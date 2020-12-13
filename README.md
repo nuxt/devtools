@@ -1,6 +1,6 @@
 # Nice!
 
-Design system for Nuxt framework
+Unified and nice designs for Nuxt framework
 
 ## Scripts
 
