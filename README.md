@@ -1,7 +1,17 @@
-# Nice!
+# Nice
 
-Unified and nice designs for Nuxt framework
+Unified designs for the [Nuxt Framework](https://nuxtjs.com).
 
-## Scripts
+## Development
 
-- `dev:error`
+```
+yarn dev [page = 500]
+```
+
+Example:
+
+```bash
+yarn dev 404
+```
+
+Then go to http://localhost:3000

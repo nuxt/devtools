@@ -1,11 +1,22 @@
 {
   "private": true,
   "scripts": {
-    "dev:error": "parcel dev src/error.html"
+    "dev": "jiti serve"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-beta.1",
+    "@nuxt/h2": "^0.2.0",
+    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "autoprefixer": "^9",
+    "edge.js": "^1.1.4",
+    "execa": "^5.0.0",
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^1.0.6",
+    "jiti": "^0.1.19",
+    "listhen": "^0.1.2",
+    "ohmyfetch": "^0.1.5",
+    "parcel": "^2.0.0-nightly.511",
     "parcel-bundler": "^1.12.4",
-    "posthtml-expressions": "^1.7.1"
+    "postcss": "^7",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }
