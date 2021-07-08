@@ -2,7 +2,7 @@ import { resolve, join } from 'path'
 import { promises as fsp } from 'fs'
 import type { Plugin } from 'vite'
 import template from 'lodash.template'
-import messages from '../data/en/messages.json'
+import messages from '../data/messages.json'
 
 const r = (...path) => resolve(join(__dirname, '..', ...path))
 

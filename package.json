@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "prerender": "jiti ./scripts/prerender"
   },
   "devDependencies": {
     "@types/lodash.template": "^4.5.0",
