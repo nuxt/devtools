@@ -1,26 +1,17 @@
 {
-  "name": "@nuxt/nice",
+  "name": "@nuxt/design",
   "private": true,
   "scripts": {
-    "dev": "jiti serve"
+    "dev": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
-    "@nuxt/h2": "^0.2.0",
-    "@tailwindcss/postcss7-compat": "^2.0.2",
-    "autoprefixer": "^9",
-    "edge.js": "^1.1.4",
-    "execa": "^5.0.0",
-    "http-proxy": "^1.18.1",
-    "http-proxy-middleware": "^1.0.6",
-    "jiti": "^0.1.19",
-    "listhen": "^0.1.2",
-    "ohmyfetch": "^0.1.5",
-    "parcel": "^2.0.0-nightly.511",
-    "parcel-bundler": "^1.12.4",
-    "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
-  },
-  "resolutions": {
-    "postcss": "^7"
+    "@types/lodash.template": "^4.5.0",
+    "critters": "^0.0.10",
+    "globby": "^11.0.4",
+    "lodash.template": "^4.5.0",
+    "vite": "^2.4.1",
+    "vite-plugin-windicss": "^1.2.4",
+    "windicss": "^3.1.4"
   }
 }

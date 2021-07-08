@@ -122,5 +122,5 @@ module.exports = {
         darker: "#00A0A0"
       }
     }
-  }
+  },
 };
