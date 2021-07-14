@@ -18,7 +18,8 @@
     "build": "vite build",
     "lint": "eslint --ext .ts,.js .",
     "release": "release-it",
-    "prerender": "jiti ./scripts/prerender"
+    "optimize-assets": "npx svgo public/assets/**/*.svg",
+    "prerender": "yarn build && jiti ./scripts/prerender"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
