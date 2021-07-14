@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/nuxt/design/compare/v0.0.2...v0.0.3) (2021-07-14)
+
+
+### Bug Fixes
+
+* use statusCode not message for 500 dev ([#19](https://github.com/nuxt/design/issues/19)) ([a910883](https://github.com/nuxt/design/commit/a910883024b2280770cbe985092153666eb17790))
+
 ### 0.0.2 (2021-07-14)
 
 
