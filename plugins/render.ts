@@ -66,7 +66,7 @@ export const RenderPlugin = () => {
         // Serialize into a js function
         const jsCode = [
           `const _messages = ${JSON.stringify({ ...genericMessages, ...messages })}`,
-          `const _render = ${template(html, { interpolate: /{{([\s\S]+?)}}/g }).toString()}`,
+          `const _render = ${template(html, { variable: '__var__', interpolate: /{{([\s\S]+?)}}/g }).toString().replace('__var__', '{ messages }')}`,
           'const _template = (messages) => _render({ messages: { ..._messages, ...messages } })'
         ].join('\n').trim()
 
