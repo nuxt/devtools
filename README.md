@@ -1,27 +1,6 @@
 # Nuxt Design
 
-Unified designs for the [Nuxt Framework](https://nuxtjs.com).
-
-## Usage
-
-Each template can be imported as a JS file or pulled in as raw HTML.
-
-```js
-import { template } from '@nuxt/design/dist/templates/error-404'
-// or
-const templateFile = readFileSync('./node_modules/@nuxt/design/dist/templates/error-404/index.html', 'utf-8')
-
-const html = template({
-  error_404: '404',
-  error_404_message: 'Sorry, the page you are looking for could not be found.',
-  error_server: 'Server error',
-  error_server_message: 'An error occurred in the application and the page could not be served. If you are the application owner, check your server logs for details.',
-  back_home: 'Go back home',
-  name: 'Nuxt'
-})
-```
-
-Other assets are located in `assets/`, `icons/`, and `images/`.
+Unified designs for the [Nuxt Framework](https://nuxtjs.org). This package is not intended to be used directly by end users.
 
 ## Development
 
