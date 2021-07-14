@@ -5,7 +5,7 @@
   "license": "CC-BY-ND-4.0",
   "exports": {
     "./templates/*": "./dist/templates/*.mjs",
-    "./": "./dist/index.mjs",
+    ".": "./dist/index.mjs",
     "./*": "./dist/*"
   },
   "main": "./dist/index.mjs",
@@ -41,5 +41,8 @@
     "vite": "^2.4.1",
     "vite-plugin-windicss": "^1.2.4",
     "windicss": "^3.1.5"
+  },
+  "volta": {
+    "node": "16.5.0"
   }
 }
