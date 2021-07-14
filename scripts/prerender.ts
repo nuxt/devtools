@@ -1,21 +1,20 @@
-import { resolve, join } from 'path'
+import { basename, resolve, join } from 'path'
 import { promises as fsp } from 'fs'
-import template from 'lodash.template'
 import glob from 'globby'
-import messages from '../data/messages.json'
+import mockData from '../data/messages.json'
 
-const r = (...path) => resolve(join(__dirname, '..', ...path))
+const r = (...path: string[]) => resolve(join(__dirname, '..', ...path))
 
-async function main() {
-  const htmlFiles = await glob(r('dist/**/*.html'))
-  for (const file of htmlFiles) {
-      console.log('Process', file)
-      const contents = await fsp.readFile(file, 'utf-8')
-      const updated = template(contents, { interpolate: /{{([\s\S]+?)}}/g })({
-        messages,
-        name: '{{ name }}' // TODO
-      })
-      await fsp.writeFile(file, updated)
+async function main () {
+  const templates = await glob(r('dist/templates/*.js'))
+  for (const file of templates) {
+    console.log('Processing', basename(file).replace('.js', ''))
+    const { template } = await import(file)
+    const updated = template({
+      ...mockData,
+      name: '{{ name }}' // TODO
+    })
+    await fsp.writeFile(file.replace('.js', '/index.html'), updated)
   }
 }
 

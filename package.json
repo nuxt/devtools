@@ -1,16 +1,39 @@
 {
   "name": "@nuxt/design",
-  "private": true,
+  "version": "0.0.1",
+  "license": "CC-BY-ND-4.0",
+  "exports": {
+    "./templates/*": "./dist/templates/*.mjs",
+    "./": "./dist/index.mjs",
+    "./*": "./dist/*"
+  },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/templates",
+    "dist/index.*"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "lint": "eslint --ext .ts,.js .",
+    "release": "release-it",
     "prerender": "jiti ./scripts/prerender"
   },
   "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^6.0.1",
+    "@release-it/conventional-changelog": "^3.0.1",
+    "@types/html-minifier": "^4.0.1",
     "@types/lodash.template": "^4.5.0",
     "critters": "^0.0.10",
+    "eslint": "^7.30.0",
     "globby": "^11.0.4",
+    "html-minifier": "^4.0.0",
     "lodash.template": "^4.5.0",
+    "release-it": "^14.10.0",
+    "scule": "^0.2.1",
+    "typescript": "^4.3.5",
+    "upath": "^2.0.1",
     "vite": "^2.4.1",
     "vite-plugin-windicss": "^1.2.4",
     "windicss": "^3.1.5"

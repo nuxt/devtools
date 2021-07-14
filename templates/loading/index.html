@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ messages.loading }} | {{ messages.name }}</title>
+    <title>{{ messages.loading }} | {{ messages.appName }}</title>
     <meta charset="utf-8" />
     <meta
       content="width=device-width,initial-scale=1.0,minimum-scale=1.0"
       name="viewport"
     />
-    <meta http-equiv="refresh" content="{{ messages.retryAfter || 60 }}">
     <script type="module" src="/styles.ts"></script>
   </head>
   <body class="nuxt-loading h-screen bg-cloud-surface flex flex-col justify-center items-center text-center">
@@ -21,6 +20,7 @@
         animation-delay: 0.5s;
       }
       .nuxt-logo {
+        color: #003543;
         animation: fade 1s ease-out forwards;
       }
       .nuxt-loader-background
@@ -28,7 +28,7 @@
         background: rgb(120,120,120, 0.2);
         animation: fade 1s ease-out forwards;
       }
-      
+
       .nuxt-loader-bar {
         animation: growth 6s ease-in-out infinite;
         animation-delay: 0.5s;
@@ -89,5 +89,21 @@
         }
       }
       </style>
+      <script>
+        if (typeof window.fetch === 'undefined') {
+          setTimeout(() => window.location.reload(), 1000)
+        } else {
+          const check = async () => {
+            try {
+              const body = await window.fetch(window.location.href).then(r => r.text())
+              if (!body.includes('__NUXT_LOADING__')) {
+                return window.location.reload()
+              }
+            } catch {}
+            setTimeout(check, 1000)
+          }
+          check()
+        }
+      </script>
   </body>
 </html>
