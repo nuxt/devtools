@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/nuxt/design/compare/v0.0.3...v0.0.5) (2021-07-20)
+
+
+### Bug Fixes
+
+* correct color for the logo in dark mode ([408e6aa](https://github.com/nuxt/design/commit/408e6aa22c0ba4920dadfa4f2eae9391d2862111))
+
 ### [0.0.4](https://github.com/nuxt/design/compare/v0.0.3...v0.0.4) (2021-07-14)
 
 ### [0.0.3](https://github.com/nuxt/design/compare/v0.0.2...v0.0.3) (2021-07-14)
