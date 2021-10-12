@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/nuxt/design/compare/v0.1.2...v0.1.3) (2021-10-12)
+
+
+### Bug Fixes
+
+* updates colors and templates ([e5691b0](https://github.com/nuxt/design/commit/e5691b049b684ae98a04c5a324679d0b1f34053b))
+
 ### [0.1.2](https://github.com/nuxt/design/compare/v0.1.0...v0.1.2) (2021-10-12)
 
 
