@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/nuxt/design/compare/v0.1.0...v0.1.2) (2021-10-12)
+
+
+### Features
+
+* add welcome page template ([d7f95db](https://github.com/nuxt/design/commit/d7f95db8c3344a2a05f91fb332f0f5ab1908b780))
+
+
+### Bug Fixes
+
+* add rootdir to vite fs.allow ([02da788](https://github.com/nuxt/design/commit/02da78871564c5128b435694daa62c02b3acbef0))
+
 ### [0.1.1](https://github.com/nuxt/design/compare/v0.1.0...v0.1.1) (2021-10-07)
 
 ## [0.1.0](https://github.com/nuxt/design/compare/v0.0.6...v0.1.0) (2021-09-23)
