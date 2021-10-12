@@ -40,8 +40,6 @@ module.exports = {
       'cloud-darker': '#334040',
       'cloud-darkest': '#273131',
       'cloud-black': '#1A2121',
-      black: '#000',
-      white: '#fff',
       blue: colors.sky,
       green: {
         // 50: "#eefdf2",
