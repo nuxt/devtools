@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ messages.title }}</title>
+  <meta charset="utf-8" />
+  <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+  <script type="module" src="/styles.ts"></script>
+</head>
+
+<body>
+  <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+      <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
+        <img src="/assets/images/nuxt.svg">
+      </div>
+      <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <div class="p-6">
+            <div class="flex items-center">
+              <img src="/assets/icons/docs.svg">
+              <div class="ml-4 text-lg leading-7 font-semibold">
+                <a href="https://v3.nuxtjs.org" target="_blank" class="hover:underline text-gray-900 dark:text-white">
+                  {{ messages.documentation }}
+                </a>
+              </div>
+            </div>
+            <div class="ml-10">
+              <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                {{ messages.readDocs }}
+                <a href="https://v3.nuxtjs.org" class="text-green-500" target="_blank">
+                  {{ messages.documentation }}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
+            <div class="flex items-center">
+              <img src="/assets/icons/twitter.svg">
+              <div class="ml-4 text-lg leading-7 font-semibold">
+                <a href="https://twitter.com/nuxt_js" target="_blank"
+                  class="hover:underline text-gray-900 dark:text-white">Twitter</a>
+              </div>
+            </div>
+            <div class="ml-10">
+              <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                {{ messages.followTwitter }} <br>
+                <a href="https://twitter.com/nuxt_js" target="_blank" class="text-green-500">@nuxt_js</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mt-4 text-sm bg-white border-l-8 border-green-400 dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg p-6 pl-4">
+        <p>To remove this welcome page, <strong class="font-bold">you have 2 options</strong>:</p>
+        <ul class="list-inside list-disc pt-1 pl-2">
+          <li>Create an <code class="text-green-500">app.vue</code></li>
+          <li>Create a <code class="text-green-500">pages/index.vue</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
