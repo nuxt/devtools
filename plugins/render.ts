@@ -10,6 +10,8 @@ import genericMessages from '../templates/messages.json'
 
 const r = (...path: string[]) => resolve(join(__dirname, '..', ...path))
 
+const replaceAll = (input, search, replace) => input.split(search).join(replace)
+
 export const RenderPlugin = () => {
   return <Plugin>{
     name: 'render',
@@ -44,7 +46,7 @@ export const RenderPlugin = () => {
         for (const src of svgSources) {
           const svg = await fsp.readFile(r('dist', src), 'utf-8')
           const base64Source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
-          html = html.replaceAll(src, base64Source)
+          html = replaceAll(html, src, base64Source)
         }
 
         // Inline our scripts
@@ -53,7 +55,7 @@ export const RenderPlugin = () => {
 
         for (const [scriptBlock, src] of scriptSources) {
           let contents = await fsp.readFile(r('dist', src), 'utf-8')
-          contents = contents.replaceAll('/* empty css               */', '').trim()
+          contents = replaceAll(contents, '/* empty css               */', '').trim()
           html = html.replace(scriptBlock, contents.length ? `<script>${contents}</script>` : '')
         }
 
@@ -98,7 +100,7 @@ export const RenderPlugin = () => {
       const contents = templateExports.map(exp => `export { template as ${exp.exportName} } from './templates/${exp.templateName}.mjs'`).join('\n')
       await fsp.writeFile(r('dist/index.mjs'), contents, 'utf8')
 
-      await fsp.writeFile(r('dist/index.d.ts'), contents.replaceAll(/\.mjs/g, ''), 'utf8')
+      await fsp.writeFile(r('dist/index.d.ts'), replaceAll(contents, /\.mjs/g, ''), 'utf8')
     }
   }
 }
