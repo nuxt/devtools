@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/nuxt/design/compare/v0.1.3...v0.1.4) (2021-10-20)
+
+
+### Bug Fixes
+
+* add button background on dark media ([#36](https://github.com/nuxt/design/issues/36)) ([de0a759](https://github.com/nuxt/design/commit/de0a75959d06e90239b5a203eeb9e9be6031f0c2))
+* add missing `rel="noopener` on some links([#34](https://github.com/nuxt/design/issues/34)) ([8f18183](https://github.com/nuxt/design/commit/8f18183f1d6cca49753e3b0a6a1da0aa8e0c9c83))
+
 ### [0.1.3](https://github.com/nuxt/design/compare/v0.1.2...v0.1.3) (2021-10-12)
 
 
