@@ -74,8 +74,7 @@ export const RenderPlugin = () => {
 
         // Generate types
         const types = [
-          `const defaultMessages = ${JSON.stringify(messages)}`,
-          'export type DefaultMessages = typeof defaultMessages',
+          `export type DefaultMessages = Record<${Object.keys(messages).map(a => `"${a}"`).join(' | ')}, string | boolean | number >`,
           'declare const template: (data: Partial<DefaultMessages>) => string',
           'export { template }'
         ].join('\n')
