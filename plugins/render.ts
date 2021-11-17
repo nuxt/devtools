@@ -41,7 +41,7 @@ export const RenderPlugin = () => {
         // Inline SVGs
         const svgSources = Array.from(html.matchAll(/src="([^"]+)"|url([^)]+)/g))
           .map(m => m[1])
-          .filter(src => src.match(/\.svg$/))
+          .filter(src => src?.match(/\.svg$/))
 
         for (const src of svgSources) {
           const svg = await fsp.readFile(r('dist', src), 'utf-8')
@@ -51,7 +51,7 @@ export const RenderPlugin = () => {
 
         // Inline our scripts
         const scriptSources = Array.from(html.matchAll(/<script[^>]*src="(.*)"[^>]*>[\s\S]*?<\/script>/g))
-          .filter(([_block, src]) => src.match(/^\/.*\.js$/))
+          .filter(([_block, src]) => src?.match(/^\/.*\.js$/))
 
         for (const [scriptBlock, src] of scriptSources) {
           let contents = await fsp.readFile(r('dist', src), 'utf-8')
