@@ -4,8 +4,8 @@ import { readdirSync } from 'fs'
 import { defineConfig } from 'vite'
 import WindiCSS from 'vite-plugin-windicss'
 
-import { DevRenderingPlugin } from './plugins/dev'
-import { RenderPlugin } from './plugins/render'
+import { DevRenderingPlugin } from './lib/dev'
+import { RenderPlugin } from './lib/render'
 
 const r = (...path: string[]) => resolve(__dirname, ...path)
 
