@@ -1,14 +1,30 @@
-# Nuxt UI
+# 🎨 Nuxt UI
 
-Unified UI design for the Nuxt.
+Unified UI and Design Kit for the Nuxt.
 
-## Packages
+## 📦 Packages
 
-- [`@nuxt/ui`](./packages/ui) (preview: https://components.ui.nuxtjs.org)
-- [`@nuxt/ui-templates`](./packages/templates) (preview: https://templates.ui.nuxtjs.org)
-- [`@nuxt/ui-assets`](./packages/assets)
+<table>
+<tbody>
+<tr>
+  <td>
+    <h2><a href="./packages/ui">UI Components</a></h2>
+    <p> UI kit for examples and internal tooling UI.</p>
+  </td>
+  <td>
+    <h2><a href="./packages/templates">UI Templates</a></h2>
+    <p>Pre-compiled html templates for internal pages.</p>
+  </td>
+  <td>
+    <h2><a href="./packages/assets">UI Assets</a></h2>
+    <p> Shared assets and resources.</p>
+  </td>
+</tr>
+</tbody>
+</table>
 
-## Development
+
+## 💻 Development
 
 - Clone repository
 - Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
