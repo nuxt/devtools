@@ -1,15 +1,19 @@
 {
   "name": "@nuxt/ui-assets",
-  "version": "0.1.0",
+  "version": "0.0.0",
+  "private": true,
   "repository": "nuxt/ui",
   "license": "CC-BY-ND-4.0",
-  "main": "./index.mjs",
   "exports": {
     ".": "./index.mjs",
     "./*": "./*"
   },
+  "main": "./index.mjs",
   "files": [
     "icons",
     "images"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "target": "ESNext",
     "module": "ESNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "moduleResolution": "Node",
     "strict": false,
     "allowJs": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
-    "types": ["node", "jest"]
+    "types": [
+      "node"
+    ]
   },
-  "exclude": ["./dist/*"]
+  "exclude": [
+    "./dist/*"
+  ]
 }
