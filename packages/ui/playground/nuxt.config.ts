@@ -4,6 +4,10 @@ import '@unocss/nuxt'
 import NuxtUI from '../src/nuxt'
 
 export default defineNuxtConfig({
+  // Workaround for vercel deployment detecting nitro output
+  srcDir: __dirname,
+  rootDir: resolve(__dirname, '../../..'),
+
   buildModules: [
     NuxtUI
   ],

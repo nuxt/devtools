@@ -5,7 +5,9 @@ Unified UI design for the Nuxt.
 ## Packages
 
 - [`@nuxt/ui`](./packages/components)
+  - Preview: https://components.ui.nuxtjs.org
 - [`@nuxt/ui-templates`](./packages/templates)
+  - Preview: https://templates.ui.nuxtjs.org
 - [`@nuxt/ui-assets`](./packages/assets)
 
 ## Development
