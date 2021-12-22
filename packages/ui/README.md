@@ -1,16 +1,12 @@
 # Nuxt UI Components
 
-<a href="https://www.npmjs.com/package/@nuxt/ui"><img src="https://img.shields.io/npm/v/@nuxt/ui?color=a1b858&label="></a>
+<a href="https://www.npmjs.com/package/@nuxt/ui-edge"><img src="https://flat.badgen.net/npm/v/@nuxt/ui-edge"></a>
 
 UI kit for Nuxt 3's examples and internal tooling UI.
 
 > Note: This library is heavily working in progress and does not serve as a generic UI library (for now). It is not recommended to use it in production.
 
-## Examples
-
-[Nuxt 3 examples](https://github.com/nuxt/framework/tree/main/examples)
-
-[Playground](https://nuxt-ui-playground.vercel.app/)
+🏀 [Online Playground](https://components.ui.nuxtjs.org)
 
 ## Install
 
