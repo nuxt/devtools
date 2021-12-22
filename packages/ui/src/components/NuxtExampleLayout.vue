@@ -2,7 +2,7 @@
 const props = defineProps<{
   example?: string
   showTips?: boolean
-  class?: string
+  class?: string // eslint-disable-line vue/no-reserved-props
   openPath?: string
 }>()
 
