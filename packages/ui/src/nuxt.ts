@@ -25,9 +25,11 @@ export default defineNuxtModule({
     if (existsSync(presetStyles)) { nuxt.options.css.push(presetStyles) }
 
     if (!options.dev) {
-    // @ts-ignore
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
     }
+
+    // @ts-expect-error
+    nuxt.options.vueuse = Object.assign({ ssrHandlers: true }, nuxt.options.vueuse || {})
 
     await installModule(UnocssModule)
     await installModule(VueUseModule)
