@@ -2,6 +2,7 @@ import type { Preset, RuleContext } from '@unocss/core'
 import { mergeDeep } from '@unocss/core'
 import type { UnocssNuxtOptions } from '@unocss/nuxt'
 import type { Theme } from '@unocss/preset-uno'
+import { parseColor } from '@unocss/preset-mini/utils'
 import { presetUno, theme as unoTheme } from '@unocss/preset-uno'
 import { fonts } from '@unocss/preset-mini/rules'
 import presetIcons from '@unocss/preset-icons'
@@ -20,14 +21,13 @@ export const NuxtUIPreset: Preset<Theme> = {
     }
   }),
   rules: [
-    [/^n-(.*)$/, ([, _body]: string[], _: RuleContext<Theme>) => {
-      // TODO
-      // const { rgba } = parseColorUtil(body, theme) || {}
-      // if (rgba) {
-      //   return {
-      //     '--nui-c-context': `${rgba.join(',')}`,
-      //   }
-      // }
+    [/^n-(.*)$/, ([, body]: string[], { theme }: RuleContext<Theme>) => {
+      const { rgba } = parseColor(body, theme) || {}
+      if (rgba) {
+        return {
+          '--nui-c-context': `${rgba.join(',')}`
+        }
+      }
     }],
     [/^n-(.*)$/, fonts[1][1] as any],
     ['n-dashed', { 'border-style': 'dashed' }],
