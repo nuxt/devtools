@@ -12,7 +12,7 @@
           {{ isDark ? 'Dark' : 'Light' }}
         </NButton>
 
-        <NButton n="sm" to="/__unocss" icon="carbon-search">
+        <NButton v-if="isDev" n="sm" to="/__unocss" icon="carbon-search">
           Inspect
         </NButton>
 
@@ -186,27 +186,17 @@
 </template>
 
 <script setup lang="ts">
-const preferredDark = usePreferredDark()
-const store = useCookie<'auto' | 'dark' | 'light'>('isDark')
-
-if (store.value == null) { store.value = 'auto' }
+const isDev = process.dev
+const color = useColorMode()
 
 const isDark = computed<boolean>({
   get () {
-    return store.value === 'auto'
-      ? preferredDark.value
-      : store.value === 'dark'
+    return color.value === 'dark'
   },
   set (v) {
-    if (v === preferredDark.value) { store.value = 'auto' } else { store.value = v ? 'dark' : 'light' }
+    color.value = v ? 'dark' : 'light'
   }
 })
-
-useMeta(computed(() => ({
-  htmlAttrs: {
-    class: isDark.value ? 'dark' : 'light'
-  }
-})))
 
 const toggleDark = useToggle(isDark)
 
