@@ -1,6 +1,10 @@
 <template>
   <div class="relative p-10 n-bg-base">
     <div class="container w-full mx-auto flex flex-col gap-4">
+      <NTip n="hover:yellow-600 dark:hover:yellow-500">
+        This library is heavily working in progress and does not serve as a generic UI library (for now). It is not recommended to use it in production.
+      </NTip>
+
       <div class="flex justify-between items-center">
         <div class="text-4xl">
           Nuxt UI
@@ -8,17 +12,17 @@
       </div>
 
       <div class="flex gap-1 mb-5">
-        <NButton n="sm amber5 dark:indigo" :icon="isDark ? 'carbon-moon' : 'carbon-sun'" @click="toggleDark()">
-          {{ isDark ? 'Dark' : 'Light' }}
-        </NButton>
-
         <NButton v-if="isDev" n="sm" to="/__unocss" icon="carbon-search">
           Inspect
         </NButton>
 
-        <NSwitch v-model="isDark" n="indigo">
-          {{ isDark ? 'Dark' : 'Light' }}
-        </NSwitch>
+        <NDarkToggle>
+          <template #default="{ isDark }">
+            <NSwitch v-model="isDark.value" n="indigo">
+              {{ isDark.value ? 'Dark' : 'Light' }}
+            </NSwitch>
+          </template>
+        </NDarkToggle>
       </div>
 
       <NCard class="p4">
@@ -187,19 +191,6 @@
 
 <script setup lang="ts">
 const isDev = process.dev
-const color = useColorMode()
-
-const isDark = computed<boolean>({
-  get () {
-    return color.value === 'dark'
-  },
-  set (v) {
-    color.value = v ? 'dark' : 'light'
-  }
-})
-
-const toggleDark = useToggle(isDark)
-
 const showDialog = ref(false)
 const showDropdown = ref(false)
 const radio = ref('a')
