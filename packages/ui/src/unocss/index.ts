@@ -71,6 +71,7 @@ export const NuxtUIPreset: Preset<Theme> = {
     'n-transition': 'transition-all duration-200',
     'n-focus-base': 'ring-2 ring-context/50',
     'n-active-base': 'ring-3 ring-context/10',
+    'n-borderless': '!border-none !shadow-none',
 
     // link
     'n-link-base': 'underline underline-offset-2 underline-black/20 dark:underline-white/40',
