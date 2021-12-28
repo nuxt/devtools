@@ -16,6 +16,10 @@
           Inspect
         </NButton>
 
+        <NButton n="sm" to="https://github.com/nuxt/ui/tree/main/packages/ui" target="_blank" icon="carbon-logo-github">
+          GitHub
+        </NButton>
+
         <NDarkToggle>
           <template #default="{ isDark }">
             <NSwitch v-model="isDark.value" n="indigo">
