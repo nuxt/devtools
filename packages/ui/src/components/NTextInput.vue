@@ -6,7 +6,7 @@
     <input
       v-model="input"
       class="!outline-none flex-auto n-bg-base"
-      type="text"
+      :type="type"
       :placeholder="placeholder"
     >
   </div>
@@ -21,10 +21,12 @@ const props = withDefaults(
     placeholder?: string
     icon?: string
     disabled?: boolean
+    type?: string
   }>(),
   {
     modelValue: '',
-    disabled: false
+    disabled: false,
+    type: 'text'
   }
 )
 const emit = defineEmits<{(...args: any): void}>()
