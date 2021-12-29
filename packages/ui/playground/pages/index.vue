@@ -165,6 +165,7 @@
         <div class="flex flex-col gap-2">
           <NTextInput n="lime5" icon="carbon:checkmark-outline" placeholder="Hi!" />
           <NTextInput n="pink5" icon="carbon:user" placeholder="Your name..." />
+          <NTextInput n="lime5" icon="carbon:password" type="password" placeholder="Your password..." />
         </div>
       </NCard>
 
