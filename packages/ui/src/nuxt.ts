@@ -21,10 +21,7 @@ export default defineNuxtModule({
   async setup (options, nuxt) {
     addComponentsDir({ path: rPath('./components') })
 
-    const presetStyles = resolve(options.preset, 'styles.css')
-    if (existsSync(presetStyles)) {
-      nuxt.options.css.push(presetStyles)
-    }
+    nuxt.options.css.unshift(rPath('styles.css'))
 
     if (!options.dev) {
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
