@@ -1,6 +1,4 @@
 import { fileURLToPath } from 'url'
-import { resolve } from 'path'
-import { existsSync } from 'fs'
 import { addComponentsDir, defineNuxtModule, installModule } from '@nuxt/kit'
 
 import UnocssModule from '@unocss/nuxt'
