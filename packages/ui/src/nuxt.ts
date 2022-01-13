@@ -25,7 +25,6 @@ export default defineNuxtModule({
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
     }
 
-    // @ts-expect-error
     nuxt.options.vueuse = Object.assign({ ssrHandlers: true }, nuxt.options.vueuse || {})
 
     await installModule(UnocssModule)
