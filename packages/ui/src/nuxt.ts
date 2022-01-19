@@ -19,7 +19,7 @@ export default defineNuxtModule({
   async setup (options, nuxt) {
     addComponentsDir({ path: rPath('./components') })
 
-    nuxt.options.css.unshift(rPath('styles.css'))
+    nuxt.options.css.unshift(rPath('assets/styles.css'))
 
     if (!options.dev) {
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
