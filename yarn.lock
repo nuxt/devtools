@@ -1556,7 +1556,7 @@ __metadata:
     eslint: ^8.7.0
     jiti: ^1.12.9
     lerna: ^4.0.0
-    typescript: ^4.5.4
+    typescript: ^4.5.5
   languageName: unknown
   linkType: soft
 
@@ -1574,8 +1574,8 @@ __metadata:
     lodash.template: ^4.5.0
     scule: ^0.2.1
     upath: ^2.0.1
-    vite: ^2.7.12
-    vite-plugin-windicss: ^1.6.2
+    vite: ^2.7.13
+    vite-plugin-windicss: ^1.6.3
     windicss: ^3.4.3
   languageName: unknown
   linkType: soft
@@ -2967,29 +2967,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@windicss/config@npm:1.6.2":
-  version: 1.6.2
-  resolution: "@windicss/config@npm:1.6.2"
+"@windicss/config@npm:1.6.3":
+  version: 1.6.3
+  resolution: "@windicss/config@npm:1.6.3"
   dependencies:
     debug: ^4.3.3
     jiti: ^1.12.9
-    windicss: ^3.4.2
-  checksum: 120695da96f7957f290eba94eed9cdb71dc79e8c9b5a3faf035e0547980c105cd7283220a0575f4d7d41a58892b0c874ad733228b3a8427a21a7e2db84159d33
+    windicss: ^3.4.3
+  checksum: 987ae75e56add48278a9debfd2d6640af6cdbc1b549d1d35907961dcd8d1858e78c5f85dae4317e2abec62c1b9f65418914ffea6f464de63384573c0d0a1efe5
   languageName: node
   linkType: hard
 
-"@windicss/plugin-utils@npm:1.6.2":
-  version: 1.6.2
-  resolution: "@windicss/plugin-utils@npm:1.6.2"
+"@windicss/plugin-utils@npm:1.6.3":
+  version: 1.6.3
+  resolution: "@windicss/plugin-utils@npm:1.6.3"
   dependencies:
     "@antfu/utils": ^0.4.0
-    "@windicss/config": 1.6.2
+    "@windicss/config": 1.6.3
     debug: ^4.3.3
-    fast-glob: ^3.2.10
+    fast-glob: ^3.2.11
     magic-string: ^0.25.7
     micromatch: ^4.0.4
-    windicss: ^3.4.2
-  checksum: b99eda6b6b74a29afd978147b9622c808b5cb292d53c82fc08421d347b842cf8795389a3df70e2455db738780301a36626b0fa1efb417591c7b03ebba90aa28b
+    windicss: ^3.4.3
+  checksum: f2b6907f17df4cd0a766985b7c14ccbc61895530df7b0319bd1bcaeb3a3a12d21cf26dbc5202966fe70fa4eb5a0f1e030caf80b826d5a4aa7bd94796bef54355
   languageName: node
   linkType: hard
 
@@ -6088,16 +6088,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.10":
-  version: 3.2.10
-  resolution: "fast-glob@npm:3.2.10"
+"fast-glob@npm:^3.2.11":
+  version: 3.2.11
+  resolution: "fast-glob@npm:3.2.11"
   dependencies:
     "@nodelib/fs.stat": ^2.0.2
     "@nodelib/fs.walk": ^1.2.3
     glob-parent: ^5.1.2
     merge2: ^1.3.0
     micromatch: ^4.0.4
-  checksum: dee958d95638c8d00d200c55af5884dda513cfef96f674caab5a289a4436936ee26d603841a9ab85a6a4d9f7914558bce78dbf1088d3b8ec64b255422eea840b
+  checksum: f473105324a7780a20c06de842e15ddbb41d3cb7e71d1e4fe6e8373204f22245d54f5ab9e2061e6a1c613047345954d29b022e0e76f5c28b1df9858179a0e6d7
   languageName: node
   linkType: hard
 
@@ -12144,7 +12144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.5.2, typescript@npm:^4.5.4":
+"typescript@npm:^4.5.2":
   version: 4.5.4
   resolution: "typescript@npm:4.5.4"
   bin:
@@ -12154,13 +12154,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.5.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
+"typescript@npm:^4.5.5":
+  version: 4.5.5
+  resolution: "typescript@npm:4.5.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 506f4c919dc8aeaafa92068c997f1d213b9df4d9756d0fae1a1e7ab66b585ab3498050e236113a1c9e57ee08c21ec6814ca7a7f61378c058d79af50a4b1f5a5e
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.5.2#~builtin<compat/typescript>":
   version: 4.5.4
   resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 2e488dde7d2c4a2fa2e79cf2470600f8ce81bc0563c276b72df8ff412d74456ae532ba824650ae936ce207440c79720ddcfaa25e3cb4477572b8534fa4e34d49
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.5.5#~builtin<compat/typescript>":
+  version: 4.5.5
+  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=493e53"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: c05c318d79c690f101d7ffb34cd6c7d6bbd884d3af9cefe7749ad0cd6be43c7082f098280982ca945dcba23fde34a08fed9602bb26540936baf8c0520727d3ba
   languageName: node
   linkType: hard
 
@@ -12525,23 +12545,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-windicss@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "vite-plugin-windicss@npm:1.6.2"
+"vite-plugin-windicss@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "vite-plugin-windicss@npm:1.6.3"
   dependencies:
-    "@windicss/plugin-utils": 1.6.2
+    "@windicss/plugin-utils": 1.6.3
     debug: ^4.3.3
     kolorist: ^1.5.1
-    windicss: ^3.4.2
+    windicss: ^3.4.3
   peerDependencies:
     vite: ^2.0.1
-  checksum: 4d61365b5326383e5d68927d6efdeb7f8cabff7106cda5e7873c8dfa75b9e9cb3f38c10e1b4a7e76a0a935e977349c5f6a1b5d9ea374df27fda1e7f0b0ce5108
+  checksum: 841a4113c0939586bf548311ea737bb3a2d02416c7007084c5518a8af7824e56efba82941b3b5088ece252481ad1178d85c559f06187b696e296566b59252f29
   languageName: node
   linkType: hard
 
-"vite@npm:^2.7.12":
-  version: 2.7.12
-  resolution: "vite@npm:2.7.12"
+"vite@npm:^2.7.13":
+  version: 2.7.13
+  resolution: "vite@npm:2.7.13"
   dependencies:
     esbuild: ^0.13.12
     fsevents: ~2.3.2
@@ -12564,7 +12584,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 56d62ae8131b02891f2dbd81f26a3ca28a02bfe390f9cb4e0c2d8dc831c2e2f8264dd3c45b14c7dd48e79d83d323a35148f92729e1f3385fae04fcd691f3f985
+  checksum: 3d8780754974c5012b768b5394dce15a171e2f9e061f86517a9c934bfff02855439d411c6769efc0a1791f6c511e703e1ade8ac14a8030b0e62408af39eea456
   languageName: node
   linkType: hard
 
@@ -12953,15 +12973,6 @@ __metadata:
   dependencies:
     string-width: ^1.0.2 || 2 || 3 || 4
   checksum: d5fc37cd561f9daee3c80e03b92ed3e84d80dde3365a8767263d03dacfc8fa06b065ffe1df00d8c2a09f731482fcacae745abfbb478d4af36d0a891fad4834d3
-  languageName: node
-  linkType: hard
-
-"windicss@npm:^3.4.2":
-  version: 3.4.2
-  resolution: "windicss@npm:3.4.2"
-  bin:
-    windicss: cli/index.js
-  checksum: 74f90e08a725602f5900dbd8318aba3fed1bf0acfc057095e81194d25d61cd1df16cf2ccf507d13450bc1524e7c18838e6aac25b376e795f2db8b30e206cc362
   languageName: node
   linkType: hard
 
