@@ -3,7 +3,8 @@ import { mergeDeep } from '@unocss/core'
 import type { UnocssNuxtOptions } from '@unocss/nuxt'
 import type { Theme } from '@unocss/preset-uno'
 import { parseColor } from '@unocss/preset-mini/utils'
-import { presetUno, theme as unoTheme } from '@unocss/preset-uno'
+import { presetUno } from '@unocss/preset-uno'
+import { theme as unoTheme } from '@unocss/preset-mini'
 import { fonts } from '@unocss/preset-mini/rules'
 import presetIcons from '@unocss/preset-icons'
 import presetAttributify from '@unocss/preset-attributify'
@@ -22,10 +23,10 @@ export const NuxtUIPreset: Preset<Theme> = {
   }),
   rules: [
     [/^n-(.*)$/, ([, body]: string[], { theme }: RuleContext<Theme>) => {
-      const { rgba } = parseColor(body, theme) || {}
-      if (rgba) {
+      const color = parseColor(body, theme)
+      if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
         return {
-          '--nui-c-context': `${rgba.join(',')}`
+          '--nui-c-context': `${color.cssColor.components.join(',')}`
         }
       }
     }],
