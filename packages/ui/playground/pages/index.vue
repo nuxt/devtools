@@ -16,14 +16,19 @@
           Inspect
         </NButton>
 
-        <NButton n="sm" to="https://github.com/nuxt/ui/tree/main/packages/ui" target="_blank" icon="carbon-logo-github">
+        <NButton
+          n="sm"
+          to="https://github.com/nuxt/ui/tree/main/packages/ui"
+          target="_blank"
+          icon="carbon-logo-github"
+        >
           GitHub
         </NButton>
 
         <NDarkToggle>
           <template #default="{ isDark }">
             <NSwitch v-model="isDark.value" n="indigo">
-              {{ isDark.value ? 'Dark' : 'Light' }}
+              {{ isDark.value ? "Dark" : "Light" }}
             </NSwitch>
           </template>
         </NDarkToggle>
@@ -34,19 +39,19 @@
           Buttons
         </div>
         <div class="flex flex-wrap gap-3 items-center">
-          <NButton n="yellow5 xs">
+          <NButton n="yellow6 dark:yellow5 xs">
             XS Yellow
           </NButton>
-          <NButton n="orange5 sm dashed">
+          <NButton n="orange6 dark:orange5 sm dashed">
             S Orange Dashed
           </NButton>
-          <NButton n="red5 solid" icon="carbon:at">
+          <NButton n="red6 dark:red5 solid" icon="carbon:at">
             Red Solid
           </NButton>
           <NButton disabled>
             Disabled
           </NButton>
-          <NButton n="purple5 xl">
+          <NButton n="purple6 dark:purple5 xl">
             XL Purple
           </NButton>
         </div>
@@ -57,13 +62,13 @@
           Checkboxes
         </div>
         <div class="flex gap-3 items-center">
-          <NCheckbox n="sky5 sm" :model-value="true">
+          <NCheckbox n="red6 dark:sky5 sm" :model-value="true">
             Small
           </NCheckbox>
-          <NCheckbox n="red" :model-value="false">
+          <NCheckbox n="red6 dark:red5" :model-value="false">
             Normal
           </NCheckbox>
-          <NCheckbox n="purple xl" :model-value="true" disabled>
+          <NCheckbox n="purple6 dark:purple5 xl" :model-value="true" disabled>
             XL Disabled
           </NCheckbox>
         </div>
@@ -88,13 +93,23 @@
           Radios
         </div>
         <form class="flex gap-3 items-center">
-          <NRadio v-model="radio" n="red" name="name" value="a">
+          <NRadio v-model="radio" n="red6 dark:red5" name="name" value="a">
             Apple
           </NRadio>
-          <NRadio v-model="radio" n="yellow" name="name" value="b">
+          <NRadio
+            v-model="radio"
+            n="yellow6 dark:yellow5"
+            name="name"
+            value="b"
+          >
             Banana
           </NRadio>
-          <NRadio v-model="radio" n="lime" name="name" value="c">
+          <NRadio
+            v-model="radio"
+            n="orange6 dark:orange5"
+            name="name"
+            value="c"
+          >
             Orange
           </NRadio>
         </form>
@@ -105,16 +120,16 @@
           Switches
         </div>
         <div class="flex gap-3 items-center">
-          <NSwitch n="lime5 sm" :model-value="true">
+          <NSwitch n="lime6 dark:lime5 sm" :model-value="true">
             SM
           </NSwitch>
-          <NSwitch n="red" :model-value="false">
+          <NSwitch n="red6 dark:red5" :model-value="false">
             Normal
           </NSwitch>
           <NSwitch :model-value="true" disabled>
             Disabled
           </NSwitch>
-          <NSwitch n="purple xl" :model-value="false">
+          <NSwitch n="purple6 dark:purple5 xl" :model-value="false">
             XL
           </NSwitch>
         </div>
@@ -125,13 +140,13 @@
           Tips
         </div>
         <div class="flex flex-col gap-2">
-          <NTip n="lime6" icon="carbon:checkmark-outline">
+          <NTip n="lime6 dark:lime5" icon="carbon:checkmark-outline">
             Success!
           </NTip>
-          <NTip n="yellow6" icon="carbon:warning">
+          <NTip n="yellow6 dark:yellow5" icon="carbon:warning">
             Warning!
           </NTip>
-          <NTip n="red6" icon="carbon:warning-alt">
+          <NTip n="red6 dark:red5" icon="carbon:warning-alt">
             Error!
           </NTip>
         </div>
@@ -142,7 +157,7 @@
           Dropdown
         </div>
         <div class="flex flex-col gap-2">
-          <NDropdown v-model="showDropdown" n="lime6">
+          <NDropdown v-model="showDropdown" n="lime6 dark:lime5">
             <template #trigger>
               <NButton @click="showDropdown = !showDropdown">
                 Dropdown ({{ showDropdown }})
@@ -163,9 +178,22 @@
           TextInput
         </div>
         <div class="flex flex-col gap-2">
-          <NTextInput n="lime5" icon="carbon:checkmark-outline" placeholder="Hi!" />
-          <NTextInput n="pink5" icon="carbon:user" placeholder="Your name..." />
-          <NTextInput n="lime5" icon="carbon:password" type="password" placeholder="Your password..." />
+          <NTextInput
+            n="lime6 dark:lime5"
+            icon="carbon:checkmark-outline"
+            placeholder="Hi!"
+          />
+          <NTextInput
+            n="pink6 dark:pink5"
+            icon="carbon:user"
+            placeholder="Your name..."
+          />
+          <NTextInput
+            n="lime6 dark:lime5"
+            icon="carbon:password"
+            type="password"
+            placeholder="Your password..."
+          />
         </div>
       </NCard>
 
@@ -174,14 +202,17 @@
           Dialog
         </div>
         <div class="flex flex-col gap-2">
-          <NButton n="lime5" @click="showDialog = !showDialog">
+          <NButton n="lime6 dark:lime5" @click="showDialog = !showDialog">
             Show Dialog
           </NButton>
-          <NDialog v-model="showDialog" class="p4 min-w-100 flex flex-col gap-4">
+          <NDialog
+            v-model="showDialog"
+            class="p4 min-w-100 flex flex-col gap-4"
+          >
             <h1 text-4xl>
               Hi
             </h1>
-            <NTextInput n="lime5" placeholder="Say something..." />
+            <NTextInput n="lime6 dark:lime5" placeholder="Say something..." />
             <div>
               <NButton @click="showDialog = false">
                 Close
