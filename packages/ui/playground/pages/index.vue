@@ -62,7 +62,7 @@
           Checkboxes
         </div>
         <div class="flex gap-3 items-center">
-          <NCheckbox n="red6 dark:sky5 sm" :model-value="true">
+          <NCheckbox n="sky6 dark:sky5 sm" :model-value="true">
             Small
           </NCheckbox>
           <NCheckbox n="red6 dark:red5" :model-value="false">

@@ -1,13 +1,10 @@
 import type { Preset, RuleContext } from '@unocss/core'
-import { mergeDeep } from '@unocss/core'
 import type { UnocssNuxtOptions } from '@unocss/nuxt'
 import type { Theme } from '@unocss/preset-uno'
 import { parseColor } from '@unocss/preset-mini/utils'
-import { presetUno } from '@unocss/preset-uno'
 import { theme as unoTheme } from '@unocss/preset-mini'
 import { fonts } from '@unocss/preset-mini/rules'
-import presetIcons from '@unocss/preset-icons'
-import presetAttributify from '@unocss/preset-attributify'
+import { mergeDeep, presetUno, presetIcons, presetAttributify, transformerDirectives, transformerVariantGroup } from 'unocss'
 
 // @unocss-include
 
@@ -132,6 +129,10 @@ export function extendUnocssOptions (user: UnocssNuxtOptions = {}): UnocssNuxtOp
       }),
       NuxtUIPreset as any,
       ...(user.presets || [])
+    ],
+    transformers: [
+      transformerDirectives(),
+      transformerVariantGroup()
     ]
   }
 }
