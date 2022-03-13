@@ -1602,7 +1602,7 @@ __metadata:
     "@unocss/reset": ^0.27.6
     "@vueuse/core": ^7.7.1
     "@vueuse/integrations": ^7.7.1
-    "@vueuse/nuxt": ^7.7.1
+    "@vueuse/nuxt": ^8.0.0
     focus-trap: ^6.7.3
     nuxt3: latest
     unbuild: ^0.7.0
@@ -2669,6 +2669,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:8.0.0":
+  version: 8.0.0
+  resolution: "@vueuse/core@npm:8.0.0"
+  dependencies:
+    "@vueuse/metadata": 8.0.0
+    "@vueuse/shared": 8.0.0
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.0
+    vue: ^2.6.0 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    vue:
+      optional: true
+  checksum: 600bcc77ad6ae658e4bb344f9d7e0555fe498269bdb39d5b0cb15a53b2ff9a59e2eb2ea0b4c813d35dba6dd6a39856f1cdb352b3bd6a946093ed80f7b15ad203
+  languageName: node
+  linkType: hard
+
 "@vueuse/head@npm:^0.7.5":
   version: 0.7.5
   resolution: "@vueuse/head@npm:0.7.5"
@@ -2715,15 +2734,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/nuxt@npm:^7.7.1":
-  version: 7.7.1
-  resolution: "@vueuse/nuxt@npm:7.7.1"
+"@vueuse/metadata@npm:8.0.0":
+  version: 8.0.0
+  resolution: "@vueuse/metadata@npm:8.0.0"
+  checksum: fb3767859c1ab6a66f314f2a0fb518be9e9b466c9c68501140a211e99198c59d60bb4cce8d031db8bfe1e6d71f49b8f16c26ebada9c9885774b74bc49854d276
+  languageName: node
+  linkType: hard
+
+"@vueuse/nuxt@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@vueuse/nuxt@npm:8.0.0"
   dependencies:
     "@nuxt/kit": "npm:@nuxt/kit-edge@latest"
-    "@vueuse/core": 7.7.1
+    "@vueuse/core": 8.0.0
+    "@vueuse/metadata": 8.0.0
     local-pkg: ^0.4.1
     vue-demi: "*"
-  checksum: 905442c103883da8a9ce6b5ff4c13f3b97f9fa57fa1f9ac9be9a7106f5b98b4b9954bfef0c696e8bd168d2d93fec8d1d4cfd3c8f30f05688225c4af145d5572d
+  checksum: 86d75b3881fde270731bcaa0d4e7cbc7779c09fe703a0d4b922f862237f5cfa74b5fd784ee898a7c0c73f63f8cdc656e7eda79c3c0f154437a78904022291298
   languageName: node
   linkType: hard
 
@@ -2741,6 +2768,23 @@ __metadata:
     vue:
       optional: true
   checksum: 91b2f6f5c43c275ecd2796e2589dbaaf841606379d6bc9ac9545c90000f9cf3e4b5960be756166ee2546dbaaa47d935f028c3b2241e59127a12b3959a641d03d
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:8.0.0":
+  version: 8.0.0
+  resolution: "@vueuse/shared@npm:8.0.0"
+  dependencies:
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.1.0
+    vue: ^2.6.0 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    vue:
+      optional: true
+  checksum: 5c304a349dfccaad3d1d02bb6f6b00ad676fd9f9cd0206ece3935608b37621afbc71f2d8d0638b66d05d4eb78bbda09904d80d25df68f46fd6019efb8499abff
   languageName: node
   linkType: hard
 
