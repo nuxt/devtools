@@ -1,6 +1,8 @@
 <script setup lang="ts">
 /* eslint-disable vue/no-multiple-template-root */
+import { computed } from 'vue'
 import { useToggle } from '@vueuse/core'
+import { useColorMode } from '#imports'
 
 const mode = useColorMode() // Auto imported from @nuxtjs/color-mode
 const isDark = computed<boolean>({
