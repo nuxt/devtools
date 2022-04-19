@@ -1477,7 +1477,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/ui-assets@*, @nuxt/ui-assets@workspace:packages/assets":
+"@nuxt/ui-assets@^0.1.0, @nuxt/ui-assets@workspace:packages/assets":
   version: 0.0.0-use.local
   resolution: "@nuxt/ui-assets@workspace:packages/assets"
   languageName: unknown
@@ -1506,7 +1506,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nuxt/ui-templates@workspace:packages/templates"
   dependencies:
-    "@nuxt/ui-assets": "*"
+    "@nuxt/ui-assets": ^0.1.0
     "@types/html-minifier": ^4.0.2
     "@types/lodash.template": ^4.5.1
     critters: ^0.0.16
