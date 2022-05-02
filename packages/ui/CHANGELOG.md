@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/nuxt/ui/compare/@nuxt/ui@0.1.0...@nuxt/ui@0.1.1) (2022-05-02)
+
+
+### Features
+
+* **ui:** extend example layout ([#98](https://github.com/nuxt/ui/issues/98)) ([2e536c1](https://github.com/nuxt/ui/commit/2e536c164974282658b5f78a983fc30a123bfa7c))
+
+
+
+
+
 # 0.1.0 (2022-04-19)
 
 
