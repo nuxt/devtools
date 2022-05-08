@@ -30,7 +30,7 @@ export default defineNuxtModule({
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
     }
 
-    nuxt.options.vueuse = Object.assign({ ssrHandlers: true }, nuxt.options.vueuse || {})
+    nuxt.options.vueuse = nuxt.options.vueuse || {}
     nuxt.options.colorMode = defu(nuxt.options.colorMode, { classSuffix: '' })
 
     await installModule(UnocssModule)

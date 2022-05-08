@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { defineNuxtConfig } from 'nuxt3'
+import { defineNuxtConfig } from 'nuxt'
 import '@unocss/nuxt'
 import NuxtUI from '../src/nuxt'
 

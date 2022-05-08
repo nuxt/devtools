@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "workspaces": [
-    "./packages/*"
+    "packages/*"
   ],
   "scripts": {
     "build": "FORCE_COLOR=1 lerna run prepack --stream --no-prefix",
@@ -12,11 +12,16 @@
     "release": "FORCE_COLOR=1 lerna publish -m \"chore: release\""
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^9.0.0",
-    "eslint": "^8.13.0",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
+    "eslint": "^8.15.0",
     "jiti": "^1.13.0",
     "lerna": "^4.0.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.4"
+  },
+  "resolutions": {
+    "@nuxt/kit": "3.0.0-rc.2",
+    "@nuxt/schema": "3.0.0-rc.2",
+    "@nuxt/kit-edge": "npm:@nuxt/kit@3.0.0-rc.2"
   },
   "packageManager": "yarn@3.2.0"
 }
