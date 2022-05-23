@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NIcon from './NIcon.vue'
-import NuxtIcon from './NuxtIcon.vue'
+import NuxtLogo from './NuxtLogo.vue'
+import NuxtContentLogo from './NuxtContentLogo.vue'
 
 interface Props {
   example?: string
@@ -8,6 +9,7 @@ interface Props {
   class?: string // eslint-disable-line vue/no-reserved-props
   openPath?: string,
   repo?: string
+  logo?: string
 }
 const props = withDefaults(defineProps<Props>(), {
   repo: 'nuxt/framework'
@@ -22,8 +24,9 @@ const openInEditor = () => {
   <div class="relative font-sans" n="green6">
     <div class="container max-w-200 mx-auto py-10 px-4">
       <div class="flex items-end gap-3 mb-4 relative">
-        <slot name="icon">
-          <NuxtIcon />
+        <slot name="logo">
+          <NuxtContentLogo v-if="logo === 'content'" class="h-10" />
+          <NuxtLogo v-else class="h-10" />
         </slot>
         <div class="text-xl flex">
           <div class="op-50">
