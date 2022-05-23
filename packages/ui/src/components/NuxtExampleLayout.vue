@@ -9,7 +9,6 @@ interface Props {
   class?: string // eslint-disable-line vue/no-reserved-props
   openPath?: string,
   repo?: string
-  logo?: string
 }
 const props = withDefaults(defineProps<Props>(), {
   repo: 'nuxt/framework'
@@ -25,7 +24,7 @@ const openInEditor = () => {
     <div class="container max-w-200 mx-auto py-10 px-4">
       <div class="flex items-end gap-3 mb-4 relative">
         <slot name="logo">
-          <NuxtContentLogo v-if="logo === 'content'" class="h-10" />
+          <NuxtContentLogo v-if="repo === 'nuxt/content'" class="h-10" />
           <NuxtLogo v-else class="h-10" />
         </slot>
         <div class="text-xl flex">
