@@ -8,6 +8,12 @@ import type { ViteDevServer } from 'vite'
 import type { IncomingMessage } from 'h3'
 import type { WebSocket } from 'ws'
 import sirv from 'sirv'
+import type { ChannelOptions } from 'birpc'
+import { createBirpcGroup } from 'birpc'
+import { parse, stringify } from 'flatted'
+import type { Component } from '@nuxt/schema'
+import type { Import } from 'unimport'
+import type { ServerFunctions } from './types'
 
 export interface ModuleOptions {
 
@@ -35,6 +41,30 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(join(runtimeDir, 'float.plugin'), {})
 
+    let components: Component[] = []
+    let imports: Import[] = []
+
+    nuxt.hook('components:extend', (c: Component[]) => {
+      components = c
+    })
+    nuxt.hook('autoImports:extend', (c) => {
+      imports = c
+    })
+
+    const serverFunctions: ServerFunctions = {
+      getConfig() {
+        return nuxt.options
+      },
+      getComponents() {
+        return components
+      },
+      getAutoImports() {
+        return imports
+      },
+    }
+
+    const birpc = createBirpcGroup(serverFunctions, [])
+
     // TODO: support webpack
     nuxt.hook('vite:serverCreated', async (server: ViteDevServer) => {
       server.middlewares.use(PATH_WS, tinyws())
@@ -48,7 +78,23 @@ export default defineNuxtModule<ModuleOptions>({
 
         const ws = await req.ws()
         clients.add(ws)
-        ws.send('Hello')
+        const channel: ChannelOptions = {
+          post: d => ws.send(d),
+          on: fn => ws.on('message', fn),
+          serialize: stringify,
+          deserialize: parse,
+        }
+        birpc.updateChannels((c) => {
+          c.push(channel)
+        })
+        ws.on('close', () => {
+          clients.delete(ws)
+          birpc.updateChannels((c) => {
+            const index = c.indexOf(channel)
+            if (index >= 0)
+              c.splice(index, 1)
+          })
+        })
       })
 
       if (existsSync(clientDir)) {
