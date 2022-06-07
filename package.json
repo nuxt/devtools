@@ -1,0 +1,75 @@
+{
+  "name": "nuxt-devtools",
+  "type": "module",
+  "version": "0.0.0-alpha.0",
+  "packageManager": "pnpm@7.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/antfu/nuxt-devtools#readme",
+  "bugs": {
+    "url": "https://github.com/antfu/nuxt-devtools/issues"
+  },
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antfu/nuxt-devtools.git"
+  },
+  "funding": "https://github.com/sponsors/antfu",
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs",
+      "types": "./dist/module.d.ts"
+    },
+    "./api": {
+      "import": "./dist/runtime/api.mjs",
+      "types": "./dist/runtime/api.d.ts"
+    },
+    "./client": {
+      "import": "./dist/runtime/client.mjs",
+      "types": "./dist/runtime/client.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "scripts": {
+    "prepublishOnly": "nr build",
+    "build": "nr build:module && nr build:client",
+    "build:module": "nuxt-module-build",
+    "build:client": "nuxi generate client",
+    "play": "nuxi dev client",
+    "dev": "nr play",
+    "lint": "eslint .",
+    "release": "bumpp --commit --push --tag && pnpm publish",
+    "prepare": "nuxi prepare client"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.0.0-rc.3",
+    "birpc": "^0.2.3",
+    "fast-glob": "^3.2.11",
+    "h3": "^0.7.8",
+    "ohash": "^0.1.0",
+    "ohmyfetch": "^0.4.18",
+    "sirv": "^2.0.2",
+    "tinyws": "^0.1.0",
+    "ufo": "^0.8.4",
+    "vite": "^2.9.10"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.25.1",
+    "@antfu/ni": "^0.16.2",
+    "@iconify-json/carbon": "^1.1.5",
+    "@nuxt/module-builder": "^0.1.7",
+    "@types/node": "^17.0.41",
+    "@types/ws": "^8.5.3",
+    "bumpp": "^7.1.1",
+    "eslint": "^8.17.0",
+    "nuxt": "^3.0.0-rc.3",
+    "nuxt-devtools": "workspace:*",
+    "typescript": "^4.7.3",
+    "ws": "^8.7.0"
+  }
+}
