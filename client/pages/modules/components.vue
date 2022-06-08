@@ -7,7 +7,8 @@ definePageMeta({
   display: 'Components',
 })
 
-const components = await rpc.getComponents()
+const components = (await rpc.getComponents())
+  .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
 const fuse = new Fuse(components, {
   keys: [
     'pascalName',
@@ -26,10 +27,9 @@ const filtered = $computed(() => {
   const result = search ? fuse.search(search).map(i => i.item) : components
 
   result
-    .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
     .forEach((component) => {
-      if (component.filePath.match(/[/\\]node_modules[/\\]/)) {
-        const name = getModuleName(component.filePath)
+      if (isNodeModulePath(component.filePath)) {
+        const name = getModuleNameFromPath(component.filePath)
         if (name === 'nuxt') {
           builtin.push(component)
         }
@@ -50,13 +50,6 @@ const filtered = $computed(() => {
     lib,
   }
 })
-
-function getModuleName(path: string) {
-  const match = path.replace(/\\/g, '/').match(/.*\/node_modules\/(.*)$/)[1] || ''
-  if (match.startsWith('@'))
-    return match.split('/').slice(0, 2).join('/')
-  return match.split('/')[0]
-}
 </script>
 
 <template>

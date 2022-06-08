@@ -13,6 +13,7 @@ import { createBirpcGroup } from 'birpc'
 import { parse, stringify } from 'flatted'
 import type { Component } from '@nuxt/schema'
 import type { Import } from 'unimport'
+import { resolvePreset } from 'unimport'
 import type { ServerFunctions } from './types'
 
 export interface ModuleOptions {
@@ -43,12 +44,16 @@ export default defineNuxtModule<ModuleOptions>({
 
     let components: Component[] = []
     let imports: Import[] = []
+    let importPresets: Import[] = []
 
     nuxt.hook('components:extend', (c: Component[]) => {
       components = c
     })
     nuxt.hook('autoImports:extend', (c) => {
       imports = c
+    })
+    nuxt.hook('autoImports:sources', (c) => {
+      importPresets = c.flatMap(i => resolvePreset(i))
     })
 
     const serverFunctions: ServerFunctions = {
@@ -59,7 +64,10 @@ export default defineNuxtModule<ModuleOptions>({
         return components
       },
       getAutoImports() {
-        return imports
+        return [
+          ...imports,
+          ...importPresets,
+        ]
       },
       async openInEditor(filepath: string) {
         const file = [
