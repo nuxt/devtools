@@ -1,3 +1,4 @@
+import { stringify } from 'flatted'
 import { defineNuxtPlugin } from '#app'
 
 function h<K extends keyof HTMLElementTagNameMap>(
@@ -20,10 +21,30 @@ function h<K extends keyof HTMLElementTagNameMap>(
   return el
 }
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxt) => {
   if (typeof document === 'undefined')
     return
+
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
+  const ENTRY_PATH = '/__nuxt_devtools__/entry/'
+
+  nuxt.hook('page:finish', sendPayload)
+  nuxt.hook('app:mounted', sendPayload)
+  nuxt.hook('app:suspense:resolve', sendPayload)
+
+  function sendPayload() {
+    fetch(ENTRY_PATH, {
+      method: 'POST',
+      body: JSON.stringify({
+        method: 'setPayload',
+        data: stringify({
+          url: location.pathname,
+          time: Date.now(),
+          ...nuxt.payload,
+        }),
+      }),
+    })
+  }
 
   const iframe = h('iframe', {
     src: CLIENT_PATH,

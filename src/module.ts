@@ -12,7 +12,7 @@ export interface ModuleOptions {
 }
 
 const PATH = '/__nuxt_devtools__'
-const PATH_WS = `${PATH}/ws`
+const PATH_ENTRY = `${PATH}/entry`
 const PATH_CLIENT = `${PATH}/client`
 
 const runtimeDir = resolve(fileURLToPath(import.meta.url), '../runtime')
@@ -35,8 +35,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     // TODO: support webpack
     nuxt.hook('vite:serverCreated', async (server: ViteDevServer) => {
-      server.middlewares.use(PATH_WS, tinyws())
-      server.middlewares.use(PATH_WS, middleware)
+      server.middlewares.use(PATH_ENTRY, tinyws())
+      server.middlewares.use(PATH_ENTRY, middleware)
       if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
