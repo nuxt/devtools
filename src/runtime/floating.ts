@@ -30,7 +30,6 @@ export default defineNuxtPlugin((nuxt) => {
 
   nuxt.hook('page:finish', sendPayload)
   nuxt.hook('app:mounted', sendPayload)
-  nuxt.hook('app:suspense:resolve', sendPayload)
 
   function sendPayload() {
     fetch(ENTRY_PATH, {

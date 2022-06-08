@@ -11,7 +11,7 @@ defineProps<{
         <summary cursor-pointer select-none>
           <code font-mono px2>{{ key }}</code>
         </summary>
-        <div py2 pl4>
+        <div py2 pl4 text-sm>
           <pre bg-gray:10 p2 rounded of-auto>{{ value === undefined ? 'undefined' : value === null ? 'null' : value }}</pre>
         </div>
       </details>
