@@ -7,6 +7,6 @@ definePageMeta({
 
 <template>
   <div>
-    Plugins
+    WIP
   </div>
 </template>

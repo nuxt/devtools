@@ -20,7 +20,7 @@ const clientDir = resolve(fileURLToPath(import.meta.url), '../client')
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-devtools',
+    name: '@nuxt/devtools',
     configKey: 'devTools',
   },
   defaults: {

@@ -7,6 +7,6 @@ definePageMeta({
 
 <template>
   <div>
-    Middleware
+    WIP
   </div>
 </template>

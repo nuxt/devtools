@@ -7,6 +7,6 @@ definePageMeta({
 
 <template>
   <div>
-    Server Routes
+    WIP
   </div>
 </template>

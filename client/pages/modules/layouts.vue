@@ -7,6 +7,6 @@ definePageMeta({
 
 <template>
   <div>
-    Layouts
+    WIP
   </div>
 </template>

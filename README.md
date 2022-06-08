@@ -1,14 +1,13 @@
-# nuxt-devtools
+# @nuxt/devtools
 
-[![NPM version](https://img.shields.io/npm/v/nuxt-devtools?color=a1b858&label=)](https://www.npmjs.com/package/nuxt-devtools)
+[![NPM version](https://img.shields.io/npm/v/@nuxt/devtools?color=a1b858&label=)](https://www.npmjs.com/package/@nuxt/devtools)
 
 **Working in progress**
 
-<!-- 
 ## Install
 
 ```bash
-npm i -D nuxt-devtools
+npm i -D @nuxt/devtools
 ```
 
 ```ts
@@ -17,10 +16,10 @@ import { defineNuxtConfig } from 'nuxt'
 
 export default defineNuxtConfig({
   modules: [
-    'nuxt-devtools',
+    '@nuxt/devtools',
   ],
 })
-``` -->
+```
 
 ## License
 
