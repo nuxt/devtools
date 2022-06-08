@@ -61,6 +61,9 @@ export default defineNuxtModule<ModuleOptions>({
       getAutoImports() {
         return imports
       },
+      openInEditor(filepath: string) {
+        import('launch-editor').then(r => r(filepath))
+      },
     }
 
     const birpc = createBirpcGroup(serverFunctions, [])

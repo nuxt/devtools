@@ -5,4 +5,5 @@ export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
   getAutoImports(): Import[]
+  openInEditor(filepath: string): void
 }

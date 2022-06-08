@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   unocss: {
     shortcuts: {
       'border-base': 'border-gray/10',
+      'bg-base': 'bg-white dark:bg-[#222]',
     },
     theme: {
       colors: {
