@@ -61,8 +61,15 @@ export default defineNuxtModule<ModuleOptions>({
       getAutoImports() {
         return imports
       },
-      openInEditor(filepath: string) {
-        import('launch-editor').then(r => r(filepath))
+      async openInEditor(filepath: string) {
+        const file = [
+          filepath,
+          `${filepath}.js`,
+          `${filepath}.mjs`,
+          `${filepath}.ts`,
+        ].find(i => existsSync(i))
+        if (file)
+          import('launch-editor').then(r => r(file))
       },
     }
 

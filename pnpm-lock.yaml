@@ -17,6 +17,7 @@ importers:
       eslint: ^8.17.0
       fast-glob: ^3.2.11
       flatted: ^3.2.5
+      fuse.js: ^6.6.2
       h3: ^0.7.8
       launch-editor: ^2.4.0
       nuxt: ^3.0.0-rc.3
@@ -54,6 +55,7 @@ importers:
       '@types/ws': 8.5.3
       bumpp: 7.1.1
       eslint: 8.17.0
+      fuse.js: 6.6.2
       nuxt: 3.0.0-rc.3_vite@2.9.10
       nuxt-devtools: 'link:'
       typescript: 4.7.3
@@ -4242,6 +4244,11 @@ packages:
 
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
+    dev: true
+
+  /fuse.js/6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
     dev: true
 
   /gauge/2.7.4:

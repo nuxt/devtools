@@ -21,7 +21,7 @@ provideNotification((_text, _icon, duration = 1500) => {
     <div
       px-4 py-1 rounded bg-base inline-block m-3 transition-all duration-300 text-primary
       border="~ base" flex="~ inline gap2" items-center
-      :style="show ? {} : { transform: 'translateY(-150%)' }"
+      :style="show ? {} : { transform: 'translateY(-300%)' }"
       :class="show ? 'shadow' : 'shadow-none'"
     >
       <div v-if="icon" :class="icon" />

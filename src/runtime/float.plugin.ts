@@ -5,19 +5,14 @@ export default defineNuxtPlugin(() => {
     return
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
 
-  const container = document.createElement('div')
-  Object.assign(container.style, {
+  const iframe = document.createElement('iframe')
+  iframe.src = CLIENT_PATH
+  iframe.className = 'nuxt-devtools-iframe'
+  Object.assign(iframe.style, {
     position: 'fixed',
     bottom: '10px',
     right: '10px',
-  })
-
-  const iframe = document.createElement('iframe')
-  iframe.src = CLIENT_PATH
-  Object.assign(iframe.style, {
-    position: 'absolute',
-    bottom: '60px',
-    right: '0',
+    left: '10px',
     height: '400px',
     width: 'calc(100vw - 20px)',
     borderRadius: '10px',
@@ -29,37 +24,52 @@ export default defineNuxtPlugin(() => {
   })
 
   const button = document.createElement('button')
-  Object.assign(button.style, {
-    background: '#fff',
-    borderRadius: '50%',
-    border: '1px solid rgba(125,125,125,0.2)',
-    boxShadow: '3px 5px 10px rgba(0,0,0,0.1)',
-    zIndex: '9999',
-    height: '50px',
-    width: '50px',
-    cursor: 'pointer',
-    display: 'flex',
-    padding: '0',
-  })
+  button.title = 'Open Nuxt DevTools'
+  button.className = 'nuxt-devtools-button'
+
+  const style = document.createElement('style')
+  style.innerHTML = `
+.nuxt-devtools-button {
+  position: fixed;
+  bottom: -5px;
+  left: calc(50% - 25px);
+  background: #1DCC84;
+  border-radius: 100px 100px 0 0;
+  border: 1px solid rgba(125,125,125,0.2);
+  box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
+  z-index: 999999;
+  height: 30px;
+  width: 40px;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+.nuxt-devtools-button:hover {
+  background: #19af72;
+  bottom: 0;
+}
+`
 
   const logo = document.createElement('img')
-  logo.src = `${CLIENT_PATH}nuxt.png`
+  logo.src = `${CLIENT_PATH}nuxt-invert.svg`
   Object.assign(logo.style, {
-    height: '30px',
-    width: '30px',
+    height: '20px',
+    width: '20px',
     margin: 'auto',
   })
 
   button.addEventListener('click', () => {
-    if (Array.from(container.children).includes(iframe)) {
-      container.removeChild(iframe)
+    if (Array.from(document.body.children).includes(iframe)) {
+      iframe.style.display = iframe.style.display === 'none' ? 'block' : 'none'
     }
     else {
-      container.appendChild(iframe)
+      document.body.appendChild(iframe)
       iframe.contentDocument.body.parentElement.className = document.body.parentElement.className
     }
   })
   button.appendChild(logo)
-  container.appendChild(button)
-  document.body.appendChild(container)
+  document.body.appendChild(button)
+  document.head.appendChild(style)
 })

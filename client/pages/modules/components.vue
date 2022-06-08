@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Component } from '@nuxt/schema'
+import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-nominal',
@@ -7,6 +8,13 @@ definePageMeta({
 })
 
 const components = await rpc.getComponents()
+const fuse = new Fuse(components, {
+  keys: [
+    'pascalName',
+    'filePath',
+    'kebabName',
+  ],
+})
 
 const search = $ref('')
 
@@ -15,7 +23,9 @@ const filtered = $computed(() => {
   const lib = new Map<string, Component[]>()
   const builtin: Component[] = []
 
-  components
+  const result = search ? fuse.search(search).map(i => i.item) : components
+
+  result
     .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
     .forEach((component) => {
       if (component.filePath.match(/[/\\]node_modules[/\\]/)) {
@@ -50,21 +60,48 @@ function getModuleName(path: string) {
 </script>
 
 <template>
-  <div p4 flex="~ col gap1">
-    <IconTitle icon="carbon-nominal" :text="`User components (${filtered.user.length})`" text-lg op50 />
-    <div pl4>
-      <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+  <div>
+    <div p4 flex="~ col gap2">
+      <input
+        v-model="search"
+        placeholder="Search..."
+        type="text"
+        p="x4 y2"
+        w="full"
+        bg="transparent"
+        border="~ rounded base"
+        outline="none active:none"
+      >
     </div>
-    <IconTitle icon="tabler-brand-nuxt" :text="`Built-in components (${filtered.builtin.length})`" text-lg op50 mt5 />
-    <div pl4>
-      <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
-    </div>
-    <IconTitle icon="carbon-3d-mpr-toggle" text="Components from libraries" text-lg op50 mt5 />
-    <div v-for="[key, value] of filtered.lib.entries()" :key="key">
-      <IconTitle pl4 :text="`${key} (${value.length})`" op50 py1 />
-      <div pl8>
-        <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
+    <template v-if="filtered.user.length">
+      <div x-divider />
+      <div px4 py2 flex="~ col gap2">
+        <IconTitle icon="carbon-nominal" :text="`User components (${filtered.user.length})`" text-lg op50 />
+        <div pl4>
+          <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+        </div>
       </div>
-    </div>
+    </template>
+    <template v-if="filtered.builtin.length">
+      <div x-divider />
+      <div p4 flex="~ col gap2">
+        <IconTitle icon="tabler-brand-nuxt" :text="`Built-in components (${filtered.builtin.length})`" text-lg op50 />
+        <div pl4>
+          <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
+        </div>
+      </div>
+    </template>
+    <template v-if="filtered.lib.size">
+      <div x-divider />
+      <div p4 flex="~ col gap2">
+        <IconTitle icon="carbon-3d-mpr-toggle" text="Components from libraries" text-lg op50 />
+        <div v-for="[key, value] of filtered.lib.entries()" :key="key">
+          <IconTitle pl4 :text="`${key} (${value.length})`" op50 py1 />
+          <div pl8>
+            <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
