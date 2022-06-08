@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue?: boolean
-}>()
-
 definePageMeta({
   icon: 'carbon-data-set',
   display: 'Payload',

@@ -9,12 +9,14 @@ import { useBody } from 'h3'
 import type { Component, Nuxt } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
+import type { RouteRecordNormalized } from 'vue-router'
 import type { ClientFunctions, Payload, ServerFunctions } from './types'
 
 export function rpcMiddleware(nuxt: Nuxt) {
   let components: Component[] = []
   let imports: Import[] = []
   let importPresets: Import[] = []
+  let pages: RouteRecordNormalized[] = []
   let payload: Payload = {
     url: '',
     time: Date.now(),
@@ -26,6 +28,9 @@ export function rpcMiddleware(nuxt: Nuxt) {
     },
     getComponents() {
       return components
+    },
+    getPages() {
+      return pages
     },
     getAutoImports() {
       return [
@@ -51,16 +56,16 @@ export function rpcMiddleware(nuxt: Nuxt) {
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
 
-  nuxt.hook('components:extend', (c) => {
-    components = c as Component[]
+  nuxt.hook('components:extend', (v) => {
+    components = v as Component[]
     birpc.boardcast.refresh.asEvent('components')
   })
-  nuxt.hook('autoImports:extend', (c) => {
-    imports = c
+  nuxt.hook('autoImports:extend', (v) => {
+    imports = v
     birpc.boardcast.refresh.asEvent('composables')
   })
-  nuxt.hook('autoImports:sources', (c) => {
-    importPresets = c.flatMap(i => resolvePreset(i))
+  nuxt.hook('autoImports:sources', (v) => {
+    importPresets = v.flatMap(i => resolvePreset(i))
   })
 
   return async (req: IncomingMessage & TinyWSRequest, res: ServerResponse) => {
@@ -93,6 +98,11 @@ export function rpcMiddleware(nuxt: Nuxt) {
           payload = parse(body.data)
           if (prevUrl !== payload.url)
             birpc.boardcast.refresh.asEvent('payload')
+          res.end()
+        }
+        else if (body.method === 'setPages') {
+          pages = parse(body.data)
+          birpc.boardcast.refresh.asEvent('pages')
           res.end()
         }
         else {

@@ -57,32 +57,25 @@ const filtered = $computed(() => {
         n="primary"
       />
     </div>
-    <template v-if="filtered.user.size">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="carbon-function" text="User composables" text-lg op50 />
-        <div pl4>
-          <ComposableTree :map="filtered.user" :root="config.rootDir" />
-        </div>
-      </div>
-    </template>
-    <template v-if="filtered.builtin.size">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="tabler-brand-nuxt" text="Built-in composables" text-lg op50 />
-        <div pl4>
-          <ComposableTree :map="filtered.builtin" :root="config.rootDir" />
-        </div>
-      </div>
-    </template>
-    <template v-if="filtered.lib.size">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="carbon-3d-mpr-toggle" text="Composables from libraries" text-lg op50 />
-        <div pl4>
-          <ComposableTree :map="filtered.lib" :root="config.rootDir" />
-        </div>
-      </div>
-    </template>
+    <SectionBlock
+      v-if="filtered.user.size"
+      icon="carbon-function"
+      text="User composables"
+    >
+      <ComposableTree :map="filtered.user" :root="config.rootDir" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.builtin.size"
+      icon="tabler-brand-nuxt" text="Built-in composables"
+    >
+      <ComposableTree :map="filtered.builtin" :root="config.rootDir" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.lib.size"
+      icon="carbon-3d-mpr-toggle"
+      text="Composables from libraries"
+    >
+      <ComposableTree :map="filtered.lib" :root="config.rootDir" />
+    </SectionBlock>
   </div>
 </template>

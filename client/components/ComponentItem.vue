@@ -15,7 +15,10 @@ const copy = useCopy()
     <button hover:text-primary @click="copy(`<${component.pascalName}></${component.pascalName}>`)">
       <code font-mono text-sm><span op20 mr1>&lt;</span>{{ component.pascalName }}<span op20 ml1>/&gt;</span></code>
     </button>
-    <button text-sm op0 group-hover:op50 hover:underline @click="openInEditor(component.filePath)">
+    <button
+      text-sm op0 group-hover:op50 hover:underline ws-nowrap of-hidden
+      @click="openInEditor(component.filePath)"
+    >
       {{ path }}
     </button>
   </div>

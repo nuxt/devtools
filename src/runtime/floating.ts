@@ -1,4 +1,5 @@
 import { stringify } from 'flatted'
+import { objectPick } from '@antfu/utils'
 import { defineNuxtPlugin } from '#app'
 
 function h<K extends keyof HTMLElementTagNameMap>(
@@ -29,20 +30,34 @@ export default defineNuxtPlugin((nuxt) => {
   const ENTRY_PATH = '/__nuxt_devtools__/entry/'
 
   nuxt.hook('page:finish', sendPayload)
-  nuxt.hook('app:mounted', sendPayload)
+  nuxt.hook('app:mounted', () => {
+    sendPayload()
+    sendPages()
+  })
 
   function sendPayload() {
-    fetch(ENTRY_PATH, {
+    post('setPayload', {
+      url: location.pathname,
+      time: Date.now(),
+      ...nuxt.payload,
+    })
+  }
+  function sendPages() {
+    post('setPages',
+      (nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
+        .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children'])),
+    )
+  }
+
+  function post(method: string, data: any) {
+    return fetch(ENTRY_PATH, {
       method: 'POST',
       body: JSON.stringify({
-        method: 'setPayload',
-        data: stringify({
-          url: location.pathname,
-          time: Date.now(),
-          ...nuxt.payload,
-        }),
+        method,
+        data: stringify(data),
       }),
     })
+      .catch()
   }
 
   const iframe = h('iframe', {

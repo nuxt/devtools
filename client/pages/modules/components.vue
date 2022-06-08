@@ -62,35 +62,31 @@ const filtered = $computed(() => {
         n="primary"
       />
     </div>
-    <template v-if="filtered.user.length">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="carbon-nominal" :text="`User components (${filtered.user.length})`" text-lg op50 />
+    <SectionBlock
+      v-if="filtered.user.length"
+      icon="carbon-nominal"
+      :text="`User components (${filtered.user.length})`"
+    >
+      <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.builtin.length"
+      icon="tabler-brand-nuxt"
+      :text="`Built-in components (${filtered.builtin.length})`"
+    >
+      <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.lib.size"
+      icon="carbon-3d-mpr-toggle"
+      text="Components from libraries"
+    >
+      <div v-for="[key, value] of filtered.lib.entries()" :key="key">
+        <IconTitle :text="`${key} (${value.length})`" op50 py1 />
         <div pl4>
-          <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+          <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
         </div>
       </div>
-    </template>
-    <template v-if="filtered.builtin.length">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="tabler-brand-nuxt" :text="`Built-in components (${filtered.builtin.length})`" text-lg op50 />
-        <div pl4>
-          <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
-        </div>
-      </div>
-    </template>
-    <template v-if="filtered.lib.size">
-      <div x-divider />
-      <div p4 flex="~ col gap2">
-        <IconTitle icon="carbon-3d-mpr-toggle" text="Components from libraries" text-lg op50 />
-        <div v-for="[key, value] of filtered.lib.entries()" :key="key">
-          <IconTitle pl4 :text="`${key} (${value.length})`" op50 py1 />
-          <div pl8>
-            <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
-          </div>
-        </div>
-      </div>
-    </template>
+    </SectionBlock>
   </div>
 </template>

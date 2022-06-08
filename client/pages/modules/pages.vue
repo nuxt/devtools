@@ -1,16 +1,19 @@
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue?: boolean
-}>()
-
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   display: 'Pages',
 })
+
+const pages = await rpc.getPages()
 </script>
 
 <template>
   <div>
-    Pages
+    <SectionBlock
+      icon="carbon-tree-view-alt"
+      text="Pages"
+    >
+      <pre>{{ pages }}</pre>
+    </SectionBlock>
   </div>
 </template>

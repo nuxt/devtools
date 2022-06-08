@@ -1,10 +1,12 @@
 import type { Component, NuxtOptions } from '@nuxt/schema'
 import type { Import } from 'unimport'
+import type { RouteRecordNormalized } from 'vue-router'
 
 export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
   getAutoImports(): Import[]
+  getPages(): RouteRecordNormalized[]
   getPayload(): Payload
   openInEditor(filepath: string): void
 }
