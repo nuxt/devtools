@@ -14,4 +14,5 @@ export interface Payload {
   time: number
   data?: Record<string, any>
   state?: Record<string, any>
+  functions?: Record<string, any>
 }
