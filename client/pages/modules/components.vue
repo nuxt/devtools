@@ -62,20 +62,16 @@ function getModuleName(path: string) {
 <template>
   <div>
     <div p4 flex="~ col gap2">
-      <input
+      <NTextInput
         v-model="search"
         placeholder="Search..."
-        type="text"
         p="x4 y2"
-        w="full"
-        bg="transparent"
-        border="~ rounded base"
-        outline="none active:none"
-      >
+        n="primary"
+      />
     </div>
     <template v-if="filtered.user.length">
       <div x-divider />
-      <div px4 py2 flex="~ col gap2">
+      <div p4 flex="~ col gap2">
         <IconTitle icon="carbon-nominal" :text="`User components (${filtered.user.length})`" text-lg op50 />
         <div pl4>
           <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />

@@ -7,7 +7,7 @@ const modules = routes
 </script>
 
 <template>
-  <div border="r base">
+  <div border="r base" flex="~ col" h-full>
     <NuxtLink
       v-for="m of modules" :key="m.name" :to="m.path"
       flex items-center gap2 px3 py2 text-true-gray
@@ -18,5 +18,16 @@ const modules = routes
       <div :class="m.meta.icon" />
       <div>{{ m.meta.display }}</div>
     </NuxtLink>
+    <div flex-auto />
+    <div px3 py2 flex="~ gap1" items-center>
+      <img src="/nuxt.png" alt="Nuxt" w-8 h-8>
+      <div text-lg font-bold>
+        DevTools
+      </div>
+      <div flex-auto />
+      <NDarkToggle v-slot="{ toggle }" mx2>
+        <button carbon-sun dark:carbon-moon @click="toggle()" />
+      </NDarkToggle>
+    </div>
   </div>
 </template>

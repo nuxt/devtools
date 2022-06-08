@@ -3,27 +3,27 @@
   "type": "module",
   "version": "0.0.0-alpha.0",
   "packageManager": "pnpm@7.1.0",
-  "license": "MIT",
-  "homepage": "https://github.com/antfu/nuxt-devtools#readme",
-  "bugs": {
-    "url": "https://github.com/antfu/nuxt-devtools/issues"
-  },
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antfu",
+  "homepage": "https://github.com/antfu/nuxt-devtools#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/antfu/nuxt-devtools.git"
   },
-  "funding": "https://github.com/sponsors/antfu",
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "bugs": {
+    "url": "https://github.com/antfu/nuxt-devtools/issues"
+  },
   "exports": {
     ".": {
-      "import": "./dist/module.mjs",
+      "types": "./dist/module.d.ts",
       "require": "./dist/module.cjs",
-      "types": "./dist/module.d.ts"
+      "import": "./dist/module.mjs"
     },
     "./*": "./*"
   },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
   "files": [
     "dist",
     "*.d.ts"
@@ -42,29 +42,19 @@
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.3",
     "birpc": "^0.2.3",
-    "fast-glob": "^3.2.11",
     "flatted": "^3.2.5",
-    "h3": "^0.7.8",
     "launch-editor": "^2.4.0",
-    "ohash": "^0.1.0",
-    "ohmyfetch": "^0.4.18",
     "pathe": "^0.3.0",
     "sirv": "^2.0.2",
-    "tinyws": "^0.1.0",
-    "ufo": "^0.8.4",
-    "vite": "^2.9.10"
+    "tinyws": "^0.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
     "@antfu/ni": "^0.16.2",
-    "@iconify-json/carbon": "^1.1.5",
-    "@iconify-json/tabler": "^1.1.13",
-    "@nuxt/module-builder": "^0.1.7",
     "@types/node": "^17.0.41",
     "@types/ws": "^8.5.3",
     "bumpp": "^7.1.1",
     "eslint": "^8.17.0",
-    "fuse.js": "^6.6.2",
     "nuxt": "^3.0.0-rc.3",
     "nuxt-devtools": "workspace:*",
     "typescript": "^4.7.3",
