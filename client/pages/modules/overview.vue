@@ -13,7 +13,7 @@ const autoImports = await rpc.getAutoImports()
 
 <template>
   <div p4 flex h-full>
-    <div grid="~ cols-[max-content_1fr] gap-x-2" ma>
+    <div grid="~ cols-[max-content_1fr] gap-x-2 gap-y-1" ma>
       <div text-right op50>
         Workspace
       </div>
