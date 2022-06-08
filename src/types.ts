@@ -9,6 +9,10 @@ export interface ServerFunctions {
   openInEditor(filepath: string): void
 }
 
+export interface ClientFunctions {
+  refresh(type: string): void
+}
+
 export interface Payload {
   url: string
   time: number

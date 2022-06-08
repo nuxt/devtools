@@ -9,26 +9,16 @@ import { useBody } from 'h3'
 import type { Component, Nuxt } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
-import type { Payload, ServerFunctions } from './types'
+import type { ClientFunctions, Payload, ServerFunctions } from './types'
 
 export function rpcMiddleware(nuxt: Nuxt) {
   let components: Component[] = []
   let imports: Import[] = []
   let importPresets: Import[] = []
   let payload: Payload = {
-    url: '/',
+    url: '',
     time: Date.now(),
   }
-
-  nuxt.hook('components:extend', (c) => {
-    components = c as Component[]
-  })
-  nuxt.hook('autoImports:extend', (c) => {
-    imports = c
-  })
-  nuxt.hook('autoImports:sources', (c) => {
-    importPresets = c.flatMap(i => resolvePreset(i))
-  })
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -49,9 +39,9 @@ export function rpcMiddleware(nuxt: Nuxt) {
     async openInEditor(filepath: string) {
       const file = [
         filepath,
-`${filepath}.js`,
-`${filepath}.mjs`,
-`${filepath}.ts`,
+        `${filepath}.js`,
+        `${filepath}.mjs`,
+        `${filepath}.ts`,
       ].find(i => existsSync(i))
       if (file)
         import('launch-editor').then(r => r(file))
@@ -59,7 +49,19 @@ export function rpcMiddleware(nuxt: Nuxt) {
   }
 
   const clients = new Set<WebSocket>()
-  const birpc = createBirpcGroup(serverFunctions, [])
+  const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
+
+  nuxt.hook('components:extend', (c) => {
+    components = c as Component[]
+    birpc.boardcast.refresh.asEvent('components')
+  })
+  nuxt.hook('autoImports:extend', (c) => {
+    imports = c
+    birpc.boardcast.refresh.asEvent('composables')
+  })
+  nuxt.hook('autoImports:sources', (c) => {
+    importPresets = c.flatMap(i => resolvePreset(i))
+  })
 
   return async (req: IncomingMessage & TinyWSRequest, res: ServerResponse) => {
     if (req.ws) {
@@ -87,7 +89,10 @@ export function rpcMiddleware(nuxt: Nuxt) {
       if (req.method === 'POST') {
         const body = await useBody(req)
         if (body.method === 'setPayload') {
+          const prevUrl = payload.url
           payload = parse(body.data)
+          if (prevUrl !== payload.url)
+            birpc.boardcast.refresh.asEvent('payload')
           res.end()
         }
         else {
