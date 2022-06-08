@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { config } from '#imports'
+
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
   display: 'Modules',
@@ -7,6 +9,16 @@ definePageMeta({
 
 <template>
   <div>
-    Modules
+    <SectionBlock
+      icon="carbon-3d-mpr-toggle"
+      text="Modules"
+      padding="grid grid-cols-minmax-400px gap2"
+    >
+      <NuxtModule
+        v-for="m of config._installedModules"
+        :key="m.meta?.name || m.entryPath"
+        :mod="m"
+      />
+    </SectionBlock>
   </div>
 </template>

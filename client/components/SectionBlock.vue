@@ -1,8 +1,12 @@
 <script setup lang="ts">
-const { divider = true } = defineProps<{
+const {
+  divider = true,
+  padding = 'pl4',
+} = defineProps<{
   icon?: string
   text: string
   divider?: boolean
+  padding?: string
 }>()
 </script>
 
@@ -10,7 +14,7 @@ const { divider = true } = defineProps<{
   <div v-if="divider" x-divider />
   <div p4 flex="~ col gap2">
     <IconTitle :icon="icon" :text="text" text-lg op50 />
-    <div pl4>
+    <div :class="padding">
       <slot />
     </div>
   </div>

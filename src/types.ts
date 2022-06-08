@@ -22,3 +22,46 @@ export interface Payload {
   state?: Record<string, any>
   functions?: Record<string, any>
 }
+
+export interface BasicModuleInfo {
+  entryPath?: string
+  meta?: {
+    name?: string
+  }
+}
+
+export interface ModuleInfo {
+  name: string
+  description: string
+  repo: string
+  npm: string
+  icon?: string
+  github: string
+  website: string
+  learn_more: string
+  category: string
+  type: ModuleType
+  maintainers: MaintainerInfo[]
+  contributors: GithubContributor[]
+  compatibility: ModuleCompatibility
+}
+
+export interface ModuleCompatibility {
+  nuxt: string
+  requires: { bridge?: boolean | 'optional' }
+}
+
+export type CompatibilityStatus = 'working' | 'wip' | 'unknown' | 'not-working'
+export type ModuleType = 'community' | 'official' | '3rd-party'
+
+export interface MaintainerInfo {
+  name: string
+  github: string
+  twitter?: string
+}
+
+export interface GithubContributor {
+  login: string
+  name?: string
+  avatar_url?: string
+}

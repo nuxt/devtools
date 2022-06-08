@@ -25,7 +25,7 @@ const modules = routes
         DevTools
       </div>
       <div flex-auto />
-      <NDarkToggle v-slot="{ toggle }" mx2>
+      <NDarkToggle v-slot="{ toggle }">
         <button carbon-sun dark:carbon-moon @click="toggle()" />
       </NDarkToggle>
     </div>
