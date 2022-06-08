@@ -44,7 +44,7 @@ export function rpcMiddleware(nuxt: Nuxt) {
         `${filepath}.ts`,
       ].find(i => existsSync(i))
       if (file)
-        import('launch-editor').then(r => r(file))
+        import('launch-editor').then(r => (r.default || r)(file))
     },
   }
 
