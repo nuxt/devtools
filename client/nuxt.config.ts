@@ -41,4 +41,9 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/__nuxt_devtools__/client',
   },
+  vite: {
+    build: {
+      target: 'esnext',
+    },
+  },
 })

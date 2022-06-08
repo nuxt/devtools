@@ -22,14 +22,7 @@
       "require": "./dist/module.cjs",
       "types": "./dist/module.d.ts"
     },
-    "./api": {
-      "import": "./dist/runtime/api.mjs",
-      "types": "./dist/runtime/api.d.ts"
-    },
-    "./client": {
-      "import": "./dist/runtime/client.mjs",
-      "types": "./dist/runtime/client.d.ts"
-    }
+    "./*": "./*"
   },
   "files": [
     "dist",
