@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { highlight } from '#imports'
+
 defineProps<{
   state: Record<string, any>
 }>()
@@ -11,10 +13,22 @@ defineProps<{
         <summary cursor-pointer select-none>
           <code font-mono px2>{{ key }}</code>
         </summary>
-        <div py2 pl4 text-sm>
-          <pre bg-gray:10 p2 rounded of-auto>{{ value === undefined ? 'undefined' : value === null ? 'null' : value }}</pre>
-        </div>
+        <div
+          text-sm ml4 my2
+          border="~ base rounded"
+          of-auto font-mono
+          v-html="highlight(value === undefined ? 'undefined' : value === null ? 'null' : JSON.stringify(value, null, 2), 'javascript')"
+        />
       </details>
     </div>
   </div>
 </template>
+
+<style>
+.shiki {
+  padding: 0.5rem;
+}
+pre, code {
+  @apply !font-mono;
+}
+</style>

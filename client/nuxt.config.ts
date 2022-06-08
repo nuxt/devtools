@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineNuxtConfig } from 'nuxt'
-import { presetWebFonts } from 'unocss'
+import { presetWebFonts, transformerDirectives } from 'unocss'
 import DevTools from '../src/module'
 
 export default defineNuxtConfig({
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   unocss: {
     shortcuts: {
       'border-base': 'border-gray/15',
-      'bg-base': 'bg-white dark:bg-[#222]',
+      'bg-base': 'bg-white dark:bg-[#151515]',
       'x-divider': 'h-1px w-full bg-gray/15',
     },
     theme: {
@@ -32,7 +32,6 @@ export default defineNuxtConfig({
         },
       }),
     ],
-    icons: true,
     safelist: [
       'carbon-nominal',
       'carbon-function',
@@ -44,6 +43,9 @@ export default defineNuxtConfig({
       'carbon-layers',
       'carbon-cloud',
       'carbon-plug',
+    ],
+    transformers: [
+      transformerDirectives(),
     ],
   },
   nitro: {

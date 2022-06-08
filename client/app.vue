@@ -1,5 +1,5 @@
 <template>
-  <div h-screen font-sans of-hidden>
+  <div h-screen font-sans of-hidden bg-base>
     <Notification />
     <div grid="~ cols-[200px_1fr]" h-full of-hidden>
       <Drawer of-auto />
