@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { config } from '#imports'
+
 definePageMeta({
   icon: 'carbon-information',
   display: 'Overview',
   order: -1,
 })
 
-const data = await rpc.getConfig()
 const components = await rpc.getComponents()
 const autoImports = await rpc.getAutoImports()
 </script>
@@ -16,15 +17,15 @@ const autoImports = await rpc.getAutoImports()
       <div text-right op50>
         Workspace
       </div>
-      <div>{{ data.rootDir }}</div>
+      <div>{{ config.rootDir }}</div>
       <div text-right op50>
         Modules
       </div>
-      <div>{{ data._installedModules.length }}</div>
+      <div>{{ config._installedModules.length }}</div>
       <div text-right op50>
         Plugins
       </div>
-      <div>{{ data.plugins.length }}</div>
+      <div>{{ config.plugins.length }}</div>
       <div text-right op50>
         Components
       </div>

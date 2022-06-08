@@ -12,3 +12,5 @@ export const rpc = createBirpc<ServerFunctions>({}, {
   serialize: stringify,
   deserialize: parse,
 })
+
+export const config = await rpc.getConfig()

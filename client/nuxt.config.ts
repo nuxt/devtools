@@ -5,8 +5,8 @@ import DevTools from '../src/module'
 
 export default defineNuxtConfig({
   modules: [
-    DevTools,
     '@nuxt/ui',
+    DevTools,
   ],
   ssr: false,
   experimental: {

@@ -7,5 +7,6 @@
         <NuxtPage />
       </div>
     </div>
+    <div fixed top-0 right-0 w-10 h-10 bg-base border="l b base" rounded-bl-lg />
   </div>
 </template>

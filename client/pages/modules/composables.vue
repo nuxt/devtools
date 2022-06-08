@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
 import type { Import } from 'unimport'
-import { getShortPath, openInEditor } from '#imports'
-
-const props = defineProps<{
-  modelValue?: boolean
-}>()
+import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-function',
@@ -13,7 +9,6 @@ definePageMeta({
 })
 
 const search = $ref('')
-const config = await useConfig()
 const functions = (await rpc.getAutoImports())
   .filter(i => i.as || i.name)
   .sort((a, b) => (a.as || a.name).localeCompare(b.as || b.name))

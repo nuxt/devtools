@@ -6,9 +6,7 @@ const { component } = defineProps<{
   component: Component
 }>()
 
-const config = await useConfig()
-const path = computed(() => getShortPath(component.filePath, config.rootDir))
-
+const path = $computed(() => getShortPath(component.filePath, config.rootDir))
 const copy = useCopy()
 </script>
 
