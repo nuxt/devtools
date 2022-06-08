@@ -6,13 +6,17 @@ export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
   getAutoImports(): Import[]
-  getPages(): RouteRecordNormalized[]
+  getPages(): RouteInfo[]
   getPayload(): Payload
   openInEditor(filepath: string): void
 }
 
 export interface ClientFunctions {
   refresh(type: string): void
+}
+
+export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' | 'meta' | 'props' | 'children'> {
+  file?: string
 }
 
 export interface Payload {

@@ -6,17 +6,17 @@ import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
 import { parse, stringify } from 'flatted'
 import { useBody } from 'h3'
-import type { Component, Nuxt } from '@nuxt/schema'
+import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
-import type { RouteRecordNormalized } from 'vue-router'
-import type { ClientFunctions, Payload, ServerFunctions } from './types'
+import type { ClientFunctions, Payload, RouteInfo, ServerFunctions } from './types'
 
 export function rpcMiddleware(nuxt: Nuxt) {
   let components: Component[] = []
   let imports: Import[] = []
   let importPresets: Import[] = []
-  let pages: RouteRecordNormalized[] = []
+  let pages: RouteInfo[] = []
+  let pagesServer: NuxtPage[] = []
   let payload: Payload = {
     url: '',
     time: Date.now(),
@@ -30,7 +30,12 @@ export function rpcMiddleware(nuxt: Nuxt) {
       return components
     },
     getPages() {
-      return pages
+      return pages.map((i) => {
+        return {
+          ...pagesServer.find(s => s.name && s.name === i.name),
+          ...i,
+        }
+      })
     },
     getAutoImports() {
       return [
@@ -63,6 +68,9 @@ export function rpcMiddleware(nuxt: Nuxt) {
   nuxt.hook('autoImports:extend', (v) => {
     imports = v
     birpc.boardcast.refresh.asEvent('composables')
+  })
+  nuxt.hook('pages:extend', (v) => {
+    pagesServer = v
   })
   nuxt.hook('autoImports:sources', (v) => {
     importPresets = v.flatMap(i => resolvePreset(i))
