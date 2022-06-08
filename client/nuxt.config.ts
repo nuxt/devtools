@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     shortcuts: {
       'border-base': 'border-gray/15',
       'bg-base': 'bg-white dark:bg-[#151515]',
+      'n-bg-base': 'bg-base',
       'x-divider': 'h-1px w-full bg-gray/15',
     },
     theme: {
