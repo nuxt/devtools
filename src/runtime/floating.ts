@@ -95,6 +95,7 @@ export default defineNuxtPlugin((nuxt) => {
         position: 'absolute',
         top: '0',
         right: '0',
+        zIndex: '99999',
         height: '2.5rem',
         width: '2.5rem',
         padding: '5px',
