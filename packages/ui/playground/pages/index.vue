@@ -1,3 +1,10 @@
+<script setup lang="ts">
+const isDev = process.dev
+const showDialog = ref(false)
+const showDropdown = ref(false)
+const radio = ref('a')
+</script>
+
 <template>
   <div class="relative p-10 n-bg-base">
     <div class="container w-full mx-auto flex flex-col gap-4">
@@ -224,10 +231,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const isDev = process.dev
-const showDialog = ref(false)
-const showDropdown = ref(false)
-const radio = ref('a')
-</script>
