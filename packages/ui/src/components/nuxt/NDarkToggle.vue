@@ -9,8 +9,8 @@ const isDark = computed<boolean>({
   get () {
     return mode.value === 'dark'
   },
-  set (v) {
-    mode.preference = v ? 'dark' : 'light'
+  set () {
+    mode.preference = isDark.value ? 'light' : 'dark'
   }
 })
 const toggle = useToggle(isDark)
