@@ -1,9 +1,7 @@
-# @nuxt/devtools
-
-[![NPM version](https://img.shields.io/npm/v/@nuxt/devtools?color=a1b858&label=)](https://www.npmjs.com/package/@nuxt/devtools)
+# @nuxt/devtools-poc
 
 **Working in progress**
-
+<!-- 
 ## Install
 
 ```bash
@@ -19,7 +17,7 @@ export default defineNuxtConfig({
     '@nuxt/devtools',
   ],
 })
-```
+``` -->
 
 ## License
 
