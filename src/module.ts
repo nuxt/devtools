@@ -49,6 +49,15 @@ export default defineNuxtModule<ModuleOptions>({
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
 
+    customTabs.push({
+      name: 'nitro',
+      title: 'Nitro VFS',
+      view: {
+        type: 'iframe',
+        src: '/_vfs',
+      },
+    })
+
     await nuxt.callHook('devtools:custom-tabs', customTabs)
   },
 })

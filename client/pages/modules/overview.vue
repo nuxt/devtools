@@ -3,7 +3,7 @@ import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-information',
-  title:'Overview',
+  title: 'Overview',
   order: -1,
 })
 

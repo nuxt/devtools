@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const tabs =await getTabs()
+const tabs = await getTabs()
 </script>
 
 <template>
@@ -9,7 +9,7 @@ const tabs =await getTabs()
       flex items-center gap2 px3 py2 text-true-gray
       border="b base"
       hover="bg-gray/5"
-      active-class="!text-primary"
+      exact-active-class="!text-primary"
     >
       <div :class="m.icon || 'carbon-assembly-reference'" />
       <div>{{ m.title }}</div>

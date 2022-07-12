@@ -13,28 +13,27 @@ export async function useModulesInfo() {
 export async function getTabs() {
   const router = useRouter()
   const routes = router.getRoutes()
-const custom = (await rpc.getCustomTabs()).map(i=>{
-  return {
-  ...i,
-  path: '/modules/custom?name=' + i.name,
-  }
-})
-const builtin = routes
-  .filter(route => route.path.startsWith('/modules/') && route.name !== 'modules-custom')
-  .sort((a, b) => (a.meta.order || 0) - (b.meta.order || 0))
-  .map(i=>{
+  const custom = (await rpc.getCustomTabs()).map((i) => {
     return {
-      name: i.name,
-      path: i.path,
-      icon: i.meta.icon,
-      title: i.meta.title,
+      ...i,
+      path: `/modules/custom-${i.name}`,
     }
   })
+  
+  const builtin = routes
+    .filter(route => route.path.startsWith('/modules/') && route.name !== 'modules-custom')
+    .sort((a, b) => (a.meta.order || 0) - (b.meta.order || 0))
+    .map((i) => {
+      return {
+        name: i.name,
+        path: i.path,
+        icon: i.meta.icon,
+        title: i.meta.title,
+      }
+    })
 
-  console.log(builtin, custom)
-
-return [
-  ...builtin,
-  ...custom,
-]
+  return [
+    ...builtin,
+    ...custom,
+  ]
 }

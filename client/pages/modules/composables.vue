@@ -5,7 +5,7 @@ import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-function',
-  title:'Composables',
+  title: 'Composables',
 })
 
 const search = $ref('')

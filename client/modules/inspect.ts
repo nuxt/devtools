@@ -9,19 +9,17 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    console.log('Hello')
-
     addVitePlugin(Inspect())
 
-    nuxt.hook('devtools:custom-tabs', tabs=>{
+    nuxt.hook('devtools:custom-tabs', (tabs) => {
       tabs.push({
         title: 'Inspect',
         name: 'inspect',
         view: {
           type: 'iframe',
           src: '/__inspect',
-        }
+        },
       })
     })
-  }
+  },
 })

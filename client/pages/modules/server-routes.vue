@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-cloud',
-  title:'Server Routes',
+  title: 'Server Routes',
 })
 </script>
 

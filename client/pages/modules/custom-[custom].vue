@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ModuleCustomTab } from '~~/../src/types';
+import type { ModuleCustomTab } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-nominal',
-  title:'Custom',
+  title: 'Custom',
 })
 
 const tabs = await getTabs()
 const route = useRoute()
 
-const name = $computed(()=>route.query.name)
-const tab = $computed(() => tabs.find(i=>i.name === name) as ModuleCustomTab)
+const name = $computed(() => route.params.custom)
+const tab = $computed(() => tabs.find(i => i.name === name) as ModuleCustomTab)
 </script>
 
 <template>
