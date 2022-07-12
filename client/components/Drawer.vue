@@ -3,7 +3,18 @@ const tabs = await getTabs()
 </script>
 
 <template>
-  <div border="r base" flex="~ col" h-full>
+  <div border="l base" flex="~ col" h-full>
+    <div pl3 pr2 py2 flex="~ gap1" items-center>
+      <img src="/nuxt.png" alt="Nuxt" w-8 h-8>
+      <div text-lg font-bold>
+        DevTools
+      </div>
+      <div flex-auto />
+      <NDarkToggle v-slot="{ toggle }">
+        <button carbon-sun dark:carbon-moon @click="toggle()" />
+      </NDarkToggle>
+      <button carbon-close text-xl op50 hover:op100 ma />
+    </div>
     <NuxtLink
       v-for="m of tabs" :key="m.name" :to="m.path"
       flex items-center gap2 px3 py2 text-true-gray
@@ -15,15 +26,5 @@ const tabs = await getTabs()
       <div>{{ m.title }}</div>
     </NuxtLink>
     <div flex-auto />
-    <div px3 py2 flex="~ gap1" items-center>
-      <img src="/nuxt.png" alt="Nuxt" w-8 h-8>
-      <div text-lg font-bold>
-        DevTools
-      </div>
-      <div flex-auto />
-      <NDarkToggle v-slot="{ toggle }">
-        <button carbon-sun dark:carbon-moon @click="toggle()" />
-      </NDarkToggle>
-    </div>
   </div>
 </template>
