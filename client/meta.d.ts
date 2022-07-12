@@ -1,7 +1,7 @@
 declare module '#app' {
   interface PageMeta {
     icon?: string
-    display?: string
+    title?: string
     order?: number
   }
 }

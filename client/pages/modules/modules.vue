@@ -3,7 +3,7 @@ import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
-  display: 'Modules',
+  title:'Modules',
 })
 </script>
 

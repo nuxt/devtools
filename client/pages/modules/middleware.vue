@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-layers',
-  display: 'Middleware',
+  title:'Middleware',
 })
 </script>
 

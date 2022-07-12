@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-tree-view-alt',
-  display: 'Pages',
+  title:'Pages',
 })
 
 const pages = await rpc.getPages()

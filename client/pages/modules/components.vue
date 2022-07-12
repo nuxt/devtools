@@ -4,7 +4,7 @@ import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-nominal',
-  display: 'Components',
+  title:'Components',
 })
 
 const components = (await rpc.getComponents())

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-data-set',
-  display: 'Payload',
+  title:'Payload',
 })
 
 const payload = await rpc.getPayload()

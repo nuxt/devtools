@@ -6,6 +6,7 @@ import DevTools from '../src/module'
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
+    '~/modules/inspect',
     DevTools,
   ],
   ssr: false,

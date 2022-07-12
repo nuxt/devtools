@@ -69,6 +69,7 @@ importers:
       nuxt: 3.0.0-rc.3
       shiki: ^0.10.1
       theme-vitesse: ^0.4.10
+      vite-plugin-inspect: ^0.5.1
     devDependencies:
       '@iconify-json/carbon': 1.1.5
       '@iconify-json/tabler': 1.1.13
@@ -82,6 +83,7 @@ importers:
       nuxt: 3.0.0-rc.3
       shiki: 0.10.1
       theme-vitesse: 0.4.10
+      vite-plugin-inspect: 0.5.1
 
 packages:
 
@@ -8732,6 +8734,21 @@ packages:
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.5
       vscode-uri: 3.0.3
+    dev: true
+
+  /vite-plugin-inspect/0.5.1:
+    resolution: {integrity: sha512-cSVdNhVPAfH3OdVSV331/t/YWjg++HR/KiBkVST8pjLISna7O8gRwU8NN7KLrEBJqKKQqoRYLBb0RSdYurEyeg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vite: ^2.9.0 || ^3.0.0-0
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      debug: 4.3.4
+      kolorist: 1.5.1
+      sirv: 2.0.2
+      ufo: 0.8.5
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /vite/2.9.10:

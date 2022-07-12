@@ -23,7 +23,7 @@ function h<K extends keyof HTMLElementTagNameMap>(
 }
 
 export default defineNuxtPlugin((nuxt) => {
-  if (typeof document === 'undefined')
+  if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
     return
 
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
@@ -145,7 +145,7 @@ export default defineNuxtPlugin((nuxt) => {
   height: 30px;
   width: 40px;
   cursor: pointer;
-  display: flex;
+  title:flex;
   padding: 0;
   align-items: center;
   transition: all 0.2s ease-in-out;

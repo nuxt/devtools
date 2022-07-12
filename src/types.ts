@@ -8,6 +8,7 @@ export interface ServerFunctions {
   getAutoImports(): Import[]
   getPages(): RouteInfo[]
   getPayload(): Payload
+  getCustomTabs(): ModuleCustomTab[]
   openInEditor(filepath: string): void
 }
 
@@ -68,4 +69,16 @@ export interface GithubContributor {
   login: string
   name?: string
   avatar_url?: string
+}
+
+export interface ModuleCustomTab {
+  icon?: string
+  name: string
+  title: string
+  view: ModuleCustomView
+}
+
+export interface ModuleCustomView {
+  type: 'iframe'
+  src: string
 }

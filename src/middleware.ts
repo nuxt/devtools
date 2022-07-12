@@ -9,9 +9,9 @@ import { useBody } from 'h3'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
-import type { ClientFunctions, Payload, RouteInfo, ServerFunctions } from './types'
+import type { ClientFunctions, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
 
-export function rpcMiddleware(nuxt: Nuxt) {
+export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
   let components: Component[] = []
   let imports: Import[] = []
   let importPresets: Import[] = []
@@ -45,6 +45,9 @@ export function rpcMiddleware(nuxt: Nuxt) {
     },
     getPayload() {
       return payload
+    },
+    getCustomTabs() {
+      return customTabs
     },
     async openInEditor(filepath: string) {
       const file = [

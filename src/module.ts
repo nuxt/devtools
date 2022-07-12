@@ -6,9 +6,16 @@ import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
 import { rpcMiddleware } from './middleware'
+import type { ModuleCustomTab } from './types'
 
 export interface ModuleOptions {
 
+}
+
+declare module '@nuxt/schema' {
+  interface NuxtHooks {
+    'devtools:custom-tabs': (tabs: ModuleCustomTab[]) => void
+  }
 }
 
 const PATH = '/__nuxt_devtools__'
@@ -31,7 +38,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(join(runtimeDir, 'floating'), {})
 
-    const middleware = rpcMiddleware(nuxt)
+    const customTabs: ModuleCustomTab[] = []
+    const middleware = rpcMiddleware(nuxt, customTabs)
 
     // TODO: support webpack
     nuxt.hook('vite:serverCreated', async (server: ViteDevServer) => {
@@ -40,6 +48,8 @@ export default defineNuxtModule<ModuleOptions>({
       if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
+
+    await nuxt.callHook('devtools:custom-tabs', customTabs)
   },
 })
 
