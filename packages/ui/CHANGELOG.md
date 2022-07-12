@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/nuxt/ui/compare/@nuxt/ui@0.1.1...@nuxt/ui@0.2.0) (2022-07-12)
+
+
+### Bug Fixes
+
+* **ui:** fix color mode toggle on Nuxt ([0595ad8](https://github.com/nuxt/ui/commit/0595ad82139fdd3ae054e0ce358cb345448f7d98))
+* **ui:** let nuxt/kit resolve module source ([#117](https://github.com/nuxt/ui/issues/117)) ([ecafcef](https://github.com/nuxt/ui/commit/ecafcef782f96fd6520cce048faee0b74404b4ce))
+* use repo for detecting logo ([2ead323](https://github.com/nuxt/ui/commit/2ead3237aa1b8cd747aa23602f5c4cd25bf8a2f7))
+
+
+### Features
+
+* add Typography preset ([#130](https://github.com/nuxt/ui/issues/130)) ([7edc7ca](https://github.com/nuxt/ui/commit/7edc7ca536eb19d87047dcccf9089694bb21a5f8)), closes [#129](https://github.com/nuxt/ui/issues/129)
+* rename icon to logo slot and add content logo ([#108](https://github.com/nuxt/ui/issues/108)) ([dbeaad6](https://github.com/nuxt/ui/commit/dbeaad6793ee08b8c41660165fac252e733fe5fc))
+
+
+
+
+
 ## [0.1.1](https://github.com/nuxt/ui/compare/@nuxt/ui@0.1.0...@nuxt/ui@0.1.1) (2022-05-02)
 
 
