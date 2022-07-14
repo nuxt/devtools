@@ -1,11 +1,11 @@
-# @nuxt/devtools-poc
+# @nuxt/devtools
 
-**Working in progress**
-<!-- 
-## Install
+**Work in progress**
+
+## Installation
 
 ```bash
-npm i -D @nuxt/devtools
+npm i -D @nuxt/devtools-edge
 ```
 
 ```ts
@@ -14,11 +14,11 @@ import { defineNuxtConfig } from 'nuxt'
 
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/devtools',
+    '@nuxt/devtools-edge',
   ],
 })
-``` -->
+```
 
 ## License
 
-[MIT](./LICENSE) License © 2022 [Anthony Fu](https://github.com/antfu)
+[MIT](./LICENSE)

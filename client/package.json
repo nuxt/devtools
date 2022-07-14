@@ -1,11 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "nr prepare && nuxt build",
+    "build": "pnpm prepare && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "prepare": "esno scripts/prepare.ts"
+    "preview": "nuxt preview"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.5",
@@ -22,7 +21,7 @@
     "@vueuse/nuxt": "^8.6.0",
     "esno": "^0.16.3",
     "fuse.js": "^6.6.2",
-    "nuxt": "3.0.0-rc.3",
+    "nuxt": "^3.0.0-rc.5",
     "shiki": "^0.10.1",
     "theme-vitesse": "^0.4.10",
     "unocss": "^0.44.2",

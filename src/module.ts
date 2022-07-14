@@ -28,25 +28,27 @@ const clientDir = resolve(fileURLToPath(import.meta.url), '../client')
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@nuxt/devtools',
-    configKey: 'devTools',
+    configKey: 'devtools'
   },
   defaults: {
   },
-  async setup(options, nuxt) {
-    if (!nuxt.options.dev)
+  async setup (options, nuxt) {
+    if (!nuxt.options.dev) {
       return
+    }
 
     addPlugin(join(runtimeDir, 'floating'), {})
 
     const customTabs: ModuleCustomTab[] = []
     const middleware = rpcMiddleware(nuxt, customTabs)
 
-    // TODO: support webpack
+    // TODO: Use WS from nitro server when possible
     nuxt.hook('vite:serverCreated', async (server: ViteDevServer) => {
       server.middlewares.use(PATH_ENTRY, tinyws())
       server.middlewares.use(PATH_ENTRY, middleware)
-      if (existsSync(clientDir))
+      if (existsSync(clientDir)) {
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
+      }
     })
 
     customTabs.push({
@@ -54,11 +56,10 @@ export default defineNuxtModule<ModuleOptions>({
       title: 'Nitro VFS',
       view: {
         type: 'iframe',
-        src: '/_vfs',
-      },
+        src: '/_vfs'
+      }
     })
 
     await nuxt.callHook('devtools:custom-tabs', customTabs)
-  },
+  }
 })
-

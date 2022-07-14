@@ -1,18 +1,9 @@
 {
   "name": "@nuxt/devtools-poc",
-  "type": "module",
-  "version": "0.0.0-alpha.0",
-  "packageManager": "pnpm@7.1.0",
-  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "version": "0.0.0",
+  "repository": "nuxt/devtools",
   "license": "MIT",
-  "homepage": "https://github.com/nuxt/devtools#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nuxt/devtools.git"
-  },
-  "bugs": {
-    "url": "https://github.com/nuxt/devtools/issues"
-  },
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/module.d.ts",
@@ -27,16 +18,21 @@
     "dist",
     "*.d.ts"
   ],
+  "workspaces": [
+    "client"
+  ],
   "scripts": {
-    "prepublishOnly": "nr build",
-    "build": "nr build:module && nr build:client",
-    "build:module": "ni",
+    "build": "pnpm build:module && pnpm build:client",
     "build:client": "nuxi generate client",
-    "play": "nuxi dev client",
-    "dev": "nr play",
+    "build:module": "nuxt-build-module",
+    "dev": "nuxi dev client",
     "lint": "eslint .",
-    "release": "bumpp --commit --push --tag && pnpm publish",
-    "prepare": "nuxi prepare client"
+    "prepare": "nuxi prepare client",
+    "prepublishOnly": "pnpm build",
+    "release": "pnpm test && standard-version && git push --follow-tags && npm publish"
+  },
+  "resolutions": {
+    "unocss": "^0.44.2"
   },
   "dependencies": {
     "@nuxt/kit": "3.0.0-rc.4",
@@ -55,6 +51,7 @@
     "@antfu/utils": "^0.5.2",
     "@nuxt/devtools-poc": "workspace:*",
     "@nuxt/module-builder": "^0.1.7",
+    "@nuxtjs/eslint-config-typescript": "^10.0.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.3",
     "@types/ws": "^8.5.3",
@@ -66,9 +63,5 @@
     "typescript": "^4.7.4",
     "ws": "^8.8.0"
   },
-  "pnpm": {
-    "overrides": {
-      "unocss": "^0.44.2"
-    }
-  }
+  "packageManager": "pnpm@7.1.0"
 }

@@ -1,17 +1,17 @@
 import { resolve } from 'path'
 import { defineNuxtConfig } from 'nuxt'
-import { presetWebFonts, transformerDirectives } from 'unocss'
 import DevTools from '../src/module'
+import { presetWebFonts, transformerDirectives } from 'unocss'
 
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
     '~/modules/inspect',
-    DevTools,
+    DevTools
   ],
   ssr: false,
   experimental: {
-    reactivityTransform: true,
+    reactivityTransform: true
   },
   pages: true,
   unocss: {
@@ -19,20 +19,20 @@ export default defineNuxtConfig({
       'border-base': 'border-gray/15',
       'bg-base': 'bg-white dark:bg-[#151515]',
       'n-bg-base': 'bg-base',
-      'x-divider': 'h-1px w-full bg-gray/15',
+      'x-divider': 'h-1px w-full bg-gray/15'
     },
     theme: {
       colors: {
-        primary: '#03ae67',
-      },
+        primary: '#03ae67'
+      }
     },
     presets: [
       presetWebFonts({
         fonts: {
           sans: 'Inter',
-          mono: 'Fira Code',
-        },
-      }),
+          mono: 'Fira Code'
+        }
+      })
     ],
     safelist: [
       'carbon-nominal',
@@ -44,32 +44,32 @@ export default defineNuxtConfig({
       'carbon-data-set',
       'carbon-layers',
       'carbon-cloud',
-      'carbon-plug',
+      'carbon-plug'
     ],
     transformers: [
-      transformerDirectives(),
-    ],
+      transformerDirectives()
+    ]
   },
   nitro: {
     output: {
-      publicDir: resolve(__dirname, '../dist/client'),
-    },
+      publicDir: resolve(__dirname, '../dist/client')
+    }
   },
   alias: {
     // we are not using them, alias to anything to avoid bundler going to node specific modules
     '@iconify/utils/lib/loader/node-loader': 'vue',
-    '@iconify/utils/lib/loader/node-loader.cjs': 'vue',
+    '@iconify/utils/lib/loader/node-loader.cjs': 'vue'
   },
   app: {
-    baseURL: '/__nuxt_devtools__/client',
+    baseURL: '/__nuxt_devtools__/client'
   },
   vite: {
     build: {
-      target: 'esnext',
+      target: 'esnext'
     },
     optimizeDeps: {
       include: ['debug'],
-      exclude: ['@iconify/utils', '@unocss/plugins-icons'],
-    },
-  },
+      exclude: ['@iconify/utils', '@unocss/plugins-icons']
+    }
+  }
 })
