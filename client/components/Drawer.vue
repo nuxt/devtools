@@ -22,7 +22,14 @@ const tabs = await getTabs()
       hover="bg-gray/5"
       exact-active-class="!text-primary"
     >
-      <div :class="m.icon || 'carbon-assembly-reference'" />
+      <img
+        v-if="m.icon && (m.icon.startsWith('/') || m.icon.match(/^https?:/))"
+        w6 :src="m.icon" :alt="m.title"
+      >
+      <div
+        v-else
+        w6 :class="m.icon || 'carbon-assembly-reference'"
+      />
       <div>{{ m.title }}</div>
     </NuxtLink>
     <div flex-auto />

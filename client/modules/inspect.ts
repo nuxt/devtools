@@ -15,9 +15,20 @@ export default defineNuxtModule({
       tabs.push({
         title: 'Inspect',
         name: 'inspect',
+        icon: 'i-carbon-search',
         view: {
           type: 'iframe',
           src: '/__inspect',
+        },
+      })
+
+      tabs.push({
+        title: 'UnoCSS',
+        name: 'unocss',
+        icon: 'i-logos-unocss',
+        view: {
+          type: 'iframe',
+          src: '/__unocss/',
         },
       })
     })

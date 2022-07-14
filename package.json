@@ -53,7 +53,7 @@
     "@antfu/eslint-config": "^0.25.2",
     "@antfu/ni": "^0.16.3",
     "@antfu/utils": "^0.5.2",
-    "@nuxt/devtools": "workspace:*",
+    "@nuxt/devtools-poc": "workspace:*",
     "@nuxt/module-builder": "^0.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.3",
@@ -65,5 +65,10 @@
     "shiki": "^0.10.1",
     "typescript": "^4.7.4",
     "ws": "^8.8.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "unocss": "^0.44.2"
+    }
   }
 }

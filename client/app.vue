@@ -1,4 +1,7 @@
 <script setup>
+if (process.client)
+  import('./unocss')
+
 const router = useRouter()
 const route = useRoute()
 

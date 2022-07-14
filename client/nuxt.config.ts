@@ -62,5 +62,9 @@ export default defineNuxtConfig({
     build: {
       target: 'esnext',
     },
+    optimizeDeps: {
+      include: ['debug'],
+      exclude: ['@iconify/utils', '@unocss/plugins-icons'],
+    },
   },
 })
