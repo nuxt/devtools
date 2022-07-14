@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { dirname, resolve } from 'path'
 import { defineNuxtConfig } from 'nuxt'
 // eslint-disable-next-line
 import DevTools from '../src/module'
@@ -55,7 +55,13 @@ export default defineNuxtConfig({
   nitro: {
     output: {
       publicDir: resolve(__dirname, '../dist/client')
-    }
+    },
+    publicAssets: [
+      {
+        baseURL: '/shiki',
+        dir: dirname(require.resolve('shiki'))
+      }
+    ]
   },
   alias: {
     // we are not using them, alias to anything to avoid bundler going to node specific modules
