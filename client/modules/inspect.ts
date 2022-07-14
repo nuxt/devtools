@@ -3,11 +3,10 @@ import Inspect from 'vite-plugin-inspect'
 
 export default defineNuxtModule({
   meta: {
-    name: 'inspect',
+    name: 'inspect'
   },
-  setup(_, nuxt) {
-    if (!nuxt.options.dev)
-      return
+  setup (_, nuxt) {
+    if (!nuxt.options.dev) { return }
 
     addVitePlugin(Inspect())
 
@@ -18,8 +17,8 @@ export default defineNuxtModule({
         icon: 'i-carbon-search',
         view: {
           type: 'iframe',
-          src: '/__inspect',
-        },
+          src: '/__inspect'
+        }
       })
 
       tabs.push({
@@ -28,9 +27,9 @@ export default defineNuxtModule({
         icon: 'i-logos-unocss',
         view: {
           type: 'iframe',
-          src: '/__unocss/',
-        },
+          src: '/__unocss/'
+        }
       })
     })
-  },
+  }
 })

@@ -1,4 +1,5 @@
 import { createBirpc } from 'birpc'
+// eslint-disable-next-line import/named
 import { parse, stringify } from 'flatted'
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
 
@@ -12,17 +13,17 @@ let onMessage: Function = () => {}
 let client = await connectWS()
 
 export const clientFunctions: ClientFunctions = {
-  refresh() {},
+  refresh () {}
 }
 
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   post: d => client.send(d),
-  on: fn => onMessage = fn,
+  on: (fn) => { onMessage = fn },
   serialize: stringify,
-  deserialize: parse,
+  deserialize: parse
 })
 
-async function connectWS() {
+async function connectWS () {
   const ws = new WebSocket(`ws://${location.host}/__nuxt_devtools__/entry`)
   ws.addEventListener('message', e => onMessage(String(e.data)))
   ws.addEventListener('error', (e) => {
@@ -36,8 +37,7 @@ async function connectWS() {
     }, RECONNECT_INTERVAL)
   })
   wsConnecting.value = true
-  if (ws.readyState !== WebSocket.OPEN)
-    await new Promise(resolve => ws.addEventListener('open', resolve))
+  if (ws.readyState !== WebSocket.OPEN) { await new Promise(resolve => ws.addEventListener('open', resolve)) }
   // eslint-disable-next-line no-console
   console.log('[nuxt-devtools] WebSocket connected.')
   wsConnecting.value = false

@@ -3,8 +3,9 @@
     "@nuxtjs/eslint-config-typescript"
   ],
   "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "off"
-    ]
+    "vue/no-setup-props-destructure": "warn",
+    "vue/multi-word-component-names": "warn",
+    "vue/no-multiple-template-root": "off",
+    "no-use-before-define": "off",
   }
 }

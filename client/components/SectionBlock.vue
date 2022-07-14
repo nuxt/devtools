@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const {
   divider = true,
-  padding = 'pl4',
+  padding = 'pl4'
 } = defineProps<{
   icon?: string
   text: string

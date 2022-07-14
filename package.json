@@ -26,7 +26,7 @@
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module",
     "dev": "nuxi dev client",
-    "lint": "eslint .",
+    "lint": "eslint --ext .ts,.vue,.mjs .",
     "test": "pnpm lint",
     "prepublishOnly": "pnpm build",
     "release": "pnpm test && standard-version && git push --follow-tags && npm publish"

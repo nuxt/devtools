@@ -11,7 +11,7 @@ const ignores = [
   'components',
   'auto-imports',
   '@nuxt/devtools',
-  '@nuxt/telemetry',
+  '@nuxt/telemetry'
 ]
 
 const name = $computed(() => basic.meta?.name || basic.entryPath || '')
@@ -19,7 +19,7 @@ const collection = await useModulesInfo()
 const data = $computed(() => ({
   name,
   ...basic?.meta,
-  ...(collection || []).find?.(i => i.npm === name || i.name === name),
+  ...(collection || []).find?.(i => i.npm === name || i.name === name)
 }))
 
 const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/website/public/icons/'
@@ -31,13 +31,16 @@ const npmBase = 'https://www.npmjs.com/package/'
 <template>
   <div
     v-if="!ignores.includes(name)"
-    border="~ base" p3 flex="~ gap2"
+    border="~ base"
+    p3
+    flex="~ gap2"
   >
     <div flex-auto flex="~ col gap1" px1>
       <NuxtLink
         :to="npmBase + (data.npm || data.name)"
         target="_blank"
-        text-lg hover="underline text-primary"
+        text-lg
+        hover="underline text-primary"
       >
         {{ data.name }}
       </NuxtLink>
@@ -48,14 +51,17 @@ const npmBase = 'https://www.npmjs.com/package/'
         v-if="data.website"
         :to="data.website"
         target="_blank"
-        text-sm op50 hover="op100 underline text-primary"
+        text-sm
+        op50
+        hover="op100 underline text-primary"
       >
         <span carbon-link /> {{ data.website.replace(/^https?:\/\//, '') }}
       </NuxtLink>
 
       <div v-if="data.maintainers?.length" mt2 flex="~">
         <NuxtLink
-          v-for="m of data.maintainers" :key="m.name"
+          v-for="m of data.maintainers"
+          :key="m.name"
           target="_blank"
           :to="githubBase + m.github"
           :title="m.name"
@@ -64,7 +70,14 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
     </div>
-    <div h-20 w-20 rounded bg-gray:10 p4 flex-none>
+    <div
+      h-20
+      w-20
+      rounded
+      bg-gray:10
+      p4
+      flex-none
+    >
       <img v-if="data.icon" :src="iconBase + data.icon" :alt="name">
     </div>
   </div>

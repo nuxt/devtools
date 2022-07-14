@@ -4,7 +4,7 @@ import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-nominal',
-  title: 'Components',
+  title: 'Components'
 })
 
 const components = (await rpc.getComponents())
@@ -13,8 +13,8 @@ const fuse = new Fuse(components, {
   keys: [
     'pascalName',
     'filePath',
-    'kebabName',
-  ],
+    'kebabName'
+  ]
 })
 
 const search = $ref('')
@@ -32,14 +32,11 @@ const filtered = $computed(() => {
         const name = getModuleNameFromPath(component.filePath)
         if (name === 'nuxt') {
           builtin.push(component)
-        }
-        else {
-          if (!lib.has(name))
-            lib.set(name, [])
+        } else {
+          if (!lib.has(name)) { lib.set(name, []) }
           lib.get(name).push(component)
         }
-      }
-      else {
+      } else {
         user.push(component)
       }
     })
@@ -47,7 +44,7 @@ const filtered = $computed(() => {
   return {
     user,
     builtin,
-    lib,
+    lib
   }
 })
 </script>

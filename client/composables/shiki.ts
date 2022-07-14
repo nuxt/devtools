@@ -8,21 +8,20 @@ export const shiki = ref<Highlighter>()
 getHighlighter({
   themes: [
     'vitesse-dark',
-    'vitesse-light',
+    'vitesse-light'
   ],
   langs: [
     'css',
-    'javascript',
-  ],
+    'javascript'
+  ]
 })
-  .then(i => shiki.value = i)
+  .then((i) => { shiki.value = i })
 
-export function highlight(code: string, lang: Lang) {
+export function highlight (code: string, lang: Lang) {
   const mode = useColorMode()
-  if (!shiki.value)
-    return code
+  if (!shiki.value) { return code }
   return shiki.value.codeToHtml(code, {
     lang,
-    theme: mode.value === 'dark' ? 'vitesse-dark' : 'vitesse-light',
+    theme: mode.value === 'dark' ? 'vitesse-dark' : 'vitesse-light'
   })
 }

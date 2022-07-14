@@ -14,9 +14,12 @@ defineProps<{
           <code font-mono px2>{{ key }}</code>
         </summary>
         <div
-          text-sm ml4 my2
+          text-sm
+          ml4
+          my2
           border="~ base rounded"
-          of-auto font-mono
+          of-auto
+          font-mono
           v-html="highlight(value === undefined ? 'undefined' : value === null ? 'null' : JSON.stringify(value, null, 2), 'javascript')"
         />
       </details>

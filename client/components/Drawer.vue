@@ -16,19 +16,29 @@ const tabs = await getTabs()
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
     <NuxtLink
-      v-for="m of tabs" :key="m.name" :to="m.path"
-      flex items-center gap2 px3 py2 text-true-gray
+      v-for="m of tabs"
+      :key="m.name"
+      :to="m.path"
+      flex
+      items-center
+      gap2
+      px3
+      py2
+      text-true-gray
       border="b base"
       hover="bg-gray/5"
       exact-active-class="!text-primary"
     >
       <img
         v-if="m.icon && (m.icon.startsWith('/') || m.icon.match(/^https?:/))"
-        w6 :src="m.icon" :alt="m.title"
+        w6
+        :src="m.icon"
+        :alt="m.title"
       >
       <div
         v-else
-        w6 :class="m.icon || 'carbon-assembly-reference'"
+        w6
+        :class="m.icon || 'carbon-assembly-reference'"
       />
       <div>{{ m.title }}</div>
     </NuxtLink>

@@ -32,7 +32,7 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
   },
-  async setup (options, nuxt) {
+  async setup (_options, nuxt) {
     if (!nuxt.options.dev) {
       return
     }
@@ -43,7 +43,7 @@ export default defineNuxtModule<ModuleOptions>({
     const middleware = rpcMiddleware(nuxt, customTabs)
 
     // TODO: Use WS from nitro server when possible
-    nuxt.hook('vite:serverCreated', async (server: ViteDevServer) => {
+    nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
       server.middlewares.use(PATH_ENTRY, tinyws())
       server.middlewares.use(PATH_ENTRY, middleware)
       if (existsSync(clientDir)) {

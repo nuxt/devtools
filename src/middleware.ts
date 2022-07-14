@@ -4,6 +4,7 @@ import type { IncomingMessage, ServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
 import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
+// eslint-disable-next-line import/named
 import { parse, stringify } from 'flatted'
 import { useBody } from 'h3'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
@@ -11,7 +12,7 @@ import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
 import type { ClientFunctions, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
 
-export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
+export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
   let components: Component[] = []
   let imports: Import[] = []
   let importPresets: Import[] = []
@@ -19,46 +20,47 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
   let pagesServer: NuxtPage[] = []
   let payload: Payload = {
     url: '',
-    time: Date.now(),
+    time: Date.now()
   }
 
   const serverFunctions: ServerFunctions = {
-    getConfig() {
+    getConfig () {
       return nuxt.options
     },
-    getComponents() {
+    getComponents () {
       return components
     },
-    getPages() {
+    getPages () {
       return pages.map((i) => {
         return {
           ...pagesServer.find(s => s.name && s.name === i.name),
-          ...i,
+          ...i
         }
       })
     },
-    getAutoImports() {
+    getAutoImports () {
       return [
         ...imports,
-        ...importPresets,
+        ...importPresets
       ]
     },
-    getPayload() {
+    getPayload () {
       return payload
     },
-    getCustomTabs() {
+    getCustomTabs () {
       return customTabs
     },
-    async openInEditor(filepath: string) {
+    async openInEditor (filepath: string) {
       const file = [
         filepath,
         `${filepath}.js`,
         `${filepath}.mjs`,
-        `${filepath}.ts`,
+        `${filepath}.ts`
       ].find(i => existsSync(i))
-      if (file)
-        import('launch-editor').then(r => (r.default || r)(file))
-    },
+      if (file) {
+        await import('launch-editor').then(r => (r.default || r)(file))
+      }
+    }
   }
 
   const clients = new Set<WebSocket>()
@@ -87,7 +89,7 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         post: d => ws.send(d),
         on: fn => ws.on('message', fn),
         serialize: stringify,
-        deserialize: parse,
+        deserialize: parse
       }
       birpc.updateChannels((c) => {
         c.push(channel)
@@ -96,30 +98,23 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         clients.delete(ws)
         birpc.updateChannels((c) => {
           const index = c.indexOf(channel)
-          if (index >= 0)
-            c.splice(index, 1)
+          if (index >= 0) { c.splice(index, 1) }
         })
       })
-    }
-    else {
-      if (req.method === 'POST') {
-        const body = await useBody(req)
-        if (body.method === 'setPayload') {
-          const prevUrl = payload.url
-          payload = parse(body.data)
-          if (prevUrl !== payload.url)
-            birpc.boardcast.refresh.asEvent('payload')
-          res.end()
-        }
-        else if (body.method === 'setPages') {
-          pages = parse(body.data)
-          birpc.boardcast.refresh.asEvent('pages')
-          res.end()
-        }
-        else {
-          res.statusCode = 400
-          res.end()
-        }
+    } else if (req.method === 'POST') {
+      const body = await useBody(req)
+      if (body.method === 'setPayload') {
+        const prevUrl = payload.url
+        payload = parse(body.data)
+        if (prevUrl !== payload.url) { birpc.boardcast.refresh.asEvent('payload') }
+        res.end()
+      } else if (body.method === 'setPages') {
+        pages = parse(body.data)
+        birpc.boardcast.refresh.asEvent('pages')
+        res.end()
+      } else {
+        res.statusCode = 400
+        res.end()
       }
     }
   }

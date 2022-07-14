@@ -1,8 +1,8 @@
-export async function openInEditor(filepath: string) {
+export async function openInEditor (filepath: string) {
   await rpc.openInEditor(filepath)
 }
 
-export function useCopy() {
+export function useCopy () {
   const clipboard = useClipboard()
   const showNotification = useNotification()
 

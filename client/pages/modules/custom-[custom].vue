@@ -3,7 +3,7 @@ import type { ModuleCustomTab } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-nominal',
-  title: 'Custom',
+  title: 'Custom'
 })
 
 const tabs = await getTabs()
