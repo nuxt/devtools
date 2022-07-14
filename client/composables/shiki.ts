@@ -1,10 +1,9 @@
-import type { Highlighter, Lang } from 'shiki'
-import { getHighlighter, setCDN } from 'shiki'
-
-setCDN('/__nuxt_devtools__/client/shiki/')
+import type { Highlighter, Lang } from 'shiki-es'
+import { getHighlighter } from 'shiki-es'
 
 export const shiki = ref<Highlighter>()
 
+// TODO: Only loading when needed
 getHighlighter({
   themes: [
     'vitesse-dark',
@@ -14,8 +13,7 @@ getHighlighter({
     'css',
     'javascript'
   ]
-})
-  .then((i) => { shiki.value = i })
+}).then((i) => { shiki.value = i })
 
 export function highlight (code: string, lang: Lang) {
   const mode = useColorMode()
