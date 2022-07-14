@@ -21,10 +21,11 @@
     "client"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare pnpm build:module && pnpm build:client",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module",
     "dev": "nuxi dev client",
+    "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "nuxi prepare client",
     "lint": "eslint --ext .ts,.vue,.mjs .",
     "prepublishOnly": "pnpm build",
