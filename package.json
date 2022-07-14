@@ -27,14 +27,15 @@
     "build:module": "nuxt-build-module",
     "dev": "nuxi dev client",
     "lint": "eslint --ext .ts,.vue,.mjs .",
-    "test": "pnpm lint",
     "prepublishOnly": "pnpm build",
-    "release": "pnpm test && standard-version && git push --follow-tags && npm publish"
+    "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
+    "test": "pnpm lint"
   },
   "resolutions": {
     "unocss": "^0.44.2"
   },
   "dependencies": {
+    "@antfu/utils": "^0.5.2",
     "@nuxt/kit": "3.0.0-rc.4",
     "birpc": "^0.2.3",
     "flatted": "^3.2.6",
@@ -48,7 +49,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.2",
     "@antfu/ni": "^0.16.3",
-    "@antfu/utils": "^0.5.2",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/module-builder": "^0.1.7",
     "@nuxtjs/eslint-config-typescript": "^10.0.0",
