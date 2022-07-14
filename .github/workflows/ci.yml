@@ -22,10 +22,10 @@ jobs:
       - run: pnpm lint
       - run: pnpm build:client
       - run: pnpm build:module
-      # - name: Release Edge
-      #   if: |
-      #     github.event_name == 'push' &&
-      #     !contains(github.event.head_commit.message, '[skip-release]')
-      #   run: ./scripts/release-edge.sh
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+      - name: Release Edge
+        if: |
+          github.event_name == 'push' &&
+          !contains(github.event.head_commit.message, '[skip-release]')
+        run: ./scripts/release-edge.sh
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
