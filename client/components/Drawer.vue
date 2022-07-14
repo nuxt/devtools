@@ -5,7 +5,7 @@ const tabs = await getTabs()
 <template>
   <div border="l base" flex="~ col" h-full>
     <div pl3 pr2 py2 flex="~ gap1" items-center>
-      <img src="/nuxt.png" alt="Nuxt" w-8 h-8>
+      <NuxtLogo w-7 h-7 />
       <div text-lg font-bold>
         DevTools
       </div>

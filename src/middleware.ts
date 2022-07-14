@@ -98,7 +98,9 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         clients.delete(ws)
         birpc.updateChannels((c) => {
           const index = c.indexOf(channel)
-          if (index >= 0) { c.splice(index, 1) }
+          if (index >= 0) {
+            c.splice(index, 1)
+          }
         })
       })
     } else if (req.method === 'POST') {
@@ -106,7 +108,9 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
       if (body.method === 'setPayload') {
         const prevUrl = payload.url
         payload = parse(body.data)
-        if (prevUrl !== payload.url) { birpc.boardcast.refresh.asEvent('payload') }
+        if (prevUrl !== payload.url) {
+          birpc.boardcast.refresh.asEvent('payload')
+        }
         res.end()
       } else if (body.method === 'setPages') {
         pages = parse(body.data)

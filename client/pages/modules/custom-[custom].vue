@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import type { ModuleCustomTab } from '~~/../src/types'
 
-definePageMeta({
-  icon: 'carbon-nominal',
-  title: 'Custom'
-})
-
 const tabs = await getTabs()
 const route = useRoute()
 

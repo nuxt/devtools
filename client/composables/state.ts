@@ -20,7 +20,7 @@ export async function getTabs () {
   })
 
   const builtin = routes
-    .filter(route => route.path.startsWith('/modules/') && route.name !== 'modules-custom')
+    .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
     .sort((a, b) => (a.meta.order || 0) - (b.meta.order || 0))
     .map((i) => {
       return {

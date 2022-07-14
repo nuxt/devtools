@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BasicModuleInfo } from '../../src/types'
 
-const { mod: basic } = defineProps<{
+const { mod } = defineProps<{
   mod: BasicModuleInfo
 }>()
 
@@ -14,11 +14,11 @@ const ignores = [
   '@nuxt/telemetry'
 ]
 
-const name = $computed(() => basic.meta?.name || basic.entryPath || '')
+const name = $computed(() => mod.meta?.name || mod.entryPath || '')
 const collection = await useModulesInfo()
 const data = $computed(() => ({
   name,
-  ...basic?.meta,
+  ...mod?.meta,
   ...(collection || []).find?.(i => i.npm === name || i.name === name)
 }))
 

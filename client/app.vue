@@ -29,3 +29,9 @@ clientFunctions.refresh = (type) => {
     </div>
   </div>
 </template>
+
+<style>
+.dark {
+  color-scheme: dark;
+}
+</style>

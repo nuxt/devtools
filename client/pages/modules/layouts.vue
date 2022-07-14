@@ -1,7 +1,8 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-chart-treemap',
-  title: 'Layouts'
+  title: 'Layouts',
+  wip: true
 })
 </script>
 

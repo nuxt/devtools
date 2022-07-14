@@ -90,7 +90,7 @@ export default defineNuxtPlugin((nuxt) => {
       className: 'nuxt-devtools-close-button',
       style: {
         position: 'absolute',
-        top: '0',
+        top: '5px',
         right: '0',
         zIndex: '99999',
         height: '2rem',
@@ -151,10 +151,8 @@ export default defineNuxtPlugin((nuxt) => {
   bottom: 0;
 }
 .nuxt-devtools-close-button {
-  opacity: 0.5;
-}
-.nuxt-devtools-close-button:hover {
-  opacity: 1;
+  background: transparent;
+  border: none;
 }
 `
   })
