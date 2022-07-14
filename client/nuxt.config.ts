@@ -1,7 +1,8 @@
 import { resolve } from 'path'
 import { defineNuxtConfig } from 'nuxt'
+// eslint-disable-next-line
 import DevTools from '../src/module'
-// eslint-disable-next-line import/named
+// eslint-disable-next-line
 import { presetWebFonts, transformerDirectives } from 'unocss'
 
 export default defineNuxtConfig({
