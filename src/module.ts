@@ -52,8 +52,8 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     customTabs.push({
-      name: 'nitro',
-      title: 'Nitro VFS',
+      name: 'virtual',
+      title: 'Virtual Files',
       view: {
         type: 'iframe',
         src: '/_vfs'
