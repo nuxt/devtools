@@ -1,6 +1,6 @@
 <script setup>
 if (process.client) {
-  import('./unocss')
+  import('./setup/unocss-runtime')
 }
 
 const router = useRouter()

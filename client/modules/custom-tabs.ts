@@ -1,9 +1,10 @@
 import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
 import Inspect from 'vite-plugin-inspect'
 
+// TODO: demo only, should be contributed by modules
 export default defineNuxtModule({
   meta: {
-    name: 'inspect'
+    name: 'custom-tabs'
   },
   setup (_, nuxt) {
     if (!nuxt.options.dev) { return }
@@ -14,7 +15,7 @@ export default defineNuxtModule({
       tabs.push({
         title: 'Inspect',
         name: 'inspect',
-        icon: 'i-carbon-search',
+        icon: 'carbon-search',
         view: {
           type: 'iframe',
           src: '/__inspect'
@@ -24,7 +25,7 @@ export default defineNuxtModule({
       tabs.push({
         title: 'UnoCSS',
         name: 'unocss',
-        icon: 'i-logos-unocss',
+        icon: 'logos-unocss',
         view: {
           type: 'iframe',
           src: '/__unocss/'

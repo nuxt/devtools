@@ -8,7 +8,7 @@ import { presetWebFonts, transformerDirectives } from 'unocss'
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
-    '~/modules/inspect',
+    '~/modules/custom-tabs',
     DevTools
   ],
   ssr: false,

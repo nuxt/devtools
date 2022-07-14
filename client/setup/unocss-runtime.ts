@@ -5,6 +5,7 @@ initUnocssRuntime({
   defaults: {
     presets: [
       presetIcons({
+        prefix: '',
         collections: {
           logos: () => import('@iconify-json/logos/icons.json').then(r => r.default),
           carbon: () => import('@iconify-json/carbon/icons.json').then(r => r.default),
