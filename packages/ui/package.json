@@ -11,6 +11,9 @@
     "./nuxt": {
       "import": "./dist/nuxt.mjs",
       "require": "./nuxt.cjs"
+    },
+    "./unocss": {
+      "import": "./dist/unocss.mjs"
     }
   },
   "main": "./dist/nuxt.mjs",
@@ -27,23 +30,23 @@
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.1.6",
-    "@nuxt/kit": "^3.0.0-rc.4",
+    "@nuxt/kit": "^3.0.0-rc.5",
     "@nuxtjs/color-mode": "^3.1.4",
-    "@unocss/core": "^0.44.1",
-    "@unocss/nuxt": "^0.44.1",
-    "@unocss/preset-attributify": "^0.44.1",
-    "@unocss/preset-icons": "^0.44.1",
-    "@unocss/preset-mini": "^0.44.1",
-    "@unocss/reset": "^0.44.1",
-    "@vueuse/core": "^8.9.2",
-    "@vueuse/integrations": "^8.9.2",
-    "@vueuse/nuxt": "^8.9.2",
+    "@unocss/core": "^0.44.2",
+    "@unocss/nuxt": "^0.44.2",
+    "@unocss/preset-attributify": "^0.44.2",
+    "@unocss/preset-icons": "^0.44.2",
+    "@unocss/preset-mini": "^0.44.2",
+    "@unocss/reset": "^0.44.2",
+    "@vueuse/core": "^8.9.3",
+    "@vueuse/integrations": "^8.9.3",
+    "@vueuse/nuxt": "^8.9.3",
     "defu": "^6.0.0",
     "focus-trap": "^6.9.4",
-    "unocss": "^0.44.1"
+    "unocss": "^0.44.2"
   },
   "devDependencies": {
-    "nuxt": "3.0.0-rc.4",
+    "nuxt": "^3.0.0-rc.5",
     "unbuild": "^0.7.4"
   },
   "publishConfig": {
