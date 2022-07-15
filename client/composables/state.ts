@@ -36,3 +36,5 @@ export async function getTabs () {
     ...custom
   ]
 }
+
+export const tabsInfo = []

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const tabs = await getTabs()
 </script>
 
 <template>
@@ -16,7 +15,7 @@ const tabs = await getTabs()
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
     <NuxtLink
-      v-for="m of tabs"
+      v-for="m of tabsInfo"
       :key="m.name"
       :to="m.path"
       flex

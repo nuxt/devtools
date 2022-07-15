@@ -16,6 +16,8 @@ clientFunctions.refresh = (type) => {
     })
   }
 }
+
+tabsInfo.push(...await getTabs())
 </script>
 
 <template>
@@ -23,7 +25,9 @@ clientFunctions.refresh = (type) => {
     <Notification />
     <div grid="~ cols-[1fr_220px]" h-full of-hidden>
       <div h-full of-auto>
-        <NuxtPage :page-key="n => n.fullPath" />
+        <KeepAlive>
+          <NuxtPage :page-key="n => n.fullPath" />
+        </KeepAlive>
       </div>
       <Drawer of-auto />
     </div>
