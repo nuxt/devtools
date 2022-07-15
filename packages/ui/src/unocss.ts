@@ -8,7 +8,7 @@ import { mergeDeep, presetUno, presetIcons, presetAttributify, presetTypography,
 
 // @unocss-include
 
-export const NuxtUIPreset: Preset<Theme> = {
+export const NuxtUIPreset = (): Preset => ({
   name: 'nuxt-ui',
   theme: mergeDeep(unoTheme, {
     colors: {
@@ -109,7 +109,7 @@ export const NuxtUIPreset: Preset<Theme> = {
     'n-tip-base': 'bg-context/8 text-context px-1em py-0.4em rounded flex items-center dark:bg-context/12',
     'n-tip-icon': '-ml-0.2em mr-0.4em text-1.1em'
   }
-}
+})
 
 export function extendUnocssOptions (user: UnocssNuxtOptions = {}): UnocssNuxtOptions {
   return {
@@ -128,7 +128,7 @@ export function extendUnocssOptions (user: UnocssNuxtOptions = {}): UnocssNuxtOp
         }
         // ...(user?.icons || {})
       }),
-      NuxtUIPreset as any,
+      NuxtUIPreset(),
       ...(user.presets || [])
     ],
     transformers: [
