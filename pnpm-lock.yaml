@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 overrides:
   unocss: ^0.44.2
-  '@nuxtjs/color-mode': ^3.1.4
+  '@nuxt/ui': npm:@nuxt/ui-edge@0.2.0-27630895.12c9e43
 
 importers:
 
@@ -66,7 +66,7 @@ importers:
       '@iconify-json/ri': ^1.1.3
       '@iconify-json/tabler': ^1.1.19
       '@nuxt/module-builder': ^0.1.7
-      '@nuxt/ui': ^0.2.0
+      '@nuxt/ui': npm:@nuxt/ui-edge@0.2.0-27630895.12c9e43
       '@nuxtjs/color-mode': ^3.1.4
       '@unocss/nuxt': ^0.44.2
       '@unocss/preset-icons': ^0.44.2
@@ -80,14 +80,14 @@ importers:
       shiki-es: ^0.1.2
       theme-vitesse: ^0.5.0
       unocss: ^0.44.2
-      vite-plugin-inspect: ^0.6.0
+      vite-plugin-inspect: ^0.5.0
     devDependencies:
       '@iconify-json/carbon': 1.1.6
       '@iconify-json/logos': 1.1.9
       '@iconify-json/ri': 1.1.3
       '@iconify-json/tabler': 1.1.19
       '@nuxt/module-builder': 0.1.7
-      '@nuxt/ui': 0.2.0_fuse.js@6.6.2
+      '@nuxt/ui': /@nuxt/ui-edge/0.2.0-27630895.12c9e43_fuse.js@6.6.2
       '@nuxtjs/color-mode': 3.1.4
       '@unocss/nuxt': 0.44.2
       '@unocss/preset-icons': 0.44.2
@@ -101,7 +101,7 @@ importers:
       shiki-es: 0.1.2
       theme-vitesse: 0.5.0
       unocss: 0.44.2
-      vite-plugin-inspect: 0.6.0
+      vite-plugin-inspect: 0.5.1
 
   playground:
     specifiers: {}
@@ -877,12 +877,8 @@ packages:
       - webpack
     dev: true
 
-  /@nuxt/ui-templates/0.2.1:
-    resolution: {integrity: sha512-ANeLVhvQ+GtEcjI4Ae9asG9ZJptsmv+DhW2wJJ5we5FjOUCaZ/jawO3VbABvgdNUMXRy+hhB+lKBG5YD3GGmUw==}
-    dev: true
-
-  /@nuxt/ui/0.2.0_fuse.js@6.6.2:
-    resolution: {integrity: sha512-HoWJFYlbHfVd7a2+hMtf1k9Msif5DKENUjWkuPIQO9DyuQDhj3zNqhK4b38VmmpWpEwdzJ5HKUbKctCNBelFHg==}
+  /@nuxt/ui-edge/0.2.0-27630895.12c9e43_fuse.js@6.6.2:
+    resolution: {integrity: sha512-EAaBOqwqk8+ElwLTQ6EWtOUklayrmfPWBb4wBpv+4HLsUzdqHwlkQPDBQlLZZJeTm2wcCUgJMb5jGvcE1EjREA==}
     dependencies:
       '@iconify-json/carbon': 1.1.6
       '@nuxt/kit': 3.0.0-rc.5
@@ -893,7 +889,7 @@ packages:
       '@unocss/preset-icons': 0.44.2
       '@unocss/preset-mini': 0.44.2
       '@unocss/reset': 0.44.2
-      '@vueuse/core': 8.9.2
+      '@vueuse/core': 8.9.3
       '@vueuse/integrations': 8.9.3_3shrvhjep3p5gdooudldt7rphu
       '@vueuse/nuxt': 8.9.3
       defu: 6.0.0
@@ -917,6 +913,10 @@ packages:
       - vite
       - vue
       - webpack
+    dev: true
+
+  /@nuxt/ui-templates/0.2.1:
+    resolution: {integrity: sha512-ANeLVhvQ+GtEcjI4Ae9asG9ZJptsmv+DhW2wJJ5we5FjOUCaZ/jawO3VbABvgdNUMXRy+hhB+lKBG5YD3GGmUw==}
     dev: true
 
   /@nuxt/vite-builder/3.0.0-rc.5_vue@3.2.37:
@@ -1733,23 +1733,6 @@ packages:
     resolution: {integrity: sha512-4rSJemR2NQIo9Klm1vabqWjD8rs/ZaJSzMxkMNeJS6lHiUjjUeYFbooN19NgFjztubEKh3WlZUeOLVdbbUWHsw==}
     dev: true
 
-  /@vueuse/core/8.9.2:
-    resolution: {integrity: sha512-dE3/JgwqIHmmtmRBdZAnq87rZCSFbYVps2t3gWy9Jv/+Qp6sHSSKuPFtwguJVZ2OnaGnB/AMRmx4CuFRxFin3A==}
-    peerDependencies:
-      '@vue/composition-api': ^1.1.0
-      vue: ^2.6.0 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      '@types/web-bluetooth': 0.0.14
-      '@vueuse/metadata': 8.9.2
-      '@vueuse/shared': 8.9.2
-      vue-demi: 0.13.1
-    dev: true
-
   /@vueuse/core/8.9.3:
     resolution: {integrity: sha512-q2pr3N7FPG7IBBhEXTYOJU+38VwKMLP5IfD33byzBV4Th7f1JHT4qPKvJrvr17knAefPRzNqgt9et+xFqaRlPQ==}
     peerDependencies:
@@ -1820,10 +1803,6 @@ packages:
       - vue
     dev: true
 
-  /@vueuse/metadata/8.9.2:
-    resolution: {integrity: sha512-g2s2BeyeEtJElmMFfFPnM+BTvnt0omniyvz8U18/zXDpQIMGozlNQgHoFeratyMfgVBhH/u2VKzmchChtDsgPQ==}
-    dev: true
-
   /@vueuse/metadata/8.9.3:
     resolution: {integrity: sha512-57gZZKtWAmcJaUBmciCohvmumVLz4+FnoVnWj7U5BWs5PC2/7gU9Z0/i1i9leDNeboAauFzAq7z1GjS8eYnT+w==}
     dev: true
@@ -1844,20 +1823,6 @@ packages:
       - vite
       - vue
       - webpack
-    dev: true
-
-  /@vueuse/shared/8.9.2:
-    resolution: {integrity: sha512-s4Nk82oheL5z1GywyGnqjob0MzbAt88olMZa0vgt/p3gcMsT8Ff7+SqmNgEFC6AAs6xiuhOAZpnew9Zs3d90yQ==}
-    peerDependencies:
-      '@vue/composition-api': ^1.1.0
-      vue: ^2.6.0 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      vue-demi: 0.13.1
     dev: true
 
   /@vueuse/shared/8.9.3:
@@ -7705,11 +7670,11 @@ packages:
       vscode-uri: 3.0.3
     dev: true
 
-  /vite-plugin-inspect/0.6.0:
-    resolution: {integrity: sha512-p2Ti5z+AscXx7JAW1nkU4bgiyKWW3O6D9UbaOEk+yz0v6R2E452OSukYhbs1zhqRnHL0W6ZsmG/lwz8aSQpSjg==}
+  /vite-plugin-inspect/0.5.1:
+    resolution: {integrity: sha512-cSVdNhVPAfH3OdVSV331/t/YWjg++HR/KiBkVST8pjLISna7O8gRwU8NN7KLrEBJqKKQqoRYLBb0RSdYurEyeg==}
     engines: {node: '>=14'}
     peerDependencies:
-      vite: ^3.0.0
+      vite: ^2.9.0 || ^3.0.0-0
     dependencies:
       '@rollup/pluginutils': 4.2.1
       debug: 4.3.4

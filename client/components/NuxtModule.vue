@@ -35,11 +35,12 @@ const npmBase = 'https://www.npmjs.com/package/'
     p3
     flex="~ gap2"
   >
-    <div flex-auto flex="~ col gap1" px1>
+    <div flex-auto flex="~ col gap1" px1 of-hidden>
       <NuxtLink
         :to="npmBase + (data.npm || data.name)"
         target="_blank"
-        text-lg
+        text-lg text-ellipsis
+        of-hidden ws-nowrap
         hover="underline text-primary"
       >
         {{ data.name }}
@@ -51,8 +52,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         v-if="data.website"
         :to="data.website"
         target="_blank"
-        text-sm
-        op50
+        text-sm op50
         hover="op100 underline text-primary"
       >
         <span carbon-link /> {{ data.website.replace(/^https?:\/\//, '') }}
@@ -71,12 +71,8 @@ const npmBase = 'https://www.npmjs.com/package/'
       </div>
     </div>
     <div
-      h-20
-      w-20
-      rounded
-      bg-gray:10
-      p4
-      flex-none
+      h-20 w-20 p4
+      rounded bg-gray:10 flex-none
     >
       <img v-if="data.icon" :src="iconBase + data.icon" :alt="name">
     </div>

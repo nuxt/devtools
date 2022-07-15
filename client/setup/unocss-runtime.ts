@@ -11,7 +11,12 @@ initUnocssRuntime({
           carbon: () => import('@iconify-json/carbon/icons.json').then(r => r.default),
           ri: () => import('@iconify-json/ri/icons.json').then(r => r.default)
         },
-        cdn: 'https://esm.sh/'
+        cdn: 'https://esm.sh/',
+        scale: 1.2,
+        extraProperties: {
+          display: 'inline-block',
+          'vertical-align': 'middle'
+        }
       })
     ]
   }
