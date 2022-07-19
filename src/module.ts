@@ -60,6 +60,17 @@ export default defineNuxtModule<ModuleOptions>({
       }
     })
 
+    // TODO: vscode-server
+    // customTabs.push({
+    //   name: 'vscode',
+    //   title: 'VS Code',
+    //   icon: 'logos-visual-studio-code',
+    //   view: {
+    //     type: 'iframe',
+    //     src: 'http://localhost:8000/?folder=' + encodeURIComponent(nuxt.options.rootDir)
+    //   }
+    // })
+
     await nuxt.callHook('devtools:custom-tabs', customTabs)
   }
 })
