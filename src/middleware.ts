@@ -58,6 +58,7 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         `${filepath}.ts`
       ].find(i => existsSync(i))
       if (file) {
+        // @ts-expect-error
         await import('launch-editor').then(r => (r.default || r)(file))
       }
     }

@@ -1,3 +1,13 @@
 {
-  "extends": "./client/.nuxt/tsconfig.json"
+  "extends": "./client/.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext"
+  },
+  "include": [
+    "src/**/*.ts",
+    "client/**/*.ts",
+    "client/**/*.vue"
+  ]
 }

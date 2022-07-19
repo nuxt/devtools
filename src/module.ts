@@ -44,8 +44,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     // TODO: Use WS from nitro server when possible
     nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
-      server.middlewares.use(PATH_ENTRY, tinyws())
-      server.middlewares.use(PATH_ENTRY, middleware)
+      server.middlewares.use(PATH_ENTRY, tinyws() as any)
+      server.middlewares.use(PATH_ENTRY, middleware as any)
       if (existsSync(clientDir)) {
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
       }
