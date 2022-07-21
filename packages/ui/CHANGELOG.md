@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/nuxt/ui/compare/@nuxt/ui@0.2.0...@nuxt/ui@0.3.0) (2022-07-21)
+
+
+### Features
+
+* **ui:** expose unocss preset ([12c9e43](https://github.com/nuxt/ui/commit/12c9e43ae05a567aafe9891130e369494b62aa96))
+
+
+
+
+
 # [0.2.0](https://github.com/nuxt/ui/compare/@nuxt/ui@0.1.1...@nuxt/ui@0.2.0) (2022-07-12)
 
 
