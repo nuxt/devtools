@@ -1,5 +1,6 @@
 import initUnocssRuntime from '@unocss/runtime'
-import presetIcons from '@unocss/preset-icons'
+// @ts-expect-error missin types
+import presetIcons from '@unocss/preset-icons/browser'
 
 initUnocssRuntime({
   defaults: {

@@ -19,21 +19,12 @@ export default defineNuxtConfig({
       publicDir: resolve(__dirname, '../dist/client')
     }
   },
-  alias: {
-    // we are not using them, alias to anything to avoid bundler going to node specific modules
-    '@iconify/utils/lib/loader/node-loader': 'vue',
-    '@iconify/utils/lib/loader/node-loader.cjs': 'vue'
-  },
   app: {
     baseURL: '/__nuxt_devtools__/client'
   },
   vite: {
     build: {
       target: 'esnext'
-    },
-    optimizeDeps: {
-      include: ['debug'],
-      exclude: ['@iconify/utils', '@unocss/plugins-icons']
     }
   }
 })
