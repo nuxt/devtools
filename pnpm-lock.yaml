@@ -72,7 +72,7 @@ importers:
       '@unocss/preset-icons': ^0.44.7
       '@unocss/preset-uno': ^0.44.7
       '@unocss/runtime': ^0.44.7
-      '@vueuse/nuxt': ^8.9.4
+      '@vueuse/nuxt': ^9.0.2
       esno: ^0.16.3
       fuse.js: ^6.6.2
       nuxt: ^3.0.0-rc.6
@@ -93,7 +93,7 @@ importers:
       '@unocss/preset-icons': 0.44.7
       '@unocss/preset-uno': 0.44.7
       '@unocss/runtime': 0.44.7
-      '@vueuse/nuxt': 8.9.4
+      '@vueuse/nuxt': 9.0.2
       esno: 0.16.3
       fuse.js: 6.6.2
       nuxt: 3.0.0-rc.6
@@ -1266,6 +1266,10 @@ packages:
     resolution: {integrity: sha512-5d2RhCard1nQUC3aHcq/gHzWYO6K0WJmAbjO7mQJgCQKtZpgXxv1rOM6O/dBDhDYYVutk1sciOgNSe+5YyfM8A==}
     dev: true
 
+  /@types/web-bluetooth/0.0.15:
+    resolution: {integrity: sha512-w7hEHXnPMEZ+4nGKl/KDRVpxkwYxYExuHOYXyzIzCDzEZ9ZCGMAewulr9IqJu2LR4N37fcnb1XVeuZ09qgOxhA==}
+    dev: true
+
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
@@ -1873,6 +1877,18 @@ packages:
       vue-demi: 0.13.1
     dev: true
 
+  /@vueuse/core/9.0.2:
+    resolution: {integrity: sha512-kOIqaQPSs7OSByWg1ulEKRUJbsq3FmbJiUr0RhEKpt3O1Uhl4DrDj85DUbQBABVYgPvSaY6AE/fP3/FOcRIOoQ==}
+    dependencies:
+      '@types/web-bluetooth': 0.0.15
+      '@vueuse/metadata': 9.0.2
+      '@vueuse/shared': 9.0.2
+      vue-demi: 0.13.1
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: true
+
   /@vueuse/head/0.7.6_vue@3.2.37:
     resolution: {integrity: sha512-cOWqCkT3WiF5oEpw+VVEWUJd9RLD5rc7DmnFp3cePsejp+t7686uKD9Z9ZU7Twb7R/BI8iexKTmXo9D/F3v6UA==}
     peerDependencies:
@@ -1934,12 +1950,34 @@ packages:
     resolution: {integrity: sha512-IwSfzH80bnJMzqhaapqJl9JRIiyQU0zsRGEgnxN6jhq7992cPUJIRfV+JHRIZXjYqbwt07E1gTEp0R0zPJ1aqw==}
     dev: true
 
+  /@vueuse/metadata/9.0.2:
+    resolution: {integrity: sha512-TRh+TNUYXiodatSAxd0xZc7sh4RfktVVgNFIN7TCQXKyancbCAcWfHvKfgdlX8LcqSBxKoHVa90n0XdUbboTkw==}
+    dev: true
+
   /@vueuse/nuxt/8.9.4:
     resolution: {integrity: sha512-iA0/maD70161MYY7HjCGmxMd97LqiaDA5d7pZnuBe3Xanm6xetvbvYCLAlhigbTujfDUQcmD0qiHbNaXaIP5Xg==}
     dependencies:
-      '@nuxt/kit': 3.0.0-rc.5
+      '@nuxt/kit': 3.0.0-rc.6
       '@vueuse/core': 8.9.4
       '@vueuse/metadata': 8.9.4
+      local-pkg: 0.4.2
+      vue-demi: 0.13.1
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - esbuild
+      - rollup
+      - supports-color
+      - vite
+      - vue
+      - webpack
+    dev: true
+
+  /@vueuse/nuxt/9.0.2:
+    resolution: {integrity: sha512-1NYT3DC58fZ0YxFGaGZ4V0uAd3E4YMMnalKd1K1HBvrW3exB9zcBW52spKMspZL9dnNlxyv3TauH52b94fMxqg==}
+    dependencies:
+      '@nuxt/kit': 3.0.0-rc.6
+      '@vueuse/core': 9.0.2
+      '@vueuse/metadata': 9.0.2
       local-pkg: 0.4.2
       vue-demi: 0.13.1
     transitivePeerDependencies:
@@ -1978,6 +2016,15 @@ packages:
         optional: true
     dependencies:
       vue-demi: 0.13.1
+    dev: true
+
+  /@vueuse/shared/9.0.2:
+    resolution: {integrity: sha512-KwBDefK2ljLESpt0ffe2w8EGUCb3IaMfTzeytB/uHHjHOGOEIHLHHyn8W2C48uGQEvoe5iwaW4Bfp8cRUM6IFA==}
+    dependencies:
+      vue-demi: 0.13.1
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
     dev: true
 
   /abbrev/1.1.1:
