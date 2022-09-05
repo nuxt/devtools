@@ -22,7 +22,7 @@ const openInEditor = () => {
 <template>
   <div class="relative font-sans" n="green6">
     <div class="container max-w-200 mx-auto py-10 px-4">
-      <div class="flex items-end gap-3 mb-4 relative">
+      <div class="flex flex-wrap items-end gap-3 mb-4 relative">
         <slot name="logo">
           <NuxtContentLogo v-if="repo === 'nuxt/content'" class="h-10" />
           <NuxtLogo v-else class="h-10" />
