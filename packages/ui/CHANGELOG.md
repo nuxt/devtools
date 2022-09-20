@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/nuxt/ui/compare/@nuxt/ui@0.3.2...@nuxt/ui@0.3.3) (2022-09-20)
+
+
+### Bug Fixes
+
+* **ui:** auto wrap for example layout, close [#163](https://github.com/nuxt/ui/issues/163) ([#164](https://github.com/nuxt/ui/issues/164)) ([3761485](https://github.com/nuxt/ui/commit/37614856d3816f520a48734c6679be1a79600407))
+
+
+
+
+
 ## [0.3.2](https://github.com/nuxt/ui/compare/@nuxt/ui@0.3.1...@nuxt/ui@0.3.2) (2022-09-05)
 
 **Note:** Version bump only for package @nuxt/ui
