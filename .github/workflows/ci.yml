@@ -1,4 +1,3 @@
-
 name: ci
 
 on:
@@ -18,10 +17,11 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "16"
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint
+      - run: pnpm test
       - run: pnpm build
       - name: Release Edge
         if: |
