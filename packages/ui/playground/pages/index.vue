@@ -89,8 +89,8 @@ const radio = ref('a')
           <NLink to="/">
             NuxtLink
           </NLink>
-          <NLink href="https://v3.nuxtjs.org/">
-            Nuxtjs.org
+          <NLink href="https://nuxt.com">
+            nuxt.com
           </NLink>
         </form>
       </NCard>
