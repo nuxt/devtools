@@ -11,9 +11,6 @@ UI kit for Nuxt 3's examples and internal tooling UI.
 ## Install
 
 ```ts
-// nuxt.config.js
-import { defineNuxtConfig } from 'nuxt'
-
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui'
@@ -61,8 +58,6 @@ It's also possible to override the default theme globally, for example:
 
 ```ts
 // nuxt.config.js
-import { defineNuxtConfig } from 'nuxt'
-
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui'
