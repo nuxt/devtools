@@ -23,7 +23,7 @@ importers:
       bumpp: ^8.2.1
       eslint: ^8.20.0
       flatted: ^3.2.6
-      h3: ^0.7.12
+      h3: ^1.0.1
       launch-editor: ^2.4.0
       nuxt: ^3.0.0-rc.6
       pathe: ^0.3.2
@@ -37,7 +37,7 @@ importers:
       '@nuxt/kit': 3.0.0-rc.6
       birpc: 0.2.3
       flatted: 3.2.6
-      h3: 0.7.12
+      h3: 1.0.1
       launch-editor: 2.4.0
       pathe: 0.3.2
       sirv: 2.0.2
@@ -2802,6 +2802,10 @@ packages:
   /destr/1.1.1:
     resolution: {integrity: sha512-QqkneF8LrYmwATMdnuD2MLI3GHQIcBnG6qFC2q9bSH430VTCDAVjcspPmUaKhPGtAtPAftIUFqY1obQYQuwmbg==}
 
+  /destr/1.2.1:
+    resolution: {integrity: sha512-ud8w0qMLlci6iFG7CNgeRr8OcbUWMsbfjtWft1eJ5Luqrz/M8Ebqk/KCzne8rKUlIQWWfLv0wD6QHrqOf4GshA==}
+    dev: false
+
   /destroy/1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
@@ -4493,15 +4497,6 @@ packages:
       duplexer: 0.1.2
     dev: true
 
-  /h3/0.7.10:
-    resolution: {integrity: sha512-HcUQxlOocG2uf6PQLu3Bxk0KSXcTuxSF6kRclFBDO7y74Ml0wCwTvmoN5zmrzoxbNHecDNUrcGr8qSNGcOqAHQ==}
-    dependencies:
-      cookie-es: 0.5.0
-      destr: 1.1.1
-      radix3: 0.1.2
-      ufo: 0.8.5
-    dev: true
-
   /h3/0.7.12:
     resolution: {integrity: sha512-RLil5Hr4lzK52eQL3zEG6rE7OqYC8SwmPkcc1AoLIgJAqGRRgfrtkb/NYUWui0/DMeErzhGjaO0pjEuXyILzOw==}
     dependencies:
@@ -4509,6 +4504,16 @@ packages:
       destr: 1.1.1
       radix3: 0.1.2
       ufo: 0.8.5
+    dev: true
+
+  /h3/1.0.1:
+    resolution: {integrity: sha512-gDCGpRvjchZW2JBlTqbJ9IOs+mdkXXuwSQkSye+jubHAv/UhdamKqoQvd4RFgyBNjHSId8Y+b10UdTcPlP/V+w==}
+    dependencies:
+      cookie-es: 0.5.0
+      destr: 1.2.1
+      radix3: 1.0.0
+      ufo: 1.0.0
+    dev: false
 
   /has-bigints/1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -5607,7 +5612,7 @@ packages:
       escape-string-regexp: 5.0.0
       fs-extra: 10.1.0
       globby: 13.1.2
-      h3: 0.7.10
+      h3: 0.7.12
       hash-sum: 2.0.0
       hookable: 5.1.1
       knitwork: 0.1.2
@@ -6353,6 +6358,11 @@ packages:
 
   /radix3/0.1.2:
     resolution: {integrity: sha512-Mpfd/OuX0zoJ6ojLD/RTOHvJPg6e6PjINtmYzV87kIXc5iUtDz34i7gg4SV4XjqRJTmSiYO/g9i/mKWGf4z8wg==}
+    dev: true
+
+  /radix3/1.0.0:
+    resolution: {integrity: sha512-6n3AEXth91ASapMVKiEh2wrbFJmI+NBilrWE0AbiGgfm0xet0QXC8+a3K19r1UVYjUjctUgB053c3V/J6V0kCQ==}
+    dev: false
 
   /randombytes/2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -7200,6 +7210,10 @@ packages:
 
   /ufo/0.8.5:
     resolution: {integrity: sha512-e4+UtA5IRO+ha6hYklwj6r7BjiGMxS0O+UaSg9HbaTefg4kMkzj4tXzEBajRR+wkxf+golgAWKzLbytCUDMJAA==}
+
+  /ufo/1.0.0:
+    resolution: {integrity: sha512-DRty0ZBNlJ2R59y4mEupJRKLbkLQsc4qtxjpQv78AwEDuBkaUogMc2LkeqW3HddFlw6NwnXYfdThEZOiNgkmmQ==}
+    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
