@@ -1,5 +1,5 @@
 import { $fetch } from 'ohmyfetch'
-import type { ModuleInfo, TabInfo } from '../../src/types'
+import type { ModuleBuiltinTab, ModuleCustomTab, ModuleInfo } from '../../src/types'
 
 let modules: ModuleInfo[] | undefined
 
@@ -10,10 +10,10 @@ export async function useModulesInfo() {
   return modules
 }
 
-export async function getTabs(): Promise<TabInfo[]> {
+export async function getTabs() {
   const router = useRouter()
   const routes = router.getRoutes()
-  const custom = (await rpc.getCustomTabs()).map((i) => {
+  const custom = (await rpc.getCustomTabs()).map((i): ModuleCustomTab => {
     return {
       ...i,
       path: `/modules/custom-${i.name}`,
@@ -23,7 +23,7 @@ export async function getTabs(): Promise<TabInfo[]> {
   const builtin = routes
     .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
     .sort((a, b) => (a.meta.order || 0) - (b.meta.order || 0))
-    .map((i): TabInfo => {
+    .map((i): ModuleBuiltinTab => {
       return {
         name: i.name as string,
         path: i.path,
@@ -32,10 +32,11 @@ export async function getTabs(): Promise<TabInfo[]> {
       }
     })
 
-  return [
-    ...builtin,
-    ...custom,
-  ]
+  return {
+    custom,
+    builtin,
+  }
 }
 
-export const tabsInfo: TabInfo[] = []
+export const tabsInfoCustom: ModuleCustomTab[] = []
+export const tabsInfoBuiltin: ModuleBuiltinTab[] = []

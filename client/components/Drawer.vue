@@ -14,33 +14,22 @@
       </NDarkToggle>
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
-    <NuxtLink
-      v-for="m of tabsInfo"
-      :key="m.name"
-      :to="m.path"
-      flex
-      items-center
-      gap2
-      px3
-      py2
-      text-true-gray
-      border="b base"
-      hover="bg-gray/5"
-      exact-active-class="!text-primary"
-    >
-      <img
-        v-if="m.icon && (m.icon.startsWith('/') || m.icon.match(/^https?:/))"
-        w6
-        :src="m.icon"
-        :alt="m.title"
-      >
-      <div
-        v-else
-        w6
-        :class="m.icon || 'carbon-assembly-reference'"
-      />
-      <div>{{ m.title }}</div>
-    </NuxtLink>
+    <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="t b base">
+      Builtin
+    </div>
+    <DrawerItem
+      v-for="tab of tabsInfoBuiltin"
+      :key="tab.name"
+      :tab="tab"
+    />
+    <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
+      Modules
+    </div>
+    <DrawerItem
+      v-for="tab of tabsInfoCustom"
+      :key="tab.name"
+      :tab="tab"
+    />
     <div flex-auto />
   </div>
 </template>

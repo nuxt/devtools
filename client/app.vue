@@ -16,7 +16,13 @@ clientFunctions.refresh = (type) => {
   }
 }
 
-tabsInfo.push(...await getTabs())
+const {
+  custom,
+  builtin,
+} = await getTabs()
+
+tabsInfoBuiltin.push(...builtin)
+tabsInfoCustom.push(...custom)
 </script>
 
 <template>

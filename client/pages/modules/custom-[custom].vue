@@ -5,7 +5,7 @@ const mode = useColorMode()
 const route = useRoute()
 
 const name = $computed(() => route.params.custom)
-const tab = $computed(() => tabsInfo.find(i => i.name === name) as ModuleCustomTab)
+const tab = $computed(() => tabsInfoCustom.find(i => i.name === name) as ModuleCustomTab)
 
 const iframeEl = $ref<HTMLIFrameElement>()
 

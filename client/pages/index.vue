@@ -3,7 +3,6 @@
 
 <template>
   <div
-    p4
     bg-orange:10
     text-orange6
     px4

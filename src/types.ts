@@ -73,9 +73,10 @@ export interface GithubContributor {
 
 export interface ModuleCustomTab {
   icon?: string
-  name?: string
-  title?: string
-  view?: ModuleCustomView
+  name: string
+  title: string
+  view: ModuleCustomView
+  path?: string
 }
 
 export interface ModuleCustomView {
@@ -83,6 +84,9 @@ export interface ModuleCustomView {
   src: string
 }
 
-export interface TabInfo extends ModuleCustomTab {
-  path: string
+export interface ModuleBuiltinTab {
+  icon?: string
+  name: string
+  title?: string
+  path?: string
 }
