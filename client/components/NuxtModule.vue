@@ -14,6 +14,7 @@ const ignores = [
   '@nuxt/telemetry',
 ]
 
+const isPackageModule = $computed(() => mod.entryPath && isNodeModulePath(mod.entryPath))
 const name = $computed(() => mod.meta?.name || mod.entryPath || '')
 const collection = await useModulesInfo()
 const data = $computed(() => ({
@@ -37,6 +38,7 @@ const npmBase = 'https://www.npmjs.com/package/'
   >
     <div flex-auto flex="~ col gap1" px1 of-hidden>
       <NuxtLink
+        v-if="isPackageModule"
         :to="npmBase + (data.npm || data.name)"
         target="_blank"
         text-lg text-ellipsis
@@ -45,6 +47,21 @@ const npmBase = 'https://www.npmjs.com/package/'
       >
         {{ data.name }}
       </NuxtLink>
+      <a
+        v-else-if="mod.entryPath"
+        text-lg
+        text-ellipsis of-hidden
+        ws-nowrap hover="underline text-primary"
+        @click="rpc.openInEditor(mod.entryPath!)"
+      >
+        {{ data.name }}
+      </a>
+      <div
+        v-else text-lg text-ellipsis of-hidden ws-nowrap
+      >
+        {{ data.name }}
+      </div>
+
       <div op50 text-sm>
         {{ data.description ? data.description : '(no description)' }}
       </div>

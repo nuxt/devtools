@@ -22,7 +22,7 @@ export function getModuleNameFromPath(path: string) {
 export function isBuiltInModule(name: string | undefined) {
   if (!name)
     return
-  return ['nuxt', '#app', '#head'].includes(name)
+  return ['nuxt', '#app', '#head', 'vue'].includes(name)
 }
 
 export function getShortPath(path: string, root: string) {
