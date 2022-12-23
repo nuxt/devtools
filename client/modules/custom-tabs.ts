@@ -4,10 +4,11 @@ import Inspect from 'vite-plugin-inspect'
 // TODO: demo only, should be contributed by modules
 export default defineNuxtModule({
   meta: {
-    name: 'custom-tabs'
+    name: 'custom-tabs',
   },
-  setup (_, nuxt) {
-    if (!nuxt.options.dev) { return }
+  setup(_, nuxt) {
+    if (!nuxt.options.dev)
+      return
 
     addVitePlugin(Inspect())
 
@@ -18,8 +19,8 @@ export default defineNuxtModule({
         icon: 'carbon-search',
         view: {
           type: 'iframe',
-          src: '/_nuxt/__inspect/'
-        }
+          src: '/_nuxt/__inspect/',
+        },
       })
 
       tabs.push({
@@ -28,9 +29,9 @@ export default defineNuxtModule({
         icon: 'logos-unocss',
         view: {
           type: 'iframe',
-          src: '/__unocss/'
-        }
+          src: '/__unocss/',
+        },
       })
     })
-  }
+  },
 })

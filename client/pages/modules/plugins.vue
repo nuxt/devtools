@@ -3,7 +3,7 @@ import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-plug',
-  title: 'Plugins'
+  title: 'Plugins',
 })
 </script>
 

@@ -6,12 +6,12 @@ export default defineConfig({
     'border-base': 'border-gray/15',
     'bg-base': 'bg-white dark:bg-[#151515]',
     'n-bg-base': 'bg-base',
-    'x-divider': 'h-1px w-full bg-gray/15'
+    'x-divider': 'h-1px w-full bg-gray/15',
   },
   theme: {
     colors: {
-      primary: '#03ae67'
-    }
+      primary: '#03ae67',
+    },
   },
   presets: [
     presetUno(),
@@ -20,17 +20,17 @@ export default defineConfig({
       prefix: '',
       scale: 1.2,
       extraProperties: {
-        display: 'inline-block',
-        'vertical-align': 'middle'
-      }
+        'display': 'inline-block',
+        'vertical-align': 'middle',
+      },
     }),
     presetWebFonts({
       fonts: {
         sans: 'Inter',
-        mono: 'Fira Code'
-      }
+        mono: 'Fira Code',
+      },
     }),
-    NuxtUIPreset()
+    NuxtUIPreset(),
   ],
   safelist: [
     'carbon-nominal',
@@ -42,9 +42,9 @@ export default defineConfig({
     'carbon-data-set',
     'carbon-layers',
     'carbon-cloud',
-    'carbon-plug'
+    'carbon-plug',
   ],
   transformers: [
-    transformerDirectives()
-  ]
+    transformerDirectives(),
+  ],
 })

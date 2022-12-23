@@ -1,27 +1,30 @@
-// eslint-disable-next-line import/named
 import { stringify } from 'flatted'
 import { objectPick } from '@antfu/utils'
 import { defineNuxtPlugin } from '#app'
 
-function h<K extends keyof HTMLElementTagNameMap> (
+function h<K extends keyof HTMLElementTagNameMap>(
   type: K,
   props: Partial<Omit<HTMLElementTagNameMap[K], 'style'>> & {
     style?: Partial<CSSStyleDeclaration>
   } = {},
   children?: HTMLElement[],
-  setup?: (el: HTMLElementTagNameMap[K]) => void
+  setup?: (el: HTMLElementTagNameMap[K]) => void,
 ): HTMLElementTagNameMap[K] {
   const el = document.createElement(type)
   const { style, ...attrs } = props
   Object.assign(el, attrs)
-  if (style) { Object.assign(el.style, style) }
-  if (children) { children.forEach(c => el.appendChild(c)) }
-  if (setup) { setup(el) }
+  if (style)
+    Object.assign(el.style, style)
+  if (children)
+    children.forEach(c => el.appendChild(c))
+  if (setup)
+    setup(el)
   return el
 }
 
 export default defineNuxtPlugin((nuxt) => {
-  if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top) { return }
+  if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
+    return
 
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
   const ENTRY_PATH = '/__nuxt_devtools__/entry/'
@@ -32,27 +35,27 @@ export default defineNuxtPlugin((nuxt) => {
     sendPages()
   })
 
-  function sendPayload () {
+  function sendPayload() {
     post('setPayload', {
       url: location.pathname,
       time: Date.now(),
-      ...nuxt.payload
+      ...nuxt.payload,
     })
   }
-  function sendPages () {
+  function sendPages() {
     post('setPages',
       (nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
-        .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+        .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children'])),
     )
   }
 
-  function post (method: string, data: any) {
+  function post(method: string, data: any) {
     return fetch(ENTRY_PATH, {
       method: 'POST',
       body: JSON.stringify({
         method,
-        data: stringify(data)
-      })
+        data: stringify(data),
+      }),
     })
       .catch()
   }
@@ -68,8 +71,8 @@ export default defineNuxtPlugin((nuxt) => {
       outline: 'none',
       zIndex: '9999',
       border: '1px solid rgba(125,125,125,0.2)',
-      boxShadow: '3px 5px 8px rgba(0,0,0,0.05)'
-    }
+      boxShadow: '3px 5px 8px rgba(0,0,0,0.05)',
+    },
   })
 
   const container = h('div', {
@@ -80,8 +83,8 @@ export default defineNuxtPlugin((nuxt) => {
       left: '10px',
       height: '600px',
       maxHeight: 'calc(100vh - 20px)',
-      width: 'calc(100vw - 20px)'
-    }
+      width: 'calc(100vw - 20px)',
+    },
   },
   [
     iframe,
@@ -95,15 +98,16 @@ export default defineNuxtPlugin((nuxt) => {
         zIndex: '99999',
         height: '2rem',
         width: '2rem',
-        padding: '5px'
-      }
-    }, [], el => el.addEventListener('click', toggle))
+        padding: '5px',
+      },
+    }, [], el => el.addEventListener('click', toggle)),
   ])
 
-  function toggle () {
+  function toggle() {
     if (Array.from(document.body.children).includes(container)) {
       container.style.display = container.style.display === 'none' ? 'block' : 'none'
-    } else {
+    }
+    else {
       document.body.appendChild(container)
       iframe.contentDocument.body.parentElement.className = document.body.parentElement.className
     }
@@ -112,7 +116,7 @@ export default defineNuxtPlugin((nuxt) => {
   const button = h('button',
     {
       title: 'Open Nuxt DevTools',
-      className: 'nuxt-devtools-button'
+      className: 'nuxt-devtools-button',
     },
     [
       h('img', {
@@ -120,11 +124,11 @@ export default defineNuxtPlugin((nuxt) => {
         style: {
           height: '20px',
           width: '20px',
-          margin: 'auto'
-        }
-      })
+          margin: 'auto',
+        },
+      }),
     ],
-    el => el.addEventListener('click', toggle)
+    el => el.addEventListener('click', toggle),
   )
 
   const style = h('style', {
@@ -154,7 +158,7 @@ export default defineNuxtPlugin((nuxt) => {
   background: transparent;
   border: none;
 }
-`
+`,
   })
 
   document.body.appendChild(button)

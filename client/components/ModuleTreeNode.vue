@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { TreeNode } from '~/composables/tree'
+import type { TreeNode } from '~/composables/tree'
 
 withDefaults(defineProps<{
   node: TreeNode
   icon?: string
 }>(), {
-  icon: 'carbon-folder'
+  icon: 'carbon-folder',
 })
 
 const route = useRoute()

@@ -5,7 +5,7 @@ import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-function',
-  title: 'Composables'
+  title: 'Composables',
 })
 
 const search = $ref('')
@@ -17,8 +17,8 @@ const fuse = new Fuse(functions, {
   keys: [
     'from',
     'as',
-    'name'
-  ]
+    'name',
+  ],
 })
 
 const filtered = $computed(() => {
@@ -34,14 +34,15 @@ const filtered = $computed(() => {
           ? builtin
           : lib
         : user
-      if (!map.has(i.from)) { map.set(i.from, []) }
+      if (!map.has(i.from))
+        map.set(i.from, [])
       map.get(i.from).push(i)
     })
 
   return {
     user,
     lib,
-    builtin
+    builtin,
   }
 })
 </script>

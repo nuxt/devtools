@@ -28,14 +28,13 @@ const clientDir = resolve(fileURLToPath(import.meta.url), '../client')
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@nuxt/devtools',
-    configKey: 'devtools'
+    configKey: 'devtools',
   },
   defaults: {
   },
-  async setup (_options, nuxt) {
-    if (!nuxt.options.dev) {
+  async setup(_options, nuxt) {
+    if (!nuxt.options.dev)
       return
-    }
 
     addPlugin(join(runtimeDir, 'floating'), {})
 
@@ -46,9 +45,8 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
       server.middlewares.use(PATH_ENTRY, tinyws() as any)
       server.middlewares.use(PATH_ENTRY, middleware as any)
-      if (existsSync(clientDir)) {
+      if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
-      }
     })
 
     customTabs.push({
@@ -56,8 +54,8 @@ export default defineNuxtModule<ModuleOptions>({
       title: 'Virtual Files',
       view: {
         type: 'iframe',
-        src: '/_vfs'
-      }
+        src: '/_vfs',
+      },
     })
 
     // TODO: vscode-server
@@ -72,5 +70,5 @@ export default defineNuxtModule<ModuleOptions>({
     // })
 
     await nuxt.callHook('devtools:custom-tabs', customTabs)
-  }
+  },
 })

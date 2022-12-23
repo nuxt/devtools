@@ -9,13 +9,15 @@ const tab = $computed(() => tabsInfo.find(i => i.name === name) as ModuleCustomT
 
 const iframeEl = $ref<HTMLIFrameElement>()
 
-function syncColorMode () {
-  if (!iframeEl) { return }
+function syncColorMode() {
+  if (!iframeEl)
+    return
   try {
     const html = iframeEl.contentWindow.document.querySelector('html')
     html.classList.toggle('dark', mode.value === 'dark')
     html.classList.toggle('light', mode.value === 'dark')
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
   }
 }

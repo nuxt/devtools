@@ -11,7 +11,7 @@ const ignores = [
   'components',
   'imports',
   '@nuxt/devtools',
-  '@nuxt/telemetry'
+  '@nuxt/telemetry',
 ]
 
 const name = $computed(() => mod.meta?.name || mod.entryPath || '')
@@ -19,7 +19,7 @@ const collection = await useModulesInfo()
 const data = $computed(() => ({
   name,
   ...mod?.meta,
-  ...(collection || []).find?.(i => i.npm === name || i.name === name)
+  ...(collection || []).find?.(i => i.npm === name || i.name === name),
 }))
 
 const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/website/public/icons/'

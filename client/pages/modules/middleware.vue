@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-layers',
   title: 'Middleware',
-  wip: true
+  wip: true,
 })
 </script>
 

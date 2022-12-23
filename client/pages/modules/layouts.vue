@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-chart-treemap',
   title: 'Layouts',
-  wip: true
+  wip: true,
 })
 </script>
 

@@ -1,29 +1,29 @@
 import { resolve } from 'path'
-// eslint-disable-next-line
+
 import DevTools from '../src/module'
 
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
     '~/modules/custom-tabs',
-    DevTools
+    DevTools,
   ],
   ssr: false,
   experimental: {
-    reactivityTransform: true
+    reactivityTransform: true,
   },
   pages: true,
   nitro: {
     output: {
-      publicDir: resolve(__dirname, '../dist/client')
-    }
+      publicDir: resolve(__dirname, '../dist/client'),
+    },
   },
   app: {
-    baseURL: '/__nuxt_devtools__/client'
+    baseURL: '/__nuxt_devtools__/client',
   },
   vite: {
     build: {
-      target: 'esnext'
-    }
-  }
+      target: 'esnext',
+    },
+  },
 })

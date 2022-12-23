@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
-  wip: true
+  wip: true,
 })
 </script>
 

@@ -4,7 +4,7 @@ import { config } from '#imports'
 definePageMeta({
   icon: 'carbon-information',
   title: 'Overview',
-  order: -1
+  order: -1,
 })
 
 const components = await rpc.getComponents()

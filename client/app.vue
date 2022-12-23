@@ -1,7 +1,6 @@
 <script setup>
-if (process.client) {
+if (process.client)
   import('./setup/unocss-runtime')
-}
 
 const router = useRouter()
 const route = useRoute()
@@ -11,8 +10,8 @@ clientFunctions.refresh = (type) => {
     router.replace({
       path: route.path,
       query: {
-        t: Date.now()
-      }
+        t: Date.now(),
+      },
     })
   }
 }

@@ -1,12 +1,4 @@
 {
-  "extends": [
-    "@nuxtjs/eslint-config-typescript"
-  ],
-  "rules": {
-    "vue/no-setup-props-destructure": "warn",
-    "vue/multi-word-component-names": "warn",
-    "vue/no-multiple-template-root": "off",
-    "vue/max-attributes-per-line": "off",
-    "no-use-before-define": "off"
-  }
+  // temporary, switch to Nuxt's config when going public
+  "extends": "@antfu"
 }
