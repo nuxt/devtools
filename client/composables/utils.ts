@@ -19,7 +19,9 @@ export function getModuleNameFromPath(path: string) {
   return match.split('/')[0]
 }
 
-export function isBuiltInModule(name: string) {
+export function isBuiltInModule(name: string | undefined) {
+  if (!name)
+    return
   return ['nuxt', '#app', '#head'].includes(name)
 }
 

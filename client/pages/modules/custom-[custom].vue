@@ -10,12 +10,12 @@ const tab = $computed(() => tabsInfo.find(i => i.name === name) as ModuleCustomT
 const iframeEl = $ref<HTMLIFrameElement>()
 
 function syncColorMode() {
-  if (!iframeEl)
+  if (!iframeEl || !iframeEl.contentWindow)
     return
   try {
-    const html = iframeEl.contentWindow.document.querySelector('html')
-    html.classList.toggle('dark', mode.value === 'dark')
-    html.classList.toggle('light', mode.value === 'dark')
+    const html = iframeEl.contentWindow!.document.querySelector('html')
+    html?.classList.toggle('dark', mode.value === 'dark')
+    html?.classList.toggle('light', mode.value === 'dark')
   }
   catch (e) {
     console.error(e)
@@ -29,5 +29,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <iframe ref="iframeEl" :src="tab.view.src" class="w-full h-full" @load="syncColorMode" />
+  <iframe ref="iframeEl" :src="tab.view?.src" class="w-full h-full" @load="syncColorMode" />
 </template>

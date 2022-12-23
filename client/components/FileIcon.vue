@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{ id: string }>()
+const props = defineProps<{ id?: string }>()
 
-const ext = computed(() => props.id.split(/\./g).pop())
+const ext = computed(() => props.id?.split(/\./g).pop() || '')
 const icon = computed(() => {
   switch (ext.value) {
     case 'vue':

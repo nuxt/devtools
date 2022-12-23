@@ -73,12 +73,16 @@ export interface GithubContributor {
 
 export interface ModuleCustomTab {
   icon?: string
-  name: string
-  title: string
-  view: ModuleCustomView
+  name?: string
+  title?: string
+  view?: ModuleCustomView
 }
 
 export interface ModuleCustomView {
   type: 'iframe'
   src: string
+}
+
+export interface TabInfo extends ModuleCustomTab {
+  path: string
 }

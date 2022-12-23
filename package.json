@@ -29,6 +29,7 @@
     "dev:prepare": "nuxi prepare client",
     "lint": "eslint --ext .ts,.vue,.mjs .",
     "prepublishOnly": "pnpm build",
+    "typecheck": "nuxi typecheck",
     "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
     "test": "pnpm lint"
   },
@@ -63,6 +64,7 @@
     "eslint": "^8.30.0",
     "nuxt": "^3.0.0",
     "typescript": "^4.9.4",
+    "vue-tsc": "^1.0.16",
     "ws": "^8.11.0"
   },
   "packageManager": "pnpm@7.6.0"

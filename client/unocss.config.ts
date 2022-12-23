@@ -1,4 +1,5 @@
 import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+// @ts-expect-error missing types
 import { NuxtUIPreset } from '@nuxt/ui/unocss'
 
 export default defineConfig({

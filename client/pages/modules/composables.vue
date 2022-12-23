@@ -36,7 +36,7 @@ const filtered = $computed(() => {
         : user
       if (!map.has(i.from))
         map.set(i.from, [])
-      map.get(i.from).push(i)
+      map.get(i.from)!.push(i)
     })
 
   return {

@@ -109,7 +109,7 @@ export default defineNuxtPlugin((nuxt) => {
     }
     else {
       document.body.appendChild(container)
-      iframe.contentDocument.body.parentElement.className = document.body.parentElement.className
+      iframe.contentDocument!.body.parentElement!.className = document.body.parentElement!.className
     }
   }
 

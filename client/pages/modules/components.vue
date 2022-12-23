@@ -30,13 +30,15 @@ const filtered = $computed(() => {
     .forEach((component) => {
       if (isNodeModulePath(component.filePath)) {
         const name = getModuleNameFromPath(component.filePath)
+        if (!name)
+          return
         if (name === 'nuxt') {
           builtin.push(component)
         }
         else {
           if (!lib.has(name))
             lib.set(name, [])
-          lib.get(name).push(component)
+          lib.get(name)!.push(component)
         }
       }
       else {
