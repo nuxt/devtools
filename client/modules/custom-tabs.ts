@@ -18,7 +18,7 @@ export default defineNuxtModule({
         icon: 'carbon-search',
         view: {
           type: 'iframe',
-          src: '/__inspect'
+          src: '/_nuxt/__inspect/'
         }
       })
 

@@ -1,5 +1,4 @@
 import { resolve } from 'path'
-import { defineNuxtConfig } from 'nuxt'
 // eslint-disable-next-line
 import DevTools from '../src/module'
 

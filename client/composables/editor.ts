@@ -1,3 +1,5 @@
+import { useClipboard } from '@vueuse/core'
+
 export async function openInEditor (filepath: string) {
   await rpc.openInEditor(filepath)
 }

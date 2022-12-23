@@ -9,7 +9,7 @@ const ignores = [
   'pages',
   'meta',
   'components',
-  'auto-imports',
+  'imports',
   '@nuxt/devtools',
   '@nuxt/telemetry'
 ]

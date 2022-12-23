@@ -1,12 +1,11 @@
 import { existsSync } from 'fs'
 import type { TinyWSRequest } from 'tinyws'
-import type { IncomingMessage, ServerResponse } from 'h3'
+import type { NodeIncomingMessage, NodeServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
 import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
 // eslint-disable-next-line import/named
 import { parse, stringify } from 'flatted'
-import { useBody } from 'h3'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
@@ -71,18 +70,18 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
     components = v as Component[]
     birpc.boardcast.refresh.asEvent('components')
   })
-  nuxt.hook('autoImports:extend', (v) => {
+  nuxt.hook('imports:extend', (v) => {
     imports = v
     birpc.boardcast.refresh.asEvent('composables')
   })
   nuxt.hook('pages:extend', (v) => {
     pagesServer = v
   })
-  nuxt.hook('autoImports:sources', (v) => {
-    importPresets = v.flatMap(i => resolvePreset(i))
+  nuxt.hook('imports:sources', async (v) => {
+    importPresets = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
   })
 
-  return async (req: IncomingMessage & TinyWSRequest, res: ServerResponse) => {
+  return async (req: NodeIncomingMessage & TinyWSRequest, res: NodeServerResponse) => {
     if (req.ws) {
       const ws = await req.ws()
       clients.add(ws)
@@ -105,7 +104,7 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         })
       })
     } else if (req.method === 'POST') {
-      const body = await useBody(req)
+      const body = await getBodyJson(req)
       if (body.method === 'setPayload') {
         const prevUrl = payload.url
         payload = parse(body.data)
@@ -123,4 +122,20 @@ export function rpcMiddleware (nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
       }
     }
   }
+}
+
+function getBodyJson(req: NodeIncomingMessage) {
+  return new Promise<any>((resolve, reject) => {
+    let body = ''
+    req.on('data', chunk => body += chunk)
+    req.on('error', reject)
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body) || {})
+      }
+      catch (e) {
+        reject(e)
+      }
+    })
+  })
 }
