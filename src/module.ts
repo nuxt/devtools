@@ -33,10 +33,11 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
   },
   async setup(_options, nuxt) {
+    // TODO: Support devtools in production
     if (!nuxt.options.dev)
       return
 
-    addPlugin(join(runtimeDir, 'floating'), {})
+    addPlugin(join(runtimeDir, 'plugins/devtools-ui'), {})
 
     const customTabs: ModuleCustomTab[] = []
     const middleware = rpcMiddleware(nuxt, customTabs)

@@ -29,6 +29,11 @@ watchEffect(() => {
       text="Installed Modules"
       padding="grid grid-cols-minmax-400px gap2"
     >
+      <template #footer>
+        <div text-true-gray:50>
+          Find more modules at <a href="https://nuxt.com/modules" target="_blank" hover="text-primary underline">nuxt.com/modules</a>
+        </div>
+      </template>
       <NuxtModule
         v-for="m of packageModules"
         :key="m.meta?.name || m.entryPath"

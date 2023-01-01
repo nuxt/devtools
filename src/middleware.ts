@@ -9,7 +9,7 @@ import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
-import type { ClientFunctions, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
+import type { ClientFunctions, HookInfo, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
 
 export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
   let components: Component[] = []
@@ -21,6 +21,7 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
     url: '',
     time: Date.now(),
   }
+  const serverHooks: Record<string, HookInfo> = {}
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -49,6 +50,9 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
     getCustomTabs() {
       return customTabs
     },
+    getServerHooks() {
+      return Object.values(serverHooks)
+    },
     async openInEditor(filepath: string) {
       const file = [
         filepath,
@@ -65,6 +69,20 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
 
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
+
+  nuxt.hooks.beforeEach((event) => {
+    serverHooks[event.name] = {
+      name: event.name,
+      start: performance.now(),
+    }
+  })
+  nuxt.hooks.afterEach((event) => {
+    const hook = serverHooks[event.name]
+    if (!hook)
+      return
+    hook.end = performance.now()
+    hook.duration = hook.end - hook.start
+  })
 
   nuxt.hook('components:extend', (v) => {
     components = v as Component[]

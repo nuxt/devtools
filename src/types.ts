@@ -9,6 +9,7 @@ export interface ServerFunctions {
   getPages(): RouteInfo[]
   getPayload(): Payload
   getCustomTabs(): ModuleCustomTab[]
+  getServerHooks(): HookInfo[]
   openInEditor(filepath: string): void
 }
 
@@ -89,4 +90,11 @@ export interface ModuleBuiltinTab {
   name: string
   title?: string
   path?: string
+}
+
+export interface HookInfo {
+  name: string
+  start: number
+  end?: number
+  duration?: number
 }
