@@ -19,17 +19,31 @@ export function getModuleNameFromPath(path: string) {
   return match.split('/')[0]
 }
 
+export function getModuleSubpathFromPath(path: string) {
+  if (isPackageName(path))
+    return path
+  const match = path.replace(/\\/g, '/').match(/.*\/node_modules\/(.*)$/)?.[1]
+  if (!match)
+    return undefined
+  return match
+}
+
 export function isBuiltInModule(name: string | undefined) {
   if (!name)
     return
   return ['nuxt', '#app', '#head', 'vue'].includes(name)
 }
 
-export function getShortPath(path: string, root: string) {
-  if (isNodeModulePath(path))
-    return getModuleNameFromPath(path)!
-  const result = relative(root, path)
-  if (result[0] !== '.')
-    return `./${result}`
+export function getShortPath(path: string, root: string, subpath = false) {
+  if (isNodeModulePath(path)) {
+    return subpath
+      ? getModuleSubpathFromPath(path)
+      : getModuleNameFromPath(path)!
+  }
+  let result = relative(root, path)
+  if (!result.startsWith('./') && !result.startsWith('../'))
+    result = `./${result}`
+  if (result.startsWith('./.nuxt/'))
+    result = `#build${result.slice(7)}`
   return result
 }

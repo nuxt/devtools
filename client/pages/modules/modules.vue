@@ -27,14 +27,14 @@ watchEffect(() => {
     <SectionBlock
       icon="carbon-3d-mpr-toggle"
       text="Installed Modules"
-      padding="grid grid-cols-minmax-400px gap2"
+      container-class="grid grid-cols-minmax-400px gap2"
     >
       <template #footer>
         <div text-true-gray:50>
           Find more modules at <a href="https://nuxt.com/modules" target="_blank" hover="text-primary underline">nuxt.com/modules</a>
         </div>
       </template>
-      <NuxtModule
+      <ModuleItem
         v-for="m of packageModules"
         :key="m.meta?.name || m.entryPath"
         :mod="m"
@@ -44,9 +44,9 @@ watchEffect(() => {
       v-if="userModules.length"
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
-      padding="grid grid-cols-minmax-400px gap2"
+      container-class="grid grid-cols-minmax-400px gap2"
     >
-      <NuxtModule
+      <ModuleItem
         v-for="m of userModules"
         :key="m.meta?.name || m.entryPath"
         :mod="m"

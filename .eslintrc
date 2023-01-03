@@ -1,4 +1,7 @@
 {
   // temporary, switch to Nuxt's config when going public
-  "extends": "@antfu"
+  "extends": "@antfu",
+  "rules": {
+    "vue/no-v-text-v-html-on-component": "off"
+  }
 }

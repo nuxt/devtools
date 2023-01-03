@@ -12,8 +12,15 @@ definePageMeta({
     <SectionBlock
       icon="carbon-plug"
       text="Plugins"
+      :description="`${config.plugins.length} plugins installed`"
     >
-      <pre>{{ config.plugins.map(i => typeof i === 'string' ? i : i.src) }}</pre>
+      <PluginItem
+        v-for="plugin, idx of config.plugins"
+        :key="typeof plugin === 'string' ? plugin : plugin.src"
+        :plugin="plugin"
+        :index="idx + 1"
+        py2 border="b base"
+      />
     </SectionBlock>
   </div>
 </template>

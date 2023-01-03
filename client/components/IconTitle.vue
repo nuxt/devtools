@@ -8,6 +8,8 @@ defineProps<{
 <template>
   <div flex="~ gap2" items-center>
     <div v-if="icon" :class="icon" />
-    <div>{{ text }}</div>
+    <slot>
+      <div>{{ text }}</div>
+    </slot>
   </div>
 </template>
