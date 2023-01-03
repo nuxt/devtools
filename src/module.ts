@@ -5,7 +5,7 @@ import { addPlugin, defineNuxtModule } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
-import { rpcMiddleware } from './middleware'
+import { setupRPC } from './rpc'
 import type { ModuleCustomTab } from './types'
 
 export interface ModuleOptions {
@@ -39,37 +39,19 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(join(runtimeDir, 'plugins/devtools-ui'), {})
 
-    const customTabs: ModuleCustomTab[] = []
-    const middleware = rpcMiddleware(nuxt, customTabs)
+    const {
+      middleware: rpcMiddleware,
+      initHooks,
+    } = setupRPC(nuxt)
 
     // TODO: Use WS from nitro server when possible
     nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
       server.middlewares.use(PATH_ENTRY, tinyws() as any)
-      server.middlewares.use(PATH_ENTRY, middleware as any)
+      server.middlewares.use(PATH_ENTRY, rpcMiddleware as any)
       if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
 
-    customTabs.push({
-      name: 'virtual',
-      title: 'Virtual Files',
-      view: {
-        type: 'iframe',
-        src: '/_vfs',
-      },
-    })
-
-    // TODO: vscode-server
-    // customTabs.push({
-    //   name: 'vscode',
-    //   title: 'VS Code',
-    //   icon: 'logos-visual-studio-code',
-    //   view: {
-    //     type: 'iframe',
-    //     src: 'http://localhost:8000/?folder=' + encodeURIComponent(nuxt.options.rootDir)
-    //   }
-    // })
-
-    await nuxt.callHook('devtools:custom-tabs', customTabs)
+    await initHooks()
   },
 })

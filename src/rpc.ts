@@ -11,17 +11,19 @@ import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
 import type { ClientFunctions, HookInfo, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
 
-export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
-  let components: Component[] = []
-  let imports: Import[] = []
-  let importPresets: Import[] = []
-  let pages: RouteInfo[] = []
-  let pagesServer: NuxtPage[] = []
-  let payload: Payload = {
+export function setupRPC(nuxt: Nuxt) {
+  const components: Component[] = []
+  const imports: Import[] = []
+  const importPresets: Import[] = []
+  const clientRoutes: RouteInfo[] = []
+  const serverPages: NuxtPage[] = []
+  const customTabs: ModuleCustomTab[] = []
+  const serverHooks: Record<string, HookInfo> = {}
+
+  const payload: Payload = {
     url: '',
     time: Date.now(),
   }
-  const serverHooks: Record<string, HookInfo> = {}
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -31,9 +33,9 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
       return components
     },
     getPages() {
-      return pages.map((i) => {
+      return clientRoutes.map((i) => {
         return {
-          ...pagesServer.find(s => s.name && s.name === i.name),
+          ...serverPages.find(s => s.name && s.name === i.name),
           ...i,
         }
       })
@@ -85,21 +87,27 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
   })
 
   nuxt.hook('components:extend', (v) => {
-    components = v as Component[]
+    components.length = 0
+    components.push(...v)
     birpc.boardcast.refresh.asEvent('components')
   })
   nuxt.hook('imports:extend', (v) => {
-    imports = v
+    imports.length = 0
+    imports.push(...v)
     birpc.boardcast.refresh.asEvent('composables')
   })
   nuxt.hook('pages:extend', (v) => {
-    pagesServer = v
+    serverPages.length = 0
+    serverPages.push(...v)
   })
   nuxt.hook('imports:sources', async (v) => {
-    importPresets = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
+    const result = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
+    importPresets.length = 0
+    importPresets.push(...result)
   })
 
-  return async (req: NodeIncomingMessage & TinyWSRequest, res: NodeServerResponse) => {
+  const middleware = async (req: NodeIncomingMessage & TinyWSRequest, res: NodeServerResponse) => {
+    // Handle WebSocket
     if (req.ws) {
       const ws = await req.ws()
       clients.add(ws)
@@ -125,14 +133,15 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
       const body = await getBodyJson(req)
       if (body.method === 'setPayload') {
         const prevUrl = payload.url
-        payload = parse(body.data)
+        Object.assign(payload, parse(body.data))
         if (prevUrl !== payload.url)
           birpc.boardcast.refresh.asEvent('payload')
 
         res.end()
       }
       else if (body.method === 'setPages') {
-        pages = parse(body.data)
+        clientRoutes.length = 0
+        clientRoutes.push(...parse(body.data))
         birpc.boardcast.refresh.asEvent('pages')
         res.end()
       }
@@ -141,6 +150,37 @@ export function rpcMiddleware(nuxt: Nuxt, customTabs: ModuleCustomTab[]) {
         res.end()
       }
     }
+  }
+
+  async function initHooks() {
+    await nuxt.callHook('devtools:custom-tabs', customTabs)
+  }
+
+  // Nitro
+  customTabs.push({
+    name: 'virtual',
+    title: 'Virtual Files',
+    view: {
+      type: 'iframe',
+      src: '/_vfs',
+    },
+  })
+
+  // TODO: vscode-server
+  // customTabs.push({
+  //   name: 'vscode',
+  //   title: 'VS Code',
+  //   icon: 'logos-visual-studio-code',
+  //   view: {
+  //     type: 'iframe',
+  //     src: 'http://localhost:8000/?folder=' + encodeURIComponent(nuxt.options.rootDir)
+  //   }
+  // })
+
+  return {
+    middleware,
+    initHooks,
+    birpc,
   }
 }
 
