@@ -7,8 +7,7 @@ export default defineNuxtConfig({
   // Workaround for vercel deployment detecting nitro output
   srcDir: __dirname,
   rootDir: resolve(__dirname, '../../..'),
-
-  buildModules: [
+  modules: [
     NuxtUI
   ],
   nui: {
