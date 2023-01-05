@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ModuleBuiltinTab, ModuleCustomTab } from '~~/../src/types'
+import type { ModuleBuiltinTab, ModuleIframeTab } from '~~/../src/types'
 
 defineProps<{
-  tab: ModuleCustomTab | ModuleBuiltinTab
+  tab: ModuleIframeTab | ModuleBuiltinTab
 }>()
 </script>
 

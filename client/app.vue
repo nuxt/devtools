@@ -22,7 +22,7 @@ const {
 } = await getTabs()
 
 tabsInfoBuiltin.push(...builtin)
-tabsInfoCustom.push(...custom)
+tabsInfoIframe.push(...custom)
 </script>
 
 <template>

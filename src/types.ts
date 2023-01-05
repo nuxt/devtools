@@ -8,7 +8,7 @@ export interface ServerFunctions {
   getAutoImports(): Import[]
   getPages(): RouteInfo[]
   getPayload(): Payload
-  getCustomTabs(): ModuleCustomTab[]
+  getIframeTabs(): ModuleIframeTab[]
   getServerHooks(): HookInfo[]
   openInEditor(filepath: string): void
 }
@@ -72,12 +72,13 @@ export interface GithubContributor {
   avatar_url?: string
 }
 
-export interface ModuleCustomTab {
+export interface ModuleIframeTab {
   icon?: string
   name: string
   title: string
   view: ModuleCustomView
   path?: string
+  builtin?: boolean
 }
 
 export interface ModuleCustomView {

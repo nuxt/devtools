@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const customTabs = $computed(() => tabsInfoIframe.filter(i => !i.builtin))
+const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
 </script>
 
 <template>
@@ -18,7 +20,7 @@
       Builtin
     </div>
     <DrawerItem
-      v-for="tab of tabsInfoBuiltin"
+      v-for="tab of [...tabsInfoBuiltin, ...builtinIframeTabs]"
       :key="tab.name"
       :tab="tab"
     />
@@ -26,7 +28,7 @@
       Modules
     </div>
     <DrawerItem
-      v-for="tab of tabsInfoCustom"
+      v-for="tab of customTabs"
       :key="tab.name"
       :tab="tab"
     />

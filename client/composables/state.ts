@@ -1,5 +1,5 @@
 import { $fetch } from 'ohmyfetch'
-import type { ModuleBuiltinTab, ModuleCustomTab, ModuleInfo } from '../../src/types'
+import type { ModuleBuiltinTab, ModuleIframeTab, ModuleInfo } from '../../src/types'
 
 let modules: ModuleInfo[] | undefined
 
@@ -13,10 +13,10 @@ export async function useModulesInfo() {
 export async function getTabs() {
   const router = useRouter()
   const routes = router.getRoutes()
-  const custom = (await rpc.getCustomTabs()).map((i): ModuleCustomTab => {
+  const custom = (await rpc.getIframeTabs()).map((i): ModuleIframeTab => {
     return {
       ...i,
-      path: `/modules/custom-${i.name}`,
+      path: `/modules/iframe-${i.name}`,
     }
   })
 
@@ -38,5 +38,5 @@ export async function getTabs() {
   }
 }
 
-export const tabsInfoCustom: ModuleCustomTab[] = []
+export const tabsInfoIframe: ModuleIframeTab[] = []
 export const tabsInfoBuiltin: ModuleBuiltinTab[] = []

@@ -1,12 +1,13 @@
 import { join, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync } from 'fs'
-import { addPlugin, defineNuxtModule } from '@nuxt/kit'
+import { addPlugin, addVitePlugin, defineNuxtModule } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
+import Inspect from 'vite-plugin-inspect'
 import { setupRPC } from './rpc'
-import type { ModuleCustomTab } from './types'
+import type { ModuleIframeTab } from './types'
 
 export interface ModuleOptions {
 
@@ -14,7 +15,7 @@ export interface ModuleOptions {
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
-    'devtools:custom-tabs': (tabs: ModuleCustomTab[]) => void
+    'devtools:customTabs': (tabs: ModuleIframeTab[]) => void
   }
 }
 
@@ -51,6 +52,8 @@ export default defineNuxtModule<ModuleOptions>({
       if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
+
+    addVitePlugin(Inspect())
 
     await initHooks()
   },

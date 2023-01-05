@@ -1,5 +1,4 @@
-import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
-import Inspect from 'vite-plugin-inspect'
+import { defineNuxtModule } from '@nuxt/kit'
 
 // TODO: demo only, should be contributed by modules
 export default defineNuxtModule({
@@ -10,19 +9,7 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    addVitePlugin(Inspect())
-
-    nuxt.hook('devtools:custom-tabs', (tabs) => {
-      tabs.push({
-        title: 'Inspect',
-        name: 'inspect',
-        icon: 'carbon-search',
-        view: {
-          type: 'iframe',
-          src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
-        },
-      })
-
+    nuxt.hook('devtools:customTabs', (tabs) => {
       tabs.push({
         title: 'UnoCSS',
         name: 'unocss',

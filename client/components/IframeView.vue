@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { ModuleCustomTab } from '~/../src/types'
+import type { ModuleIframeTab } from '~/../src/types'
 
-const mode = useColorMode()
-const route = useRoute()
+const { tab } = defineProps<{
+  tab: ModuleIframeTab
+}>()
 
-const name = $computed(() => route.params.custom)
-const tab = $computed(() => tabsInfoCustom.find(i => i.name === name) as ModuleCustomTab)
-
+const colorMode = useColorMode()
 const iframeEl = $ref<HTMLIFrameElement>()
 
 function syncColorMode() {
@@ -14,8 +13,8 @@ function syncColorMode() {
     return
   try {
     const html = iframeEl.contentWindow!.document.querySelector('html')
-    html?.classList.toggle('dark', mode.value === 'dark')
-    html?.classList.toggle('light', mode.value === 'dark')
+    html?.classList.toggle('dark', colorMode.value === 'dark')
+    html?.classList.toggle('light', colorMode.value === 'dark')
   }
   catch (e) {
     console.error(e)

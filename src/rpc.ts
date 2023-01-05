@@ -10,7 +10,7 @@ import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
 import type { Hookable } from 'hookable'
-import type { ClientFunctions, HookInfo, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
+import type { ClientFunctions, HookInfo, ModuleIframeTab, Payload, RouteInfo, ServerFunctions } from './types'
 
 export function setupRPC(nuxt: Nuxt) {
   const components: Component[] = []
@@ -18,7 +18,7 @@ export function setupRPC(nuxt: Nuxt) {
   const importPresets: Import[] = []
   const clientRoutes: RouteInfo[] = []
   const serverPages: NuxtPage[] = []
-  const customTabs: ModuleCustomTab[] = []
+  const iframeTabs: ModuleIframeTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooks(nuxt.hooks)
 
   const payload: Payload = {
@@ -50,8 +50,8 @@ export function setupRPC(nuxt: Nuxt) {
     getPayload() {
       return payload
     },
-    getCustomTabs() {
-      return customTabs
+    getIframeTabs() {
+      return iframeTabs
     },
     getServerHooks() {
       return Object.values(serverHooks)
@@ -140,16 +140,28 @@ export function setupRPC(nuxt: Nuxt) {
   }
 
   async function initHooks() {
-    await nuxt.callHook('devtools:custom-tabs', customTabs)
+    await nuxt.callHook('devtools:customTabs', iframeTabs)
   }
 
   // Nitro
-  customTabs.push({
+  iframeTabs.push({
     name: 'virtual',
     title: 'Virtual Files',
+    builtin: true,
     view: {
       type: 'iframe',
       src: '/_vfs',
+    },
+  })
+
+  iframeTabs.push({
+    title: 'Vite Inspect',
+    name: 'vite-inspect',
+    builtin: true,
+    icon: 'carbon-search',
+    view: {
+      type: 'iframe',
+      src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
     },
   })
 
