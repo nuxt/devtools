@@ -1,6 +1,6 @@
 import { stringify } from 'flatted'
 import { objectPick } from '@antfu/utils'
-import { setupHooksDebug } from '../../shared/hooks'
+import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin } from '#app'
 

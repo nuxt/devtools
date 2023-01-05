@@ -10,7 +10,7 @@ import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
 import type { ClientFunctions, HookInfo, ModuleIframeTab, Payload, RouteInfo, ServerFunctions } from './types'
-import { setupHooksDebug } from './shared/hooks'
+import { setupHooksDebug } from './runtime/shared/hooks'
 
 export function setupRPC(nuxt: Nuxt) {
   const components: Component[] = []
