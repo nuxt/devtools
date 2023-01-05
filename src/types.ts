@@ -1,5 +1,6 @@
 import type { Component, NuxtOptions } from '@nuxt/schema'
 import type { Import } from 'unimport'
+import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
 
 export interface ServerFunctions {
@@ -36,7 +37,7 @@ export interface BasicModuleInfo {
   }
 }
 
-export interface ModuleInfo {
+export interface ModuleMetric {
   name: string
   description: string
   repo: string
@@ -100,4 +101,17 @@ export interface HookInfo {
   duration?: number
   listeners: number
   executions: number[]
+}
+
+export interface NuxtAppClient {
+  app: NuxtApp
+  getHooksMetrics(): HookInfo[]
+}
+
+export interface NuxtDevtoolsGlobal {
+  setClient(client: NuxtAppClient): void
+}
+
+declare global {
+  const __nuxt_devtools__: NuxtDevtoolsGlobal
 }

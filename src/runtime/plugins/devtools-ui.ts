@@ -1,5 +1,7 @@
 import { stringify } from 'flatted'
 import { objectPick } from '@antfu/utils'
+import { setupHooksDebug } from '../../shared/hooks'
+import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin } from '#app'
 
 function h<K extends keyof HTMLElementTagNameMap>(
@@ -28,6 +30,8 @@ export default defineNuxtPlugin((nuxt) => {
 
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
   const ENTRY_PATH = '/__nuxt_devtools__/entry/'
+
+  const clientHooks = setupHooksDebug(nuxt.hooks)
 
   nuxt.hook('page:finish', sendPayload)
   nuxt.hook('app:mounted', () => {
@@ -75,6 +79,11 @@ export default defineNuxtPlugin((nuxt) => {
     },
   })
 
+  iframe.addEventListener('load', () => {
+    setNuxtInstance()
+    setTimeout(setNuxtInstance, 1000)
+  })
+
   const container = h('div', {
     style: {
       position: 'fixed',
@@ -110,7 +119,20 @@ export default defineNuxtPlugin((nuxt) => {
     else {
       document.body.appendChild(container)
       iframe.contentDocument!.body.parentElement!.className = document.body.parentElement!.className
+      setNuxtInstance()
     }
+  }
+
+  function setNuxtInstance() {
+    // @ts-expect-error injection
+    const injection = iframe?.contentWindow?.__nuxt_devtools__ as NuxtDevtoolsGlobal
+
+    injection?.setClient({
+      app: nuxt as any,
+      getHooksMetrics() {
+        return Object.values(clientHooks)
+      },
+    })
   }
 
   const button = h('button',

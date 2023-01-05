@@ -1,7 +1,7 @@
 import { $fetch } from 'ohmyfetch'
-import type { ModuleBuiltinTab, ModuleIframeTab, ModuleInfo } from '../../src/types'
+import type { ModuleBuiltinTab, ModuleIframeTab, ModuleMetric } from '../../src/types'
 
-let modules: ModuleInfo[] | undefined
+let modules: ModuleMetric[] | undefined
 
 export async function useModulesInfo() {
   if (modules)
