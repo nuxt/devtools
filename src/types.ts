@@ -111,7 +111,3 @@ export interface NuxtAppClient {
 export interface NuxtDevtoolsGlobal {
   setClient(client: NuxtAppClient): void
 }
-
-declare global {
-  const __nuxt_devtools__: NuxtDevtoolsGlobal
-}
