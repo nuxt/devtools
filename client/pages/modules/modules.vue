@@ -54,6 +54,7 @@ watchEffect(() => {
     </SectionBlock>
     <SectionBlock
       v-if="userModules.length"
+      divider
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
       container-class="grid grid-cols-minmax-400px gap2"

@@ -75,6 +75,7 @@ const filtered = $computed(() => {
     </div>
     <SectionBlock
       v-if="filtered.user.length"
+      divider
       icon="carbon-nominal"
       text="User components"
       :description="`Total components: ${filtered.count.user}`"
@@ -83,6 +84,7 @@ const filtered = $computed(() => {
     </SectionBlock>
     <SectionBlock
       v-if="filtered.builtin.length"
+      divider
       icon="tabler-brand-nuxt"
       text="Built-in components"
       :description="`Total components: ${filtered.count.builtin}`"
@@ -91,6 +93,7 @@ const filtered = $computed(() => {
     </SectionBlock>
     <SectionBlock
       v-if="filtered.lib.size"
+      divider
       icon="carbon-3d-mpr-toggle"
       text="Components from libraries"
       :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const {
-  divider = true,
+  divider = false,
   containerClass = '',
 } = defineProps<{
   icon?: string
