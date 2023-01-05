@@ -5,7 +5,7 @@ const props = defineProps<{
   hooks: HookInfo[]
 }>()
 
-type SortBy = 'duration' | 'name' | 'listener' | 'start'
+type SortBy = 'duration' | 'name' | 'listener' | 'start' | 'executions'
 
 let sortby = $ref<SortBy>('duration')
 let direction = $ref<'asc' | 'desc'>('asc')
@@ -15,7 +15,10 @@ const sortFunctions = {
   name: (a: HookInfo, b: HookInfo) => a.name.localeCompare(b.name),
   listener: (a: HookInfo, b: HookInfo) => b.listeners - a.listeners,
   start: (a: HookInfo, b: HookInfo) => b.start - a.start,
+  executions: (a: HookInfo, b: HookInfo) => b.executions.length - a.executions.length,
 }
+
+const startTimes = $computed(() => props.hooks.map(i => i.start).sort((a, b) => a - b))
 
 const sorted = $computed(() => {
   const sortFn = sortFunctions[sortby as SortBy]
@@ -28,6 +31,8 @@ const sorted = $computed(() => {
 function formatDuration(duration: number | undefined) {
   if (!duration)
     return '-'
+  if (duration < 1)
+    return '<1'
   return duration.toFixed(2)
 }
 
@@ -48,6 +53,8 @@ function getNameRest(name: string) {
 function getLatencyColor(latency: number | undefined) {
   if (!latency)
     return 'text-gray-400'
+  if (latency < 0.5)
+    return 'text-gray:50'
   if (latency > 1000)
     return 'text-red-400'
   if (latency > 500)
@@ -74,50 +81,59 @@ function toggleSortedBy(by: SortBy) {
 </script>
 
 <template>
-  <table w-full mt5>
+  <table w-full>
     <thead border="b base">
       <tr>
-        <th colspan="2" p1 text-center font-bold>
-          <button @click="toggleSortedBy('name')">
-            Hook Name
-            <div text-xs :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+        <th p1 text-right font-bold ws-nowrap>
+          <button @click="toggleSortedBy('start')">
+            Order
+            <div text-xs ml--1 :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-center font-bold>
+        <th colspan="2" text-left font-bold p1 pl5>
+          <button @click="toggleSortedBy('name')">
+            Hook name
+            <div text-xs ml--1 :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+          </button>
+        </th>
+        <th p1 text-center font-bold ws-nowrap>
           <button @click="toggleSortedBy('listener')">
             Listeners
-            <div text-xs :class="[sortby === 'listener' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div text-xs ml--1 :class="[sortby === 'listener' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-right font-bold>
-          <button @click="toggleSortedBy('start')">
-            Start At
-            <div text-xs :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+        <th p1 text-center font-bold ws-nowrap>
+          <button @click="toggleSortedBy('executions')">
+            Executions
+            <div text-xs ml--1 :class="[sortby === 'executions' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-right font-bold>
+        <th p1 text-right font-bold ws-nowrap>
           <button @click="toggleSortedBy('duration')">
             Duration
-            <div text-xs :class="[sortby === 'duration' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div text-xs ml--1 :class="[sortby === 'duration' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item of sorted" :key="item.name">
+        <td text-center w-0 ws-nowrap text-sm op25>
+          {{ startTimes.indexOf(item.start) }}
+        </td>
         <td text-right w-0 ws-nowrap :style="{ color: getHashColorFromString(getNamePrefix(item.name)) }">
           <code text-sm>{{ getNamePrefix(item.name) }}</code>
         </td>
-        <td w-0 ws-nowrap>
+        <td ws-nowrap>
           <code text-sm>{{ getNameRest(item.name) }}</code>
         </td>
-        <td text-center>
-          <code text-sm>{{ item.listeners }}</code>
+        <td text-center text-sm w-0>
+          {{ item.listeners }}
         </td>
-        <td text-right>
-          <code text-sm>{{ Math.round(item.start) }}</code>
+        <td text-center text-sm w-0>
+          {{ item.executions.length + 1 }}
         </td>
-        <td text-right text-sm :class="getLatencyColor(item.duration)">
+        <td text-right text-sm w-0 :class="getLatencyColor(item.duration)">
           {{ formatDuration(item.duration) }}<span op50 ml-1 text-xs>ms</span>
         </td>
       </tr>

@@ -98,4 +98,5 @@ export interface HookInfo {
   end?: number
   duration?: number
   listeners: number
+  executions: number[]
 }
