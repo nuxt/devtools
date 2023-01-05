@@ -6,10 +6,7 @@ const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
 <template>
   <div border="l base" flex="~ col" h-full>
     <div pl3 pr2 py2 flex="~ gap1" items-center>
-      <NuxtLogo w-7 h-7 />
-      <div text-lg font-bold>
-        DevTools
-      </div>
+      <NuxtLogo h-8 />
       <div flex-auto />
       <NDarkToggle v-slot="{ toggle }">
         <button carbon-sun dark:carbon-moon @click="toggle()" />
