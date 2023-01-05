@@ -5,15 +5,6 @@ const { mod } = defineProps<{
   mod: BasicModuleInfo
 }>()
 
-const ignores = [
-  'pages',
-  'meta',
-  'components',
-  'imports',
-  '@nuxt/devtools',
-  '@nuxt/telemetry',
-]
-
 const isPackageModule = $computed(() => mod.entryPath && isNodeModulePath(mod.entryPath))
 const name = $computed(() => mod.meta?.name || mod.entryPath || '')
 const collection = await useModulesInfo()
@@ -30,12 +21,7 @@ const npmBase = 'https://www.npmjs.com/package/'
 </script>
 
 <template>
-  <div
-    v-if="!ignores.includes(name)"
-    border="~ base"
-    p3
-    flex="~ gap2"
-  >
+  <div border="~ base" p3 flex="~ gap2">
     <div flex-auto flex="~ col gap1" px1 of-hidden>
       <NuxtLink
         v-if="isPackageModule"

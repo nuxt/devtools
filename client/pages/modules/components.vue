@@ -23,6 +23,11 @@ const filtered = $computed(() => {
   const user: Component[] = []
   const lib = new Map<string, Component[]>()
   const builtin: Component[] = []
+  const count = {
+    user: 0,
+    lib: 0,
+    builtin: 0,
+  }
 
   const result = search ? fuse.search(search).map(i => i.item) : components
 
@@ -34,15 +39,18 @@ const filtered = $computed(() => {
           return
         if (name === 'nuxt') {
           builtin.push(component)
+          count.builtin++
         }
         else {
           if (!lib.has(name))
             lib.set(name, [])
           lib.get(name)!.push(component)
+          count.lib++
         }
       }
       else {
         user.push(component)
+        count.user++
       }
     })
 
@@ -50,6 +58,7 @@ const filtered = $computed(() => {
     user,
     builtin,
     lib,
+    count,
   }
 })
 </script>
@@ -67,14 +76,16 @@ const filtered = $computed(() => {
     <SectionBlock
       v-if="filtered.user.length"
       icon="carbon-nominal"
-      :text="`User components (${filtered.user.length})`"
+      text="User components"
+      :description="`Total components: ${filtered.count.user}`"
     >
       <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
     </SectionBlock>
     <SectionBlock
       v-if="filtered.builtin.length"
       icon="tabler-brand-nuxt"
-      :text="`Built-in components (${filtered.builtin.length})`"
+      text="Built-in components"
+      :description="`Total components: ${filtered.count.builtin}`"
     >
       <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
     </SectionBlock>
@@ -82,6 +93,7 @@ const filtered = $computed(() => {
       v-if="filtered.lib.size"
       icon="carbon-3d-mpr-toggle"
       text="Components from libraries"
+      :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
     >
       <div v-for="[key, value] of filtered.lib.entries()" :key="key">
         <IconTitle :text="`${key} (${value.length})`" op50 py1 />

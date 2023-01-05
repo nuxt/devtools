@@ -12,7 +12,7 @@ definePageMeta({
     <SectionBlock
       icon="carbon-plug"
       text="Plugins"
-      :description="`${config.plugins.length} plugins installed`"
+      :description="`Total plugins: ${config.plugins.length}`"
     >
       <PluginItem
         v-for="plugin, idx of config.plugins"

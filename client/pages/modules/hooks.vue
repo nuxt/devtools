@@ -12,6 +12,7 @@ const serverHooks = await rpc.getServerHooks()
     <SectionBlock
       icon="carbon-plug"
       text="Server Hooks"
+      :description="`Total hooks: ${serverHooks.length}`"
     >
       <HooksTable :hooks="serverHooks" />
     </SectionBlock>

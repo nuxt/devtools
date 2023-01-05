@@ -9,6 +9,7 @@ import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
+import type { Hookable } from 'hookable'
 import type { ClientFunctions, HookInfo, ModuleCustomTab, Payload, RouteInfo, ServerFunctions } from './types'
 
 export function setupRPC(nuxt: Nuxt) {
@@ -18,7 +19,7 @@ export function setupRPC(nuxt: Nuxt) {
   const clientRoutes: RouteInfo[] = []
   const serverPages: NuxtPage[] = []
   const customTabs: ModuleCustomTab[] = []
-  const serverHooks: Record<string, HookInfo> = {}
+  const serverHooks: Record<string, HookInfo> = setupHooks(nuxt.hooks)
 
   const payload: Payload = {
     url: '',
@@ -71,20 +72,6 @@ export function setupRPC(nuxt: Nuxt) {
 
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
-
-  nuxt.hooks.beforeEach((event) => {
-    serverHooks[event.name] = {
-      name: event.name,
-      start: performance.now(),
-    }
-  })
-  nuxt.hooks.afterEach((event) => {
-    const hook = serverHooks[event.name]
-    if (!hook)
-      return
-    hook.end = performance.now()
-    hook.duration = hook.end - hook.start
-  })
 
   nuxt.hook('components:extend', (v) => {
     components.length = 0
@@ -182,6 +169,30 @@ export function setupRPC(nuxt: Nuxt) {
     initHooks,
     birpc,
   }
+}
+
+function setupHooks<T extends Hookable<any>>(hooks: T) {
+  const serverHooks: Record<string, HookInfo> = {}
+  hooks.beforeEach((event) => {
+    serverHooks[event.name] = {
+      name: event.name,
+      start: performance.now(),
+      // @ts-expect-error private field
+      listeners: hooks._hooks[event.name]?.length || 0,
+    }
+  })
+  hooks.afterEach((event) => {
+    const hook = serverHooks[event.name]
+    if (!hook)
+      return
+    hook.end = performance.now()
+    hook.duration = hook.end - hook.start
+    // @ts-expect-error private field
+    const listeners = hooks._hooks[event.name]?.length
+    if (listeners != null)
+      hook.listeners = listeners
+  })
+  return serverHooks
 }
 
 function getBodyJson(req: NodeIncomingMessage) {

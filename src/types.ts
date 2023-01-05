@@ -97,4 +97,5 @@ export interface HookInfo {
   start: number
   end?: number
   duration?: number
+  listeners: number
 }

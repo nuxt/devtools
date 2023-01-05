@@ -6,6 +6,15 @@ definePageMeta({
   title: 'Modules',
 })
 
+const ignores = [
+  'pages',
+  'meta',
+  'components',
+  'imports',
+  '@nuxt/devtools',
+  '@nuxt/telemetry',
+]
+
 const modules = $computed(() => config._installedModules)
 const packageModules = $ref<any[]>([])
 const userModules = $ref<any[]>([])
@@ -14,6 +23,8 @@ watchEffect(() => {
   packageModules.length = 0
   userModules.length = 0
   for (const m of modules) {
+    if (ignores.includes(m.meta?.name))
+      continue
     if (m.entryPath && isNodeModulePath(m.entryPath))
       packageModules.push(m)
     else
@@ -28,6 +39,7 @@ watchEffect(() => {
       icon="carbon-3d-mpr-toggle"
       text="Installed Modules"
       container-class="grid grid-cols-minmax-400px gap2"
+      :description="`Total modules: ${packageModules.length}`"
     >
       <template #footer>
         <div text-true-gray:50>
@@ -45,6 +57,7 @@ watchEffect(() => {
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
       container-class="grid grid-cols-minmax-400px gap2"
+      :description="`Total modules: ${userModules.length}`"
     >
       <ModuleItem
         v-for="m of userModules"

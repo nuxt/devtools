@@ -27,6 +27,12 @@ const filtered = $computed(() => {
   const builtin = new Map<string, Import[]>()
   const result = search ? fuse.search(search).map(i => i.item) : functions
 
+  const count = {
+    user: 0,
+    lib: 0,
+    builtin: 0,
+  }
+
   result
     .forEach((i) => {
       const map = isNodeModulePath(i.from)
@@ -37,12 +43,14 @@ const filtered = $computed(() => {
       if (!map.has(i.from))
         map.set(i.from, [])
       map.get(i.from)!.push(i)
+      count[map === user ? 'user' : map === lib ? 'lib' : 'builtin']++
     })
 
   return {
     user,
     lib,
     builtin,
+    count,
   }
 })
 </script>
@@ -61,6 +69,7 @@ const filtered = $computed(() => {
       v-if="filtered.user.size"
       icon="carbon-function"
       text="User composables"
+      :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
     >
       <ComposableTree :map="filtered.user" :root="config.rootDir" />
     </SectionBlock>
@@ -68,6 +77,7 @@ const filtered = $computed(() => {
       v-if="filtered.builtin.size"
       icon="tabler-brand-nuxt"
       text="Built-in composables"
+      :description="`${filtered.count.builtin} composables`"
     >
       <ComposableTree :map="filtered.builtin" :root="config.rootDir" />
     </SectionBlock>
@@ -75,6 +85,7 @@ const filtered = $computed(() => {
       v-if="filtered.lib.size"
       icon="carbon-3d-mpr-toggle"
       text="Composables from libraries"
+      :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
     >
       <ComposableTree :map="filtered.lib" :root="config.rootDir" />
     </SectionBlock>
