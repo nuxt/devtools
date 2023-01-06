@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/nuxt/ui/compare/@nuxt/ui@0.3.3...@nuxt/ui@0.4.0) (2023-01-06)
+
+
+### Bug Fixes
+
+* nuxt ui playground, close [#188](https://github.com/nuxt/ui/issues/188), close [#184](https://github.com/nuxt/ui/issues/184) ([#192](https://github.com/nuxt/ui/issues/192)) ([afc329f](https://github.com/nuxt/ui/commit/afc329f4a65532273f6ea3a4d5dbbc1bfa0644b5))
+* **templates:** avoid using blur in no-animation mode, disable animation in Safari ([#175](https://github.com/nuxt/ui/issues/175)) ([e552ec5](https://github.com/nuxt/ui/commit/e552ec53478d1b310f2aac6aac552777d00c16f7))
+
+
+### Features
+
+* new design welcome template ([#178](https://github.com/nuxt/ui/issues/178)) ([85ceb30](https://github.com/nuxt/ui/commit/85ceb30301a58094e9ae4a6556e086dec245a3fb))
+* **ui:** suport both prefixed and unprefixed icons ([6b2d12e](https://github.com/nuxt/ui/commit/6b2d12e8ea6d2ad601bb58351579740e620ae0eb))
+
+
+
+
+
 ## [0.3.3](https://github.com/nuxt/ui/compare/@nuxt/ui@0.3.2...@nuxt/ui@0.3.3) (2022-09-20)
 
 
