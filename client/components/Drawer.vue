@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const customTabs = $computed(() => tabsInfoIframe.filter(i => !i.builtin))
 const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
+
+const client = useClient()
 </script>
 
 <template>
@@ -13,6 +15,7 @@ const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
       </NDarkToggle>
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
+
     <DrawerItem
       v-for="tab of [...tabsInfoBuiltin, ...builtinIframeTabs]"
       :key="tab.name"
@@ -29,5 +32,8 @@ const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
       />
       <div flex-auto />
     </template>
+    <div v-if="!client" text-sm p4 bg-orange:10 text-orange>
+      Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+    </div>
   </div>
 </template>
