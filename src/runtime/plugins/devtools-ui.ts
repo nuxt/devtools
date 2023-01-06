@@ -142,7 +142,7 @@ export default defineNuxtPlugin((nuxt) => {
     },
     [
       h('img', {
-        src: `${CLIENT_PATH}nuxt-invert.svg`,
+        src: `${CLIENT_PATH}nuxt.svg`,
         style: {
           height: '20px',
           width: '20px',
@@ -159,7 +159,7 @@ export default defineNuxtPlugin((nuxt) => {
   position: fixed;
   bottom: -5px;
   left: calc(50% - 25px);
-  background: #1DCC84;
+  background: #0C0C0C;
   border-radius: 100px 100px 0 0;
   border: 1px solid rgba(125,125,125,0.2);
   box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
@@ -173,7 +173,7 @@ export default defineNuxtPlugin((nuxt) => {
   transition: all 0.2s ease-in-out;
 }
 .nuxt-devtools-button:hover {
-  background: #19af72;
+  background: #1D1D1D;
   bottom: 0;
 }
 .nuxt-devtools-close-button {
