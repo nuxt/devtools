@@ -27,7 +27,7 @@ const radio = ref('a')
           n="sm"
           to="https://github.com/nuxt/ui/tree/main/packages/ui"
           target="_blank"
-          icon="carbon-logo-github"
+          icon="i-carbon-logo-github"
         >
           GitHub
         </NButton>
