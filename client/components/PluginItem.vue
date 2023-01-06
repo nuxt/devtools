@@ -2,11 +2,11 @@
 import type { NuxtPlugin } from '@nuxt/schema'
 
 const props = defineProps<{
-  plugin: NuxtPlugin | string
+  plugin: any
   index?: number
 }>()
 
-const normalized = $computed(() => {
+const normalized = $computed((): NuxtPlugin => {
   if (typeof props.plugin === 'string')
     return { src: props.plugin }
   return props.plugin
