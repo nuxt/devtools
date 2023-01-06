@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import type { ModuleBuiltinTab, ModuleIframeTab } from '~~/../src/types'
 
-defineProps<{
+const { tab } = defineProps<{
   tab: ModuleIframeTab | ModuleBuiltinTab
 }>()
+
+const client = useClient()
+const isEnabled = computed(() => !(tab as ModuleBuiltinTab).requireClient || !!client.value)
 </script>
 
 <template>
   <NuxtLink
+    v-if="isEnabled"
     :to="tab.path"
     flex
     items-center

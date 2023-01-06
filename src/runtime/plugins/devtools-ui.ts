@@ -1,5 +1,5 @@
-import { stringify } from 'flatted'
-import { objectPick } from '@antfu/utils'
+// import { stringify } from 'flatted'
+// import { objectPick } from '@antfu/utils'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin } from '#app'
@@ -29,40 +29,40 @@ export default defineNuxtPlugin((nuxt) => {
     return
 
   const CLIENT_PATH = '/__nuxt_devtools__/client/'
-  const ENTRY_PATH = '/__nuxt_devtools__/entry/'
+  // const ENTRY_PATH = '/__nuxt_devtools__/entry/'
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
-  nuxt.hook('page:finish', sendPayload)
-  nuxt.hook('app:mounted', () => {
-    sendPayload()
-    sendPages()
-  })
+  // nuxt.hook('page:finish', sendPayload)
+  // nuxt.hook('app:mounted', () => {
+  //   sendPayload()
+  //   sendPages()
+  // })
 
-  function sendPayload() {
-    post('setPayload', {
-      url: location.pathname,
-      time: Date.now(),
-      ...nuxt.payload,
-    })
-  }
-  function sendPages() {
-    post('setPages',
-      (nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
-        .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children'])),
-    )
-  }
+  // function sendPayload() {
+  //   post('setPayload', {
+  //     url: location.pathname,
+  //     time: Date.now(),
+  //     ...nuxt.payload,
+  //   })
+  // }
+  // function sendPages() {
+  //   post('setPages',
+  //     (nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
+  //       .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children'])),
+  //   )
+  // }
 
-  function post(method: string, data: any) {
-    return fetch(ENTRY_PATH, {
-      method: 'POST',
-      body: JSON.stringify({
-        method,
-        data: stringify(data),
-      }),
-    })
-      .catch()
-  }
+  // function post(method: string, data: any) {
+  //   return fetch(ENTRY_PATH, {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       method,
+  //       data: stringify(data),
+  //     }),
+  //   })
+  //     .catch()
+  // }
 
   const iframe = h('iframe', {
     src: CLIENT_PATH,

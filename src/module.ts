@@ -5,7 +5,6 @@ import { addPlugin, addVitePlugin, defineNuxtModule } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
-import Inspect from 'vite-plugin-inspect'
 import { setupRPC } from './rpc'
 import type { ModuleIframeTab } from './types'
 
@@ -53,7 +52,8 @@ export default defineNuxtModule<ModuleOptions>({
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
 
-    addVitePlugin(Inspect())
+    if (nuxt.options.builder === '@nuxt/vite-builder')
+      addVitePlugin(await import('vite-plugin-inspect').then(r => (r.default || r)()))
 
     await initHooks()
   },

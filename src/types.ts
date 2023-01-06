@@ -1,4 +1,4 @@
-import type { Component, NuxtOptions } from '@nuxt/schema'
+import type { Component, NuxtOptions, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
@@ -7,8 +7,7 @@ export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
   getAutoImports(): Import[]
-  getPages(): RouteInfo[]
-  getPayload(): Payload
+  getServerPages(): NuxtPage[]
   getIframeTabs(): ModuleIframeTab[]
   getServerHooks(): HookInfo[]
   openInEditor(filepath: string): void
@@ -92,6 +91,7 @@ export interface ModuleBuiltinTab {
   name: string
   title?: string
   path?: string
+  requireClient?: boolean
 }
 
 export interface HookInfo {

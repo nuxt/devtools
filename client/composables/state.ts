@@ -27,8 +27,7 @@ export async function getTabs() {
       return {
         name: i.name as string,
         path: i.path,
-        icon: i.meta.icon,
-        title: i.meta.title,
+        ...i.meta,
       }
     })
 

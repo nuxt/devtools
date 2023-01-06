@@ -9,22 +9,16 @@ import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
-import type { ClientFunctions, HookInfo, ModuleIframeTab, Payload, RouteInfo, ServerFunctions } from './types'
+import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 
 export function setupRPC(nuxt: Nuxt) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
-  const clientRoutes: RouteInfo[] = []
   const serverPages: NuxtPage[] = []
   const iframeTabs: ModuleIframeTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
-
-  const payload: Payload = {
-    url: '',
-    time: Date.now(),
-  }
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -33,22 +27,14 @@ export function setupRPC(nuxt: Nuxt) {
     getComponents() {
       return components
     },
-    getPages() {
-      return clientRoutes.map((i) => {
-        return {
-          ...serverPages.find(s => s.name && s.name === i.name),
-          ...i,
-        }
-      })
+    getServerPages() {
+      return serverPages
     },
     getAutoImports() {
       return [
         ...imports,
         ...importPresets,
       ]
-    },
-    getPayload() {
-      return payload
     },
     getIframeTabs() {
       return iframeTabs
@@ -119,23 +105,12 @@ export function setupRPC(nuxt: Nuxt) {
     else if (req.method === 'POST') {
       const body = await getBodyJson(req)
       if (body.method === 'setPayload') {
-        const prevUrl = payload.url
-        Object.assign(payload, parse(body.data))
-        if (prevUrl !== payload.url)
-          birpc.boardcast.refresh.asEvent('payload')
-
-        res.end()
-      }
-      else if (body.method === 'setPages') {
-        clientRoutes.length = 0
-        clientRoutes.push(...parse(body.data))
-        birpc.boardcast.refresh.asEvent('pages')
-        res.end()
+        // TODO:
       }
       else {
         res.statusCode = 400
-        res.end()
       }
+      res.end()
     }
   }
 
@@ -154,26 +129,28 @@ export function setupRPC(nuxt: Nuxt) {
     },
   })
 
-  iframeTabs.push({
-    title: 'Vite Inspect',
-    name: 'vite-inspect',
-    builtin: true,
-    icon: 'carbon-search',
-    view: {
-      type: 'iframe',
-      src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
-    },
-  })
+  if (nuxt.options.builder === '@nuxt/vite-builder') {
+    iframeTabs.push({
+      title: 'Vite Inspect',
+      name: 'vite-inspect',
+      builtin: true,
+      icon: 'carbon-search',
+      view: {
+        type: 'iframe',
+        src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
+      },
+    })
+  }
 
   // TODO: vscode-server
-  // customTabs.push({
+  // iframeTabs.push({
   //   name: 'vscode',
   //   title: 'VS Code',
   //   icon: 'logos-visual-studio-code',
   //   view: {
   //     type: 'iframe',
-  //     src: 'http://localhost:8000/?folder=' + encodeURIComponent(nuxt.options.rootDir)
-  //   }
+  //     src: `http://localhost:8000/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
+  //   },
   // })
 
   return {
