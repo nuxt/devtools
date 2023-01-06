@@ -2,6 +2,7 @@ import type { Component, NuxtOptions, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
+import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 
 export interface ServerFunctions {
   getConfig(): NuxtOptions
@@ -104,8 +105,11 @@ export interface HookInfo {
 }
 
 export interface NuxtAppClient {
-  app: NuxtApp
+  nuxt: NuxtApp
   getHooksMetrics(): HookInfo[]
+
+  componentInspector?: VueInspectorClient
+  enableComponentInspector(): void
 }
 
 export interface NuxtDevtoolsGlobal {

@@ -1,5 +1,6 @@
 // import { stringify } from 'flatted'
 // import { objectPick } from '@antfu/utils'
+import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin } from '#app'
@@ -24,6 +25,29 @@ function h<K extends keyof HTMLElementTagNameMap>(
   return el
 }
 
+const LAYOUT_IFRAME = {
+  position: 'fixed',
+  bottom: '10px',
+  right: '10px',
+  left: '10px',
+  height: '600px',
+  borderRadius: '0.5rem',
+  maxHeight: 'calc(100vh - 20px)',
+  width: 'calc(100vw - 20px)',
+}
+
+const LAYOUT_ACTION_BAR = {
+  position: 'fixed',
+  bottom: '10px',
+  left: '50%',
+  height: 'auto',
+  padding: '10px',
+  borderRadius: '0.5rem',
+  border: '1px solid rgba(125,125,125,0.2)',
+  width: 'auto',
+  transform: 'translateX(-50%)',
+}
+
 export default defineNuxtPlugin((nuxt) => {
   if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
     return
@@ -32,26 +56,6 @@ export default defineNuxtPlugin((nuxt) => {
   // const ENTRY_PATH = '/__nuxt_devtools__/entry/'
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
-
-  // nuxt.hook('page:finish', sendPayload)
-  // nuxt.hook('app:mounted', () => {
-  //   sendPayload()
-  //   sendPages()
-  // })
-
-  // function sendPayload() {
-  //   post('setPayload', {
-  //     url: location.pathname,
-  //     time: Date.now(),
-  //     ...nuxt.payload,
-  //   })
-  // }
-  // function sendPages() {
-  //   post('setPages',
-  //     (nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
-  //       .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children'])),
-  //   )
-  // }
 
   // function post(method: string, data: any) {
   //   return fetch(ENTRY_PATH, {
@@ -80,36 +84,54 @@ export default defineNuxtPlugin((nuxt) => {
   })
 
   iframe.addEventListener('load', () => {
-    setNuxtInstance()
-    setTimeout(setNuxtInstance, 1000)
+    updateClient()
+    setTimeout(updateClient, 1000)
   })
 
-  const container = h('div', {
+  const closeButton = h('button', {
+    className: 'nuxt-devtools-close-button',
     style: {
-      position: 'fixed',
-      bottom: '10px',
-      right: '10px',
-      left: '10px',
-      height: '600px',
-      maxHeight: 'calc(100vh - 20px)',
-      width: 'calc(100vw - 20px)',
+      position: 'absolute',
+      top: '5px',
+      right: '0',
+      zIndex: '99999',
+      height: '2rem',
+      width: '2rem',
+      padding: '5px',
     },
+  }, [], el => el.addEventListener('click', toggle))
+
+  const inspectorInfo = h('div',
+    {
+      style: {
+        fontSize: '0.8rem',
+        display: 'flex',
+        gap: '0.5rem',
+        alignItems: 'center',
+        padding: '0 2rem',
+      },
+    },
+    [
+      h('span', {
+        textContent: 'Inspecting Vue components',
+      }),
+      h('button', {
+        textContent: 'Close',
+        className: 'nuxt-devtools-button',
+        style: {
+          fontSize: '0.8rem',
+        },
+      }, [], el => el.addEventListener('click', disableComponentInspector)),
+    ],
+  )
+
+  const container = h('div', {
+    className: 'nuxt-devtools-container',
+    style: LAYOUT_IFRAME,
   },
   [
     iframe,
-    // close button
-    h('button', {
-      className: 'nuxt-devtools-close-button',
-      style: {
-        position: 'absolute',
-        top: '5px',
-        right: '0',
-        zIndex: '99999',
-        height: '2rem',
-        width: '2rem',
-        padding: '5px',
-      },
-    }, [], el => el.addEventListener('click', toggle)),
+    closeButton,
   ])
 
   function toggle() {
@@ -119,16 +141,43 @@ export default defineNuxtPlugin((nuxt) => {
     else {
       document.body.appendChild(container)
       iframe.contentDocument!.body.parentElement!.className = document.body.parentElement!.className
-      setNuxtInstance()
+      updateClient()
     }
   }
 
-  function setNuxtInstance() {
+  function enableComponentInspector() {
     // @ts-expect-error injection
-    const injection = iframe?.contentWindow?.__nuxt_devtools__ as NuxtDevtoolsGlobal
+    window.__VUE_INSPECTOR__?.enable()
+    container.replaceChildren(inspectorInfo)
+    container.removeAttribute('style')
+    Object.assign(container.style, LAYOUT_ACTION_BAR)
+  }
+
+  function disableComponentInspector() {
+    // @ts-expect-error injection
+    window.__VUE_INSPECTOR__?.disable()
+    container.replaceChildren(iframe, closeButton)
+    container.removeAttribute('style')
+    Object.assign(container.style, LAYOUT_IFRAME)
+  }
+
+  function updateClient() {
+    // @ts-expect-error injection
+    const injection = iframe?.contentWindow?.__NUXT_DEVTOOLS__ as NuxtDevtoolsGlobal
+    // @ts-expect-error injection
+    const componentInspector = window.__VUE_INSPECTOR__ as VueInspectorClient
+
+    if (componentInspector) {
+      // replace the default openInEditor
+      componentInspector.openInEditor = (baseUrl, file, line, column) => {
+        console.log('TODO:', baseUrl, file, line, column)
+      }
+    }
 
     injection?.setClient({
-      app: nuxt as any,
+      nuxt: nuxt as any,
+      componentInspector,
+      enableComponentInspector,
       getHooksMetrics() {
         return Object.values(clientHooks)
       },
@@ -138,7 +187,7 @@ export default defineNuxtPlugin((nuxt) => {
   const button = h('button',
     {
       title: 'Open Nuxt DevTools',
-      className: 'nuxt-devtools-button',
+      className: 'nuxt-devtools-toggle',
     },
     [
       h('img', {
@@ -155,7 +204,13 @@ export default defineNuxtPlugin((nuxt) => {
 
   const style = h('style', {
     innerHTML: `
-.nuxt-devtools-button {
+.nuxt-devtools-container {
+  background: white;
+}
+.dark .nuxt-devtools-container {
+  background: #0C0C0C;
+}
+.nuxt-devtools-toggle {
   position: fixed;
   bottom: -5px;
   left: calc(50% - 25px);
@@ -179,6 +234,14 @@ export default defineNuxtPlugin((nuxt) => {
 .nuxt-devtools-close-button {
   background: transparent;
   border: none;
+}
+.nuxt-devtools-button {
+  padding: 0.25em 0.5em;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(125,125,125,0.2);
+}
+.nuxt-devtools-button:hover {
+  background: rgba(125,125,125,0.1);
 }
 `,
   })

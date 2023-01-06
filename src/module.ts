@@ -52,8 +52,16 @@ export default defineNuxtModule<ModuleOptions>({
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
 
-    if (nuxt.options.builder === '@nuxt/vite-builder')
+    if (nuxt.options.builder === '@nuxt/vite-builder') {
       addVitePlugin(await import('vite-plugin-inspect').then(r => (r.default || r)()))
+      if (nuxt.options.dev) {
+        addVitePlugin(await import('vite-plugin-vue-inspector').then(r => (r.default || r)({
+          appendTo: 'entry.mjs',
+          toggleComboKey: '',
+          toggleButtonVisibility: 'never',
+        })) as any)
+      }
+    }
 
     await initHooks()
   },

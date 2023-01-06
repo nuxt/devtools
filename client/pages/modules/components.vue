@@ -7,6 +7,7 @@ definePageMeta({
   title: 'Components',
 })
 
+const client = useClient()
 const components = (await rpc.getComponents())
   .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
 const fuse = new Fuse(components, {
@@ -65,13 +66,20 @@ const filtered = $computed(() => {
 
 <template>
   <div>
-    <div p4 flex="~ col gap2">
+    <div p4 flex="~ gap4">
       <NTextInput
         v-model="search"
         placeholder="Search..."
         p="x4 y2"
         n="primary"
+        flex-auto
       />
+      <button
+        v-if="client?.componentInspector"
+        title="Inspect Vue components" @click="client.enableComponentInspector()"
+      >
+        <NIcon icon="i-carbon-map-identify" />
+      </button>
     </div>
     <SectionBlock
       v-if="filtered.user.length"

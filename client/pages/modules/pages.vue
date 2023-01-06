@@ -11,7 +11,7 @@ const client = useClient()
 const serverPages = await rpc.getServerPages()
 
 const pages = $computed(() => {
-  return (client.value?.app.vueApp.config.globalProperties.$router?.getRoutes() || [])
+  return (client.value?.nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
       return {
