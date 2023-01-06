@@ -18,6 +18,7 @@ export function setupRPC(nuxt: Nuxt) {
   const importPresets: Import[] = []
   const serverPages: NuxtPage[] = []
   const iframeTabs: ModuleIframeTab[] = []
+  const customTabs: ModuleIframeTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
 
   const serverFunctions: ServerFunctions = {
@@ -37,7 +38,10 @@ export function setupRPC(nuxt: Nuxt) {
       ]
     },
     getIframeTabs() {
-      return iframeTabs
+      return [
+        ...iframeTabs,
+        ...customTabs,
+      ]
     },
     getServerHooks() {
       return Object.values(serverHooks)
@@ -115,7 +119,7 @@ export function setupRPC(nuxt: Nuxt) {
   }
 
   async function initHooks() {
-    await nuxt.callHook('devtools:customTabs', iframeTabs)
+    await nuxt.callHook('devtools:customTabs', customTabs)
   }
 
   // Nitro
@@ -141,17 +145,6 @@ export function setupRPC(nuxt: Nuxt) {
       },
     })
   }
-
-  // TODO: vscode-server
-  // iframeTabs.push({
-  //   name: 'vscode',
-  //   title: 'VS Code',
-  //   icon: 'logos-visual-studio-code',
-  //   view: {
-  //     type: 'iframe',
-  //     src: `http://localhost:8000/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
-  //   },
-  // })
 
   return {
     middleware,

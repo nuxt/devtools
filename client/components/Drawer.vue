@@ -18,14 +18,16 @@ const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
       :key="tab.name"
       :tab="tab"
     />
-    <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
-      Modules
-    </div>
-    <DrawerItem
-      v-for="tab of customTabs"
-      :key="tab.name"
-      :tab="tab"
-    />
-    <div flex-auto />
+    <template v-if="customTabs.length">
+      <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
+        By Modules
+      </div>
+      <DrawerItem
+        v-for="tab of customTabs"
+        :key="tab.name"
+        :tab="tab"
+      />
+      <div flex-auto />
+    </template>
   </div>
 </template>

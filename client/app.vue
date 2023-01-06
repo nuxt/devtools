@@ -2,6 +2,23 @@
 if (process.client)
   import('./setup/unocss-runtime')
 
+useHead({
+  title: 'Nuxt DevTools',
+  meta: [
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1',
+    },
+  ],
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/svg+xml',
+      href: '/nuxt.svg',
+    },
+  ],
+})
+
 const router = useRouter()
 const route = useRoute()
 

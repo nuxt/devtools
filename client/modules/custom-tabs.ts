@@ -9,14 +9,15 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    nuxt.hook('devtools:customTabs', (tabs) => {
-      tabs.push({
-        title: 'UnoCSS',
-        name: 'unocss',
-        icon: 'logos-unocss',
+    // TODO: vscode-server
+    nuxt.hook('devtools:customTabs', (iframeTabs) => {
+      iframeTabs.push({
+        name: 'vscode',
+        title: 'VS Code',
+        icon: 'i-bxl-visual-studio',
         view: {
           type: 'iframe',
-          src: '/__unocss/',
+          src: `http://localhost:8000/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
         },
       })
     })
