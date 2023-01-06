@@ -4,7 +4,15 @@ import type { Theme } from '@unocss/preset-uno'
 import { parseColor } from '@unocss/preset-mini/utils'
 import { theme as unoTheme } from '@unocss/preset-mini'
 import { fonts } from '@unocss/preset-mini/rules'
-import { mergeDeep, presetUno, presetIcons, presetAttributify, presetTypography, transformerDirectives, transformerVariantGroup } from 'unocss'
+import {
+  mergeDeep,
+  presetUno,
+  presetIcons,
+  presetAttributify,
+  presetTypography,
+  transformerDirectives,
+  transformerVariantGroup
+} from 'unocss'
 
 // @unocss-include
 
@@ -120,7 +128,7 @@ export function extendUnocssOptions (user: UnocssNuxtOptions = {}): UnocssNuxtOp
       presetAttributify(),
       presetTypography(),
       presetIcons({
-        prefix: '',
+        prefix: ['i-', ''],
         scale: 1.2,
         extraProperties: {
           display: 'inline-block',
