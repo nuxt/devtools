@@ -18,12 +18,19 @@ const copy = useCopy()
     hover="bg-gray/10"
     class="group"
     flex="~ gap2"
-    w-full
+    w-full items-center
   >
     <button hover:text-primary @click="copy(`<${component.pascalName}></${component.pascalName}>`)">
       <code font-mono text-sm><span op20 mr1>&lt;</span>{{ component.pascalName }}<span op20 ml1>/&gt;</span></code>
     </button>
+    <Badge
+      v-if="component.global"
+      bg-green-400:10 text-green-400
+      title="Registered at runtime as a global component"
+      v-text="'runtime'"
+    />
     <button
+      v-if="component.filePath"
       text-sm
       op0
       group-hover:op50

@@ -8,15 +8,30 @@ definePageMeta({
 })
 
 const client = useClient()
-const components = (await rpc.getComponents())
+const serverComponents = (await rpc.getComponents())
   .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
-const fuse = new Fuse(components, {
+
+const globalComponents = $computed(() =>
+  Object
+    .entries(client.value.nuxt.vueApp._context.components || {})
+    .map(([key]) => ({
+      pascalName: key,
+      global: true,
+    } as unknown as Component)),
+)
+
+const components = $computed(() => [
+  ...globalComponents,
+  ...serverComponents,
+].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
+
+const fuse = $computed(() => new Fuse(components, {
   keys: [
     'pascalName',
     'filePath',
     'kebabName',
   ],
-})
+}))
 
 const search = $ref('')
 
@@ -30,11 +45,13 @@ const filtered = $computed(() => {
     builtin: 0,
   }
 
-  const result = search ? fuse.search(search).map(i => i.item) : components
+  const result = search
+    ? fuse.search(search).map(i => i.item)
+    : components
 
   result
     .forEach((component) => {
-      if (isNodeModulePath(component.filePath)) {
+      if (component.filePath && isNodeModulePath(component.filePath)) {
         const name = getModuleNameFromPath(component.filePath)
         if (!name)
           return
