@@ -10,7 +10,7 @@ importers:
       '@nuxt/devtools': workspace:*
       '@nuxt/kit': ^3.0.0
       '@nuxt/module-builder': ^0.2.1
-      '@types/fs-extra': ^9.0.13
+      '@types/fs-extra': ^11.0.0
       '@types/node': ^18.11.18
       '@types/ws': ^8.5.4
       '@unocss/nuxt': ^0.48.2
@@ -47,7 +47,7 @@ importers:
       '@antfu/ni': 0.18.8
       '@nuxt/devtools': 'link:'
       '@nuxt/module-builder': 0.2.1
-      '@types/fs-extra': 9.0.13
+      '@types/fs-extra': 11.0.0
       '@types/node': 18.11.18
       '@types/ws': 8.5.4
       '@unocss/nuxt': 0.48.2
@@ -1284,9 +1284,10 @@ packages:
   /@types/estree/1.0.0:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
 
-  /@types/fs-extra/9.0.13:
-    resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
+  /@types/fs-extra/11.0.0:
+    resolution: {integrity: sha512-zdV5odfHf95B4qr6bdpshG4VMm/3xgnPhSJLa3xh75CYr35e34k+4FQli82Q48sPqwHazJGy+6+jl4T+Vw1AMg==}
     dependencies:
+      '@types/jsonfile': 6.1.1
       '@types/node': 18.11.18
     dev: true
 
@@ -1296,6 +1297,12 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/jsonfile/6.1.1:
+    resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
+    dependencies:
+      '@types/node': 18.11.18
     dev: true
 
   /@types/mdast/3.0.10:
@@ -1733,7 +1740,7 @@ packages:
       '@babel/core': 7.20.7
       '@babel/plugin-transform-typescript': 7.20.7_@babel+core@7.20.7
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.7
-      vite: 3.2.5
+      vite: 3.2.5_@types+node@18.11.18
       vue: 3.2.45
     transitivePeerDependencies:
       - supports-color
@@ -1746,7 +1753,7 @@ packages:
       vite: ^3.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 3.2.5
+      vite: 3.2.5_@types+node@18.11.18
       vue: 3.2.45
     dev: true
 
