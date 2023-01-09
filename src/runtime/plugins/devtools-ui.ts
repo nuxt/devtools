@@ -170,6 +170,7 @@ export default defineNuxtPlugin((nuxt) => {
     if (componentInspector) {
       // replace the default openInEditor
       componentInspector.openInEditor = (baseUrl, file, line, column) => {
+        // eslint-disable-next-line no-console
         console.log('TODO:', baseUrl, file, line, column)
       }
     }
