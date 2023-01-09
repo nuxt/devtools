@@ -28,21 +28,21 @@ const payload = $computed(() => client.value?.nuxt.payload)
       <div x-divider />
       <div p4 flex="~ col gap2">
         <IconTitle icon="carbon-settings" text="App Config" text-lg op50 />
-        <StateGroup pl2 :state="payload.config?.app" />
+        <StateEditor pl2 :state="payload.config?.app" />
       </div>
     </template>
     <template v-if="payload.config?.public && Object.keys(payload.config?.public).length">
       <div x-divider />
       <div p4 flex="~ col gap2">
         <IconTitle icon="carbon-settings" text="Runtime Config" text-lg op50 />
-        <StateGroup pl2 :state="payload.config?.public" />
+        <StateEditor pl2 :state="payload.config?.public" />
       </div>
     </template>
     <template v-if="payload.functions && Object.keys(payload.functions).length">
       <div x-divider />
       <div p4 flex="~ col gap2">
         <IconTitle icon="carbon-function" text="Functions" text-lg op50 />
-        <StateGroup pl2 :state="payload.functions" />
+        <StateEditor pl2 :state="payload.functions" />
       </div>
     </template>
   </div>

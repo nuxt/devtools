@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { highlight } from '#imports'
+import StateEditor from './StateEditor.vue'
 
 defineProps<{
   state: Record<string, any>
@@ -13,25 +13,8 @@ defineProps<{
         <summary cursor-pointer select-none>
           <code font-mono px2>{{ key }}</code>
         </summary>
-        <div
-          text-sm
-          ml4
-          my2
-          border="~ base rounded"
-          of-auto
-          font-mono
-          v-html="highlight(value === undefined ? 'undefined' : value === null ? 'null' : JSON.stringify(value, null, 2), 'javascript')"
-        />
+        <StateEditor :state="value" mt-1 />
       </details>
     </div>
   </div>
 </template>
-
-<style>
-.shiki {
-  padding: 0.5rem;
-}
-pre, code {
-  @apply !font-mono;
-}
-</style>
