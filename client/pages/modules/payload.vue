@@ -14,7 +14,7 @@ const payload = $computed(() => client.value?.nuxt.payload)
     <template v-if="payload.state && Object.keys(payload.state).length">
       <div p4 flex="~ col gap2">
         <IconTitle icon="carbon-data-set" text="State" text-lg op50 />
-        <StateGroup pl2 :state="payload.state" />
+        <StateGroup pl2 :state="payload.state" prefix="$s" />
       </div>
     </template>
     <template v-if="payload.data && Object.keys(payload.data).length">

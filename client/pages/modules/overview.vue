@@ -9,6 +9,13 @@ definePageMeta({
 
 const client = useClient()
 
+const showConnectionWarning = ref(false)
+onMounted(() => {
+  setTimeout(() => {
+    showConnectionWarning.value = true
+  }, 2000)
+})
+
 const components = await rpc.getComponents()
 const autoImports = await rpc.getAutoImports()
 </script>
@@ -21,7 +28,7 @@ const autoImports = await rpc.getAutoImports()
     <span carbon-chemistry />Working in Progress. For early preview only.
   </div>
   <div
-    v-if="!client"
+    v-if="!client && showConnectionWarning"
     p="x4 y2" m2 flex="~ gap-2" items-center
     bg-yellow:10 text-yellow6 rounded
   >

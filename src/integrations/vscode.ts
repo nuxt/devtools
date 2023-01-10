@@ -21,6 +21,7 @@ export function setupVSCodeServer(nuxt: Nuxt) {
       name: 'vscode',
       title: 'VS Code',
       icon: 'i-bxl-visual-studio',
+      builtin: true,
       view: {
         type: 'iframe',
         src: `http://localhost:${PORT}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
