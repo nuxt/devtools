@@ -2,8 +2,6 @@
 const customTabs = $computed(() => tabsInfoIframe.filter(i => !i.builtin))
 const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
 
-const client = useClient()
-
 const {
   custom,
   builtin,
@@ -42,8 +40,5 @@ tabsInfoIframe.push(...custom)
       />
       <div flex-auto />
     </template>
-    <div v-if="!client" text-sm p4 bg-orange:10 text-orange>
-      Not connected to the client, showing server-side data only. Use the embedded mode for full features.
-    </div>
   </div>
 </template>

@@ -18,7 +18,7 @@ export default defineConfig({
     presetUno(),
     presetAttributify(),
     presetIcons({
-      prefix: '',
+      prefix: ['i-', ''],
       scale: 1.2,
       extraProperties: {
         'display': 'inline-block',

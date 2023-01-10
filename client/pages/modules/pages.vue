@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { objectPick } from '@antfu/utils'
+import type { RouteInfo } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -10,7 +11,7 @@ definePageMeta({
 const client = useClient()
 const serverPages = await rpc.getServerPages()
 
-const pages = $computed(() => {
+const pages = $computed((): RouteInfo[] => {
   return (client.value?.nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
@@ -20,8 +21,6 @@ const pages = $computed(() => {
       }
     })
 })
-
-const tree = toTree(pages, 'Pages')
 </script>
 
 <template>
@@ -30,8 +29,8 @@ const tree = toTree(pages, 'Pages')
       icon="carbon-tree-view-alt"
       text="Pages"
     >
-      <ModuleTreeNode :node="tree" />
-      <pre>{{ pages }}</pre>
+      <PagesTable :pages="pages" />
+      <!-- <ModuleTreeNode :node="tree" /> -->
     </SectionBlock>
   </div>
 </template>

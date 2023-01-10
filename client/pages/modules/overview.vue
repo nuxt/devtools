@@ -7,11 +7,26 @@ definePageMeta({
   order: -1,
 })
 
+const client = useClient()
+
 const components = await rpc.getComponents()
 const autoImports = await rpc.getAutoImports()
 </script>
 
 <template>
+  <div
+    p="x4 y2" m2 flex="~ gap-2" items-center
+    bg-lime:10 text-lime6 rounded
+  >
+    <span carbon-chemistry />Working in Progress. For early preview only.
+  </div>
+  <div
+    v-if="!client"
+    p="x4 y2" m2 flex="~ gap-2" items-center
+    bg-yellow:10 text-yellow6 rounded
+  >
+    <span i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+  </div>
   <div p4 flex h-full>
     <div grid="~ cols-[max-content_1fr] gap-x-2 gap-y-1" ma>
       <div text-right op50>
