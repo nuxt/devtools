@@ -80,7 +80,6 @@ export default defineNuxtPlugin((nuxt) => {
       borderRadius: '0.5rem',
       overflow: 'auto',
       outline: 'none',
-      zIndex: '9999',
       border: '1px solid rgba(125,125,125,0.2)',
       boxShadow: '3px 5px 8px rgba(0,0,0,0.05)',
     },
@@ -191,6 +190,7 @@ export default defineNuxtPlugin((nuxt) => {
     innerHTML: `
 .nuxt-devtools-container {
   background: white;
+  z-index: 2147483647
 }
 .dark .nuxt-devtools-container {
   background: #0C0C0C;
@@ -203,7 +203,7 @@ export default defineNuxtPlugin((nuxt) => {
   border-radius: 100px 100px 0 0;
   border: 1px solid rgba(125,125,125,0.2);
   box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
-  z-index: 999999;
+  z-index: 2147483646;
   height: 30px;
   width: 40px;
   cursor: pointer;
