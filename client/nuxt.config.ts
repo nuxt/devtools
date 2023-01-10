@@ -18,6 +18,9 @@ export default defineNuxtConfig({
       publicDir: resolve(__dirname, '../dist/client'),
     },
   },
+  devtools: {
+    vscodeServer: true,
+  },
   app: {
     baseURL: '/__nuxt_devtools__/client',
   },

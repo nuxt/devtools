@@ -149,19 +149,6 @@ export function setupRPC(nuxt: Nuxt) {
     },
   })
 
-  if (nuxt.options.builder === '@nuxt/vite-builder') {
-    iframeTabs.push({
-      title: 'Vite Inspect',
-      name: 'vite-inspect',
-      builtin: true,
-      icon: 'carbon-search',
-      view: {
-        type: 'iframe',
-        src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
-      },
-    })
-  }
-
   return {
     middleware,
     initHooks,

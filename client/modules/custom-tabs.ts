@@ -9,17 +9,8 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    // TODO: vscode-server
-    nuxt.hook('devtools:customTabs', (iframeTabs) => {
-      iframeTabs.push({
-        name: 'vscode',
-        title: 'VS Code',
-        icon: 'i-bxl-visual-studio',
-        view: {
-          type: 'iframe',
-          src: `http://localhost:8000/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
-        },
-      })
+    nuxt.hook('devtools:customTabs', (_tabs) => {
+      // todo
     })
   },
 })
