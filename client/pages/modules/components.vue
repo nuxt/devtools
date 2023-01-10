@@ -8,12 +8,13 @@ definePageMeta({
 })
 
 const client = useClient()
+const router = useRouter()
 const serverComponents = (await rpc.getComponents())
   .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
 
 const globalComponents = $computed(() =>
   Object
-    .entries(client.value.nuxt.vueApp._context.components || {})
+    .entries(client.value?.nuxt?.vueApp._context.components || {})
     .map(([key]) => ({
       pascalName: key,
       global: true,
@@ -79,6 +80,13 @@ const filtered = $computed(() => {
     count,
   }
 })
+
+function openComponentInspector() {
+  if (!client.value?.componentInspector)
+    return
+  client.value.enableComponentInspector()
+  router.push('/inspecting')
+}
 </script>
 
 <template>
@@ -93,7 +101,8 @@ const filtered = $computed(() => {
       />
       <button
         v-if="client?.componentInspector"
-        title="Inspect Vue components" @click="client.enableComponentInspector()"
+        title="Inspect Vue components"
+        @click="openComponentInspector"
       >
         <NIcon icon="i-carbon-map-identify" />
       </button>

@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { ClientFunctions } from '../src/types'
+
 if (process.client)
   import('./setup/unocss-runtime')
 
@@ -22,38 +24,26 @@ useHead({
 const router = useRouter()
 const route = useRoute()
 
-clientFunctions.refresh = (type) => {
-  if (route.path.includes(type)) {
-    router.replace({
-      path: route.path,
-      query: {
-        t: Date.now(),
-      },
-    })
-  }
-}
-
-const {
-  custom,
-  builtin,
-} = await getTabs()
-
-tabsInfoBuiltin.push(...builtin)
-tabsInfoIframe.push(...custom)
+Object.assign(clientFunctions, {
+  refresh(type) {
+    if (route.path.includes(type)) {
+      router.replace({
+        path: route.path,
+        query: {
+          t: Date.now(),
+        },
+      })
+    }
+  },
+} satisfies ClientFunctions)
 </script>
 
 <template>
-  <div h-screen font-sans of-hidden bg-base>
-    <Notification />
-    <div grid="~ cols-[1fr_220px]" h-full of-hidden>
-      <div h-full of-auto>
-        <KeepAlive>
-          <NuxtPage :page-key="n => n.fullPath" />
-        </KeepAlive>
-      </div>
-      <Drawer of-auto />
-    </div>
-  </div>
+  <NuxtLayout>
+    <KeepAlive>
+      <NuxtPage :page-key="(n: any) => n.fullPath" />
+    </KeepAlive>
+  </NuxtLayout>
 </template>
 
 <style>

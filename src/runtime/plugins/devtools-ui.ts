@@ -1,9 +1,14 @@
-// import { stringify } from 'flatted'
-// import { objectPick } from '@antfu/utils'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin } from '#app'
+
+declare global {
+  interface Window {
+    __NUXT_DEVTOOLS__?: NuxtDevtoolsGlobal
+    __VUE_INSPECTOR__?: VueInspectorClient
+  }
+}
 
 function h<K extends keyof HTMLElementTagNameMap>(
   type: K,
@@ -36,16 +41,14 @@ const LAYOUT_IFRAME = {
   width: 'calc(100vw - 20px)',
 }
 
-const LAYOUT_ACTION_BAR = {
+const LAYOUT_IFRAME_SMALL = {
   position: 'fixed',
   bottom: '10px',
   left: '50%',
-  height: 'auto',
-  padding: '10px',
-  borderRadius: '0.5rem',
-  border: '1px solid rgba(125,125,125,0.2)',
-  width: 'auto',
   transform: 'translateX(-50%)',
+  width: '300px',
+  height: '60px',
+  borderRadius: '0.5rem',
 }
 
 export default defineNuxtPlugin((nuxt) => {
@@ -101,30 +104,6 @@ export default defineNuxtPlugin((nuxt) => {
     },
   }, [], el => el.addEventListener('click', toggle))
 
-  const inspectorInfo = h('div',
-    {
-      style: {
-        fontSize: '0.8rem',
-        display: 'flex',
-        gap: '0.5rem',
-        alignItems: 'center',
-        padding: '0 2rem',
-      },
-    },
-    [
-      h('span', {
-        textContent: 'Inspecting Vue components',
-      }),
-      h('button', {
-        textContent: 'Close',
-        className: 'nuxt-devtools-button',
-        style: {
-          fontSize: '0.8rem',
-        },
-      }, [], el => el.addEventListener('click', disableComponentInspector)),
-    ],
-  )
-
   const container = h('div', {
     className: 'nuxt-devtools-container',
     style: LAYOUT_IFRAME,
@@ -136,7 +115,13 @@ export default defineNuxtPlugin((nuxt) => {
 
   function toggle() {
     if (Array.from(document.body.children).includes(container)) {
-      container.style.display = container.style.display === 'none' ? 'block' : 'none'
+      const isOpen = container.style.display !== 'none'
+      if (!isOpen)
+        container.style.display = 'block'
+      else if (window.__VUE_INSPECTOR__?.enabled) // inspector enabled, exit first
+        disableComponentInspector()
+      else
+        container.style.display = 'none'
     }
     else {
       document.body.appendChild(container)
@@ -146,32 +131,31 @@ export default defineNuxtPlugin((nuxt) => {
   }
 
   function enableComponentInspector() {
-    // @ts-expect-error injection
     window.__VUE_INSPECTOR__?.enable()
-    container.replaceChildren(inspectorInfo)
     container.removeAttribute('style')
-    Object.assign(container.style, LAYOUT_ACTION_BAR)
+    Object.assign(container.style, LAYOUT_IFRAME_SMALL)
   }
 
   function disableComponentInspector() {
-    // @ts-expect-error injection
     window.__VUE_INSPECTOR__?.disable()
-    container.replaceChildren(iframe, closeButton)
     container.removeAttribute('style')
     Object.assign(container.style, LAYOUT_IFRAME)
+    window.__NUXT_DEVTOOLS__?.componentInspectorClose()
   }
 
   function updateClient() {
-    // @ts-expect-error injection
     const injection = iframe?.contentWindow?.__NUXT_DEVTOOLS__ as NuxtDevtoolsGlobal
-    // @ts-expect-error injection
     const componentInspector = window.__VUE_INSPECTOR__ as VueInspectorClient
 
     if (componentInspector) {
-      // replace the default openInEditor
       componentInspector.openInEditor = (baseUrl, file, line, column) => {
-        // eslint-disable-next-line no-console
-        console.log('TODO:', baseUrl, file, line, column)
+        window.__NUXT_DEVTOOLS__?.componentInspectorClick(baseUrl, file, line, column)
+      }
+      componentInspector.onUpdated = () => {
+        window.__NUXT_DEVTOOLS__?.componentInspectorUpdate({
+          ...componentInspector.linkParams,
+          ...componentInspector.position,
+        })
       }
     }
 

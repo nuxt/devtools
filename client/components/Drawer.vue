@@ -3,6 +3,16 @@ const customTabs = $computed(() => tabsInfoIframe.filter(i => !i.builtin))
 const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
 
 const client = useClient()
+
+const {
+  custom,
+  builtin,
+} = await getTabs()
+
+tabsInfoBuiltin.length = 0
+tabsInfoIframe.length = 0
+tabsInfoBuiltin.push(...builtin)
+tabsInfoIframe.push(...custom)
 </script>
 
 <template>

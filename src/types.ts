@@ -112,6 +112,11 @@ export interface NuxtAppClient {
   enableComponentInspector(): void
 }
 
+export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
+
 export interface NuxtDevtoolsGlobal {
   setClient(client: NuxtAppClient): void
+  componentInspectorUpdate(data: VueInspectorData): void
+  componentInspectorClick(baseUrl: string, file: string, line: number, column: number): void
+  componentInspectorClose(): void
 }

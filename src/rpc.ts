@@ -9,6 +9,7 @@ import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
+import { resolve } from 'pathe'
 import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 
@@ -46,16 +47,31 @@ export function setupRPC(nuxt: Nuxt) {
     getServerHooks() {
       return Object.values(serverHooks)
     },
-    async openInEditor(filepath: string) {
+    async openInEditor(input: string) {
+      if (input.startsWith('./'))
+        input = resolve(process.cwd(), input)
+
+      // separate line and column syntax
+      const match = input.match(/^(.*?)([:\d]*)$/)
+      let suffix = ''
+      if (match) {
+        input = match[1]
+        suffix = match[2]
+      }
+
+      // search for existing file
       const file = [
-        filepath,
-        `${filepath}.js`,
-        `${filepath}.mjs`,
-        `${filepath}.ts`,
+        input,
+        `${input}.js`,
+        `${input}.mjs`,
+        `${input}.ts`,
       ].find(i => existsSync(i))
       if (file) {
         // @ts-expect-error missin types
-        await import('launch-editor').then(r => (r.default || r)(file))
+        await import('launch-editor').then(r => (r.default || r)(file + suffix))
+      }
+      else {
+        console.error('File not found:', input)
       }
     },
   }
