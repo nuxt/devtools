@@ -190,7 +190,7 @@ export default defineNuxtPlugin((nuxt) => {
     innerHTML: `
 .nuxt-devtools-container {
   background: white;
-  z-index: 2147483647
+  z-index: 2147483646;
 }
 .dark .nuxt-devtools-container {
   background: #0C0C0C;
@@ -203,7 +203,7 @@ export default defineNuxtPlugin((nuxt) => {
   border-radius: 100px 100px 0 0;
   border: 1px solid rgba(125,125,125,0.2);
   box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
-  z-index: 2147483646;
+  z-index: 2147483647;
   height: 30px;
   width: 40px;
   cursor: pointer;
