@@ -18,32 +18,26 @@ const box = reactive(useElementBounding(anchor))
 
 onMounted(() => {
   if (map.get(key)) {
-    map.get(key)!.style.visibility = 'visible'
+    iframeEl = map.get(key)!
+    iframeEl.style.visibility = 'visible'
   }
   else {
     iframeEl = document.createElement('iframe')
     map.set(key, iframeEl)
     iframeEl.src = tab.view.src
-    iframeEl.onload = syncColorMode
+    iframeEl!.style.opacity = '0.01'
+    iframeEl.onload = () => {
+      syncColorMode()
+      iframeEl!.style.opacity = '1'
+    }
     document.body.appendChild(iframeEl)
-    nextTick(update)
+    nextTick(updateIframeBox)
   }
+  setTimeout(syncColorMode, 100)
 })
 
-watchEffect(update)
-
-function update() {
-  if (!iframeEl)
-    return
-  Object.assign(iframeEl.style, {
-    position: 'fixed',
-    left: `${box.left}px`,
-    top: `${box.top}px`,
-    width: `${box.width}px`,
-    height: `${box.height}px`,
-    outline: 'none',
-  })
-}
+watchEffect(updateIframeBox)
+watchEffect(syncColorMode)
 
 onUnmounted(() => {
   if (iframeEl)
@@ -63,10 +57,18 @@ function syncColorMode() {
   }
 }
 
-watchEffect(syncColorMode)
-onMounted(() => {
-  setTimeout(syncColorMode, 100)
-})
+function updateIframeBox() {
+  if (!iframeEl)
+    return
+  Object.assign(iframeEl.style, {
+    position: 'fixed',
+    left: `${box.left}px`,
+    top: `${box.top}px`,
+    width: `${box.width}px`,
+    height: `${box.height}px`,
+    outline: 'none',
+  })
+}
 </script>
 
 <template>
