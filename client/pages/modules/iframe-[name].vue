@@ -7,5 +7,5 @@ const tab = $computed(() => tabsInfoIframe.find(i => i.name === name) as ModuleI
 </script>
 
 <template>
-  <IframeView :tab="tab" />
+  <IframeView v-if="tab" :tab="tab" />
 </template>
