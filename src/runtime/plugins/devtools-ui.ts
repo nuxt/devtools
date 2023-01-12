@@ -85,9 +85,9 @@ export default defineNuxtPlugin((nuxt) => {
     },
   })
 
-  iframe.addEventListener('load', () => {
-    updateClient()
-    setTimeout(updateClient, 1000)
+  iframe.addEventListener('load', async () => {
+    await waitForClientInjection()
+    setupClient()
   })
 
   const closeButton = h('button', {
@@ -140,6 +140,41 @@ export default defineNuxtPlugin((nuxt) => {
     container.removeAttribute('style')
     Object.assign(container.style, LAYOUT_IFRAME)
     window.__NUXT_DEVTOOLS__?.componentInspectorClose()
+  }
+
+  function waitForClientInjection(retry = 10, timeout = 200) {
+    const test = () => !!iframe?.contentWindow?.__NUXT_DEVTOOLS__
+
+    if (test())
+      return
+
+    return new Promise<void>((resolve, reject) => {
+      const interval = setInterval(() => {
+        if (test()) {
+          clearInterval(interval)
+          resolve()
+        }
+        else if (retry-- <= 0) {
+          clearInterval(interval)
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject('Nuxt Devtools client injection failed')
+        }
+      }, timeout)
+    })
+  }
+
+  function setupClient() {
+    // trigger update for payload change
+    watch(nuxt.payload, () => {
+      iframe?.contentWindow?.__NUXT_DEVTOOLS__?.triggerUpdate()
+    }, { deep: true })
+
+    // trigger update for route change
+    nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
+      iframe?.contentWindow?.__NUXT_DEVTOOLS__?.triggerUpdate()
+    })
+
+    updateClient()
   }
 
   function updateClient() {

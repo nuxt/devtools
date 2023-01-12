@@ -1,15 +1,21 @@
 import type { NuxtDevtoolsGlobal } from '../../src/types'
 
 export default defineNuxtPlugin(() => {
-  const state = useClient()
+  const client = useClient()
   const inspectorData = useComponentInspectorData()
   const router = useRouter()
 
   window.__NUXT_DEVTOOLS__ = <NuxtDevtoolsGlobal>{
-    setClient(client) {
-      state.value = client
+    setClient(_client) {
+      client.value = _client
       // eslint-disable-next-line no-console
-      console.log('DevTools client connected', client)
+      console.log('DevTools client connected', _client)
+    },
+    triggerUpdate() {
+      // TODO: use triggerRef after: https://github.com/vuejs/core/pull/7507
+      // triggerRef(client)
+      if (client.value)
+        client.value = { ...client.value }
     },
     componentInspectorClose() {
       router.go(-1)

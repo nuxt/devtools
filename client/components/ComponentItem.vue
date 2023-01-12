@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { Component } from '@nuxt/schema'
+import { pascalCase } from 'scule'
 import { openInEditor } from '#imports'
 
 const { component } = defineProps<{
   component: Component
 }>()
 
-const path = $computed(() => getShortPath(component.filePath, config.rootDir))
+// @ts-expect-error types
+const name = $computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
+// @ts-expect-error types
+const filePath = $computed(() => component.filePath || component.__file || '')
+const path = $computed(() => filePath ? getShortPath(filePath, config.rootDir) : '')
 const copy = useCopy()
 </script>
 
@@ -20,8 +25,8 @@ const copy = useCopy()
     flex="~ gap2"
     w-full items-center
   >
-    <button hover:text-primary @click="copy(`<${component.pascalName}></${component.pascalName}>`)">
-      <code font-mono text-sm><span op20 mr1>&lt;</span>{{ component.pascalName }}<span op20 ml1>/&gt;</span></code>
+    <button hover:text-primary @click="copy(`<${name}></${name}>`)">
+      <code font-mono text-sm><span op20 mr1>&lt;</span>{{ name }}<span op20 ml1>/&gt;</span></code>
     </button>
     <Badge
       v-if="component.global"
@@ -30,14 +35,14 @@ const copy = useCopy()
       v-text="'runtime'"
     />
     <button
-      v-if="component.filePath"
+      v-if="filePath"
       text-sm
       op0
       group-hover:op50
       hover:underline
       ws-nowrap
       of-hidden
-      @click="openInEditor(component.filePath)"
+      @click="openInEditor(filePath)"
     >
       {{ path }}
     </button>

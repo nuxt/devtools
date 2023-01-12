@@ -116,6 +116,7 @@ export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorCl
 
 export interface NuxtDevtoolsGlobal {
   setClient(client: NuxtAppClient): void
+  triggerUpdate(): void
   componentInspectorUpdate(data: VueInspectorData): void
   componentInspectorClick(baseUrl: string, file: string, line: number, column: number): void
   componentInspectorClose(): void
