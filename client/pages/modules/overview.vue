@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { config } from '#imports'
-
 definePageMeta({
   icon: 'carbon-information',
   title: 'Overview',
@@ -8,6 +6,7 @@ definePageMeta({
 })
 
 const client = useClient()
+const config = $(useServerConfig())
 
 const showConnectionWarning = ref(false)
 onMounted(() => {
@@ -18,8 +17,6 @@ onMounted(() => {
 
 const components = await rpc.getComponents()
 const autoImports = await rpc.getAutoImports()
-
-const matched = $computed(() => [...client.value?.nuxt?.vueApp.config.globalProperties.$route.matched || []])
 </script>
 
 <template>
@@ -36,11 +33,8 @@ const matched = $computed(() => [...client.value?.nuxt?.vueApp.config.globalProp
   >
     <span i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
   </div>
-  <div p4 flex="~ col" h-full>
-    <div>Matched routes</div>
-    <template v-for="i, idx of matched" :key="idx">
-      <ComponentItem v-if="i.components?.default" :component="i.components?.default as any" />
-    </template>
+  <div v-if="config" p4 flex="~ col" h-full>
+    <CurrentState v-if="client" />
     <div grid="~ cols-[max-content_1fr] gap-x-2 gap-y-1" ma>
       <div text-right op50>
         Workspace

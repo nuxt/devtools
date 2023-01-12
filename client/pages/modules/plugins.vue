@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { config } from '#imports'
-
 definePageMeta({
   icon: 'carbon-plug',
   title: 'Plugins',
 })
+
+const config = $(useServerConfig())
 </script>
 
 <template>
-  <div>
+  <div v-if="config">
     <SectionBlock
       icon="carbon-plug"
       text="Plugins"

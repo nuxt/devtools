@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { config } from '#imports'
-
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
   title: 'Modules',
@@ -15,7 +13,8 @@ const ignores = [
   '@nuxt/telemetry',
 ]
 
-const modules = $computed(() => config._installedModules)
+const config = $(useServerConfig())
+const modules = $computed(() => config?._installedModules || [])
 const packageModules = $ref<any[]>([])
 const userModules = $ref<any[]>([])
 

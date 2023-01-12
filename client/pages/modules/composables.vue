@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
 import type { Import } from 'unimport'
-import { config } from '#imports'
 
 definePageMeta({
   icon: 'carbon-function',
   title: 'Composables',
 })
+
+const config = $(useServerConfig())
 
 const search = $ref('')
 const functions = (await rpc.getAutoImports())
@@ -56,7 +57,7 @@ const filtered = $computed(() => {
 </script>
 
 <template>
-  <div>
+  <div v-if="config">
     <div p4 flex="~ col gap2">
       <NTextInput
         v-model="search"

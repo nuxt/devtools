@@ -268,4 +268,8 @@ export default defineNuxtPlugin((nuxt) => {
 
   document.body.appendChild(button)
   document.head.appendChild(style)
+
+  // for development
+  if (useRuntimeConfig().public.NUXT_DEVTOOLS_OPEN)
+    toggle()
 })

@@ -6,13 +6,15 @@ const props = defineProps<{
   index?: number
 }>()
 
+const config = $(useServerConfig())
+
 const normalized = $computed((): NuxtPlugin => {
   if (typeof props.plugin === 'string')
     return { src: props.plugin }
   return props.plugin
 })
 
-const shortPath = $computed(() => getShortPath(normalized.src, config.rootDir, true)!)
+const shortPath = $computed(() => config ? getShortPath(normalized.src, config.rootDir, true)! : '')
 </script>
 
 <template>

@@ -46,4 +46,7 @@ async function connectWS() {
   return ws
 }
 
-export const config = await rpc.getConfig()
+export function useServerConfig() {
+  const serverConfigRef = useAsyncData('devtools-server-config', () => rpc.getConfig())
+  return serverConfigRef.data
+}
