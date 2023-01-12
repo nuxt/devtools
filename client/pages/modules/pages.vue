@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { objectPick } from '@antfu/utils'
 import type { RouteInfo } from '~~/../src/types'
+import CurrentRoute from '~~/components/CurrentRoute.vue'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -11,6 +12,8 @@ definePageMeta({
 const client = useClient()
 const serverPages = await rpc.getServerPages()
 
+// const router = $computed(() => client.value?.nuxt.vueApp.config.globalProperties.$router)
+const route = $computed(() => client.value?.nuxt.vueApp.config.globalProperties.$route)
 const pages = $computed((): RouteInfo[] => {
   return (client.value?.nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
@@ -26,8 +29,16 @@ const pages = $computed((): RouteInfo[] => {
 <template>
   <div v-if="client">
     <SectionBlock
+      v-if="route"
+      icon="carbon-3d-curve-manual"
+      text="Current Routes"
+    >
+      <CurrentRoute />
+    </SectionBlock>
+    <SectionBlock
       icon="carbon-tree-view-alt"
       text="Pages"
+      divider
     >
       <PagesTable :pages="pages" />
       <!-- <ModuleTreeNode :node="tree" /> -->

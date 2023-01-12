@@ -34,7 +34,6 @@ const autoImports = await rpc.getAutoImports()
     <span i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
   </div>
   <div v-if="config" p4 flex="~ col" h-full>
-    <CurrentState v-if="client" />
     <div grid="~ cols-[max-content_1fr] gap-x-2 gap-y-1" ma>
       <div text-right op50>
         Workspace
