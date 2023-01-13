@@ -74,6 +74,8 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.vscodeServer)
       await import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt))
 
-    await initHooks()
+    nuxt.hook('app:resolve', async () => {
+      await initHooks()
+    })
   },
 })
