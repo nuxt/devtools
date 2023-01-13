@@ -53,6 +53,7 @@ export default defineNuxtPlugin((nuxt) => {
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
+  // height and width of the panel, in percent
   const height = ref(+(localStorage.getItem('nuxt-devtools-height') || '50'))
   const width = ref(+(localStorage.getItem('nuxt-devtools-width') || '100'))
   width.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width.value))
@@ -111,13 +112,13 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], el => el.addEventListener('click', toggle))
 
   // #region Resize
-  let isDragging: false | 'top' | 'left' | 'right' = false
+  const isDragging = ref<false | 'top' | 'left' | 'right'>(false)
   const resizeHandleHorizontal = h('div', {
     className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal',
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging = 'top'
+      isDragging.value = 'top'
     })
   })
   const resizeHandleVerticalLeft = h('div', {
@@ -128,7 +129,7 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging = 'left'
+      isDragging.value = 'left'
     })
   })
   const resizeHandleVerticalRight = h('div', {
@@ -139,15 +140,15 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging = 'right'
+      isDragging.value = 'right'
     })
   })
 
   document.addEventListener('mousemove', (event) => {
-    if (!isDragging)
+    if (!isDragging.value)
       return
 
-    if (isDragging === 'top') {
+    if (isDragging.value === 'top') {
       const fullHeight = window.innerHeight - PANEL_PADDING * 2
       const value = (window.innerHeight - event.clientY - PANEL_PADDING) / fullHeight * 100
       height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
@@ -160,7 +161,7 @@ export default defineNuxtPlugin((nuxt) => {
     }
   })
   document.addEventListener('mouseup', () => {
-    isDragging = false
+    isDragging.value = false
   })
   // #endregion
 
@@ -182,7 +183,7 @@ export default defineNuxtPlugin((nuxt) => {
     if (!window.__VUE_INSPECTOR__?.enabled)
       Object.assign(container.style, LAYOUT_IFRAME.value)
 
-    iframe.style.pointerEvents = isDragging ? 'none' : 'auto'
+    iframe.style.pointerEvents = isDragging.value ? 'none' : 'auto'
   })
 
   function toggle() {

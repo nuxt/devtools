@@ -16,10 +16,10 @@ tabsInfoIframe.push(...custom)
 <template>
   <div border="l base" flex="~ col" h-full>
     <div pl3 pr2 py2 flex="~ gap1" items-center border="b base">
-      <NuxtLogo h-8 />
-      <div flex-auto />
+      <NuxtLogo h-8 hidden md:block />
+      <div flex-auto hidden md:block />
       <NDarkToggle v-slot="{ toggle }">
-        <button carbon-sun text-sm op50 hover:op100 dark:carbon-moon @click="toggle()" />
+        <button carbon-sun text-sm op50 hover:op100 dark:carbon-moon class="hidden! md:block!" @click="toggle()" />
       </NDarkToggle>
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
@@ -31,7 +31,7 @@ tabsInfoIframe.push(...custom)
     />
     <template v-if="customTabs.length">
       <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
-        By Modules
+        <span hidden md:inline>By Modules</span>
       </div>
       <DrawerItem
         v-for="tab of customTabs"

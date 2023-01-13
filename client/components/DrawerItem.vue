@@ -13,27 +13,28 @@ const isEnabled = computed(() => !(tab as ModuleBuiltinTab).requireClient || !!c
   <NuxtLink
     v-if="isEnabled"
     :to="tab.path"
-    flex
+    flex="~ gap2"
     items-center
-    gap2
-    px3
-    py2
+    p2
     text-true-gray
-    border="b base"
+    border="base"
+    md="border-b px3 py2"
     hover="bg-gray/5"
     exact-active-class="!text-primary"
   >
     <img
       v-if="tab.icon && (tab.icon.startsWith('/') || tab.icon.match(/^https?:/))"
-      w6
+      w10 md:w6
       :src="tab.icon"
       :alt="tab.title"
     >
     <div
       v-else
-      w6
+      w10 md:w6
       :class="tab.icon || 'carbon-assembly-reference'"
     />
-    <div>{{ tab.title }}</div>
+    <div hidden md:block>
+      {{ tab.title }}
+    </div>
   </NuxtLink>
 </template>
