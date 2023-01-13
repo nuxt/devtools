@@ -45,7 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
     if (!nuxt.options.dev)
       return
 
-    addPlugin(join(runtimeDir, 'plugins/devtools-ui'), {})
+    addPlugin(join(runtimeDir, 'plugins/devtools-client'), {})
 
     const {
       middleware: rpcMiddleware,

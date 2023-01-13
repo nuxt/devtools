@@ -30,17 +30,6 @@ function h<K extends keyof HTMLElementTagNameMap>(
   return el
 }
 
-const LAYOUT_IFRAME = {
-  position: 'fixed',
-  bottom: '10px',
-  right: '10px',
-  left: '10px',
-  height: '600px',
-  borderRadius: '0.5rem',
-  maxHeight: 'calc(100vh - 20px)',
-  width: 'calc(100vw - 20px)',
-}
-
 const LAYOUT_IFRAME_SMALL = {
   position: 'fixed',
   bottom: '10px',
@@ -51,6 +40,10 @@ const LAYOUT_IFRAME_SMALL = {
   borderRadius: '0.5rem',
 }
 
+const PANEL_PADDING = 10
+const PANEL_MIN = 5
+const PANEL_MAX = 100
+
 export default defineNuxtPlugin((nuxt) => {
   if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
     return
@@ -59,6 +52,20 @@ export default defineNuxtPlugin((nuxt) => {
   // const ENTRY_PATH = '/__nuxt_devtools__/entry/'
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
+
+  const height = ref(+(localStorage.getItem('nuxt-devtools-height') || '50'))
+  const width = ref(+(localStorage.getItem('nuxt-devtools-width') || '100'))
+  width.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width.value))
+  height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height.value))
+
+  const LAYOUT_IFRAME = computed(() => ({
+    position: 'fixed',
+    bottom: `${PANEL_PADDING}px`,
+    borderRadius: '0.5rem',
+    left: `calc(${(100 - width.value) / 2}vw + ${PANEL_PADDING}px)`,
+    height: `calc(${height.value}vh - ${PANEL_PADDING * 2}px)`,
+    width: `calc(${width.value}vw - ${PANEL_PADDING * 2}px)`,
+  }))
 
   // function post(method: string, data: any) {
   //   return fetch(ENTRY_PATH, {
@@ -83,11 +90,11 @@ export default defineNuxtPlugin((nuxt) => {
       border: '1px solid rgba(125,125,125,0.2)',
       boxShadow: '3px 5px 8px rgba(0,0,0,0.05)',
     },
-  })
-
-  iframe.addEventListener('load', async () => {
-    await waitForClientInjection()
-    setupClient()
+  }, [], (iframe) => {
+    iframe.addEventListener('load', async () => {
+      await waitForClientInjection()
+      setupClient()
+    })
   })
 
   const closeButton = h('button', {
@@ -103,14 +110,80 @@ export default defineNuxtPlugin((nuxt) => {
     },
   }, [], el => el.addEventListener('click', toggle))
 
+  // #region Resize
+  let isDragging: false | 'top' | 'left' | 'right' = false
+  const resizeHandleHorizontal = h('div', {
+    className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal',
+  }, [], (el) => {
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      isDragging = 'top'
+    })
+  })
+  const resizeHandleVerticalLeft = h('div', {
+    className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical',
+    style: {
+      left: '0',
+    },
+  }, [], (el) => {
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      isDragging = 'left'
+    })
+  })
+  const resizeHandleVerticalRight = h('div', {
+    className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical',
+    style: {
+      right: '0',
+    },
+  }, [], (el) => {
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      isDragging = 'right'
+    })
+  })
+
+  document.addEventListener('mousemove', (event) => {
+    if (!isDragging)
+      return
+
+    if (isDragging === 'top') {
+      const fullHeight = window.innerHeight - PANEL_PADDING * 2
+      const value = (window.innerHeight - event.clientY - PANEL_PADDING) / fullHeight * 100
+      height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
+    }
+    else {
+      const fullWidth = window.innerWidth - PANEL_PADDING * 2
+      const halfPanelWidth = Math.abs(event.clientX - (window.innerWidth / 2)) - PANEL_PADDING
+      const value = halfPanelWidth / fullWidth * 100 * 2
+      width.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
+    }
+  })
+  document.addEventListener('mouseup', () => {
+    isDragging = false
+  })
+  // #endregion
+
   const container = h('div', {
     className: 'nuxt-devtools-container',
-    style: LAYOUT_IFRAME,
+    style: LAYOUT_IFRAME.value,
   },
   [
     iframe,
     closeButton,
+    resizeHandleHorizontal,
+    resizeHandleVerticalLeft,
+    resizeHandleVerticalRight,
   ])
+
+  watchEffect(() => {
+    localStorage.setItem('nuxt-devtools-height', height.value.toString())
+    localStorage.setItem('nuxt-devtools-width', width.value.toString())
+    if (!window.__VUE_INSPECTOR__?.enabled)
+      Object.assign(container.style, LAYOUT_IFRAME.value)
+
+    iframe.style.pointerEvents = isDragging ? 'none' : 'auto'
+  })
 
   function toggle() {
     if (Array.from(document.body.children).includes(container)) {
@@ -138,7 +211,7 @@ export default defineNuxtPlugin((nuxt) => {
   function disableComponentInspector() {
     window.__VUE_INSPECTOR__?.disable()
     container.removeAttribute('style')
-    Object.assign(container.style, LAYOUT_IFRAME)
+    Object.assign(container.style, LAYOUT_IFRAME.value)
     window.__NUXT_DEVTOOLS__?.componentInspectorClose()
   }
 
@@ -261,6 +334,28 @@ export default defineNuxtPlugin((nuxt) => {
   border: 1px solid rgba(125,125,125,0.2);
 }
 .nuxt-devtools-button:hover {
+  background: rgba(125,125,125,0.1);
+}
+.nuxt-devtools-resize-handle-horizontal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  margin: -5px 0;
+  cursor: ns-resize;
+  border-radius: 5px;
+}
+.nuxt-devtools-resize-handle-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  margin: 0 -5px;
+  cursor: ew-resize;
+  border-radius: 5px;
+}
+.nuxt-devtools-resize-handle:hover {
   background: rgba(125,125,125,0.1);
 }
 `,
