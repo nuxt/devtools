@@ -6,7 +6,7 @@ import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
 
 import { parse, stringify } from 'flatted'
-import type { Component, Nuxt, NuxtPage } from '@nuxt/schema'
+import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
 import type { Import } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
@@ -21,6 +21,7 @@ export function setupRPC(nuxt: Nuxt) {
   const iframeTabs: ModuleIframeTab[] = []
   const customTabs: ModuleIframeTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
+  let app: NuxtApp | undefined
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -43,6 +44,9 @@ export function setupRPC(nuxt: Nuxt) {
         ...iframeTabs,
         ...customTabs,
       ]
+    },
+    getLayouts() {
+      return Object.values(app?.layouts || [])
     },
     getServerHooks() {
       return Object.values(serverHooks)
@@ -97,6 +101,10 @@ export function setupRPC(nuxt: Nuxt) {
     const result = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
     importPresets.length = 0
     importPresets.push(...result)
+  })
+
+  nuxt.hook('app:resolve', (v) => {
+    app = v
   })
 
   const middleware = async (req: NodeIncomingMessage & TinyWSRequest, res: NodeServerResponse) => {

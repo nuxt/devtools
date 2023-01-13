@@ -3,7 +3,6 @@ const client = useClient()
 
 const path = $computed(() => client.value?.nuxt?.vueApp.config.globalProperties.$route.path)
 const matched = $computed(() => [...client.value?.nuxt?.vueApp.config.globalProperties.$route.matched || []])
-const config = useServerConfig()
 </script>
 
 <template>

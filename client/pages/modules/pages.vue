@@ -35,6 +35,7 @@ const pages = $computed((): RouteInfo[] => {
     >
       <CurrentRoute />
     </SectionBlock>
+    <LayoutsSection />
     <SectionBlock
       icon="carbon-tree-view-alt"
       text="Pages"
