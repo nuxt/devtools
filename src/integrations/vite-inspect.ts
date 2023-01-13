@@ -14,7 +14,7 @@ export async function setupViteInspect(nuxt: Nuxt) {
       icon: 'carbon-search',
       view: {
         type: 'iframe',
-        src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`,
+        src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`.replace(/\/\//g, '/'),
       },
     })
   })
