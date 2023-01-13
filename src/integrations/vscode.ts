@@ -9,7 +9,7 @@ export function setupVSCodeServer(nuxt: Nuxt) {
     'serve-local',
     '--accept-server-license-terms',
     '--without-connection-token',
-`--port=${PORT}`,
+    `--port=${PORT}`,
   ])
 
   nuxt.hook('close', () => {
