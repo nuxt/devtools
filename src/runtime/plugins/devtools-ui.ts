@@ -1,7 +1,7 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 
 declare global {
   interface Window {
