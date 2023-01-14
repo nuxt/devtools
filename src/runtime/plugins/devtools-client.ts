@@ -1,4 +1,5 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'
@@ -112,13 +113,13 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], el => el.addEventListener('click', toggle))
 
   // #region Resize
-  const isDragging = ref<false | 'top' | 'left' | 'right'>(false)
+  const isDragging = ref<false | 'vertical' | 'horizontal' | 'both'>(false)
   const resizeHandleHorizontal = h('div', {
     className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal',
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging.value = 'top'
+      isDragging.value = 'horizontal'
     })
   })
   const resizeHandleVerticalLeft = h('div', {
@@ -129,7 +130,7 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging.value = 'left'
+      isDragging.value = 'vertical'
     })
   })
   const resizeHandleVerticalRight = h('div', {
@@ -140,7 +141,31 @@ export default defineNuxtPlugin((nuxt) => {
   }, [], (el) => {
     el.addEventListener('mousedown', (e) => {
       e.preventDefault()
-      isDragging.value = 'right'
+      isDragging.value = 'vertical'
+    })
+  })
+  const resizeHandleVerticalTopLeft = h('div', {
+    className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner',
+    style: {
+      left: '0',
+      cursor: 'nwse-resize',
+    },
+  }, [], (el) => {
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      isDragging.value = 'both'
+    })
+  })
+  const resizeHandleVerticalTopRight = h('div', {
+    className: 'nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner',
+    style: {
+      right: '0',
+      cursor: 'nesw-resize',
+    },
+  }, [], (el) => {
+    el.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      isDragging.value = 'both'
     })
   })
 
@@ -148,12 +173,13 @@ export default defineNuxtPlugin((nuxt) => {
     if (!isDragging.value)
       return
 
-    if (isDragging.value === 'top') {
+    if (isDragging.value === 'horizontal' || isDragging.value === 'both') {
       const fullHeight = window.innerHeight - PANEL_PADDING * 2
       const value = (window.innerHeight - event.clientY - PANEL_PADDING) / fullHeight * 100
       height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
     }
-    else {
+
+    if (isDragging.value === 'vertical' || isDragging.value === 'both') {
       const fullWidth = window.innerWidth - PANEL_PADDING * 2
       const halfPanelWidth = Math.abs(event.clientX - (window.innerWidth / 2)) - PANEL_PADDING
       const value = halfPanelWidth / fullWidth * 100 * 2
@@ -175,6 +201,8 @@ export default defineNuxtPlugin((nuxt) => {
     resizeHandleHorizontal,
     resizeHandleVerticalLeft,
     resizeHandleVerticalRight,
+    resizeHandleVerticalTopLeft,
+    resizeHandleVerticalTopRight,
   ])
 
   watchEffect(() => {
@@ -340,8 +368,8 @@ export default defineNuxtPlugin((nuxt) => {
 .nuxt-devtools-resize-handle-horizontal {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 6px;
+  right: 6px;
   height: 10px;
   margin: -5px 0;
   cursor: ns-resize;
@@ -349,12 +377,20 @@ export default defineNuxtPlugin((nuxt) => {
 }
 .nuxt-devtools-resize-handle-vertical {
   position: absolute;
-  top: 0;
+  top: 6px;
   bottom: 0;
   width: 10px;
   margin: 0 -5px;
   cursor: ew-resize;
   border-radius: 5px;
+}
+.nuxt-devtools-resize-handle-corner {
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  margin: -6px;
+  border-radius: 6px;
 }
 .nuxt-devtools-resize-handle:hover {
   background: rgba(125,125,125,0.1);
