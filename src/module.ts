@@ -41,6 +41,10 @@ export default defineNuxtModule<ModuleOptions>({
     vscodeServer: false,
   },
   async setup(options, nuxt) {
+    // Disable in test mode
+    if (process.env.TEST || process.env.NODE_ENV === 'test')
+      return
+
     // TODO: Support devtools in production
     if (!nuxt.options.dev)
       return
