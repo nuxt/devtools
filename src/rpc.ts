@@ -7,7 +7,7 @@ import type { ChannelOptions } from 'birpc'
 
 import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
-import type { Import } from 'unimport'
+import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
 import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions } from './types'
@@ -21,6 +21,7 @@ export function setupRPC(nuxt: Nuxt) {
   const iframeTabs: ModuleIframeTab[] = []
   const customTabs: ModuleIframeTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
+  let unimport: Unimport | undefined
   let app: NuxtApp | undefined
 
   const serverFunctions: ServerFunctions = {
@@ -34,10 +35,13 @@ export function setupRPC(nuxt: Nuxt) {
       return serverPages
     },
     getAutoImports() {
-      return [
-        ...imports,
-        ...importPresets,
-      ]
+      return {
+        imports: [
+          ...imports,
+          ...importPresets,
+        ],
+        metadata: unimport?.getMetadata(),
+      }
     },
     getIframeTabs() {
       return [
@@ -101,6 +105,11 @@ export function setupRPC(nuxt: Nuxt) {
     const result = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
     importPresets.length = 0
     importPresets.push(...result)
+  })
+
+  // @ts-expect-error missing types
+  nuxt.hook('imports:context', (_unimport: Unimport) => {
+    unimport = _unimport
   })
 
   nuxt.hook('app:resolve', (v) => {

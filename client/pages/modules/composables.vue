@@ -10,7 +10,9 @@ definePageMeta({
 const config = $(useServerConfig())
 
 const search = $ref('')
-const functions = (await rpc.getAutoImports())
+const { imports, metadata } = (await rpc.getAutoImports())
+
+const functions = imports
   .filter(i => i.as || i.name)
   .sort((a, b) => (a.as || a.name).localeCompare(b.as || b.name))
 
@@ -73,7 +75,7 @@ const filtered = $computed(() => {
       text="User composables"
       :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
     >
-      <ComposableTree :map="filtered.user" :root="config.rootDir" />
+      <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="metadata" />
     </SectionBlock>
     <SectionBlock
       v-if="filtered.builtin.size"
@@ -82,7 +84,7 @@ const filtered = $computed(() => {
       text="Built-in composables"
       :description="`${filtered.count.builtin} composables`"
     >
-      <ComposableTree :map="filtered.builtin" :root="config.rootDir" />
+      <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="metadata" />
     </SectionBlock>
     <SectionBlock
       v-if="filtered.lib.size"
@@ -91,7 +93,7 @@ const filtered = $computed(() => {
       text="Composables from libraries"
       :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
     >
-      <ComposableTree :map="filtered.lib" :root="config.rootDir" />
+      <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="metadata" />
     </SectionBlock>
   </div>
 </template>

@@ -54,6 +54,8 @@ export default defineNuxtModule<ModuleOptions>({
       return
     }
 
+    nuxt.options.imports.collectMeta = true
+
     addPlugin(join(runtimeDir, 'plugins/devtools-client'), {})
 
     const {

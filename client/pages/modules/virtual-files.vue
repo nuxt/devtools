@@ -23,12 +23,18 @@ const { data, refresh } = await useFetch<VfsData>('/_vfs.json', {
   responseType: 'json',
 })
 
-const query = useRoute().query as { id?: string }
+const fileId = $computed(() => useRoute().query?.id as string | undefined)
 
 const current = ref<VfsFile>()
 
-if (query.id)
-  current.value = await fetch(`/_vfs.json/${encodeURIComponent(query.id)}`).then(i => i.json()).then(i => i.current)
+watchEffect(() => {
+  if (!fileId)
+    return
+  const url = `/_vfs.json/${encodeURIComponent(fileId)}`
+  fetch(url)
+    .then(i => i.json())
+    .then(i => current.value = i.current)
+})
 
 function toShortPath(path: string) {
   if (!data.value?.rootDir)
@@ -51,7 +57,7 @@ const files = computed(() => {
   <div grid="~ cols-[250px_1fr]" h-full of-hidden>
     <div border="r base" flex="~ col" of-auto>
       <NuxtLink
-        v-for="f of files" :key="f.id" px2 py1 border="b base"
+        v-for="f of files" :key="f.id" px2 py1 border="b base" text-sm font-mono
         :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
         :class="f.id === current?.id ? 'bg-truegray:20 text-base' : 'text-truegray'"
       >

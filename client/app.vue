@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { ClientFunctions } from '../src/types'
 
+import 'floating-vue/dist/style.css'
+
 if (process.client)
   import('./setup/unocss-runtime')
 
@@ -40,9 +42,7 @@ Object.assign(clientFunctions, {
 
 <template>
   <NuxtLayout>
-    <KeepAlive>
-      <NuxtPage :page-key="(n: any) => n.fullPath" />
-    </KeepAlive>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 

@@ -1,5 +1,5 @@
 import type { Component, NuxtLayout, NuxtOptions, NuxtPage } from '@nuxt/schema'
-import type { Import } from 'unimport'
+import type { Import, UnimportMeta } from 'unimport'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
@@ -7,12 +7,17 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
-  getAutoImports(): Import[]
+  getAutoImports(): AutoImportsWithMetadata
   getServerPages(): NuxtPage[]
   getIframeTabs(): ModuleIframeTab[]
   getServerHooks(): HookInfo[]
   getLayouts(): NuxtLayout[]
   openInEditor(filepath: string): void
+}
+
+export interface AutoImportsWithMetadata {
+  imports: Import[]
+  metadata?: UnimportMeta
 }
 
 export interface ClientFunctions {

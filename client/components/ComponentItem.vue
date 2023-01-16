@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Component } from '@nuxt/schema'
 import { pascalCase } from 'scule'
-import { openInEditor } from '#imports'
 
 const { component } = defineProps<{
   component: Component
@@ -12,7 +11,6 @@ const config = $(useServerConfig())
 const name = $computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
 // @ts-expect-error types
 const filePath = $computed(() => component.filePath || component.file || component.__file || '')
-const path = $computed(() => filePath && config ? getShortPath(filePath, config.rootDir) : '')
 const copy = useCopy()
 </script>
 
@@ -36,17 +34,10 @@ const copy = useCopy()
       v-text="'runtime'"
     />
     <slot />
-    <button
+    <FilepathItem
       v-if="filePath"
-      text-sm
-      op0
-      group-hover:op50
-      hover:underline
-      ws-nowrap
-      of-hidden
-      @click="openInEditor(filePath)"
-    >
-      {{ path }}
-    </button>
+      :filepath="filePath"
+      op0 group-hover:op50 text-sm
+    />
   </div>
 </template>

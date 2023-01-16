@@ -16,7 +16,7 @@ onMounted(() => {
 })
 
 const components = await rpc.getComponents()
-const autoImports = await rpc.getAutoImports()
+const { imports: autoImports } = await rpc.getAutoImports()
 </script>
 
 <template>

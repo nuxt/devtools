@@ -29,6 +29,7 @@ importers:
       eslint: ^8.32.0
       execa: ^6.1.0
       flatted: ^3.2.7
+      floating-vue: 2.0.0-beta.20
       get-port-please: ^3.0.1
       h3: ^1.0.2
       json-editor-vue: ^0.10.5
@@ -73,6 +74,7 @@ importers:
       '@unocss/nuxt': 0.48.4
       bumpp: 8.2.1
       eslint: 8.32.0
+      floating-vue: 2.0.0-beta.20
       json-editor-vue: 0.10.5_vanilla-jsoneditor@0.11.8
       nuxt: /nuxt3/3.0.1-rc.0-27894335.0db3c63_tjxknrp5okovqtrxh5aihvdm5y
       typescript: 4.9.4
@@ -1073,6 +1075,16 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@floating-ui/core/0.3.1:
+    resolution: {integrity: sha512-ensKY7Ub59u16qsVIFEo2hwTCqZ/r9oZZFh51ivcLGHfUwTn8l1Xzng8RJUe91H/UP8PeqeBronAGx0qmzwk2g==}
+    dev: true
+
+  /@floating-ui/dom/0.1.10:
+    resolution: {integrity: sha512-4kAVoogvQm2N0XE0G6APQJuCNuErjOfPW8Ux7DFxh8+AfugWflwVJ5LDlHOwrwut7z/30NUvdtHzQ3zSip4EzQ==}
+    dependencies:
+      '@floating-ui/core': 0.3.1
     dev: true
 
   /@humanwhocodes/config-array/0.11.8:
@@ -2340,7 +2352,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.7_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.0.4
+      vite: 4.0.4_@types+node@18.11.18
       vue: 3.2.45
     transitivePeerDependencies:
       - supports-color
@@ -2353,7 +2365,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.0.4
+      vite: 4.0.4_@types+node@18.11.18
       vue: 3.2.45
     dev: true
 
@@ -4692,6 +4704,15 @@ packages:
 
   /flatted/3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
+
+  /floating-vue/2.0.0-beta.20:
+    resolution: {integrity: sha512-N68otcpp6WwcYC7zP8GeJqNZVdfvS7tEY88lwmuAHeqRgnfWx1Un8enzLxROyVnBDZ3TwUoUdj5IFg+bUT7JeA==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      '@floating-ui/dom': 0.1.10
+      vue-resize: 2.0.0-alpha.1
+    dev: true
 
   /focus-trap/7.2.0:
     resolution: {integrity: sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==}
@@ -8421,6 +8442,12 @@ packages:
       change-case: 4.1.2
       lodash-es: 4.17.21
       vue-demi: 0.13.11
+    dev: true
+
+  /vue-resize/2.0.0-alpha.1:
+    resolution: {integrity: sha512-7+iqOueLU7uc9NrMfrzbG8hwMqchfVfSzpVlCMeJQe4pyibqyoifDNbKTZvwxZKDvGkB+PdFeKvnGZMoEb8esg==}
+    peerDependencies:
+      vue: ^3.0.0
     dev: true
 
   /vue-router/4.1.6_vue@3.2.45:
