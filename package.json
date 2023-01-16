@@ -69,5 +69,14 @@
     "which": "^3.0.0",
     "ws": "^8.12.0"
   },
-  "packageManager": "pnpm@7.21.0"
+  "packageManager": "pnpm@7.21.0",
+  "pnpm": {
+    "overrides": {
+      "nuxt": "npm:nuxt3@latest",
+      "nitropack": "npm:nitropack-edge@latest"
+    },
+    "patchedDependencies": {
+      "@nuxt/vite-builder-edge@3.0.1-rc.0-27894335.0db3c63": "patches/@nuxt__vite-builder-edge@3.0.1-rc.0-27894335.0db3c63.patch"
+    }
+  }
 }

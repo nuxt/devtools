@@ -1,0 +1,17 @@
+diff --git a/dist/shared/vite-builder-edge.6f6b365e.mjs b/dist/shared/vite-builder-edge.6f6b365e.mjs
+index 06dd7fa3b0a8c677505e471edca05a5a2e166b1f..c52b6c8cf4467791e43b147b0315d8e5e603ea3f 100644
+--- a/dist/shared/vite-builder-edge.6f6b365e.mjs
++++ b/dist/shared/vite-builder-edge.6f6b365e.mjs
+@@ -312,9 +312,9 @@ async function buildClient(ctx) {
+     viteServer.middlewares.stack.splice(transformHandler, 0, {
+       route: "",
+       handle: (req, res, next) => {
+-        if (req._skip_transform) {
+-          req.url = joinURL("/__skip_vite", req.url);
+-        }
++        // if (req._skip_transform) {
++        //   req.url = joinURL("/__skip_vite", req.url);
++        // }
+         next();
+       }
+     });
