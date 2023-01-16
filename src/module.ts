@@ -61,6 +61,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
       server.middlewares.use(PATH_ENTRY, tinyws() as any)
       server.middlewares.use(PATH_ENTRY, rpcMiddleware as any)
+      // serve the front end in production
       if (existsSync(clientDir))
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
@@ -82,5 +83,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook('app:resolve', async () => {
       await initHooks()
     })
+
+    logger.success('Nuxt Devtools is enabled.')
   },
 })

@@ -5,8 +5,16 @@ const { tab } = defineProps<{
   tab: ModuleIframeTab | ModuleBuiltinTab
 }>()
 
-const client = useClient()
-const isEnabled = computed(() => !(tab as ModuleBuiltinTab).requireClient || !!client.value)
+const client = $(useClient())
+const config = $(useServerConfig())
+const isEnabled = computed(() => {
+  const _tab = tab as ModuleBuiltinTab
+  if (_tab.requireClient && !client)
+    return false
+  if (_tab.requirePages && !config?.pages)
+    return false
+  return true
+})
 </script>
 
 <template>

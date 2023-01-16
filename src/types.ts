@@ -94,6 +94,7 @@ export interface ModuleBuiltinTab {
   title?: string
   path?: string
   requireClient?: boolean
+  requirePages?: boolean
 }
 
 export interface HookInfo {
