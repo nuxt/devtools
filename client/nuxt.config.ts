@@ -8,9 +8,6 @@ export default defineNuxtConfig({
     '~/modules/custom-tabs',
     DevTools,
   ],
-  css: [
-    '~/styles/global.css',
-  ],
   ssr: false,
   experimental: {
     reactivityTransform: true,

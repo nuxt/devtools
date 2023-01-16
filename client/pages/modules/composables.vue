@@ -8,6 +8,7 @@ definePageMeta({
 })
 
 const config = $(useServerConfig())
+const onlyUsed = $ref(false)
 
 const search = $ref('')
 const { imports, metadata } = (await rpc.getAutoImports())
@@ -28,7 +29,14 @@ const filtered = $computed(() => {
   const user = new Map<string, Import[]>()
   const lib = new Map<string, Import[]>()
   const builtin = new Map<string, Import[]>()
-  const result = search ? fuse.search(search).map(i => i.item) : functions
+  let result = search
+    ? fuse.search(search).map(i => i.item)
+    : functions
+
+  if (onlyUsed && metadata) {
+    result = result
+      .filter(i => (i.as || i.name) in metadata.injectionUsage)
+  }
 
   const count = {
     user: 0,
@@ -60,13 +68,18 @@ const filtered = $computed(() => {
 
 <template>
   <div v-if="config">
-    <div p4 flex="~ col gap2">
+    <div p4 flex="~ col gap3">
       <NTextInput
         v-model="search"
         placeholder="Search..."
         p="x4 y2"
         n="primary"
       />
+      <div v-if="metadata">
+        <NSwitch v-model="onlyUsed" n="primary sm">
+          Show used only
+        </NSwitch>
+      </div>
     </div>
     <SectionBlock
       v-if="filtered.user.size"

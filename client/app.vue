@@ -2,6 +2,7 @@
 import type { ClientFunctions } from '../src/types'
 
 import 'floating-vue/dist/style.css'
+import './styles/global.css'
 
 if (process.client)
   import('./setup/unocss-runtime')

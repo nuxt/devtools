@@ -54,7 +54,7 @@ const files = computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-[250px_1fr]" h-full of-hidden>
+  <div grid="~ cols-[250px_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" flex="~ col" of-auto>
       <NuxtLink
         v-for="f of files" :key="f.id" px2 py1 border="b base" text-sm font-mono
@@ -64,7 +64,14 @@ const files = computed(() => {
         {{ toShortPath(f.id) }}
       </NuxtLink>
     </div>
-    <pre v-if="current?.content" of-auto h-full p2 text-sm v-html="highlight(current?.content, 'typescript')" />
+    <pre v-if="current?.content" of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
     <pre v-else flex items-center justify-center>Select one file to start</pre>
   </div>
 </template>
+
+<style>
+.virtual-files .shiki {
+  padding: 10px;
+  background: none !important;
+}
+</style>
