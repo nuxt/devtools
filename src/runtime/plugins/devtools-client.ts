@@ -56,7 +56,7 @@ export default defineNuxtPlugin((nuxt) => {
 
   // height and width of the panel, in percent
   const height = ref(+(localStorage.getItem('nuxt-devtools-height') || '50'))
-  const width = ref(+(localStorage.getItem('nuxt-devtools-width') || '100'))
+  const width = ref(+(localStorage.getItem('nuxt-devtools-width') || '85'))
   width.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width.value))
   height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height.value))
 
