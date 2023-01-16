@@ -143,19 +143,9 @@ export function setupRPC(nuxt: Nuxt) {
   }
 
   async function initHooks() {
+    customTabs.length = 0
     await nuxt.callHook('devtools:customTabs', customTabs)
   }
-
-  // Nitro
-  iframeTabs.push({
-    name: 'virtual',
-    title: 'Virtual Files',
-    builtin: true,
-    view: {
-      type: 'iframe',
-      src: '/_vfs',
-    },
-  })
 
   return {
     middleware,

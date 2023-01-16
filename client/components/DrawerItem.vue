@@ -39,7 +39,7 @@ const isEnabled = computed(() => {
     <div
       v-else
       w10 md:w6
-      :class="tab.icon || 'carbon-assembly-reference'"
+      :class="tab.icon || 'carbon-bring-forward'"
     />
     <div hidden md:block>
       {{ tab.title }}

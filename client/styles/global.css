@@ -1,0 +1,14 @@
+.shiki code {
+  counter-reset: step;
+  counter-increment: step calc(var(--start, 1) - 1);
+}
+.shiki code .line::before {
+  content: counter(step);
+  counter-increment: step;
+  width: 2rem;
+  padding-right: 0.5rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+  text-align: right;
+  --at-apply: text-truegray:50 border-r border-base;
+}

@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     '~/modules/custom-tabs',
     DevTools,
   ],
+  css: [
+    '~/styles/global.css',
+  ],
   ssr: false,
   experimental: {
     reactivityTransform: true,
@@ -30,6 +33,9 @@ export default defineNuxtConfig({
     baseURL: '/__nuxt_devtools__/client',
   },
   vite: {
+    define: {
+      'process.env.VSCODE_TEXTMATE_DEBUG': 'false',
+    },
     build: {
       target: 'esnext',
     },

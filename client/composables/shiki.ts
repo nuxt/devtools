@@ -12,6 +12,7 @@ getHighlighter({
   langs: [
     'css',
     'javascript',
+    'typescript',
   ],
 }).then((i) => { shiki.value = i })
 
