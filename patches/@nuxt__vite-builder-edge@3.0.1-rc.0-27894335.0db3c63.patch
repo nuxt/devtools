@@ -1,17 +1,21 @@
 diff --git a/dist/shared/vite-builder-edge.6f6b365e.mjs b/dist/shared/vite-builder-edge.6f6b365e.mjs
-index 06dd7fa3b0a8c677505e471edca05a5a2e166b1f..c52b6c8cf4467791e43b147b0315d8e5e603ea3f 100644
+index 06dd7fa3b0a8c677505e471edca05a5a2e166b1f..8eff71c733cd93469d8831db059d54dac9f92abb 100644
 --- a/dist/shared/vite-builder-edge.6f6b365e.mjs
 +++ b/dist/shared/vite-builder-edge.6f6b365e.mjs
-@@ -312,9 +312,9 @@ async function buildClient(ctx) {
-     viteServer.middlewares.stack.splice(transformHandler, 0, {
-       route: "",
-       handle: (req, res, next) => {
--        if (req._skip_transform) {
--          req.url = joinURL("/__skip_vite", req.url);
--        }
-+        // if (req._skip_transform) {
-+        //   req.url = joinURL("/__skip_vite", req.url);
-+        // }
+@@ -318,9 +318,15 @@ async function buildClient(ctx) {
          next();
        }
      });
++    const base = withTrailingSlash(clientConfig.base)
+     const viteMiddleware = defineEventHandler(async (event) => {
+       const originalURL = event.node.req.url;
+-      event.node.req._skip_transform = !originalURL.startsWith(clientConfig.base);
++
++      const viteRoutes = viteServer.middlewares.stack.map(m => m.route).filter(r => r.length > 1)
++      if (!originalURL.startsWith(base) && !viteRoutes.some(route => originalURL.startsWith(route))) {
++        event.node.req._skip_transform = true
++      }
++
+       await new Promise((resolve2, reject) => {
+         viteServer.middlewares.handle(event.node.req, event.node.res, (err) => {
+           event.node.req.url = originalURL;
