@@ -1,7 +1,7 @@
 import { join, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync } from 'fs'
-import { addPlugin, addVitePlugin, defineNuxtModule } from '@nuxt/kit'
+import { addPlugin, addVitePlugin, defineNuxtModule, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
@@ -45,6 +45,11 @@ export default defineNuxtModule<ModuleOptions>({
     if (!nuxt.options.dev)
       return
 
+    if (nuxt.options.builder !== '@nuxt/vite-builder') {
+      logger.warn('Nuxt Devtools only supports Vite mode, module is disabled.')
+      return
+    }
+
     addPlugin(join(runtimeDir, 'plugins/devtools-client'), {})
 
     const {
@@ -62,7 +67,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     if (nuxt.options.builder === '@nuxt/vite-builder') {
       if (nuxt.options.dev) {
-        addVitePlugin(await import('vite-plugin-vue-inspector').then(r => (r.default || r)({
+        addVitePlugin(await import('vite-plugin-vue-inspector').then(r => r.default({
           appendTo: 'entry.mjs',
           toggleComboKey: '',
           toggleButtonVisibility: 'never',

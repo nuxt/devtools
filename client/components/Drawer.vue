@@ -2,6 +2,8 @@
 const customTabs = $computed(() => tabsInfoIframe.filter(i => !i.builtin))
 const builtinIframeTabs = $computed(() => tabsInfoIframe.filter(i => i.builtin))
 
+const client = useClient()
+
 const {
   custom,
   builtin,
@@ -16,7 +18,12 @@ tabsInfoIframe.push(...custom)
 <template>
   <div border="l base" flex="~ col" h-full>
     <div pl3 pr2 py2 flex="~ gap1" items-center border="b base">
-      <NuxtLogo h-8 hidden md:block />
+      <NuxtLogo
+        h-8 hidden md:block
+        :class="client ? '' : 'saturate-0'"
+        :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
+      />
+
       <div flex-auto hidden md:block />
       <NDarkToggle v-slot="{ toggle }">
         <button carbon-sun text-sm op50 hover:op100 dark:carbon-moon class="hidden! md:block!" @click="toggle()" />
