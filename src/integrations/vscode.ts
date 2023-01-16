@@ -1,9 +1,18 @@
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import type { Nuxt } from '@nuxt/schema'
+import { getPort } from 'get-port-please'
+import which from 'which'
 
-export function setupVSCodeServer(nuxt: Nuxt) {
-  const PORT = 8141
+export async function setupVSCodeServer(nuxt: Nuxt) {
+  const url = await which('code-server').catch(() => null)
+  if (!url) {
+    logger.debug('VS Code Server is not installed, module is disabled.')
+    return
+  }
+
+  const PORT = await getPort({ port: 8814 })
+
   logger.info(`Starting VS Code Server at http://localhost:${PORT} ...`)
   const command = execa('code-server', [
     'serve-local',
