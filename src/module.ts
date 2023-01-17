@@ -82,9 +82,18 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
 
-    await import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt))
-    if (options.vscodeServer)
-      await import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt))
+    const promises: Promise<any>[] = []
+
+    promises.push(
+      import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt)),
+    )
+    if (options.vscodeServer) {
+      promises.push(
+        import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt)),
+      )
+    }
+
+    await Promise.all(promises)
 
     nuxt.hook('app:resolve', async () => {
       await initHooks()
