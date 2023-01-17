@@ -13,7 +13,7 @@ let onMessage: Function = () => {}
 let client = await connectWS()
 
 export const clientFunctions: ClientFunctions = {
-  refresh() {},
+  refresh() {}, // will be replaced in app.vue
 }
 
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {

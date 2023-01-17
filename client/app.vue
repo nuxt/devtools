@@ -28,7 +28,7 @@ const router = useRouter()
 const route = useRoute()
 
 Object.assign(clientFunctions, {
-  refresh(type) {
+  async refresh(type) {
     if (route.path.includes(type)) {
       router.replace({
         path: route.path,
@@ -37,8 +37,12 @@ Object.assign(clientFunctions, {
         },
       })
     }
+    if (type === 'customTabs')
+      await updateTabs()
   },
 } satisfies ClientFunctions)
+
+await updateTabs()
 </script>
 
 <template>

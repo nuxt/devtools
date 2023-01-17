@@ -3,6 +3,7 @@ import { execa } from 'execa'
 import type { Nuxt } from '@nuxt/schema'
 import { getPort } from 'get-port-please'
 import which from 'which'
+import waitOn from 'wait-on'
 import type { ServerFunctions } from '../types'
 
 export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions) {
@@ -13,18 +14,31 @@ export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions)
   }
 
   const PORT = await getPort({ port: 8814 })
+  const URL = `http://localhost:${PORT}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
 
-  logger.info(`Starting VS Code Server at http://localhost:${PORT} ...`)
-  const command = execa('code-server', [
-    'serve-local',
-    '--accept-server-license-terms',
-    '--without-connection-token',
-    `--port=${PORT}`,
-  ])
+  async function start() {
+    logger.info(`Starting VS Code Server at ${URL} ...`)
+    const command = execa('code-server', [
+      'serve-local',
+      '--accept-server-license-terms',
+      '--without-connection-token',
+      `--port=${PORT}`,
+    ])
 
-  nuxt.hook('close', () => {
-    command.kill()
-  })
+    nuxt.hook('close', () => {
+      command.kill()
+    })
+
+    await waitOn({
+      resources: [URL],
+      timeout: 20_000,
+      reverse: true,
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  let promise: Promise<void> | null = null
 
   nuxt.hook('devtools:customTabs', (iframeTabs) => {
     iframeTabs.push({
@@ -34,7 +48,14 @@ export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions)
       builtin: true,
       view: {
         type: 'iframe',
-        src: `http://localhost:${PORT}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`,
+        src: URL,
+      },
+      lazy: {
+        description: 'Start VS Code Server',
+        onLoad() {
+          promise = promise || start()
+          return promise
+        },
       },
     })
   })

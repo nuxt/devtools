@@ -9,6 +9,7 @@ import { setupRPC } from './rpc'
 import type { ModuleIframeTab } from './types'
 
 export interface ModuleOptions {
+  // MOVE TO VIEW
   /**
    * Start a VS Code server locally, and integrate with the devtools.
    * You may need to apply and install VS Code server first.
@@ -16,7 +17,7 @@ export interface ModuleOptions {
    * @see https://code.visualstudio.com/blogs/2022/07/07/vscode-server
    * @default false
    */
-  vscodeServer?: boolean
+  // vscodeServer?: boolean
 }
 
 declare module '@nuxt/schema' {
@@ -91,19 +92,16 @@ export default defineNuxtModule<ModuleOptions>({
 
     promises.push(
       import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt, serverFunctions)),
+      import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt, serverFunctions)),
     )
-    if (options.vscodeServer) {
-      promises.push(
-        import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt, serverFunctions)),
-      )
-    }
 
     await Promise.all(promises)
 
     nuxt.hook('app:resolve', async () => {
       await initHooks()
-      await nuxt.callHook('devtools:init')
-      logger.success('Nuxt Devtools is enabled.')
     })
+
+    await nuxt.callHook('devtools:init')
+    logger.success('Nuxt Devtools is enabled.')
   },
 })

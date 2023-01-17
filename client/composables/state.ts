@@ -37,5 +37,15 @@ export async function getTabs() {
   }
 }
 
-export const tabsInfoIframe: ModuleIframeTab[] = []
-export const tabsInfoBuiltin: ModuleBuiltinTab[] = []
+export const tabsInfoIframe = ref<ModuleIframeTab[]>([])
+export const tabsInfoBuiltin = ref<ModuleBuiltinTab[]>([])
+
+export async function updateTabs() {
+  const {
+    custom,
+    builtin,
+  } = await getTabs()
+
+  tabsInfoBuiltin.value = builtin
+  tabsInfoIframe.value = custom
+}

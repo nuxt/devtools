@@ -10,7 +10,7 @@ import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
-import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions } from './types'
+import type { ClientFunctions, HookInfo, ModuleIframeTab, ModuleIframeTabLoadingState, ServerFunctions } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 
 export function setupRPC(nuxt: Nuxt) {
@@ -23,6 +23,8 @@ export function setupRPC(nuxt: Nuxt) {
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
+
+  const customTabsLoadingState = new Map<string, ModuleIframeTabLoadingState>()
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -47,13 +49,19 @@ export function setupRPC(nuxt: Nuxt) {
       return [
         ...iframeTabs,
         ...customTabs,
-      ]
+      ].map((i) => {
+        i._loadState = i.lazy ? customTabsLoadingState.get(i.name) || 'idle' : 'loaded'
+        return i
+      })
     },
     getLayouts() {
       return Object.values(app?.layouts || [])
     },
     getServerHooks() {
       return Object.values(serverHooks)
+    },
+    startCustomTab() {
+      // will be replaced below
     },
     async openInEditor(input: string) {
       if (input.startsWith('./'))
@@ -86,6 +94,22 @@ export function setupRPC(nuxt: Nuxt) {
 
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
+
+  serverFunctions.startCustomTab = async (name) => {
+    const tab = customTabs.find(i => i.name === name)
+    if (!tab || customTabsLoadingState.get(name) === 'loaded')
+      return
+    customTabsLoadingState.set(name, 'pending')
+    birpc.boardcast.refresh.asEvent('customTabs')
+    try {
+      await tab.lazy?.onLoad?.()
+    }
+    catch (e) {
+      console.error(e)
+    }
+    customTabsLoadingState.set(name, 'loaded')
+    birpc.boardcast.refresh.asEvent('customTabs')
+  }
 
   nuxt.hook('components:extend', (v) => {
     components.length = 0

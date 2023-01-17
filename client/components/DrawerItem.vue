@@ -21,27 +21,19 @@ const isEnabled = computed(() => {
   <NuxtLink
     v-if="isEnabled"
     :to="tab.path"
-    flex="~ gap2"
-    items-center
-    p2
+    flex="~" p2
+    items-center justify-center
     text-true-gray
     border="base"
-    md="border-b px3 py2"
+    md="border-b px3 py2 justify-start"
     hover="bg-gray/5"
     exact-active-class="!text-primary"
   >
-    <img
-      v-if="tab.icon && (tab.icon.startsWith('/') || tab.icon.match(/^https?:/))"
-      w10 md:w6
-      :src="tab.icon"
-      :alt="tab.title"
-    >
-    <div
-      v-else
-      w10 md:w6
-      :class="tab.icon || 'carbon-bring-forward'"
+    <TabIcon
+      text-lg md:text-base
+      :icon="tab.icon" :title="tab.title"
     />
-    <div hidden md:block>
+    <div pl2 hidden md:block>
       {{ tab.title }}
     </div>
   </NuxtLink>
