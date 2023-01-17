@@ -25,9 +25,15 @@ onMounted(() => {
     iframeEl = document.createElement('iframe')
     map.set(key, iframeEl)
     iframeEl.src = tab.view.src
-    iframeEl!.style.opacity = '0.01'
-    iframeEl.onload = () => {
-      syncColorMode()
+    // CORS
+    try {
+      iframeEl!.style.opacity = '0.01'
+      iframeEl.onload = () => {
+        syncColorMode()
+        iframeEl!.style.opacity = '1'
+      }
+    }
+    catch (e) {
       iframeEl!.style.opacity = '1'
     }
     document.body.appendChild(iframeEl)
