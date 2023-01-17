@@ -24,7 +24,6 @@ const clientHooks = state.value?.getHooksMetrics()
       <HooksTable :hooks="clientHooks" />
     </SectionBlock>
     <SectionBlock
-      :divider="!!clientHooks?.length"
       icon="carbon-ibm-cloud-direct-link-2-dedicated"
       text="Server Hooks"
       :description="`Total hooks: ${serverHooks.length}`"

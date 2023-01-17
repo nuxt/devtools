@@ -130,7 +130,7 @@ function openComponentInspector() {
       <SectionBlock
         v-if="filtered.runtime.length"
         icon="i-carbon-load-balancer-global"
-        divider
+
         text="Runtime components"
         :description="`Total components: ${filtered.count.runtime}`"
       >
@@ -138,7 +138,6 @@ function openComponentInspector() {
       </SectionBlock>
       <SectionBlock
         v-if="filtered.builtin.length"
-        divider
         icon="tabler-brand-nuxt"
         text="Built-in components"
         :description="`Total components: ${filtered.count.builtin}`"
@@ -147,7 +146,6 @@ function openComponentInspector() {
       </SectionBlock>
       <SectionBlock
         v-if="filtered.lib.size"
-        divider
         icon="carbon-3d-mpr-toggle"
         text="Components from libraries"
         :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"

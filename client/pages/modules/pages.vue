@@ -39,7 +39,6 @@ const pages = $computed((): RouteInfo[] => {
     <SectionBlock
       icon="carbon-tree-view-alt"
       text="Pages"
-      divider
     >
       <PagesTable :pages="pages" />
       <!-- <ModuleTreeNode :node="tree" /> -->

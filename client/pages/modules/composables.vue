@@ -92,7 +92,6 @@ const filtered = $computed(() => {
       </SectionBlock>
       <SectionBlock
         v-if="filtered.builtin.size"
-        divider
         icon="tabler-brand-nuxt"
         text="Built-in composables"
         :description="`${filtered.count.builtin} composables`"
@@ -101,7 +100,6 @@ const filtered = $computed(() => {
       </SectionBlock>
       <SectionBlock
         v-if="filtered.lib.size"
-        divider
         icon="carbon-3d-mpr-toggle"
         text="Composables from libraries"
         :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"

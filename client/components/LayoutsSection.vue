@@ -17,7 +17,6 @@ const usedLayouts = $computed(() => {
     v-if="layouts.length"
     icon="carbon-template"
     text="Layouts"
-    divider
   >
     <template v-for="i of layouts" :key="i.name">
       <ComponentItem :component="i as any">
