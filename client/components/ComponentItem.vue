@@ -6,7 +6,6 @@ const { component } = defineProps<{
   component: Component
 }>()
 
-const config = $(useServerConfig())
 // @ts-expect-error types
 const name = $computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
 // @ts-expect-error types
@@ -37,7 +36,7 @@ const copy = useCopy()
     <FilepathItem
       v-if="filePath"
       :filepath="filePath"
-      op0 group-hover:op50 text-sm
+      op25 group-hover:op75 text-sm
     />
   </div>
 </template>

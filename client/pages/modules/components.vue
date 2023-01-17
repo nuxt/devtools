@@ -40,10 +40,13 @@ const filtered = $computed(() => {
   const user: Component[] = []
   const lib = new Map<string, Component[]>()
   const builtin: Component[] = []
+  const runtime: Component[] = []
+
   const count = {
     user: 0,
     lib: 0,
     builtin: 0,
+    runtime: 0,
   }
 
   const result = search
@@ -52,6 +55,12 @@ const filtered = $computed(() => {
 
   result
     .forEach((component) => {
+      if (component.global) {
+        runtime.push(component)
+        count.runtime++
+        return
+      }
+
       if (component.filePath && isNodeModulePath(component.filePath)) {
         const name = getModuleNameFromPath(component.filePath)
         if (!name)
@@ -74,10 +83,12 @@ const filtered = $computed(() => {
     })
 
   return {
+    count,
+
     user,
     builtin,
     lib,
-    count,
+    runtime,
   }
 })
 
@@ -115,6 +126,15 @@ function openComponentInspector() {
         :description="`Total components: ${filtered.count.user}`"
       >
         <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+      </SectionBlock>
+      <SectionBlock
+        v-if="filtered.runtime.length"
+        icon="i-carbon-load-balancer-global"
+        divider
+        text="Runtime components"
+        :description="`Total components: ${filtered.count.runtime}`"
+      >
+        <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" :component="c" />
       </SectionBlock>
       <SectionBlock
         v-if="filtered.builtin.length"
