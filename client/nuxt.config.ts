@@ -21,11 +21,6 @@ export default defineNuxtConfig({
   devtools: {
     vscodeServer: true,
   },
-  runtimeConfig: {
-    public: {
-      NUXT_DEVTOOLS_OPEN: true,
-    },
-  },
   app: {
     baseURL: '/__nuxt_devtools__/client',
   },

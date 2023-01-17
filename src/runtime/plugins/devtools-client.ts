@@ -2,7 +2,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsGlobal } from '../../types'
-import { defineNuxtPlugin, useRuntimeConfig } from '#app'
+import { defineNuxtPlugin } from '#app'
 
 declare global {
   interface Window {
@@ -31,6 +31,8 @@ function h<K extends keyof HTMLElementTagNameMap>(
   return el
 }
 
+type ViewMode = 'full' | 'inspector'
+
 const LAYOUT_IFRAME_SMALL = {
   position: 'fixed',
   bottom: '10px',
@@ -57,6 +59,9 @@ export default defineNuxtPlugin((nuxt) => {
   // height and width of the panel, in percent
   const height = ref(+(localStorage.getItem('nuxt-devtools-height') || '50'))
   const width = ref(+(localStorage.getItem('nuxt-devtools-width') || '85'))
+  const isOpened = ref(localStorage.getItem('nuxt-devtools-opened') === 'true')
+  const viewMode = ref<ViewMode>('full')
+
   width.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width.value))
   height.value = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height.value))
 
@@ -208,6 +213,8 @@ export default defineNuxtPlugin((nuxt) => {
   watchEffect(() => {
     localStorage.setItem('nuxt-devtools-height', height.value.toString())
     localStorage.setItem('nuxt-devtools-width', width.value.toString())
+    localStorage.setItem('nuxt-devtools-opened', isOpened.value ? 'true' : 'false')
+
     if (!window.__VUE_INSPECTOR__?.enabled)
       Object.assign(container.style, LAYOUT_IFRAME.value)
 
@@ -215,19 +222,25 @@ export default defineNuxtPlugin((nuxt) => {
   })
 
   function toggle() {
-    if (Array.from(document.body.children).includes(container)) {
-      const isOpen = container.style.display !== 'none'
-      if (!isOpen)
-        container.style.display = 'block'
-      else if (window.__VUE_INSPECTOR__?.enabled) // inspector enabled, exit first
-        disableComponentInspector()
-      else
-        container.style.display = 'none'
-    }
-    else {
+    if (!Array.from(document.body.children).includes(container)) {
       document.body.appendChild(container)
       iframe.contentDocument!.body.parentElement!.className = document.body.parentElement!.className
       updateClient()
+      container.style.display = 'none'
+    }
+
+    const isOpen = container.style.display !== 'none'
+    if (!isOpen) {
+      container.style.display = 'block'
+      isOpened.value = true
+    }
+    // inspector enabled, exit first
+    else if (window.__VUE_INSPECTOR__?.enabled) {
+      disableComponentInspector()
+    }
+    else {
+      container.style.display = 'none'
+      isOpened.value = false
     }
   }
 
@@ -401,7 +414,6 @@ export default defineNuxtPlugin((nuxt) => {
   document.body.appendChild(button)
   document.head.appendChild(style)
 
-  // for development
-  if (useRuntimeConfig().public.NUXT_DEVTOOLS_OPEN)
+  if (isOpened.value)
     toggle()
 })
