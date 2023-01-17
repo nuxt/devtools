@@ -21,6 +21,8 @@ export interface ModuleOptions {
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
+    'devtools:before': () => void
+    'devtools:init': () => void
     'devtools:customTabs': (tabs: ModuleIframeTab[]) => void
   }
 }
@@ -54,6 +56,8 @@ export default defineNuxtModule<ModuleOptions>({
       return
     }
 
+    await nuxt.callHook('devtools:before')
+
     nuxt.options.imports.collectMeta = true
 
     addPlugin(join(runtimeDir, 'plugins/devtools-client'), {})
@@ -61,6 +65,7 @@ export default defineNuxtModule<ModuleOptions>({
     const {
       middleware: rpcMiddleware,
       initHooks,
+      serverFunctions,
     } = setupRPC(nuxt)
 
     // TODO: Use WS from nitro server when possible
@@ -85,11 +90,11 @@ export default defineNuxtModule<ModuleOptions>({
     const promises: Promise<any>[] = []
 
     promises.push(
-      import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt)),
+      import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt, serverFunctions)),
     )
     if (options.vscodeServer) {
       promises.push(
-        import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt)),
+        import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt, serverFunctions)),
       )
     }
 
@@ -97,8 +102,8 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.hook('app:resolve', async () => {
       await initHooks()
+      await nuxt.callHook('devtools:init')
+      logger.success('Nuxt Devtools is enabled.')
     })
-
-    logger.success('Nuxt Devtools is enabled.')
   },
 })

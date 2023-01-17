@@ -1,8 +1,18 @@
 import { addVitePlugin } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
+import type { ViteInspectAPI } from 'vite-plugin-inspect'
+import type { ServerFunctions } from '../types'
 
-export async function setupViteInspect(nuxt: Nuxt) {
-  addVitePlugin(await import('vite-plugin-inspect').then(r => (r.default || r)()))
+export async function setupViteInspect(nuxt: Nuxt, _functions: ServerFunctions) {
+  const plugin = await import('vite-plugin-inspect').then(r => (r.default || r)())
+  addVitePlugin(plugin)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let api: ViteInspectAPI | undefined
+
+  nuxt.hook('vite:serverCreated', () => {
+    api = plugin.api
+  })
 
   nuxt.hook('devtools:customTabs', (iframeTabs) => {
     iframeTabs.push({

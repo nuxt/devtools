@@ -3,8 +3,9 @@ import { execa } from 'execa'
 import type { Nuxt } from '@nuxt/schema'
 import { getPort } from 'get-port-please'
 import which from 'which'
+import type { ServerFunctions } from '../types'
 
-export async function setupVSCodeServer(nuxt: Nuxt) {
+export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions) {
   const url = await which('code-server').catch(() => null)
   if (!url) {
     logger.debug('VS Code Server is not installed, module is disabled.')

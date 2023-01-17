@@ -157,6 +157,7 @@ export function setupRPC(nuxt: Nuxt) {
   }
 
   return {
+    serverFunctions,
     middleware,
     initHooks,
     birpc,
