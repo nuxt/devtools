@@ -61,7 +61,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.imports.collectMeta = true
 
-    addPlugin(join(runtimeDir, 'plugins/devtools-client'), {})
+    addPlugin({
+      src: join(runtimeDir, 'plugins/devtools.client'),
+      mode: 'client',
+    })
 
     const {
       middleware: rpcMiddleware,
