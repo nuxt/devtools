@@ -1,7 +1,7 @@
 import { join, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { existsSync } from 'fs'
-import { addPlugin, addVitePlugin, defineNuxtModule, logger } from '@nuxt/kit'
+import { addPlugin, defineNuxtModule, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'

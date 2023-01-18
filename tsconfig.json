@@ -1,3 +1,13 @@
 {
-  "extends": "./client/.nuxt/tsconfig.json"
+  "compilerOptions": {
+    "strict": true,
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "target": "esnext",
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*",
+    "scripts/**/*"
+  ]
 }

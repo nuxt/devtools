@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { useObjectStorage } from './utils'
 
 export const PANEL_PADDING = 10

@@ -1,10 +1,15 @@
 import { createApp, markRaw } from 'vue'
+import type { Nuxt } from '@nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtAppClient } from '../../types'
 import Container from './view/Container.vue'
-import { defineNuxtPlugin } from '#app'
 
-export default defineNuxtPlugin((nuxt) => {
+// @ts-expect-error runtime
+import { defineNuxtPlugin } from '#app'
+// @ts-expect-error runtime
+import { useAppConfig } from '#import'
+
+export default defineNuxtPlugin((nuxt: Nuxt) => {
   // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
     return
