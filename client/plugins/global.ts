@@ -28,4 +28,8 @@ export default defineNuxtPlugin(() => {
       await rpc.openInEditor(url)
     },
   }
+
+  router.afterEach(() => {
+    client.value?.onNavigate(router.currentRoute.value.path)
+  })
 })

@@ -125,6 +125,7 @@ export interface NuxtAppClient {
   nuxt: NuxtApp
   getHooksMetrics(): HookInfo[]
 
+  onNavigate(path: string): void
   componentInspector?: VueInspectorClient
   enableComponentInspector(): void
 }

@@ -12,7 +12,7 @@ const props = defineProps({
 
 const CLIENT_PATH = '/__nuxt_devtools__/client'
 
-const url = computed(() => CLIENT_PATH + state.value.route)
+const initialUrl = CLIENT_PATH + state.value.route
 const iframe = ref<HTMLIFrameElement>()
 const isDragging = ref<false | 'vertical' | 'horizontal' | 'both'>(false)
 
@@ -38,6 +38,13 @@ const frameStyle = computed(() => {
 async function onLoad() {
   await waitForClientInjection()
   setupClient()
+  try {
+    iframe.value.contentWindow.addEventListener('locationchange', () => {
+      state.value.route = iframe.value.contentWindow.location.pathname.replace(CLIENT_PATH, '')
+    })
+  }
+  catch (e) {
+  }
 }
 
 function waitForClientInjection(retry = 10, timeout = 200) {
@@ -93,6 +100,9 @@ function updateClient() {
 
   injection?.setClient({
     ...props.client,
+    onNavigate: (route) => {
+      state.value.route = route
+    },
     enableComponentInspector,
     componentInspector,
   })
@@ -152,7 +162,8 @@ watch(viewMode, (mode) => {
 <template>
   <div v-show="state.open" class="frame" :style="frameStyle">
     <iframe
-      ref="iframe" :src="url"
+      ref="iframe"
+      :src="initialUrl"
       :style="{
         'pointer-events': isDragging ? 'none' : 'auto',
       }"

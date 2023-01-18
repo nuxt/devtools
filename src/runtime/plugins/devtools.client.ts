@@ -22,6 +22,7 @@ export default defineNuxtPlugin((nuxt) => {
   const client: NuxtAppClient = {
     nuxt: markRaw(nuxt as any),
     enableComponentInspector: () => {},
+    onNavigate: () => {},
     getHooksMetrics: () => Object.values(clientHooks),
   }
 
