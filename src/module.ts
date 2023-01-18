@@ -81,24 +81,13 @@ export default defineNuxtModule<ModuleOptions>({
         server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
     })
 
-    if (nuxt.options.builder === '@nuxt/vite-builder') {
-      if (nuxt.options.dev) {
-        addVitePlugin(await import('vite-plugin-vue-inspector').then(r => r.default({
-          appendTo: 'entry.mjs',
-          toggleComboKey: '',
-          toggleButtonVisibility: 'never',
-        })) as any)
-      }
-    }
+    const integrations = [
+      import('./integrations/vue-inspector').then(({ setup }) => setup(nuxt, serverFunctions)),
+      import('./integrations/vite-inspect').then(({ setup }) => setup(nuxt, serverFunctions)),
+      import('./integrations/vscode').then(({ setup }) => setup(nuxt, serverFunctions)),
+    ]
 
-    const promises: Promise<any>[] = []
-
-    promises.push(
-      import('./integrations/vite-inspect').then(({ setupViteInspect }) => setupViteInspect(nuxt, serverFunctions)),
-      import('./integrations/vscode').then(({ setupVSCodeServer }) => setupVSCodeServer(nuxt, serverFunctions)),
-    )
-
-    await Promise.all(promises)
+    await Promise.all(integrations)
 
     nuxt.hook('app:resolve', async () => {
       await initHooks()

@@ -6,7 +6,7 @@ import which from 'which'
 import waitOn from 'wait-on'
 import type { ServerFunctions } from '../types'
 
-export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions) {
+export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
   const url = await which('code-server').catch(() => null)
   if (!url) {
     logger.debug('VS Code Server is not installed, module is disabled.')
