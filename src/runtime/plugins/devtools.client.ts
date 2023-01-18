@@ -7,7 +7,7 @@ import Container from './view/Container.vue'
 // @ts-expect-error runtime
 import { defineNuxtPlugin } from '#app'
 // @ts-expect-error runtime
-import { useAppConfig } from '#import'
+import { useAppConfig } from '#imports'
 
 export default defineNuxtPlugin((nuxt: Nuxt) => {
   // TODO: Stackblitz support?
