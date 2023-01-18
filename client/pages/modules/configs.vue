@@ -22,11 +22,11 @@ const privateConfig = $computed(() => {
 <template>
   <div v-if="client">
     <SectionBlock
-      v-if="payload.config?.app && Object.keys(payload.config?.app).length"
+      v-if="client.appConfig && Object.keys(client.appConfig).length"
       icon="carbon-settings-services"
       text="App Config"
     >
-      <StateEditor pl2 :state="payload.config" />
+      <StateEditor pl2 :state="client.appConfig" />
     </SectionBlock>
 
     <SectionBlock

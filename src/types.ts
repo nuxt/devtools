@@ -1,4 +1,4 @@
-import type { Component, NuxtLayout, NuxtOptions, NuxtPage } from '@nuxt/schema'
+import type { AppConfig, Component, NuxtLayout, NuxtOptions, NuxtPage } from '@nuxt/schema'
 import type { Import, UnimportMeta } from 'unimport'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
@@ -123,6 +123,8 @@ export interface HookInfo {
 
 export interface NuxtAppClient {
   nuxt: NuxtApp
+  appConfig: AppConfig
+
   getHooksMetrics(): HookInfo[]
 
   onNavigate(path: string): void

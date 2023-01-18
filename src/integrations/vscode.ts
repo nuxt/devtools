@@ -35,7 +35,7 @@ export async function setupVSCodeServer(nuxt: Nuxt, _functions: ServerFunctions)
       reverse: true,
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 2000))
   }
 
   let promise: Promise<void> | null = null

@@ -22,10 +22,13 @@ export default defineNuxtConfig({
     vscodeServer: true,
   },
   appConfig: {
-    publicPath: '/__nuxt_devtools__/client',
+    fixture2: 'from nuxt.config.ts',
   },
   runtimeConfig: {
-    asd: 'asd',
+    fixture3: 'private runtime config from nuxt.config.ts',
+    public: {
+      fixture4: 'public runtime config from nuxt.config.ts',
+    },
   },
   app: {
     baseURL: '/__nuxt_devtools__/client',

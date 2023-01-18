@@ -13,6 +13,8 @@ export default defineNuxtPlugin((nuxt) => {
 
   const client: NuxtAppClient = {
     nuxt: markRaw(nuxt as any),
+    appConfig: useAppConfig() as any,
+
     enableComponentInspector: () => {},
     onNavigate: () => {},
     getHooksMetrics: () => Object.values(clientHooks),
