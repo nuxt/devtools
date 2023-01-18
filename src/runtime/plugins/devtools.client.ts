@@ -1,16 +1,8 @@
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { createApp, markRaw } from 'vue'
 import { setupHooksDebug } from '../shared/hooks'
-import type { NuxtAppClient, NuxtDevtoolsGlobal } from '../../types'
+import type { NuxtAppClient } from '../../types'
 import Container from './view/Container.vue'
 import { defineNuxtPlugin } from '#app'
-
-declare global {
-  interface Window {
-    __NUXT_DEVTOOLS__?: NuxtDevtoolsGlobal
-    __VUE_INSPECTOR__?: VueInspectorClient
-  }
-}
 
 export default defineNuxtPlugin((nuxt) => {
   // TODO: Stackblitz support?

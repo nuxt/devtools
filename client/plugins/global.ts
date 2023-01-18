@@ -30,6 +30,9 @@ export default defineNuxtPlugin(() => {
   }
 
   router.afterEach(() => {
-    client.value?.onNavigate(router.currentRoute.value.path)
+    const path = router.currentRoute.value.path
+    if (path.includes('__'))
+      return
+    client.value?.onNavigate(path)
   })
 })

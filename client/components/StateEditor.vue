@@ -4,6 +4,7 @@ import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 
 const { state } = defineProps<{
   state: Record<string, any>
+  readonly?: boolean
 }>()
 
 const colorMode = useColorMode()
@@ -40,6 +41,7 @@ function deepSync(from: any, to: any) {
     :main-menu-bar="false"
     :navigation-bar="false"
     :status-bar="false"
+    :read-only="readonly"
     :indentation="2"
     :tab-size="2"
   />

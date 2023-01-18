@@ -3,7 +3,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { NuxtAppClient, NuxtDevtoolsGlobal } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, togglePanel, viewMode } from './state'
+import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
 const props = defineProps({
@@ -159,6 +159,15 @@ watch(viewMode, (mode) => {
 }, { immediate: true })
 </script>
 
+<script lang="ts">
+declare global {
+  interface Window {
+    __NUXT_DEVTOOLS__?: NuxtDevtoolsGlobal
+    __VUE_INSPECTOR__?: VueInspectorClient
+  }
+}
+</script>
+
 <template>
   <div v-show="state.open" class="frame" :style="frameStyle">
     <iframe
@@ -171,9 +180,9 @@ watch(viewMode, (mode) => {
     />
     <button class="close-button" @click="closePanel()" />
     <template v-if="viewMode === 'default'">
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
+      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
       <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
       <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
     </template>

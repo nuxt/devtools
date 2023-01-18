@@ -30,10 +30,10 @@ const isEnabled = computed(() => {
     exact-active-class="!text-primary"
   >
     <TabIcon
-      text-lg md:text-base
+      text-lg lg:text-base
       :icon="tab.icon" :title="tab.title"
     />
-    <div pl2 hidden md:block>
+    <div pl2 hidden lg:block>
       {{ tab.title }}
     </div>
   </NuxtLink>

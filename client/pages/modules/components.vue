@@ -96,7 +96,7 @@ function openComponentInspector() {
   if (!client.value?.componentInspector)
     return
   client.value.enableComponentInspector()
-  router.push('/inspecting')
+  router.push('/__inspecting')
 }
 </script>
 

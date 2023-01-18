@@ -13,7 +13,7 @@ const {
 
 <template>
   <details p4 :open="open">
-    <summary>
+    <summary select-none>
       <IconTitle :icon="icon" :text="text" text-xl op75>
         <div>
           {{ text }}
@@ -21,6 +21,8 @@ const {
             {{ description }}
           </div>
         </div>
+        <div flex-auto />
+        <NIcon icon="carbon-chevron-down" text-base transition duration-500 op50 place-self-start class="chevron" />
       </IconTitle>
     </summary>
     <div flex="~ col gap2" py2>
@@ -50,5 +52,10 @@ details[open] summary {
 
 details summary::-webkit-details-marker {
   display:none;
+}
+
+details[open] .chevron {
+  transform: rotate(180deg);
+  opacity: 0.75;
 }
 </style>
