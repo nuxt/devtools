@@ -90,7 +90,7 @@ export const NuxtUIPreset = (): Preset => ({
     'n-header-upper': 'text-sm uppercase mb-2 leading-1.2em tracking-wide op50',
 
     // button
-    'n-button-base': 'border n-border-base rounded shadow-sm px-1em py-0.25em inline-flex items-center gap-1 op80 !outline-none',
+    'n-button-base': 'border n-border-base rounded shadow-sm px-1em py-0.25em inline-flex items-center gap-1 op80 !outline-none touch-manipulation',
     'n-button-hover': 'op100 !border-context text-context',
     'n-button-active': 'n-active-base bg-context/5',
     'n-button-icon': '-ml-0.2em mr-0.2em text-1.1em',
