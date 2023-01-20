@@ -4,6 +4,7 @@ import type { Import, UnimportMeta } from 'unimport'
 const { import: item, metadata } = defineProps<{
   import: Import
   metadata?: UnimportMeta
+  filepath?: string
 }>()
 
 const copy = useCopy()
@@ -25,25 +26,40 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
       </code>
     </button>
     <template #popper>
-      <div p4>
-        <div text-sm>
-          <button @click="copy(name)">
-            <code text-primary bg-gray:5 px2 py1>{{ name }}</code>
-          </button>
+      <div>
+        <div text-sm px4 py3>
+          <div v-if="item.meta?.description" op75 pb3 text-sm>
+            {{ item.meta?.description }}
+          </div>
+          <div flex="~ gap2" n="primary xs">
+            <NButton n-solid @click="copy(name)">
+              Copy
+            </NButton>
+            <NButton v-if="filepath" n-solid @click="filepath && openInEditor(filepath)">
+              Source
+            </NButton>
+            <NButton v-if="item.meta?.docsUrl" n-solid :to="item.meta?.docsUrl" target="_blank">
+              Docs
+            </NButton>
+          </div>
+        </div>
+        <div border="t base" px4 py3>
           <template v-if="usageCount">
-            has been referenced <strong text-primary>{{ usageCount }}</strong> times by:
+            <div text-sm>
+              <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50>times by:</span>
+            </div>
+            <div flex="~ col gap-2" items-start pt3 text-sm>
+              <FilepathItem
+                v-for="id of modules" :key="id"
+                :filepath="id"
+              />
+            </div>
           </template>
           <template v-else>
-            is not used via auto import.
+            <div op50 text-sm>
+              It's not used via auto import.
+            </div>
           </template>
-        </div>
-        <div v-if="usageCount">
-          <div flex="~ col gap-2" items-start pt3 text-sm>
-            <FilepathItem
-              v-for="id of modules" :key="id"
-              :filepath="id"
-            />
-          </div>
         </div>
       </div>
     </template>

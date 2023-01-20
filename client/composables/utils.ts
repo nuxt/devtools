@@ -40,10 +40,16 @@ export function getShortPath(path: string, root: string, subpath = false) {
       ? getModuleSubpathFromPath(path)
       : getModuleNameFromPath(path)!
   }
-  let result = relative(root, path)
-  if (!result.startsWith('./') && !result.startsWith('../'))
-    result = `./${result}`
-  if (result.startsWith('./.nuxt/'))
-    result = `#build${result.slice(7)}`
-  return result
+  // Workaround https://github.com/unjs/pathe/issues/113
+  try {
+    let result = relative(root, path)
+    if (!result.startsWith('./') && !result.startsWith('../'))
+      result = `./${result}`
+    if (result.startsWith('./.nuxt/'))
+      result = `#build${result.slice(7)}`
+    return result
+  }
+  catch {
+    return path
+  }
 }

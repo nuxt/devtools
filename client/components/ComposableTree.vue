@@ -12,11 +12,9 @@ const { metadata } = defineProps<{
 <template>
   <div>
     <div v-for="[key, value] of map.entries()" :key="key">
-      <button op50 hover:underline @click="openInEditor(key)">
-        <code font-mono text-sm>{{ getShortPath(key, root) }}</code>
-      </button>
+      <FilepathItem :filepath="key" op50 hover:underline />
       <div flex="~ wrap gap2" p2 pl4>
-        <ComposableItem v-for="i of value" :key="i.as" :import="i" :metadata="metadata" />
+        <ComposableItem v-for="i of value" :key="i.as" :import="i" :metadata="metadata" :filepath="key.match(/^[\w@]/) ? undefined : key" />
       </div>
     </div>
   </div>
