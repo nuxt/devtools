@@ -26,11 +26,13 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
       </code>
     </button>
     <template #popper>
-      <div>
+      <div max-w-100>
         <div text-sm px4 py3>
-          <div v-if="item.meta?.description" op75 pb3 text-sm>
-            {{ item.meta?.description }}
-          </div>
+          <div
+            v-if="item.meta?.description"
+            class="markdown-body" pb3 text-sm
+            v-html="renderMarkdown(item.meta.description)"
+          />
           <div flex="~ gap2" n="primary xs">
             <NButton n-solid @click="copy(name)">
               Copy
@@ -57,7 +59,7 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
           </template>
           <template v-else>
             <div op50 text-sm>
-              It's not used via auto import.
+              Not in use via auto import.
             </div>
           </template>
         </div>
