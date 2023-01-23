@@ -22,7 +22,6 @@ const privateConfig = $computed(() => {
 <template>
   <div v-if="client">
     <SectionBlock
-      v-if="client.appConfig && Object.keys(client.appConfig).length"
       icon="carbon-settings-services"
       text="App Config"
     >
@@ -30,7 +29,6 @@ const privateConfig = $computed(() => {
     </SectionBlock>
 
     <SectionBlock
-      v-if="payload.config?.public && Object.keys(payload.config?.public).length"
       icon="carbon-settings"
       text="Public Runtime Config"
     >
@@ -38,7 +36,6 @@ const privateConfig = $computed(() => {
     </SectionBlock>
 
     <SectionBlock
-      v-if="privateConfig && Object.keys(privateConfig).length"
       icon="carbon-locked"
       :open="false"
       text="Private Runtime Config"

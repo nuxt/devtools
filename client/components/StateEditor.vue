@@ -3,7 +3,7 @@ import JsonEditorVue from 'json-editor-vue'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 
 const { state } = defineProps<{
-  state: Record<string, any>
+  state?: Record<string, any>
   readonly?: boolean
 }>()
 
@@ -34,6 +34,7 @@ function deepSync(from: any, to: any) {
 
 <template>
   <JsonEditorVue
+    v-if="state && Object.keys(state).length > 0"
     v-model="proxy"
     v-bind="$attrs"
     class="json-editor-vue"
@@ -45,6 +46,9 @@ function deepSync(from: any, to: any) {
     :indentation="2"
     :tab-size="2"
   />
+  <div v-else italic op35 mt2>
+    No data
+  </div>
 </template>
 
 <style>
