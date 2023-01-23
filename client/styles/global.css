@@ -1,3 +1,10 @@
+html {
+  --apply: font-sans;
+}
+.dark {
+  color-scheme: dark;
+}
+
 .shiki code {
   counter-reset: step;
   counter-increment: step calc(var(--start, 1) - 1);

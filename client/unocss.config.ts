@@ -3,12 +3,16 @@ import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts
 import { NuxtUIPreset } from '@nuxt/ui/unocss'
 
 export default defineConfig({
-  shortcuts: {
-    'border-base': 'border-gray/15',
-    'bg-base': 'bg-white dark:bg-[#151515]',
-    'n-bg-base': 'bg-base',
-    'x-divider': 'h-1px w-full bg-gray/15',
-  },
+  shortcuts: [
+    {
+      'border-base': 'border-gray/15',
+      'bg-base': 'bg-white dark:bg-[#151515]',
+      'n-bg-base': 'bg-base',
+      'x-divider': 'h-1px w-full bg-gray/15',
+    },
+    [/^theme-banner-(\w+)$/, $ => `p2 flex gap2 items-center rounded bg-${$[1]}:10 text-${$[1]}6`],
+    [/^theme-card-(\w+)$/, $ => `p2 flex gap2 items-center rounded min-w-40 min-h-30 justify-center transition-all saturate-0 bg-gray/10 op50 hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
+  ],
   theme: {
     colors: {
       primary: '#03ae67',
@@ -27,7 +31,7 @@ export default defineConfig({
     }),
     presetWebFonts({
       fonts: {
-        sans: 'Inter',
+        sans: 'Inter:400,500',
         mono: 'Fira Code',
       },
     }),

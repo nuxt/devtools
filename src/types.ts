@@ -12,8 +12,13 @@ export interface ServerFunctions {
   getIframeTabs(): ModuleIframeTab[]
   getServerHooks(): HookInfo[]
   getLayouts(): NuxtLayout[]
+  getVersions(): VersionsInfo
   startCustomTab(name: string): void
   openInEditor(filepath: string): void
+}
+
+export interface VersionsInfo {
+  nuxt: string
 }
 
 export interface AutoImportsWithMetadata {

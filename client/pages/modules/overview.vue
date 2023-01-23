@@ -7,54 +7,61 @@ definePageMeta({
 
 const client = useClient()
 const config = $(useServerConfig())
-
-const showConnectionWarning = ref(false)
-onMounted(() => {
-  setTimeout(() => {
-    showConnectionWarning.value = true
-  }, 2000)
-})
+const { data: versions } = useAsyncData(() => rpc.getVersions())
 
 const components = await rpc.getComponents()
 const { imports: autoImports } = await rpc.getAutoImports()
 </script>
 
 <template>
-  <div
-    p="x4 y2" m2 flex="~ gap-2" items-center
-    bg-lime:10 text-lime6 rounded
-  >
-    <span carbon-chemistry />Working in Progress. For early preview only.
-  </div>
-  <div
-    v-if="!client && showConnectionWarning"
-    p="x4 y2" m2 flex="~ gap-2" items-center
-    bg-yellow:10 text-yellow6 rounded
-  >
-    <span i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
-  </div>
-  <div v-if="config" p4 flex="~ col" h-full>
-    <div grid="~ cols-[max-content_1fr] gap-x-2 gap-y-1" ma>
-      <div text-right op50>
-        Workspace
+  <div h-full w-full flex>
+    <div w-full max-w-300 ma flex="~ col gap2" p4>
+      <div mt--10 flex="~ gap2" justify-center items-center p2>
+        <img src="/nuxt.svg" h-12>
+        <div text-4xl font-bold>
+          DevTools
+        </div>
       </div>
-      <div>{{ config.rootDir }}</div>
-      <div text-right op50>
-        Modules
+      <!-- Banner -->
+      <div flex="~ col gap2">
+        <div
+          px4 theme-banner-lime justify-center
+        >
+          <span carbon-chemistry flex-none />Working in Progress. For early preview only.
+        </div>
+        <div
+          v-if="showConnectionWarning"
+          px4 theme-banner-yellow justify-center
+        >
+          <span i-carbon-unlink flex-none />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+        </div>
       </div>
-      <div>{{ config._installedModules.length }}</div>
-      <div text-right op50>
-        Plugins
+      <!-- Main Grid -->
+      <div flex="~ gap2 wrap">
+        <div p5 theme-card-green flex="~ col auto">
+          <div logos-nuxt-icon text-3xl />
+          <code>{{ versions?.nuxt ? `v${versions.nuxt}` : 'Unknown' }}</code>
+        </div>
+        <template v-if="config">
+          <NuxtLink v-if="config" p5 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
+            <div carbon-nominal text-3xl />
+            <div>{{ components.length }} components</div>
+          </NuxtLink>
+          <NuxtLink v-if="config" p5 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/composables">
+            <div carbon-function text-3xl />
+            <div>{{ autoImports.length }} composables</div>
+          </NuxtLink>
+          <NuxtLink v-if="config" p5 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
+            <div carbon-3d-mpr-toggle text-3xl />
+            <div>{{ config._installedModules.length }} modules</div>
+          </NuxtLink>
+          <NuxtLink v-if="config" p5 theme-card-teal min-w-40 flex="~ col auto" to="/modules/plugins">
+            <div carbon-plug text-3xl />
+            <div>{{ config.plugins.length }} plugins</div>
+          </NuxtLink>
+        </template>
       </div>
-      <div>{{ config.plugins.length }}</div>
-      <div text-right op50>
-        Components
-      </div>
-      <div>{{ components.length }}</div>
-      <div text-right op50>
-        Composables
-      </div>
-      <div>{{ autoImports.length }}</div>
+      <!-- <div bg-red:10 flex-full /> -->
     </div>
   </div>
 </template>

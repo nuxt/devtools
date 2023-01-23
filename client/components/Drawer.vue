@@ -36,6 +36,12 @@ const client = useClient()
         :tab="tab"
       />
       <div flex-auto />
+      <div
+        v-if="showConnectionWarning"
+        px4 theme-banner-yellow justify-center hidden lg:flex gap3
+      >
+        Server data only
+      </div>
     </template>
   </div>
 </template>

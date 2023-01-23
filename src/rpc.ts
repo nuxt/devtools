@@ -10,7 +10,8 @@ import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
-import type { ClientFunctions, HookInfo, ModuleIframeTab, ModuleIframeTabLoadingState, ServerFunctions } from './types'
+import { getNuxtVersion } from '@nuxt/kit'
+import type { ClientFunctions, HookInfo, ModuleIframeTab, ModuleIframeTabLoadingState, ServerFunctions, VersionsInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 
 export function setupRPC(nuxt: Nuxt) {
@@ -25,6 +26,9 @@ export function setupRPC(nuxt: Nuxt) {
   let app: NuxtApp | undefined
 
   const customTabsLoadingState = new Map<string, ModuleIframeTabLoadingState>()
+  const versionsInfo: VersionsInfo = {
+    nuxt: getNuxtVersion(),
+  }
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -53,6 +57,9 @@ export function setupRPC(nuxt: Nuxt) {
         i._loadState = i.lazy ? customTabsLoadingState.get(i.name) || 'idle' : 'loaded'
         return i
       })
+    },
+    getVersions() {
+      return versionsInfo
     },
     getLayouts() {
       return Object.values(app?.layouts || [])
