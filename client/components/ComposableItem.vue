@@ -46,7 +46,7 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
         <div border="t base" px4 py3>
           <template v-if="usageCount">
             <div text-sm>
-              <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50>times by:</span>
+              <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
             </div>
             <div flex="~ col gap-2" items-start pt3 text-sm>
               <FilepathItem
