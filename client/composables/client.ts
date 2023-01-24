@@ -1,7 +1,7 @@
-import type { NuxtAppClient, VueInspectorData } from '~/../src/types'
+import type { NuxtDevtoolsHostClient, VueInspectorData } from '~/../src/types'
 
 export function useClient() {
-  return useState<NuxtAppClient>('devtools-client')
+  return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
 
 export function useComponentInspectorData() {

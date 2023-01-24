@@ -2,12 +2,12 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
-import type { NuxtAppClient, NuxtDevtoolsGlobal } from '../../../types'
+import type { NuxtDevtoolsGlobal, NuxtDevtoolsHostClient } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
 const props = defineProps({
-  client: Object as PropType<NuxtAppClient>,
+  client: Object as PropType<NuxtDevtoolsHostClient>,
 })
 
 const CLIENT_PATH = '/__nuxt_devtools__/client'
@@ -39,8 +39,8 @@ async function onLoad() {
   await waitForClientInjection()
   setupClient()
   try {
-    iframe.value.contentWindow.addEventListener('locationchange', () => {
-      state.value.route = iframe.value.contentWindow.location.pathname.replace(CLIENT_PATH, '')
+    iframe.value!.contentWindow!.addEventListener('locationchange', () => {
+      state.value.route = iframe.value!.contentWindow!.location.pathname.replace(CLIENT_PATH, '')
     })
   }
   catch (e) {
@@ -70,13 +70,13 @@ function waitForClientInjection(retry = 10, timeout = 200) {
 
 function setupClient() {
   // trigger update for payload change
-  watch(() => props.client.nuxt.payload, () => {
-    iframe.value?.contentWindow?.__NUXT_DEVTOOLS__?.triggerUpdate()
+  watch(() => props.client?.nuxt.payload, () => {
+    props.client!.hooks.callHook('update:all')
   }, { deep: true })
 
   // trigger update for route change
-  props.client.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
-    iframe.value?.contentWindow?.__NUXT_DEVTOOLS__?.triggerUpdate()
+  props.client?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
+    props.client!.hooks.callHook('update:all')
   })
 
   updateClient()
@@ -88,24 +88,25 @@ function updateClient() {
 
   if (componentInspector) {
     componentInspector.openInEditor = (baseUrl, file, line, column) => {
-      window.__NUXT_DEVTOOLS__?.componentInspectorClick(baseUrl, file, line, column)
+      props.client!.hooks.callHook('inspector:click', baseUrl, file, line, column)
     }
     componentInspector.onUpdated = () => {
-      window.__NUXT_DEVTOOLS__?.componentInspectorUpdate({
+      props.client!.hooks.callHook('inspector:update', {
         ...componentInspector.linkParams,
         ...componentInspector.position,
       })
     }
   }
 
-  injection?.setClient({
-    ...props.client,
-    onNavigate: (route) => {
-      state.value.route = route
-    },
-    enableComponentInspector,
-    componentInspector,
-  })
+  injection?.setClient(props.client!)
+  // {
+  //   ...props.client,
+  //   onNavigate: (route) => {
+  //     state.value.route = route
+  //   },
+  //   enableComponentInspector,
+  //   componentInspector,
+  // })
 }
 
 function enableComponentInspector() {
@@ -115,7 +116,7 @@ function enableComponentInspector() {
 
 function disableComponentInspector() {
   window.__VUE_INSPECTOR__?.disable()
-  window.__NUXT_DEVTOOLS__?.componentInspectorClose()
+  props.client?.hooks.callHook('inspector:close')
   if (viewMode.value === 'component-inspector')
     viewMode.value = 'default'
 }

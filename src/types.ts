@@ -3,6 +3,7 @@ import type { Import, UnimportMeta } from 'unimport'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
+import type { Hookable } from 'hookable'
 
 export interface ServerFunctions {
   getConfig(): NuxtOptions
@@ -126,23 +127,29 @@ export interface HookInfo {
   executions: number[]
 }
 
-export interface NuxtAppClient {
+export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
+
+/**
+ * Host client from the App
+ */
+export interface NuxtDevtoolsHostClient {
   nuxt: NuxtApp
   appConfig: AppConfig
 
   getHooksMetrics(): HookInfo[]
 
-  onNavigate(path: string): void
+  hooks: Hookable<{
+    'navigate': (path: string) => void
+    'inspector:update': (data: VueInspectorData) => void
+    'inspector:click': (baseUrl: string, file: string, line: number, column: number) => void
+    'inspector:close': () => void
+    'update:all': () => void
+  }>
+
   componentInspector?: VueInspectorClient
   enableComponentInspector(): void
 }
 
-export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
-
 export interface NuxtDevtoolsGlobal {
-  setClient(client: NuxtAppClient): void
-  triggerUpdate(): void
-  componentInspectorUpdate(data: VueInspectorData): void
-  componentInspectorClick(baseUrl: string, file: string, line: number, column: number): void
-  componentInspectorClose(): void
+  setClient(client: NuxtDevtoolsHostClient): void
 }

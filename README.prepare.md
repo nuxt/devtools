@@ -1,6 +1,6 @@
 # Nuxt DevTools <sup>Alpha Preview</sup>
 
-Tools to enhance your development experience with Nuxt. Transparent, infomative, extensible and joyful.
+Tools to enhance your development experience with Nuxt. Transparent, informative, extensible and joyful.
 
 > **Note**: Experimental and under heavy development. APIs are subject to change.
 

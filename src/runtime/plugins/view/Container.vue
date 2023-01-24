@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { ref, watch } from 'vue'
-import type { NuxtAppClient } from '../../../types'
+import type { NuxtDevtoolsHostClient } from '../../../types'
 import { state, togglePanel } from './state'
 import Frame from './Frame.vue'
 
 const { client } = defineProps({
-  client: Object as PropType<NuxtAppClient>,
+  client: Object as PropType<NuxtDevtoolsHostClient>,
 })
 
 const initialized = ref(state.value.open)
