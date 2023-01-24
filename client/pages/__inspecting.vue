@@ -11,8 +11,6 @@ const data = useComponentInspectorData()
     <div absolute right-0 top-0 p2>
       <button carbon-close text-xl op50 hover:op100 ma />
     </div>
-    <!-- Fix reactivity -->
-    <pre>{{ data }}</pre>
     <div>
       Inspecting Vue components
     </div>

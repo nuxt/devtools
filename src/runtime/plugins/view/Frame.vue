@@ -6,6 +6,9 @@ import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlob
 import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
+// Can't use reactivity transform here because this file is shipped as-is,
+// where we can't guarantee that the user has the reactivity transform enabled.
+// Same for not using auto imports.
 const props = defineProps({
   client: Object as PropType<NuxtDevtoolsHostClient>,
 })
@@ -38,13 +41,6 @@ const frameStyle = computed(() => {
 async function onLoad() {
   await waitForClientInjection()
   setupClient()
-  try {
-    iframe.value!.contentWindow!.addEventListener('locationchange', () => {
-      state.value.route = iframe.value!.contentWindow!.location.pathname.replace(CLIENT_PATH, '')
-    })
-  }
-  catch (e) {
-  }
 }
 
 function waitForClientInjection(retry = 10, timeout = 200) {
@@ -87,8 +83,9 @@ function updateClient() {
   const componentInspector = window.__VUE_INSPECTOR__ as VueInspectorClient
 
   if (componentInspector) {
-    componentInspector.openInEditor = (baseUrl, file, line, column) => {
-      props.client!.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
+    componentInspector.openInEditor = async (baseUrl, file, line, column) => {
+      await props.client!.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
+      disableComponentInspector()
     }
     componentInspector.onUpdated = () => {
       props.client!.hooks.callHook('host:inspector:update', {
@@ -104,6 +101,10 @@ function updateClient() {
       enable: enableComponentInspector,
       instance: componentInspector,
     },
+  })
+
+  props.client?.hooks.hook('devtools:navigate', (path) => {
+    state.value.route = path
   })
 }
 

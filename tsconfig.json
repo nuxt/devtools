@@ -4,7 +4,8 @@
     "module": "esnext",
     "lib": ["esnext", "dom"],
     "target": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noUnusedLocals": true
   },
   "include": [
     "src/**/*",

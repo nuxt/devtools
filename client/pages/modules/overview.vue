@@ -5,7 +5,6 @@ definePageMeta({
   order: -1,
 })
 
-const client = useClient()
 const config = $(useServerConfig())
 const { data: versions } = useAsyncData(() => rpc.getVersions())
 
@@ -15,25 +14,14 @@ const { imports: autoImports } = await rpc.getAutoImports()
 
 <template>
   <div h-full w-full flex>
-    <div w-full max-w-300 ma flex="~ col gap2" p4>
-      <div mt--10 flex="~ gap2" justify-center items-center p2>
-        <img src="/nuxt.svg" h-12>
-        <div text-4xl font-bold>
-          DevTools
-        </div>
-      </div>
+    <div w-full max-w-300 ma flex="~ col gap6" p4>
       <!-- Banner -->
-      <div flex="~ col gap2">
-        <div
-          px4 theme-banner-lime justify-center
-        >
-          <span carbon-chemistry flex-none />Working in Progress. For early preview only.
-        </div>
-        <div
-          v-if="showConnectionWarning"
-          px4 theme-banner-yellow justify-center
-        >
-          <span i-carbon-unlink flex-none />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+      <div flex="~ col" items-center>
+        <div mt--10 flex="~ gap2" justify-center items-center>
+          <img src="/nuxt.svg" h-12>
+          <div text-4xl font-bold>
+            DevTools
+          </div>
         </div>
       </div>
       <!-- Main Grid -->
@@ -62,6 +50,19 @@ const { imports: autoImports } = await rpc.getAutoImports()
         </template>
       </div>
       <!-- <div bg-red:10 flex-full /> -->
+      <div flex="~ col gap2">
+        <div
+          px4 theme-banner-lime justify-center
+        >
+          <span carbon-chemistry flex-none />Working in Progress. For early preview only.
+        </div>
+        <div
+          v-if="showConnectionWarning"
+          px4 theme-banner-yellow justify-center
+        >
+          <span i-carbon-unlink flex-none />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+        </div>
+      </div>
     </div>
   </div>
 </template>

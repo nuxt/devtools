@@ -30,7 +30,7 @@ export default defineNuxtPlugin(() => {
       })
 
       // eslint-disable-next-line no-console
-      console.log('DevTools client connected', _client)
+      console.log('Nuxt DevTools Connected', _client)
     },
   }
 

@@ -20,9 +20,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   const client: NuxtDevtoolsHostClient = markRaw({
     nuxt: markRaw(nuxt as any),
     appConfig: useAppConfig() as any,
-
     getHooksMetrics: () => Object.values(clientHooks),
-
     hooks: createHooks(),
   })
 
