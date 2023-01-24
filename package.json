@@ -1,9 +1,10 @@
 {
   "name": "@nuxt/devtools",
-  "version": "0.0.0",
-  "repository": "nuxt/devtools",
-  "license": "MIT",
   "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@7.25.1",
+  "license": "MIT",
+  "repository": "nuxt/devtools",
   "exports": {
     ".": {
       "types": "./dist/module.d.ts",
@@ -35,11 +36,14 @@
     "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "nuxi prepare client",
-    "lint": "eslint --ext .ts,.vue,.mjs .",
+    "lint": "eslint .",
     "prepublishOnly": "pnpm build",
     "typecheck": "nuxi typecheck",
     "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
     "test": "pnpm lint"
+  },
+  "peerDependencies": {
+    "nuxt": "^3.1.0"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.2",
@@ -77,17 +81,10 @@
     "eslint": "^8.32.0",
     "floating-vue": "2.0.0-beta.20",
     "json-editor-vue": "^0.10.5",
-    "nuxt": "npm:nuxt3@3.0.1-rc.0-27909319.bb41265",
+    "nuxt": "^3.1.0",
     "typescript": "^4.9.4",
     "vanilla-jsoneditor": "^0.14.0",
     "vue-tsc": "^1.0.24",
     "ws": "^8.12.0"
-  },
-  "packageManager": "pnpm@7.25.1",
-  "pnpm": {
-    "overrides": {
-      "nuxt": "npm:nuxt3@latest",
-      "nitropack": "npm:nitropack-edge@latest"
-    }
   }
 }

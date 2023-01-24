@@ -18,10 +18,7 @@ const { imports: autoImports } = await rpc.getAutoImports()
       <!-- Banner -->
       <div flex="~ col" items-center>
         <div mt--10 flex="~ gap2" justify-center items-center>
-          <img src="/nuxt.svg" h-12>
-          <div text-4xl font-bold>
-            DevTools
-          </div>
+          <NuxtLogo h-16 />
         </div>
       </div>
       <!-- Main Grid -->
