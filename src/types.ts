@@ -4,6 +4,7 @@ import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { RouteRecordNormalized } from 'vue-router'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { Hookable } from 'hookable'
+import type { BirpcReturn } from 'birpc'
 
 export interface ServerFunctions {
   getConfig(): NuxtOptions
@@ -129,6 +130,29 @@ export interface HookInfo {
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
 
+export interface NuxtDevtoolsClientHooks {
+  /**
+   * When the devtools navigates, used for persisting the current tab
+   */
+  'devtools:navigate': (path: string) => void
+  /**
+   * Event emitted when the component inspector is updated
+   */
+  'host:inspector:update': (data: VueInspectorData) => void
+  /**
+   * Event emitted when the component inspector is clicked
+   */
+  'host:inspector:click': (baseUrl: string, file: string, line: number, column: number) => void
+  /**
+   * Event to close the component inspector
+   */
+  'host:inspector:close': () => void
+  /**
+   * Triggers reactivity manually, since Vue won't be reactive across frames)
+   */
+  'host:update:reactivity': () => void
+}
+
 /**
  * Host client from the App
  */
@@ -138,16 +162,21 @@ export interface NuxtDevtoolsHostClient {
 
   getHooksMetrics(): HookInfo[]
 
-  hooks: Hookable<{
-    'navigate': (path: string) => void
-    'inspector:update': (data: VueInspectorData) => void
-    'inspector:click': (baseUrl: string, file: string, line: number, column: number) => void
-    'inspector:close': () => void
-    'update:all': () => void
-  }>
+  hooks: Hookable<NuxtDevtoolsClientHooks>
 
-  componentInspector?: VueInspectorClient
-  enableComponentInspector(): void
+  inspector?: {
+    instance?: VueInspectorClient
+    enable: () => void
+  }
+}
+
+export interface NuxtDevtoolsClient {
+  rpc: BirpcReturn<ServerFunctions>
+}
+
+export interface NuxtDevtoolsIframeClient {
+  host: NuxtDevtoolsHostClient
+  devtools: NuxtDevtoolsClient
 }
 
 export interface NuxtDevtoolsGlobal {

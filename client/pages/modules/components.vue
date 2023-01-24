@@ -93,9 +93,9 @@ const filtered = $computed(() => {
 })
 
 function openComponentInspector() {
-  if (!client.value?.componentInspector)
+  if (!client.value?.inspector?.instance)
     return
-  client.value.enableComponentInspector()
+  client.value.inspector.enable()
   router.push('/__inspecting')
 }
 </script>
@@ -111,7 +111,7 @@ function openComponentInspector() {
         flex-auto
       />
       <button
-        v-if="client?.componentInspector"
+        v-if="client?.inspector?.instance"
         title="Inspect Vue components"
         @click="openComponentInspector"
       >

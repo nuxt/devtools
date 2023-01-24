@@ -1,15 +1,16 @@
 <script lang="ts">
-const map = new Map<string, HTMLIFrameElement>()
+const iframeCacheMap = new Map<string, HTMLIFrameElement>()
 </script>
 
 <script setup lang="ts">
 // eslint-disable-next-line import/first
-import type { ModuleIframeTab } from '~/../src/types'
+import type { ModuleIframeTab, NuxtDevtoolsIframeClient } from '~/../src/types'
 
 const { tab } = defineProps<{
   tab: ModuleIframeTab
 }>()
 
+const client = useClient()
 const colorMode = useColorMode()
 const anchor = ref<HTMLDivElement>()
 const key = $computed(() => tab.name)
@@ -17,18 +18,19 @@ let iframeEl = $ref<HTMLIFrameElement>()
 const box = reactive(useElementBounding(anchor))
 
 onMounted(() => {
-  if (map.get(key)) {
-    iframeEl = map.get(key)!
+  if (iframeCacheMap.get(key)) {
+    iframeEl = iframeCacheMap.get(key)!
     iframeEl.style.visibility = 'visible'
   }
   else {
     iframeEl = document.createElement('iframe')
-    map.set(key, iframeEl)
+    iframeCacheMap.set(key, iframeEl)
     iframeEl.src = tab.view.src
     // CORS
     try {
       iframeEl!.style.opacity = '0.01'
       iframeEl.onload = () => {
+        injectClient()
         syncColorMode()
         iframeEl!.style.opacity = '1'
       }
@@ -44,6 +46,7 @@ onMounted(() => {
 
 watchEffect(updateIframeBox)
 watchEffect(syncColorMode)
+watchEffect(injectClient)
 
 onUnmounted(() => {
   if (iframeEl)
@@ -57,6 +60,23 @@ function syncColorMode() {
     const html = iframeEl.contentWindow!.document.querySelector('html')
     html?.classList.toggle('dark', colorMode.value === 'dark')
     html?.classList.toggle('light', colorMode.value === 'dark')
+  }
+  catch (e) {
+    console.error(e)
+  }
+}
+
+function injectClient() {
+  if (!iframeEl || !iframeEl.contentWindow)
+    return
+
+  try {
+    iframeEl.contentWindow!.__NUXT_DEVTOOLS__ = {
+      host: client.value,
+      devtools: {
+        rpc,
+      },
+    } satisfies NuxtDevtoolsIframeClient
   }
   catch (e) {
     console.error(e)

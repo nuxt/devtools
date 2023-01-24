@@ -2,7 +2,7 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
-import type { NuxtDevtoolsGlobal, NuxtDevtoolsHostClient } from '../../../types'
+import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
@@ -48,7 +48,7 @@ async function onLoad() {
 }
 
 function waitForClientInjection(retry = 10, timeout = 200) {
-  const test = () => !!iframe.value?.contentWindow?.__NUXT_DEVTOOLS__
+  const test = () => !!iframe.value?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
 
   if (test())
     return
@@ -71,42 +71,40 @@ function waitForClientInjection(retry = 10, timeout = 200) {
 function setupClient() {
   // trigger update for payload change
   watch(() => props.client?.nuxt.payload, () => {
-    props.client!.hooks.callHook('update:all')
+    props.client!.hooks.callHook('host:update:reactivity')
   }, { deep: true })
 
   // trigger update for route change
   props.client?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
-    props.client!.hooks.callHook('update:all')
+    props.client!.hooks.callHook('host:update:reactivity')
   })
 
   updateClient()
 }
 
 function updateClient() {
-  const injection = iframe.value?.contentWindow?.__NUXT_DEVTOOLS__ as NuxtDevtoolsGlobal
+  const injection = iframe.value?.contentWindow?.__NUXT_DEVTOOLS_VIEW__ as NuxtDevtoolsViewGlobal
   const componentInspector = window.__VUE_INSPECTOR__ as VueInspectorClient
 
   if (componentInspector) {
     componentInspector.openInEditor = (baseUrl, file, line, column) => {
-      props.client!.hooks.callHook('inspector:click', baseUrl, file, line, column)
+      props.client!.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
     }
     componentInspector.onUpdated = () => {
-      props.client!.hooks.callHook('inspector:update', {
+      props.client!.hooks.callHook('host:inspector:update', {
         ...componentInspector.linkParams,
         ...componentInspector.position,
       })
     }
   }
 
-  injection?.setClient(props.client!)
-  // {
-  //   ...props.client,
-  //   onNavigate: (route) => {
-  //     state.value.route = route
-  //   },
-  //   enableComponentInspector,
-  //   componentInspector,
-  // })
+  injection?.setClient({
+    ...props.client as any,
+    inspector: {
+      enable: enableComponentInspector,
+      instance: componentInspector,
+    },
+  })
 }
 
 function enableComponentInspector() {
@@ -116,7 +114,7 @@ function enableComponentInspector() {
 
 function disableComponentInspector() {
   window.__VUE_INSPECTOR__?.disable()
-  props.client?.hooks.callHook('inspector:close')
+  props.client?.hooks.callHook('host:inspector:close')
   if (viewMode.value === 'component-inspector')
     viewMode.value = 'default'
 }
@@ -163,7 +161,8 @@ watch(viewMode, (mode) => {
 <script lang="ts">
 declare global {
   interface Window {
-    __NUXT_DEVTOOLS__?: NuxtDevtoolsGlobal
+    __NUXT_DEVTOOLS_VIEW__?: NuxtDevtoolsViewGlobal
+    __NUXT_DEVTOOLS__?: NuxtDevtoolsIframeClient
     __VUE_INSPECTOR__?: VueInspectorClient
   }
 }

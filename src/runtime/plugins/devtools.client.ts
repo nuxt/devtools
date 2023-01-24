@@ -17,15 +17,14 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
-  const client: NuxtDevtoolsHostClient = {
+  const client: NuxtDevtoolsHostClient = markRaw({
     nuxt: markRaw(nuxt as any),
     appConfig: useAppConfig() as any,
 
-    enableComponentInspector: () => {},
     getHooksMetrics: () => Object.values(clientHooks),
 
     hooks: createHooks(),
-  }
+  })
 
   const holder = document.createElement('div')
   holder.setAttribute('data-v-inspector-ignore', 'true')
