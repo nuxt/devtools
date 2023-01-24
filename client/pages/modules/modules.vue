@@ -41,8 +41,8 @@ watchEffect(() => {
       :description="`Total modules: ${packageModules.length}`"
     >
       <template #footer>
-        <div text-true-gray:50>
-          Find more modules at <a href="https://nuxt.com/modules" target="_blank" hover="text-primary underline">nuxt.com/modules</a>
+        <div>
+          <span op50>Find more modules at </span><a href="https://nuxt.com/modules" target="_blank" hover="text-primary underline">nuxt.com/modules</a>
         </div>
       </template>
       <ModuleItem

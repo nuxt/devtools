@@ -1,11 +1,11 @@
 import { relative } from 'pathe'
 
 export function isNodeModulePath(path: string) {
-  return path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
+  return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
 }
 
 export function isPackageName(name: string) {
-  return name[0] === '#' || name.match(/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/)
+  return name[0] === '#' || !!name.match(/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/)
 }
 
 export function getModuleNameFromPath(path: string) {
