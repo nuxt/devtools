@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { objectPick } from '@antfu/utils'
 import type { RouteInfo } from '~~/../src/types'
-import CurrentRoute from '~~/components/CurrentRoute.vue'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -28,13 +27,6 @@ const pages = $computed((): RouteInfo[] => {
 
 <template>
   <div v-if="client">
-    <SectionBlock
-      v-if="route"
-      icon="carbon-3d-curve-manual"
-      text="Current Routes"
-    >
-      <CurrentRoute />
-    </SectionBlock>
     <LayoutsSection />
     <SectionBlock
       icon="carbon-tree-view-alt"

@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { useObjectStorage } from './utils'
 
 export const PANEL_PADDING = 10
-export const PANEL_MIN = 5
+export const PANEL_MIN = 15
 export const PANEL_MAX = 100
 
 export interface State {
