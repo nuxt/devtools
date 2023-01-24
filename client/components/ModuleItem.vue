@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { mode } from 'process'
 import type { BasicModuleInfo } from '../../src/types'
 
 const { mod } = defineProps<{

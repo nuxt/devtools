@@ -5,9 +5,15 @@ import { NuxtUIPreset } from '@nuxt/ui/unocss'
 export default defineConfig({
   shortcuts: [
     {
+      // General Tokens
       'border-base': 'border-gray/15',
       'bg-base': 'bg-white dark:bg-[#151515]',
+
+      // Nuxt UI Custom
       'n-bg-base': 'bg-base',
+      'n-border-base': 'border-base',
+
+      // Reusable
       'x-divider': 'h-1px w-full bg-gray/15',
     },
     [/^theme-banner-(\w+)$/, $ => `p2 flex gap2 items-center rounded bg-${$[1]}:10 text-${$[1]}6`],

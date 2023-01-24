@@ -106,16 +106,16 @@ function openComponentInspector() {
       <NTextInput
         v-model="search"
         placeholder="Search..."
-        p="x4 y2"
+        p="x5 y2"
         n="primary"
-        flex-auto
+        flex-auto bg-base border-base
       />
       <button
         v-if="client?.inspector?.instance"
         title="Inspect Vue components"
         @click="openComponentInspector"
       >
-        <NIcon icon="i-carbon-map-identify" />
+        <NIcon icon="i-carbon-select-window" />
       </button>
     </div>
     <div h-full of-auto>

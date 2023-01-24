@@ -72,7 +72,7 @@ const filtered = $computed(() => {
       <NTextInput
         v-model="search"
         placeholder="Search..."
-        p="x4 y2"
+        p="x5 y2"
         n="primary"
       />
       <div v-if="metadata">
