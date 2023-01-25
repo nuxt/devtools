@@ -4,6 +4,16 @@ export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
 
+export function useClientRoute() {
+  const client = useClient()
+  return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$route)
+}
+
+export function useClientRouter() {
+  const client = useClient()
+  return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$router)
+}
+
 export function useComponentInspectorData() {
   return useState<VueInspectorData>('devtools-component-inspector-data')
 }

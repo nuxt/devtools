@@ -2,12 +2,14 @@
 const {
   containerClass = '',
   open = true,
+  padding = true,
 } = defineProps<{
   icon?: string
   text: string
   description?: string
   containerClass?: string
   open?: boolean
+  padding?: boolean
 }>()
 </script>
 
@@ -25,7 +27,7 @@ const {
         <NIcon icon="carbon-chevron-down" text-base transition duration-500 op50 place-self-start class="chevron" />
       </IconTitle>
     </summary>
-    <div flex="~ col gap2" py2>
+    <div flex="~ col gap2" py2 :class="padding ? 'pl8' : ''">
       <slot name="details" />
       <div :class="containerClass" mt1>
         <slot />

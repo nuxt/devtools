@@ -6,7 +6,7 @@ export default defineConfig({
   shortcuts: [
     {
       // General Tokens
-      'border-base': 'border-gray/15',
+      'border-base': 'border-gray/20',
       'bg-base': 'bg-white dark:bg-[#151515]',
 
       // Nuxt UI Custom

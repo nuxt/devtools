@@ -72,6 +72,7 @@ const filtered = $computed(() => {
       <NTextInput
         v-model="search"
         placeholder="Search..."
+        icon="carbon-search"
         p="x5 y2"
         n="primary"
       />

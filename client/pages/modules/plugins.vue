@@ -19,7 +19,7 @@ const config = $(useServerConfig())
         :key="typeof plugin === 'string' ? plugin : plugin.src"
         :plugin="plugin"
         :index="idx + 1"
-        py2 border="b base"
+        py2 ml--4 border="b base"
       />
     </SectionBlock>
   </div>

@@ -75,7 +75,12 @@ const filteredFiles = $computed(() => {
   <div grid="~ cols-[250px_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" flex="~ col" of-auto>
       <div p3 pb2>
-        <NTextInput v-model="searchString" placeholder="Search..." n="primary" />
+        <NTextInput
+          v-model="searchString"
+          icon="carbon-search"
+          placeholder="Search..."
+          n="primary"
+        />
       </div>
       <NuxtLink
         v-for="f of filteredFiles" :key="f.id" px2 py1 border="b base" text-sm font-mono

@@ -106,6 +106,7 @@ function openComponentInspector() {
       <NTextInput
         v-model="search"
         placeholder="Search..."
+        icon="carbon-search"
         p="x5 y2"
         n="primary"
         flex-auto bg-base border-base
@@ -125,7 +126,7 @@ function openComponentInspector() {
         text="User components"
         :description="`Total components: ${filtered.count.user}`"
       >
-        <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
+        <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
       </SectionBlock>
       <SectionBlock
         v-if="filtered.runtime.length"
@@ -134,7 +135,7 @@ function openComponentInspector() {
         text="Runtime components"
         :description="`Total components: ${filtered.count.runtime}`"
       >
-        <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" :component="c" />
+        <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" ml--5 :component="c" />
       </SectionBlock>
       <SectionBlock
         v-if="filtered.builtin.length"
@@ -142,7 +143,7 @@ function openComponentInspector() {
         text="Built-in components"
         :description="`Total components: ${filtered.count.builtin}`"
       >
-        <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
+        <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" ml--5 :component="c" />
       </SectionBlock>
       <SectionBlock
         v-if="filtered.lib.size"

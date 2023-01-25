@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { objectPick } from '@antfu/utils'
+import { nextTick } from 'vue'
 import type { RouteInfo } from '~~/../src/types'
 
 definePageMeta({
@@ -8,13 +9,15 @@ definePageMeta({
   requireClient: true,
 })
 
-const client = useClient()
-const serverPages = await rpc.getServerPages()
+const client = $(useClient())
+const router = $(useClientRouter())
+const route = $(useClientRoute())
 
-// const router = $computed(() => client.value?.nuxt.vueApp.config.globalProperties.$router)
-const route = $computed(() => client.value?.nuxt.vueApp.config.globalProperties.$route)
-const pages = $computed((): RouteInfo[] => {
-  return (client.value?.nuxt.vueApp.config.globalProperties.$router?.getRoutes() || [])
+const serverPages = await rpc.getServerPages()
+const layouts = await rpc.getLayouts()
+
+const routes = $computed((): RouteInfo[] => {
+  return (router?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
       return {
@@ -23,17 +26,63 @@ const pages = $computed((): RouteInfo[] => {
       }
     })
 })
+
+const routeInput = ref(route.path || '/')
+
+router.afterEach(() => {
+  nextTick(() => {
+    routeInput.value = route.path
+  })
+})
+
+async function navigate() {
+  if (routeInput.value !== route.path)
+    router.push(routeInput.value || '/')
+}
+
+const routeInputMatched = $computed(() => {
+  if (routeInput.value === route.path)
+    return []
+  return router.resolve(routeInput.value || '/').matched
+})
 </script>
 
 <template>
-  <div v-if="client">
-    <LayoutsSection />
+  <div v-if="client && router">
+    <SectionBlock
+      icon="carbon-3d-curve-auto-colon"
+      text="Current Route"
+    >
+      <NTextInput
+        v-model="routeInput"
+        font-mono
+        icon="carbon-direction-right-01"
+        @keydown.enter="navigate"
+      />
+      <div py2 text-sm>
+        <template v-if="route.path !== routeInput">
+          <span op50>Navigate </span>
+          <span font-mono>{{ route.path }}</span>
+          <span op50> -> </span>
+          <span font-mono :class="routeInputMatched.length ? 'text-green' : 'text-orange'">{{ routeInput || '/' }}</span>
+          <span op50>, press Enter to go</span>
+        </template>
+        <template v-else>
+          <span op50>Edit to navigate</span>
+        </template>
+      </div>
+    </SectionBlock>
     <SectionBlock
       icon="carbon-tree-view-alt"
       text="Routes"
+      description="All the routes in registered in your application"
     >
-      <PagesTable :pages="pages" />
-      <!-- <ModuleTreeNode :node="tree" /> -->
+      <PagesTable
+        :pages="routes"
+        :layouts="layouts"
+        :matched="route.matched"
+        :matched-pending="routeInputMatched"
+      />
     </SectionBlock>
   </div>
 </template>
