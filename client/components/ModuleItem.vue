@@ -62,14 +62,11 @@ const npmBase = 'https://www.npmjs.com/package/'
       <div v-if="data.description " op50 text-sm mt--1>
         {{ data.description }}
       </div>
-      <div v-else-if="!isPackageModule && mod.entryPath" mt--1>
-        <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
-      </div>
 
       <div flex-auto />
 
-      <div v-if="data.website" flex="~ gap-1">
-        <span i-carbon-notebook text-lg op50 />
+      <div v-if="data.website" flex="~ gap-2" title="Documentation">
+        <span i-carbon-link text-lg op50 />
         <NuxtLink
           :to="data.website"
           target="_blank"
@@ -79,7 +76,7 @@ const npmBase = 'https://www.npmjs.com/package/'
           {{ data.website.replace(/^https?:\/\//, '') }}
         </NuxtLink>
       </div>
-      <div v-if="data.github" flex="~ gap-1">
+      <div v-if="data.github" flex="~ gap-2">
         <span i-carbon-logo-github text-lg op50 />
         <NuxtLink
           :to="data.github"
@@ -89,6 +86,10 @@ const npmBase = 'https://www.npmjs.com/package/'
         >
           {{ data.github.replace(/^https?:\/\/github.com\//, '') }}
         </NuxtLink>
+      </div>
+      <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
+        <span i-carbon-folder-move-to text-lg op50 />
+        <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
     </div>
     <div flex="~ col">
