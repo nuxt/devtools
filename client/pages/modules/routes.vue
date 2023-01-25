@@ -4,7 +4,7 @@ import type { RouteInfo } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
-  title: 'Pages',
+  title: 'Routes',
   requireClient: true,
 })
 
@@ -30,7 +30,7 @@ const pages = $computed((): RouteInfo[] => {
     <LayoutsSection />
     <SectionBlock
       icon="carbon-tree-view-alt"
-      text="Pages"
+      text="Routes"
     >
       <PagesTable :pages="pages" />
       <!-- <ModuleTreeNode :node="tree" /> -->

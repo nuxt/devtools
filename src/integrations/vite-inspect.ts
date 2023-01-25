@@ -17,7 +17,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
 
   nuxt.hook('devtools:customTabs', (iframeTabs) => {
     iframeTabs.push({
-      title: 'Vite Inspect',
+      title: 'Inspect',
       name: 'vite-inspect',
       builtin: true,
       icon: 'carbon-search',

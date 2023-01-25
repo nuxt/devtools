@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-data-set',
-  title: 'Configs',
+  title: 'Runtime Configs',
   requireClient: true,
 })
 

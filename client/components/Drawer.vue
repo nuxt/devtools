@@ -28,7 +28,7 @@ const client = useClient()
     />
     <template v-if="customTabs.length">
       <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
-        <span hidden lg:inline>By Modules</span>
+        <span hidden lg:inline>Modules</span>
       </div>
       <DrawerItem
         v-for="tab of customTabs"
