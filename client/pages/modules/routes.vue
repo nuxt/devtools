@@ -51,6 +51,7 @@ const routeInputMatched = $computed(() => {
   <div v-if="client && router">
     <SectionBlock
       icon="carbon-3d-curve-auto-colon"
+      :collapse="false"
       text="Current Route"
     >
       <NTextInput

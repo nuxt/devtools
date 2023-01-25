@@ -3,11 +3,13 @@ const {
   containerClass = '',
   open = true,
   padding = true,
+  collapse = true,
 } = defineProps<{
   icon?: string
   text: string
   description?: string
   containerClass?: string
+  collapse?: boolean
   open?: boolean
   padding?: boolean
 }>()
@@ -15,7 +17,7 @@ const {
 
 <template>
   <details p4 :open="open">
-    <summary select-none>
+    <summary select-none :class="collapse ? '' : 'pointer-events-none'">
       <IconTitle :icon="icon" :text="text" text-xl op75>
         <div>
           {{ text }}
@@ -24,7 +26,11 @@ const {
           </div>
         </div>
         <div flex-auto />
-        <NIcon icon="carbon-chevron-down" text-base transition duration-500 op50 place-self-start class="chevron" />
+        <NIcon
+          v-if="collapse"
+          icon="carbon-chevron-down" text-base transition duration-500 op50 place-self-start
+          class="chevron"
+        />
       </IconTitle>
     </summary>
     <div flex="~ col gap2" py2 :class="padding ? 'pl8' : ''">

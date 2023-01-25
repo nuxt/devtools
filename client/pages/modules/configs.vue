@@ -25,14 +25,20 @@ const privateConfig = $computed(() => {
       icon="carbon-settings-services"
       text="App Config"
     >
-      <StateEditor pl2 :state="client.appConfig" />
+      <StateEditor
+        ml--6
+        :state="client.appConfig"
+      />
     </SectionBlock>
 
     <SectionBlock
       icon="carbon-settings"
       text="Public Runtime Config"
     >
-      <StateEditor pl2 :state="payload.config?.public" />
+      <StateEditor
+        ml--6
+        :state="payload.config?.public"
+      />
     </SectionBlock>
 
     <SectionBlock
@@ -42,7 +48,8 @@ const privateConfig = $computed(() => {
       description="These values are not exposed to the client. Readonly in the DevTools."
     >
       <StateEditor
-        pl2 :state="privateConfig"
+        ml--6
+        :state="privateConfig"
         readonly
       />
     </SectionBlock>
