@@ -33,8 +33,11 @@ const isEnabled = computed(() => {
       text-lg lg:text-base
       :icon="tab.icon" :title="tab.title"
     />
-    <div pl2 hidden lg:block>
+    <div pl2 hidden lg:block flex-auto>
       {{ tab.title }}
+    </div>
+    <div v-if="'extraTabVNode' in tab && tab.extraTabVNode" hidden lg:block>
+      <Component :is="tab.extraTabVNode" />
     </div>
   </NuxtLink>
 </template>

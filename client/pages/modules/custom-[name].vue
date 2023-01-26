@@ -15,6 +15,9 @@ const tab = $computed(() => tabsInfoIframe.value.find(i => i.name === name) as M
   <template v-else-if="tab.view.type === 'iframe'">
     <IframeView :tab="tab" />
   </template>
+  <template v-else-if="tab.view.type === 'vnode'">
+    <Component :is="tab.view.vnode" />
+  </template>
   <template v-else-if="tab.view.type === 'launch'">
     <div flex="~ col gap2" h-full items-center justify-center>
       <TabIcon text-5xl :icon="tab.view.icon || tab.icon" :title="tab.title" />
