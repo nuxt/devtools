@@ -15,7 +15,7 @@ export interface ServerFunctions {
   getServerHooks(): HookInfo[]
   getLayouts(): NuxtLayout[]
   getVersions(): VersionsInfo
-  startCustomTab(name: string): void
+  customTabAction(name: string, action: number): Promise<boolean>
   openInEditor(filepath: string): void
 }
 
@@ -93,19 +93,29 @@ export interface ModuleIframeTab {
   icon?: string
   name: string
   title: string
-  view: ModuleCustomView
-  path?: string
-  builtin?: boolean
-  lazy?: ModuleIframeTabLazyOptions
-  _loadState?: ModuleIframeTabLoadingState
+  view: ModuleView
 }
 
-export interface ModuleCustomView {
+export interface ModuleLaunchView {
+  type: 'launch'
+  title?: string
+  icon?: string
+  description: string
+  actions: ModuleLaunchAction[]
+}
+
+export interface ModuleIframeView {
   type: 'iframe'
   src: string
 }
 
-export type ModuleIframeTabLoadingState = 'idle' | 'pending' | 'loaded'
+export interface ModuleLaunchAction {
+  label: string
+  pending?: boolean
+  handle: () => void | Promise<void>
+}
+
+export type ModuleView = ModuleIframeView | ModuleLaunchView
 
 export interface ModuleIframeTabLazyOptions {
   description?: string

@@ -13,12 +13,7 @@ export async function useModulesInfo() {
 export async function getTabs() {
   const router = useRouter()
   const routes = router.getRoutes()
-  const custom = (await rpc.getIframeTabs()).map((i): ModuleIframeTab => {
-    return {
-      ...i,
-      path: `/modules/iframe-${i.name}`,
-    }
-  })
+  const custom = (await rpc.getIframeTabs())
 
   const builtin = routes
     .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)

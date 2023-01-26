@@ -11,7 +11,7 @@ import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
 import { getNuxtVersion } from '@nuxt/kit'
-import type { ClientFunctions, HookInfo, ModuleIframeTab, ModuleIframeTabLoadingState, ServerFunctions, VersionsInfo } from './types'
+import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions, VersionsInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
 
@@ -26,7 +26,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
 
-  const customTabsLoadingState = new Map<string, ModuleIframeTabLoadingState>()
   const versionsInfo: VersionsInfo = {
     nuxt: getNuxtVersion(),
   }
@@ -54,10 +53,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       return [
         ...iframeTabs,
         ...customTabs,
-      ].map((i) => {
-        i._loadState = i.lazy ? customTabsLoadingState.get(i.name) || 'idle' : 'loaded'
-        return i
-      })
+      ]
     },
     getVersions() {
       return versionsInfo
@@ -68,8 +64,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     getServerHooks() {
       return Object.values(serverHooks)
     },
-    startCustomTab() {
+    async customTabAction() {
       // will be replaced below
+      return false
     },
     async openInEditor(input: string) {
       if (input.startsWith('./'))
@@ -103,20 +100,26 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
 
-  serverFunctions.startCustomTab = async (name) => {
+  serverFunctions.customTabAction = async (name, actionIndex) => {
     const tab = customTabs.find(i => i.name === name)
-    if (!tab || customTabsLoadingState.get(name) === 'loaded')
-      return
-    customTabsLoadingState.set(name, 'pending')
-    birpc.boardcast.refresh.asEvent('customTabs')
-    try {
-      await tab.lazy?.onLoad?.()
-    }
-    catch (e) {
-      console.error(e)
-    }
-    customTabsLoadingState.set(name, 'loaded')
-    birpc.boardcast.refresh.asEvent('customTabs')
+    if (!tab)
+      return false
+    const view = tab.view
+    if (view.type !== 'launch')
+      return false
+    const action = view.actions?.[actionIndex]
+    if (!action)
+      return false
+
+    Promise.resolve(action.handle())
+      .catch((e) => {
+        console.error(e)
+      })
+      .finally(() => {
+        nuxt.callHook('devtools:customTabs:refresh')
+      })
+    nuxt.callHook('devtools:customTabs:refresh')
+    return true
   }
 
   // Nuxt Hooks to collect data

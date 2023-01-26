@@ -1,6 +1,11 @@
 <script setup lang="ts">
-const customTabs = $computed(() => tabsInfoIframe.value.filter(i => !i.builtin))
-const builtinIframeTabs = $computed(() => tabsInfoIframe.value.filter(i => i.builtin))
+const builtinTabs = [
+  'vscode',
+  'vite-inspect',
+]
+
+const customTabs = $computed(() => tabsInfoIframe.value.filter(i => !builtinTabs.includes(i.name)))
+const builtinIframeTabs = $computed(() => tabsInfoIframe.value.filter(i => builtinTabs.includes(i.name)))
 
 const client = useClient()
 </script>

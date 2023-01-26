@@ -20,7 +20,7 @@ const isEnabled = computed(() => {
 <template>
   <NuxtLink
     v-if="isEnabled"
-    :to="tab.path"
+    :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
     flex="~" p2
     items-center justify-center
     text-true-gray

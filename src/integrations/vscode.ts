@@ -15,6 +15,8 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
 
   const PORT = await getPort({ port: 8814 })
   const URL = `http://localhost:${PORT}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+  let loaded = false
+  let promise: Promise<void> | null = null
 
   async function start() {
     logger.info(`Starting VS Code Server at ${URL} ...`)
@@ -36,27 +38,31 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
     })
 
     await new Promise(resolve => setTimeout(resolve, 2000))
+    loaded = true
   }
 
-  let promise: Promise<void> | null = null
-
-  nuxt.hook('devtools:customTabs', (iframeTabs) => {
-    iframeTabs.push({
+  nuxt.hook('devtools:customTabs', (tabs) => {
+    tabs.push({
       name: 'vscode',
       title: 'VS Code',
       icon: 'i-bxl-visual-studio',
-      builtin: true,
-      view: {
-        type: 'iframe',
-        src: URL,
-      },
-      lazy: {
-        description: 'Start VS Code Server',
-        onLoad() {
-          promise = promise || start()
-          return promise
-        },
-      },
+      view: loaded
+        ? {
+            type: 'iframe',
+            src: URL,
+          }
+        : {
+            type: 'launch',
+            description: 'Start VS Code Server',
+            actions: [{
+              label: promise ? 'Starting...' : 'Launch',
+              pending: !!promise,
+              handle: () => {
+                promise = promise || start()
+                return promise
+              },
+            }],
+          },
     })
   })
 }
