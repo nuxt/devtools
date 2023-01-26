@@ -13,6 +13,7 @@ function init() {
     md.value = new MarkdownIt({
       html: true,
       linkify: true,
+      breaks: true,
     })
   })()
 }

@@ -7,24 +7,23 @@ import waitOn from 'wait-on'
 import type { ServerFunctions } from '../types'
 
 export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
-  const url = await which('code-server').catch(() => null)
-  if (!url) {
-    logger.debug('VS Code Server is not installed, module is disabled.')
-    return
-  }
+  const installed = !!await which('code-server').catch(() => null)
 
-  const PORT = await getPort({ port: 8814 })
-  const URL = `http://localhost:${PORT}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+  let port = 8814
+  let url = `http://localhost:${port}`
   let loaded = false
   let promise: Promise<void> | null = null
 
   async function start() {
+    port = await getPort({ port })
+    url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+
     logger.info(`Starting VS Code Server at ${URL} ...`)
     const command = execa('code-server', [
       'serve-local',
       '--accept-server-license-terms',
       '--without-connection-token',
-      `--port=${PORT}`,
+      `--port=${port}`,
     ])
 
     nuxt.hook('close', () => {
@@ -32,7 +31,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
     })
 
     await waitOn({
-      resources: [URL],
+      resources: [url],
       timeout: 20_000,
       reverse: true,
     })
@@ -46,23 +45,30 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
       name: 'vscode',
       title: 'VS Code',
       icon: 'i-bxl-visual-studio',
-      view: loaded
+      view: !installed
         ? {
-            type: 'iframe',
-            src: URL,
-          }
-        : {
             type: 'launch',
-            description: 'Start VS Code Server',
-            actions: [{
-              label: promise ? 'Starting...' : 'Launch',
-              pending: !!promise,
-              handle: () => {
-                promise = promise || start()
-                return promise
+            title: 'Install VS Code Server',
+            description: 'It seems you don\'t have code-server installed.\n\nLearn more about it with [this guide](https://code.visualstudio.com/docs/remote/vscode-server).\nOnce installed, restart Nuxt and visit this tab again.',
+            actions: [],
+          }
+        : !loaded
+            ? {
+                type: 'launch',
+                description: 'Launch VS Code right in the devtools!',
+                actions: [{
+                  label: promise ? 'Starting...' : 'Launch',
+                  pending: !!promise,
+                  handle: () => {
+                    promise = promise || start()
+                    return promise
+                  },
+                }],
+              }
+            : {
+                type: 'iframe',
+                src: url,
               },
-            }],
-          },
     })
   })
 }

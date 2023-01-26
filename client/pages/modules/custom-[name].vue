@@ -24,9 +24,12 @@ const tab = $computed(() => tabsInfoIframe.value.find(i => i.name === name) as M
       <h1 text-xl>
         {{ tab.view.title || tab.title }}
       </h1>
-      <div v-if="tab.view.description" text-base op50 mt--1 mb2>
-        {{ tab.view.description }}
-      </div>
+      <div
+        v-if="tab.view.description"
+        text-base op50 mt--1 mb2 text-center
+        class="markdown-body"
+        v-html="renderMarkdown(tab.view.description)"
+      />
       <template v-for="action, idx of tab.view.actions" :key="idx">
         <NButton
           n="solid primary" :disabled="action.pending"
