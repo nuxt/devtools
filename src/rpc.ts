@@ -13,8 +13,9 @@ import { resolve } from 'pathe'
 import { getNuxtVersion } from '@nuxt/kit'
 import type { ClientFunctions, HookInfo, ModuleIframeTab, ModuleIframeTabLoadingState, ServerFunctions, VersionsInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
+import type { ModuleOptions } from './module'
 
-export function setupRPC(nuxt: Nuxt) {
+export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -118,6 +119,7 @@ export function setupRPC(nuxt: Nuxt) {
     birpc.boardcast.refresh.asEvent('customTabs')
   }
 
+  // Nuxt Hooks to collect data
   nuxt.hook('components:extend', (v) => {
     components.length = 0
     components.push(...v)
@@ -126,7 +128,7 @@ export function setupRPC(nuxt: Nuxt) {
   nuxt.hook('imports:extend', (v) => {
     imports.length = 0
     imports.push(...v)
-    birpc.boardcast.refresh.asEvent('composables')
+    birpc.boardcast.refresh.asEvent('imports')
   })
   nuxt.hook('pages:extend', (v) => {
     serverPages.length = 0
@@ -137,12 +139,9 @@ export function setupRPC(nuxt: Nuxt) {
     importPresets.length = 0
     importPresets.push(...result)
   })
-
-  // @ts-expect-error missing types
   nuxt.hook('imports:context', (_unimport: Unimport) => {
     unimport = _unimport
   })
-
   nuxt.hook('app:resolve', (v) => {
     app = v
   })
@@ -183,8 +182,16 @@ export function setupRPC(nuxt: Nuxt) {
   }
 
   async function initHooks() {
+    nuxt.hook('devtools:customTabs:refresh', initCustomTabs)
+    await initCustomTabs()
+  }
+
+  async function initCustomTabs() {
     customTabs.length = 0
-    await nuxt.callHook('devtools:customTabs', customTabs)
+    if (options.enableCustomTabs) {
+      await nuxt.callHook('devtools:customTabs', customTabs)
+      birpc.boardcast.refresh.asEvent('customTabs')
+    }
   }
 
   return {

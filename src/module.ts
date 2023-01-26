@@ -5,10 +5,41 @@ import { addPlugin, defineNuxtModule, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
+import c from 'picocolors'
 import { setupRPC } from './rpc'
 import type { ModuleIframeTab } from './types'
 
+declare module '@nuxt/schema' {
+  interface NuxtHooks {
+    /**
+     * Called before devtools starts. Useful to detect if devtools is enabled.
+     */
+    'devtools:before': () => void
+
+    /**
+     * Called after devtools is initialized.
+     */
+    'devtools:initialized': () => void
+
+    /**
+     * Hooks to extend devtools tabs.
+     */
+    'devtools:customTabs': (tabs: ModuleIframeTab[]) => void
+
+    /**
+     * Retrigger update for custom tabs, `devtools:customTabs` will be called again.
+     */
+    'devtools:customTabs:refresh': () => void
+  }
+}
+
 export interface ModuleOptions {
+  /**
+   * Enable custom tabs.
+   * @default true
+   */
+  enableCustomTabs?: boolean
+
   // MOVE TO VIEW
   /**
    * Start a VS Code server locally, and integrate with the devtools.
@@ -18,14 +49,6 @@ export interface ModuleOptions {
    * @default false
    */
   // vscodeServer?: boolean
-}
-
-declare module '@nuxt/schema' {
-  interface NuxtHooks {
-    'devtools:before': () => void
-    'devtools:init': () => void
-    'devtools:customTabs': (tabs: ModuleIframeTab[]) => void
-  }
 }
 
 const PATH = '/__nuxt_devtools__'
@@ -41,7 +64,7 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'devtools',
   },
   defaults: {
-    vscodeServer: false,
+    enableCustomTabs: true,
   },
   async setup(options, nuxt) {
     // Disable in test mode
@@ -70,7 +93,7 @@ export default defineNuxtModule<ModuleOptions>({
       middleware: rpcMiddleware,
       initHooks,
       serverFunctions,
-    } = setupRPC(nuxt)
+    } = setupRPC(nuxt, options)
 
     // TODO: Use WS from nitro server when possible
     nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
@@ -93,7 +116,8 @@ export default defineNuxtModule<ModuleOptions>({
       await initHooks()
     })
 
-    await nuxt.callHook('devtools:init')
-    logger.success('Nuxt Devtools is enabled.')
+    await nuxt.callHook('devtools:initialized')
+
+    logger.success(`Nuxt Devtools is enabled ${c.yellow('(experimental)')}`)
   },
 })

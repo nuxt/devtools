@@ -28,8 +28,10 @@ export interface AutoImportsWithMetadata {
   metadata?: UnimportMeta
 }
 
+export type ClientUpdateEvent = 'customTabs' | 'components' | 'imports'
+
 export interface ClientFunctions {
-  refresh(type: string): void
+  refresh(event: ClientUpdateEvent): void
 }
 
 export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' | 'meta' | 'props' | 'children'> {
