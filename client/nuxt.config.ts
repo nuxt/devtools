@@ -18,9 +18,6 @@ export default defineNuxtConfig({
       publicDir: resolve(__dirname, '../dist/client'),
     },
   },
-  devtools: {
-    vscodeServer: true,
-  },
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },
