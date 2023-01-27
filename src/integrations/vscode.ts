@@ -49,7 +49,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
         ? {
             type: 'launch',
             title: 'Install VS Code Server',
-            description: 'It seems you don\'t have code-server installed.\n\nLearn more about it with [this guide](https://code.visualstudio.com/docs/remote/vscode-server).\nOnce installed, restart Nuxt and visit this tab again.',
+            description: 'It seems you don\'t have code-server installed.\n\nLearn more about it with <a href="https://code.visualstudio.com/docs/remote/vscode-server" target="_blank">this guide</a>.\nOnce installed, restart Nuxt and visit this tab again.',
             actions: [],
           }
         : !loaded
