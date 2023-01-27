@@ -62,7 +62,6 @@ function syncColorMode() {
     html?.classList.toggle('light', colorMode.value === 'dark')
   }
   catch (e) {
-    console.error(e)
   }
 }
 
@@ -79,7 +78,6 @@ function injectClient() {
     } satisfies NuxtDevtoolsIframeClient
   }
   catch (e) {
-    console.error(e)
   }
 }
 

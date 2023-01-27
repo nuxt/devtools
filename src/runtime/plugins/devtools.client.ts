@@ -12,8 +12,17 @@ import { useAppConfig } from '#imports'
 
 export default defineNuxtPlugin((nuxt: Nuxt) => {
   // TODO: Stackblitz support?
-  if (typeof document === 'undefined' || typeof window === 'undefined' || window.self !== window.top)
+  if (typeof document === 'undefined' || typeof window === 'undefined')
     return
+
+  if (window.top && window.self !== window.top) {
+    try {
+      if (window.top.__NUXT_DEVTOOLS_VIEW__ || window.top.document.querySelector('#nuxt-devtools-container'))
+        return
+    }
+    catch (e) {
+    }
+  }
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
@@ -25,6 +34,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   })
 
   const holder = document.createElement('div')
+  holder.id = 'nuxt-devtools-container'
   holder.setAttribute('data-v-inspector-ignore', 'true')
   document.body.appendChild(holder)
 
