@@ -38,15 +38,81 @@ Currently the only way to contribute to Nuxt DevTools View is via iframe. You ne
 ```ts
 nuxt.hook('devtools:customTabs', (tabs) => {
   tabs.push({
+    // unique identifier
     name: 'my-module',
+    // title to display in the tab
     title: 'My Module',
-    icon: 'carbon:apps', // any icon name from Iconify
+    // any icon from Iconify, or a URL to an image
+    icon: 'carbon:apps',
+    // iframe view
     view: {
       type: 'iframe',
       src: '/url-to-your-module-view',
     },
   })
 })
+```
+
+### Lazy Service Launching
+
+If the view you are contributing is heavy to load, you can have the tab first and let user launch it when they need it.
+
+```ts
+let isReady = false
+const promise: Promise<any> | null = null
+
+async function launchService() {
+  // ...launch your service
+  isReady = true
+}
+
+nuxt.hook('devtools:customTabs', (tabs) => {
+  tabs.push({
+    name: 'my-module',
+    title: 'My Module',
+    view: isReady
+      ? {
+          type: 'iframe',
+          src: '/url-to-your-module-view',
+        }
+      : {
+          type: 'launch',
+          description: 'Launch My Module',
+          actions: [{
+            label: 'Start',
+            async handle() {
+              if (!promise)
+                promise = launchService()
+              await promise
+            },
+          }]
+        },
+  })
+})
+```
+
+It will first display a launch page with a button to start the service. When user click the button, the `handle()` will be called, and the view will be updated to iframe.
+
+When you need to refresh the custom tabs, you can call `nuxt.callHook('devtools:customTabs:refresh')` and the hooks on `devtools:customTabs` will be revaluated again.
+
+### DevTools API from Custom View
+
+To provide complex interactions for your module integrations, we recommend to host your own view and display it in devtools via iframe.
+
+To get the infomation from the devtools and the client app, you can do this in your client app:
+
+```ts
+import { useDevtoolsClient } from '@nuxt/devtools-edge/iframe-client'
+
+export const devtoolsClient = useDevtoolsClient()
+```
+
+When the iframe been served with the same origin (CORS limitation), devtools will automatically inject `__NUXT_DEVTOOLS__` to the iframe's window object. You can access it as a ref using `useDevtoolsClient()` utility.
+
+`devtoolsClient.value.host` contains APIs to communicate with the client app, and `devtoolsClient.value.devtools` contains APIs to communicate with the devtools. For example, you can get the router instance from the client app:
+
+```ts
+const router = computed(() => devtoolsClient.value?.host.nuxt.vueApp.config.globalProperties?.$router)
 ```
 
 ## License
