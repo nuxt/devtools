@@ -7,7 +7,7 @@ import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
 import c from 'picocolors'
 import { setupRPC } from './rpc'
-import type { ModuleIframeTab } from './types'
+import type { ModuleCustomTab } from './types'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
@@ -24,7 +24,7 @@ declare module '@nuxt/schema' {
     /**
      * Hooks to extend devtools tabs.
      */
-    'devtools:customTabs': (tabs: ModuleIframeTab[]) => void
+    'devtools:customTabs': (tabs: ModuleCustomTab[]) => void
 
     /**
      * Retrigger update for custom tabs, `devtools:customTabs` will be called again.

@@ -11,7 +11,7 @@ import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
 import { getNuxtVersion } from '@nuxt/kit'
-import type { ClientFunctions, HookInfo, ModuleIframeTab, ServerFunctions, VersionsInfo } from './types'
+import type { ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, VersionsInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
 
@@ -20,8 +20,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const imports: Import[] = []
   const importPresets: Import[] = []
   const serverPages: NuxtPage[] = []
-  const iframeTabs: ModuleIframeTab[] = []
-  const customTabs: ModuleIframeTab[] = []
+  const iframeTabs: ModuleCustomTab[] = []
+  const customTabs: ModuleCustomTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
@@ -49,7 +49,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         metadata: unimport?.getMetadata(),
       }
     },
-    getIframeTabs() {
+    getCustomTabs() {
       return [
         ...iframeTabs,
         ...customTabs,

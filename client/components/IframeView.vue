@@ -4,10 +4,10 @@ const iframeCacheMap = new Map<string, HTMLIFrameElement>()
 
 <script setup lang="ts">
 // eslint-disable-next-line import/first
-import type { ModuleIframeTab, NuxtDevtoolsIframeClient } from '~/../src/types'
+import type { ModuleCustomTab, ModuleIframeView, NuxtDevtoolsIframeClient } from '~/../src/types'
 
 const { tab } = defineProps<{
-  tab: ModuleIframeTab
+  tab: ModuleCustomTab
 }>()
 
 const client = useClient()
@@ -18,14 +18,18 @@ let iframeEl = $ref<HTMLIFrameElement>()
 const box = reactive(useElementBounding(anchor))
 
 onMounted(() => {
-  if (iframeCacheMap.get(key)) {
+  const view = tab.view as ModuleIframeView
+  const isPersistent = view.persistent !== false
+
+  if (iframeCacheMap.get(key) && isPersistent) {
     iframeEl = iframeCacheMap.get(key)!
     iframeEl.style.visibility = 'visible'
   }
   else {
     iframeEl = document.createElement('iframe')
-    iframeCacheMap.set(key, iframeEl)
-    iframeEl.src = tab.view.src
+    if (isPersistent)
+      iframeCacheMap.set(key, iframeEl)
+    iframeEl.src = view.src
     // CORS
     try {
       iframeEl!.style.opacity = '0.01'

@@ -12,7 +12,7 @@ export interface ServerFunctions {
   getComponents(): Component[]
   getAutoImports(): AutoImportsWithMetadata
   getServerPages(): NuxtPage[]
-  getIframeTabs(): ModuleIframeTab[]
+  getCustomTabs(): ModuleCustomTab[]
   getServerHooks(): HookInfo[]
   getLayouts(): NuxtLayout[]
   getVersions(): VersionsInfo
@@ -66,7 +66,7 @@ export interface ModuleMetric {
   category: string
   type: ModuleType
   maintainers: MaintainerInfo[]
-  contributors: GithubContributor[]
+  contributors: GitHubContributor[]
   compatibility: ModuleCompatibility
 }
 
@@ -84,13 +84,13 @@ export interface MaintainerInfo {
   twitter?: string
 }
 
-export interface GithubContributor {
+export interface GitHubContributor {
   login: string
   name?: string
   avatar_url?: string
 }
 
-export interface ModuleIframeTab {
+export interface ModuleCustomTab {
   /**
    * The name of the tab, must be unique
    */
@@ -138,6 +138,12 @@ export interface ModuleIframeView {
    * Url of the iframe
    */
   src: string
+  /**
+   * Persist the iframe instance even if the tab is not active
+   *
+   * @default true
+   */
+  persistent?: boolean
 }
 
 export interface ModuleVNodeView {
