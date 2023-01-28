@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ModuleBuiltinTab, ModuleIframeTab } from '~~/../src/types'
+import type { ModuleBuiltinTab, ModuleCustomTab } from '~~/../src/types'
 
 const { tab } = defineProps<{
-  tab: ModuleIframeTab | ModuleBuiltinTab
+  tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
 const client = $(useClient())
