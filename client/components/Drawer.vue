@@ -24,7 +24,7 @@ const client = useClient()
       :tab="tab"
     />
     <template v-if="tabsInfoCustom.length">
-      <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
+      <div p1 lg:p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>
       <DrawerItem

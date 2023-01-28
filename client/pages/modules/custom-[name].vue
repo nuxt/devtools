@@ -3,7 +3,7 @@ import type { ModuleCustomTab } from '~/../src/types'
 
 const route = useRoute()
 const name = $computed(() => route.params.name)
-const tab = $computed(() => (tabsInfoBuiltin.value.find(i => i.name === name) || tabsInfoCustom.value.find(i => i.name === name)) as ModuleCustomTab)
+const tab = $computed(() => tabsInfoAll.value.find(i => i.name === name) as ModuleCustomTab)
 </script>
 
 <template>

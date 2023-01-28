@@ -40,6 +40,10 @@ export async function getTabs() {
 
 export const tabsInfoCustom = ref<ModuleCustomTab[]>([])
 export const tabsInfoBuiltin = ref<ModuleTabInfo[]>([])
+export const tabsInfoAll = computed(() => [
+  ...tabsInfoBuiltin.value,
+  ...tabsInfoCustom.value,
+])
 
 export async function updateTabs() {
   const {
@@ -49,4 +53,18 @@ export async function updateTabs() {
 
   tabsInfoBuiltin.value = builtin
   tabsInfoCustom.value = custom
+}
+
+export function useEnabledTabs() {
+  const client = useClient()
+  const config = useServerConfig()
+
+  return computed(() => tabsInfoAll.value.filter((tab) => {
+    const _tab = tab as ModuleBuiltinTab
+    if (_tab.requireClient && !client)
+      return false
+    if (_tab.requirePages && !config.value?.pages)
+      return false
+    return true
+  }))
 }

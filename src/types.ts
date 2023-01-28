@@ -187,8 +187,8 @@ export interface ModuleIframeTabLazyOptions {
 }
 
 export interface ModuleBuiltinTab {
-  icon?: string
   name: string
+  icon?: string
   title?: string
   path?: string
   requireClient?: boolean
