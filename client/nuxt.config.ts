@@ -5,6 +5,7 @@ import DevTools from '../src/module'
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
+    'nuxt-vitest',
     '~/modules/custom-tabs',
     DevTools,
   ],
