@@ -15,9 +15,9 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
 
-  if (window.top && window.self !== window.top) {
+  if (window.parent && window.self !== window.parent) {
     try {
-      if (window.top.__NUXT_DEVTOOLS_VIEW__ || window.top.document.querySelector('#nuxt-devtools-container'))
+      if (window.parent.__NUXT_DEVTOOLS_VIEW__ || window.parent.document.querySelector('#nuxt-devtools-container'))
         return
     }
     catch (e) {
