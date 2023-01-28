@@ -42,7 +42,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
 
   nuxt.hook('devtools:customTabs', (tabs) => {
     tabs.push({
-      name: 'vscode',
+      name: 'builtin-vscode',
       title: 'VS Code',
       icon: 'i-bxl-visual-studio',
       view: !installed

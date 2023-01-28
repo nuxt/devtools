@@ -14,33 +14,38 @@ const { imports: autoImports } = await rpc.getAutoImports()
 
 <template>
   <div h-full w-full flex>
-    <div w-full max-w-300 ma flex="~ col gap6" p4>
+    <div w-full max-w-300 ma flex="~ col gap2" p10>
       <!-- Banner -->
       <div flex="~ col" items-center>
-        <div mt--10 flex="~ gap2" justify-center items-center>
+        <div mt--10 flex="~" justify-center items-center>
           <NuxtLogo h-16 />
+          <Badge
+            bg-green-400:10 text-green-400 mr--20 mt--5
+            title="preview"
+            v-text="'preview'"
+          />
         </div>
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
-        <div p5 theme-card-green flex="~ col auto">
+        <div p4 theme-card-green flex="~ col auto">
           <div logos-nuxt-icon text-3xl />
           <code>{{ versions?.nuxt ? `v${versions.nuxt}` : 'Unknown' }}</code>
         </div>
         <template v-if="config">
-          <NuxtLink v-if="config" p5 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
+          <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
             <div carbon-nominal text-3xl />
             <div>{{ components.length }} components</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p5 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/composables">
+          <NuxtLink v-if="config" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/composables">
             <div carbon-function text-3xl />
             <div>{{ autoImports.length }} composables</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p5 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
+          <NuxtLink v-if="config" p4 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
             <div>{{ config._installedModules.length }} modules</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p5 theme-card-teal min-w-40 flex="~ col auto" to="/modules/plugins">
+          <NuxtLink v-if="config" p4 theme-card-teal min-w-40 flex="~ col auto" to="/modules/plugins">
             <div carbon-plug text-3xl />
             <div>{{ config.plugins.length }} plugins</div>
           </NuxtLink>
@@ -49,7 +54,7 @@ const { imports: autoImports } = await rpc.getAutoImports()
       <!-- <div bg-red:10 flex-full /> -->
       <div flex="~ col gap2">
         <div
-          px4 theme-banner-lime justify-center
+          px4 theme-banner-green justify-center
         >
           <span carbon-chemistry flex-none />Working in Progress. For early preview only.
         </div>

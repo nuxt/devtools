@@ -195,6 +195,8 @@ export interface ModuleBuiltinTab {
   requirePages?: boolean
 }
 
+export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab
+
 export interface HookInfo {
   name: string
   start: number

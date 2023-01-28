@@ -1,12 +1,4 @@
 <script setup lang="ts">
-const builtinTabs = [
-  'vscode',
-  'vite-inspect',
-]
-
-const customTabs = $computed(() => tabsInfoIframe.value.filter(i => !builtinTabs.includes(i.name)))
-const builtinIframeTabs = $computed(() => tabsInfoIframe.value.filter(i => builtinTabs.includes(i.name)))
-
 const client = useClient()
 </script>
 
@@ -27,16 +19,16 @@ const client = useClient()
     </div>
 
     <DrawerItem
-      v-for="tab of [...tabsInfoBuiltin, ...builtinIframeTabs]"
+      v-for="tab of tabsInfoBuiltin"
       :key="tab.name"
       :tab="tab"
     />
-    <template v-if="customTabs.length">
+    <template v-if="tabsInfoCustom.length">
       <div p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>
       <DrawerItem
-        v-for="tab of customTabs"
+        v-for="tab of tabsInfoCustom"
         :key="tab.name"
         :tab="tab"
       />

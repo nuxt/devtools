@@ -14,10 +14,10 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
   //   _api = plugin.api
   // })
 
-  nuxt.hook('devtools:customTabs', (iframeTabs) => {
-    iframeTabs.push({
+  nuxt.hook('devtools:customTabs', (tabs) => {
+    tabs.push({
+      name: 'builtin-vite-inspect',
       title: 'Inspect',
-      name: 'vite-inspect',
       icon: 'carbon-search',
       view: {
         type: 'iframe',

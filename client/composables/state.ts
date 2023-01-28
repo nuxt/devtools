@@ -1,5 +1,5 @@
 import { $fetch } from 'ohmyfetch'
-import type { ModuleBuiltinTab, ModuleIframeTab, ModuleMetric } from '../../src/types'
+import type { ModuleBuiltinTab, ModuleCustomTab, ModuleMetric, ModuleTabInfo } from '../../src/types'
 
 let modules: ModuleMetric[] | undefined
 
@@ -26,14 +26,20 @@ export async function getTabs() {
       }
     })
 
+  const builtInCustom = custom.filter(i => i.name.startsWith('builtin-'))
+  const customCustom = custom.filter(i => !i.name.startsWith('builtin-'))
+
   return {
-    custom,
-    builtin,
+    custom: customCustom,
+    builtin: [
+      ...builtin,
+      ...builtInCustom,
+    ],
   }
 }
 
-export const tabsInfoIframe = ref<ModuleIframeTab[]>([])
-export const tabsInfoBuiltin = ref<ModuleBuiltinTab[]>([])
+export const tabsInfoCustom = ref<ModuleCustomTab[]>([])
+export const tabsInfoBuiltin = ref<ModuleTabInfo[]>([])
 
 export async function updateTabs() {
   const {
@@ -42,5 +48,5 @@ export async function updateTabs() {
   } = await getTabs()
 
   tabsInfoBuiltin.value = builtin
-  tabsInfoIframe.value = custom
+  tabsInfoCustom.value = custom
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ModuleIframeTab } from '~/../src/types'
+import type { ModuleCustomTab } from '~/../src/types'
 
 const route = useRoute()
 const name = $computed(() => route.params.name)
-const tab = $computed(() => tabsInfoIframe.value.find(i => i.name === name) as ModuleIframeTab)
+const tab = $computed(() => (tabsInfoBuiltin.value.find(i => i.name === name) || tabsInfoCustom.value.find(i => i.name === name)) as ModuleCustomTab)
 </script>
 
 <template>
