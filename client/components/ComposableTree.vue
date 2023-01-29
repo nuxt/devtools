@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
-import { getShortPath, openInEditor } from '#imports'
 
 const { metadata } = defineProps<{
   map: Map<string, Import[]>

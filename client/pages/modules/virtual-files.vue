@@ -21,7 +21,7 @@ interface VfsFile {
 
 const searchString = $ref('')
 
-const { data, refresh } = await useFetch<VfsData>('/_vfs.json', {
+const { data } = await useFetch<VfsData>('/_vfs.json', {
   key: 'vfs-list',
   baseURL: '/',
   responseType: 'json',

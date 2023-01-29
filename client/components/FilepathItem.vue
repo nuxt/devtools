@@ -4,7 +4,7 @@ const { filepath } = defineProps<{
 }>()
 
 const config = $(useServerConfig())
-const short = $computed(() => filepath && config ? getShortPath(filepath, config.rootDir) : filepath)
+const short = $computed(() => (filepath && config) ? getShortPath(filepath, config.rootDir) : filepath)
 </script>
 
 <template>

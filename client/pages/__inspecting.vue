@@ -2,8 +2,7 @@
 definePageMeta({
   layout: 'none',
 })
-
-const data = useComponentInspectorData()
+// const data = useComponentInspectorData()
 </script>
 
 <template>

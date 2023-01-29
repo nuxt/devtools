@@ -9,7 +9,7 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    nuxt.hook('devtools:customTabs', (_tabs) => {
+    nuxt.hook('devtools:customTabs', () => {
       // todo
     })
   },
