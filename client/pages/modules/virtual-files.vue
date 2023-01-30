@@ -72,8 +72,8 @@ const filteredFiles = $computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-[250px_1fr]" h-full of-hidden class="virtual-files">
-    <div border="r base" flex="~ col" of-auto>
+  <div grid="~ cols-[300px_1fr]" h-full of-hidden class="virtual-files">
+    <div border="r base" of-auto>
       <div p3 pb2>
         <NTextInput
           v-model="searchString"
@@ -83,14 +83,20 @@ const filteredFiles = $computed(() => {
         />
       </div>
       <NuxtLink
-        v-for="f of filteredFiles" :key="f.id" px2 py1 border="b base" text-sm font-mono
+        v-for="f of filteredFiles" :key="f.id"
+        px2 py1 border="b base" block text-sm font-mono truncate
         :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
         :class="f.id === current?.id ? 'bg-truegray:20 text-base' : 'text-truegray'"
       >
         {{ toShortPath(f.id) }}
       </NuxtLink>
     </div>
-    <pre v-if="current?.content" of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
+    <div v-if="current?.content">
+      <div border="b base" px4 py2 text-sm op75>
+        <code>{{ current.id }}</code>
+      </div>
+      <pre of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
+    </div>
     <span v-else flex items-center justify-center op50>Select one file to start</span>
   </div>
 </template>
