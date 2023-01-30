@@ -3,6 +3,8 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
   entries: [
     'src/types',
+    'src/module',
+    'src/dirs',
     'src/iframe-client',
   ],
   externals: [

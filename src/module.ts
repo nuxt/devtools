@@ -1,5 +1,4 @@
-import { join, resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { join } from 'path'
 import { existsSync } from 'fs'
 import { addPlugin, defineNuxtModule, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
@@ -8,6 +7,7 @@ import sirv from 'sirv'
 import c from 'picocolors'
 import { setupRPC } from './rpc'
 import type { ModuleCustomTab } from './types'
+import { clientDir, runtimeDir } from './dirs'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
@@ -54,9 +54,6 @@ export interface ModuleOptions {
 const PATH = '/__nuxt_devtools__'
 const PATH_ENTRY = `${PATH}/entry`
 const PATH_CLIENT = `${PATH}/client`
-
-const runtimeDir = resolve(fileURLToPath(import.meta.url), '../runtime')
-const clientDir = resolve(fileURLToPath(import.meta.url), '../client')
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
