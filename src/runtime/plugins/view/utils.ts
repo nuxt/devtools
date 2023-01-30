@@ -10,15 +10,21 @@ export function useObjectStorage<T>(key: string, initial: T): Ref<T> {
       data.value[key] = initial[key]
   }
 
+  let updating = false
   let wrote = ''
   watch(data, (value) => {
+    if (!updating)
+      return
     wrote = JSON.stringify(value)
     localStorage.setItem(key, wrote)
-  }, { deep: true })
+  }, { deep: true, flush: 'sync' })
 
   useEventListener(window, 'storage', (e: StorageEvent) => {
-    if (e.key === key && e.newValue && e.newValue !== wrote)
+    if (e.key === key && e.newValue && e.newValue !== wrote) {
+      updating = true
       data.value = JSON.parse(e.newValue)
+      updating = false
+    }
   })
 
   return data
