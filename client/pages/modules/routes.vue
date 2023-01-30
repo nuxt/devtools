@@ -11,6 +11,7 @@ definePageMeta({
 
 const router = useClientRouter()
 const route = useClientRoute()
+const config = useServerConfig()
 
 const serverPages = await rpc.getServerPages()
 const layouts = await rpc.getLayouts()
@@ -59,7 +60,7 @@ function navigateToRoute(route: RouteInfo) {
 </script>
 
 <template>
-  <div v-if="router">
+  <div v-if="config?.pages && router">
     <SectionBlock
       icon="carbon-3d-curve-auto-colon"
       :collapse="false"
@@ -110,18 +111,18 @@ function navigateToRoute(route: RouteInfo) {
   <LaunchPage
     v-else
     icon="carbon-tree-view-alt"
-    title="Nuxt routing is not enabled"
+    title="Nuxt Routing"
     description="Create `./pages/index.vue` to enable routing"
     :actions="[
       {
-        label: 'Learn more about routing',
+        label: 'Learn more',
         src: 'https://nuxt.com/docs/getting-started/routing',
         attrs: {
           n: 'primary',
         },
       },
       {
-        label: 'Enable routing',
+        label: 'Enable Routing',
         handle() {
           return rpc.runWizard('enablePages')
         },
