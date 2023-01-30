@@ -54,6 +54,7 @@ const routeInputMatched = $computed(() => {
 function navigateToRoute(route: RouteInfo) {
   if (!route.path.includes(':'))
     router.value.push(route.path)
+  // TODO: dialog to ask for params
 }
 </script>
 

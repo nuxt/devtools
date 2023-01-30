@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { NuxtLayout } from '@nuxt/schema'
-import type { RouteInfo } from '~~/../src/types'
+import type { RouteInfo } from '~/../src/types'
 
 const { pages, layouts, matched, matchedPending } = defineProps<{
   pages: RouteInfo[]

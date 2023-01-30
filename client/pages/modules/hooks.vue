@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { NuxtDevtoolsHostClient } from '~~/../src/types'
-
 definePageMeta({
   icon: 'carbon-ibm-cloud-direct-link-2-connect',
   title: 'Hooks',
@@ -8,9 +6,8 @@ definePageMeta({
 
 const serverHooks = await rpc.getServerHooks()
 
-const state = useState<NuxtDevtoolsHostClient>('devtools-client')
-
-const clientHooks = state.value?.getHooksMetrics()
+const client = useClient()
+const clientHooks = computed(() => client.value?.getHooksMetrics())
 </script>
 
 <template>
