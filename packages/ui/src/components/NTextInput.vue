@@ -5,7 +5,7 @@
     </slot>
     <input
       v-model="input"
-      class="!outline-none flex-auto n-bg-base"
+      class="!outline-none flex-auto n-bg-base w-full"
       :type="type"
       :placeholder="placeholder"
     >
