@@ -45,9 +45,9 @@ function goIntro() {
             <div carbon-nominal text-3xl />
             <div>{{ components.length }} components</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/composables">
+          <NuxtLink v-if="config" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/imports">
             <div carbon-function text-3xl />
-            <div>{{ autoImports.length }} composables</div>
+            <div>{{ autoImports.length }} imports</div>
           </NuxtLink>
           <NuxtLink v-if="config" p4 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
