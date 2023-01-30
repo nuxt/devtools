@@ -265,3 +265,17 @@ export interface NuxtDevtoolsIframeClient {
 export interface NuxtDevtoolsGlobal {
   setClient(client: NuxtDevtoolsHostClient): void
 }
+
+export interface DevToolsFrameState {
+  width: number
+  height: number
+  bottom: number
+  left: number
+  open: boolean
+  route: string
+  position: 'left' | 'right' | 'bottom' | 'top'
+}
+
+export interface DevToolsUISettings {
+  customTabs: boolean
+}

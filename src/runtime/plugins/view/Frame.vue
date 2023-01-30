@@ -29,12 +29,27 @@ const frameStyle = computed(() => {
       width: '400px',
     }
   }
-  return {
-    bottom: `${PANEL_PADDING}px`,
-    borderRadius: '0.5rem',
-    left: `calc(${(100 - state.value.width) / 2}vw + ${PANEL_PADDING}px)`,
-    height: `calc(${state.value.height}vh - ${PANEL_PADDING * 2}px)`,
-    width: `calc(${state.value.width}vw - ${PANEL_PADDING * 2}px)`,
+
+  const height = `calc(${state.value.height}vh - ${PANEL_PADDING * 2}px)`
+  const width = `calc(${state.value.width}vw - ${PANEL_PADDING * 2}px)`
+
+  if (state.value.position === 'left' || state.value.position === 'right') {
+    return {
+      [state.value.position]: `${PANEL_PADDING}px`,
+      borderRadius: '0.5rem',
+      top: `calc(${(100 - state.value.height) / 2}vh + ${PANEL_PADDING}px)`,
+      height,
+      width,
+    }
+  }
+  else {
+    return {
+      [state.value.position || 'bottom']: `${PANEL_PADDING}px`,
+      borderRadius: '0.5rem',
+      left: `calc(${(100 - state.value.width) / 2}vw + ${PANEL_PADDING}px)`,
+      height,
+      width,
+    }
   }
 })
 
@@ -124,16 +139,27 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
   if (!isDragging.value)
     return
 
+  const alignSide = state.value.position === 'left' || state.value.position === 'right'
+
   if (isDragging.value === 'horizontal' || isDragging.value === 'both') {
-    const fullHeight = window.innerHeight - PANEL_PADDING * 2
-    const value = (window.innerHeight - e.clientY - PANEL_PADDING) / fullHeight * 100
+    const y = state.value.position === 'top'
+      ? window.innerHeight - e.clientY
+      : e.clientY
+    const boxHeight = window.innerHeight - PANEL_PADDING * 2
+    const value = alignSide
+      ? (Math.abs(y - (window.innerHeight / 2)) - PANEL_PADDING) / boxHeight * 100 * 2
+      : (window.innerHeight - y - PANEL_PADDING) / boxHeight * 100
     state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
   }
 
   if (isDragging.value === 'vertical' || isDragging.value === 'both') {
-    const fullWidth = window.innerWidth - PANEL_PADDING * 2
-    const halfPanelWidth = Math.abs(e.clientX - (window.innerWidth / 2)) - PANEL_PADDING
-    const value = halfPanelWidth / fullWidth * 100 * 2
+    const x = state.value.position === 'left'
+      ? window.innerWidth - e.clientX
+      : e.clientX
+    const boxWidth = window.innerWidth - PANEL_PADDING * 2
+    const value = alignSide
+      ? (window.innerWidth - x - PANEL_PADDING) / boxWidth * 100
+      : (Math.abs(x - (window.innerWidth / 2)) - PANEL_PADDING) / boxWidth * 100 * 2
     state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
   }
 })
@@ -181,11 +207,14 @@ declare global {
     />
     <button class="close-button" @click="closePanel()" />
     <template v-if="viewMode === 'default'">
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-      <div class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+      <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
+      <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
+      <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+      <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+      <div v-if="state.position !== 'top' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+      <div v-if="state.position !== 'top' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+      <div v-if="state.position !== 'bottom' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+      <div v-if="state.position !== 'bottom' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
     </template>
   </div>
 </template>
@@ -218,7 +247,6 @@ declare global {
 
 .nuxt-devtools-resize-handle-horizontal {
   position: absolute;
-  top: 0;
   left: 6px;
   right: 6px;
   height: 10px;
@@ -237,7 +265,6 @@ declare global {
 }
 .nuxt-devtools-resize-handle-corner {
   position: absolute;
-  top: 0;
   width: 14px;
   height: 14px;
   margin: -6px;
