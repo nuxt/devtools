@@ -26,15 +26,19 @@ const routes = $computed((): RouteInfo[] => {
     })
 })
 
-const routeInput = ref(route.value?.path || '/')
+const routeInput = ref('')
 
-if (router.value) {
-  router.value.afterEach(() => {
+until(route).toBeTruthy().then((v) => {
+  routeInput.value = v.path
+})
+
+until(router).toBeTruthy().then((v) => {
+  v.afterEach(() => {
     nextTick(() => {
       routeInput.value = route.value.path
     })
   })
-}
+})
 
 async function navigate() {
   if (routeInput.value !== route.value.path)
@@ -46,6 +50,11 @@ const routeInputMatched = $computed(() => {
     return []
   return router.value.resolve(routeInput.value || '/').matched
 })
+
+function navigateToRoute(route: RouteInfo) {
+  if (!route.path.includes(':'))
+    router.value.push(route.path)
+}
 </script>
 
 <template>
@@ -55,22 +64,30 @@ const routeInputMatched = $computed(() => {
       :collapse="false"
       text="Current Route"
     >
+      <div py2 text-sm>
+        <template v-if="route.path !== routeInput">
+          <span op50>Navigate from </span>
+          <span font-mono>{{ route.path }}</span>
+          <span op50> to </span>
+        </template>
+        <template v-else>
+          <span op50>Current route:</span>
+        </template>
+      </div>
       <NTextInput
         v-model="routeInput"
         font-mono
-        icon="carbon-direction-right-01"
+        icon="carbon-direction-right-01 scale-y--100"
+        :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
         @keydown.enter="navigate"
       />
       <div py2 text-sm>
         <template v-if="route.path !== routeInput">
-          <span op50>Navigate </span>
-          <span font-mono>{{ route.path }}</span>
-          <span op50> -> </span>
-          <span font-mono :class="routeInputMatched.length ? 'text-green' : 'text-orange'">{{ routeInput || '/' }}</span>
-          <span op50>, press Enter to go</span>
+          <span>Press <b font-bold>Enter</b> to navigate</span>
+          <span v-if="!routeInputMatched.length" text-orange op75> (no match)</span>
         </template>
         <template v-else>
-          <span op50>Edit to navigate</span>
+          <span op50>(Edit to navigate)</span>
         </template>
       </div>
     </SectionBlock>
@@ -78,12 +95,14 @@ const routeInputMatched = $computed(() => {
       icon="carbon-tree-view-alt"
       text="Routes"
       description="All the routes in registered in your application"
+      :padding="false"
     >
       <PagesTable
         :pages="routes"
         :layouts="layouts"
         :matched="route.matched"
         :matched-pending="routeInputMatched"
+        @navigate="navigateToRoute"
       />
     </SectionBlock>
   </div>

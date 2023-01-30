@@ -117,7 +117,7 @@ function toggleSortedBy(by: SortBy) {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item of sorted" :key="item.name">
+      <tr v-for="item of sorted" :key="item.name" border="b dashed transparent hover:base">
         <td text-center w-0 ws-nowrap text-sm op25>
           {{ startTimes.indexOf(item.start) }}
         </td>

@@ -20,6 +20,7 @@ const clientHooks = state.value?.getHooksMetrics()
       icon="carbon-ibm-cloud-direct-link-1-dedicated-hosting"
       text="Client Hooks"
       :description="`Total hooks: ${clientHooks.length}`"
+      :padding="false"
     >
       <HooksTable :hooks="clientHooks" />
     </SectionBlock>
@@ -27,6 +28,7 @@ const clientHooks = state.value?.getHooksMetrics()
       icon="carbon-ibm-cloud-direct-link-2-dedicated"
       text="Server Hooks"
       :description="`Total hooks: ${serverHooks.length}`"
+      :padding="false"
     >
       <HooksTable :hooks="serverHooks" />
     </SectionBlock>

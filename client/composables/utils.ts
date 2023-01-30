@@ -53,3 +53,7 @@ export function getShortPath(path: string, root: string, subpath = false) {
     return path
   }
 }
+
+export function parseExpressRoute(route: string) {
+  return route.split(/(:\w+)/).filter(Boolean)
+}
