@@ -23,7 +23,7 @@ const client = useClient()
       :key="tab.name"
       :tab="tab"
     />
-    <template v-if="tabsInfoCustom.length">
+    <template v-if="tabsInfoCustom.length && devToolsSettings.customTabs">
       <div p1 lg:p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>

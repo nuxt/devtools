@@ -10,6 +10,9 @@ const isEnabled = computed(() => {
   const _tab = tab as ModuleBuiltinTab
   if (_tab.requireClient && !client.value)
     return false
+  // Consider VS Code integration a custom tab
+  if (_tab.name === 'builtin-vscode' && !devToolsSettings.value.customTabs)
+    return false
   return true
 })
 </script>

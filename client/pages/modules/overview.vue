@@ -73,6 +73,18 @@ function goIntro() {
           <span i-carbon-unlink flex-none />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
         </div>
       </div>
+
+      <div flex="~ col" items-center mt-5>
+        <VDropdown>
+          <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
+            <div i-carbon-settings />
+            Settings
+          </button>
+          <template #popper>
+            <Settings />
+          </template>
+        </VDropdown>
+      </div>
     </div>
   </div>
 </template>
