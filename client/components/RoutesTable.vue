@@ -10,7 +10,7 @@ const { pages, layouts, matched, matchedPending } = defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'navigate', route: RouteInfo): void
+  (e: 'navigate', path: string): void
 }>()
 
 const sorted = $computed(() => {
@@ -55,19 +55,11 @@ function openLayout(name: string) {
             />
           </td>
           <td w-0 ws-nowrap text-sm items-center>
-            <button
+            <RoutePathItem
+              :route="item"
               :class="matched.find(m => m.name === item.name) ? 'text-primary' : matchedPending.find(m => m.name === item.name) ? 'text-teal' : ''"
-              @click="$emit('navigate', item)"
-            >
-              <code>
-                <span
-                  v-for="part, idx of parseExpressRoute(item.path)" :key="idx"
-                  :class="part[0] === ':' ? 'text-gray border border-dashed rounded border-gray:50 px1' : ''"
-                >
-                  {{ part[0] === ':' ? part.slice(1) : part }}
-                </span>
-              </code>
-            </button>
+              @navigate="path => $emit('navigate', path)"
+            />
           </td>
           <td text-center font-mono>
             <span v-if="item.meta.layout === false">-</span>
@@ -80,11 +72,20 @@ function openLayout(name: string) {
           </td>
           <td flex="~ gap-2" h-full items-center justify-end>
             <button
-              v-if="item.file" text-sm op25 hover="op100 text-primary"
+              v-if="!item.path.includes(':')"
+              text-sm op40 hover="op100 text-primary"
+              title="Navigate to page"
+              @click="$emit('navigate', item.path)"
+            >
+              <div i-carbon-arrow-up-right />
+            </button>
+            <button
+              v-if="item.file"
+              text-sm op40 hover="op100 text-primary"
               title="Open in editor"
               @click="openInEditor(item.file!)"
             >
-              <div i-carbon-launch />
+              <div i-carbon-script-reference />
             </button>
           </td>
         </tr>
