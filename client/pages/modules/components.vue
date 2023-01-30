@@ -18,7 +18,9 @@ const globalComponents = $computed(() =>
     .map(([key]) => ({
       pascalName: key,
       global: true,
-    } as unknown as Component)),
+    } as unknown as Component))
+    // dedupe server components
+    .filter(i => !serverComponents.find(j => j.pascalName === i.pascalName)),
 )
 
 const components = $computed(() => [

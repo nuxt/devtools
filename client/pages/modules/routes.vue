@@ -99,7 +99,7 @@ function navigateToRoute(route: RouteInfo) {
       description="All the routes in registered in your application"
       :padding="false"
     >
-      <PagesTable
+      <RoutesTable
         :pages="routes"
         :layouts="layouts"
         :matched="route.matched"
