@@ -25,7 +25,10 @@ function navigate() {
 </script>
 
 <template>
-  <VDropdown>
+  <button v-if="!hasWildcard" @click="navigate">
+    <code>{{ route.path }}</code>
+  </button>
+  <VDropdown v-else>
     <code cursor-pointer block>
       <span
         v-for="part, idx of parts" :key="idx"
@@ -53,11 +56,8 @@ function navigate() {
               </template>
             </div>
           </template>
-          <NButton block n="primary sm">
+          <NButton block n="primary">
             Navigate
-            <template v-if="hasWildcard">
-              to <br><code text-sm>{{ path }}</code>
-            </template>
           </NButton>
         </form>
       </div>

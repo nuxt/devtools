@@ -39,8 +39,8 @@ function openLayout(name: string) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item of sorted" :key="item.name" h-7 border="b dashed transparent hover:base">
-          <td w-16 text-right pr-1>
+        <tr v-for="item of sorted" :key="item.name" class="group" h-7 border="b dashed transparent hover:base">
+          <td w-16 pr-1 flex="inline" justify-end items-center>
             <Badge
               v-if="matched.find(m => m.name === item.name)"
               bg-green-400:10 text-green-400
@@ -54,12 +54,22 @@ function openLayout(name: string) {
               v-text="'next'"
             />
           </td>
-          <td w-0 ws-nowrap text-sm items-center>
+          <td w-0 ws-nowrap text-sm items-center flex="inline gap3">
             <RoutePathItem
               :route="item"
               :class="matched.find(m => m.name === item.name) ? 'text-primary' : matchedPending.find(m => m.name === item.name) ? 'text-teal' : ''"
               @navigate="path => $emit('navigate', path)"
             />
+            <div op0 group-hover:op100 flex="~ gap1">
+              <button
+                v-if="item.file"
+                text-sm op40 hover="op100 text-primary"
+                title="Open in editor"
+                @click="openInEditor(item.file!)"
+              >
+                <div i-carbon-script-reference />
+              </button>
+            </div>
           </td>
           <td text-center font-mono>
             <span v-if="item.meta.layout === false">-</span>
@@ -68,24 +78,6 @@ function openLayout(name: string) {
             </button>
             <button v-else op15 text-sm @click="openLayout('default')">
               (default)
-            </button>
-          </td>
-          <td flex="~ gap-2" h-full items-center justify-end>
-            <button
-              v-if="!item.path.includes(':')"
-              text-sm op40 hover="op100 text-primary"
-              title="Navigate to page"
-              @click="$emit('navigate', item.path)"
-            >
-              <div i-carbon-arrow-up-right />
-            </button>
-            <button
-              v-if="item.file"
-              text-sm op40 hover="op100 text-primary"
-              title="Open in editor"
-              @click="openInEditor(item.file!)"
-            >
-              <div i-carbon-script-reference />
             </button>
           </td>
         </tr>
