@@ -4,16 +4,20 @@ import type { NodeIncomingMessage, NodeServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
 import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
+import c from 'picocolors'
 
 import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
-import { getNuxtVersion } from '@nuxt/kit'
+import { getNuxtVersion, logger } from '@nuxt/kit'
 import type { ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, VersionsInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
+import type { WizardActions } from './wizard'
+import { wizard } from './wizard'
+import { LOG_PREFIX } from './logger'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const components: Component[] = []
@@ -68,6 +72,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       // will be replaced below
       return false
     },
+    runWizard(name: WizardActions, ...args: any[]) {
+      logger.info(LOG_PREFIX, `Running wizard ${c.green(name)}...`)
+      return wizard[name](nuxt, ...args as [])
+    },
     async openInEditor(input: string) {
       if (input.startsWith('./'))
         input = resolve(process.cwd(), input)
@@ -111,13 +119,14 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     if (!action)
       return false
 
-    Promise.resolve(action.handle())
+    Promise.resolve(action.handle?.())
       .catch((e) => {
         console.error(e)
       })
       .finally(() => {
         nuxt.callHook('devtools:customTabs:refresh')
       })
+
     nuxt.callHook('devtools:customTabs:refresh')
     return true
   }

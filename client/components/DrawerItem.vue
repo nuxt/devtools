@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import type { ModuleBuiltinTab, ModuleCustomTab } from '~~/../src/types'
+import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
 
 const { tab } = defineProps<{
   tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
-const client = $(useClient())
-const config = $(useServerConfig())
+const client = useClient()
 const isEnabled = computed(() => {
   const _tab = tab as ModuleBuiltinTab
-  if (_tab.requireClient && !client)
-    return false
-  if (_tab.requirePages && !config?.pages)
+  if (_tab.requireClient && !client.value)
     return false
   return true
 })

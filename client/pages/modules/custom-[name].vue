@@ -19,27 +19,13 @@ const tab = $computed(() => tabsInfoAll.value.find(i => i.name === name) as Modu
     <Component :is="tab.view.vnode" />
   </template>
   <template v-else-if="tab.view.type === 'launch'">
-    <div flex="~ col gap2" h-full items-center justify-center>
-      <TabIcon text-5xl :icon="tab.view.icon || tab.icon" :title="tab.title" />
-      <h1 text-xl>
-        {{ tab.view.title || tab.title }}
-      </h1>
-      <div
-        v-if="tab.view.description"
-        text-base op50 mt--1 mb2 text-center
-        class="markdown-body"
-        v-html="renderMarkdown(tab.view.description)"
-      />
-      <template v-for="action, idx of tab.view.actions" :key="idx">
-        <NButton
-          n="solid primary" :disabled="action.pending"
-          @click="rpc.customTabAction(tab.name, idx)"
-        >
-          <NIcon v-if="action.pending" icon="carbon-circle-dash" animate-spin />
-          {{ action.label }}
-        </NButton>
-      </template>
-    </div>
+    <LaunchPage
+      :icon="tab.view.icon || tab.icon"
+      :title="tab.view.title || tab.title"
+      :description="tab.view.description"
+      :actions="tab.view.actions"
+      @action="idx => rpc.customTabAction(tab.name, idx)"
+    />
   </template>
   <template v-else>
     <div flex="~ col" h-full items-center justify-center>

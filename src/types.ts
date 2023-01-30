@@ -6,6 +6,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { VNode } from 'vue'
+import type { WizardActions, WizardArgs } from './wizard'
 
 export interface ServerFunctions {
   getConfig(): NuxtOptions
@@ -17,6 +18,7 @@ export interface ServerFunctions {
   getLayouts(): NuxtLayout[]
   getVersions(): VersionsInfo
   customTabAction(name: string, action: number): Promise<boolean>
+  runWizard<T extends WizardActions>(name: T, ...args: WizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
 }
 
@@ -176,7 +178,11 @@ export interface ModuleLaunchAction {
    * Function to handle the action, this is executed on the server side.
    * Will automatically refresh the tabs after the action is resolved.
    */
-  handle: () => void | Promise<void>
+  handle?: () => void | Promise<void>
+  /**
+   * Treat the action as a link, will open the link in a new tab
+   */
+  src?: string
 }
 
 export type ModuleView = ModuleIframeView | ModuleLaunchView | ModuleVNodeView
@@ -192,7 +198,6 @@ export interface ModuleBuiltinTab {
   title?: string
   path?: string
   requireClient?: boolean
-  requirePages?: boolean
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab

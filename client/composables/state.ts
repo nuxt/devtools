@@ -57,13 +57,10 @@ export async function updateTabs() {
 
 export function useEnabledTabs() {
   const client = useClient()
-  const config = useServerConfig()
 
   return computed(() => tabsInfoAll.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab
-    if (_tab.requireClient && !client)
-      return false
-    if (_tab.requirePages && !config.value?.pages)
+    if (_tab.requireClient && !client.value)
       return false
     return true
   }))

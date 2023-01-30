@@ -5,6 +5,7 @@ import { getPort } from 'get-port-please'
 import which from 'which'
 import waitOn from 'wait-on'
 import type { ServerFunctions } from '../types'
+import { LOG_PREFIX } from '../logger'
 
 export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
   const installed = !!await which('code-server').catch(() => null)
@@ -18,7 +19,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
     port = await getPort({ port })
     url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
 
-    logger.info(`Starting VS Code Server at ${URL} ...`)
+    logger.info(LOG_PREFIX, `Starting VS Code Server at ${URL} ...`)
     const command = execa('code-server', [
       'serve-local',
       '--accept-server-license-terms',

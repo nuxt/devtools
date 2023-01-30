@@ -9,15 +9,14 @@ definePageMeta({
   requireClient: true,
 })
 
-const client = $(useClient())
-const router = $(useClientRouter())
-const route = $(useClientRoute())
+const router = useClientRouter()
+const route = useClientRoute()
 
 const serverPages = await rpc.getServerPages()
 const layouts = await rpc.getLayouts()
 
 const routes = $computed((): RouteInfo[] => {
-  return (router?.getRoutes() || [])
+  return (router.value?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
       return {
@@ -27,28 +26,30 @@ const routes = $computed((): RouteInfo[] => {
     })
 })
 
-const routeInput = ref(route.path || '/')
+const routeInput = ref(route.value?.path || '/')
 
-router.afterEach(() => {
-  nextTick(() => {
-    routeInput.value = route.path
+if (router.value) {
+  router.value.afterEach(() => {
+    nextTick(() => {
+      routeInput.value = route.value.path
+    })
   })
-})
+}
 
 async function navigate() {
-  if (routeInput.value !== route.path)
-    router.push(routeInput.value || '/')
+  if (routeInput.value !== route.value.path)
+    router.value.push(routeInput.value || '/')
 }
 
 const routeInputMatched = $computed(() => {
-  if (routeInput.value === route.path)
+  if (routeInput.value === route.value.path)
     return []
-  return router.resolve(routeInput.value || '/').matched
+  return router.value.resolve(routeInput.value || '/').matched
 })
 </script>
 
 <template>
-  <div v-if="client && router">
+  <div v-if="router">
     <SectionBlock
       icon="carbon-3d-curve-auto-colon"
       :collapse="false"
@@ -86,4 +87,25 @@ const routeInputMatched = $computed(() => {
       />
     </SectionBlock>
   </div>
+  <LaunchPage
+    v-else
+    icon="carbon-tree-view-alt"
+    title="Nuxt routing is not enabled"
+    description="Create `./pages/index.vue` to enable routing"
+    :actions="[
+      {
+        label: 'Learn more about routing',
+        src: 'https://nuxt.com/docs/getting-started/routing',
+        attrs: {
+          n: 'primary',
+        },
+      },
+      {
+        label: 'Enable routing',
+        handle() {
+          return rpc.runWizard('enablePages')
+        },
+      },
+    ]"
+  />
 </template>
