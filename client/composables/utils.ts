@@ -55,5 +55,5 @@ export function getShortPath(path: string, root: string, subpath = false) {
 }
 
 export function parseExpressRoute(route: string) {
-  return route.split(/(:\w+)/).filter(Boolean)
+  return route.split(/(:\w+[\?\*]?)/).filter(Boolean)
 }

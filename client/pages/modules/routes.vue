@@ -60,20 +60,16 @@ function navigateToRoute(route: RouteInfo) {
 </script>
 
 <template>
-  <div v-if="config?.pages && router">
-    <SectionBlock
-      icon="carbon-3d-curve-auto-colon"
-      :collapse="false"
-      text="Current Route"
-    >
-      <div py2 text-sm>
+  <div v-if="config?.pages && router" h-full of-auto>
+    <div border="b base" px6 py4 flex="~ col gap1" navbar-glass>
+      <div>
         <template v-if="route.path !== routeInput">
           <span op50>Navigate from </span>
           <span font-mono>{{ route.path }}</span>
           <span op50> to </span>
         </template>
         <template v-else>
-          <span op50>Current route:</span>
+          <span op50>Current route</span>
         </template>
       </div>
       <NTextInput
@@ -83,16 +79,16 @@ function navigateToRoute(route: RouteInfo) {
         :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
         @keydown.enter="navigate"
       />
-      <div py2 text-sm>
+      <div>
         <template v-if="route.path !== routeInput">
           <span>Press <b font-bold>Enter</b> to navigate</span>
           <span v-if="!routeInputMatched.length" text-orange op75> (no match)</span>
         </template>
         <template v-else>
-          <span op50>(Edit to navigate)</span>
+          <span op50>Edit path above to navigate</span>
         </template>
       </div>
-    </SectionBlock>
+    </div>
     <SectionBlock
       icon="carbon-tree-view-alt"
       text="Routes"

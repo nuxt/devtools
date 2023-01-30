@@ -67,8 +67,8 @@ const filtered = $computed(() => {
 </script>
 
 <template>
-  <div v-if="config" h-full grid="~ rows-[max-content_1fr]">
-    <div px4 pt4 pb2 flex="~ col gap4" flex-1 border="b base">
+  <div v-if="config" h-full of-auto>
+    <div px4 pt4 pb2 flex="~ col gap4" flex-1 border="b base" navbar-glass>
       <NTextInput
         v-model="search"
         placeholder="Search..."
@@ -82,31 +82,29 @@ const filtered = $computed(() => {
         </NSwitch>
       </div>
     </div>
-    <div h-full of-auto>
-      <SectionBlock
-        v-if="filtered.user.size"
-        icon="carbon-function"
-        text="User composables"
-        :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
-      >
-        <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="metadata" />
-      </SectionBlock>
-      <SectionBlock
-        v-if="filtered.builtin.size"
-        icon="tabler-brand-nuxt"
-        text="Built-in composables"
-        :description="`${filtered.count.builtin} composables`"
-      >
-        <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="metadata" />
-      </SectionBlock>
-      <SectionBlock
-        v-if="filtered.lib.size"
-        icon="carbon-3d-mpr-toggle"
-        text="Composables from libraries"
-        :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
-      >
-        <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="metadata" />
-      </SectionBlock>
-    </div>
+    <SectionBlock
+      v-if="filtered.user.size"
+      icon="carbon-function"
+      text="User composables"
+      :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
+    >
+      <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="metadata" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.builtin.size"
+      icon="tabler-brand-nuxt"
+      text="Built-in composables"
+      :description="`${filtered.count.builtin} composables`"
+    >
+      <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="metadata" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.lib.size"
+      icon="carbon-3d-mpr-toggle"
+      text="Composables from libraries"
+      :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
+    >
+      <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="metadata" />
+    </SectionBlock>
   </div>
 </template>

@@ -103,8 +103,8 @@ function openComponentInspector() {
 </script>
 
 <template>
-  <div h-full grid="~ rows-[max-content_1fr]">
-    <div p4 flex="~ gap4" flex-1 border="b base">
+  <div h-full of-auto>
+    <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass>
       <NTextInput
         v-model="search"
         placeholder="Search..."
@@ -121,45 +121,43 @@ function openComponentInspector() {
         <NIcon icon="i-carbon-select-window" />
       </button>
     </div>
-    <div h-full of-auto>
-      <SectionBlock
-        v-if="filtered.user.length"
-        icon="carbon-nominal"
-        text="User components"
-        :description="`Total components: ${filtered.count.user}`"
-      >
-        <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
-      </SectionBlock>
-      <SectionBlock
-        v-if="filtered.runtime.length"
-        icon="i-carbon-load-balancer-global"
+    <SectionBlock
+      v-if="filtered.user.length"
+      icon="carbon-nominal"
+      text="User components"
+      :description="`Total components: ${filtered.count.user}`"
+    >
+      <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.runtime.length"
+      icon="i-carbon-load-balancer-global"
 
-        text="Runtime components"
-        :description="`Total components: ${filtered.count.runtime}`"
-      >
-        <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" ml--5 :component="c" />
-      </SectionBlock>
-      <SectionBlock
-        v-if="filtered.builtin.length"
-        icon="tabler-brand-nuxt"
-        text="Built-in components"
-        :description="`Total components: ${filtered.count.builtin}`"
-      >
-        <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" ml--5 :component="c" />
-      </SectionBlock>
-      <SectionBlock
-        v-if="filtered.lib.size"
-        icon="carbon-3d-mpr-toggle"
-        text="Components from libraries"
-        :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
-      >
-        <div v-for="[key, value] of filtered.lib.entries()" :key="key">
-          <IconTitle :text="`${key} (${value.length})`" op50 py1 />
-          <div pl4>
-            <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
-          </div>
+      text="Runtime components"
+      :description="`Total components: ${filtered.count.runtime}`"
+    >
+      <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" ml--5 :component="c" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.builtin.length"
+      icon="tabler-brand-nuxt"
+      text="Built-in components"
+      :description="`Total components: ${filtered.count.builtin}`"
+    >
+      <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" ml--5 :component="c" />
+    </SectionBlock>
+    <SectionBlock
+      v-if="filtered.lib.size"
+      icon="carbon-3d-mpr-toggle"
+      text="Components from libraries"
+      :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
+    >
+      <div v-for="[key, value] of filtered.lib.entries()" :key="key">
+        <IconTitle :text="`${key} (${value.length})`" op50 py1 />
+        <div pl4>
+          <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
         </div>
-      </SectionBlock>
-    </div>
+      </div>
+    </SectionBlock>
   </div>
 </template>

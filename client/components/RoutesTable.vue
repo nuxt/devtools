@@ -62,7 +62,7 @@ function openLayout(name: string) {
               <code>
                 <span
                   v-for="part, idx of parseExpressRoute(item.path)" :key="idx"
-                  :class="part[0] === ':' ? 'text-blue border border-dashed border-blue:50 px1' : ''"
+                  :class="part[0] === ':' ? 'text-gray border border-dashed rounded border-gray:50 px1' : ''"
                 >
                   {{ part[0] === ':' ? part.slice(1) : part }}
                 </span>
