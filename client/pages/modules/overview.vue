@@ -5,11 +5,17 @@ definePageMeta({
   order: -1,
 })
 
+const router = useRouter()
 const config = $(useServerConfig())
 const { data: versions } = useAsyncData(() => rpc.getVersions())
 
 const components = await rpc.getComponents()
 const { imports: autoImports } = await rpc.getAutoImports()
+
+function goIntro() {
+  isFirstVisit.value = true
+  router.push('/')
+}
 </script>
 
 <template>
@@ -19,11 +25,13 @@ const { imports: autoImports } = await rpc.getAutoImports()
       <div flex="~ col" items-center>
         <div mt--10 flex="~" justify-center items-center>
           <NuxtLogo h-16 />
-          <Badge
-            bg-green-400:10 text-green-400 mr--20 mt--5
-            title="preview"
-            v-text="'preview'"
-          />
+          <button mr--20 mt--5 @click="goIntro">
+            <Badge
+              bg-green-400:10 text-green-400
+              title="preview"
+              v-text="'preview'"
+            />
+          </button>
         </div>
       </div>
       <!-- Main Grid -->
