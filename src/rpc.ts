@@ -152,7 +152,17 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   })
   nuxt.hook('pages:extend', (v) => {
     serverPages.length = 0
-    serverPages.push(...v)
+
+    const pagesSet = new Set(v)
+    function searchChildren(page: NuxtPage) {
+      if (pagesSet.has(page))
+        return
+      pagesSet.add(page)
+      page.children?.forEach(searchChildren)
+    }
+    v.forEach(searchChildren)
+    serverPages.push(...Array.from(pagesSet).sort((a, b) => a.file.localeCompare(b.file)))
+
     refresh('getServerPages')
   })
   nuxt.hook('imports:sources', async (v) => {
