@@ -1,14 +1,16 @@
+<img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/11247099/215777354-7f04135e-a3c7-4ef2-880e-52d100b3fd33.png">
+
 # Nuxt DevTools <sup>Alpha Preview</sup>
 
-Tools to enhance your development experience with Nuxt. Transparent, informative, extensible and joyful.
+Unleash Nuxt Developer Experience. Nuxt DevTools is a set of visual tools that help you to know your app/site better.
 
 > **Note**: Experimental and under heavy development. APIs are subject to change.
 
 ## Installation
 
-Nuxt DevTools is currently only available in edge versions (releases on every commit to `main`).
+Currently only available in edge versions (releases on every commit to `main`).
 
-Requires Nuxt 3.1.0 or higher.
+> Requires Nuxt v3.1.0 or higher.
 
 ```bash
 npm i -D @nuxt/devtools-edge
