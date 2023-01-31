@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { version } from '../../../package.json'
+
 definePageMeta({
   icon: 'carbon-information',
   title: 'Overview',
@@ -26,13 +28,17 @@ function goIntro() {
       <div flex="~ col" items-center>
         <div mt--10 flex="~" justify-center items-center>
           <NuxtLogo h-16 />
-          <button mr--20 mt--5 @click="goIntro">
+          <button mr--16 mt--6 @click="goIntro">
             <Badge
               bg-green-400:10 text-green-400
               title="preview"
               v-text="'preview'"
             />
           </button>
+        </div>
+        <div text-center text-sm op30 mb6 mt--1>
+          Nuxt DevTools
+          <code>v{{ version }}</code>
         </div>
       </div>
       <!-- Main Grid -->
