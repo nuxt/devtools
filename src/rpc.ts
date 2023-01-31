@@ -34,7 +34,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   let checkForUpdatePromise: Promise<any> | undefined
   let versions: UpdateInfo[] = getVersions()
 
-  const serverFunctions: ServerFunctions = {
+  const serverFunctions = {} as ServerFunctions
+  const clients = new Set<WebSocket>()
+  const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
+
+  Object.assign(serverFunctions, {
     getConfig() {
       return nuxt.options
     },
@@ -64,6 +68,13 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     },
     getServerHooks() {
       return Object.values(serverHooks)
+    },
+    getVersions() {
+      checkForUpdatePromise = checkForUpdatePromise || checkForUpdates().then((v) => {
+        versions = v
+        birpc.boardcast.refresh.asEvent('versions')
+      })
+      return versions
     },
     runWizard(name: WizardActions, ...args: any[]) {
       logger.info(LOG_PREFIX, `Running wizard ${c.green(name)}...`)
@@ -96,48 +107,28 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         console.error('File not found:', input)
       }
     },
+    async customTabAction(name, actionIndex) {
+      const tab = customTabs.find(i => i.name === name)
+      if (!tab)
+        return false
+      const view = tab.view
+      if (view.type !== 'launch')
+        return false
+      const action = view.actions?.[actionIndex]
+      if (!action)
+        return false
 
-    // will be replaced below, as they are referencing birpc instance
-    getVersions() {
-      return []
+      Promise.resolve(action.handle?.())
+        .catch((e) => {
+          console.error(e)
+        })
+        .finally(() => {
+          nuxt.callHook('devtools:customTabs:refresh')
+        })
+      nuxt.callHook('devtools:customTabs:refresh')
+      return true
     },
-    async customTabAction() {
-      return false
-    },
-  }
-
-  const clients = new Set<WebSocket>()
-  const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
-
-  serverFunctions.customTabAction = async (name, actionIndex) => {
-    const tab = customTabs.find(i => i.name === name)
-    if (!tab)
-      return false
-    const view = tab.view
-    if (view.type !== 'launch')
-      return false
-    const action = view.actions?.[actionIndex]
-    if (!action)
-      return false
-
-    Promise.resolve(action.handle?.())
-      .catch((e) => {
-        console.error(e)
-      })
-      .finally(() => {
-        nuxt.callHook('devtools:customTabs:refresh')
-      })
-    nuxt.callHook('devtools:customTabs:refresh')
-    return true
-  }
-
-  serverFunctions.getVersions = () => {
-    checkForUpdatePromise = checkForUpdatePromise || checkForUpdates().then((v) => {
-      versions = v
-      birpc.boardcast.refresh.asEvent('versions')
-    })
-    return versions
-  }
+  } satisfies ServerFunctions)
 
   // Nuxt Hooks to collect data
   nuxt.hook('components:extend', (v) => {

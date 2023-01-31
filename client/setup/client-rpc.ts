@@ -22,6 +22,4 @@ export function setupClientRPC() {
         await getVersionsData.refresh()
     },
   } satisfies ClientFunctions)
-
-  updateTabs()
 }
