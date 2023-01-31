@@ -7,7 +7,9 @@ definePageMeta({
 
 const router = useRouter()
 const config = $(useServerConfig())
-const { data: versions } = useAsyncData(() => rpc.getVersions())
+const { data: versions } = useAsyncData('getVersions', () => rpc.getVersions())
+
+const nuxtVersion = computed(() => versions.value?.find(v => v.name === 'nuxt'))
 
 const components = await rpc.getComponents()
 const { imports: autoImports } = await rpc.getAutoImports()
@@ -36,9 +38,23 @@ function goIntro() {
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
-        <div p4 theme-card-green flex="~ col auto">
+        <div v-if="nuxtVersion" p4 theme-card-green flex="~ col auto">
           <div logos-nuxt-icon text-3xl />
-          <code>{{ versions?.nuxt ? `v${versions.nuxt}` : 'Unknown' }}</code>
+          <code>{{ `v${nuxtVersion.current}` }}</code>
+          <template v-if="nuxtVersion.latest">
+            <Badge
+              v-if="nuxtVersion.needsUpdate"
+              bg-green-400:10 text-green-400 mt--1
+              title="updates available"
+              v-text="'updates available'"
+            />
+            <Badge
+              v-else
+              bg-gray-400:10 text-gray-400 mt--1
+              title="latest"
+              v-text="'latest'"
+            />
+          </template>
         </div>
         <template v-if="config">
           <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">

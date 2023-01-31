@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { ClientFunctions } from '../src/types'
-
 import 'floating-vue/dist/style.css'
 import './styles/global.css'
+import { setupClientRPC } from './setup/client-rpc'
 
 if (process.client)
   import('./setup/unocss-runtime')
@@ -24,25 +23,7 @@ useHead({
   ],
 })
 
-const router = useRouter()
-const route = useRoute()
-
-Object.assign(clientFunctions, {
-  async refresh(type) {
-    if (route.path.includes(type)) {
-      router.replace({
-        path: route.path,
-        query: {
-          t: Date.now(),
-        },
-      })
-    }
-    if (type === 'customTabs')
-      await updateTabs()
-  },
-} satisfies ClientFunctions)
-
-await updateTabs()
+setupClientRPC()
 </script>
 
 <template>

@@ -16,14 +16,17 @@ export interface ServerFunctions {
   getCustomTabs(): ModuleCustomTab[]
   getServerHooks(): HookInfo[]
   getLayouts(): NuxtLayout[]
-  getVersions(): VersionsInfo
+  getVersions(): UpdateInfo[]
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: WizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
 }
 
-export interface VersionsInfo {
-  nuxt: string
+export interface UpdateInfo {
+  name: string
+  current: string
+  latest?: string
+  needsUpdate?: boolean
 }
 
 export interface AutoImportsWithMetadata {
@@ -31,7 +34,7 @@ export interface AutoImportsWithMetadata {
   metadata?: UnimportMeta
 }
 
-export type ClientUpdateEvent = 'customTabs' | 'components' | 'imports'
+export type ClientUpdateEvent = 'customTabs' | 'components' | 'imports' | 'versions'
 
 export interface ClientFunctions {
   refresh(event: ClientUpdateEvent): void

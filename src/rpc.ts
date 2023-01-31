@@ -11,13 +11,14 @@ import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
-import { getNuxtVersion, logger } from '@nuxt/kit'
-import type { ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, VersionsInfo } from './types'
+import { logger } from '@nuxt/kit'
+import type { ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, UpdateInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
 import type { WizardActions } from './wizard'
 import { wizard } from './wizard'
 import { LOG_PREFIX } from './logger'
+import { checkForUpdates, getVersions } from './npm'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const components: Component[] = []
@@ -30,9 +31,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
 
-  const versionsInfo: VersionsInfo = {
-    nuxt: getNuxtVersion(),
-  }
+  let checkForUpdatePromise: Promise<any> | undefined
+  let versions: UpdateInfo[] = getVersions()
 
   const serverFunctions: ServerFunctions = {
     getConfig() {
@@ -59,18 +59,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         ...customTabs,
       ]
     },
-    getVersions() {
-      return versionsInfo
-    },
     getLayouts() {
       return Object.values(app?.layouts || [])
     },
     getServerHooks() {
       return Object.values(serverHooks)
-    },
-    async customTabAction() {
-      // will be replaced below
-      return false
     },
     runWizard(name: WizardActions, ...args: any[]) {
       logger.info(LOG_PREFIX, `Running wizard ${c.green(name)}...`)
@@ -103,6 +96,14 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         console.error('File not found:', input)
       }
     },
+
+    // will be replaced below, as they are referencing birpc instance
+    getVersions() {
+      return []
+    },
+    async customTabAction() {
+      return false
+    },
   }
 
   const clients = new Set<WebSocket>()
@@ -126,9 +127,16 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       .finally(() => {
         nuxt.callHook('devtools:customTabs:refresh')
       })
-
     nuxt.callHook('devtools:customTabs:refresh')
     return true
+  }
+
+  serverFunctions.getVersions = () => {
+    checkForUpdatePromise = checkForUpdatePromise || checkForUpdates().then((v) => {
+      versions = v
+      birpc.boardcast.refresh.asEvent('versions')
+    })
+    return versions
   }
 
   // Nuxt Hooks to collect data
