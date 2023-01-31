@@ -3,6 +3,7 @@ definePageMeta({
   icon: 'carbon-data-set',
   title: 'Payload',
   requireClient: true,
+  order: 7,
 })
 
 const client = useClient()

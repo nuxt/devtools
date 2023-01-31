@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-information',
   title: 'Overview',
-  order: -1,
+  order: -100,
 })
 
 const router = useRouter()

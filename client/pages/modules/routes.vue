@@ -7,6 +7,7 @@ definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Routes',
   requireClient: true,
+  order: 1,
 })
 
 const router = useClientRouter()

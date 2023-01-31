@@ -5,6 +5,7 @@ import Fuse from 'fuse.js'
 definePageMeta({
   icon: 'carbon-nominal',
   title: 'Components',
+  order: 2,
 })
 
 const client = useClient()

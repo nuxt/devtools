@@ -17,7 +17,7 @@ export async function getTabs() {
 
   const builtin = routes
     .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
-    .sort((a, b) => (a.meta.order || 0) - (b.meta.order || 0))
+    .sort((a, b) => (a.meta.order || 100) - (b.meta.order || 100))
     .map((i): ModuleBuiltinTab => {
       return {
         name: i.name as string,

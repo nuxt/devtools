@@ -2,6 +2,7 @@
 definePageMeta({
   icon: 'carbon-plug',
   title: 'Plugins',
+  order: 5,
 })
 
 const config = $(useServerConfig())

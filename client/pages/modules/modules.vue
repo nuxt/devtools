@@ -2,6 +2,7 @@
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
   title: 'Modules',
+  order: 4,
 })
 
 const ignores = [

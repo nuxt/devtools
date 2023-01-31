@@ -5,6 +5,7 @@ import type { Import } from 'unimport'
 definePageMeta({
   icon: 'carbon-function',
   title: 'Imports',
+  order: 3,
 })
 
 const config = $(useServerConfig())
