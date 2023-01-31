@@ -45,6 +45,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     getComponents() {
       return components
     },
+    async getComponentsRelationships() {
+      return [] // replaced by vite-inspector setup
+    },
     getServerPages() {
       return serverPages
     },
@@ -128,12 +131,14 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       nuxt.callHook('devtools:customTabs:refresh')
       return true
     },
+
   } satisfies ServerFunctions)
 
   // Nuxt Hooks to collect data
   nuxt.hook('components:extend', (v) => {
     components.length = 0
     components.push(...v)
+    components.sort((a, b) => a.pascalName.localeCompare(b.pascalName))
     birpc.boardcast.refresh.asEvent('components')
   })
   nuxt.hook('imports:extend', (v) => {

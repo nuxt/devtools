@@ -38,5 +38,11 @@ export default defineNuxtConfig({
     build: {
       target: 'esnext',
     },
+    optimizeDeps: {
+      include: [
+        'vis-network',
+        'vis-data',
+      ],
+    },
   },
 })

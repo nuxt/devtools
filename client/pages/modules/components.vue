@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from '@nuxt/schema'
-import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-nominal',
@@ -10,8 +9,7 @@ definePageMeta({
 
 const client = useClient()
 const router = useRouter()
-const serverComponents = (await rpc.getComponents())
-  .sort((a, b) => a.pascalName.localeCompare(b.pascalName))
+const serverComponents = await rpc.getComponents()
 
 const globalComponents = $computed(() =>
   Object
@@ -29,77 +27,21 @@ const components = $computed(() => [
   ...serverComponents,
 ].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
 
-const fuse = $computed(() => new Fuse(components, {
-  keys: [
-    'pascalName',
-    'filePath',
-    'kebabName',
-  ],
-}))
-
 const search = $ref('')
 
-const filtered = $computed(() => {
-  const user: Component[] = []
-  const lib = new Map<string, Component[]>()
-  const builtin: Component[] = []
-  const runtime: Component[] = []
-
-  const count = {
-    user: 0,
-    lib: 0,
-    builtin: 0,
-    runtime: 0,
-  }
-
-  const result = search
-    ? fuse.search(search).map(i => i.item)
-    : components
-
-  result
-    .forEach((component) => {
-      if (component.global) {
-        runtime.push(component)
-        count.runtime++
-        return
-      }
-
-      if (component.filePath && isNodeModulePath(component.filePath)) {
-        const name = getModuleNameFromPath(component.filePath)
-        if (!name)
-          return
-        if (name === 'nuxt') {
-          builtin.push(component)
-          count.builtin++
-        }
-        else {
-          if (!lib.has(name))
-            lib.set(name, [])
-          lib.get(name)!.push(component)
-          count.lib++
-        }
-      }
-      else {
-        user.push(component)
-        count.user++
-      }
-    })
-
-  return {
-    count,
-
-    user,
-    builtin,
-    lib,
-    runtime,
-  }
-})
+const {
+  componentsView: view,
+} = devToolsSettingsRefs
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)
     return
   client.value.inspector.enable()
   router.push('/__inspecting')
+}
+
+function toggleView() {
+  view.value = view.value === 'list' ? 'graph' : 'list'
 }
 </script>
 
@@ -115,6 +57,13 @@ function openComponentInspector() {
         flex-auto bg-base border-base
       />
       <button
+        title="Toggle view"
+        @click="toggleView"
+      >
+        <NIcon v-if="view === 'graph'" icon="i-carbon-network-4" />
+        <NIcon v-else icon="i-carbon-list" />
+      </button>
+      <button
         v-if="client?.inspector?.instance"
         title="Inspect Vue components"
         @click="openComponentInspector"
@@ -122,43 +71,7 @@ function openComponentInspector() {
         <NIcon icon="i-carbon-select-window" />
       </button>
     </div>
-    <SectionBlock
-      v-if="filtered.user.length"
-      icon="carbon-nominal"
-      text="User components"
-      :description="`Total components: ${filtered.count.user}`"
-    >
-      <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
-    </SectionBlock>
-    <SectionBlock
-      v-if="filtered.runtime.length"
-      icon="i-carbon-load-balancer-global"
-
-      text="Runtime components"
-      :description="`Total components: ${filtered.count.runtime}`"
-    >
-      <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" ml--5 :component="c" />
-    </SectionBlock>
-    <SectionBlock
-      v-if="filtered.builtin.length"
-      icon="tabler-brand-nuxt"
-      text="Built-in components"
-      :description="`Total components: ${filtered.count.builtin}`"
-    >
-      <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" ml--5 :component="c" />
-    </SectionBlock>
-    <SectionBlock
-      v-if="filtered.lib.size"
-      icon="carbon-3d-mpr-toggle"
-      text="Components from libraries"
-      :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
-    >
-      <div v-for="[key, value] of filtered.lib.entries()" :key="key">
-        <IconTitle :text="`${key} (${value.length})`" op50 py1 />
-        <div pl4>
-          <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
-        </div>
-      </div>
-    </SectionBlock>
+    <ComponentsGraph v-if="view === 'graph'" :components="components" />
+    <ComponentsList v-else :search="search" :components="components" />
   </div>
 </template>

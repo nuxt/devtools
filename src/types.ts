@@ -11,6 +11,7 @@ import type { WizardActions, WizardArgs } from './wizard'
 export interface ServerFunctions {
   getConfig(): NuxtOptions
   getComponents(): Component[]
+  getComponentsRelationships(): Promise<ComponentRelationship[]>
   getAutoImports(): AutoImportsWithMetadata
   getServerPages(): NuxtPage[]
   getCustomTabs(): ModuleCustomTab[]
@@ -281,4 +282,13 @@ export interface DevToolsFrameState {
 
 export interface DevToolsUISettings {
   customTabs: boolean
+  componentsView: 'list' | 'graph'
+  componentsGraphShowNodeModules: boolean
+  componentsGraphShowPages: boolean
+  componentsGraphShowLayouts: boolean
+}
+
+export interface ComponentRelationship {
+  id: string
+  deps: string[]
 }

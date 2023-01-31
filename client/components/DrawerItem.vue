@@ -25,7 +25,7 @@ const isEnabled = computed(() => {
     items-center justify-center
     text-true-gray
     border="base"
-    lg="border-b px3 py2 justify-start"
+    lg="border-b px3 py1.5 justify-start"
     hover="bg-gray/5"
     exact-active-class="!text-primary"
   >
