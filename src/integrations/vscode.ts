@@ -1,21 +1,28 @@
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import type { Nuxt } from '@nuxt/schema'
-import { getPort } from 'get-port-please'
+import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import waitOn from 'wait-on'
-import type { ServerFunctions } from '../types'
+import type { ServerFunctions, VSCodeIntegrationOptions } from '../types'
 import { LOG_PREFIX } from '../logger'
 
-export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
+export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VSCodeIntegrationOptions) {
   const installed = !!await which('code-server').catch(() => null)
 
-  let port = 8814
+  let port = options?.port || 3080
   let url = `http://localhost:${port}`
   let loaded = false
   let promise: Promise<void> | null = null
 
   async function start() {
+    if (options?.reuseExistingServer && !(await checkPort(port))) {
+      loaded = true
+      url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+      logger.info(LOG_PREFIX, `Existing VS Code Server found at port ${port}...`)
+      return
+    }
+
     port = await getPort({ port })
     url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
 
@@ -72,4 +79,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
               },
     })
   })
+
+  if (options?.startOnBoot)
+    promise = promise || start()
 }

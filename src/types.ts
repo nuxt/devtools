@@ -292,3 +292,26 @@ export interface ComponentRelationship {
   id: string
   deps: string[]
 }
+
+export interface VSCodeIntegrationOptions {
+  /**
+   * Enable VS Code Server integration
+   */
+  enabled?: boolean
+  /**
+   * Start VS Code Server on boot
+   *
+   * @default false
+   */
+  startOnBoot?: boolean
+  /**
+   * Port to start VS Code Server
+   *
+   * @default 3080
+   */
+  port?: number
+  /**
+   * Reuse existing server if available (same port)
+   */
+  reuseExistingServer?: boolean
+}

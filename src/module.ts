@@ -6,7 +6,7 @@ import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
 import c from 'picocolors'
 import { setupRPC } from './rpc'
-import type { ModuleCustomTab } from './types'
+import type { ModuleCustomTab, VSCodeIntegrationOptions } from './types'
 import { clientDir, runtimeDir } from './dirs'
 
 declare module '@nuxt/schema' {
@@ -40,15 +40,10 @@ export interface ModuleOptions {
    */
   enableCustomTabs?: boolean
 
-  // MOVE TO VIEW
   /**
-   * Start a VS Code server locally, and integrate with the devtools.
-   * You may need to apply and install VS Code server first.
-   *
-   * @see https://code.visualstudio.com/blogs/2022/07/07/vscode-server
-   * @default false
+   * VS Code Server integration options.
    */
-  // vscodeServer?: boolean
+  vscode?: VSCodeIntegrationOptions
 }
 
 const PATH = '/__nuxt_devtools__'
@@ -62,6 +57,12 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     enableCustomTabs: true,
+    vscode: {
+      enabled: true,
+      startOnBoot: false,
+      port: 3080,
+      reuseExistingServer: true,
+    },
   },
   async setup(options, nuxt) {
     // Disable in test mode
@@ -104,7 +105,9 @@ export default defineNuxtModule<ModuleOptions>({
     const integrations = [
       import('./integrations/vue-inspector').then(({ setup }) => setup(nuxt, serverFunctions)),
       import('./integrations/vite-inspect').then(({ setup }) => setup(nuxt, serverFunctions)),
-      import('./integrations/vscode').then(({ setup }) => setup(nuxt, serverFunctions)),
+      options.vscode?.enabled
+        ? import('./integrations/vscode').then(({ setup }) => setup(nuxt, serverFunctions, options.vscode || {}))
+        : null,
     ]
 
     await Promise.all(integrations)
