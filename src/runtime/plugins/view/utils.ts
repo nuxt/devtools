@@ -13,7 +13,7 @@ export function useObjectStorage<T>(key: string, initial: T): Ref<T> {
   let updating = false
   let wrote = ''
   watch(data, (value) => {
-    if (!updating)
+    if (updating)
       return
     wrote = JSON.stringify(value)
     localStorage.setItem(key, wrote)

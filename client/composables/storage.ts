@@ -6,4 +6,4 @@ export const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtoo
   customTabs: true,
 }, { mergeDefaults: true })
 
-export const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any)
+export const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
