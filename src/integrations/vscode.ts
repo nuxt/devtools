@@ -19,7 +19,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
     port = await getPort({ port })
     url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
 
-    logger.info(LOG_PREFIX, `Starting VS Code Server at ${URL} ...`)
+    logger.info(LOG_PREFIX, `Starting VS Code Server at ${url} ...`)
     const command = execa('code-server', [
       'serve-local',
       '--accept-server-license-terms',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Component } from '@nuxt/schema'
+import { useComponents } from '~/composables/state'
 
 definePageMeta({
   icon: 'carbon-nominal',
@@ -9,24 +9,7 @@ definePageMeta({
 
 const client = useClient()
 const router = useRouter()
-const serverComponents = await rpc.getComponents()
-
-const globalComponents = $computed(() =>
-  Object
-    .entries(client.value?.nuxt?.vueApp._context.components || {})
-    .map(([key]) => ({
-      pascalName: key,
-      global: true,
-    } as unknown as Component))
-    // dedupe server components
-    .filter(i => !serverComponents.find(j => j.pascalName === i.pascalName)),
-)
-
-const components = $computed(() => [
-  ...globalComponents,
-  ...serverComponents,
-].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
-
+const components = useComponents()
 const search = $ref('')
 
 const {

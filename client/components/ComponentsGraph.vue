@@ -10,9 +10,9 @@ const props = defineProps<{
 const container = ref<HTMLElement>()
 const colorMode = useColorMode()
 
-const { data: relationships } = useAsyncData('getComponentsRelationships', () => rpc.getComponentsRelationships())
-const { data: pages } = useAsyncData('getServerPages', () => rpc.getServerPages())
-const { data: layouts } = useAsyncData('getLayouts', () => rpc.getLayouts())
+const pages = useServerPages()
+const layouts = useLayouts()
+const relationships = useComponentsRelationships()
 
 const {
   componentsGraphShowNodeModules: showNodeModules,

@@ -1,4 +1,6 @@
 import { relative } from 'pathe'
+import type { Ref } from 'vue'
+import type { AsyncDataOptions } from '#app'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -56,4 +58,15 @@ export function getShortPath(path: string, root: string, subpath = false) {
 
 export function parseExpressRoute(route: string) {
   return route.split(/(:\w+[\?\*]?)/).filter(Boolean)
+}
+
+export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: AsyncDataOptions<T>) {
+  const nuxt = useNuxtApp()
+  if (!nuxt.payload.unique)
+    nuxt.payload.unique = {}
+
+  if (!nuxt.payload.unique[key])
+    nuxt.payload.unique[key] = useAsyncData(key, fn, options)
+
+  return nuxt.payload.unique[key].data as Ref<T | null>
 }

@@ -24,8 +24,6 @@ useHead({
 })
 
 setupClientRPC()
-
-await updateTabs()
 </script>
 
 <template>

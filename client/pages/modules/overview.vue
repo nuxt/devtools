@@ -6,13 +6,12 @@ definePageMeta({
 })
 
 const router = useRouter()
-const config = $(useServerConfig())
-const { data: versions } = useAsyncData('getVersions', () => rpc.getVersions())
+const config = useServerConfig()
+const versions = usePackageVersions()
+const components = useComponents()
+const autoImports = useAutoImports()
 
 const nuxtVersion = computed(() => versions.value?.find(v => v.name === 'nuxt'))
-
-const components = await rpc.getComponents()
-const { imports: autoImports } = await rpc.getAutoImports()
 
 function goIntro() {
   isFirstVisit.value = true
@@ -61,9 +60,9 @@ function goIntro() {
             <div carbon-nominal text-3xl />
             <div>{{ components.length }} components</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/imports">
+          <NuxtLink v-if="config && autoImports" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/imports">
             <div carbon-function text-3xl />
-            <div>{{ autoImports.length }} imports</div>
+            <div>{{ autoImports.imports.length }} imports</div>
           </NuxtLink>
           <NuxtLink v-if="config" p4 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />

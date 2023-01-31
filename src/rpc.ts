@@ -18,7 +18,7 @@ import type { ModuleOptions } from './module'
 import type { WizardActions } from './wizard'
 import { wizard } from './wizard'
 import { LOG_PREFIX } from './logger'
-import { checkForUpdates, getVersions } from './npm'
+import { checkForUpdates, usePackageVersions } from './npm'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const components: Component[] = []
@@ -32,14 +32,18 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   let app: NuxtApp | undefined
 
   let checkForUpdatePromise: Promise<any> | undefined
-  let versions: UpdateInfo[] = getVersions()
+  let versions: UpdateInfo[] = usePackageVersions()
 
   const serverFunctions = {} as ServerFunctions
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
 
+  function refresh(event: keyof ServerFunctions) {
+    birpc.boardcast.refresh.asEvent(event)
+  }
+
   Object.assign(serverFunctions, {
-    getConfig() {
+    getServerConfig() {
       return nuxt.options
     },
     getComponents() {
@@ -66,16 +70,16 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         ...customTabs,
       ]
     },
-    getLayouts() {
+    getServerLayouts() {
       return Object.values(app?.layouts || [])
     },
     getServerHooks() {
       return Object.values(serverHooks)
     },
-    getVersions() {
+    usePackageVersions() {
       checkForUpdatePromise = checkForUpdatePromise || checkForUpdates().then((v) => {
         versions = v
-        birpc.boardcast.refresh.asEvent('versions')
+        refresh('usePackageVersions')
       })
       return versions
     },
@@ -139,21 +143,23 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     components.length = 0
     components.push(...v)
     components.sort((a, b) => a.pascalName.localeCompare(b.pascalName))
-    birpc.boardcast.refresh.asEvent('components')
+    refresh('getComponents')
   })
   nuxt.hook('imports:extend', (v) => {
     imports.length = 0
     imports.push(...v)
-    birpc.boardcast.refresh.asEvent('imports')
+    refresh('getAutoImports')
   })
   nuxt.hook('pages:extend', (v) => {
     serverPages.length = 0
     serverPages.push(...v)
+    refresh('getServerPages')
   })
   nuxt.hook('imports:sources', async (v) => {
     const result = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
     importPresets.length = 0
     importPresets.push(...result)
+    refresh('getAutoImports')
   })
   nuxt.hook('imports:context', (_unimport: Unimport) => {
     unimport = _unimport
@@ -206,7 +212,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     customTabs.length = 0
     if (options.enableCustomTabs) {
       await nuxt.callHook('devtools:customTabs', customTabs)
-      birpc.boardcast.refresh.asEvent('customTabs')
+      refresh('getCustomTabs')
     }
   }
 

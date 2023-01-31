@@ -4,10 +4,12 @@ definePageMeta({
   title: 'Layouts',
   wip: true,
 })
+
+const layouts = useLayouts()
 </script>
 
 <template>
   <div>
-    WIP
+    <pre>{{ layouts }}</pre>
   </div>
 </template>

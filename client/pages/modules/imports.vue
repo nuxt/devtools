@@ -12,31 +12,34 @@ const config = $(useServerConfig())
 const onlyUsed = $ref(false)
 
 const search = $ref('')
-const { imports, metadata } = (await rpc.getAutoImports())
+const autoImports = useAutoImports()
+const importsMetadata = computed(() => autoImports.value?.metadata)
 
-const functions = imports
+const functions = computed(() => autoImports.value?.imports
   .filter(i => i.as || i.name)
   .sort((a, b) => (a.as || a.name).localeCompare(b.as || b.name))
+  || [],
+)
 
-const fuse = new Fuse(functions, {
+const fuse = computed(() => new Fuse(functions.value, {
   keys: [
     'from',
     'as',
     'name',
   ],
-})
+}))
 
-const filtered = $computed(() => {
+const filtered = computed(() => {
   const user = new Map<string, Import[]>()
   const lib = new Map<string, Import[]>()
   const builtin = new Map<string, Import[]>()
   let result = search
-    ? fuse.search(search).map(i => i.item)
-    : functions
+    ? fuse.value.search(search).map(i => i.item)
+    : functions.value
 
-  if (onlyUsed && metadata) {
+  if (onlyUsed && importsMetadata.value) {
     result = result
-      .filter(i => (i.as || i.name) in metadata.injectionUsage)
+      .filter(i => (i.as || i.name) in importsMetadata.value!.injectionUsage)
   }
 
   const count = {
@@ -77,7 +80,7 @@ const filtered = $computed(() => {
         p="x5 y2"
         n="primary"
       />
-      <div v-if="metadata">
+      <div v-if="importsMetadata">
         <NSwitch v-model="onlyUsed" n="primary sm">
           Show used only
         </NSwitch>
@@ -89,7 +92,7 @@ const filtered = $computed(() => {
       text="User composables"
       :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
     >
-      <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="metadata" />
+      <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="importsMetadata" />
     </SectionBlock>
     <SectionBlock
       v-if="filtered.builtin.size"
@@ -97,7 +100,7 @@ const filtered = $computed(() => {
       text="Built-in composables"
       :description="`${filtered.count.builtin} composables`"
     >
-      <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="metadata" />
+      <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="importsMetadata" />
     </SectionBlock>
     <SectionBlock
       v-if="filtered.lib.size"
@@ -105,7 +108,7 @@ const filtered = $computed(() => {
       text="Composables from libraries"
       :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
     >
-      <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="metadata" />
+      <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="importsMetadata" />
     </SectionBlock>
   </div>
 </template>

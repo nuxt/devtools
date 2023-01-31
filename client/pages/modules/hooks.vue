@@ -4,8 +4,7 @@ definePageMeta({
   title: 'Hooks',
 })
 
-const serverHooks = await rpc.getServerHooks()
-
+const serverHooks = useServerHooks()
 const client = useClient()
 const clientHooks = computed(() => client.value?.getHooksMetrics())
 </script>

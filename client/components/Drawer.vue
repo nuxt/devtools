@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const client = useClient()
+const tabs = useTabs()
 </script>
 
 <template>
@@ -24,16 +25,16 @@ const client = useClient()
     </div>
 
     <DrawerItem
-      v-for="tab of tabsInfoBuiltin"
+      v-for="tab of tabs.builtin.value"
       :key="tab.name"
       :tab="tab"
     />
-    <template v-if="tabsInfoCustom.length && devToolsSettings.customTabs">
+    <template v-if="tabs.custom.value.length && devToolsSettings.customTabs">
       <div p1 lg:p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>
       <DrawerItem
-        v-for="tab of tabsInfoCustom"
+        v-for="tab of tabs.custom.value"
         :key="tab.name"
         :tab="tab"
       />

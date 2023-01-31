@@ -14,15 +14,15 @@ const router = useClientRouter()
 const route = useClientRoute()
 const config = useServerConfig()
 
-const serverPages = await rpc.getServerPages()
-const layouts = await rpc.getLayouts()
+const serverPages = useServerPages()
+const layouts = useLayouts()
 
 const routes = $computed((): RouteInfo[] => {
   return (router.value?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
       return {
-        ...serverPages.find(j => j.name && j.name === i.name),
+        ...serverPages.value?.find(j => j.name && j.name === i.name),
         ...i,
       }
     })
@@ -96,7 +96,7 @@ function navigateToRoute(path: string) {
     >
       <RoutesTable
         :pages="routes"
-        :layouts="layouts"
+        :layouts="layouts || []"
         :matched="route.matched"
         :matched-pending="routeInputMatched"
         @navigate="navigateToRoute"

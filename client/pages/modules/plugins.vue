@@ -5,7 +5,7 @@ definePageMeta({
   order: 5,
 })
 
-const config = $(useServerConfig())
+const config = useServerConfig()
 </script>
 
 <template>

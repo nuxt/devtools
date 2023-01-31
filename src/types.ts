@@ -9,15 +9,15 @@ import type { VNode } from 'vue'
 import type { WizardActions, WizardArgs } from './wizard'
 
 export interface ServerFunctions {
-  getConfig(): NuxtOptions
+  getServerConfig(): NuxtOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>
   getAutoImports(): AutoImportsWithMetadata
   getServerPages(): NuxtPage[]
   getCustomTabs(): ModuleCustomTab[]
   getServerHooks(): HookInfo[]
-  getLayouts(): NuxtLayout[]
-  getVersions(): UpdateInfo[]
+  getServerLayouts(): NuxtLayout[]
+  usePackageVersions(): UpdateInfo[]
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: WizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
@@ -35,7 +35,7 @@ export interface AutoImportsWithMetadata {
   metadata?: UnimportMeta
 }
 
-export type ClientUpdateEvent = 'customTabs' | 'components' | 'imports' | 'versions'
+export type ClientUpdateEvent = keyof ServerFunctions
 
 export interface ClientFunctions {
   refresh(event: ClientUpdateEvent): void
