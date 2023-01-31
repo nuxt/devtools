@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/nuxt/ui/compare/@nuxt/ui@0.4.0...@nuxt/ui@0.4.1) (2023-01-31)
+
+
+### Bug Fixes
+
+* **button:** remove zoom from buttons to allow double tap on phone ([#195](https://github.com/nuxt/ui/issues/195)) ([200705c](https://github.com/nuxt/ui/commit/200705c6f6801619069d1e81e4c9403c0731effa))
+* **ui:** `NTextInput` fill width ([700b8d4](https://github.com/nuxt/ui/commit/700b8d486de1e6d020400fce94583bee25b2ed2b))
+* **ui:** use `NuxtLink` ([f0ab96b](https://github.com/nuxt/ui/commit/f0ab96bdef5c7e97dc8de7c60de57e9e1be220f7))
+
+
+
+
+
 # [0.4.0](https://github.com/nuxt/ui/compare/@nuxt/ui@0.3.3...@nuxt/ui@0.4.0) (2023-01-06)
 
 
