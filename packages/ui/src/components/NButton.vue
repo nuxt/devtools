@@ -1,7 +1,17 @@
+<script setup lang="ts">
+import { NuxtLink } from '#components'
+
+defineProps<{
+  to?: string
+  icon?: string
+}>()
+</script>
+
 <template>
   <Component
-    :is="to ? 'a' : 'button'"
-    :href="to"
+    :is="to ? NuxtLink : 'button'"
+    :to="to"
+    v-bind="$attrs"
     class="n-button n-transition n-button-base hover:n-button-hover active:n-button-active focus-visible:n-focus-base n-disabled:n-disabled"
   >
     <slot name="icon">
@@ -10,10 +20,3 @@
     <slot />
   </Component>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  to?: string
-  icon?: string
-}>()
-</script>
