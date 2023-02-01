@@ -1,10 +1,27 @@
 <img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/11247099/215777354-7f04135e-a3c7-4ef2-880e-52d100b3fd33.png">
 
-# Nuxt DevTools <sup>Alpha Preview</sup>
+<br>
+<br>
 
-Unleash Nuxt Developer Experience. Nuxt DevTools is a set of visual tools that help you to know your app/site better.
+<h1 align="center">
+Nuxt DevTools <sup>Preview</sup>
+</h1>
 
-> **Note**: Experimental and under heavy development. APIs are subject to change.
+<p align="center">
+Unleash Nuxt Developer Experience.
+<br>Nuxt DevTools is a set of visual tools that help you to know your app/site better.
+</p>
+
+<p align="center">
+  <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
+  <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a>
+</p>
+
+<br>
+
+> **Warning**: Experimental and under heavy development. APIs are subject to change.
+
+<br>
 
 ## Installation
 
@@ -31,7 +48,7 @@ Then open your app in browser. Click the Nuxt icon on the bottom to open the Dev
 
 Nuxt DevTools is designed to be extensible. You can add your own modules's integration to the DevTools.
 
-> **Warning**: API and subject to change.
+> **Warning**: APIs are subject to change.
 
 ### Contributing to View
 
