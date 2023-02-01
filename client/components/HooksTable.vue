@@ -84,7 +84,7 @@ function toggleSortedBy(by: SortBy) {
   <table w-full>
     <thead border="b base">
       <tr>
-        <th p1 text-right font-bold ws-nowrap>
+        <th p1 text-right font-bold ws-nowrap select-none>
           <button @click="toggleSortedBy('start')">
             Order
             <div text-xs ml--1 :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />

@@ -91,8 +91,8 @@ const filteredFiles = $computed(() => {
         {{ toShortPath(f.id) }}
       </NuxtLink>
     </div>
-    <div v-if="current?.content">
-      <div border="b base" px4 py2 text-sm op75>
+    <div v-if="current?.content" h-full of-hidden flex="~ col">
+      <div border="b base" px4 py2 text-sm op75 flex-none>
         <code>{{ current.id }}</code>
       </div>
       <pre of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
