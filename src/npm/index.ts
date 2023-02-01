@@ -10,8 +10,8 @@ export async function getMainPackageJSON(nuxt: Nuxt) {
 }
 
 export async function checkForUpdateOf(info: UpdateInfo): Promise<Required<UpdateInfo>> {
-  const pacote = await import('pacote')
-  const manifest = await pacote.packument(info.name)
+  const packument = await import('pacote').then(r => r.default?.packument || r.packument)
+  const manifest = await packument(info.name)
 
   const latest = manifest['dist-tags'].latest
   const needsUpdate = latest !== info.current && semver.lt(info.current, latest)
