@@ -82,11 +82,14 @@ const data = computed<Data>(() => {
 
     return {
       id: rel.id,
-      label: path.split('/').splice(-1)[0],
+      label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
       group,
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
-      font: { color: colorMode.value === 'dark' ? 'white' : 'black' },
+      font: {
+        color: colorMode.value === 'dark' ? 'white' : 'black',
+      },
+      color: selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,
