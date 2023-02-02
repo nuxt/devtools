@@ -1,5 +1,5 @@
 import type { Component } from '@nuxt/schema'
-import { $fetch } from 'ohmyfetch'
+import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { ModuleBuiltinTab, ModuleMetric } from '../../src/types'
 import type { HookInfo } from '~~/../dist/types'
