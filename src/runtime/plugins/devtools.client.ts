@@ -5,7 +5,7 @@ import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'
 import Container from './view/Container.vue'
 
-import { closePanel } from './view/state'
+import { closePanel, togglePanel } from './view/state'
 // @ts-expect-error runtime
 import { defineNuxtPlugin } from '#app'
 // @ts-expect-error runtime
@@ -39,6 +39,11 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   holder.id = 'nuxt-devtools-container'
   holder.setAttribute('data-v-inspector-ignore', 'true')
   document.body.appendChild(holder)
+
+  addEventListener('keypress', (e) => {
+    if (e.code === 'KeyD' && e.altKey)
+      togglePanel()
+  })
 
   const app = createApp(Container, { client })
   app.mount(holder)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
@@ -183,6 +183,13 @@ watch(viewMode, (mode) => {
   else
     disableComponentInspector()
 }, { immediate: true })
+
+watchEffect(() => {
+  if (!state.value.open)
+    iframe.value?.blur()
+  else
+    iframe.value?.focus()
+})
 </script>
 
 <script lang="ts">

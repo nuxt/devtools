@@ -42,7 +42,7 @@ export default defineNuxtConfig({
 })
 ```
 
-Then open your app in browser. Click the Nuxt icon on the bottom to open the DevTools.
+Then open your app in browser. Click the Nuxt icon on the bottom (or press `Alt+D`) to open the DevTools.
 
 ## Module Authors
 

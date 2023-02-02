@@ -24,6 +24,12 @@ useHead({
 })
 
 setupClientRPC()
+
+const client = useClient()
+addEventListener('keypress', (e) => {
+  if (e.code === 'KeyD' && e.altKey)
+    client.value?.closeDevTools()
+})
 </script>
 
 <template>
