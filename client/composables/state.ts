@@ -1,8 +1,8 @@
 import type { Component } from '@nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
-import type { ModuleBuiltinTab, ModuleMetric } from '../../src/types'
-import type { HookInfo } from '~~/../dist/types'
+import { objectPick } from '@antfu/utils'
+import type { HookInfo, ModuleBuiltinTab, ModuleMetric, RouteInfo } from '../../src/types'
 
 let modules: ModuleMetric[] | undefined
 
@@ -112,4 +112,19 @@ export function useEnabledTabs() {
       return false
     return true
   }))
+}
+
+export function useAllRoutes() {
+  const router = useClientRouter()
+  const serverPages = useServerPages()
+  return computed((): RouteInfo[] => {
+    return (router.value?.getRoutes() || [])
+      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map((i) => {
+        return {
+          ...serverPages.value?.find(j => j.name && j.name === i.name),
+          ...i,
+        }
+      })
+  })
 }

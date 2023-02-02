@@ -5,6 +5,7 @@ import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'
 import Container from './view/Container.vue'
 
+import { closePanel } from './view/state'
 // @ts-expect-error runtime
 import { defineNuxtPlugin } from '#app'
 // @ts-expect-error runtime
@@ -31,6 +32,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     appConfig: useAppConfig() as any,
     getHooksMetrics: () => Object.values(clientHooks),
     hooks: createHooks(),
+    closeDevTools: closePanel,
   })
 
   const holder = document.createElement('div')

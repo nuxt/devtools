@@ -7,14 +7,16 @@ definePageMeta({
   order: -100,
 })
 
-const router = useRouter()
+const client = useClient()
 const config = useServerConfig()
 const versions = usePackageVersions()
 const components = useComponents()
 const autoImports = useAutoImports()
+const routes = useAllRoutes()
 
 const nuxtVersion = computed(() => versions.value?.find(v => v.name === 'nuxt'))
 
+const router = useRouter()
 function goIntro() {
   isFirstVisit.value = true
   router.push('/')
@@ -23,7 +25,10 @@ function goIntro() {
 
 <template>
   <div h-full w-full flex>
-    <div flex="~ col gap2" w-full ma max-w-300 p10>
+    <div v-if="!config">
+      Loading...
+    </div>
+    <div v-else flex="~ col gap2" w-full ma max-w-300 p10>
       <!-- Banner -->
       <div flex="~ col" items-center>
         <div flex="~" justify-center items-center mt--10>
@@ -62,6 +67,10 @@ function goIntro() {
           </template>
         </div>
         <template v-if="config">
+          <NuxtLink v-if="config && config.pages && client" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/pages">
+            <div text-3xl carbon-tree-view-alt />
+            <div>{{ routes.length }} pages</div>
+          </NuxtLink>
           <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
             <div text-3xl carbon-nominal />
             <div>{{ components.length }} components</div>
@@ -83,11 +92,6 @@ function goIntro() {
       <!-- <div bg-red:10 flex-full /> -->
       <div flex="~ col gap2">
         <div
-          px4 justify-center theme-banner-green
-        >
-          <span flex-none carbon-chemistry />Working in Progress. For early preview only.
-        </div>
-        <div
           v-if="showConnectionWarning"
           px4 theme-banner-yellow justify-center
         >
@@ -96,15 +100,29 @@ function goIntro() {
       </div>
 
       <div flex="~ col" items-center mt-5>
-        <VDropdown>
-          <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
-            <div i-carbon-settings />
-            Settings
-          </button>
-          <template #popper>
-            <Settings />
-          </template>
-        </VDropdown>
+        <div flex="~ gap-6" p4>
+          <a href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-yellow" transition>
+            <div i-carbon-data-enrichment />
+            Ideas & Suggestions
+          </a>
+          <a href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-lime" transition>
+            <div i-carbon-plan />
+            Project Roadmap
+          </a>
+          <a href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-rose" transition>
+            <div i-carbon-debug />
+            Bug Reports
+          </a>
+          <VDropdown>
+            <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
+              <div i-carbon-settings />
+              Settings
+            </button>
+            <template #popper>
+              <Settings />
+            </template>
+          </VDropdown>
+        </div>
       </div>
     </div>
   </div>

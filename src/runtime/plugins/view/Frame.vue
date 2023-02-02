@@ -205,7 +205,6 @@ declare global {
       }"
       @load="onLoad"
     />
-    <button class="close-button" @click="closePanel()" />
     <template v-if="viewMode === 'default'">
       <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
       <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
@@ -231,18 +230,6 @@ declare global {
   outline: none;
   border: 1px solid rgba(125,125,125,0.2);
   border-radius: 0.5rem;
-}
-
-.frame .close-button {
-  position: absolute;
-  top: 5px;
-  right: 0;
-  z-index: 1;
-  height: 2rem;
-  width: 2rem;
-  padding: 5px;
-  background: transparent;
-  border: none;
 }
 
 .nuxt-devtools-resize-handle-horizontal {

@@ -4,7 +4,7 @@ const tabs = useTabs()
 </script>
 
 <template>
-  <div border="l base" flex="~ col" h-full>
+  <div border="r base" flex="~ col" h-full>
     <div flex="~ gap1" pl3 pr2 items-center py2 border="b base">
       <VDropdown placement="left-start" :distance="20">
         <NuxtLogo
@@ -21,7 +21,7 @@ const tabs = useTabs()
       <NDarkToggle v-slot="{ toggle }">
         <button text-sm op50 hover:op100 carbon-sun dark:carbon-moon class="hidden! lg:block!" @click="toggle()" />
       </NDarkToggle>
-      <button op50 hover:op100 carbon-close text-xl ma />
+      <button v-if="client" op50 hover:op100 carbon-close text-xl ma @click="client.closeDevTools()" />
     </div>
 
     <DrawerItem
