@@ -28,11 +28,13 @@ function goIntro() {
     <div v-if="!config">
       Loading...
     </div>
-    <div v-else flex="~ col gap2" w-full ma max-w-300 p10>
+    <div v-else flex="~ col gap2" w-full h-full ma max-w-300 p10 px20>
+      <div flex-auto />
+
       <!-- Banner -->
-      <div flex="~ col" items-center>
+      <div flex="~ col" items-center mt-20>
         <div flex="~" justify-center items-center mt--10>
-          <NuxtLogo h-16 />
+          <NuxtLogo h-18 />
           <button mr--16 mt--6 @click="goIntro">
             <Badge
               bg-green-400:10 text-green-400
@@ -89,41 +91,38 @@ function goIntro() {
           </NuxtLink>
         </template>
       </div>
-      <!-- <div bg-red:10 flex-full /> -->
       <div flex="~ col gap2">
         <div
           v-if="showConnectionWarning"
           px4 theme-banner-yellow justify-center
         >
-          <span flex-none i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+          <span flex-none i-carbon-unlink />Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
         </div>
       </div>
-
-      <div flex="~ col" items-center mt-5>
-        <div flex="~ gap-6" p4>
-          <a href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-yellow" transition>
-            <div i-carbon-data-enrichment />
-            Ideas & Suggestions
-          </a>
-          <a href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-lime" transition>
-            <div i-carbon-plan />
-            Project Roadmap
-          </a>
-          <a href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-rose" transition>
-            <div i-carbon-debug />
-            Bug Reports
-          </a>
-          <VDropdown>
-            <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
-              <div i-carbon-settings />
-              Settings
-            </button>
-            <template #popper>
-              <Settings />
-            </template>
-          </VDropdown>
-        </div>
+      <div flex="~ gap-6 wrap" items-center justify-center mt-5>
+        <a href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-yellow" transition>
+          <div i-carbon-data-enrichment />
+          Ideas & Suggestions
+        </a>
+        <a href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-lime" transition>
+          <div i-carbon-plan />
+          Project Roadmap
+        </a>
+        <a href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-rose" transition>
+          <div i-carbon-debug />
+          Bug Reports
+        </a>
+        <VDropdown>
+          <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
+            <div i-carbon-settings />
+            Settings
+          </button>
+          <template #popper>
+            <Settings />
+          </template>
+        </VDropdown>
       </div>
+      <div flex-auto />
     </div>
   </div>
 </template>
