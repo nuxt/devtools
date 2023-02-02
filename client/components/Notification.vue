@@ -15,27 +15,15 @@ provideNotification((_text, _icon, duration = 1500) => {
 
 <template>
   <div
-    fixed
-    top-0
-    left-0
-    right-0
-    z-50
-    text-center
+
+    text-center fixed top-0 left-0 right-0 z-50
     :class="show ? '' : 'pointer-events-none overflow-hidden'"
   >
     <div
-      px-4
-      py-1
-      rounded
-      bg-base
-      inline-block
-      m-3
-      transition-all
-      duration-300
-      text-primary
+
       border="~ base"
       flex="~ inline gap2"
-      items-center
+      rounded bg-base text-primary items-center px-4 py-1 inline-block m-3 transition-all duration-300
       :style="show ? {} : { transform: 'translateY(-300%)' }"
       :class="show ? 'shadow' : 'shadow-none'"
     >

@@ -23,10 +23,10 @@ function goIntro() {
 
 <template>
   <div h-full w-full flex>
-    <div w-full max-w-300 ma flex="~ col gap2" p10>
+    <div flex="~ col gap2" w-full ma max-w-300 p10>
       <!-- Banner -->
       <div flex="~ col" items-center>
-        <div mt--10 flex="~" justify-center items-center>
+        <div flex="~" justify-center items-center mt--10>
           <NuxtLogo h-16 />
           <button mr--16 mt--6 @click="goIntro">
             <Badge
@@ -36,7 +36,7 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-center text-sm op30 mb6 mt--1>
+        <div text-center text-sm mt--1 op30 mb6>
           Nuxt DevTools
           <code>v{{ version }}</code>
         </div>
@@ -63,19 +63,19 @@ function goIntro() {
         </div>
         <template v-if="config">
           <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
-            <div carbon-nominal text-3xl />
+            <div text-3xl carbon-nominal />
             <div>{{ components.length }} components</div>
           </NuxtLink>
-          <NuxtLink v-if="config && autoImports" p4 theme-card-yellow min-w-40 flex="~ col auto" to="/modules/imports">
-            <div carbon-function text-3xl />
+          <NuxtLink v-if="config && autoImports" p4 min-w-40 theme-card-yellow flex="~ col auto" to="/modules/imports">
+            <div text-3xl carbon-function />
             <div>{{ autoImports.imports.length }} imports</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 theme-card-purple min-w-40 flex="~ col auto" to="/modules/modules">
-            <div carbon-3d-mpr-toggle text-3xl />
+          <NuxtLink v-if="config" p4 min-w-40 theme-card-purple flex="~ col auto" to="/modules/modules">
+            <div text-3xl carbon-3d-mpr-toggle />
             <div>{{ config._installedModules.length }} modules</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 theme-card-teal min-w-40 flex="~ col auto" to="/modules/plugins">
-            <div carbon-plug text-3xl />
+          <NuxtLink v-if="config" p4 min-w-40 theme-card-teal flex="~ col auto" to="/modules/plugins">
+            <div text-3xl carbon-plug />
             <div>{{ config.plugins.length }} plugins</div>
           </NuxtLink>
         </template>
@@ -83,15 +83,15 @@ function goIntro() {
       <!-- <div bg-red:10 flex-full /> -->
       <div flex="~ col gap2">
         <div
-          px4 theme-banner-green justify-center
+          px4 justify-center theme-banner-green
         >
-          <span carbon-chemistry flex-none />Working in Progress. For early preview only.
+          <span flex-none carbon-chemistry />Working in Progress. For early preview only.
         </div>
         <div
           v-if="showConnectionWarning"
           px4 theme-banner-yellow justify-center
         >
-          <span i-carbon-unlink flex-none />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
+          <span flex-none i-carbon-unlink />Not connected to the client, showing server-side data only. Use the embedded mode for full features.
         </div>
       </div>
 

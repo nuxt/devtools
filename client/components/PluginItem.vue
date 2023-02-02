@@ -19,7 +19,7 @@ const shortPath = $computed(() => config ? getShortPath(normalized.src, config.r
 
 <template>
   <div flex="~ gap2" items-center>
-    <div op25 w8 text-right text-sm>
+    <div op25 text-right text-sm w8>
       {{ index }}
     </div>
     <button hover:underline :class="shortPath.startsWith('.') ? '' : 'op50'" @click="openInEditor(normalized.src)">

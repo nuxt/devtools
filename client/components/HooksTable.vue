@@ -84,13 +84,13 @@ function toggleSortedBy(by: SortBy) {
   <table w-full>
     <thead border="b base">
       <tr>
-        <th p1 text-right font-bold ws-nowrap select-none>
+        <th p1 ws-nowrap text-right font-bold select-none>
           <button @click="toggleSortedBy('start')">
             Order
             <div text-xs ml--1 :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th colspan="2" text-left font-bold p1 pl5>
+        <th colspan="2" font-bold p1 text-left pl5>
           <button @click="toggleSortedBy('name')">
             Hook name
             <div text-xs ml--1 :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
@@ -118,7 +118,7 @@ function toggleSortedBy(by: SortBy) {
     </thead>
     <tbody>
       <tr v-for="item of sorted" :key="item.name" border="b dashed transparent hover:base">
-        <td text-center w-0 ws-nowrap text-sm op25>
+        <td text-center ws-nowrap text-sm op25 w-0>
           {{ startTimes.indexOf(item.start) }}
         </td>
         <td text-right w-0 ws-nowrap :style="{ color: getHashColorFromString(getNamePrefix(item.name)) }">
@@ -134,7 +134,7 @@ function toggleSortedBy(by: SortBy) {
           {{ item.executions.length + 1 }}
         </td>
         <td text-right text-sm w-0 :class="getLatencyColor(item.duration)">
-          {{ formatDuration(item.duration) }}<span op50 ml-1 text-xs>ms</span>
+          {{ formatDuration(item.duration) }}<span op50 text-xs ml-1>ms</span>
         </td>
       </tr>
     </tbody>

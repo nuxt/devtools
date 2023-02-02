@@ -74,7 +74,7 @@ const filteredFiles = $computed(() => {
 <template>
   <div grid="~ cols-[300px_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" of-auto>
-      <div p3 pb2>
+      <div pb2 p3>
         <NTextInput
           v-model="searchString"
           icon="carbon-search"

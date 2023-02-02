@@ -29,7 +29,7 @@ function navigate() {
     <code>{{ route.path }}</code>
   </button>
   <VDropdown v-else>
-    <code cursor-pointer block>
+    <code block cursor-pointer>
       <span
         v-for="part, idx of parts" :key="idx"
         :class="part[0] === ':' ? 'text-gray border border-dashed rounded border-gray:50 px1' : ''"
@@ -49,7 +49,7 @@ function navigate() {
                 <NTextInput
                   v-if="part[0] === ':'"
                   v-model="partsInput[idx]"
-                  n-sm w-20
+                  w-20 n-sm
                   :placeholder="part.slice(1)"
                 />
                 <span v-else>{{ part }}</span>

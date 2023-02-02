@@ -21,7 +21,7 @@ defineEmits<{
     </h1>
     <div
       v-if="description"
-      text-base op50 mt--1 mb2 text-center
+      op50 text-center text-base mt--1 mb2
       class="markdown-body"
       v-html="renderMarkdown(description)"
     />

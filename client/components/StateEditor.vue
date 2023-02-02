@@ -46,7 +46,7 @@ function deepSync(from: any, to: any) {
     :indentation="2"
     :tab-size="2"
   />
-  <div v-else italic op35 mt2>
+  <div v-else mt2 italic op35>
     No data
   </div>
 </template>

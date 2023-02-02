@@ -34,10 +34,10 @@ const npmBase = 'https://www.npmjs.com/package/'
 
 <template>
   <div border="~ base" p4 flex="~ gap2">
-    <div flex-auto flex="~ col gap2" px1 of-hidden>
+    <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-        text-lg text-ellipsis
-        of-hidden ws-nowrap
+
+        text-lg of-hidden ws-nowrap text-ellipsis
       >
         <NuxtLink
           v-if="isPackageModule"
@@ -66,7 +66,7 @@ const npmBase = 'https://www.npmjs.com/package/'
       <div flex-auto />
 
       <div v-if="data.website" flex="~ gap-2" title="Documentation">
-        <span i-carbon-link text-lg op50 />
+        <span text-lg op50 i-carbon-link />
         <NuxtLink
           :to="data.website"
           target="_blank"
@@ -77,7 +77,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
       <div v-if="data.github" flex="~ gap-2">
-        <span i-carbon-logo-github text-lg op50 />
+        <span text-lg op50 i-carbon-logo-github />
         <NuxtLink
           :to="data.github"
           target="_blank"
@@ -88,21 +88,20 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
       <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
-        <span i-carbon-folder-move-to text-lg op50 />
+        <span text-lg op50 i-carbon-folder-move-to />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
     </div>
     <div flex="~ col">
       <div
         v-if="data.icon || isPackageModule"
-        h-20 w-20
-        p4 rounded bg-gray:3 flex-none
-        flex
+
+        p4 rounded flex-none h-20 w-20 bg-gray:3 flex
       >
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
-        <div i-carbon-circle-dash text-4xl op50 ma />
+        <div op50 ma i-carbon-circle-dash text-4xl />
       </div>
-      <div v-if="data.maintainers?.length" mt2 flex="~" justify-end items-end flex-auto>
+      <div v-if="data.maintainers?.length" flex="~" items-end flex-auto mt2 justify-end>
         <NuxtLink
           v-for="m of data.maintainers"
           :key="m.name"
@@ -110,7 +109,7 @@ const npmBase = 'https://www.npmjs.com/package/'
           :to="githubBase + m.github"
           :title="m.name"
         >
-          <img :src="avatarBase + m.github" w-6 h-6 rounded-full>
+          <img :src="avatarBase + m.github" rounded-full w-6 h-6>
         </NuxtLink>
       </div>
     </div>

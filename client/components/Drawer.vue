@@ -5,7 +5,7 @@ const tabs = useTabs()
 
 <template>
   <div border="l base" flex="~ col" h-full>
-    <div pl3 pr2 py2 flex="~ gap1" items-center border="b base">
+    <div flex="~ gap1" pl3 pr2 items-center py2 border="b base">
       <VDropdown placement="left-start" :distance="20">
         <NuxtLogo
           h-8 hidden lg:block
@@ -17,11 +17,11 @@ const tabs = useTabs()
         </template>
       </VDropdown>
 
-      <div flex-auto hidden lg:block />
+      <div hidden lg:block flex-auto />
       <NDarkToggle v-slot="{ toggle }">
-        <button carbon-sun text-sm op50 hover:op100 dark:carbon-moon class="hidden! lg:block!" @click="toggle()" />
+        <button text-sm op50 hover:op100 carbon-sun dark:carbon-moon class="hidden! lg:block!" @click="toggle()" />
       </NDarkToggle>
-      <button carbon-close text-xl op50 hover:op100 ma />
+      <button op50 hover:op100 carbon-close text-xl ma />
     </div>
 
     <DrawerItem
@@ -30,7 +30,7 @@ const tabs = useTabs()
       :tab="tab"
     />
     <template v-if="tabs.custom.value.length && devToolsSettings.customTabs">
-      <div p1 lg:p2 text-hex-888 text-xs text-center uppercase tracking-widest border="b base">
+      <div text-xs p1 lg:p2 text-hex-888 text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>
       <DrawerItem
@@ -41,7 +41,7 @@ const tabs = useTabs()
       <div flex-auto />
       <div
         v-if="showConnectionWarning"
-        px4 theme-banner-yellow justify-center hidden lg:flex gap3
+        px4 hidden theme-banner-yellow justify-center lg:flex gap3
       >
         Server data only
       </div>

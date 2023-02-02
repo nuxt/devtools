@@ -178,7 +178,7 @@ function setFilter() {
 
 <template>
   <div h-full flex="~ col">
-    <div border="b base" flex="~ gap4" py1 px4 h-10 flex-none items-center>
+    <div border="b base" flex="~ gap4" py1 items-center px4 h-10 flex-none>
       <NCheckbox v-model="showPages" n="primary sm">
         <span op75>Show pages</span>
       </NCheckbox>
@@ -188,7 +188,7 @@ function setFilter() {
       <NCheckbox v-model="showNodeModules" n="primary sm">
         <span op75>Show node_modules</span>
       </NCheckbox>
-      <button v-if="selectedFilter" flex="~ gap-1" items-center bg-gray:20 pl3 pr2 py1 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
+      <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
     </div>
@@ -197,9 +197,8 @@ function setFilter() {
       <div
         v-if="selected"
         border="~ base"
-        absolute right-4 top-4 text-sm
-        rounded bg-base shadow
-        p2 flex="~ col gap-1" items-end
+        flex="~ col gap-1"
+        text-sm rounded absolute right-4 top-4 bg-base shadow p2 items-end
       >
         <FilepathItem :filepath="selected.id" />
         <NButton n="primary solid" @click="setFilter()">

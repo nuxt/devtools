@@ -33,7 +33,7 @@ const isEnabled = computed(() => {
       text-lg lg:text-base
       :icon="tab.icon" :title="tab.title"
     />
-    <div pl2 hidden lg:block flex-auto>
+    <div hidden lg:block flex-auto pl2>
       {{ tab.title }}
     </div>
     <div v-if="'extraTabVNode' in tab && tab.extraTabVNode" hidden lg:block>

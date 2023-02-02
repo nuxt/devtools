@@ -36,7 +36,7 @@ const copy = useCopy()
     <FilepathItem
       v-if="filePath"
       :filepath="filePath"
-      op25 group-hover:op75 text-sm
+      text-sm op25 group-hover:op75
     />
   </div>
 </template>

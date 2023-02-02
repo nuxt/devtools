@@ -40,7 +40,7 @@ function openLayout(name: string) {
       </thead>
       <tbody>
         <tr v-for="item of sorted" :key="item.name" class="group" h-7 border="b dashed transparent hover:base">
-          <td w-16 pr-1 flex="inline" justify-end items-center>
+          <td flex="inline" justify-end items-center w-16 pr-1>
             <Badge
               v-if="matched.find(m => m.name === item.name)"
               bg-green-400:10 text-green-400
@@ -76,7 +76,7 @@ function openLayout(name: string) {
             <button v-else-if="item.meta.layout" @click="openLayout(item.meta.layout as string)">
               {{ item.meta.layout }}
             </button>
-            <button v-else op15 text-sm @click="openLayout('default')">
+            <button v-else text-sm op15 @click="openLayout('default')">
               (default)
             </button>
           </td>

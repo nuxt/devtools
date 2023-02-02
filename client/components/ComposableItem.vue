@@ -18,7 +18,7 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
   <VDropdown :disabled="!metadata">
     <button hover:text-primary>
       <code
-        bg-gray:5 px2 py1 rounded font-mono text-sm
+        px2 py1 rounded font-mono text-sm bg-gray:5
         :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
       >
         {{ name }}
@@ -30,7 +30,7 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
         <div text-sm px4 py3>
           <div
             v-if="item.meta?.description"
-            class="markdown-body" pb3 text-sm
+            class="markdown-body" text-sm pb3
             v-html="renderMarkdown(item.meta.description)"
           />
           <div flex="~ gap2" n="primary xs">
@@ -50,7 +50,7 @@ const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [
             <div text-sm>
               <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
             </div>
-            <div flex="~ col gap-2" items-start pt3 text-sm>
+            <div flex="~ col gap-2" text-sm items-start pt3>
               <FilepathItem
                 v-for="id of modules" :key="id"
                 :filepath="id"

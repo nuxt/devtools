@@ -14,10 +14,8 @@ const route = useRoute()
 <template>
   <details open>
     <summary
-      cursor-default
-      select-none
-      text-sm
-      truncate
+
+      select-none text-sm cursor-default truncate
       p="y1"
       flex="~ gap2"
     >
@@ -30,14 +28,13 @@ const route = useRoute()
     <div
       v-for="i of node.items"
       :key="i.file"
-      ml4
-      ws-nowrap
+
+      ws-nowrap ml4
     >
       <div
-        block
-        text-sm
+
         p="x2 y1"
-        rounded
+        text-sm rounded block
         :class="{ 'bg-gray/10': i.file === route.params.id }"
       >
         <FileIcon :id="i.file" />
