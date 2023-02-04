@@ -19,7 +19,8 @@ export default defineNuxtPlugin(() => {
           client.value = { ...client.value }
       })
       _client.hooks.hook('host:inspector:close', () => {
-        router.go(-1)
+        if (router.currentRoute.value.path === '/__inspecting')
+          router.go(-1)
       })
       _client.hooks.hook('host:inspector:update', (data) => {
         inspectorData.value = data
@@ -30,7 +31,7 @@ export default defineNuxtPlugin(() => {
       })
 
       // eslint-disable-next-line no-console
-      console.log('Nuxt DevTools Connected', _client)
+      console.log('[nuxt-devtools] Client connected', _client)
     },
   }
 
