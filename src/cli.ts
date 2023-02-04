@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'url'
+import fs from 'fs'
 import consola from 'consola'
 import { execa } from 'execa'
 import { readUser, writeUser } from 'rc9'
@@ -12,17 +12,19 @@ async function run() {
   const args = process.argv.slice(2)
   const command = args[0]
   const cwd = process.cwd()
-  const dir = fileURLToPath(import.meta.url)
-
-  console.log(moduleName, 'dir', dir)
 
   if (command === 'enable') {
     consola.info('Installed Nuxt Devtools...')
-    await execa('npm', ['install', '-g', `${moduleName}@latest`])
+    await execa('npm', ['install', '-g', `${moduleName}@latest`], { stdio: 'inherit' })
     const modulePath = resolve(globalDirs.npm.packages, moduleName)
-    console.log(moduleName, 'modulePath', modulePath)
-    enable(cwd, modulePath)
-    consola.info('Nuxt Devtools enabled! Restart your Nuxt app to start using it.')
+
+    if (!fs.existsSync(modulePath))
+      throw new Error('Failed to locate the global Nuxt Devtools module. You may try it again')
+
+    if (enable(cwd, modulePath))
+      consola.info('Nuxt Devtools enabled! Restart your Nuxt app to start using it.')
+    else
+      consola.warn('Nuxt Devtools is already enabled for this project.')
   }
   else if (command === 'disable') {
     if (disable(cwd))
@@ -38,7 +40,8 @@ async function run() {
 function enable(path: string, modulePath: string) {
   const rc = readUser(RC_PATH)
   let changed = false
-  if (rc.modules?.includes(modulePath)) {
+
+  if (!rc.modules?.includes(modulePath)) {
     rc.modules = [...rc.modules || [], modulePath]
     changed = true
   }
