@@ -33,6 +33,9 @@ function openLayout(name: string) {
           <th text-left>
             Route Path
           </th>
+          <th text-left>
+            Name
+          </th>
           <th>
             Layout
           </th>
@@ -40,19 +43,21 @@ function openLayout(name: string) {
       </thead>
       <tbody>
         <tr v-for="item of sorted" :key="item.name" class="group" h-7 border="b dashed transparent hover:base">
-          <td flex="inline" justify-end items-center w-16 pr-1>
-            <Badge
-              v-if="matched.find(m => m.name === item.name)"
-              bg-green-400:10 text-green-400
-              title="active"
-              v-text="'active'"
-            />
-            <Badge
-              v-if="matchedPending.find(m => m.name === item.name)"
-              bg-teal-400:10 text-teal-400
-              title="next"
-              v-text="'next'"
-            />
+          <td w-16 pr-1>
+            <div flex="inline" justify-end items-center>
+              <Badge
+                v-if="matched.find(m => m.name === item.name)"
+                bg-green-400:10 text-green-400
+                title="active"
+                v-text="'active'"
+              />
+              <Badge
+                v-if="matchedPending.find(m => m.name === item.name)"
+                bg-teal-400:10 text-teal-400
+                title="next"
+                v-text="'next'"
+              />
+            </div>
           </td>
           <td w-0 ws-nowrap text-sm items-center flex="inline gap3">
             <RoutePathItem
@@ -70,6 +75,9 @@ function openLayout(name: string) {
                 <div i-carbon-script-reference />
               </button>
             </div>
+          </td>
+          <td text-left font-mono op50 text-sm>
+            {{ item.name }}
           </td>
           <td text-center font-mono>
             <span v-if="item.meta.layout === false">-</span>

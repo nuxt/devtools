@@ -89,8 +89,22 @@ function navigateToRoute(path: string) {
       </div>
     </div>
     <SectionBlock
+      v-if="routeInputMatched.length"
+      icon="carbon-tree-view"
+      text="Matched Routes"
+      :padding="false"
+    >
+      <RoutesTable
+        :pages="routeInputMatched"
+        :layouts="layouts || []"
+        :matched="[]"
+        :matched-pending="routeInputMatched"
+        @navigate="navigateToRoute"
+      />
+    </SectionBlock>
+    <SectionBlock
       icon="carbon-tree-view-alt"
-      text="Routes"
+      text="All Routes"
       description="All the routes in registered in your application"
       :padding="false"
     >
