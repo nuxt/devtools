@@ -28,7 +28,7 @@ const {
         <div flex-auto />
         <NIcon
           v-if="collapse"
-          icon="carbon-chevron-down" text-base op50 transition duration-500 place-self-start
+          icon="carbon-chevron-down" text-base op50 cursor-pointer transition duration-500 place-self-start
           class="chevron"
         />
       </IconTitle>
