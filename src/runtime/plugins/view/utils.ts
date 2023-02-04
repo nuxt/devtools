@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, onScopeDispose, ref, watch } from 'vue'
+import { computed, onScopeDispose, ref, watch, getCurrentScope } from 'vue'
 
 export function useObjectStorage<T>(key: string, initial: T): Ref<T> {
   const raw = localStorage.getItem(key)
@@ -43,5 +43,5 @@ export function useTransform<F, T>(data: Ref<F>, to: (data: F) => T, from: (data
 
 export function useEventListener(target: EventTarget, type: string, listener: any, options?: boolean | AddEventListenerOptions) {
   target.addEventListener(type, listener, options)
-  onScopeDispose(() => target.removeEventListener(type, listener, options))
+  getCurrentScope() && onScopeDispose(() => target.removeEventListener(type, listener, options))
 }
