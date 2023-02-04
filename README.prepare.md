@@ -25,24 +25,57 @@ Unleash Nuxt Developer Experience.
 
 ## Installation
 
-Currently only available in edge versions (releases on every commit to `main`).
+> Nuxt DevTools requires **Nuxt v3.1.0 or higher**.
 
-> Requires Nuxt v3.1.0 or higher.
+You can opt-in Nuxt DevTools per-project by going to the project root and run:
 
 ```bash
-npm i -D @nuxt/devtools-edge
+npx nuxi@latest enable devtools
+```
+
+Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press `Alt+D`) to toggle the DevTools.
+
+When you run `nuxi enable devtools`, Nuxt DevTools will be installed as a global module and only activated for the projects you enabled. The configuration will be saved in your local `~/.nuxtrc` file, so it doesn't affect your team unless they also opt-in.
+
+Similarly, you can disable it per-project by running:
+
+```bash
+npx nuxi@latest disable devtools
+```
+
+### Install Manually
+
+Nuxt DevTools is currently provided as a module (might be changed in the future). If you prefer, you can also install it locally, which will be activated for all your team members.
+
+```bash
+npm i -D @nuxt/devtools
 ```
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/devtools-edge',
+    '@nuxt/devtools',
   ],
 })
 ```
 
-Then open your app in browser. Click the Nuxt icon on the bottom (or press `Alt+D`) to open the DevTools.
+### Edge Release Channel
+
+Similar to [Nuxt's Edge Channel](https://nuxt.com/docs/guide/going-further/edge-channel#opting-into-the-edge-channel), DevTools also offers an edge release channel, that automatically releases for every commit to `main` branch.
+
+You can opt-in to the edge release channel by running:
+
+```diff
+{
+  "devDependencies": {
+--    "@nuxt/devtools": "^0.1.0"
+++    "@nuxt/devtools": "npm:@nuxt/devtools-edge@latest"
+  }
+}
+```
+
+Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
 
 ## Module Authors
 
@@ -121,7 +154,7 @@ To provide complex interactions for your module integrations, we recommend to ho
 To get the infomation from the devtools and the client app, you can do this in your client app:
 
 ```ts
-import { useDevtoolsClient } from '@nuxt/devtools-edge/iframe-client'
+import { useDevtoolsClient } from '@nuxt/devtools/iframe-client'
 
 export const devtoolsClient = useDevtoolsClient()
 ```
