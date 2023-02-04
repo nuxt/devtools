@@ -8,6 +8,24 @@ import type { BirpcReturn } from 'birpc'
 import type { VNode } from 'vue'
 import type { WizardActions, WizardArgs } from './wizard'
 
+export interface ModuleOptions {
+  /**
+   * Enable custom tabs.
+   * @default true
+   */
+  enableCustomTabs?: boolean
+
+  /**
+   * VS Code Server integration options.
+   */
+  vscode?: VSCodeIntegrationOptions
+
+  /**
+   * List of projects to enable devtools for. Only works when devtools is installed globally.
+   */
+  enabledProjects?: string[]
+}
+
 export interface ServerFunctions {
   getServerConfig(): NuxtOptions
   getComponents(): Component[]

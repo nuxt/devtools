@@ -1,6 +1,8 @@
 import { defineNuxtModule } from '@nuxt/kit'
 import isInstalledGlobally from 'is-installed-globally'
-import type { ModuleCustomTab, VSCodeIntegrationOptions } from './types'
+import type { ModuleCustomTab, ModuleOptions } from './types'
+
+export type { ModuleOptions }
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
@@ -24,24 +26,6 @@ declare module '@nuxt/schema' {
      */
     'devtools:customTabs:refresh': () => void
   }
-}
-
-export interface ModuleOptions {
-  /**
-   * Enable custom tabs.
-   * @default true
-   */
-  enableCustomTabs?: boolean
-
-  /**
-   * VS Code Server integration options.
-   */
-  vscode?: VSCodeIntegrationOptions
-
-  /**
-   * List of projects to enable devtools for. Only works when devtools is installed globally.
-   */
-  enabledProjects?: string[]
 }
 
 export default defineNuxtModule<ModuleOptions>({
