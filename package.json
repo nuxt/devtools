@@ -22,9 +22,11 @@
   },
   "main": "./dist/module.mjs",
   "types": "./dist/types.d.ts",
+  "bin": "./cli.mjs",
   "files": [
     "dist",
-    "*.d.ts"
+    "*.d.ts",
+    "cli.mjs"
   ],
   "workspaces": [
     "client"
@@ -50,6 +52,7 @@
     "@antfu/utils": "^0.7.2",
     "@nuxt/kit": "^3.1.1",
     "birpc": "^0.2.3",
+    "consola": "^2.15.3",
     "execa": "^6.1.0",
     "flatted": "^3.2.7",
     "get-port-please": "^3.0.1",

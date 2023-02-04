@@ -6,6 +6,7 @@ export default defineBuildConfig({
     'src/module',
     'src/dirs',
     'src/iframe-client',
+    'src/cli',
   ],
   externals: [
     // Type only
