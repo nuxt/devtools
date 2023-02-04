@@ -12,7 +12,7 @@ export const viewMode = ref<ViewMode>('default')
 
 export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {
   width: 80,
-  height: 40,
+  height: 60,
   bottom: 0,
   left: 0,
   open: false,
