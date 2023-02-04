@@ -16,7 +16,7 @@ async function run() {
   if (command === 'enable') {
     consola.info('Installed Nuxt Devtools...')
     await execa('npm', ['install', '-g', `${moduleName}@latest`], { stdio: 'inherit' })
-    const modulePath = resolve(globalDirs.npm.packages, moduleName)
+    const modulePath = resolve(globalDirs.npm.packages, moduleName, 'dist', 'module.mjs')
 
     if (!fs.existsSync(modulePath))
       throw new Error('Failed to locate the global Nuxt Devtools module. You may try it again')

@@ -6,9 +6,10 @@ import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import sirv from 'sirv'
 import c from 'picocolors'
+import isInstalledGlobally from 'is-installed-globally'
 import type { ModuleOptions } from './module'
 import { setupRPC } from './rpc'
-import { clientDir, runtimeDir } from './dirs'
+import { clientDir, packageDir, runtimeDir } from './dirs'
 
 const PATH = '/__nuxt_devtools__'
 const PATH_ENTRY = `${PATH}/entry`
@@ -45,12 +46,12 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   const clientDirExists = existsSync(clientDir)
 
-  if (clientDirExists) {
+  if (isInstalledGlobally) {
     nuxt.hook('vite:extendConfig', (config) => {
       config.server ||= {}
       config.server.fs ||= {}
       config.server.fs.allow ||= []
-      config.server.fs.allow.push(clientDir)
+      config.server.fs.allow.push(packageDir)
     })
   }
 
