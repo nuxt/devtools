@@ -27,6 +27,7 @@ const isEnabled = computed(() => {
     border="base"
     lg="border-b px3 py1.5 justify-start"
     hover="bg-gray/5"
+    select-none
     exact-active-class="!text-primary"
   >
     <TabIcon
