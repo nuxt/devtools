@@ -43,12 +43,23 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     serverFunctions,
   } = setupRPC(nuxt, options)
 
+  const clientDirExists = existsSync(clientDir)
+
+  if (clientDirExists) {
+    nuxt.hook('vite:extendConfig', (config) => {
+      config.server ||= {}
+      config.server.fs ||= {}
+      config.server.fs.allow ||= []
+      config.server.fs.allow.push(clientDir)
+    })
+  }
+
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
     server.middlewares.use(PATH_ENTRY, tinyws() as any)
     server.middlewares.use(PATH_ENTRY, rpcMiddleware as any)
     // serve the front end in production
-    if (existsSync(clientDir))
+    if (clientDirExists)
       server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
   })
 
