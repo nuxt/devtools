@@ -1,6 +1,6 @@
 import { defineNuxtModule } from '@nuxt/kit'
 import isInstalledGlobally from 'is-installed-globally'
-import type { ModuleCustomTab, ModuleOptions } from './types'
+import type { ModuleCustomTab, ModuleGlobalOptions, ModuleOptions } from './types'
 
 export type { ModuleOptions }
 
@@ -34,7 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'devtools',
   },
   defaults: {
-    enableCustomTabs: true,
+    enabled: undefined,
     vscode: {
       enabled: true,
       startOnBoot: false,
@@ -43,13 +43,24 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
   setup(options, nuxt) {
-    if (!isInstalledGlobally)
-      return import('./module-entry').then(({ enableModule }) => enableModule(options, nuxt))
+    // Explicitly disabled
+    if (options.enabled === false)
+      return
 
-    // installed globally
-    if (options.enabledProjects?.includes(nuxt.options.rootDir))
-      return import('./module-entry').then(({ enableModule }) => enableModule(options, nuxt))
+    if (isInstalledGlobally) {
+      // @ts-expect-error missing types
+      const globalOptions = nuxt.options.devtoolsGlobal || {} as ModuleGlobalOptions
+      if (options.enabled !== true && !globalOptions.projects?.includes(nuxt.options.rootDir))
+        return
+    }
 
-    // not enabled for this project
+    /**
+     * Enable conditions:
+     *
+     * - `enabled` is not explicitly set to false
+     * - Installed locally
+     * - Installed globally, and enabled via `nuxi enable devtools`, or `enabled` is explicitly set to true
+     */
+    return import('./module-main').then(({ enableModule }) => enableModule(options, nuxt))
   },
 })

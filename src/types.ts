@@ -10,20 +10,23 @@ import type { WizardActions, WizardArgs } from './wizard'
 
 export interface ModuleOptions {
   /**
-   * Enable custom tabs.
+   * Enable DevTools
+   *
    * @default true
    */
-  enableCustomTabs?: boolean
+  enabled?: boolean
 
   /**
    * VS Code Server integration options.
    */
   vscode?: VSCodeIntegrationOptions
+}
 
+export interface ModuleGlobalOptions {
   /**
    * List of projects to enable devtools for. Only works when devtools is installed globally.
    */
-  enabledProjects?: string[]
+  projects?: string[]
 }
 
 export interface ServerFunctions {

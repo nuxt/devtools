@@ -220,10 +220,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
 
   async function initCustomTabs() {
     customTabs.length = 0
-    if (options.enableCustomTabs) {
-      await nuxt.callHook('devtools:customTabs', customTabs)
-      refresh('getCustomTabs')
-    }
+    await nuxt.callHook('devtools:customTabs', customTabs)
+    refresh('getCustomTabs')
   }
 
   return {

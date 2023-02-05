@@ -8,6 +8,38 @@ import { name as moduleName } from '../package.json'
 
 const RC_PATH = '.nuxtrc'
 
+function enable(path: string, modulePath: string) {
+  const rc = readUser(RC_PATH)
+  let changed = false
+
+  if (!rc.modules?.includes(modulePath)) {
+    rc.modules = [...rc.modules || [], modulePath]
+    changed = true
+  }
+
+  if (!rc.devtoolsGlobal)
+    rc.devtoolsGlobal = {}
+  if (!rc.devtoolsGlobal.projects)
+    rc.devtoolsGlobal.projects = []
+  if (!rc.devtoolsGlobal.projects.includes(path)) {
+    rc.devtoolsGlobal.projects.push(path)
+    changed = true
+  }
+  if (changed)
+    writeUser(rc, RC_PATH)
+  return changed
+}
+
+function disable(path: string) {
+  const rc = readUser(RC_PATH)
+  if (rc.devtoolsGlobal?.projects?.includes(path)) {
+    rc.devtoolsGlobal.projects = rc.devtoolsGlobal.projects.filter((p: string) => p !== path)
+    writeUser(rc, RC_PATH)
+    return true
+  }
+  return false
+}
+
 async function run() {
   const args = process.argv.slice(2)
   const command = args[0]
@@ -35,38 +67,6 @@ async function run() {
   else {
     consola.log(`Unknown command "${command}"`)
   }
-}
-
-function enable(path: string, modulePath: string) {
-  const rc = readUser(RC_PATH)
-  let changed = false
-
-  if (!rc.modules?.includes(modulePath)) {
-    rc.modules = [...rc.modules || [], modulePath]
-    changed = true
-  }
-
-  if (!rc.devtools)
-    rc.devtools = {}
-  if (!rc.devtools.enabledProjects)
-    rc.devtools.enabledProjects = []
-  if (!rc.devtools.enabledProjects.includes(path)) {
-    rc.devtools.enabledProjects.push(path)
-    changed = true
-  }
-  if (changed)
-    writeUser(rc, RC_PATH)
-  return changed
-}
-
-function disable(path: string) {
-  const rc = readUser(RC_PATH)
-  if (rc.devtools?.enabledProjects?.includes(path)) {
-    rc.devtools.enabledProjects = rc.devtools.enabledProjects.filter((p: string) => p !== path)
-    writeUser(rc, RC_PATH)
-    return true
-  }
-  return false
 }
 
 run()
