@@ -201,16 +201,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         })
       })
     }
-    else if (req.method === 'POST') {
-      const body = await getBodyJson(req)
-      if (body.method === 'setPayload') {
-        // TODO:
-      }
-      else {
-        res.statusCode = 400
-      }
-      res.end()
-    }
   }
 
   async function initHooks() {
@@ -230,20 +220,4 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     initHooks,
     birpc,
   }
-}
-
-function getBodyJson(req: NodeIncomingMessage) {
-  return new Promise<any>((resolve, reject) => {
-    let body = ''
-    req.on('data', chunk => body += chunk)
-    req.on('error', reject)
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(body) || {})
-      }
-      catch (e) {
-        reject(e)
-      }
-    })
-  })
 }
