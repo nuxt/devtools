@@ -24,19 +24,9 @@ const openInEditor = () => {
     <div class="container max-w-200 mx-auto py-10 px-4">
       <div class="flex flex-wrap items-end gap-3 mb-4 relative">
         <slot name="logo">
-          <NuxtContentLogo v-if="repo === 'nuxt/content'" class="h-10" />
-          <NuxtLogo v-else class="h-10" />
+          <NuxtContentLogo v-if="repo === 'nuxt/content'" class="h-6" />
+          <NuxtLogo v-else class="h-6" />
         </slot>
-        <div class="text-xl flex">
-          <div class="op-50">
-            examples/
-          </div>
-          <slot name="name">
-            <NLink :href="`https://github.com/${repo}/tree/main/examples/${example}`" target="_blank">
-              {{ example }}
-            </NLink>
-          </slot>
-        </div>
         <div flex-auto />
         <div class="op20 hover:op-100 n-transition -mb-2 -mr-1">
           <NButton
