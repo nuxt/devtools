@@ -9,7 +9,7 @@ Nuxt DevTools <sup>Preview</sup>
 
 <p align="center">
 Unleash Nuxt Developer Experience.
-<br>Nuxt DevTools is a set of visual tools that help you to know your app/site better.
+<br>Nuxt DevTools is a set of visual tools that help you to know your app better.
 </p>
 
 <p align="center">
@@ -164,7 +164,7 @@ When the iframe been served with the same origin (CORS limitation), devtools wil
 `devtoolsClient.value.host` contains APIs to communicate with the client app, and `devtoolsClient.value.devtools` contains APIs to communicate with the devtools. For example, you can get the router instance from the client app:
 
 ```ts
-const router = computed(() => devtoolsClient.value?.host.nuxt.vueApp.config.globalProperties?.$router)
+const router = computed(() => devtoolsClient.value?.host?.nuxt.vueApp.config.globalProperties?.$router)
 ```
 
 ### Examples
