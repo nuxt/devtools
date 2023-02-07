@@ -45,9 +45,8 @@ async function run() {
   const command = args[0]
   const cwd = process.cwd()
 
-  // TODO: Enable this check when we have a stable release
-  // if (moduleName !== '@nuxt/devtools')
-  //   throw new Error('Edge release of Nuxt Devtools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
+  if (moduleName !== '@nuxt/devtools')
+    throw new Error('Edge release of Nuxt Devtools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
 
   if (command === 'enable') {
     consola.info('Installed Nuxt Devtools...')
