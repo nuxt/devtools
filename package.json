@@ -8,7 +8,8 @@
   "exports": {
     ".": {
       "types": "./dist/module.d.ts",
-      "import": "./dist/module.mjs"
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
     },
     "./types": {
       "types": "./dist/types.d.ts",
@@ -20,7 +21,7 @@
     },
     "./*": "./*"
   },
-  "main": "./dist/module.mjs",
+  "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "bin": "./cli.mjs",
   "files": [
