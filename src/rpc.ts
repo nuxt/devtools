@@ -20,7 +20,7 @@ import { wizard } from './wizard'
 import { LOG_PREFIX } from './logger'
 import { checkForUpdates, usePackageVersions } from './npm'
 
-export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
+export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -178,7 +178,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     app = v
   })
 
-  const middleware = async (req: NodeIncomingMessage & TinyWSRequest, res: NodeServerResponse) => {
+  const middleware = async (req: NodeIncomingMessage & TinyWSRequest, _res: NodeServerResponse) => {
     // Handle WebSocket
     if (req.ws) {
       const ws = await req.ws()
