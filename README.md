@@ -30,17 +30,17 @@ Unleash Nuxt Developer Experience.
 You can opt-in Nuxt DevTools per-project by going to the project root and run:
 
 ```bash
-npx nuxi@latest enable devtools
+npx nuxi@latest devtools enable
 ```
 
 Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press `Alt+D`) to toggle the DevTools.
 
-When you run `nuxi enable devtools`, Nuxt DevTools will be installed as a global module and only activated for the projects you enabled. The configuration will be saved in your local `~/.nuxtrc` file, so it doesn't affect your team unless they also opt-in.
+When you run `nuxi devtools enable`, Nuxt DevTools will be installed as a global module and only activated for the projects you enabled. The configuration will be saved in your local `~/.nuxtrc` file, so it doesn't affect your team unless they also opt-in.
 
 Similarly, you can disable it per-project by running:
 
 ```bash
-npx nuxi@latest disable devtools
+npx nuxi@latest devtools disable
 ```
 
 ### Install Manually
