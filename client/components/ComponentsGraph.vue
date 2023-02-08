@@ -177,34 +177,32 @@ function setFilter() {
 </script>
 
 <template>
-  <div h-full flex="~ col">
-    <div border="b base" flex="~ gap4" py1 items-center px4 h-10 flex-none>
-      <NCheckbox v-model="showPages" n="primary sm">
-        <span op75>Show pages</span>
-      </NCheckbox>
-      <NCheckbox v-model="showLayouts" n="primary sm">
-        <span op75>Show layouts</span>
-      </NCheckbox>
-      <NCheckbox v-model="showNodeModules" n="primary sm">
-        <span op75>Show node_modules</span>
-      </NCheckbox>
-      <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
-        Clear filter <div i-carbon-close />
-      </button>
-    </div>
-    <div h-full w-full relative>
-      <div ref="container" w-full h-full />
-      <div
-        v-if="selected"
-        border="~ base"
-        flex="~ col gap-1"
-        text-sm rounded absolute right-4 top-4 bg-base shadow p2 items-end
-      >
-        <FilepathItem :filepath="selected.id" />
-        <NButton n="primary solid" @click="setFilter()">
-          Filter to this component
-        </NButton>
-      </div>
+  <div border="b base" flex="~ gap4" py1 items-center px4 h-10 flex-none>
+    <NCheckbox v-model="showPages" n="primary sm">
+      <span op75>Show pages</span>
+    </NCheckbox>
+    <NCheckbox v-model="showLayouts" n="primary sm">
+      <span op75>Show layouts</span>
+    </NCheckbox>
+    <NCheckbox v-model="showNodeModules" n="primary sm">
+      <span op75>Show node_modules</span>
+    </NCheckbox>
+    <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
+      Clear filter <div i-carbon-close />
+    </button>
+  </div>
+  <div w-full relative style="height:calc(100vh - 115px)">
+    <div ref="container" w-full h-full />
+    <div
+      v-if="selected"
+      border="~ base"
+      flex="~ col gap-1"
+      text-sm rounded absolute right-4 top-4 bg-base shadow p2 items-end
+    >
+      <FilepathItem :filepath="selected.id" />
+      <NButton n="primary solid" @click="setFilter()">
+        Filter to this component
+      </NButton>
     </div>
   </div>
 </template>
