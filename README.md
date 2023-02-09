@@ -15,6 +15,7 @@ Unleash Nuxt Developer Experience.
 <p align="center">
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
   <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a>
+  <a href="https://github.com/nuxt/devtools/blob/main/README.zh-CN.md">🔍 中文</a>
 </p>
 
 <br>
