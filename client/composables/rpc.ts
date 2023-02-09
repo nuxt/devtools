@@ -24,7 +24,11 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
 })
 
 async function connectWS() {
-  const ws = new WebSocket(`ws://${location.host}/__nuxt_devtools__/entry`)
+  const wsUrl = new URL('ws://host/__nuxt_devtools__/entry')
+  wsUrl.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+  wsUrl.host = location.host
+
+  const ws = new WebSocket(wsUrl.toString())
   ws.addEventListener('message', e => onMessage(String(e.data)))
   ws.addEventListener('error', (e) => {
     wsError.value = e
