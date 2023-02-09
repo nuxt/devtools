@@ -1,4 +1,4 @@
-<img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/11247099/215777354-7f04135e-a3c7-4ef2-880e-52d100b3fd33.png">
+<img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg">
 
 <br>
 <br>
