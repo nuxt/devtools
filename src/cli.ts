@@ -14,7 +14,7 @@ function enable(path: string, modulePath: string, removePath?: string) {
 
   // remove ESM entry and switch to CJS, to be compactible with Nuxt 2
   if (removePath && rc.modules?.includes(removePath)) {
-    rc.modules = rc.modules.filter((p: string) => p === removePath)
+    rc.modules = rc.modules.filter((p: string) => p !== removePath)
     changed = true
   }
 
