@@ -46,7 +46,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         >
           {{ data.name }}
         </NuxtLink>
-        <a
+        <button
           v-else-if="mod.entryPath"
           cursor-pointer
           role="button"
@@ -54,7 +54,7 @@ const npmBase = 'https://www.npmjs.com/package/'
           @click="rpc.openInEditor(mod.entryPath!)"
         >
           {{ data.name }}
-        </a>
+        </button>
         <span v-else>
           {{ data.name }}
         </span>
