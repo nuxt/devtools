@@ -62,7 +62,7 @@ async function run() {
     throw new Error('Edge release of Nuxt Devtools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
 
   const esmPath = resolve(globalDirs.npm.packages, moduleName, 'dist', 'module.mjs')
-  const cjsPath = resolve(globalDirs.npm.packages, moduleName, 'dist', 'module.cjs')
+  const cjsPath = resolve(globalDirs.npm.packages, moduleName, 'module.cjs')
 
   if (command === 'enable') {
     consola.info('Installed Nuxt Devtools...')
