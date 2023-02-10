@@ -8,7 +8,7 @@
   "exports": {
     ".": {
       "types": "./dist/module.d.ts",
-      "require": "./dist/module.cjs",
+      "require": "./module.cjs",
       "import": "./dist/module.mjs"
     },
     "./types": {
@@ -21,13 +21,14 @@
     },
     "./*": "./*"
   },
-  "main": "./dist/module.cjs",
+  "main": "./module.cjs",
   "types": "./dist/types.d.ts",
   "bin": "./cli.mjs",
   "files": [
     "dist",
     "*.d.ts",
-    "cli.mjs"
+    "*.cjs",
+    "*.mjs"
   ],
   "workspaces": [
     "client"
