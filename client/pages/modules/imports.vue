@@ -96,7 +96,7 @@ const filtered = computed(() => {
     </SectionBlock>
     <SectionBlock
       v-if="filtered.builtin.size"
-      icon="tabler-brand-nuxt"
+      icon="simple-icons-nuxtdotjs"
       text="Built-in composables"
       :description="`${filtered.count.builtin} composables`"
     >
