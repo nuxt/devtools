@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { state, togglePanel } from './state'
 import Frame from './Frame.vue'
