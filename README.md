@@ -21,6 +21,27 @@ Unleash Nuxt Developer Experience.
 
 > **Warning**: Experimental and under heavy development. APIs are subject to change.
 
+<hr>
+
+* [Installation](https://github.com/nuxt/devtools/#installation)
+  * [Install Manually](https://github.com/nuxt/devtools/edit/main/README.md#install-manually)
+  * [Edge Release Channel](https://github.com/nuxt/devtools#edge-release-channel)  
+* [Features](https://github.com/nuxt/devtools/#features)
+  * [Overview](https://github.com/nuxt/devtools/#overview)
+  * [Pages](https://github.com/nuxt/devtools/#pages)
+  * [Components](https://github.com/nuxt/devtools/#components)
+  * [Imports](https://github.com/nuxt/devtools/#imports)
+  * [Modules](https://github.com/nuxt/devtools/#modules)
+  * [Hooks](https://github.com/nuxt/devtools/#hooks)
+  * [Virtual Files](https://github.com/nuxt/devtools/#virtual-files)
+  * [Inspect](https://github.com/nuxt/devtools/#inspect)
+  * [Inspect](https://github.com/nuxt/devtools/#inspect)
+* [Module Authors/Extending Nuxt DevTools](https://github.com/nuxt/devtools/#module-authors)
+  * [Contributing To View](https://github.com/nuxt/devtools#contributing-to-view) 
+  * [Lazy Service Launching](https://github.com/nuxt/devtools#lazy-service-launching)
+  * [Examples](https://github.com/nuxt/devtools#examples)
+
+
 <br>
 
 ## Installation
