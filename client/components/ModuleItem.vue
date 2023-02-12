@@ -48,7 +48,6 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
         <button
           v-else-if="mod.entryPath"
-          cursor-pointer
           role="button"
           hover="underline text-primary"
           @click="rpc.openInEditor(mod.entryPath!)"
