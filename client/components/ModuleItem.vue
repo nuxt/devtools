@@ -36,7 +36,6 @@ const npmBase = 'https://www.npmjs.com/package/'
   <div border="~ base" p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-
         text-lg of-hidden ws-nowrap text-ellipsis
       >
         <NuxtLink
@@ -47,13 +46,15 @@ const npmBase = 'https://www.npmjs.com/package/'
         >
           {{ data.name }}
         </NuxtLink>
-        <a
+        <button
           v-else-if="mod.entryPath"
+          cursor-pointer
+          role="button"
           hover="underline text-primary"
           @click="rpc.openInEditor(mod.entryPath!)"
         >
           {{ data.name }}
-        </a>
+        </button>
         <span v-else>
           {{ data.name }}
         </span>

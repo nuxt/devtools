@@ -1,14 +1,14 @@
 {
   "name": "@nuxt/devtools",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "packageManager": "pnpm@7.27.0",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
     ".": {
       "types": "./dist/module.d.ts",
-      "require": "./dist/module.cjs",
+      "require": "./module.cjs",
       "import": "./dist/module.mjs"
     },
     "./types": {
@@ -21,13 +21,14 @@
     },
     "./*": "./*"
   },
-  "main": "./dist/module.cjs",
+  "main": "./module.cjs",
   "types": "./dist/types.d.ts",
   "bin": "./cli.mjs",
   "files": [
     "dist",
     "*.d.ts",
-    "cli.mjs"
+    "*.cjs",
+    "*.mjs"
   ],
   "workspaces": [
     "client"
@@ -46,11 +47,11 @@
     "test": "pnpm lint"
   },
   "peerDependencies": {
-    "nuxt": "^3.1.2"
+    "nuxt": "^3.2.0"
   },
   "dependencies": {
     "@antfu/install-pkg": "^0.1.1",
-    "@nuxt/kit": "^3.1.2",
+    "@nuxt/kit": "^3.2.0",
     "birpc": "^0.2.3",
     "consola": "^2.15.3",
     "execa": "^6.1.0",
@@ -66,7 +67,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.2",
-    "@antfu/ni": "^0.19.0",
+    "@antfu/ni": "^0.20.0",
     "@antfu/utils": "^0.7.2",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/module-builder": "^0.2.1",
@@ -80,7 +81,7 @@
     "@unocss/eslint-config": "^0.49.4",
     "@unocss/nuxt": "^0.49.4",
     "bumpp": "^8.2.1",
-    "eslint": "^8.33.0",
+    "eslint": "^8.34.0",
     "flatted": "^3.2.7",
     "floating-vue": "2.0.0-beta.20",
     "get-port-please": "^3.0.1",
@@ -88,7 +89,7 @@
     "is-installed-globally": "^0.4.0",
     "json-editor-vue": "^0.10.5",
     "markdown-it": "^13.0.1",
-    "nuxt": "^3.1.2",
+    "nuxt": "^3.2.0",
     "ofetch": "^1.0.0",
     "pacote": "^15.0.8",
     "picocolors": "^1.0.0",

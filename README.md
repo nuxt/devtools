@@ -33,7 +33,7 @@ You can opt-in Nuxt DevTools per-project by going to the project root and run:
 npx nuxi@latest devtools enable
 ```
 
-Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press `Alt+D`) to toggle the DevTools.
+Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press <kbd>Alt</kbd> / <kbd>⌥ Option</kbd> + <kbd>D</kbd>) to toggle the DevTools.
 
 When you run `nuxi devtools enable`, Nuxt DevTools will be installed as a global module and only activated for the projects you enabled. The configuration will be saved in your local `~/.nuxtrc` file, so it doesn't affect your team unless they also opt-in.
 
@@ -76,6 +76,27 @@ You can opt-in to the edge release channel by running:
 ```
 
 Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
+
+
+### Module Options
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: [
+    ['@nuxt/devtools', {
+      enabled: true, // Enable devtools (default: true)
+      vscode: {
+        enabled: true, // Enable VS Code Server integration
+        startOnBoot: false, // Start VS Code Server on boot (default: false)
+        port: 8080, // VS Code Server port (default: 3080)
+        reuseExistingServer: true // Reuse existing VS Code Server instance
+      }
+    }
+    ]
+  ]
+})
+```
+
 
 ## Features
 

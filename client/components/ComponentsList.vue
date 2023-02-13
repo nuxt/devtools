@@ -83,7 +83,7 @@ const filtered = $computed(() => {
   </SectionBlock>
   <SectionBlock
     v-if="filtered.runtime.length"
-    icon="i-carbon-load-balancer-global"
+    icon="carbon-load-balancer-global"
 
     text="Runtime components"
     :description="`Total components: ${filtered.count.runtime}`"
@@ -92,7 +92,7 @@ const filtered = $computed(() => {
   </SectionBlock>
   <SectionBlock
     v-if="filtered.builtin.length"
-    icon="tabler-brand-nuxt"
+    icon="simple-icons-nuxtdotjs"
     text="Built-in components"
     :description="`Total components: ${filtered.count.builtin}`"
   >
