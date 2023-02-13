@@ -74,13 +74,12 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VS
     })
 
     await waitOn({
-      resources: [`${url}/healthz`],
+      resources: [url],
       timeout: 20_000,
     })
 
     await new Promise(resolve => setTimeout(resolve, 2000))
     loaded = true
-    console.log('loaded', url)
   }
 
   async function start() {
