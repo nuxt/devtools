@@ -337,4 +337,25 @@ export interface VSCodeIntegrationOptions {
    * Reuse existing server if available (same port)
    */
   reuseExistingServer?: boolean
+
+  /**
+   * Determine whether to use vs code tunnel or code-server
+   *
+   * @default 'tunnel'
+   */
+  medium?: 'tunnel' | 'server'
+
+  /**
+   * Options for VS Code tunnel
+   */
+  tunnel?: VSCodeTunnelOptions
+}
+
+export interface VSCodeTunnelOptions {
+  /**
+   * the machine name for port forwarding service
+   *
+   * default: device hostname
+   */
+  name?: string
 }
