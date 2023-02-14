@@ -77,6 +77,29 @@ You can opt-in to the edge release channel by running:
 
 Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
 
+
+### Module Options
+
+To configure Nuxt DevTools, you can pass the `devtools` options. 
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/devtools',
+  ],
+  devtools: {
+    // Enable devtools (default: true)
+    enabled: true,
+    // VS Code Server options
+    vscode: {},
+    // ...other options
+  }
+})
+```
+
+For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/src/types.ts#L11).
+
 ## Features
 
 Nuxt DevTools is a set of visual tools available **right inside your app**.
