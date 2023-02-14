@@ -79,24 +79,26 @@ Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and rein
 
 
 ### Module Options
+
+To configure Nuxt DevTools, you can pass the `devtools` options. 
+
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: [
-    ['@nuxt/devtools', {
-      enabled: true, // Enable devtools (default: true)
-      vscode: {
-        enabled: true, // Enable VS Code Server integration
-        startOnBoot: false, // Start VS Code Server on boot (default: false)
-        port: 8080, // VS Code Server port (default: 3080)
-        reuseExistingServer: true // Reuse existing VS Code Server instance
-      }
-    }
-    ]
-  ]
+    '@nuxt/devtools',
+  ],
+  devtools: {
+    // Enable devtools (default: true)
+    enabled: true,
+    // VS Code Server options
+    vscode: {},
+    // ...other options
+  }
 })
 ```
 
+For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/src/types.ts#L11).
 
 ## Features
 
