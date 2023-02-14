@@ -1,14 +1,14 @@
 <script setup lang='ts'>
-let show = $ref(false)
-let icon = $ref<string | undefined>()
-let text = $ref<string | undefined>()
+const show = ref(false)
+const icon = ref<string | undefined>()
+const text = ref<string | undefined>()
 
 provideNotification((_text, _icon, duration = 1500) => {
-  text = _text
-  icon = _icon
-  show = true
+  text.value = _text
+  icon.value = _icon
+  show.value = true
   setTimeout(() => {
-    show = false
+    show.value = false
   }, duration)
 })
 </script>

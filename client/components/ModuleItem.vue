@@ -6,12 +6,12 @@ const { mod } = defineProps<{
 }>()
 
 const config = useServerConfig()
-const isPackageModule = $computed(() => mod.entryPath && isNodeModulePath(mod.entryPath))
-const name = $computed(() => {
+const isPackageModule = computed(() => mod.entryPath && isNodeModulePath(mod.entryPath))
+const name = computed(() => {
   if (mod.meta?.name)
     return mod.meta.name
   if (mod.entryPath) {
-    return isPackageModule
+    return isPackageModule.value
       ? getModuleNameFromPath(mod.entryPath)
       : config.value?.rootDir
         ? getShortPath(mod.entryPath, config.value?.rootDir)
@@ -20,10 +20,10 @@ const name = $computed(() => {
   return ''
 })
 const collection = await useModulesInfo()
-const data = $computed(() => ({
+const data = computed(() => ({
   name,
   ...mod?.meta,
-  ...(collection || []).find?.(i => i.npm === name || i.name === name),
+  ...(collection || []).find?.(i => i.npm === name.value || i.name === name.value),
 }))
 
 const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'

@@ -7,7 +7,7 @@ definePageMeta({
 })
 
 const client = useClient()
-const payload = $computed(() => client.value?.nuxt.payload)
+const payload = computed(() => client.value?.nuxt.payload)
 </script>
 
 <template>

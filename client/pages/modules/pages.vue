@@ -17,7 +17,7 @@ const config = useServerConfig()
 const serverPages = useServerPages()
 const layouts = useLayouts()
 
-const routes = $computed((): RouteInfo[] => {
+const routes = computed((): RouteInfo[] => {
   return (router.value?.getRoutes() || [])
     .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
     .map((i) => {
@@ -47,7 +47,7 @@ async function navigate() {
     router.value.push(routeInput.value || '/')
 }
 
-const routeInputMatched = $computed(() => {
+const routeInputMatched = computed(() => {
   if (routeInput.value === route.value.path)
     return []
   return router.value.resolve(routeInput.value || '/').matched

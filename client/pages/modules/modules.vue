@@ -15,21 +15,21 @@ const ignores = [
   '@nuxt/telemetry',
 ]
 
-const config = $(useServerConfig())
-const modules = $computed(() => config?._installedModules || [])
-const packageModules = $ref<any[]>([])
-const userModules = $ref<any[]>([])
+const config = useServerConfig()
+const modules = computed(() => config.value?._installedModules || [])
+const packageModules = ref<any[]>([])
+const userModules = ref<any[]>([])
 
 watchEffect(() => {
-  packageModules.length = 0
-  userModules.length = 0
-  for (const m of modules) {
+  packageModules.value.length = 0
+  userModules.value.length = 0
+  for (const m of modules.value) {
     if (ignores.includes(m.meta?.name))
       continue
     if (m.entryPath && isNodeModulePath(m.entryPath))
-      packageModules.push(m)
+      packageModules.value.push(m)
     else
-      userModules.push(m)
+      userModules.value.push(m)
   }
 })
 </script>

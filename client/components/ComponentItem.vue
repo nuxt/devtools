@@ -7,9 +7,9 @@ const { component } = defineProps<{
 }>()
 
 // @ts-expect-error types
-const name = $computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
+const name = computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
 // @ts-expect-error types
-const filePath = $computed(() => component.filePath || component.file || component.__file || '')
+const filePath = computed(() => component.filePath || component.file || component.__file || '')
 const copy = useCopy()
 </script>
 

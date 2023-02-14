@@ -7,8 +7,8 @@ const props = defineProps<{
 
 type SortBy = 'duration' | 'name' | 'listener' | 'start' | 'executions'
 
-let sortby = $ref<SortBy>('duration')
-let direction = $ref<'asc' | 'desc'>('asc')
+const sortby = ref<SortBy>('duration')
+const direction = ref<'asc' | 'desc'>('asc')
 
 const sortFunctions = {
   duration: (a: HookInfo, b: HookInfo) => (b.duration ?? Infinity) - (a.duration ?? Infinity),
@@ -18,12 +18,12 @@ const sortFunctions = {
   executions: (a: HookInfo, b: HookInfo) => b.executions.length - a.executions.length,
 }
 
-const startTimes = $computed(() => props.hooks.map(i => i.start).sort((a, b) => a - b))
+const startTimes = computed(() => props.hooks.map(i => i.start).sort((a, b) => a - b))
 
-const sorted = $computed(() => {
-  const sortFn = sortFunctions[sortby as SortBy]
+const sorted = computed(() => {
+  const sortFn = sortFunctions[sortby.value]
   const sorted = [...props.hooks].sort(sortFn)
-  if (direction === 'desc')
+  if (direction.value === 'desc')
     sorted.reverse()
   return sorted
 })
@@ -73,10 +73,10 @@ function getHashColorFromString(name: string) {
 }
 
 function toggleSortedBy(by: SortBy) {
-  if (sortby === by)
-    direction = direction === 'asc' ? 'desc' : 'asc'
+  if (sortby.value === by)
+    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
   else
-    sortby = by
+    sortby.value = by
 }
 </script>
 

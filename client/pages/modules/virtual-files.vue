@@ -19,7 +19,7 @@ interface VfsFile {
   content: string
 }
 
-const searchString = $ref('')
+const searchString = ref('')
 
 const { data } = await useFetch<VfsData>('/_vfs.json', {
   key: 'vfs-list',
@@ -27,14 +27,14 @@ const { data } = await useFetch<VfsData>('/_vfs.json', {
   responseType: 'json',
 })
 
-const fileId = $computed(() => useRoute().query?.id as string | undefined)
+const fileId = computed(() => useRoute().query?.id as string | undefined)
 
 const current = ref<VfsFile>()
 
 watchEffect(() => {
-  if (!fileId)
+  if (!fileId.value)
     return
-  const url = `/_vfs.json/${encodeURIComponent(fileId)}`
+  const url = `/_vfs.json/${encodeURIComponent(fileId.value)}`
   fetch(url)
     .then(i => i.json())
     .then(i => current.value = i.current)
@@ -48,7 +48,7 @@ function toShortPath(path: string) {
     : path
 }
 
-const files = $computed(() => {
+const files = computed(() => {
   if (!data.value)
     return []
   return data.value.entries
@@ -57,17 +57,17 @@ const files = $computed(() => {
     .sort((a, b) => a.id.localeCompare(b.id))
 })
 
-const fuse = $computed(() => new Fuse(files, {
+const fuse = computed(() => new Fuse(files.value, {
   keys: [
     'id',
     'path',
   ],
 }))
 
-const filteredFiles = $computed(() => {
+const filteredFiles = computed(() => {
   if (!searchString)
-    return files
-  return fuse.search(searchString).map(i => i.item)
+    return files.value
+  return fuse.value.search(searchString.value).map(i => i.item)
 })
 </script>
 
