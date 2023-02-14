@@ -9,9 +9,9 @@ const { import: item, metadata } = defineProps<{
 
 const copy = useCopy()
 
-const name = $computed(() => item.as || item.name)
-const usageCount = $computed(() => metadata?.injectionUsage?.[name]?.count || 0)
-const modules = $computed(() => metadata?.injectionUsage?.[name]?.moduleIds || [])
+const name = computed(() => item.as || item.name)
+const usageCount = computed(() => metadata?.injectionUsage?.[name.value]?.count || 0)
+const modules = computed(() => metadata?.injectionUsage?.[name.value]?.moduleIds || [])
 </script>
 
 <template>

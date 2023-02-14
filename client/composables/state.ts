@@ -17,7 +17,7 @@ export function useComponents() {
   const client = useClient()
   const serverComponents = useAsyncState('getComponents', () => rpc.getComponents())
 
-  const globalComponents = $computed(() =>
+  const globalComponents = computed(() =>
     Object
       .entries(client.value?.nuxt?.vueApp._context.components || {})
       .map(([key]) => ({
@@ -29,7 +29,7 @@ export function useComponents() {
   )
 
   return computed(() => [
-    ...globalComponents,
+    ...globalComponents.value,
     ...serverComponents.value || [],
   ].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
 }

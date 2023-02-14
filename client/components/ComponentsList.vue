@@ -7,7 +7,7 @@ const props = defineProps<{
   search: string
 }>()
 
-const fuse = $computed(() => new Fuse(props.components, {
+const fuse = computed(() => new Fuse(props.components, {
   keys: [
     'pascalName',
     'filePath',
@@ -15,7 +15,7 @@ const fuse = $computed(() => new Fuse(props.components, {
   ],
 }))
 
-const filtered = $computed(() => {
+const filtered = computed(() => {
   const user: Component[] = []
   const lib = new Map<string, Component[]>()
   const builtin: Component[] = []
@@ -29,7 +29,7 @@ const filtered = $computed(() => {
   }
 
   const result = props.search
-    ? fuse.search(props.search).map(i => i.item)
+    ? fuse.value.search(props.search).map(i => i.item)
     : props.components
 
   result

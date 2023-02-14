@@ -8,10 +8,10 @@ definePageMeta({
   order: 3,
 })
 
-const config = $(useServerConfig())
-const onlyUsed = $ref(false)
+const config = useServerConfig()
+const onlyUsed = ref(false)
 
-const search = $ref('')
+const search = ref('')
 const autoImports = useAutoImports()
 const importsMetadata = computed(() => autoImports.value?.metadata)
 
@@ -33,11 +33,11 @@ const filtered = computed(() => {
   const user = new Map<string, Import[]>()
   const lib = new Map<string, Import[]>()
   const builtin = new Map<string, Import[]>()
-  let result = search
-    ? fuse.value.search(search).map(i => i.item)
+  let result = search.value
+    ? fuse.value.search(search.value).map(i => i.item)
     : functions.value
 
-  if (onlyUsed && importsMetadata.value) {
+  if (onlyUsed.value && importsMetadata.value) {
     result = result
       .filter(i => (i.as || i.name) in importsMetadata.value!.injectionUsage)
   }

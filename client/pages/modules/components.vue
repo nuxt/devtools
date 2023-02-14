@@ -10,7 +10,7 @@ definePageMeta({
 const client = useClient()
 const router = useRouter()
 const components = useComponents()
-const search = $ref('')
+const search = ref('')
 
 const {
   componentsView: view,

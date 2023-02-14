@@ -10,9 +10,6 @@ export default defineNuxtConfig({
     DevTools,
   ],
   ssr: false,
-  experimental: {
-    reactivityTransform: true,
-  },
   pages: true,
   nitro: {
     output: {

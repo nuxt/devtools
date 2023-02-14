@@ -10,7 +10,7 @@ const client = useClient()
 const serverConfig = useServerConfig()
 const payload = computed(() => client.value?.nuxt.payload)
 
-const privateConfig = $computed(() => {
+const privateConfig = computed(() => {
   const clone = {
     ...serverConfig.value?.runtimeConfig,
   }

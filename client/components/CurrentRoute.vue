@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const client = useClient()
 
-const path = $computed(() => client.value?.nuxt?.vueApp.config.globalProperties.$route.path)
+const path = computed(() => client.value?.nuxt?.vueApp.config.globalProperties.$route.path)
 </script>
 
 <template>

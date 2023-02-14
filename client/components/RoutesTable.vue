@@ -13,7 +13,7 @@ defineEmits<{
   (e: 'navigate', path: string): void
 }>()
 
-const sorted = $computed(() => {
+const sorted = computed(() => {
   return [...pages].sort((a, b) => a.path.localeCompare(b.path))
 })
 
