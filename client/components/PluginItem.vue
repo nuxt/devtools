@@ -14,8 +14,7 @@ const normalized = computed((): NuxtPlugin => {
   return props.plugin
 })
 
-// TODO: Check if correct
-const shortPath = computed(() => config ? getShortPath(normalized.value.src, config.value?.rootDir ?? '', true)! : '')
+const shortPath = computed(() => config.value ? getShortPath(normalized.value.src, config.value.rootDir, true)! : '')
 </script>
 
 <template>
