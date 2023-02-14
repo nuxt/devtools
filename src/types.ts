@@ -275,6 +275,7 @@ export interface NuxtDevtoolsHostClient {
   inspector?: {
     instance?: VueInspectorClient
     enable: () => void
+    disable: () => void
   }
 
   closeDevTools(): void

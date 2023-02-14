@@ -114,6 +114,7 @@ function updateClient() {
     ...props.client as any,
     inspector: {
       enable: enableComponentInspector,
+      disable: disableComponentInspector,
       instance: componentInspector,
     },
   })
