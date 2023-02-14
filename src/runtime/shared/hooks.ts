@@ -1,14 +1,19 @@
-import { performance } from 'node:perf_hooks'
 import type { Hookable } from 'hookable'
 import type { HookInfo } from '../../types'
 
 export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
   const serverHooks: Record<string, HookInfo> = {}
+
+  // eslint-disable-next-line no-constant-condition
+  const now = typeof 'performance' === 'undefined'
+    ? () => window.performance.now()
+    : () => Date.now()
+
   hooks.beforeEach((event) => {
     if (!serverHooks[event.name]) {
       serverHooks[event.name] = {
         name: event.name,
-        start: performance.now(),
+        start: now(),
         // @ts-expect-error private field
         listeners: hooks._hooks[event.name]?.length || 0,
         executions: [],
@@ -18,7 +23,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
       const hook = serverHooks[event.name]
       if (hook.duration != null)
         hook.executions.push(hook.duration)
-      hook.start = performance.now()
+      hook.start = now()
       hook.end = undefined
       hook.duration = undefined
     }
@@ -28,7 +33,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
     const hook = serverHooks[event.name]
     if (!hook)
       return
-    hook.end = performance.now()
+    hook.end = now()
     hook.duration = hook.end - hook.start
     // @ts-expect-error private field
     const listeners = hooks._hooks[event.name]?.length
