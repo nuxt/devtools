@@ -1,4 +1,3 @@
-import { performance } from 'node:perf_hooks'
 import type { Hookable } from 'hookable'
 import type { HookInfo } from '../../types'
 
@@ -8,7 +7,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
     if (!serverHooks[event.name]) {
       serverHooks[event.name] = {
         name: event.name,
-        start: performance.now(),
+        start: window.performance.now(),
         // @ts-expect-error private field
         listeners: hooks._hooks[event.name]?.length || 0,
         executions: [],
@@ -18,7 +17,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
       const hook = serverHooks[event.name]
       if (hook.duration != null)
         hook.executions.push(hook.duration)
-      hook.start = performance.now()
+      hook.start = window.performance.now()
       hook.end = undefined
       hook.duration = undefined
     }
@@ -28,7 +27,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
     const hook = serverHooks[event.name]
     if (!hook)
       return
-    hook.end = performance.now()
+    hook.end = window.performance.now()
     hook.duration = hook.end - hook.start
     // @ts-expect-error private field
     const listeners = hooks._hooks[event.name]?.length
