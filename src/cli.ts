@@ -1,4 +1,5 @@
 import fs from 'fs'
+import os from 'os'
 import consola from 'consola'
 import { execa } from 'execa'
 import { readUser, writeUser } from 'rc9'
@@ -8,14 +9,39 @@ import { name as moduleName } from '../package.json'
 
 const RC_PATH = '.nuxtrc'
 
-function enable(path: string, modulePath: string, removePath?: string) {
+function enable(path: string, modulePath: string) {
   const rc = readUser(RC_PATH)
   let changed = false
 
+  const esmPath = resolve(modulePath, 'dist', 'module.mjs')
+  const cjsPath = resolve(modulePath, 'module.cjs')
+
+  // legacy path to be removed
+  const removePaths = [
+    esmPath,
+  ]
+
+  // in windows, we need to replace backslash with slash
+  if (os.platform() === 'win32') {
+    removePaths.push(
+      esmPath.replace(/\\/g, '/'),
+      cjsPath,
+    )
+  }
+
+  const targetPath = cjsPath.replace(/\\/g, '/')
+
+  if (!fs.existsSync(targetPath))
+    throw new Error('Failed to locate the global Nuxt Devtools module. You may try it again')
+
   // remove ESM entry and switch to CJS, to be compactible with Nuxt 2
-  if (removePath && rc.modules?.includes(removePath)) {
-    rc.modules = rc.modules.filter((p: string) => p !== removePath)
-    changed = true
+  if (rc.modules && Array.isArray(rc.modules)) {
+    rc.modules = rc.modules.filter((i: string) => {
+      const result = !removePaths.includes(i)
+      if (!result)
+        changed = true
+      return result
+    })
   }
 
   if (!rc.modules?.includes(modulePath)) {
@@ -46,9 +72,20 @@ function disable(path: string) {
   return false
 }
 
-function remove(paths: string[]) {
+function remove(modulePath: string) {
   const rc = readUser(RC_PATH)
-  rc.modules = (rc.modules || []).filter((p: string) => paths.includes(p))
+
+  const esmPath = resolve(modulePath, 'dist', 'module.mjs')
+  const cjsPath = resolve(modulePath, 'module.cjs')
+
+  const removePaths = [
+    esmPath,
+    cjsPath,
+    esmPath.replace(/\\/g, '/'),
+    cjsPath.replace(/\\/g, '/'),
+  ]
+
+  rc.modules = (rc.modules || []).filter((p: string) => !removePaths.includes(p))
   writeUser(rc, RC_PATH)
   return true
 }
@@ -61,17 +98,13 @@ async function run() {
   if (moduleName !== '@nuxt/devtools')
     throw new Error('Edge release of Nuxt Devtools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
 
-  const esmPath = resolve(globalDirs.npm.packages, moduleName, 'dist', 'module.mjs')
-  const cjsPath = resolve(globalDirs.npm.packages, moduleName, 'module.cjs')
+  const modulePath = resolve(globalDirs.npm.packages, moduleName)
 
   if (command === 'enable') {
     consola.info('Installed Nuxt Devtools...')
     await execa('npm', ['install', '-g', `${moduleName}@latest`], { stdio: 'inherit' })
 
-    if (!fs.existsSync(cjsPath))
-      throw new Error('Failed to locate the global Nuxt Devtools module. You may try it again')
-
-    if (enable(cwd, cjsPath, esmPath))
+    if (enable(cwd, modulePath))
       consola.info('Nuxt Devtools enabled! Restart your Nuxt app to start using it.')
     else
       consola.warn('Nuxt Devtools is already enabled for this project.')
@@ -84,7 +117,7 @@ async function run() {
       consola.warn('Nuxt Devtools is not enabled for this project.')
 
     if (isRemove) {
-      remove([esmPath, cjsPath])
+      remove(modulePath)
       consola.success('Nuxt Devtools is removed globally')
     }
   }
