@@ -4,10 +4,14 @@ import type { HookInfo } from '../../types'
 export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
   const serverHooks: Record<string, HookInfo> = {}
 
+  // maybe run in node or browser env
+  // performance api is not supported below node version v16.0.0
+  // browser support https://caniuse.com/mdn-api_performance
+  // if `performance` is undefined then downgrade to `Date`
   // eslint-disable-next-line no-constant-condition
-  const now = typeof 'performance' === 'undefined'
-    ? () => window.performance.now()
-    : () => Date.now()
+  const now = typeof globalThis.performance === 'undefined'
+    ? () => Date.now()
+    : () => performance.now()
 
   hooks.beforeEach((event) => {
     if (!serverHooks[event.name]) {
