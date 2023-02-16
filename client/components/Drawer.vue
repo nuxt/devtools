@@ -29,7 +29,7 @@ const tabs = useTabs()
       :key="tab.name"
       :tab="tab"
     />
-    <template v-if="tabs.custom.value.length && devToolsSettings.customTabs">
+    <template v-if="tabs.custom.value.length">
       <div text-xs p1 lg:p2 text-hex-888 text-center uppercase tracking-widest border="b base">
         <span hidden lg:inline>Modules</span>
       </div>

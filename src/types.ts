@@ -305,7 +305,6 @@ export interface DevToolsFrameState {
 }
 
 export interface DevToolsUISettings {
-  customTabs: boolean
   componentsView: 'list' | 'graph'
   componentsGraphShowNodeModules: boolean
   componentsGraphShowPages: boolean

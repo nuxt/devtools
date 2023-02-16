@@ -65,7 +65,7 @@ const fuse = computed(() => new Fuse(files.value, {
 }))
 
 const filteredFiles = computed(() => {
-  if (!searchString)
+  if (!searchString.value)
     return files.value
   return fuse.value.search(searchString.value).map(i => i.item)
 })
@@ -84,7 +84,7 @@ const filteredFiles = computed(() => {
       </div>
       <NuxtLink
         v-for="f of filteredFiles" :key="f.id"
-        px2 py1 border="b base" block text-sm font-mono truncate
+        border="b base" px2 py1 text-sm font-mono block truncate
         :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
         :class="f.id === current?.id ? 'bg-truegray:20 text-base' : 'text-truegray'"
       >

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-const settings = devToolsSettings
 const frameState = devToolsFrameState
+
+const client = useClient()
 </script>
 
 <template>
   <div>
-    <div px4 py2 flex="~ col gap-1">
+    <div v-if="client" px4 py2 border="b base" flex="~ col gap-1">
       <div text-sm op50>
         Dock devtools to
       </div>
@@ -32,10 +33,6 @@ const frameState = devToolsFrameState
         />
       </div>
     </div>
-    <div px4 py2 border="t base">
-      <NCheckbox v-model="settings.customTabs" n-primary>
-        <span op75>Show custom tabs</span>
-      </NCheckbox>
-    </div>
+    <!-- <div px4 py2 /> -->
   </div>
 </template>
