@@ -1,18 +1,20 @@
 <script setup lang="ts">
-const {
-  containerClass = '',
-  open = true,
-  padding = true,
-  collapse = true,
-} = defineProps<{
-  icon?: string
-  text: string
-  description?: string
-  containerClass?: string
-  collapse?: boolean
-  open?: boolean
-  padding?: boolean
-}>()
+withDefaults(
+  defineProps<{
+    icon?: string
+    text: string
+    description?: string
+    containerClass?: string
+    collapse?: boolean
+    open?: boolean
+    padding?: boolean
+  }>(), {
+    containerClass: '',
+    open: true,
+    padding: true,
+    collapse: true,
+  },
+)
 </script>
 
 <template>

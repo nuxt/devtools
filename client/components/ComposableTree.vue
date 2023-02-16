@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
 
-const { metadata } = defineProps<{
+defineProps<{
   map: Map<string, Import[]>
   root: string
   metadata?: UnimportMeta

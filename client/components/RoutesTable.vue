@@ -2,7 +2,7 @@
 import type { NuxtLayout } from '@nuxt/schema'
 import type { RouteInfo } from '~/../src/types'
 
-const { pages, layouts, matched, matchedPending } = defineProps<{
+const props = defineProps<{
   pages: RouteInfo[]
   layouts: NuxtLayout[]
   matched: RouteInfo[]
@@ -14,11 +14,11 @@ defineEmits<{
 }>()
 
 const sorted = computed(() => {
-  return [...pages].sort((a, b) => a.path.localeCompare(b.path))
+  return [...props.pages].sort((a, b) => a.path.localeCompare(b.path))
 })
 
 function openLayout(name: string) {
-  const layout = layouts.find(i => i.name === name)
+  const layout = props.layouts.find(i => i.name === name)
   if (layout)
     openInEditor(layout.file)
 }

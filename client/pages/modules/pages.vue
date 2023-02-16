@@ -105,7 +105,7 @@ function navigateToRoute(path: string) {
     <SectionBlock
       icon="carbon-tree-view-alt"
       text="All Routes"
-      description="All the routes in registered in your application"
+      :description="`${routes.length} routes in registered in your application`"
       :padding="false"
     >
       <RoutesTable

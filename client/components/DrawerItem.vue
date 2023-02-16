@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
 
-const { tab } = defineProps<{
+const props = defineProps<{
   tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
 const client = useClient()
 const isEnabled = computed(() => {
-  const _tab = tab as ModuleBuiltinTab
+  const _tab = props.tab as ModuleBuiltinTab
   if (_tab.requireClient && !client.value)
     return false
   // Consider VS Code integration a custom tab

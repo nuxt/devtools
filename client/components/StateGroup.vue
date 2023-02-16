@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import StateEditor from './StateEditor.vue'
 
-const { prefix = '' } = defineProps<{
-  state?: Record<string, any>
-  prefix?: string
-}>()
+withDefaults(
+  defineProps<{
+    state?: Record<string, any>
+    prefix?: string
+  }>(),
+  {
+    prefix: '',
+  },
+)
 </script>
 
 <template>

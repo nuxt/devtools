@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const { filepath } = defineProps<{
+const props = defineProps<{
   filepath: string
 }>()
 
 const config = useServerConfig()
-const short = computed(() => (filepath && config.value)
-  ? getShortPath(filepath, config.value.rootDir)
-  : filepath,
+const short = computed(() => (props.filepath && config.value)
+  ? getShortPath(props.filepath, config.value.rootDir)
+  : props.filepath,
 )
 </script>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
 
-const { import: item, metadata } = defineProps<{
+const props = defineProps<{
   import: Import
   metadata?: UnimportMeta
   filepath?: string
@@ -9,9 +9,9 @@ const { import: item, metadata } = defineProps<{
 
 const copy = useCopy()
 
-const name = computed(() => item.as || item.name)
-const usageCount = computed(() => metadata?.injectionUsage?.[name.value]?.count || 0)
-const modules = computed(() => metadata?.injectionUsage?.[name.value]?.moduleIds || [])
+const name = computed(() => props.import.as || props.import.name)
+const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
+const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
 </script>
 
 <template>

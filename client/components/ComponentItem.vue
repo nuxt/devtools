@@ -2,14 +2,14 @@
 import type { Component } from '@nuxt/schema'
 import { pascalCase } from 'scule'
 
-const { component } = defineProps<{
+const props = defineProps<{
   component: Component
 }>()
 
 // @ts-expect-error types
-const name = computed(() => component.pascalName || pascalCase(component.name || component.__name || component.kebabName || ''))
+const name = computed(() => props.component.pascalName || pascalCase(props.component.name || props.component.__name || props.component.kebabName || ''))
 // @ts-expect-error types
-const filePath = computed(() => component.filePath || component.file || component.__file || '')
+const filePath = computed(() => props.component.filePath || props.component.file || props.component.__file || '')
 const copy = useCopy()
 </script>
 

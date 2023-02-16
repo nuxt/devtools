@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import type { BasicModuleInfo } from '../../src/types'
 
-const { mod } = defineProps<{
+const props = defineProps<{
   mod: BasicModuleInfo
 }>()
 
 const config = useServerConfig()
-const isPackageModule = computed(() => mod.entryPath && isNodeModulePath(mod.entryPath))
+const isPackageModule = computed(() => props.mod.entryPath && isNodeModulePath(props.mod.entryPath))
 const name = computed(() => {
-  if (mod.meta?.name)
-    return mod.meta.name
-  if (mod.entryPath) {
+  if (props.mod.meta?.name)
+    return props.mod.meta.name
+  if (props.mod.entryPath) {
     return isPackageModule.value
-      ? getModuleNameFromPath(mod.entryPath)
+      ? getModuleNameFromPath(props.mod.entryPath)
       : config.value?.rootDir
-        ? getShortPath(mod.entryPath, config.value?.rootDir)
+        ? getShortPath(props.mod.entryPath, config.value?.rootDir)
         : ''
   }
   return ''
@@ -22,7 +22,7 @@ const name = computed(() => {
 const collection = await useModulesInfo()
 const data = computed(() => ({
   name,
-  ...mod?.meta,
+  ...props.mod?.meta,
   ...(collection || []).find?.(i => i.npm === name.value || i.name === name.value),
 }))
 

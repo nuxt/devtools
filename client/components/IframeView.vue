@@ -6,19 +6,19 @@ const iframeCacheMap = new Map<string, HTMLIFrameElement>()
 // eslint-disable-next-line import/first
 import type { ModuleCustomTab, ModuleIframeView, NuxtDevtoolsIframeClient } from '~/../src/types'
 
-const { tab } = defineProps<{
+const props = defineProps<{
   tab: ModuleCustomTab
 }>()
 
 const client = useClient()
 const colorMode = useColorMode()
 const anchor = ref<HTMLDivElement>()
-const key = computed(() => tab.name)
+const key = computed(() => props.tab.name)
 const iframeEl = ref<HTMLIFrameElement>()
 const box = reactive(useElementBounding(anchor))
 
 onMounted(() => {
-  const view = tab.view as ModuleIframeView
+  const view = props.tab.view as ModuleIframeView
   const isPersistent = view.persistent !== false
 
   if (iframeCacheMap.get(key.value) && isPersistent) {

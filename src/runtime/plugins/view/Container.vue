@@ -5,7 +5,7 @@ import type { NuxtDevtoolsHostClient } from '../../../types'
 import { state, togglePanel } from './state'
 import Frame from './Frame.vue'
 
-const { client } = defineProps({
+defineProps({
   client: Object as PropType<NuxtDevtoolsHostClient>,
 })
 
