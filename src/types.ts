@@ -322,30 +322,32 @@ export interface VSCodeIntegrationOptions {
    * Enable VS Code Server integration
    */
   enabled?: boolean
+
   /**
    * Start VS Code Server on boot
    *
    * @default false
    */
   startOnBoot?: boolean
+
   /**
    * Port to start VS Code Server
    *
    * @default 3080
    */
   port?: number
+
   /**
    * Reuse existing server if available (same port)
    */
   reuseExistingServer?: boolean
 
   /**
-   * Determine whether to use vs code tunnel or code-server
+   * Determine whether to use code-server or vs code tunnel
    *
-   * @default 'tunnel'
+   * @default 'local-serve'
    */
-  medium?: 'tunnel' | 'server'
-
+  mode?: 'local-serve' | 'tunnel'
   /**
    * Options for VS Code tunnel
    */

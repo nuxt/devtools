@@ -10,13 +10,12 @@ import { LOG_PREFIX } from '../logger'
 
 export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VSCodeIntegrationOptions) {
   const installed = !!await which('code-server').catch(() => null)
-  const installedCode = !!await which('code').catch(() => null)
 
   let port = options?.port || 3080
   let url = `http://localhost:${port}`
   let loaded = false
   let promise: Promise<void> | null = null
-  const medium = options?.medium || 'tunnel'
+  const mode = options?.mode || 'local-serve'
   const computerHostName = options.tunnel?.name || hostname().split('.').join('')
 
   async function startCodeServer() {
@@ -57,7 +56,8 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VS
     const { stdout: currentDir } = await execa('pwd')
 
     url = `https://vscode.dev/tunnel/${computerHostName}${currentDir}`
-    // url = 'https://vscode.dev/tunnel/cruxlocal/Users/claranceliberi/projects/mine/devtools'
+
+    logger.info(LOG_PREFIX, `Starting VS Code tunnel at ${url} ...`)
 
     const command = execa('code', [
       'tunnel',
@@ -83,16 +83,13 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VS
   }
 
   async function start() {
-    if (medium === 'server') {
+    if (mode === 'tunnel')
+      await startCodeTunnel()
+    else
       await startCodeServer()
-      return
-    }
-
-    await startCodeTunnel()
   }
 
   nuxt.hook('devtools:customTabs', (tabs) => {
-    logger.info(LOG_PREFIX, `Adding VS Code tab... ${url}`)
     tabs.push({
       name: 'builtin-vscode',
       title: 'VS Code',
