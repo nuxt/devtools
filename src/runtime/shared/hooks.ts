@@ -8,7 +8,7 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
   // performance api is not supported below node version v16.0.0
   // browser support https://caniuse.com/mdn-api_performance
   // if `performance` is undefined then downgrade to `Date`
-  // eslint-disable-next-line no-constant-condition
+
   const now = typeof globalThis.performance === 'undefined'
     ? () => Date.now()
     : () => performance.now()
