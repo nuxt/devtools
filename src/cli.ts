@@ -18,12 +18,14 @@ function enable(path: string, modulePath: string) {
 
   // legacy path to be removed
   const removePaths = [
+    modulePath,
     esmPath,
   ]
 
   // in windows, we need to replace backslash with slash
   if (os.platform() === 'win32') {
     removePaths.push(
+      modulePath.replace(/\\/g, '/'),
       esmPath.replace(/\\/g, '/'),
       cjsPath,
     )
@@ -44,8 +46,8 @@ function enable(path: string, modulePath: string) {
     })
   }
 
-  if (!rc.modules?.includes(modulePath)) {
-    rc.modules = [...rc.modules || [], modulePath]
+  if (!rc.modules?.includes(targetPath)) {
+    rc.modules = [...rc.modules || [], targetPath]
     changed = true
   }
 
@@ -79,8 +81,10 @@ function remove(modulePath: string) {
   const cjsPath = resolve(modulePath, 'module.cjs')
 
   const removePaths = [
+    modulePath,
     esmPath,
     cjsPath,
+    modulePath.replace(/\\/g, '/'),
     esmPath.replace(/\\/g, '/'),
     cjsPath.replace(/\\/g, '/'),
   ]
