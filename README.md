@@ -256,7 +256,7 @@ const router = computed(() => devtoolsClient.value?.host?.nuxt.vueApp.config.glo
 ### Examples
 
 - Built-in VS Code integration with lazy initialize: https://github.com/nuxt/devtools/blob/main/src/integrations/vscode.ts.
-- VueUse adds a docs tab: https://github.com/vueuse/vueuse/blob/6158e660367b4417896926984670c5b91133c7c3/packages/nuxt/index.ts#L89-L99.
+- VueUse adds a docs tab: https://github.com/vueuse/vueuse/blob/ce28cef154489c73abe308104bef8568594a9bcd/packages/nuxt/index.ts#L89-L99.
 - UnoCSS Inspector: https://github.com/unocss/unocss/blob/25021a751494e99e85cfd82cca3855cdf78f6a12/packages/nuxt/src/index.ts#L81-L94
 - Nuxt Vitest runner: https://github.com/danielroe/nuxt-vitest/blob/7bac68d96f27dea6c30c198b7caaaf0b495574ab/packages/nuxt-vitest/src/module.ts#L139-L181
 - Nuxt OG Image Playground: https://github.com/harlan-zw/nuxt-og-image/blob/main/src/module.ts#L136
