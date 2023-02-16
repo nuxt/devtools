@@ -79,15 +79,24 @@ function waitForClientInjection(retry = 10, timeout = 200) {
   })
 }
 
+function refreshReactivity() {
+  props.client?.hooks.callHook('host:update:reactivity')
+}
+
 function setupClient() {
   // trigger update for payload change
   watch(() => props.client?.nuxt.payload, () => {
-    props.client!.hooks.callHook('host:update:reactivity')
+    refreshReactivity()
   }, { deep: true })
 
   // trigger update for route change
   props.client?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
-    props.client!.hooks.callHook('host:update:reactivity')
+    refreshReactivity()
+  })
+
+  // trigger update for app mounted
+  props.client?.nuxt.hook('app:mounted', () => {
+    refreshReactivity()
   })
 
   updateClient()
