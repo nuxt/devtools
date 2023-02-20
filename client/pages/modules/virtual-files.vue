@@ -72,8 +72,8 @@ const filteredFiles = computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-[300px_1fr]" h-full of-hidden class="virtual-files">
-    <div border="r base" of-auto>
+  <div grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
+    <div border="r base" of-auto resize-x w="300px">
       <div pb2 p3>
         <NTextInput
           v-model="searchString"
