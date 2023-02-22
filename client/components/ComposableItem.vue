@@ -2,20 +2,20 @@
 import type { Import, UnimportMeta } from 'unimport'
 
 const props = defineProps<{
-  import: Import
+  item: Import
   metadata?: UnimportMeta
   filepath?: string
 }>()
 
 const copy = useCopy()
 
-const name = computed(() => props.import.as || props.import.name)
+const name = computed(() => props.item.as || props.item.name)
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
 const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
 </script>
 
 <template>
-  <VDropdown :disabled="!metadata">
+  <VDropdown :disabled="!props.metadata">
     <button hover:text-primary>
       <code
         px2 py1 rounded font-mono text-sm bg-gray:5
