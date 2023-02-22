@@ -24,7 +24,7 @@ const filePath = computed(() => props.component.filePath || props.component.file
   >
     <VDropdown>
       <button hover:text-primary>
-        <code font-mono text-sm><span op20 mr1>&lt;</span>{{ name }}<span op20 ml1>/&gt;</span></code>
+        <ComponentName :component="component" />
       </button>
       <template #popper>
         <ComponentDetails :component="component" p4 />
