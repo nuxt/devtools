@@ -23,7 +23,7 @@ const isEnabled = computed(() => {
     text-true-gray
     border="base"
     lg="border-b px3 py1.5 justify-start"
-    hover="bg-gray/5"
+    hover:bg-active
     select-none
     exact-active-class="!text-primary"
   >

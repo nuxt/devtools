@@ -16,9 +16,9 @@ const payload = computed(() => client.value?.nuxt.payload)
       icon="carbon-data-set"
       text="State"
       description="Keyed state from `useState`"
+      :padding="false"
     >
       <StateGroup
-        ml--6
         :state="payload.state" prefix="$s"
       />
     </SectionBlock>
@@ -26,9 +26,9 @@ const payload = computed(() => client.value?.nuxt.payload)
       icon="carbon-data-blob"
       text="Data"
       description="Keyed state from `useAsyncData`"
+      :padding="false"
     >
       <StateGroup
-        ml--6
         :state="payload.data"
       />
     </SectionBlock>

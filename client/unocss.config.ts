@@ -8,6 +8,7 @@ export default defineConfig({
       // General Tokens
       'border-base': 'border-gray/20',
       'bg-base': 'bg-white dark:bg-[#151515]',
+      'bg-active': 'bg-gray:5',
       'navbar-glass': 'sticky z-10 top-0 backdrop-blur bg-white/70 dark:bg-[#151515]/70',
 
       // Nuxt UI Custom

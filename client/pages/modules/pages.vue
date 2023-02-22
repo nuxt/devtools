@@ -106,7 +106,7 @@ function navigateToRoute(path: string) {
       icon="carbon-tree-view-alt"
       text="All Routes"
       :description="`${routes.length} routes registered in your application`"
-      :padding="false"
+      padding="pr5"
     >
       <RoutesTable
         :pages="routes"

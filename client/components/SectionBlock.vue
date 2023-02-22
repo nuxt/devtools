@@ -7,7 +7,7 @@ withDefaults(
     containerClass?: string
     collapse?: boolean
     open?: boolean
-    padding?: boolean
+    padding?: boolean | string
   }>(), {
     containerClass: '',
     open: true,
@@ -18,8 +18,8 @@ withDefaults(
 </script>
 
 <template>
-  <details p4 :open="open">
-    <summary select-none :class="collapse ? '' : 'pointer-events-none'">
+  <details :open="open">
+    <summary select-none cursor-pointer p4 hover:bg-active :class="collapse ? '' : 'pointer-events-none'">
       <IconTitle :icon="icon" :text="text" text-xl op75>
         <div>
           {{ text }}
@@ -35,7 +35,7 @@ withDefaults(
         />
       </IconTitle>
     </summary>
-    <div flex="~ col gap2" py2 :class="padding ? 'pl8' : ''">
+    <div flex="~ col gap2" pt2 pb6 :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
       <div :class="containerClass" mt1>
         <slot />
