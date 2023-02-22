@@ -43,7 +43,8 @@
     "lint": "eslint .",
     "prepublishOnly": "pnpm build",
     "typecheck": "nuxi typecheck",
-    "release": "pnpm test && standard-version && git push --follow-tags && npm publish",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "release": "pnpm test && bumpp -x \"pnpm run changelog\" --all && npm publish",
     "test": "pnpm lint"
   },
   "peerDependencies": {
@@ -83,6 +84,7 @@
     "@unocss/eslint-config": "^0.49.7",
     "@unocss/nuxt": "^0.49.7",
     "bumpp": "^8.2.1",
+    "conventional-changelog-cli": "^2.2.2",
     "eslint": "^8.34.0",
     "flatted": "^3.2.7",
     "floating-vue": "2.0.0-beta.20",
@@ -95,7 +97,6 @@
     "picocolors": "^1.0.0",
     "semver": "^7.3.8",
     "sirv": "^2.0.2",
-    "standard-version": "^9.5.0",
     "tinyws": "^0.1.0",
     "typescript": "^4.9.5",
     "vanilla-jsoneditor": "^0.14.5",
