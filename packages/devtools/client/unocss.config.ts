@@ -1,6 +1,6 @@
+// @ts-expect-error missing types
 import { NuxtUIPreset } from '@nuxt/ui/unocss'
 import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
-// @ts-expect-error missing types
 
 export default defineConfig({
   shortcuts: [

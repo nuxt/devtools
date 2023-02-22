@@ -20,8 +20,7 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint
-      - run: pnpm build:client
-      - run: pnpm build:module
+      - run: pnpm build
       - name: Release Edge
         if: |
           github.event_name == 'push' &&
