@@ -16,7 +16,7 @@ provideNotification((_text, _icon, duration = 1500) => {
 <template>
   <div
 
-    text-center fixed top-0 left-0 right-0 z-50
+    text-center top-0 right-0 fixed left-0 z-50
     :class="show ? '' : 'pointer-events-none overflow-hidden'"
   >
     <div

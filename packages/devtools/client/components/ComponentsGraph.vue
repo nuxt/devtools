@@ -205,9 +205,9 @@ function setFilter() {
         v-if="selected && selected.component"
         border="l base"
         flex="~ col gap-1"
-        text-sm absolute right-0 top-0 bg-base p2 items-center bottom-0
+        text-sm items-center absolute right-0 top-0 bg-base p2 bottom-0
       >
-        <button n-icon-btn text-xl absolute right-2 top-2 @click="selected = undefined">
+        <button n-icon-btn absolute text-xl right-2 top-2 @click="selected = undefined">
           <div i-carbon-close />
         </button>
         <ComponentDetails :component="selected.component" p4 />

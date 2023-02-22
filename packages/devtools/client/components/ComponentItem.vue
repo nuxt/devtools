@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import type { Component } from '@nuxt/schema'
-import { pascalCase } from 'scule'
 
 const props = defineProps<{
   component: Component
 }>()
 
-// @ts-expect-error types
-const name = computed(() => props.component.pascalName || pascalCase(props.component.name || props.component.__name || props.component.kebabName || ''))
 // @ts-expect-error types
 const filePath = computed(() => props.component.filePath || props.component.file || props.component.__file || '')
 </script>

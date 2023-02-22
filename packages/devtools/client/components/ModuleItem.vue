@@ -101,7 +101,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
         <div op50 ma i-carbon-circle-dash text-4xl />
       </div>
-      <div v-if="data.maintainers?.length" flex="~" items-end flex-auto mt2 justify-end>
+      <div v-if="data.maintainers?.length" flex="~" flex-auto items-end mt2 justify-end>
         <NuxtLink
           v-for="m of data.maintainers"
           :key="m.name"

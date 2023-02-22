@@ -1,0 +1,107 @@
+{
+  "name": "@nuxt/devtools",
+  "type": "module",
+  "version": "0.1.6",
+  "license": "MIT",
+  "repository": "nuxt/devtools",
+  "exports": {
+    ".": {
+      "types": "./dist/module.d.ts",
+      "require": "./module.cjs",
+      "import": "./dist/module.mjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.mjs"
+    },
+    "./iframe-client": {
+      "types": "./dist/iframe-client.d.ts",
+      "import": "./dist/iframe-client.mjs"
+    },
+    "./*": "./*"
+  },
+  "main": "./module.cjs",
+  "types": "./dist/types.d.ts",
+  "bin": "./cli.mjs",
+  "files": [
+    "dist",
+    "*.d.ts",
+    "*.cjs",
+    "*.mjs"
+  ],
+  "workspaces": [
+    "client"
+  ],
+  "scripts": {
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && cp ../../README.md .",
+    "build:client": "nuxi generate client",
+    "build:module": "nuxt-build-module",
+    "dev": "nuxi dev client",
+    "dev:playground": "pnpm build && nuxi dev playground",
+    "dev:prepare": "nuxi prepare client",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "nuxt": "^3.2.0"
+  },
+  "dependencies": {
+    "@antfu/install-pkg": "^0.1.1",
+    "@nuxt/kit": "^3.2.2",
+    "birpc": "^0.2.4",
+    "consola": "^2.15.3",
+    "execa": "^7.0.0",
+    "h3": "^1.5.0",
+    "hookable": "^5.4.2",
+    "is-installed-globally": "^0.4.0",
+    "launch-editor": "^2.6.0",
+    "pacote": "^15.1.1",
+    "pathe": "^1.1.0",
+    "pkg-types": "^1.0.2",
+    "rc9": "^2.0.1",
+    "unimport": "^2.2.4",
+    "vite-plugin-inspect": "^0.7.15",
+    "vite-plugin-vue-inspector": "^3.3.2"
+  },
+  "devDependencies": {
+    "@antfu/utils": "^0.7.2",
+    "@iconify-json/carbon": "^1.1.15",
+    "@iconify-json/logos": "^1.1.23",
+    "@iconify-json/mdi": "^1.1.47",
+    "@iconify-json/ri": "^1.1.5",
+    "@iconify-json/tabler": "^1.1.61",
+    "@nuxt/devtools": "workspace:*",
+    "@nuxt/ui": "^0.4.1",
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@unocss/nuxt": "^0.49.7",
+    "@unocss/preset-icons": "^0.49.7",
+    "@unocss/preset-uno": "^0.49.7",
+    "@unocss/runtime": "^0.49.7",
+    "@vueuse/nuxt": "^9.13.0",
+    "esno": "^0.16.3",
+    "flatted": "^3.2.7",
+    "floating-vue": "2.0.0-beta.20",
+    "fuse.js": "^6.6.2",
+    "get-port-please": "^3.0.1",
+    "global-dirs": "^3.0.1",
+    "json-editor-vue": "^0.10.5",
+    "markdown-it": "^13.0.1",
+    "nuxt": "^3.2.2",
+    "nuxt-vitest": "^0.6.6",
+    "ofetch": "^1.0.1",
+    "picocolors": "^1.0.0",
+    "semver": "^7.3.8",
+    "shiki": "^0.14.1",
+    "shiki-es": "^0.2.0",
+    "sirv": "^2.0.2",
+    "theme-vitesse": "^0.6.2",
+    "tinyws": "^0.1.0",
+    "unocss": "^0.49.7",
+    "vanilla-jsoneditor": "^0.14.5",
+    "vis-data": "^7.1.4",
+    "vis-network": "^9.1.2",
+    "vue-tsc": "^1.1.6",
+    "wait-on": "^7.0.1",
+    "which": "^3.0.0",
+    "ws": "^8.12.1"
+  }
+}
