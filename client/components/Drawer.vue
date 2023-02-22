@@ -5,10 +5,10 @@ const tabs = useTabs()
 
 <template>
   <div border="r base" flex="~ col" h-full>
-    <div flex="~ gap1" pl3 pr2 items-center py2 border="b base">
-      <VDropdown placement="left-start" :distance="20">
+    <div flex="~" p2 items-center border="b base">
+      <VDropdown placement="left-start" :distance="20" hidden lg:block>
         <NuxtLogo
-          h-8 hidden lg:block
+          h-8
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
         />
@@ -18,10 +18,15 @@ const tabs = useTabs()
       </VDropdown>
 
       <div hidden lg:block flex-auto />
+
       <NDarkToggle v-slot="{ toggle }">
-        <button text-sm op50 hover:op100 carbon-sun dark:carbon-moon class="hidden! lg:block!" @click="toggle()" />
+        <button n-icon-btn w-7 mr--1 h-7 class="hidden! lg:block!" @click="toggle()">
+          <div carbon-sun dark:carbon-moon translate-y--1px />
+        </button>
       </NDarkToggle>
-      <button v-if="client" op50 hover:op100 carbon-close text-xl ma @click="client.closeDevTools()" />
+      <button v-if="client" n-icon-btn w-7 h-7 @click="client.closeDevTools()">
+        <div i-carbon-close scale-140 />
+      </button>
     </div>
 
     <DrawerItem

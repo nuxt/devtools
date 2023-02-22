@@ -15,6 +15,8 @@ export default defineConfig({
       'n-bg-base': 'bg-base',
       'n-border-base': 'border-base',
 
+      'n-icon-btn': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:bg-active',
+
       // Reusable
       'x-divider': 'h-1px w-full bg-gray/15',
     },

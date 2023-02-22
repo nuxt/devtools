@@ -66,7 +66,9 @@ async function refresh() {
         >{{ name }}</code>
       </button>
       <template v-if="isOpen">
-        <button title="Refresh" i-carbon-renew hover:op80 op30 @click="refresh" />
+        <button title="Refresh" n-icon-btn @click="refresh">
+          <div i-carbon-renew />
+        </button>
       </template>
     </div>
     <template v-if="isOpen || !name">

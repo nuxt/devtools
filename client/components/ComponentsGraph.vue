@@ -193,16 +193,28 @@ function setFilter() {
   </div>
   <div w-full relative style="height:calc(100vh - 115px)">
     <div ref="container" w-full h-full />
-    <div
-      v-if="selected"
-      border="~ base"
-      flex="~ col gap-1"
-      text-sm rounded absolute right-4 top-4 bg-base shadow p2 items-end
+    <Transition
+      enter-active-class="duration-200 ease-in"
+      enter-from-class="transform translate-x-1/1"
+      enter-to-class="opacity-100"
+      leave-active-class="duration-200 ease-out"
+      leave-from-class="opacity-100"
+      leave-to-class="transform translate-x-1/1"
     >
-      <FilepathItem :filepath="selected.id" />
-      <NButton n="primary solid" @click="setFilter()">
-        Filter to this component
-      </NButton>
-    </div>
+      <div
+        v-if="selected && selected.component"
+        border="l base"
+        flex="~ col gap-1"
+        text-sm absolute right-0 top-0 bg-base p2 items-center bottom-0
+      >
+        <button n-icon-btn text-xl absolute right-2 top-2 @click="selected = undefined">
+          <div i-carbon-close />
+        </button>
+        <ComponentDetails :component="selected.component" p4 />
+        <NButton n="primary solid" @click="setFilter()">
+          Filter to this component
+        </NButton>
+      </div>
+    </Transition>
   </div>
 </template>

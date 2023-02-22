@@ -10,37 +10,30 @@ const props = defineProps<{
 const name = computed(() => props.component.pascalName || pascalCase(props.component.name || props.component.__name || props.component.kebabName || ''))
 // @ts-expect-error types
 const filePath = computed(() => props.component.filePath || props.component.file || props.component.__file || '')
+const copy = useCopy()
 </script>
 
 <template>
-  <div
-    rounded
-    px2
-    py1
-    hover="bg-active"
-    class="group"
-    flex="~ gap2"
-    w-full items-center
-  >
-    <VDropdown>
-      <button hover:text-primary>
+  <div flex="~ col gap1">
+    <div flex="~ gap2">
+      <div>
         <code font-mono text-sm><span op20 mr1>&lt;</span>{{ name }}<span op20 ml1>/&gt;</span></code>
+      </div>
+      <button title="Copy name" n-icon-btn @click="copy(`<${name}></${name}>`)">
+        <div i-carbon-copy />
       </button>
-      <template #popper>
-        <ComponentDetails :component="component" p4 />
-      </template>
-    </VDropdown>
-    <Badge
-      v-if="component.global"
-      bg-green-400:10 text-green-400
-      title="Registered at runtime as a global component"
-      v-text="'runtime'"
-    />
-    <slot />
+      <Badge
+        v-if="component.global"
+        bg-green-400:10 text-green-400
+        title="Registered at runtime as a global component"
+        v-text="'runtime'"
+      />
+    </div>
     <FilepathItem
       v-if="filePath"
       :filepath="filePath"
       text-sm op25 group-hover:op75
     />
+    <slot />
   </div>
 </template>
