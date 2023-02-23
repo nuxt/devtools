@@ -26,7 +26,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
     </slot>
     <input
       v-model="input"
-      class="flex-auto n-bg-base w-full !outline-none w-full"
+      class="flex-auto n-bg-base w-full !outline-none"
       :type="type"
       :placeholder="placeholder"
     >
