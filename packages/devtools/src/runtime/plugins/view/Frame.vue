@@ -183,7 +183,7 @@ useEventListener(window, 'mouseleave', () => {
 })
 
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
-  if (e.key === 'Escape')
+  if (viewMode.value === 'component-inspector' && e.key === 'Escape')
     closePanel()
 })
 
