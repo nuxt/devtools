@@ -7,6 +7,7 @@ import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { VNode } from 'vue'
 import type { WizardActions, WizardArgs } from './wizard'
+import type {} from '@nuxt/schema'
 
 export interface ModuleOptions {
   /**

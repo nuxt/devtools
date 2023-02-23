@@ -9,8 +9,10 @@ export default defineBuildConfig({
     { input: 'src/assets/', outDir: 'dist/assets' },
   ],
   externals: [
-    '@nuxt/schema',
+    'nuxt',
     'nuxt/schema',
+    '@nuxt/schema',
+    '@nuxt/kit',
     'unocss.mjs',
   ],
 })
