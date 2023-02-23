@@ -3,7 +3,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
+import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, settings, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
 // Can't use reactivity transform here because this file is shipped as-is,
@@ -187,6 +187,23 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
     closePanel()
 })
 
+// Close panel on outside click (when enabled)
+useEventListener(window, 'mousedown', (e: MouseEvent) => {
+  if (!settings.value.interactionCloseOnOutsideClick)
+    return
+  if (!state.value.open || isDragging.value || viewMode.value !== 'default')
+    return
+
+  const matched = e.composedPath().find((_el) => {
+    const el = _el as HTMLElement
+    return Array.from(el.classList || []).some(c => c.startsWith('nuxt-devtools-'))
+    || el.tagName?.toLowerCase() === 'iframe'
+  })
+
+  if (!matched)
+    state.value.open = false
+})
+
 watch(viewMode, (mode) => {
   if (mode === 'component-inspector')
     enableComponentInspector()
@@ -213,7 +230,7 @@ declare global {
 </script>
 
 <template>
-  <div v-show="state.open" class="frame" :style="frameStyle">
+  <div v-show="state.open" class="nuxt-devtools-frame" :style="frameStyle">
     <iframe
       ref="iframe"
       :src="initialUrl"
@@ -236,12 +253,12 @@ declare global {
 </template>
 
 <style scoped>
-.frame {
+.nuxt-devtools-frame {
   position: fixed;
   z-index: 2147483646;
 }
 
-.frame iframe {
+.nuxt-devtools-frame iframe {
   width: 100%;
   height: 100%;
   outline: none;

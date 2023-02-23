@@ -2,9 +2,8 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
-import { settings, state, togglePanel } from './state'
+import { state, togglePanel } from './state'
 import Frame from './Frame.vue'
-import { useEventListener } from './utils'
 
 defineProps({
   client: Object as PropType<NuxtDevtoolsHostClient>,
@@ -19,19 +18,6 @@ if (!initialized.value) {
 }
 
 const isOpen = computed(() => state.value.open)
-
-useEventListener(window, 'click', (e: MouseEvent) => {
-  if (!state.value.open || !settings.value.interactionCloseOnOutsideClick)
-    return
-
-  const matched = e.composedPath().find((_el) => {
-    const el = _el as HTMLElement
-    return el.classList?.contains('nuxt-devtools-toggle') || el.tagName?.toLowerCase() === 'iframe'
-  })
-
-  if (!matched)
-    state.value.open = false
-})
 
 function getToggleButtonPosition() {
   if (state.value.position === 'left') {
