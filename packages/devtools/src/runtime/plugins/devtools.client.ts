@@ -1,17 +1,14 @@
 import { createApp, markRaw } from 'vue'
-import type { Nuxt } from 'nuxt/schema'
 import { createHooks } from 'hookable'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'
 import Container from './view/Container.vue'
 
 import { closePanel, togglePanel } from './view/state'
-// @ts-expect-error runtime
 import { defineNuxtPlugin } from '#app'
-// @ts-expect-error runtime
 import { useAppConfig } from '#imports'
 
-export default defineNuxtPlugin((nuxt: Nuxt) => {
+export default defineNuxtPlugin((nuxt) => {
   // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
@@ -30,8 +27,8 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   const client: NuxtDevtoolsHostClient = markRaw({
     nuxt: markRaw(nuxt as any),
     appConfig: useAppConfig() as any,
-    getHooksMetrics: () => Object.values(clientHooks),
     hooks: createHooks(),
+    getHooksMetrics: () => Object.values(clientHooks),
     closeDevTools: closePanel,
   })
 
@@ -40,6 +37,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   holder.setAttribute('data-v-inspector-ignore', 'true')
   document.body.appendChild(holder)
 
+  // Shortcut to toggle devtools
   addEventListener('keypress', (e) => {
     if (e.code === 'KeyD' && e.altKey)
       togglePanel()
