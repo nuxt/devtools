@@ -8,12 +8,12 @@ const radio = ref('a')
   <div class="relative p-10 n-bg-base">
     <div class="w-full flex container mx-auto flex-col gap-4">
       <NTip n="hover:yellow-600 dark:hover:yellow-500">
-        This library is heavily working in progress and does not serve as a generic UI library (for now). It is not recommended to use it in production.
+        This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
       </NTip>
 
       <div class="flex items-center justify-between">
         <div class="text-4xl">
-          Nuxt UI
+          @nuxt/devtools-ui-kit
         </div>
       </div>
 

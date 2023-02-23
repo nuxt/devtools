@@ -2,9 +2,10 @@
 
 <a href="https://www.npmjs.com/package/@nuxt/devtools-ui-kit-edge"><img src="https://flat.badgen.net/npm/v/@nuxt/devtools-ui-kit-edge"></a>
 
-UI kit for custom Nuxt DevTools view.
+> **Warning**: This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
 
-- [Online Playground](https://stackblitz.com/github/nuxt/ui/tree/main/packages/ui?file=playground%2Fpages%2Findex.vue)
+UI kit for module authors to build embedded views for Nuxt Devtools.
+
 - [Demo](https://components.ui.nuxtjs.org)
 
 ## Install
@@ -23,9 +24,9 @@ export default defineNuxtConfig({
 
 ## Usage
 
-Nuxt UI is an unbundled component library powered by [UnoCSS](https://github.com/antfu/unocss) and [VueUse](https://vueuse.org/).
+`@nuxt/devtools-ui-kit` is an unbundled component library powered by [UnoCSS](https://github.com/antfu/unocss) and [VueUse](https://vueuse.org/).
 
-In Nuxt UI, we introduced the `n` attribute for every component to customize the styles and variations. For example, to make a red button:
+In this library, we introduced the `n` attribute for every component to customize the styles and variations. For example, to make a red button:
 
 ```html
 <NButton n="red" />
