@@ -267,9 +267,6 @@ export interface NuxtDevtoolsClientHooks {
 export interface NuxtDevtoolsHostClient {
   nuxt: NuxtApp
   appConfig: AppConfig
-
-  getHooksMetrics(): HookInfo[]
-
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
   inspector?: {
@@ -278,6 +275,7 @@ export interface NuxtDevtoolsHostClient {
     disable: () => void
   }
 
+  getClientHooksMetrics(): HookInfo[]
   closeDevTools(): void
 }
 

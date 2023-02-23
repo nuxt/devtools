@@ -28,7 +28,7 @@ export default defineNuxtPlugin((nuxt) => {
     nuxt: markRaw(nuxt as any),
     appConfig: useAppConfig() as any,
     hooks: createHooks(),
-    getHooksMetrics: () => Object.values(clientHooks),
+    getClientHooksMetrics: () => Object.values(clientHooks),
     closeDevTools: closePanel,
   })
 

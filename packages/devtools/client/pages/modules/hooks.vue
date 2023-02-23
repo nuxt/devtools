@@ -6,7 +6,7 @@ definePageMeta({
 
 const serverHooks = useServerHooks()
 const client = useClient()
-const clientHooks = computed(() => client.value?.getHooksMetrics())
+const clientHooks = computed(() => client.value?.getClientHooksMetrics())
 </script>
 
 <template>
