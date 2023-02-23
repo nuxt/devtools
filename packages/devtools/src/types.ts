@@ -309,6 +309,7 @@ export interface DevToolsUISettings {
   componentsGraphShowNodeModules: boolean
   componentsGraphShowPages: boolean
   componentsGraphShowLayouts: boolean
+  interactionCloseOnOutsideClick: boolean
 }
 
 export interface ComponentRelationship {

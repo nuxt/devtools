@@ -20,7 +20,7 @@ export default defineNuxtPlugin(() => {
       })
       _client.hooks.hook('host:inspector:close', () => {
         if (router.currentRoute.value.path === '/__inspecting')
-          router.go(-1)
+          router.replace('/modules/components')
       })
       _client.hooks.hook('host:inspector:update', (data) => {
         inspectorData.value = data

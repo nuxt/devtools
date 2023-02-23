@@ -3,13 +3,22 @@ import type { DevToolsFrameState, DevToolsUISettings } from '~~/../src/types'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 
-export const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-settings', {
+const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-settings', {
   componentsView: 'list',
   componentsGraphShowNodeModules: false,
   componentsGraphShowPages: false,
   componentsGraphShowLayouts: false,
+  interactionCloseOnOutsideClick: false,
 }, { mergeDefaults: true })
 
-export const devToolsSettingsRefs = toRefs(devToolsSettings)
+const devToolsSettingsRefs = toRefs(devToolsSettings)
 
-export const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
+const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
+
+export function useDevToolsSettings() {
+  return devToolsSettingsRefs
+}
+
+export function useDevToolsFrameState() {
+  return devToolsFrameState
+}

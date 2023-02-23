@@ -11,10 +11,7 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './rpc'
 import { clientDir, packageDir, runtimeDir } from './dirs'
-
-const PATH = '/__nuxt_devtools__'
-const PATH_ENTRY = `${PATH}/entry`
-const PATH_CLIENT = `${PATH}/client`
+import { ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -58,11 +55,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
-    server.middlewares.use(PATH_ENTRY, tinyws() as any)
-    server.middlewares.use(PATH_ENTRY, rpcMiddleware as any)
+    server.middlewares.use(ROUTE_ENTRY, tinyws() as any)
+    server.middlewares.use(ROUTE_ENTRY, rpcMiddleware as any)
     // serve the front end in production
     if (clientDirExists)
-      server.middlewares.use(PATH_CLIENT, sirv(clientDir, { single: true, dev: true }))
+      server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
   })
 
   const integrations = [

@@ -14,7 +14,7 @@ const search = ref('')
 
 const {
   componentsView: view,
-} = devToolsSettingsRefs
+} = useDevToolsSettings()
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)

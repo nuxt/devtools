@@ -27,7 +27,7 @@ const {
   componentsGraphShowNodeModules: showNodeModules,
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
-} = devToolsSettingsRefs
+} = useDevToolsSettings()
 
 const selectedFilter = ref<ComponentRelationship>()
 

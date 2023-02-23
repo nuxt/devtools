@@ -1,15 +1,19 @@
 <script setup lang="ts">
-const frameState = devToolsFrameState
+const frameState = useDevToolsFrameState()
 
 const client = useClient()
 const nuxt = useNuxtApp()
 
-function refreshAll() {
+function refreshData() {
   nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
   // TODO: use triggerRef after: https://github.com/vuejs/core/pull/7507
   // triggerRef(client)
   if (client.value)
     client.value = { ...client.value }
+}
+
+function refreshPage() {
+  location.reload()
 }
 </script>
 
@@ -42,9 +46,12 @@ function refreshAll() {
         />
       </div>
     </div>
-    <div px4 py2>
-      <NButton n="solid primary xs" @click="refreshAll">
-        Refresh All
+    <div px4 py3 flex="~ gap2">
+      <NButton n="solid primary xs" @click="refreshData">
+        Refetch Data
+      </NButton>
+      <NButton n="solid primary xs" @click="refreshPage">
+        Refresh Page
       </NButton>
     </div>
   </div>
