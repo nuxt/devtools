@@ -7,7 +7,7 @@ import type { ChannelOptions } from 'birpc'
 import c from 'picocolors'
 
 import { parse, stringify } from 'flatted'
-import type { Component, Nuxt, NuxtApp, NuxtPage } from '@nuxt/schema'
+import type { Component, Nuxt, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'

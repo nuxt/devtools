@@ -1,4 +1,4 @@
-import type { ModuleOptions } from '@nuxt/schema'
+import type { ModuleOptions } from 'nuxt/schema'
 
 export const ROUTE_PATH = '/__nuxt_devtools__'
 export const ROUTE_ENTRY = `${ROUTE_PATH}/entry`

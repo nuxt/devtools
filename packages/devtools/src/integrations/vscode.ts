@@ -1,7 +1,7 @@
 import { hostname } from 'os'
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import waitOn from 'wait-on'

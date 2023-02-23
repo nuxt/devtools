@@ -1,19 +1,14 @@
-// @ts-expect-error missing types
-import { NuxtUIPreset } from '@nuxt/ui/unocss'
 import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
   shortcuts: [
     {
       // General Tokens
-      'border-base': 'border-gray/20',
-      'bg-base': 'bg-white dark:bg-[#151515]',
-      'bg-active': 'bg-gray:5',
+      'bg-base': 'n-bg-base',
+      'bg-active': 'n-bg-active',
+      'border-base': 'n-border-base',
       'navbar-glass': 'sticky z-10 top-0 backdrop-blur bg-white/70 dark:bg-[#151515]/70',
-
-      // Nuxt UI Custom
-      'n-bg-base': 'bg-base',
-      'n-border-base': 'border-base',
 
       'n-icon-btn': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:bg-active',
 
@@ -45,7 +40,7 @@ export default defineConfig({
         mono: 'Fira Code',
       },
     }),
-    NuxtUIPreset(),
+    devtoolsUIKitUnoPreset(),
   ],
   safelist: [
     'carbon-nominal',

@@ -1,6 +1,6 @@
 import type { ModuleCustomTab } from './types'
 
-declare module '@nuxt/schema' {
+declare module 'nuxt/schema' {
   interface NuxtHooks {
     /**
      * Called before devtools starts. Useful to detect if devtools is enabled.

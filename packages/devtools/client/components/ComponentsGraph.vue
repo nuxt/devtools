@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Component, NuxtLayout, NuxtPage } from '@nuxt/schema'
+import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
 import { Network } from 'vis-network'
 import type { ComponentRelationship } from '~~/../src/types'

@@ -1,4 +1,4 @@
-import type { Component } from '@nuxt/schema'
+import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'

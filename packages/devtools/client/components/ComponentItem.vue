@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Component } from '@nuxt/schema'
+import type { Component } from 'nuxt/schema'
 
 const props = defineProps<{
   component: Component

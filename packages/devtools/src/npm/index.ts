@@ -1,5 +1,5 @@
 import { getNuxtVersion } from '@nuxt/kit'
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
 import { version as devToolsVersion } from '../../package.json'
