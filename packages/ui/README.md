@@ -6,7 +6,8 @@ UI kit for Nuxt 3's examples and internal tooling UI.
 
 > Note: This library is heavily working in progress and does not serve as a generic UI library (for now). It is not recommended to use it in production.
 
-🏀 [Online Playground](https://components.ui.nuxtjs.org)
+- [Online Playground](https://stackblitz.com/github/nuxt/ui/tree/main/packages/ui?file=playground%2Fpages%2Findex.vue)
+- [Demo](https://components.ui.nuxtjs.org)
 
 ## Install
 

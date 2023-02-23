@@ -18,7 +18,7 @@ import {
 
 export const NuxtUIPreset = (): Preset => ({
   name: 'nuxt-ui',
-  theme: mergeDeep(unoTheme, {
+  theme: mergeDeep<Theme>(unoTheme, {
     colors: {
       context: 'rgba(var(--nui-c-context),%alpha)'
     },

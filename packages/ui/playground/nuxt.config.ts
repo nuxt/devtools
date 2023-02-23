@@ -8,7 +8,8 @@ export default defineNuxtConfig({
   srcDir: __dirname,
   rootDir: resolve(__dirname, '../../..'),
   modules: [
-    NuxtUI
+    NuxtUI,
+    '@nuxt/devtools'
   ],
   nui: {
     dev: true
