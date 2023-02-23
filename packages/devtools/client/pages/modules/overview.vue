@@ -100,6 +100,10 @@ function goIntro() {
         </div>
       </div>
       <div flex="~ gap-6 wrap" items-center justify-center mt-5>
+        <a href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue" transition>
+          <div i-carbon-star />
+          Star on GitHub
+        </a>
         <a href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-yellow" transition>
           <div i-carbon-data-enrichment />
           Ideas & Suggestions
@@ -123,6 +127,22 @@ function goIntro() {
         </VDropdown>
       </div>
       <div flex-auto />
+      <div flex="~ col gap2">
+        <div
+          v-if="showConnectionWarning"
+          px4 justify-center theme-banner-lightblue
+        >
+          <span flex-none i-carbon-keyboard />You can press <NButton n="xs lightblue">
+            Alt
+          </NButton><NButton n="xs lightblue">
+            D
+          </NButton> or <NButton n="xs lightblue">
+            ⌥ Option
+          </NButton><NButton n="xs lightblue">
+            D
+          </NButton> to toggle the DevTools.
+        </div>
+      </div>
     </div>
   </div>
 </template>
