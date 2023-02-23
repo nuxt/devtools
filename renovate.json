@@ -4,5 +4,15 @@
   ],
   "baseBranches": [
     "main"
+  ],
+  "packageRules": [
+    {
+      "matchBaseBranches": [
+        "main"
+      ],
+      "ignoreDeps": [
+        "unimport"
+      ]
+    }
   ]
 }
