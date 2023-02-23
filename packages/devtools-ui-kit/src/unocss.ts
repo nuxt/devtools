@@ -70,10 +70,9 @@ export const unocssPreset = (): Preset => ({
   ],
   shortcuts: {
     // general
-    'n-bg-base': 'bg-white dark:bg-[#222]',
-    'n-border-base': 'border-gray-400/50',
-    'n-border-300': 'border-gray-400/40',
-    'n-border-200': 'border-gray-400/25',
+    'n-bg-base': 'bg-white dark:bg-[#151515]',
+    'n-bg-active': 'bg-gray:5',
+    'n-border-base': 'border-gray/20',
     'n-transition': 'transition-all duration-200',
     'n-focus-base': 'ring-2 ring-context/50',
     'n-active-base': 'ring-3 ring-context/10',
@@ -84,7 +83,7 @@ export const unocssPreset = (): Preset => ({
     'n-link-hover': 'decoration-dotted text-context underline-context',
 
     // card
-    'n-card-base': 'border n-border-200 rounded n-bg-base shadow-sm',
+    'n-card-base': 'border n-border-base rounded n-bg-base shadow-sm',
 
     // header
     'n-header-upper': 'text-sm uppercase mb-2 leading-1.2em tracking-wide op50',
