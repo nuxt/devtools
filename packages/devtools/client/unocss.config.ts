@@ -1,5 +1,5 @@
-import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
 import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
   shortcuts: [
