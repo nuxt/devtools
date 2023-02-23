@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { useColorMode, useToggle } from '@vueuse/core'
 import { computed } from 'vue'
+import { useToggle } from '@vueuse/core'
+// @ts-expect-error auto imported from @nuxtjs/color-mode
+import { useColorMode } from '#imports'
 
 const mode = useColorMode()
-
 const isDark = computed<boolean>({
   get() {
     return mode.value === 'dark'
   },
-  set(v) {
-    mode.value = v ? 'dark' : 'light'
+  set() {
+    mode.preference = isDark.value ? 'light' : 'dark'
   },
 })
-
 const toggle = useToggle(isDark)
-
 const context = {
   mode,
   isDark,
@@ -23,5 +22,7 @@ const context = {
 </script>
 
 <template>
-  <slot v-bind="context" />
+  <ColorScheme tag="span">
+    <slot v-bind="context" />
+  </ColorScheme>
 </template>
