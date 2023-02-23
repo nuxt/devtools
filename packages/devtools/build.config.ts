@@ -13,6 +13,9 @@ export default defineBuildConfig({
     'src/dirs',
   ],
   externals: [
+    '@nuxt/kit',
+    '@nuxt/schema',
+    'nuxt/schema',
     // Type only
     'vue',
     'vue-router',

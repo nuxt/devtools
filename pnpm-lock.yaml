@@ -164,7 +164,6 @@ importers:
   packages/devtools-ui-kit:
     specifiers:
       '@iconify-json/carbon': ^1.1.15
-      '@nuxt/devtools': ^0.1.6
       '@nuxt/kit': ^3.2.2
       '@nuxtjs/color-mode': ^3.2.0
       '@unocss/core': ^0.50.0
@@ -179,7 +178,6 @@ importers:
       defu: ^6.1.2
       focus-trap: ^7.3.1
       nuxt: ^3.2.2
-      unbuild: ^1.1.2
       unocss: ^0.50.0
     dependencies:
       '@iconify-json/carbon': 1.1.15
@@ -198,9 +196,7 @@ importers:
       focus-trap: 7.3.1
       unocss: 0.50.0
     devDependencies:
-      '@nuxt/devtools': link:../devtools
       nuxt: 3.2.2
-      unbuild: 1.1.2
 
   packages/devtools/playground:
     specifiers: {}
