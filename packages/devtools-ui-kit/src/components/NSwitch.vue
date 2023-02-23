@@ -16,7 +16,7 @@ const checked = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <label
-    class="n-switch n-switch-base n-disabled:n-disabled"
+    class="n-disabled:n-disabled n-switch n-switch-base"
     :checked="checked || null"
     :disabled="disabled || null"
   >
@@ -27,7 +27,7 @@ const checked = useVModel(props, 'modelValue', emit, { passive: true })
       :disabled="disabled"
       @keypress.enter="checked = !checked"
     >
-    <div class="n-transition n-switch-slider n-checked:n-switch-slider-checked peer-active:n-active-base peer-focus-visible:n-focus-base">
+    <div class="n-transition peer-active:n-active-base peer-focus-visible:n-focus-base n-switch-slider n-checked:n-switch-slider-checked">
       <div
         class="n-transition n-switch-thumb n-checked:n-switch-thumb-checked"
       />

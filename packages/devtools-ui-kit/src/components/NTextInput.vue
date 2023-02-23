@@ -20,13 +20,13 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
 </script>
 
 <template>
-  <div class="n-text-input n-bg-base focus-within:n-focus-base focus-within:border-context rounded px-2 py-1 border n-border-base flex items-center flex">
+  <div class="n-bg-base rounded py-1 border n-border-base flex items-center flex n-text-input focus-within:n-focus-base focus-within:border-context px-2">
     <slot name="icon">
-      <NIcon v-if="icon" :icon="icon" class="mr-0.4em text-1.1em op50" />
+      <NIcon v-if="icon" :icon="icon" class="op50 mr-0.4em text-1.1em" />
     </slot>
     <input
       v-model="input"
-      class="!outline-none flex-auto n-bg-base w-full"
+      class="flex-auto n-bg-base w-full !outline-none"
       :type="type"
       :placeholder="placeholder"
     >

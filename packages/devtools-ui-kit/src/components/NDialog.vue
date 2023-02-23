@@ -45,7 +45,7 @@ export default {
 
 <template>
   <div
-    class="n-dialog n-transition fixed inset-0 flex items-center justify-center z-100"
+    class="n-transition fixed flex items-center justify-center n-dialog inset-0 z-100"
     :class="[
       show ? '' : 'op0 pointer-events-none',
     ]"

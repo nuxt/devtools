@@ -19,7 +19,7 @@ const model = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <label
-    class="n-radio inline-flex items-center select-none hover:n-radio-hover n-disabled:n-disabled"
+    class="inline-flex items-center select-none n-disabled:n-disabled n-radio hover:n-radio-hover"
     :checked="model === value || null"
     :disabled="disabled || null"
   >
@@ -32,7 +32,7 @@ const model = useVModel(props, 'modelValue', emit, { passive: true })
       :value="value"
       @keypress.enter="model = value"
     >
-    <span class="n-transition n-radio-box n-checked:n-radio-box-checked peer-active:n-active-base peer-focus-visible:n-focus-base">
+    <span class="n-transition peer-active:n-active-base peer-focus-visible:n-focus-base n-radio-box n-checked:n-radio-box-checked">
       <div class="n-transition n-radio-inner n-checked:n-radio-inner-checked" />
     </span>
     <span><slot /></span>
