@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const frameState = devToolsFrameState
+const frameState = useDevToolsFrameState()
 
 const client = useClient()
 const nuxt = useNuxtApp()

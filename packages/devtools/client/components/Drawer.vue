@@ -13,7 +13,7 @@ const tabs = useTabs()
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
         />
         <template #popper>
-          <Settings />
+          <DockingPanel />
         </template>
       </VDropdown>
 

@@ -118,7 +118,7 @@ function goIntro() {
             Settings
           </button>
           <template #popper>
-            <Settings />
+            <SettingsPanel />
           </template>
         </VDropdown>
       </div>
