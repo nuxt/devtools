@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NuxtPlugin } from '@nuxt/schema'
+import type { NuxtPlugin } from 'nuxt/schema'
 
 const props = defineProps<{
   plugin: any

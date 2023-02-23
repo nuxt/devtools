@@ -1,5 +1,4 @@
-// @ts-expect-error missing types
-import { NuxtUIPreset } from '@nuxt/ui/unocss'
+import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
 import { defineConfig, presetAttributify, presetIcons, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
 
 export default defineConfig({
@@ -45,7 +44,7 @@ export default defineConfig({
         mono: 'Fira Code',
       },
     }),
-    NuxtUIPreset(),
+    devtoolsUIKitUnoPreset(),
   ],
   safelist: [
     'carbon-nominal',

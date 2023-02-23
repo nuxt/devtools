@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import { addPlugin, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'

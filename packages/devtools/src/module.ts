@@ -4,7 +4,7 @@ import type { ModuleCustomTab, ModuleGlobalOptions, ModuleOptions } from './type
 
 export type { ModuleOptions }
 
-declare module '@nuxt/schema' {
+declare module 'nuxt/schema' {
   interface NuxtHooks {
     /**
      * Called before devtools starts. Useful to detect if devtools is enabled.

@@ -1,5 +1,5 @@
 import { addVitePlugin } from '@nuxt/kit'
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import type { ViteInspectAPI } from 'vite-plugin-inspect'
 import Inspect from 'vite-plugin-inspect'
 import type { ServerFunctions } from '../types'

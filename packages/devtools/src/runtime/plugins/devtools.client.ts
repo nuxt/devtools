@@ -1,5 +1,5 @@
 import { createApp, markRaw } from 'vue'
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import { createHooks } from 'hookable'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'

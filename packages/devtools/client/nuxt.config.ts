@@ -1,12 +1,13 @@
 import { resolve } from 'path'
 
 import DevTools from '../src/module'
+import DevToolsUiKit from '../../devtools-ui-kit/src/module'
 
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/ui',
     'nuxt-vitest',
     '~/modules/custom-tabs',
+    DevToolsUiKit,
     DevTools,
   ],
   ssr: false,
