@@ -11,14 +11,14 @@ declare module 'nuxt/schema' {
 }
 
 export default defineNuxtConfig({
-  // Workaround for vercel deployment detecting nitro output
-  srcDir: __dirname,
-  rootDir: resolve(__dirname, '../../..'),
   modules: [
     DevtoolsUIKit,
   ],
   devtoolsUIKit: {
     dev: true,
+  },
+  nitro: {
+    rootDir: resolve(__dirname, '../../..'),
   },
   unocss: {
     preflight: true,
