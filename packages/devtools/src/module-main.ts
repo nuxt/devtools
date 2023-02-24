@@ -45,16 +45,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   const clientDirExists = existsSync(clientDir)
 
-  if (isInstalledGlobally) {
-    nuxt.hook('vite:extendConfig', (config) => {
-      config.server ||= {}
-      config.server.fs ||= {}
-      config.server.fs.allow ||= [
-        searchForWorkspaceRoot(process.cwd()),
-      ]
-      config.server.fs.allow.push(packageDir)
-    })
-  }
+  nuxt.hook('vite:extendConfig', (config) => {
+    config.server ||= {}
+    config.server.fs ||= {}
+    config.server.fs.allow ||= [
+      searchForWorkspaceRoot(process.cwd()),
+    ]
+    config.server.fs.allow.push(packageDir)
+  })
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
