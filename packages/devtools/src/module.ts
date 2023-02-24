@@ -1,8 +1,8 @@
 import { defineNuxtModule } from '@nuxt/kit'
-import isInstalledGlobally from 'is-installed-globally'
 import { defaultOptions } from './constant'
 import type { ModuleGlobalOptions, ModuleOptions } from './types'
 import './hooks'
+import { isGlobalInstall } from './dirs'
 
 export type { ModuleOptions }
 
@@ -17,7 +17,7 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.enabled === false)
       return
 
-    if (isInstalledGlobally) {
+    if (isGlobalInstall()) {
       // @ts-expect-error missing types
       const globalOptions = nuxt.options.devtoolsGlobal || {} as ModuleGlobalOptions
       if (options.enabled !== true && !globalOptions.projects?.includes(nuxt.options.rootDir))

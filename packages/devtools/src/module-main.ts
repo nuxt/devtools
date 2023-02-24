@@ -7,11 +7,10 @@ import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
 import c from 'picocolors'
-import isInstalledGlobally from 'is-installed-globally'
 import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './rpc'
-import { clientDir, packageDir, runtimeDir } from './dirs'
+import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
 import { ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
@@ -79,5 +78,5 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:initialized')
 
-  logger.success(`Nuxt Devtools is enabled ${c.dim(`v${version}`)}${isInstalledGlobally ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
+  logger.success(`Nuxt Devtools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
 }
