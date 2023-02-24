@@ -129,7 +129,6 @@ function goIntro() {
       <div flex-auto />
       <div flex="~ col gap2">
         <div
-          v-if="showConnectionWarning"
           px4 justify-center theme-banner-lightblue
         >
           <span flex-none i-carbon-keyboard />You can press <NButton n="xs lightblue">
