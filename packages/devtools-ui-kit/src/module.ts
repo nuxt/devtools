@@ -22,9 +22,6 @@ export default defineNuxtModule<ModuleOptions>({
     dev: false,
   },
   async setup(options, nuxt) {
-    // Nuxt overrides
-    addComponentsDir({ path: rPath('./components/nuxt') })
-
     // Standard components
     addComponentsDir({ path: rPath('./components') })
 
