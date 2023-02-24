@@ -39,7 +39,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
 
   function refresh(event: keyof ServerFunctions) {
-    birpc.boardcast.refresh.asEvent(event)
+    birpc.broadcast.refresh.asEvent(event)
   }
 
   Object.assign(serverFunctions, {

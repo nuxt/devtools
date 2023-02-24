@@ -255,6 +255,12 @@ When the iframe been served with the same origin (CORS limitation), devtools wil
 const router = computed(() => devtoolsClient.value?.host?.nuxt.vueApp.config.globalProperties?.$router)
 ```
 
+### Trying Local Changes to Nuxt DevTools
+
+You can clone Nuxt DevTools repo and try your changes locally.
+
+Please refer to [Trying Local Changes](CONTRIBUTING.md#trying-local-changes).
+
 ### Examples
 
 - Built-in VS Code integration with lazy initialize: https://github.com/nuxt/devtools/blob/main/src/integrations/vscode.ts.
@@ -262,6 +268,10 @@ const router = computed(() => devtoolsClient.value?.host?.nuxt.vueApp.config.glo
 - UnoCSS Inspector: https://github.com/unocss/unocss/blob/25021a751494e99e85cfd82cca3855cdf78f6a12/packages/nuxt/src/index.ts#L81-L94
 - Nuxt Vitest runner: https://github.com/danielroe/nuxt-vitest/blob/7bac68d96f27dea6c30c198b7caaaf0b495574ab/packages/nuxt-vitest/src/module.ts#L139-L181
 - Nuxt OG Image Playground: https://github.com/harlan-zw/nuxt-og-image/blob/main/src/module.ts#L136
+
+## Contribution Guide
+
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
 
 ## License
 
