@@ -174,6 +174,16 @@ Nuxt DevTools is designed to be extensible. You can add your own modules' integr
 
 > **Warning**: APIs are subject to change.
 
+### Starter Template
+
+If you want to try integrating with Nuxt DevTools, you can run
+
+```bash
+npx nuxi init my-module -t module-devtools
+```
+
+to create a new module starter with Nuxt DevTools integration pre-configured (contributing a fully custom view as a tab).
+
 ### Contributing to View
 
 Currently the only way to contribute to Nuxt DevTools View is via iframe. You need to serve your module's view yourself and then register it to the DevTools.
