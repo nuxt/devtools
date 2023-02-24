@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { version } from '../../package.json'
+
 const showDialog = ref(false)
 const showDropdown = ref(false)
 const radio = ref('a')
@@ -11,16 +13,19 @@ const radio = ref('a')
         This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
       </NTip>
 
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
         <div class="text-4xl">
           @nuxt/devtools-ui-kit
         </div>
+        <sup class="text-xl">
+          <code>v{{ version }}</code>
+        </sup>
       </div>
 
       <div class="flex gap-1 mb-5">
         <NButton
           n="sm"
-          to="https://github.com/nuxt/ui/tree/main/packages/ui"
+          to="https://github.com/nuxt/devtools/tree/main/packages/devtools-ui-kit"
           target="_blank"
           icon="i-carbon-logo-github"
         >
@@ -57,7 +62,7 @@ const radio = ref('a')
             XL Purple
           </NButton>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L44-L58" />
+        <ShowSource src="/playground/pages/index.vue#L44-L58" />
       </NCard>
 
       <NCard class="p4">
@@ -75,7 +80,7 @@ const radio = ref('a')
             XL Disabled
           </NCheckbox>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L68-L76" />
+        <ShowSource src="/playground/pages/index.vue#L68-L76" />
       </NCard>
 
       <NCard class="p4">
@@ -90,7 +95,7 @@ const radio = ref('a')
             nuxt.com
           </NLink>
         </form>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L86-L91" />
+        <ShowSource src="/playground/pages/index.vue#L86-L91" />
       </NCard>
 
       <NCard class="p4">
@@ -118,7 +123,7 @@ const radio = ref('a')
             Orange
           </NRadio>
         </form>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L101-L119" />
+        <ShowSource src="/playground/pages/index.vue#L101-L119" />
       </NCard>
 
       <NCard class="p4">
@@ -139,7 +144,7 @@ const radio = ref('a')
             XL
           </NSwitch>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L129-L140" />
+        <ShowSource src="/playground/pages/index.vue#L129-L140" />
       </NCard>
 
       <NCard class="p4">
@@ -157,7 +162,7 @@ const radio = ref('a')
             Error!
           </NTip>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L150-L158" />
+        <ShowSource src="/playground/pages/index.vue#L150-L158" />
       </NCard>
 
       <NCard class="p4">
@@ -179,7 +184,7 @@ const radio = ref('a')
             </div>
           </NDropdown>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L168-L180" />
+        <ShowSource src="/playground/pages/index.vue#L168-L180" />
       </NCard>
 
       <NCard class="p4">
@@ -204,7 +209,7 @@ const radio = ref('a')
             placeholder="Your password..."
           />
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L190-L205" />
+        <ShowSource src="/playground/pages/index.vue#L190-L205" />
       </NCard>
 
       <NCard class="p4">
@@ -230,7 +235,7 @@ const radio = ref('a')
             </div>
           </NDialog>
         </div>
-        <ShowSource src="https://github.com/nuxt/ui/blob/main/packages/ui/playground/pages/index.vue#L215-L231" />
+        <ShowSource src="/playground/pages/index.vue#L215-L231" />
       </NCard>
     </div>
   </div>

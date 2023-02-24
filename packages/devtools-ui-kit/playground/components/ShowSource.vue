@@ -4,7 +4,9 @@ const props = defineProps({
 })
 const show = ref(false)
 const embed = ref(null)
-const url = computed(() => `https://emgithub.com/embed-v2.js?target=${encodeURIComponent(props.src)}&style=default&type=code&showFullPath=on&showFileMeta=on&showCopy=on`)
+const repo = 'https://github.com/nuxt/devtools/tree/main/packages/devtools-ui-kit'
+const url = computed(() => `https://emgithub.com/embed-v2.js?target=${encodeURIComponent(repo + props.src)}&style=default&type=code&showFullPath=on&showFileMeta=on&showCopy=on`)
+
 watch(show, async () => {
   if (show.value) {
     await nextTick()
@@ -20,6 +22,6 @@ watch(show, async () => {
     <span n="xs" class="cursor-pointer text-gray n-link n-link-base hover:n-link-hover n-transition" @click="show = !show">
       {{ show ? 'Hide' : 'Show' }} source
     </span>
-    <div v-if="show" ref="embed" />
+    <div v-if="show" ref="embed" class="dark:filter-invert-100" />
   </div>
 </template>
