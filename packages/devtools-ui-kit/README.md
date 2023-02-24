@@ -6,7 +6,7 @@
 
 UI kit for module authors to build embedded views for Nuxt Devtools.
 
-- [Demo](https://components.ui.nuxtjs.org)
+- [Demo](https://ui-kit.devtools.nuxtjs.org/)
 
 ## Install
 
