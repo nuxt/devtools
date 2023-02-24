@@ -4,6 +4,7 @@ import type { Nuxt } from 'nuxt/schema'
 import { addPlugin, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
+import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
 import c from 'picocolors'
 import isInstalledGlobally from 'is-installed-globally'
@@ -48,7 +49,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.hook('vite:extendConfig', (config) => {
       config.server ||= {}
       config.server.fs ||= {}
-      config.server.fs.allow ||= []
+      config.server.fs.allow ||= [
+        searchForWorkspaceRoot(process.cwd()),
+      ]
       config.server.fs.allow.push(packageDir)
     })
   }

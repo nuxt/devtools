@@ -21,6 +21,7 @@ import { defineNuxtModule, logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import { resolve } from 'pathe'
 import { getPort } from 'get-port-please'
+import { searchForWorkspaceRoot } from 'vite'
 import { ROUTE_CLIENT, defaultOptions } from './packages/devtools/src/constant'
 import type { ModuleOptions } from './packages/devtools/src/types'
 import { packageDir } from './packages/devtools/src/dirs'
@@ -54,7 +55,9 @@ export default defineNuxtModule<ModuleOptions>({
       }
       // add fs allow for local modules
       config.server.fs ||= {}
-      config.server.fs.allow ||= []
+      config.server.fs.allow ||= [
+        searchForWorkspaceRoot(process.cwd()),
+      ]
       config.server.fs.allow.push(workspaceRoot)
     })
 
