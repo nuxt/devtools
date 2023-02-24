@@ -15,6 +15,7 @@ export default defineBuildConfig({
   externals: [
     'nuxt',
     'nuxt/schema',
+    'vite',
     '@nuxt/kit',
     '@nuxt/schema',
     // Type only
