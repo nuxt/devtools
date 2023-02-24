@@ -1,18 +1,21 @@
 <img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg">
-
 <br>
-<br>
-
-<h1 align="center">
+<h1>
 Nuxt DevTools <sup>Preview</sup>
 </h1>
 
-<p align="center">
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![License][license-src]][license-href]
+[![Nuxt][nuxt-src]][nuxt-href]
+[![Volta][volta-src]][volta-href]
+
+<p>
 Unleash Nuxt Developer Experience.
 <br>Nuxt DevTools is a set of visual tools that help you to know your app better.
 </p>
 
-<p align="center">
+<p>
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
   <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a>
 </p>
@@ -276,3 +279,20 @@ Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
 ## License
 
 [MIT](./LICENSE)
+
+
+<!-- Badges -->
+[npm-version-src]: https://img.shields.io/npm/v/@nuxt/devtools/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-version-href]: https://npmjs.com/package/@nuxt/devtools
+
+[npm-downloads-src]: https://img.shields.io/npm/dt/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
+[npm-downloads-href]: https://npmjs.com/package/@nuxt/devtools
+
+[license-src]: https://img.shields.io/npm/l/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
+[license-href]: https://npmjs.com/package/@nuxt/devtools
+
+[nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
+[nuxt-href]: https://nuxt.com
+
+[volta-src]: https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg
+[volta-href]: https://volta.net/nuxt/devtools?utm_source=nuxt_devtools_readme
