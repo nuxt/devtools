@@ -8,7 +8,7 @@ const radio = ref('a')
 
 <template>
   <div class="relative p-10 n-bg-base">
-    <div class="w-full flex container mx-auto flex-col gap-4">
+    <div class="w-full flex gap-4 container mx-auto flex-col">
       <NTip n="hover:yellow-600 dark:hover:yellow-500">
         This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
       </NTip>

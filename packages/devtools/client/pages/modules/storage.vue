@@ -95,7 +95,7 @@ async function removeCurrentItem() {
     </div>
     <div v-if="current?.key" h-full of-hidden flex="~ col">
       <div border="b base" class="text-sm op75 flex items-center h-15 px-4 justify-between">
-        <div class="flex gap-4 items-center">
+        <div class="flex items-center gap-4">
           <code>{{ current.key }}</code>
           <NButton n="green xs" :disabled="current.content === current.updatedContent" :class="{ 'border-green': current.content !== current.updatedContent }" @click="saveCurrentItem">
             Save
