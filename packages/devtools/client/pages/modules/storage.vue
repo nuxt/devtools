@@ -110,7 +110,13 @@ async function removeCurrentItem() {
       <textarea v-if="typeof current.content === 'string'" v-model="current.updatedContent" class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
       <JsonEditorVue v-else v-model="current.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
     </div>
-    <span v-else flex items-center justify-center op50>Select one file to start</span>
+    <div v-else flex items-center justify-center op50 text-center>
+      <p>
+        Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
+          Nitro storage
+        </NLink>
+      </p>
+    </div>
   </div>
 </template>
 
