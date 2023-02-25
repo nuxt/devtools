@@ -16,6 +16,12 @@ export default defineNuxtConfig({
     output: {
       publicDir: resolve(__dirname, '../dist/client'),
     },
+    devStorage: {
+      test: {
+        driver: 'fs',
+        base: resolve(__dirname, './.data/test'),
+      },
+    },
   },
   appConfig: {
     fixture2: 'from nuxt.config.ts',

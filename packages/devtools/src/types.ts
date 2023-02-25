@@ -6,6 +6,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { VNode } from 'vue'
+import type { StorageValue } from 'unstorage'
 import type { WizardActions, WizardArgs } from './wizard'
 import type {} from '@nuxt/schema'
 
@@ -31,6 +32,10 @@ export interface ModuleGlobalOptions {
 }
 
 export interface ServerFunctions {
+  getStorageKeys(): Promise<string[]>
+  getStorageItem(key: string): Promise<StorageValue>
+  setStorageItem(key: string, value: StorageValue): Promise<void>
+  removeStorageItem(key: string): Promise<void>
   getServerConfig(): NuxtOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>

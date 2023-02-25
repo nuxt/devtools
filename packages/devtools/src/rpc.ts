@@ -5,6 +5,7 @@ import type { WebSocket } from 'ws'
 import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
 import c from 'picocolors'
+import type { Storage, StorageValue } from 'unstorage'
 
 import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtApp, NuxtPage } from 'nuxt/schema'
@@ -28,6 +29,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   const iframeTabs: ModuleCustomTab[] = []
   const customTabs: ModuleCustomTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
+  let storage: Storage | undefined
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
 
@@ -42,7 +44,33 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
     birpc.broadcast.refresh.asEvent(event)
   }
 
+  nuxt.hook('nitro:init', (nitro) => {
+    storage = nitro.storage
+  })
+
   Object.assign(serverFunctions, {
+    async getStorageKeys() {
+      if (!storage)
+        return []
+      const keys = await storage.getKeys()
+
+      return keys.filter(key => !['root', 'build', 'src'].includes(key.split(':')[0]))
+    },
+    async getStorageItem(key: string) {
+      if (!storage)
+        return null
+      return await storage.getItem(key)
+    },
+    async setStorageItem(key: string, value: StorageValue) {
+      if (!storage)
+        return
+      return await storage.setItem(key, value)
+    },
+    async removeStorageItem(key: string) {
+      if (!storage)
+        return
+      return await storage.removeItem(key)
+    },
     getServerConfig() {
       return nuxt.options
     },
