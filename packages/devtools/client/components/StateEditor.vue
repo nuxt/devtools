@@ -95,7 +95,7 @@ async function refresh() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .json-editor-vue {
   --jse-theme-color: #383e42 !important;
   --jse-theme-color-highlight: #687177 !important;

@@ -20,15 +20,24 @@ watchEffect(async () => {
     current.value = null
     return
   }
-  const content = await rpc.getStorageItem(fileKey.value)
-  current.value = { key: fileKey.value, content, updatedContent: content }
+  fetchItem(fileKey.value)
 })
 
 const filteredKeys = computed(() => {
   if (!keys.value)
     return []
-  return keys.value.filter(key => key.startsWith(searchString.value))
+  return keys.value.filter(key => key.includes(searchString.value))
 })
+
+async function fetchItem(key: string) {
+  const content = await rpc.getStorageItem(key)
+  current.value = {
+    key: fileKey.value,
+    content,
+    updatedContent: content,
+  }
+}
+
 async function saveNewItem() {
   if (!newKey.value)
     return
@@ -44,7 +53,7 @@ async function saveCurrentItem() {
   if (!current.value)
     return
   await rpc.setStorageItem(current.value.key, current.value.updatedContent)
-  current.value.content = current.value.updatedContent
+  await fetchItem(current.value.key)
 }
 async function removeCurrentItem() {
   if (!current.value)
@@ -77,6 +86,7 @@ async function removeCurrentItem() {
       </NuxtLink>
       <NTextInput
         v-model="newKey"
+        icon="carbon-add"
         placeholder="new:key"
         n="sm"
         class="w-full outline-none border-0 border-b rounded-none"
@@ -87,7 +97,7 @@ async function removeCurrentItem() {
       <div border="b base" class="text-sm op75 flex items-center h-15 px-4 justify-between">
         <div class="flex gap-4 items-center">
           <code>{{ current.key }}</code>
-          <NButton n="green xs" :disabled="current.content === current.updatedContent" @click="saveCurrentItem">
+          <NButton n="green xs" :disabled="current.content === current.updatedContent" :class="{ 'border-green': current.content !== current.updatedContent }" @click="saveCurrentItem">
             Save
           </NButton>
         </div>
@@ -97,9 +107,24 @@ async function removeCurrentItem() {
           </NButton>
         </div>
       </div>
-      <textarea v-if="typeof current.content === 'string'" v-model="current.updatedContent" class="of-auto h-full text-sm outline-none p-4" />
-      <JsonEditorVue v-else v-model="current.updatedContent" class="of-auto h-full text-sm outline-none" />
+      <textarea v-if="typeof current.content === 'string'" v-model="current.updatedContent" class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
+      <JsonEditorVue v-else v-model="current.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
     </div>
     <span v-else flex items-center justify-center op50>Select one file to start</span>
   </div>
 </template>
+
+<style scoped>
+.json-editor-vue.light {
+  --jse-theme-color: #ebebeb !important;
+  --jse-theme-color-highlight: #bbb !important;
+  --jse-background-color: #8881 !important;
+  --jse-menu-color: #333 !important;
+}
+.json-editor-vue.jse-theme-dark {
+  --jse-theme-color: #1d1d1d !important;
+  --jse-theme-color-highlight: #333 !important;
+  --jse-background-color: #8881 !important;
+  --jse-menu-color: #aaa !important;
+}
+</style>
