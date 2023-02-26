@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Pane, Splitpanes } from 'splitpanes'
+
 const client = useClient()
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 </script>
@@ -12,11 +14,13 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
         Connecting...
       </div>
     </div>
-    <div v-else grid="~ cols-[45px_1fr] lg:cols-[200px_1fr]" h-full of-hidden>
-      <Drawer of-auto />
-      <div h-full of-auto>
+    <Splitpanes v-else h-full of-hidden>
+      <Pane class="default-theme" min-size="2" size="20" of-auto>
+        <Drawer />
+      </Pane>
+      <Pane h-full of-auto>
         <slot />
-      </div>
-    </div>
+      </Pane>
+    </splitpanes>
   </div>
 </template>

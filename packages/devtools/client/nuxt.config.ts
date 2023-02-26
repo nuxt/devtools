@@ -17,6 +17,9 @@ export default defineNuxtConfig({
       publicDir: resolve(__dirname, '../dist/client'),
     },
   },
+  css: [
+    'splitpanes/dist/splitpanes.css',
+  ],
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },

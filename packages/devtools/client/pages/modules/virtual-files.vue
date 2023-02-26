@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import { Pane, Splitpanes } from 'splitpanes'
 
 definePageMeta({
   icon: 'carbon-assembly-reference',
@@ -72,8 +73,8 @@ const filteredFiles = computed(() => {
 </script>
 
 <template>
-  <div grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
-    <div border="r base" of-auto resize-x w="300px">
+  <Splitpanes h-full of-hidden class="virtual-files">
+    <Pane border="r base" size="30" of-auto>
       <div pb2 p3>
         <NTextInput
           v-model="searchString"
@@ -90,15 +91,17 @@ const filteredFiles = computed(() => {
       >
         {{ toShortPath(f.id) }}
       </NuxtLink>
-    </div>
-    <div v-if="current?.content" h-full of-hidden flex="~ col">
-      <div border="b base" px4 py2 text-sm op75 flex-none>
-        <code>{{ current.id }}</code>
+    </Pane>
+    <Pane>
+      <div v-if="current?.content" h-full of-hidden flex="~ col">
+        <div border="b base" px4 py2 text-sm op75 flex-none>
+          <code>{{ current.id }}</code>
+        </div>
+        <pre of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
       </div>
-      <pre of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
-    </div>
-    <span v-else flex items-center justify-center op50>Select one file to start</span>
-  </div>
+      <span v-else flex items-center justify-center op50>Select one file to start</span>
+    </Pane>
+  </Splitpanes>
 </template>
 
 <style>
