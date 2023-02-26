@@ -74,7 +74,7 @@ const filteredFiles = computed(() => {
 
 <template>
   <Splitpanes h-full of-hidden class="virtual-files">
-    <Pane border="r base" size="30" of-auto>
+    <Pane border="r base" size="30" min-size="5" of-auto>
       <div pb2 p3>
         <NTextInput
           v-model="searchString"
@@ -92,7 +92,7 @@ const filteredFiles = computed(() => {
         {{ toShortPath(f.id) }}
       </NuxtLink>
     </Pane>
-    <Pane>
+    <Pane min-size="5">
       <div v-if="current?.content" h-full of-hidden flex="~ col">
         <div border="b base" px4 py2 text-sm op75 flex-none>
           <code>{{ current.id }}</code>

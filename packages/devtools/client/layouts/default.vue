@@ -15,10 +15,10 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
       </div>
     </div>
     <Splitpanes v-else h-full of-hidden>
-      <Pane class="default-theme" min-size="2" size="20" of-auto>
+      <Pane class="default-theme" min-size="5" size="20" of-auto>
         <Drawer />
       </Pane>
-      <Pane h-full of-auto>
+      <Pane h-full of-auto min-size="5">
         <slot />
       </Pane>
     </splitpanes>
