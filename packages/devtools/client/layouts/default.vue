@@ -21,6 +21,6 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
       <Pane h-full of-auto min-size="5">
         <slot />
       </Pane>
-    </splitpanes>
+    </Splitpanes>
   </div>
 </template>
