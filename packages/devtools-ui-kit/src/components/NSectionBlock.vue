@@ -19,31 +19,31 @@ withDefaults(
 
 <template>
   <details :open="open">
-    <summary select-none cursor-pointer p4 hover:bg-active :class="collapse ? '' : 'pointer-events-none'">
-      <NIconTitle :icon="icon" :text="text" text-xl op75>
+    <summary class="select-none cursor-pointer p4 hover:bg-active" :class="collapse ? '' : 'pointer-events-none'">
+      <NIconTitle :icon="icon" :text="text" class="text-xl op75">
         <div>
           {{ text }}
-          <div v-if="description" op50 text-sm>
+          <div v-if="description" class="op50 text-sm">
             {{ description }}
           </div>
         </div>
-        <div flex-auto />
+        <div class="flex-auto" />
         <NIcon
           v-if="collapse"
-          icon="carbon-chevron-down" text-base op50 cursor-pointer transition duration-500 place-self-start
-          class="chevron"
+          icon="carbon-chevron-down"
+          class="text-base op50 cursor-pointer transition duration-500 place-self-start chevron"
         />
       </NIconTitle>
     </summary>
-    <div flex="~ col gap2" pt2 pb6 :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
+    <div class="pt2 pb6 flex flex-col flex-gap2" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
-      <div :class="containerClass" mt1>
+      <div :class="containerClass" class="mt1">
         <slot />
       </div>
       <slot name="footer" />
     </div>
   </details>
-  <div x-divider />
+  <div class="x-divider" />
 </template>
 
 <style scoped>
