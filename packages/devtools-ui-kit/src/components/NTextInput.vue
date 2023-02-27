@@ -3,7 +3,7 @@ import { useVModel } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
+    modelValue?: string | number
     placeholder?: string
     icon?: string
     disabled?: boolean
