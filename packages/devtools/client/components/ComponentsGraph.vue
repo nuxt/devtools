@@ -2,7 +2,7 @@
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
 import { Network } from 'vis-network'
-import type { ComponentRelationship } from '~~/../src/types'
+import type { ComponentRelationship } from '~/../src/types'
 
 const props = defineProps<{
   components: Component[]
@@ -20,6 +20,7 @@ const selected = ref<{
 }>()
 
 const pages = useServerPages()
+const config = useServerConfig()
 const layouts = useLayouts()
 const relationships = useComponentsRelationships()
 
@@ -27,6 +28,7 @@ const {
   componentsGraphShowNodeModules: showNodeModules,
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
+  componentsGraphShowWorkspace: showWorkspace,
 } = useDevToolsSettings()
 
 const selectedFilter = ref<ComponentRelationship>()
@@ -72,6 +74,8 @@ const data = computed<Data>(() => {
     if (!showPages.value && group === 'page')
       return null
     if (!showLayouts.value && group === 'layout')
+      return null
+    if (!showWorkspace.value && group === 'user' && config.value && !rel.id.startsWith(config.value.rootDir))
       return null
 
     const shape = group === 'layout'
@@ -183,6 +187,9 @@ function setFilter() {
     </NCheckbox>
     <NCheckbox v-model="showLayouts" n="primary sm">
       <span op75>Show layouts</span>
+    </NCheckbox>
+    <NCheckbox v-model="showWorkspace" n="primary sm">
+      <span op75>Show workspace</span>
     </NCheckbox>
     <NCheckbox v-model="showNodeModules" n="primary sm">
       <span op75>Show node_modules</span>
