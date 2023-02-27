@@ -12,7 +12,7 @@ const payload = computed(() => client.value?.nuxt.payload)
 
 <template>
   <div v-if="client">
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-data-set"
       text="State"
       description="Keyed state from `useState`"
@@ -21,8 +21,8 @@ const payload = computed(() => client.value?.nuxt.payload)
       <StateGroup
         :state="payload.state" prefix="$s"
       />
-    </SectionBlock>
-    <SectionBlock
+    </NSectionBlock>
+    <NSectionBlock
       icon="carbon-data-blob"
       text="Data"
       description="Keyed state from `useAsyncData`"
@@ -31,8 +31,8 @@ const payload = computed(() => client.value?.nuxt.payload)
       <StateGroup
         :state="payload.data"
       />
-    </SectionBlock>
-    <SectionBlock
+    </NSectionBlock>
+    <NSectionBlock
       v-if="payload.functions && Object.keys(payload.functions).length"
       icon="carbon-function"
       text="Functions"
@@ -42,6 +42,6 @@ const payload = computed(() => client.value?.nuxt.payload)
         ml--6
         :state="payload.functions"
       />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
 </template>

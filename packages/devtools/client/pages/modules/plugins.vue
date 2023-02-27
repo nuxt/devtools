@@ -10,7 +10,7 @@ const config = useServerConfig()
 
 <template>
   <div v-if="config">
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-plug"
       text="Plugins"
       :description="`Total plugins: ${config.plugins.length}`"
@@ -22,6 +22,6 @@ const config = useServerConfig()
         :index="idx + 1"
         py2 ml--4 border="b base"
       />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
 </template>
