@@ -1,0 +1,50 @@
+# Contribution Guide
+
+Hi! We're really excited that you're interested in contributing to Nuxt DevTools! Before submitting your contribution, please read through the following guide.
+
+## Monorepo
+
+The Nuxt DevTools repo is a monorepo using pnpm workspaces. The package manager used to install and link dependencies must be [pnpm](https://pnpm.io/).
+
+After cloning the repo, run `pnpm i` in the root folder to install all dependencies.
+
+> Nuxt DevTools uses pnpm v7. If you are working on multiple projects with different versions of pnpm, it's recommended to enable [Corepack](https://github.com/nodejs/corepack) by running `corepack enable`.
+
+## Packages
+
+This repo contains the following packages:
+
+- `@nuxt/devtools`: The Nuxt DevTools module
+- `@nuxt/devtools-ui-kit`: The UI Kit used by Nuxt DevTools, and also for module authors to build UI for Devtools interation
+
+### Development DevTools
+
+Most of the scripts are forward to the root `package.json`. You can run `pnpm dev` in the root folder to start the development server (Nuxt DevTools on top of it's own client UI).
+
+Or you can `cd packages/devtools` and run `pnpm dev` to start the developement server.
+
+### Development UI Kit
+
+Normally when you are developing the Nuxt DevTools, the components in the UI Kit already get the HMR capabilities. But if you want to develop the UI Kit itself, you can run `cd packages/devtools-ui-kit` and run `pnpm dev` to start the playground for the UI Kit.
+
+## Trying Local Changes
+
+If you want to try your local changes in other Nuxt projects, you can use the `local.ts` module under the root folder.
+
+Change `@nuxt/devtools` to the absolute path of this module in any of your Nuxt projects,
+allows you to try Nuxt Devtools locally directly from the source code. HMR is supported
+for the front-end client.
+
+For example, if you clone this repo to `/users/me/nuxt-devtools`, update your nuxt config:
+
+```diff
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: [
+-   '@nuxt/devtools',
++   '/users/me/nuxt-devtools/local',
+  ]
+})
+```
+
+One the module code, the source TypeScript file are directly used, so you don't need to run the build everytime. However, do to Node.js module caching, you need to restart your app to see the changes on the module side.

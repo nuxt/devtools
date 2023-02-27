@@ -1,11 +1,18 @@
 export default defineAppConfig({
   docus: {
-    title: 'Docus',
-    description: 'The best place to start your documentation.',
-    image: 'https://user-images.githubusercontent.com/904724/185365452-87b7ca7b-6030-4813-a2db-5e65c785bf88.png',
+    title: 'Nuxt DevTools',
+    description: 'Unleash Nuxt Developer Experience.',
+    image: 'https://repository-images.githubusercontent.com/420050565/6459bd6d-fd45-4bce-918a-9c5fa62a0576',
     socials: {
-      twitter: 'nuxt_themes',
-      github: 'nuxt-themes/docus',
+      twitter: 'nuxt_js',
+      github: 'nuxt/devtools',
+    },
+    github: {
+      owner: 'nuxt',
+      repo: 'devtools',
+      branch: 'main',
+      dir: 'docs/content',
+      edit: true,
     },
     aside: {
       level: 0,
