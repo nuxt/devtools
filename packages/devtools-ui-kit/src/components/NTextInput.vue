@@ -28,6 +28,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
       v-model="input"
       class="flex-auto n-bg-base w-full !outline-none"
       :type="type"
+      :disabled="disabled"
       :placeholder="placeholder"
     >
   </div>
