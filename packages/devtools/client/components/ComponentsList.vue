@@ -4,8 +4,9 @@ import Fuse from 'fuse.js'
 
 const props = defineProps<{
   components: Component[]
-  search: string
 }>()
+
+const search = ref('')
 
 const fuse = computed(() => new Fuse(props.components, {
   keys: [
@@ -28,8 +29,8 @@ const filtered = computed(() => {
     runtime: 0,
   }
 
-  const result = props.search
-    ? fuse.value.search(props.search).map(i => i.item)
+  const result = search.value
+    ? fuse.value.search(search.value).map(i => i.item)
     : props.components
 
   result
@@ -73,6 +74,17 @@ const filtered = computed(() => {
 </script>
 
 <template>
+  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass>
+    <NTextInput
+      v-model="search"
+      placeholder="Search..."
+      icon="carbon-search"
+      p="x5 y2"
+      n="primary"
+      flex-auto bg-base border-base
+    />
+    <slot />
+  </div>
   <NSectionBlock
     v-if="filtered.user.length"
     icon="carbon-nominal"

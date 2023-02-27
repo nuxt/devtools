@@ -24,7 +24,7 @@ export function useComponents() {
         pascalName: key,
         global: true,
       } as unknown as Component))
-    // dedupe server components
+      // dedupe server components
       .filter(i => !(serverComponents.value || []).find(j => j.pascalName === i.pascalName)),
   )
 
