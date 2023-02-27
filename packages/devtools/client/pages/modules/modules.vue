@@ -36,7 +36,7 @@ watchEffect(() => {
 
 <template>
   <div>
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-3d-mpr-toggle"
       text="Installed Modules"
       container-class="grid grid-cols-minmax-400px gap2"
@@ -52,8 +52,8 @@ watchEffect(() => {
         :key="m.meta?.name || m.entryPath"
         :mod="m"
       />
-    </SectionBlock>
-    <SectionBlock
+    </NSectionBlock>
+    <NSectionBlock
       v-if="userModules.length"
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
@@ -65,6 +65,6 @@ watchEffect(() => {
         :key="m.meta?.name || m.entryPath"
         :mod="m"
       />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
 </template>

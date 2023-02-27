@@ -22,7 +22,7 @@ const privateConfig = computed(() => {
 
 <template>
   <div v-if="client">
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-settings-services"
       text="App Config"
     >
@@ -30,9 +30,9 @@ const privateConfig = computed(() => {
         ml--6
         :state="client.appConfig"
       />
-    </SectionBlock>
+    </NSectionBlock>
 
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-settings"
       text="Public Runtime Config"
     >
@@ -40,9 +40,9 @@ const privateConfig = computed(() => {
         ml--6
         :state="payload.config?.public"
       />
-    </SectionBlock>
+    </NSectionBlock>
 
-    <SectionBlock
+    <NSectionBlock
       icon="carbon-locked"
       :open="false"
       text="Private Runtime Config"
@@ -53,6 +53,6 @@ const privateConfig = computed(() => {
         :state="privateConfig"
         readonly
       />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
 </template>

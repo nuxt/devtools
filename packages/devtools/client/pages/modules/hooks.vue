@@ -11,7 +11,7 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
 
 <template>
   <div>
-    <SectionBlock
+    <NSectionBlock
       v-if="clientHooks?.length"
       icon="carbon-ibm-cloud-direct-link-1-dedicated-hosting"
       text="Client Hooks"
@@ -19,14 +19,14 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
       padding="pl4 pr6"
     >
       <HooksTable :hooks="clientHooks" />
-    </SectionBlock>
-    <SectionBlock
+    </NSectionBlock>
+    <NSectionBlock
       icon="carbon-ibm-cloud-direct-link-2-dedicated"
       text="Server Hooks"
       :description="`Total hooks: ${serverHooks.length}`"
       padding="pl4 pr6"
     >
       <HooksTable :hooks="serverHooks" />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
 </template>

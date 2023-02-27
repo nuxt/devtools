@@ -20,7 +20,7 @@ withDefaults(
 <template>
   <details :open="open">
     <summary select-none cursor-pointer p4 hover:bg-active :class="collapse ? '' : 'pointer-events-none'">
-      <IconTitle :icon="icon" :text="text" text-xl op75>
+      <NIconTitle :icon="icon" :text="text" text-xl op75>
         <div>
           {{ text }}
           <div v-if="description" op50 text-sm>
@@ -33,7 +33,7 @@ withDefaults(
           icon="carbon-chevron-down" text-base op50 cursor-pointer transition duration-500 place-self-start
           class="chevron"
         />
-      </IconTitle>
+      </NIconTitle>
     </summary>
     <div flex="~ col gap2" pt2 pb6 :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
