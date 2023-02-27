@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
 import { Pane, Splitpanes } from 'splitpanes'
+import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-assembly-reference',
