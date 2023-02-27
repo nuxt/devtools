@@ -9,7 +9,8 @@
     "typecheck": "nuxi typecheck",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
-    "test": "pnpm lint"
+    "test": "pnpm lint",
+    "docs": "nuxi dev docs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.2",

@@ -35,7 +35,7 @@ withDefaults(
         />
       </NIconTitle>
     </summary>
-    <div class="pt2 pb6 flex flex-col flex-gap2" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
+    <div class="flex flex-col flex-gap2 pt2 pb6" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
       <div :class="containerClass" class="mt1">
         <slot />

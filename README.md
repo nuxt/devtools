@@ -17,7 +17,8 @@ Unleash Nuxt Developer Experience.
 
 <p>
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
-  <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a>
+  <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a> |
+  <a href="https://devtools.nuxtjs.org/">📚 Documentation</a> |
 </p>
 
 <br>
@@ -170,121 +171,11 @@ Inspect expose the [`vite-plugin-inspect`](https://github.com/antfu/vite-plugin-
 
 ## Module Authors
 
-Nuxt DevTools is designed to be extensible. You can add your own modules' integration to the DevTools.
-
-> **Warning**: APIs are subject to change.
-
-### Starter Template
-
-If you want to try integrating with Nuxt DevTools, you can run
-
-```bash
-npx nuxi init my-module -t module-devtools
-```
-
-to create a new module starter with Nuxt DevTools integration pre-configured (contributing a fully custom view as a tab).
-
-### Contributing to View
-
-Currently the only way to contribute to Nuxt DevTools View is via iframe. You need to serve your module's view yourself and then register it to the DevTools.
-
-```ts
-nuxt.hook('devtools:customTabs', (tabs) => {
-  tabs.push({
-    // unique identifier
-    name: 'my-module',
-    // title to display in the tab
-    title: 'My Module',
-    // any icon from Iconify, or a URL to an image
-    icon: 'carbon:apps',
-    // iframe view
-    view: {
-      type: 'iframe',
-      src: '/url-to-your-module-view',
-    },
-  })
-})
-```
-
-### Lazy Service Launching
-
-If the view you are contributing is heavy to load, you can have the tab first and let user launch it when they need it.
-
-```ts
-let isReady = false
-const promise: Promise<any> | null = null
-
-async function launchService() {
-  // ...launch your service
-  isReady = true
-}
-
-nuxt.hook('devtools:customTabs', (tabs) => {
-  tabs.push({
-    name: 'my-module',
-    title: 'My Module',
-    view: isReady
-      ? {
-          type: 'iframe',
-          src: '/url-to-your-module-view',
-        }
-      : {
-          type: 'launch',
-          description: 'Launch My Module',
-          actions: [{
-            label: 'Start',
-            async handle() {
-              if (!promise)
-                promise = launchService()
-              await promise
-            },
-          }]
-        },
-  })
-})
-```
-
-It will first display a launch page with a button to start the service. When user click the button, the `handle()` will be called, and the view will be updated to iframe.
-
-When you need to refresh the custom tabs, you can call `nuxt.callHook('devtools:customTabs:refresh')` and the hooks on `devtools:customTabs` will be revaluated again.
-
-### DevTools API from Custom View
-
-To provide complex interactions for your module integrations, we recommend to host your own view and display it in devtools via iframe.
-
-To get the infomation from the devtools and the client app, you can do this in your client app:
-
-```ts
-import { useDevtoolsClient } from '@nuxt/devtools/iframe-client'
-
-export const devtoolsClient = useDevtoolsClient()
-```
-
-When the iframe been served with the same origin (CORS limitation), devtools will automatically inject `__NUXT_DEVTOOLS__` to the iframe's window object. You can access it as a ref using `useDevtoolsClient()` utility.
-
-`devtoolsClient.value.host` contains APIs to communicate with the client app, and `devtoolsClient.value.devtools` contains APIs to communicate with the devtools. For example, you can get the router instance from the client app:
-
-```ts
-const router = computed(() => devtoolsClient.value?.host?.nuxt.vueApp.config.globalProperties?.$router)
-```
-
-### Trying Local Changes to Nuxt DevTools
-
-You can clone Nuxt DevTools repo and try your changes locally.
-
-Please refer to [Trying Local Changes](CONTRIBUTING.md#trying-local-changes).
-
-### Examples
-
-- Built-in VS Code integration with lazy initialize: https://github.com/nuxt/devtools/blob/main/packages/devtools/src/integrations/vscode.ts.
-- VueUse adds a docs tab: https://github.com/vueuse/vueuse/blob/ce28cef154489c73abe308104bef8568594a9bcd/packages/nuxt/index.ts#L89-L99.
-- UnoCSS Inspector: https://github.com/unocss/unocss/blob/25021a751494e99e85cfd82cca3855cdf78f6a12/packages/nuxt/src/index.ts#L81-L94
-- Nuxt Vitest runner: https://github.com/danielroe/nuxt-vitest/blob/7bac68d96f27dea6c30c198b7caaaf0b495574ab/packages/nuxt-vitest/src/module.ts#L139-L181
-- Nuxt OG Image Playground: https://github.com/harlan-zw/nuxt-og-image/blob/main/src/module.ts#L136
+Please refer to the [Module Authors Guide](https://devtools.nuxtjs.org/module/guide).
 
 ## Contribution Guide
 
-Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
+Please refer to the [Contribution Guide](https://devtools.nuxtjs.org/development/contributing).
 
 ## License
 
