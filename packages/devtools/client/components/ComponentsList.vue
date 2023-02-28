@@ -35,12 +35,6 @@ const filtered = computed(() => {
 
   result
     .forEach((component) => {
-      if (component.global) {
-        runtime.push(component)
-        count.runtime++
-        return
-      }
-
       if (component.filePath && isNodeModulePath(component.filePath)) {
         const name = getModuleNameFromPath(component.filePath)
         if (!name)
@@ -55,6 +49,10 @@ const filtered = computed(() => {
           lib.get(name)!.push(component)
           count.lib++
         }
+      }
+      else if (component.global && !component.filePath) {
+        runtime.push(component)
+        count.runtime++
       }
       else {
         user.push(component)
