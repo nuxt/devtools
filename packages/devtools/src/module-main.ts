@@ -63,8 +63,12 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   })
 
   const integrations = [
-    import('./integrations/vue-inspector').then(({ setup }) => setup(nuxt, serverFunctions)),
-    import('./integrations/vite-inspect').then(({ setup }) => setup(nuxt, serverFunctions)),
+    options.viteInspect !== false
+      ? import('./integrations/vite-inspect').then(({ setup }) => setup(nuxt, serverFunctions))
+      : null,
+    options.componentInspector !== false
+      ? import('./integrations/vue-inspector').then(({ setup }) => setup(nuxt, serverFunctions))
+      : null,
     options.vscode?.enabled
       ? import('./integrations/vscode').then(({ setup }) => setup(nuxt, serverFunctions, options.vscode || {}))
       : null,

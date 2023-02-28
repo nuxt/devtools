@@ -23,6 +23,20 @@ export interface ModuleOptions {
    * VS Code Server integration options.
    */
   vscode?: VSCodeIntegrationOptions
+
+  /**
+   * Enable Vue Component Inspector
+   *
+   * @default true
+   */
+  componentInspector?: boolean
+
+  /**
+   * Enable vite-plugin-inspect
+   *
+   * @default true
+   */
+  viteInspect?: boolean
 }
 
 export interface ModuleGlobalOptions {
@@ -289,6 +303,9 @@ export interface NuxtDevtoolsHostClient {
 
 export interface NuxtDevtoolsClient {
   rpc: BirpcReturn<ServerFunctions>
+  renderCodeHighlight: (code: string, lang: string, theme?: string) => string
+  renderMarkdown: (markdown: string) => string
+  colorMode: string
 }
 
 export interface NuxtDevtoolsIframeClient {
@@ -315,6 +332,7 @@ export interface DevToolsUISettings {
   componentsGraphShowNodeModules: boolean
   componentsGraphShowPages: boolean
   componentsGraphShowLayouts: boolean
+  componentsGraphShowWorkspace: boolean
   interactionCloseOnOutsideClick: boolean
   showExperimentalFeatures: boolean
 }

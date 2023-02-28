@@ -17,4 +17,7 @@ export default defineNuxtConfig({
     preflight: true,
     configFile: resolve(__dirname, '../unocss.config.ts'),
   },
+  alias: {
+    '@nuxt/devtools/iframe-client': resolve(__dirname, './stub/iframe-client.ts'),
+  },
 })

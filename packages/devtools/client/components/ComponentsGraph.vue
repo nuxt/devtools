@@ -2,7 +2,7 @@
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
 import { Network } from 'vis-network'
-import type { ComponentRelationship } from '~~/../src/types'
+import type { ComponentRelationship } from '~/../src/types'
 
 const props = defineProps<{
   components: Component[]
@@ -20,6 +20,7 @@ const selected = ref<{
 }>()
 
 const pages = useServerPages()
+const config = useServerConfig()
 const layouts = useLayouts()
 const relationships = useComponentsRelationships()
 
@@ -27,6 +28,7 @@ const {
   componentsGraphShowNodeModules: showNodeModules,
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
+  componentsGraphShowWorkspace: showWorkspace,
 } = useDevToolsSettings()
 
 const selectedFilter = ref<ComponentRelationship>()
@@ -72,6 +74,8 @@ const data = computed<Data>(() => {
     if (!showPages.value && group === 'page')
       return null
     if (!showLayouts.value && group === 'layout')
+      return null
+    if (!showWorkspace.value && group === 'user' && config.value && !rel.id.startsWith(config.value.rootDir))
       return null
 
     const shape = group === 'layout'
@@ -177,12 +181,15 @@ function setFilter() {
 </script>
 
 <template>
-  <div border="b base" flex="~ gap4" py1 items-center px4 h-10 flex-none>
+  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0 h-60px>
     <NCheckbox v-model="showPages" n="primary sm">
       <span op75>Show pages</span>
     </NCheckbox>
     <NCheckbox v-model="showLayouts" n="primary sm">
       <span op75>Show layouts</span>
+    </NCheckbox>
+    <NCheckbox v-model="showWorkspace" n="primary sm">
+      <span op75>Show workspace</span>
     </NCheckbox>
     <NCheckbox v-model="showNodeModules" n="primary sm">
       <span op75>Show node_modules</span>
@@ -190,8 +197,11 @@ function setFilter() {
     <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
       Clear filter <div i-carbon-close />
     </button>
+    <div flex-auto />
+    <slot />
   </div>
-  <div w-full relative style="height:calc(100vh - 115px)">
+
+  <div w-full h-full relative>
     <div ref="container" w-full h-full />
     <Transition
       enter-active-class="duration-200 ease-in"
@@ -204,8 +214,8 @@ function setFilter() {
       <div
         v-if="selected && selected.component"
         border="l base"
-        flex="~ col gap-1"
-        text-sm items-center absolute right-0 top-0 bg-base p2 bottom-0
+        flex="~ col gap-1" navbar-glass
+        text-sm items-center absolute right-0 p2 bottom-0 top-60px
       >
         <button n-icon-btn absolute text-xl right-2 top-2 @click="selected = undefined">
           <div i-carbon-close />

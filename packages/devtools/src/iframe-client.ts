@@ -15,24 +15,26 @@ export function useDevtoolsClient() {
       // @ts-ignore injection
       setup(window.__NUXT_DEVTOOLS__)
     }
-    else {
-      Object.defineProperty(window, '__NUXT_DEVTOOLS__', {
-        set(value) {
-          if (value)
-            setup(value)
-        },
-        get() {
-          return clientRef!.value
-        },
-      })
-    }
+
+    Object.defineProperty(window, '__NUXT_DEVTOOLS__', {
+      set(value) {
+        if (value)
+          setup(value)
+      },
+      get() {
+        return clientRef!.value
+      },
+      configurable: true,
+    })
   }
 
   function setup(client: NuxtDevtoolsIframeClient) {
     clientRef!.value = client
-    client.host.hooks.hook('host:update:reactivity', () => {
-      triggerRef(clientRef!)
-    })
+    if (client.host) {
+      client.host.hooks.hook('host:update:reactivity', () => {
+        triggerRef(clientRef!)
+      })
+    }
   }
 
   return clientRef

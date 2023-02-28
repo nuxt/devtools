@@ -8,6 +8,7 @@ const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-sett
   componentsGraphShowNodeModules: false,
   componentsGraphShowPages: false,
   componentsGraphShowLayouts: false,
+  componentsGraphShowWorkspace: true,
   interactionCloseOnOutsideClick: false,
   showExperimentalFeatures: false,
 }, { mergeDefaults: true })

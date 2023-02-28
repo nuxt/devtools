@@ -24,8 +24,11 @@ export function useComponents() {
         pascalName: key,
         global: true,
       } as unknown as Component))
-    // dedupe server components
-      .filter(i => !(serverComponents.value || []).find(j => j.pascalName === i.pascalName)),
+      // filter out lazy components
+      .filter(i => !/^Lazy[A-Z]/.test(i.pascalName))
+      // dedupe server components
+      .filter(i => !(serverComponents.value || [])
+        .find(s => s.pascalName === i.pascalName)),
   )
 
   return computed(() => [
@@ -129,4 +132,8 @@ export function useAllRoutes() {
         }
       })
   })
+}
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }

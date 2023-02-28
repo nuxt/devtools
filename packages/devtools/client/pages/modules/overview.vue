@@ -13,6 +13,7 @@ const versions = usePackageVersions()
 const components = useComponents()
 const autoImports = useAutoImports()
 const routes = useAllRoutes()
+const isMacOS = getIsMacOS()
 
 const nuxtVersion = computed(() => versions.value?.find(v => v.name === 'nuxt'))
 
@@ -92,12 +93,12 @@ function goIntro() {
         </template>
       </div>
       <div flex="~ col gap2">
-        <div
+        <NTip
           v-if="showConnectionWarning"
-          px4 theme-banner-yellow justify-center
+          n="yellow5" icon="carbon-unlink" justify-center
         >
-          <span flex-none i-carbon-unlink />Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
-        </div>
+          Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
+        </NTip>
       </div>
       <div flex="~ gap-6 wrap" items-center justify-center mt-5>
         <a href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue" transition>
@@ -127,21 +128,24 @@ function goIntro() {
         </VDropdown>
       </div>
       <div flex-auto />
-      <div flex="~ col gap2">
-        <div
-          px4 justify-center theme-banner-lightblue
-        >
-          <span flex-none i-carbon-keyboard />You can press <NButton n="xs lightblue">
-            Alt
-          </NButton><NButton n="xs lightblue">
-            D
-          </NButton> or <NButton n="xs lightblue">
+      <NTip n="green6" justify-center icon="carbon-keyboard">
+        You can press
+        <template v-if="isMacOS">
+          <NButton n="xs green" class="px2">
             ⌥ Option
-          </NButton><NButton n="xs lightblue">
+          </NButton>+<NButton n="xs green" class="px2">
             D
-          </NButton> to toggle the DevTools.
-        </div>
-      </div>
+          </NButton>
+        </template>
+        <template v-else>
+          <NButton n="xs green" class="px2">
+            Alt
+          </NButton>+<NButton n="xs green" class="px2">
+            D
+          </NButton>
+        </template>
+        to toggle the DevTools.
+      </NTip>
     </div>
   </div>
 </template>

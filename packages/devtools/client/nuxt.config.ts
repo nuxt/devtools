@@ -23,6 +23,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  css: [
+    'splitpanes/dist/splitpanes.css',
+  ],
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },

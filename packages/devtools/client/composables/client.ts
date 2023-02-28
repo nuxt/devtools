@@ -1,4 +1,7 @@
-import type { NuxtDevtoolsHostClient, VueInspectorData } from '~/../src/types'
+import type { Lang } from 'shiki-es'
+import { renderMarkdown } from './client-services/markdown'
+import { renderCodeHighlight } from './client-services/shiki'
+import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '~/../src/types'
 
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
@@ -26,3 +29,22 @@ setTimeout(() => {
 export const showConnectionWarning = computed(() => {
   return connectionTimeout.value && !useClient().value
 })
+
+export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
+  const client = useClient()
+  const mode = useColorMode()
+
+  return computed(() => ({
+    host: client.value,
+    devtools: {
+      rpc,
+      colorMode: mode.value,
+      renderCodeHighlight(code, lang) {
+        return renderCodeHighlight(code, lang as Lang)
+      },
+      renderMarkdown(code) {
+        return renderMarkdown(code)
+      },
+    },
+  }))
+}

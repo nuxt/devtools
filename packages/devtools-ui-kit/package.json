@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-ui-kit",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
@@ -28,25 +28,28 @@
     "prepublishOnly": "npm run build",
     "playground:build": "nuxi generate playground"
   },
+  "peerDependencies": {
+    "@nuxt/devtools": "workspace:*"
+  },
   "dependencies": {
-    "@iconify-json/carbon": "^1.1.15",
-    "@nuxt/kit": "^3.2.2",
+    "@iconify-json/carbon": "^1.1.16",
+    "@nuxt/kit": "^3.2.3",
     "@nuxtjs/color-mode": "^3.2.0",
-    "@unocss/core": "^0.50.0",
-    "@unocss/nuxt": "^0.50.0",
-    "@unocss/preset-attributify": "^0.50.0",
-    "@unocss/preset-icons": "^0.50.0",
-    "@unocss/preset-mini": "^0.50.0",
-    "@unocss/reset": "^0.50.0",
+    "@unocss/core": "^0.50.1",
+    "@unocss/nuxt": "^0.50.1",
+    "@unocss/preset-attributify": "^0.50.1",
+    "@unocss/preset-icons": "^0.50.1",
+    "@unocss/preset-mini": "^0.50.1",
+    "@unocss/reset": "^0.50.1",
     "@vueuse/core": "^9.13.0",
     "@vueuse/integrations": "^9.13.0",
     "@vueuse/nuxt": "^9.13.0",
     "defu": "^6.1.2",
     "focus-trap": "^7.3.1",
-    "unocss": "^0.50.0"
+    "unocss": "^0.50.1"
   },
   "devDependencies": {
-    "nuxt": "^3.2.2"
+    "nuxt": "^3.2.3"
   },
   "publishConfig": {
     "access": "public"

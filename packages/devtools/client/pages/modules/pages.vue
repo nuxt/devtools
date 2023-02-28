@@ -88,7 +88,7 @@ function navigateToRoute(path: string) {
         </template>
       </div>
     </div>
-    <SectionBlock
+    <NSectionBlock
       v-if="routeInputMatched.length"
       icon="carbon-tree-view"
       text="Matched Routes"
@@ -101,8 +101,8 @@ function navigateToRoute(path: string) {
         :matched-pending="routeInputMatched"
         @navigate="navigateToRoute"
       />
-    </SectionBlock>
-    <SectionBlock
+    </NSectionBlock>
+    <NSectionBlock
       icon="carbon-tree-view-alt"
       text="All Routes"
       :description="`${routes.length} routes registered in your application`"
@@ -115,7 +115,7 @@ function navigateToRoute(path: string) {
         :matched-pending="routeInputMatched"
         @navigate="navigateToRoute"
       />
-    </SectionBlock>
+    </NSectionBlock>
   </div>
   <LaunchPage
     v-else

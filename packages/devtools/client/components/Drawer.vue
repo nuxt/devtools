@@ -46,7 +46,7 @@ const tabs = useTabs()
       <div flex-auto />
       <div
         v-if="showConnectionWarning"
-        px4 hidden theme-banner-yellow justify-center lg:flex gap3
+        px4 hidden py2 justify-center lg:flex gap3 text-yellow5
       >
         Server data only
       </div>

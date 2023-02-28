@@ -2,14 +2,12 @@ import { createBirpc } from 'birpc'
 import { parse, stringify } from 'flatted'
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
 
-// TODO: auto reconnect and error overlay
 const RECONNECT_INTERVAL = 2000
 
 export const wsConnecting = ref(true)
 export const wsError = ref<any>()
 
-const wsClient = ref<WebSocket>(await connectWS())
-
+let connectPromise = connectWS()
 let onMessage: Function = () => {}
 
 export const clientFunctions: ClientFunctions = {
@@ -17,7 +15,9 @@ export const clientFunctions: ClientFunctions = {
 }
 
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
-  post: d => wsClient.value.send(d),
+  post: async (d) => {
+    (await connectPromise).send(d)
+  },
   on: (fn) => { onMessage = fn },
   serialize: stringify,
   deserialize: parse,
@@ -38,7 +38,7 @@ async function connectWS() {
     console.log('[nuxt-devtools] WebSocket closed, reconnecting...')
     wsConnecting.value = true
     setTimeout(async () => {
-      wsClient.value = await connectWS()
+      connectPromise = connectWS()
     }, RECONNECT_INTERVAL)
   })
   wsConnecting.value = true
