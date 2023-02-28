@@ -120,7 +120,7 @@ async function renameCurrentItem() {
 <template>
   <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
     <template #left>
-      <div class="flex items-center justify-between px-3 h-[48px] gap1">
+      <div class="items-center flex justify-between px-3 h-[48px] gap1">
         <button n-icon-btn ml--1 @click="currentStorage = ''">
           <div i-carbon-chevron-left />
         </button>
@@ -142,7 +142,7 @@ async function renameCurrentItem() {
       />
       <template v-for="key of filteredKeys" :key="key">
         <NuxtLink
-          px2 py1 text-sm font-mono block truncate
+          text-sm px2 py1 font-mono block truncate
           :to="{ query: { key, storage: currentStorage } }"
           :class="key === currentItem?.key ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >
@@ -163,7 +163,7 @@ async function renameCurrentItem() {
 
     <template #right>
       <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
-        <div border="b base" class="text-sm flex items-center px-4 justify-between flex-none h-[49px]">
+        <div border="b base" class="text-sm flex items-center justify-between px-4 flex-none h-[49px]">
           <div class="flex items-center gap-4">
             <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
             <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
@@ -181,17 +181,17 @@ async function renameCurrentItem() {
           v-if="typeof currentItem.content === 'object'"
           v-model="currentItem.updatedContent"
           :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
-          class="json-editor-vue of-auto h-full text-sm outline-none"
+          class="h-full text-sm json-editor-vue of-auto outline-none"
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
         <textarea
           v-else v-model="currentItem.updatedContent"
           placeholder="Item value..."
-          class="of-auto h-full text-sm outline-none p-4 font-mono"
+          class="of-auto h-full text-sm outline-none font-mono p-4"
           @keyup.ctrl.enter="saveCurrentItem"
         />
       </div>
-      <div v-else flex items-center justify-center op50 text-center h-full>
+      <div v-else flex items-center op50 h-full justify-center text-center>
         <p>
           Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
             Nitro storage
@@ -212,10 +212,10 @@ async function renameCurrentItem() {
         </NLink>
       </p>
       <div class="mx-auto">
-        <NCard v-for="(storage, name) of storageMounts" :key="name" class="text-left p-4 cursor-pointer border mb-4 hover:border-green" @click="currentStorage = name">
+        <NCard v-for="(storage, name) of storageMounts" :key="name" class="p-4 cursor-pointer text-left border mb-4 hover:border-green" @click="currentStorage = name">
           <span class="font-bold">{{ name }}</span><br>
           <span class="text-sm">{{ storage.driver }} driver</span><br>
-          <span v-if="storage.base" class="text-xs font-mono">{{ storage.base }}</span>
+          <span v-if="storage.base" class="font-mono text-xs">{{ storage.base }}</span>
         </NCard>
       </div>
     </div>
