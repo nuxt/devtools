@@ -44,4 +44,5 @@ onMounted(() => {
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <DisconnectIndicator />
 </template>
