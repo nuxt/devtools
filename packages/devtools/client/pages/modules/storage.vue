@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 
 definePageMeta({
   icon: 'carbon-data-base',
@@ -27,11 +26,10 @@ const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.ge
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
   if (currentStorage.value)
     return await rpc.getStorageKeys(currentStorage.value)
-
   return []
 })
 
-const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: string, event) => {
+const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: string, event: any) => {
   if (!currentStorage.value || key.split(':')[0] !== currentStorage.value)
     return
   await refreshStorageKeys()
@@ -41,6 +39,7 @@ const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: strin
     await fetchItem(fileKey.value)
   }
 })
+
 onUnmounted(closeWatcher)
 
 watch(currentStorage, refreshStorageKeys)
@@ -51,6 +50,14 @@ watchEffect(async () => {
     return
   }
   fetchItem(fileKey.value)
+})
+
+// Save on Ctrl/Cmd + S
+useEventListener('keydown', (e) => {
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+    saveCurrentItem()
+    e.preventDefault()
+  }
 })
 
 function keyName(key: string) {
@@ -85,18 +92,21 @@ async function saveNewItem() {
   router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
 }
+
 async function saveCurrentItem() {
   if (!currentItem.value)
     return
   await rpc.setStorageItem(currentItem.value.key, currentItem.value.updatedContent)
   await fetchItem(currentItem.value.key)
 }
+
 async function removeCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
   await rpc.removeStorageItem(currentItem.value.key)
   currentItem.value = null
 }
+
 async function renameCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
@@ -110,7 +120,7 @@ async function renameCurrentItem() {
 <template>
   <div v-if="currentStorage" grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" of-auto w="300px">
-      <div class="flex items-center justify-betwen gap-2 px-3 h-[50px]">
+      <div class="flex items-center justify-between gap-2 px-3 h-[48px]">
         <div class="w-full text-sm">
           <span text-gray>storage:</span>
           <select v-model="currentStorage" class="ml-2 p-1 bg-transparent">
@@ -126,13 +136,15 @@ async function renameCurrentItem() {
         icon="carbon-search"
         placeholder="Search..."
         n="primary sm"
-        class="w-full rounded-0 border-x-none outline-none"
+        border="y x-none base!"
+        class="w-full rounded-0 py2 ring-0!"
       />
       <NuxtLink
         v-for="key of filteredKeys" :key="key"
         border="b base" px2 py1 text-sm font-mono block truncate
         :to="{ query: { key, storage: currentStorage } }"
-        :class="key === currentItem?.key ? 'bg-truegray:20 text-base' : 'text-truegray'"
+        hover:bg-active
+        :class="key === currentItem?.key ? 'bg-active text-primary font-bold' : 'text-secondary'"
       >
         {{ keyName(key) }}
       </NuxtLink>
@@ -146,7 +158,7 @@ async function renameCurrentItem() {
       />
     </div>
     <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
-      <div border="b base" class="text-sm op75 flex items-center h-[50px] px-4 justify-between">
+      <div border="b base" class="text-sm flex items-center px-4 justify-between flex-none h-[49px]">
         <div class="flex items-center gap-4">
           <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
           <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
@@ -160,8 +172,19 @@ async function renameCurrentItem() {
           </NButton>
         </div>
       </div>
-      <JsonEditorVue v-if="typeof currentItem.content === 'object'" v-model="currentItem.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
-      <textarea v-else v-model="currentItem.updatedContent" placeholder="Item value..." class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
+      <JsonEditorVue
+        v-if="typeof currentItem.content === 'object'"
+        v-model="currentItem.updatedContent"
+        :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+        class="json-editor-vue of-auto h-full text-sm outline-none"
+        v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+      />
+      <textarea
+        v-else v-model="currentItem.updatedContent"
+        placeholder="Item value..."
+        class="of-auto h-full text-sm outline-none p-4 font-mono"
+        @keyup.ctrl.enter="saveCurrentItem"
+      />
     </div>
     <div v-else flex items-center justify-center op50 text-center>
       <p>
@@ -180,7 +203,7 @@ async function renameCurrentItem() {
         No custom storage defined in <code>nitro.storage</code>.<br>
         Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
           Nitro storage
-        </nlink>
+        </NLink>
       </p>
       <div class="mx-auto">
         <NCard v-for="(storage, name) of storageMounts" :key="name" class="text-left p-4 cursor-pointer border mb-4 hover:border-green" @click="currentStorage = name">
@@ -192,18 +215,3 @@ async function renameCurrentItem() {
     </div>
   </div>
 </template>
-
-<style scoped>
-.json-editor-vue.light {
-  --jse-theme-color: #ebebeb !important;
-  --jse-theme-color-highlight: #bbb !important;
-  --jse-background-color: #8881 !important;
-  --jse-menu-color: #333 !important;
-}
-.json-editor-vue.jse-theme-dark {
-  --jse-theme-color: #1d1d1d !important;
-  --jse-theme-color-highlight: #333 !important;
-  --jse-background-color: #8881 !important;
-  --jse-menu-color: #aaa !important;
-}
-</style>

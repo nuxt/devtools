@@ -18,12 +18,10 @@ const isEnabled = computed(() => {
   <NuxtLink
     v-if="isEnabled"
     :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
-    flex="~" p2
-    items-center justify-center
-    text-true-gray
+    flex="~" p2 items-center justify-center text-secondary
     border="base"
     lg="border-b px3 py1.5 justify-start"
-    hover:bg-active
+    hover="bg-active"
     select-none
     exact-active-class="!text-primary"
   >
