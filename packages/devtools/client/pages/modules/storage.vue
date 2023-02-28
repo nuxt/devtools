@@ -65,11 +65,12 @@ async function saveNewItem() {
   if (!newKey.value || !currentStorage.value)
     return
   // If does not exists
-  if (!storageKeys.value?.includes(newKey.value))
-    await rpc.setStorageItem(`${currentStorage.value}:${newKey.value}`, '')
+  const key = `${currentStorage.value}:${newKey.value}`
+  if (!storageKeys.value?.includes(key))
+    await rpc.setStorageItem(key, '')
 
   await refreshStorageKeys()
-  router.replace({ query: { storage: currentStorage.value, key: newKey.value } })
+  router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
 }
 async function saveCurrentItem() {
@@ -149,7 +150,7 @@ async function renameCurrentItem() {
           </NButton>
         </div>
       </div>
-      <textarea v-if="typeof currentItem.content === 'string'" v-model="currentItem.updatedContent" class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
+      <textarea v-if="typeof currentItem.content === 'string'" v-model="currentItem.updatedContent" placeholder="Item value..." class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
       <JsonEditorVue v-else v-model="currentItem.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
     </div>
     <div v-else flex items-center justify-center op50 text-center>
@@ -163,7 +164,7 @@ async function renameCurrentItem() {
   <div v-else grid="~" class="h-full of-hidden">
     <div class="flex flex-col gap-4 justify-center op50 text-center">
       <p v-if="Object.keys(storageMounts).length">
-        Select one storage to start.
+        Select one storage to start:
       </p>
       <p v-else>
         No custom storage defined in <code>nitro.storage</code>.<br>
@@ -172,7 +173,7 @@ async function renameCurrentItem() {
         </nlink>
       </p>
       <div class="mx-auto">
-        <NCard v-for="(storage, name) of storageMounts" :key="name" class="border text-left p-2 mb-4 hover:border-green cursor-pointer" @click="currentStorage = name">
+        <NCard v-for="(storage, name) of storageMounts" :key="name" class="border text-left p-4 mb-4 hover:border-green cursor-pointer" @click="currentStorage = name">
           <span class="font-bold">{{ name }}</span><br>
           <span class="text-sm">{{ storage.driver }} driver</span><br>
           <span v-if="storage.base" class="text-xs font-mono">{{ storage.base }}</span>
