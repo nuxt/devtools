@@ -74,10 +74,12 @@ export function useCustomTabs() {
 export function useTabs() {
   const router = useRouter()
   const customTabs = useCustomTabs()
+  const settings = useDevToolsSettings()
 
   const builtin = computed(() => {
     return router.getRoutes()
       .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
+      .filter(route => !route.meta.experimental || (route.meta.experimental && settings.showExperimentalFeatures.value))
       .sort((a, b) => (a.meta.order || 100) - (b.meta.order || 100))
       .map((i): ModuleBuiltinTab => {
         return {
@@ -130,8 +132,4 @@ export function useAllRoutes() {
         }
       })
   })
-}
-
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }

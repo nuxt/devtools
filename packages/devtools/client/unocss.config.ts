@@ -11,6 +11,8 @@ export default defineConfig({
       'glass-effect': 'backdrop-blur-6 bg-white/70 dark:bg-[#151515]/70',
       'navbar-glass': 'sticky z-10 top-0 glass-effect',
 
+      'text-secondary': 'color-black/50 dark:color-white/50',
+
       'n-icon-btn': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:bg-active',
 
       // Reusable

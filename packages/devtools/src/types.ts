@@ -6,6 +6,8 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { VNode } from 'vue'
+import type { StorageValue } from 'unstorage'
+import type { StorageMounts } from 'nitropack'
 import type { WizardActions, WizardArgs } from './wizard'
 import type {} from '@nuxt/schema'
 
@@ -45,6 +47,11 @@ export interface ModuleGlobalOptions {
 }
 
 export interface ServerFunctions {
+  getStorageMounts(): Promise<StorageMounts>
+  getStorageKeys(base?: string): Promise<string[]>
+  getStorageItem(key: string): Promise<StorageValue>
+  setStorageItem(key: string, value: StorageValue): Promise<void>
+  removeStorageItem(key: string): Promise<void>
   getServerConfig(): NuxtOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>
@@ -75,6 +82,7 @@ export type ClientUpdateEvent = keyof ServerFunctions
 
 export interface ClientFunctions {
   refresh(event: ClientUpdateEvent): void
+  callHook(hook: string, ...args: any[]): Promise<void>
 }
 
 export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' | 'meta' | 'props' | 'children'> {
@@ -327,6 +335,7 @@ export interface DevToolsUISettings {
   componentsGraphShowLayouts: boolean
   componentsGraphShowWorkspace: boolean
   interactionCloseOnOutsideClick: boolean
+  showExperimentalFeatures: boolean
 }
 
 export interface ComponentRelationship {

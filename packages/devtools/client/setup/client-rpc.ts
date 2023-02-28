@@ -8,5 +8,8 @@ export function setupClientRPC() {
       // refresh useAsyncData
       nuxt.hooks.callHookParallel('app:data:refresh', [type])
     },
+    async callHook(hook: string, ...args: any[]) {
+      nuxt.hooks.callHookParallel(hook as any, ...args)
+    },
   } satisfies ClientFunctions)
 }

@@ -62,3 +62,23 @@ html.dark {
 }
 .splitpanes--vertical > .splitpanes__splitter:before {left: -4px;right: -4px;height: 100%;}
 .splitpanes--horizontal > .splitpanes__splitter:before {top: -4px;bottom: -4px;width: 100%;}
+
+/* JSON Editor */
+textarea {
+  background: #8881
+}
+.json-editor-vue {
+  --jse-theme-color: #8886 !important;
+  --jse-theme-color-highlight: #8889 !important;
+  --jse-background-color: #8881 !important;
+}
+.json-editor-vue .no-main-menu {
+  border: none !important;
+}
+.json-editor-vue .jse-main {
+  min-height: 1em !important;
+}
+.json-editor-vue .jse-contents {
+  border-width: 0 !important;
+  border-radius: 5px !important;
+}

@@ -10,7 +10,6 @@ const props = defineProps<{
   tab: ModuleCustomTab
 }>()
 
-const client = useClient()
 const colorMode = useColorMode()
 const anchor = ref<HTMLDivElement>()
 const key = computed(() => props.tab.name)

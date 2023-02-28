@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import 'floating-vue/dist/style.css'
+import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
+import 'splitpanes/dist/splitpanes.css'
 import './styles/global.css'
 import { setupClientRPC } from './setup/client-rpc'
 

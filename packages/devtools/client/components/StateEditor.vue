@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 
 const props = defineProps<{
   name?: string
@@ -94,24 +93,3 @@ async function refresh() {
     </template>
   </div>
 </template>
-
-<style>
-.json-editor-vue {
-  --jse-theme-color: #383e42 !important;
-  --jse-theme-color-highlight: #687177 !important;
-  --jse-background-color: #8881 !important;
-}
-
-.json-editor-vue .no-main-menu {
-  border: none !important;
-}
-
-.json-editor-vue .jse-main {
-  min-height: 1em !important;
-}
-
-.json-editor-vue .jse-contents {
-  border-width: 0 !important;
-  border-radius: 5px !important;
-}
-</style>
