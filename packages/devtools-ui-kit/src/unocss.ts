@@ -113,8 +113,10 @@ export const unocssPreset = (): Preset => ({
     'n-switch-thumb-checked': 'bg-context border-context ml-0.8em mr-0',
 
     // tip
-    'n-tip-base': 'bg-context/8 text-context px-1em py-0.4em rounded flex items-center dark:bg-context/12',
-    'n-tip-icon': '-ml-0.2em mr-0.4em text-1.1em',
+    'n-tip-base': 'bg-context/4 text-context px-1em py-0.4em rounded flex gap-2 items-center dark:bg-context/12',
+
+    // icon
+    'n-icon': 'flex-none',
   },
 })
 

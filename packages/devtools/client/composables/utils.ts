@@ -70,3 +70,7 @@ export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: As
 
   return nuxt.payload.unique[key].data as Ref<T | null>
 }
+
+export function getIsMacOS() {
+  return typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('mac')
+}
