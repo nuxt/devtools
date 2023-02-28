@@ -31,6 +31,7 @@ async function connectWS() {
   const ws = new WebSocket(wsUrl.toString())
   ws.addEventListener('message', e => onMessage(String(e.data)))
   ws.addEventListener('error', (e) => {
+    console.error(e)
     wsError.value = e
   })
   ws.addEventListener('close', () => {

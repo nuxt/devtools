@@ -8,7 +8,8 @@ export default defineConfig({
       'bg-base': 'n-bg-base',
       'bg-active': 'n-bg-active',
       'border-base': 'n-border-base',
-      'navbar-glass': 'sticky z-10 top-0 backdrop-blur bg-white/70 dark:bg-[#151515]/70',
+      'glass-effect': 'backdrop-blur-6 bg-white/70 dark:bg-[#151515]/70',
+      'navbar-glass': 'sticky z-10 top-0 glass-effect',
 
       'n-icon-btn': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:bg-active',
 
