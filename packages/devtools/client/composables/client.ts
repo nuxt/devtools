@@ -30,12 +30,15 @@ export const showConnectionWarning = computed(() => {
   return connectionTimeout.value && !useClient().value
 })
 
-export function getInjectionClient(): NuxtDevtoolsIframeClient {
+export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
   const client = useClient()
-  return {
+  const mode = useColorMode()
+
+  return computed(() => ({
     host: client.value,
     devtools: {
       rpc,
+      colorMode: mode.value,
       renderCodeHighlight(code, lang) {
         return renderCodeHighlight(code, lang as Lang)
       },
@@ -43,5 +46,5 @@ export function getInjectionClient(): NuxtDevtoolsIframeClient {
         return renderMarkdown(code)
       },
     },
-  }
+  }))
 }

@@ -298,6 +298,7 @@ export interface NuxtDevtoolsClient {
   rpc: BirpcReturn<ServerFunctions>
   renderCodeHighlight: (code: string, lang: string, theme?: string) => string
   renderMarkdown: (markdown: string) => string
+  colorMode: string
 }
 
 export interface NuxtDevtoolsIframeClient {

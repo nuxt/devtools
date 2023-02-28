@@ -69,12 +69,13 @@ function syncColorMode() {
   }
 }
 
+const injectionClient = useInjectionClient()
+
 function injectClient() {
   if (!iframeEl.value || !iframeEl.value.contentWindow)
     return
-
   try {
-    iframeEl.value.contentWindow.__NUXT_DEVTOOLS__ = getInjectionClient()
+    iframeEl.value.contentWindow.__NUXT_DEVTOOLS__ = injectionClient.value
   }
   catch (e) {
   }

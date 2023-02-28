@@ -99,7 +99,7 @@ const filteredFiles = computed(() => {
         </div>
         <NCodeBlock of-auto h-full text-sm :code="current.content" lang="typescript" />
       </div>
-      <span v-else flex items-center justify-center op50>Select one file to start</span>
+      <span v-else flex items-center justify-center op50 h-full>Select one file to start</span>
     </Pane>
   </Splitpanes>
 </template>

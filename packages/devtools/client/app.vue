@@ -32,7 +32,10 @@ addEventListener('keypress', (e) => {
 })
 
 onMounted(() => {
-  window.__NUXT_DEVTOOLS__ = getInjectionClient()
+  const injectClient = useInjectionClient()
+  watchEffect(() => {
+    window.__NUXT_DEVTOOLS__ = injectClient.value
+  })
 })
 </script>
 

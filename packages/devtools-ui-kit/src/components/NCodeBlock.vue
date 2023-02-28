@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
-
-import { devToolsClient } from './_utils/client'
+import { devToolsClient } from '../runtime/client'
 
 defineProps<{
   code: string

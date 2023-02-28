@@ -13,6 +13,7 @@ getHighlighter({
     'css',
     'javascript',
     'typescript',
+    'html',
   ],
 }).then((i) => { shiki.value = i })
 
