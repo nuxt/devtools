@@ -5,99 +5,141 @@ import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 definePageMeta({
   icon: 'carbon-data-base',
   title: 'Storage',
+  experimental: true,
 })
 
 const router = useRouter()
 const searchString = ref('')
 const newKey = ref('')
-const current = ref()
+const currentStorage = computed({
+  get(): string | undefined {
+    return useRoute().query?.storage as string | undefined
+  },
+  set(storage: string | undefined): void {
+    router.replace({ query: { storage } })
+  },
+})
+const currentItem = ref()
 const fileKey = computed(() => useRoute().query?.key as string | undefined)
 
-const { data: keys, refresh } = await useAsyncData('storage', () => rpc.getStorageKeys())
+const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.getStorageMounts())
+const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
+  if (currentStorage.value)
+    return await rpc.getStorageKeys(currentStorage.value)
+
+  return []
+})
+
+watch(currentStorage, refreshStorageKeys)
 
 watchEffect(async () => {
   if (!fileKey.value) {
-    current.value = null
+    currentItem.value = null
     return
   }
   fetchItem(fileKey.value)
 })
 
+function keyName(key: string) {
+  return key.replace(`${currentStorage.value}:`, '')
+}
+
 const filteredKeys = computed(() => {
-  if (!keys.value)
+  if (!storageKeys.value)
     return []
-  return keys.value.filter(key => key.includes(searchString.value))
+  return storageKeys.value.filter(key => key.includes(searchString.value))
 })
 
 async function fetchItem(key: string) {
   const content = await rpc.getStorageItem(key)
-  current.value = {
-    key: fileKey.value,
+  currentItem.value = {
+    key,
+    updatedKey: keyName(key),
+    editingKey: false,
     content,
     updatedContent: content,
   }
 }
 
 async function saveNewItem() {
-  if (!newKey.value)
+  if (!newKey.value || !currentStorage.value)
     return
   // If does not exists
-  if (!keys.value?.includes(newKey.value))
-    await rpc.setStorageItem(newKey.value, '')
+  if (!storageKeys.value?.includes(newKey.value))
+    await rpc.setStorageItem(`${currentStorage.value}:${newKey.value}`, '')
 
-  await refresh()
-  router.push({ query: { key: newKey.value } })
+  await refreshStorageKeys()
+  router.replace({ query: { storage: currentStorage.value, key: newKey.value } })
   newKey.value = ''
 }
 async function saveCurrentItem() {
-  if (!current.value)
+  if (!currentItem.value)
     return
-  await rpc.setStorageItem(current.value.key, current.value.updatedContent)
-  await fetchItem(current.value.key)
+  await rpc.setStorageItem(currentItem.value.key, currentItem.value.updatedContent)
+  await fetchItem(currentItem.value.key)
 }
 async function removeCurrentItem() {
-  if (!current.value)
+  if (!currentItem.value || !currentStorage.value)
     return
-  await rpc.removeStorageItem(current.value.key)
-  current.value = null
-  await refresh()
+  await rpc.removeStorageItem(currentItem.value.key)
+  currentItem.value = null
+  await refreshStorageKeys()
+}
+async function renameCurrentItem() {
+  if (!currentItem.value || !currentStorage.value)
+    return
+  const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
+  await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
+  await rpc.removeStorageItem(currentItem.value.key)
+  await refreshStorageKeys()
+  router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>
 
 <template>
-  <div grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
+  <div v-if="currentStorage" grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" of-auto w="300px">
-      <div class="flex items-center px-3 h-15">
-        <NTextInput
-          v-model="searchString"
-          icon="carbon-search"
-          placeholder="Search..."
-          n="primary"
-          class="w-full"
-        />
+      <div class="flex justify-betwen items-center gap-2 px-3 h-[50px]">
+        <div class="w-full text-sm">
+          <span text-gray>storage:</span>
+          <select v-model="currentStorage" class="ml-2 p-1 bg-transparent">
+            <option v-for="(_storage, name) of storageMounts" :key="name" :value="name">
+              {{ name }}
+            </option>
+          </select>
+        </div>
+        <NIcon icon="carbon-close" class="op50 hover:op100 cursor-pointer" @click="currentStorage = ''" />
       </div>
+      <NTextInput
+        v-model="searchString"
+        icon="carbon-search"
+        placeholder="Search..."
+        n="primary sm"
+        class="w-full rounded-0 border-x-none outline-none"
+      />
       <NuxtLink
         v-for="key of filteredKeys" :key="key"
         border="b base" px2 py1 text-sm font-mono block truncate
-        :to="{ query: { key } }"
-        :class="key === current?.key ? 'bg-truegray:20 text-base' : 'text-truegray'"
+        :to="{ query: { key, storage: currentStorage } }"
+        :class="key === currentItem?.key ? 'bg-truegray:20 text-base' : 'text-truegray'"
       >
-        {{ key }}
+        {{ keyName(key) }}
       </NuxtLink>
       <NTextInput
         v-model="newKey"
         icon="carbon-add"
-        placeholder="new:key"
+        placeholder="key"
         n="sm"
         class="w-full outline-none border-0 border-b rounded-none"
         @keyup.enter="saveNewItem"
       />
     </div>
-    <div v-if="current?.key" h-full of-hidden flex="~ col">
-      <div border="b base" class="text-sm op75 flex items-center h-15 px-4 justify-between">
+    <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
+      <div border="b base" class="text-sm op75 flex items-center h-[50px] px-4 justify-between">
         <div class="flex items-center gap-4">
-          <code>{{ current.key }}</code>
-          <NButton n="green xs" :disabled="current.content === current.updatedContent" :class="{ 'border-green': current.content !== current.updatedContent }" @click="saveCurrentItem">
+          <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
+          <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
+          <NButton v-if="!currentItem.editingKey" n="green xs" :disabled="currentItem.content === currentItem.updatedContent" :class="{ 'border-green': currentItem.content !== currentItem.updatedContent }" @click="saveCurrentItem">
             Save
           </NButton>
         </div>
@@ -107,8 +149,8 @@ async function removeCurrentItem() {
           </NButton>
         </div>
       </div>
-      <textarea v-if="typeof current.content === 'string'" v-model="current.updatedContent" class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
-      <JsonEditorVue v-else v-model="current.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
+      <textarea v-if="typeof currentItem.content === 'string'" v-model="currentItem.updatedContent" class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
+      <JsonEditorVue v-else v-model="currentItem.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
     </div>
     <div v-else flex items-center justify-center op50 text-center>
       <p>
@@ -116,6 +158,26 @@ async function removeCurrentItem() {
           Nitro storage
         </NLink>
       </p>
+    </div>
+  </div>
+  <div v-else grid="~" class="h-full of-hidden">
+    <div class="flex flex-col gap-4 justify-center op50 text-center">
+      <p v-if="Object.keys(storageMounts).length">
+        Select one storage to start.
+      </p>
+      <p v-else>
+        No custom storage defined in <code>nitro.storage</code>.<br>
+        Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
+          Nitro storage
+        </nlink>
+      </p>
+      <div class="mx-auto">
+        <NCard v-for="(storage, name) of storageMounts" :key="name" class="border text-left p-2 mb-4 hover:border-green cursor-pointer" @click="currentStorage = name">
+          <span class="font-bold">{{ name }}</span><br>
+          <span class="text-sm">{{ storage.driver }} driver</span><br>
+          <span v-if="storage.base" class="text-xs font-mono">{{ storage.base }}</span>
+        </NCard>
+      </div>
     </div>
   </div>
 </template>
