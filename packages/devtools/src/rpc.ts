@@ -53,10 +53,9 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
     storage = nitro.storage
 
     nuxt.hook('ready', () => {
-      storage!.watch((_event, key) => {
+      storage!.watch((event, key) => {
         if (shouldIgnoreStorageKey(key)) return
-        // TODO: send websocket event as storage key updated
-        // birpc.broadcast.sendEvent('storageUpdate', key)
+        birpc.broadcast.callHook.asEvent('storage:key:update', key, event)
       })
     })
 

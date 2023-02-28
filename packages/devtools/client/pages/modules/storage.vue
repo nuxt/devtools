@@ -8,6 +8,7 @@ definePageMeta({
   experimental: true,
 })
 
+const nuxtApp = useNuxtApp()
 const router = useRouter()
 const searchString = ref('')
 const newKey = ref('')
@@ -29,6 +30,16 @@ const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('s
 
   return []
 })
+
+const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: string, event) => {
+  if (!currentStorage.value || key.split(':')[0] !== currentStorage.value) return
+  await refreshStorageKeys()
+  if (fileKey.value === key) {
+    if (event === 'remove') return router.replace({ query: { storage: currentStorage.value } })
+    await fetchItem(fileKey.value)
+  }
+})
+onUnmounted(closeWatcher)
 
 watch(currentStorage, refreshStorageKeys)
 
@@ -69,7 +80,6 @@ async function saveNewItem() {
   if (!storageKeys.value?.includes(key))
     await rpc.setStorageItem(key, '')
 
-  await refreshStorageKeys()
   router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
 }
@@ -84,7 +94,6 @@ async function removeCurrentItem() {
     return
   await rpc.removeStorageItem(currentItem.value.key)
   currentItem.value = null
-  await refreshStorageKeys()
 }
 async function renameCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
@@ -92,8 +101,6 @@ async function renameCurrentItem() {
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
   await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
   await rpc.removeStorageItem(currentItem.value.key)
-  await refreshStorageKeys()
-  router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>
 
@@ -150,8 +157,8 @@ async function renameCurrentItem() {
           </NButton>
         </div>
       </div>
-      <textarea v-if="typeof currentItem.content === 'string'" v-model="currentItem.updatedContent" placeholder="Item value..." class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
-      <JsonEditorVue v-else v-model="currentItem.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
+      <JsonEditorVue v-if="typeof currentItem.content === 'object'" v-model="currentItem.updatedContent" :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']" class="json-editor-vue of-auto h-full text-sm outline-none" v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2" />
+      <textarea v-else v-model="currentItem.updatedContent" placeholder="Item value..." class="of-auto h-full text-sm outline-none p-4" @keyup.ctrl.enter="saveCurrentItem" />
     </div>
     <div v-else flex items-center justify-center op50 text-center>
       <p>
@@ -163,7 +170,7 @@ async function renameCurrentItem() {
   </div>
   <div v-else grid="~" class="h-full of-hidden">
     <div class="flex flex-col gap-4 justify-center op50 text-center">
-      <p v-if="Object.keys(storageMounts).length">
+      <p v-if="Object.keys(storageMounts as any).length">
         Select one storage to start:
       </p>
       <p v-else>

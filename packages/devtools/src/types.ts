@@ -82,6 +82,7 @@ export type ClientUpdateEvent = keyof ServerFunctions
 
 export interface ClientFunctions {
   refresh(event: ClientUpdateEvent): void
+  callHook(hook: string, ...args: any[]): Promise<void>
 }
 
 export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' | 'meta' | 'props' | 'children'> {
