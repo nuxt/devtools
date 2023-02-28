@@ -72,6 +72,7 @@ export const unocssPreset = (): Preset => ({
     // general
     'n-bg-base': 'bg-white dark:bg-[#151515]',
     'n-bg-active': 'bg-gray:5',
+    'n-bg-hover': 'bg-gray:3',
     'n-border-base': 'border-gray/20',
     'n-transition': 'transition-all duration-200',
     'n-focus-base': 'ring-2 ring-context/50',

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Pane, Splitpanes } from 'splitpanes'
 import Fuse from 'fuse.js'
 
 definePageMeta({
@@ -73,8 +72,8 @@ const filteredFiles = computed(() => {
 </script>
 
 <template>
-  <Splitpanes h-full of-hidden class="virtual-files">
-    <Pane border="r base" size="30" min-size="5" of-auto>
+  <PanelLeftRight class="virtual-files" storage-key="tab-virtual-files">
+    <template #left>
       <div pb2 p3>
         <NTextInput
           v-model="searchString"
@@ -83,16 +82,21 @@ const filteredFiles = computed(() => {
           n="primary"
         />
       </div>
-      <NuxtLink
+      <template
         v-for="f of filteredFiles" :key="f.id"
-        border="b base" px2 py1 text-sm font-mono block truncate
-        :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
-        :class="f.id === current?.id ? 'bg-truegray:20 text-base' : 'text-truegray'"
       >
-        {{ toShortPath(f.id) }}
-      </NuxtLink>
-    </Pane>
-    <Pane min-size="5">
+        <NuxtLink
+          px2 py1 text-sm font-mono block truncate select-none
+          :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
+          :class="f.id === current?.id ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
+        >
+          {{ toShortPath(f.id) }}
+        </NuxtLink>
+        <div x-divider />
+      </template>
+    </template>
+
+    <template #right>
       <div v-if="current?.content" h-full of-hidden flex="~ col">
         <div border="b base" px4 py2 text-sm op75 flex-none>
           <code>{{ current.id }}</code>
@@ -100,8 +104,8 @@ const filteredFiles = computed(() => {
         <NCodeBlock of-auto h-full text-sm :code="current.content" lang="typescript" />
       </div>
       <span v-else flex items-center justify-center op50 h-full>Select one file to start</span>
-    </Pane>
-  </Splitpanes>
+    </template>
+  </PanelLeftRight>
 </template>
 
 <style>

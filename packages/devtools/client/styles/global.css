@@ -51,17 +51,27 @@ html.dark {
 }
 
 /* Splitpanes */
-.splitpanes__splitter{
- --at-apply: relative;
+.splitpanes__splitter {
+  position: relative;
 }
 .splitpanes__splitter:before {
-  --at-apply: absolute left-0 top-0 opacity-0; 
+  --at-apply: absolute left-0 top-0 transition; 
   content: '';
   transition: opacity 0.4s; 
   z-index: 1;
 }
-.splitpanes--vertical > .splitpanes__splitter:before {left: -4px;right: -4px;height: 100%;}
-.splitpanes--horizontal > .splitpanes__splitter:before {top: -4px;bottom: -4px;width: 100%;}
+.splitpanes__splitter:hover:before {
+  background: #8881;
+  opacity: 1;
+}
+.splitpanes--vertical > .splitpanes__splitter {
+  width: 0 !important;
+}
+.splitpanes--horizontal > .splitpanes__splitter {
+  height: 0 !important;
+}
+.splitpanes--vertical > .splitpanes__splitter:before {left: -5px;right: -4px;height: 100%;}
+.splitpanes--horizontal > .splitpanes__splitter:before {top: -5px;bottom: -4px;width: 100%;}
 
 /* JSON Editor */
 textarea {

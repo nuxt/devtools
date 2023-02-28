@@ -118,8 +118,8 @@ async function renameCurrentItem() {
 </script>
 
 <template>
-  <div v-if="currentStorage" grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
-    <div border="r base" of-auto w="300px">
+  <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
+    <template #left>
       <div class="flex items-center justify-between px-3 h-[48px] gap1">
         <button n-icon-btn ml--1 @click="currentStorage = ''">
           <div i-carbon-chevron-left />
@@ -140,62 +140,66 @@ async function renameCurrentItem() {
         border="y x-none base! rounded-0"
         class="w-full py2 ring-0!"
       />
-      <NuxtLink
-        v-for="key of filteredKeys" :key="key"
-        border="b base" px2 py1 text-sm font-mono block truncate
-        :to="{ query: { key, storage: currentStorage } }"
-        hover:bg-active
-        :class="key === currentItem?.key ? 'bg-active text-primary font-bold' : 'text-secondary'"
-      >
-        {{ keyName(key) }}
-      </NuxtLink>
+      <template v-for="key of filteredKeys" :key="key">
+        <NuxtLink
+          px2 py1 text-sm font-mono block truncate
+          :to="{ query: { key, storage: currentStorage } }"
+          :class="key === currentItem?.key ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
+        >
+          {{ keyName(key) }}
+        </NuxtLink>
+        <div x-divider />
+      </template>
       <NTextInput
         v-model="newKey"
         icon="carbon-add"
         placeholder="key"
         n="sm"
         border="t-none x-none base! rounded-0"
-        class="w-full py2 ring-0!"
+        class="w-full py2 ring-0! font-mono"
         @keyup.enter="saveNewItem"
       />
-    </div>
-    <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
-      <div border="b base" class="text-sm flex items-center px-4 justify-between flex-none h-[49px]">
-        <div class="flex items-center gap-4">
-          <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
-          <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
-          <NButton v-if="!currentItem.editingKey" n="green xs" :disabled="currentItem.content === currentItem.updatedContent" :class="{ 'border-green': currentItem.content !== currentItem.updatedContent }" @click="saveCurrentItem">
-            Save
-          </NButton>
+    </template>
+
+    <template #right>
+      <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
+        <div border="b base" class="text-sm flex items-center px-4 justify-between flex-none h-[49px]">
+          <div class="flex items-center gap-4">
+            <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
+            <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
+            <NButton v-if="!currentItem.editingKey" n="green xs" :disabled="currentItem.content === currentItem.updatedContent" :class="{ 'border-green': currentItem.content !== currentItem.updatedContent }" @click="saveCurrentItem">
+              Save
+            </NButton>
+          </div>
+          <div>
+            <NButton n="red xs" @click="removeCurrentItem">
+              Delete
+            </NButton>
+          </div>
         </div>
-        <div>
-          <NButton n="red xs" @click="removeCurrentItem">
-            Delete
-          </NButton>
-        </div>
+        <JsonEditorVue
+          v-if="typeof currentItem.content === 'object'"
+          v-model="currentItem.updatedContent"
+          :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+          class="json-editor-vue of-auto h-full text-sm outline-none"
+          v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+        />
+        <textarea
+          v-else v-model="currentItem.updatedContent"
+          placeholder="Item value..."
+          class="of-auto h-full text-sm outline-none p-4 font-mono"
+          @keyup.ctrl.enter="saveCurrentItem"
+        />
       </div>
-      <JsonEditorVue
-        v-if="typeof currentItem.content === 'object'"
-        v-model="currentItem.updatedContent"
-        :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
-        class="json-editor-vue of-auto h-full text-sm outline-none"
-        v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
-      />
-      <textarea
-        v-else v-model="currentItem.updatedContent"
-        placeholder="Item value..."
-        class="of-auto h-full text-sm outline-none p-4 font-mono"
-        @keyup.ctrl.enter="saveCurrentItem"
-      />
-    </div>
-    <div v-else flex items-center justify-center op50 text-center>
-      <p>
-        Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
-          Nitro storage
-        </NLink>
-      </p>
-    </div>
-  </div>
+      <div v-else flex items-center justify-center op50 text-center h-full>
+        <p>
+          Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
+            Nitro storage
+          </NLink>
+        </p>
+      </div>
+    </template>
+  </PanelLeftRight>
   <div v-else grid="~" class="h-full of-hidden">
     <div class="flex gap-4 justify-center op50 text-center flex-col">
       <p v-if="Object.keys(storageMounts as any).length">

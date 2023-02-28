@@ -17,10 +17,16 @@ const devToolsSettingsRefs = toRefs(devToolsSettings)
 
 const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
 
+const devToolsPanelsState = useLocalStorage<Record<string, number>>('nuxt-devtools-panels-state', {} as any, { listenToStorageChanges: false })
+
 export function useDevToolsSettings() {
   return devToolsSettingsRefs
 }
 
 export function useDevToolsFrameState() {
   return devToolsFrameState
+}
+
+export function useDevToolsPanelsState() {
+  return devToolsPanelsState
 }
