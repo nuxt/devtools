@@ -103,6 +103,7 @@ async function renameCurrentItem() {
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
   await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
   await rpc.removeStorageItem(currentItem.value.key)
+  router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>
 

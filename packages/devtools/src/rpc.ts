@@ -80,9 +80,14 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
     async getStorageKeys(base?: string) {
       if (!storage)
         return []
-      const keys = await storage.getKeys(base)
+      try {
+        const keys = await storage.getKeys(base)
 
-      return keys.filter(key => !shouldIgnoreStorageKey(key))
+        return keys.filter(key => !shouldIgnoreStorageKey(key))
+      } catch (err) {
+        console.error(`Cloud not fetch storage keys for ${base}:`, err)
+        return []
+      }
     },
     async getStorageItem(key: string) {
       if (!storage)
