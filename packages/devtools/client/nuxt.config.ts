@@ -3,6 +3,8 @@ import { resolve } from 'path'
 import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
 
+const r = (p: string) => resolve(__dirname, p)
+
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
@@ -14,14 +16,17 @@ export default defineNuxtConfig({
   pages: true,
   nitro: {
     output: {
-      publicDir: resolve(__dirname, '../dist/client'),
+      publicDir: r('../dist/client'),
     },
     devStorage: {
       test: {
         driver: 'fs',
-        base: resolve(__dirname, './.data/test'),
+        base: r('./.data/test'),
       },
     },
+  },
+  alias: {
+    '@nuxt/devtools/iframe-client': r('../src/iframe-client'),
   },
   appConfig: {
     fixture2: 'from nuxt.config.ts',
