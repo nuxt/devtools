@@ -58,7 +58,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
       ...nitro.options.devStorage,
     }
     for (const name of Object.keys(mounts)) {
-      if (IGNORE_STORAGE_MOUNTS.includes(name))
+      if (IGNORE_STORAGE_MOUNTS.includes(name.split(':')[0]))
         continue
       storageMounts[name] = mounts[name]
     }
