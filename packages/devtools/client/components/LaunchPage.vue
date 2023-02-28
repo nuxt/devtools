@@ -19,12 +19,7 @@ defineEmits<{
     <h1 text-xl>
       {{ title }}
     </h1>
-    <div
-      v-if="description"
-      op50 text-center text-base mt--1 mb2
-      class="markdown-body"
-      v-html="renderMarkdown(description)"
-    />
+    <NMarkdown v-if="description" op50 text-center text-base mt--1 mb2 :markdown="description" />
     <div flex="~ gap2 wrap">
       <template v-for="action, idx of actions" :key="idx">
         <NButton

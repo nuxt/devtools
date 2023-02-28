@@ -4,7 +4,7 @@ const iframeCacheMap = new Map<string, HTMLIFrameElement>()
 
 <script setup lang="ts">
 // eslint-disable-next-line import/first
-import type { ModuleCustomTab, ModuleIframeView, NuxtDevtoolsIframeClient } from '~/../src/types'
+import type { ModuleCustomTab, ModuleIframeView } from '~/../src/types'
 
 const props = defineProps<{
   tab: ModuleCustomTab
@@ -74,12 +74,7 @@ function injectClient() {
     return
 
   try {
-    iframeEl.value.contentWindow.__NUXT_DEVTOOLS__ = {
-      host: client.value,
-      devtools: {
-        rpc,
-      },
-    } satisfies NuxtDevtoolsIframeClient
+    iframeEl.value.contentWindow.__NUXT_DEVTOOLS__ = getInjectionClient()
   }
   catch (e) {
   }

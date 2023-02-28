@@ -28,10 +28,11 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
     <template #popper>
       <div max-w-100>
         <div text-sm px4 py3>
-          <div
+          <NMarkdown
             v-if="item.meta?.description"
-            class="markdown-body" text-sm pb3
-            v-html="renderMarkdown(item.meta.description)"
+            tag="div"
+            text-sm pb3
+            :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
             <NButton n-solid @click="copy(name)">

@@ -97,7 +97,7 @@ const filteredFiles = computed(() => {
         <div border="b base" px4 py2 text-sm op75 flex-none>
           <code>{{ current.id }}</code>
         </div>
-        <pre of-auto h-full text-sm v-html="highlight(current?.content, 'typescript')" />
+        <NCodeBlock of-auto h-full text-sm :code="current.content" lang="typescript" />
       </div>
       <span v-else flex items-center justify-center op50>Select one file to start</span>
     </Pane>

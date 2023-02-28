@@ -16,7 +16,7 @@ getHighlighter({
   ],
 }).then((i) => { shiki.value = i })
 
-export function highlight(code: string, lang: Lang) {
+export function renderCodeHighlight(code: string, lang: Lang) {
   const mode = useColorMode()
   if (!shiki.value)
     return code

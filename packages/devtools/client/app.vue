@@ -30,6 +30,10 @@ addEventListener('keypress', (e) => {
   if (e.code === 'KeyD' && e.altKey)
     client.value?.closeDevTools()
 })
+
+onMounted(() => {
+  window.__NUXT_DEVTOOLS__ = getInjectionClient()
+})
 </script>
 
 <template>
