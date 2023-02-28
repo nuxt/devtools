@@ -120,24 +120,25 @@ async function renameCurrentItem() {
 <template>
   <div v-if="currentStorage" grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" of-auto w="300px">
-      <div class="flex items-center justify-between gap-2 px-3 h-[48px]">
+      <div class="flex items-center justify-between px-3 h-[48px] gap1">
+        <button n-icon-btn ml--1 @click="currentStorage = ''">
+          <div i-carbon-chevron-left />
+        </button>
         <div class="w-full text-sm">
-          <span text-gray>storage:</span>
-          <select v-model="currentStorage" class="ml-2 p-1 bg-transparent">
+          <NSelect v-model="currentStorage" n="primary" icon="carbon-data-base">
             <option v-for="(_storage, name) of storageMounts" :key="name" :value="name">
               {{ name }}
             </option>
-          </select>
+          </NSelect>
         </div>
-        <NIcon icon="carbon-close" class="op50 hover:op100 cursor-pointer" @click="currentStorage = ''" />
       </div>
       <NTextInput
         v-model="searchString"
         icon="carbon-search"
         placeholder="Search..."
         n="primary sm"
-        border="y x-none base!"
-        class="w-full rounded-0 py2 ring-0!"
+        border="y x-none base! rounded-0"
+        class="w-full py2 ring-0!"
       />
       <NuxtLink
         v-for="key of filteredKeys" :key="key"
@@ -153,7 +154,8 @@ async function renameCurrentItem() {
         icon="carbon-add"
         placeholder="key"
         n="sm"
-        class="w-full outline-none border-0 border-b rounded-none"
+        border="t-none x-none base! rounded-0"
+        class="w-full py2 ring-0!"
         @keyup.enter="saveNewItem"
       />
     </div>
