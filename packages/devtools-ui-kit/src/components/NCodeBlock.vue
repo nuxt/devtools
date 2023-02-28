@@ -1,12 +1,11 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
 
-import type { Lang } from 'shiki-es'
-import { devToolsClient } from '../composables/client'
+import { devToolsClient } from './_utils/client'
 
 defineProps<{
   code: string
-  lang?: Lang
+  lang?: string
 }>()
 </script>
 

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "strict": true,
     "module": "esnext",
     "lib": ["esnext", "dom"],
@@ -8,7 +9,11 @@
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@nuxt/devtools": ["./packages/devtools/src/index.ts"],
+      "@nuxt/devtools/iframe-client": ["./packages/devtools/src/iframe-client.ts"]
+    }
   },
   "exclude": [
     "**/node_modules",

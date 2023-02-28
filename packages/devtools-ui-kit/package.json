@@ -28,6 +28,9 @@
     "prepublishOnly": "npm run build",
     "playground:build": "nuxi generate playground"
   },
+  "peerDependencies": {
+    "@nuxt/devtools": "workspace:*"
+  },
   "dependencies": {
     "@iconify-json/carbon": "^1.1.16",
     "@nuxt/kit": "^3.2.3",
