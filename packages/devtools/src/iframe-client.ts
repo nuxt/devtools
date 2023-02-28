@@ -15,17 +15,17 @@ export function useDevtoolsClient() {
       // @ts-ignore injection
       setup(window.__NUXT_DEVTOOLS__)
     }
-    else {
-      Object.defineProperty(window, '__NUXT_DEVTOOLS__', {
-        set(value) {
-          if (value)
-            setup(value)
-        },
-        get() {
-          return clientRef!.value
-        },
-      })
-    }
+
+    Object.defineProperty(window, '__NUXT_DEVTOOLS__', {
+      set(value) {
+        if (value)
+          setup(value)
+      },
+      get() {
+        return clientRef!.value
+      },
+      configurable: true,
+    })
   }
 
   function setup(client: NuxtDevtoolsIframeClient) {
