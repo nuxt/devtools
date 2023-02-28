@@ -21,6 +21,20 @@ export interface ModuleOptions {
    * VS Code Server integration options.
    */
   vscode?: VSCodeIntegrationOptions
+
+  /**
+   * Enable Vue Component Inspector
+   *
+   * @default true
+   */
+  componentInspector?: boolean
+
+  /**
+   * Enable vite-plugin-inspect
+   *
+   * @default true
+   */
+  viteInspect?: boolean
 }
 
 export interface ModuleGlobalOptions {
