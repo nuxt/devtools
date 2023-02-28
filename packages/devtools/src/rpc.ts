@@ -23,6 +23,7 @@ import { LOG_PREFIX } from './logger'
 import { checkForUpdates, usePackageVersions } from './npm'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
+const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
 
 export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   const components: Component[] = []
@@ -51,6 +52,14 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   nuxt.hook('nitro:init', (nitro) => {
     storage = nitro.storage
 
+    nuxt.hook('ready', () => {
+      storage!.watch((_event, key) => {
+        if (shouldIgnoreStorageKey(key)) return
+        // TODO: send websocket event as storage key updated
+        // birpc.broadcast.sendEvent('storageUpdate', key)
+      })
+    })
+
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53
     const mounts = {
@@ -58,7 +67,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
       ...nitro.options.devStorage,
     }
     for (const name of Object.keys(mounts)) {
-      if (IGNORE_STORAGE_MOUNTS.includes(name.split(':')[0]))
+      if (shouldIgnoreStorageKey(name))
         continue
       storageMounts[name] = mounts[name]
     }
@@ -73,7 +82,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
         return []
       const keys = await storage.getKeys(base)
 
-      return keys.filter(key => !IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]))
+      return keys.filter(key => !shouldIgnoreStorageKey(key))
     },
     async getStorageItem(key: string) {
       if (!storage)
