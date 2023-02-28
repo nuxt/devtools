@@ -10,6 +10,6 @@ export function setupClientRPC() {
     },
     async callHook(hook: string, ...args: any[]) {
       nuxt.hooks.callHookParallel(hook as any, ...args)
-    }
+    },
   } satisfies ClientFunctions)
 }

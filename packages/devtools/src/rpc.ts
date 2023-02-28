@@ -54,7 +54,8 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
 
     nuxt.hook('ready', () => {
       storage!.watch((event, key) => {
-        if (shouldIgnoreStorageKey(key)) return
+        if (shouldIgnoreStorageKey(key))
+          return
         birpc.broadcast.callHook.asEvent('storage:key:update', key, event)
       })
     })

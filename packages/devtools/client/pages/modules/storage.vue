@@ -32,10 +32,12 @@ const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('s
 })
 
 const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: string, event) => {
-  if (!currentStorage.value || key.split(':')[0] !== currentStorage.value) return
+  if (!currentStorage.value || key.split(':')[0] !== currentStorage.value)
+    return
   await refreshStorageKeys()
   if (fileKey.value === key) {
-    if (event === 'remove') return router.replace({ query: { storage: currentStorage.value } })
+    if (event === 'remove')
+      return router.replace({ query: { storage: currentStorage.value } })
     await fetchItem(fileKey.value)
   }
 })
@@ -107,7 +109,7 @@ async function renameCurrentItem() {
 <template>
   <div v-if="currentStorage" grid="~ cols-[auto_1fr]" h-full of-hidden class="virtual-files">
     <div border="r base" of-auto w="300px">
-      <div class="flex justify-betwen items-center gap-2 px-3 h-[50px]">
+      <div class="flex items-center justify-betwen gap-2 px-3 h-[50px]">
         <div class="w-full text-sm">
           <span text-gray>storage:</span>
           <select v-model="currentStorage" class="ml-2 p-1 bg-transparent">
@@ -169,7 +171,7 @@ async function renameCurrentItem() {
     </div>
   </div>
   <div v-else grid="~" class="h-full of-hidden">
-    <div class="flex flex-col gap-4 justify-center op50 text-center">
+    <div class="flex gap-4 justify-center op50 text-center flex-col">
       <p v-if="Object.keys(storageMounts as any).length">
         Select one storage to start:
       </p>
@@ -180,7 +182,7 @@ async function renameCurrentItem() {
         </nlink>
       </p>
       <div class="mx-auto">
-        <NCard v-for="(storage, name) of storageMounts" :key="name" class="border text-left p-4 mb-4 hover:border-green cursor-pointer" @click="currentStorage = name">
+        <NCard v-for="(storage, name) of storageMounts" :key="name" class="text-left p-4 cursor-pointer border mb-4 hover:border-green" @click="currentStorage = name">
           <span class="font-bold">{{ name }}</span><br>
           <span class="text-sm">{{ storage.driver }} driver</span><br>
           <span v-if="storage.base" class="text-xs font-mono">{{ storage.base }}</span>
