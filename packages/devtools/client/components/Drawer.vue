@@ -5,7 +5,7 @@ const tabs = useTabs()
 
 <template>
   <div border="r base" flex="~ col" h-full>
-    <div flex="~" p2 items-center border="b base">
+    <div flex="~" sticky top-0 z-1 bg-base p2 items-center border="b base">
       <VDropdown placement="left-start" :distance="20" hidden lg:block>
         <NuxtLogo
           h-8
