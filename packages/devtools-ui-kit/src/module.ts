@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import { addComponentsDir, createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
 import defu from 'defu'
 import { extendUnocssOptions } from './unocss'

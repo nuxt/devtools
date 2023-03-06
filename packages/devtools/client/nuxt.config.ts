@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 
 import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
