@@ -1,5 +1,5 @@
-import fsp from 'fs/promises'
-import fs from 'fs'
+import fsp from 'node:fs/promises'
+import fs from 'node:fs'
 import type { Nuxt } from 'nuxt/schema'
 import { dirname, join } from 'pathe'
 import { logger } from '@nuxt/kit'

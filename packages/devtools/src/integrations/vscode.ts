@@ -1,4 +1,4 @@
-import { hostname } from 'os'
+import { hostname } from 'node:os'
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import type { Nuxt } from 'nuxt/schema'

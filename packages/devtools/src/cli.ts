@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import consola from 'consola'
 import { execa } from 'execa'
 import { readUser, writeUser } from 'rc9'

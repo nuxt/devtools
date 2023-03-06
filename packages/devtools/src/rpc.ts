@@ -1,4 +1,4 @@
-import { existsSync } from 'fs'
+import { existsSync } from 'node:fs'
 import type { TinyWSRequest } from 'tinyws'
 import type { NodeIncomingMessage, NodeServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
