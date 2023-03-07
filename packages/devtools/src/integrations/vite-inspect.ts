@@ -2,6 +2,7 @@ import { addVitePlugin } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import type { ViteInspectAPI } from 'vite-plugin-inspect'
 import Inspect from 'vite-plugin-inspect'
+import { addCustomTab } from '../kit'
 import type { ServerFunctions } from '../types'
 
 export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
@@ -14,17 +15,15 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
     api = plugin.api
   })
 
-  nuxt.hook('devtools:customTabs', (tabs) => {
-    tabs.push({
-      name: 'builtin-vite-inspect',
-      title: 'Inspect',
-      icon: 'carbon-search',
-      view: {
-        type: 'iframe',
-        src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`.replace(/\/\//g, '/'),
-      },
-    })
-  })
+  addCustomTab(() => ({
+    name: 'builtin-vite-inspect',
+    title: 'Inspect',
+    icon: 'carbon-search',
+    view: {
+      type: 'iframe',
+      src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`.replace(/\/\//g, '/'),
+    },
+  }), nuxt)
 
   async function getComponentsRelationships() {
     const modules = (await api?.rpc.list())?.modules || []
