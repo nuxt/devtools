@@ -6,12 +6,12 @@
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
     "dev": "pnpm -C packages/devtools dev",
     "lint": "eslint .",
-    "typecheck": "nuxi typecheck",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
     "test": "pnpm lint",
     "docs": "nuxi dev docs",
-    "postinstall": "npx simple-git-hooks"
+    "postinstall": "npx simple-git-hooks",
+    "prepare": "pnpm -r run dev:prepare"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.36.0",

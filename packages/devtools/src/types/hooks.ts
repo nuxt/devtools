@@ -1,4 +1,4 @@
-import type { ModuleCustomTab } from './types'
+import type { ModuleCustomTab } from './custom-tabs'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {

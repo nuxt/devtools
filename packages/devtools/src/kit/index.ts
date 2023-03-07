@@ -1,6 +1,6 @@
 import { useNuxt } from '@nuxt/kit'
 import type { ModuleCustomTab } from '../types'
-import type {} from '../hooks'
+import '../types/hooks'
 
 /**
  * Hooks to extend a custom tab in devtools.

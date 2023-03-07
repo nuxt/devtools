@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   src: String,
 })
 const show = ref(false)
-const embed = ref(null)
+const embed = ref<HTMLElement>()
 const repo = 'https://github.com/nuxt/devtools/tree/main/packages/devtools-ui-kit'
 const url = computed(() => `https://emgithub.com/embed-v2.js?target=${encodeURIComponent(repo + props.src)}&style=default&type=code&showFullPath=on&showFileMeta=on&showCopy=on`)
 
@@ -12,7 +12,7 @@ watch(show, async () => {
     await nextTick()
     const script = document.createElement('script')
     script.src = url.value
-    embed.value.appendChild(script)
+    embed.value?.appendChild(script)
   }
 })
 </script>
