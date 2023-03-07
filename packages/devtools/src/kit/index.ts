@@ -5,7 +5,7 @@ import type {} from '../hooks'
 /**
  * Hooks to extend a custom tab in devtools.
  *
- * Provide a function to make pass a factory that can be updated dynamically.
+ * Provide a function to pass a factory that can be updated dynamically.
  */
 export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Promise<ModuleCustomTab>), nuxt = useNuxt()) {
   nuxt.hook('devtools:customTabs', async (tabs) => {
