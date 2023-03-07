@@ -16,4 +16,5 @@ export interface DevToolsUISettings {
   componentsGraphShowWorkspace: boolean
   interactionCloseOnOutsideClick: boolean
   showExperimentalFeatures: boolean
+  scale: number
 }

@@ -11,6 +11,7 @@ const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-sett
   componentsGraphShowWorkspace: true,
   interactionCloseOnOutsideClick: false,
   showExperimentalFeatures: false,
+  scale: 1,
 }, { mergeDefaults: true })
 
 const devToolsSettingsRefs = toRefs(devToolsSettings)

@@ -29,14 +29,24 @@ setupClientRPC()
 
 const client = useClient()
 addEventListener('keypress', (e) => {
-  if (e.code === 'KeyD' && e.altKey)
+  if (e.code === 'KeyD' && e.altKey) {
     client.value?.closeDevTools()
+    e.preventDefault()
+  }
 })
+
+const {
+  scale,
+} = useDevToolsSettings()
 
 onMounted(() => {
   const injectClient = useInjectionClient()
   watchEffect(() => {
     window.__NUXT_DEVTOOLS__ = injectClient.value
+  })
+
+  watchEffect(() => {
+    document.body.style.fontSize = `${scale.value * 15}px`
   })
 })
 </script>

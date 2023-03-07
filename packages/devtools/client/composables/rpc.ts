@@ -10,9 +10,9 @@ export const wsError = ref<any>()
 let connectPromise = connectWS()
 let onMessage: Function = () => {}
 
-export const clientFunctions: ClientFunctions = {
-  refresh() {}, // will be replaced in app.vue
-}
+export const clientFunctions = {
+  // will be added in app.vue
+} as ClientFunctions
 
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   post: async (d) => {
