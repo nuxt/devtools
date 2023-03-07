@@ -25,13 +25,12 @@ import { checkForUpdates, usePackageVersions } from './npm'
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
 
-export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
+export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
   const serverPages: NuxtPage[] = []
   const iframeTabs: ModuleCustomTab[] = []
-  const customTabs: ModuleCustomTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
   let storage: Storage | undefined
   const storageMounts: StorageMounts = {}
@@ -40,6 +39,10 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
 
   let checkForUpdatePromise: Promise<any> | undefined
   let versions: UpdateInfo[] = usePackageVersions()
+
+  const customTabs: ModuleCustomTab[] = []
+  if (options.customTabs?.length)
+    customTabs.push(...options.customTabs)
 
   const serverFunctions = {} as ServerFunctions
   const clients = new Set<WebSocket>()
@@ -272,6 +275,8 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
 
   async function initCustomTabs() {
     customTabs.length = 0
+    if (options.customTabs?.length)
+      customTabs.push(...options.customTabs)
     await nuxt.callHook('devtools:customTabs', customTabs)
     refresh('getCustomTabs')
   }

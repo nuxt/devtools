@@ -20,6 +20,13 @@ export interface ModuleOptions {
   enabled?: boolean
 
   /**
+   * Custom tabs
+   *
+   * This is in static format, for dynamic injection, call `nuxt.hook('devtools:customTabs')` instead
+   */
+  customTabs?: ModuleCustomTab[]
+
+  /**
    * VS Code Server integration options.
    */
   vscode?: VSCodeIntegrationOptions
