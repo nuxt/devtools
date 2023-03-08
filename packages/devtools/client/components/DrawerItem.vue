@@ -15,25 +15,26 @@ const isEnabled = computed(() => {
 </script>
 
 <template>
-  <NuxtLink
-    v-if="isEnabled"
-    :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
-    flex="~" p2 items-center justify-center text-secondary
-    border="base"
-    lg="border-b px3 py1.5 justify-start"
-    hover="bg-active"
-    select-none
-    exact-active-class="!text-primary"
-  >
-    <TabIcon
-      text-lg lg:text-base
-      :icon="tab.icon" :title="tab.title"
-    />
-    <div hidden lg:block flex-auto pl2>
-      {{ tab.title }}
-    </div>
-    <div v-if="'extraTabVNode' in tab && tab.extraTabVNode" hidden lg:block>
-      <Component :is="tab.extraTabVNode" />
-    </div>
-  </NuxtLink>
+  <VTooltip v-if="isEnabled" placement="right">
+    <NuxtLink
+      :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
+      flex="~"
+      hover="bg-active"
+      items-center justify-center w-10 p1 text-secondary select-none rounded-xl h-10
+      exact-active-class="!text-primary bg-active"
+    >
+      <TabIcon
+        text-xl
+        :icon="tab.icon" :title="tab.title"
+      />
+    </NuxtLink>
+    <template #popper>
+      <div>
+        {{ tab.title }}
+      </div>
+      <div v-if="'extraTabVNode' in tab && tab.extraTabVNode" hidden lg:block>
+        <Component :is="tab.extraTabVNode" />
+      </div>
+    </template>
+  </VTooltip>
 </template>

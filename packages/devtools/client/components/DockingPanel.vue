@@ -19,7 +19,7 @@ function refreshPage() {
 
 <template>
   <div>
-    <div v-if="client" px4 py2 border="b base" flex="~ col gap-1">
+    <div v-if="client" px3 py2 border="b base" flex="~ col gap-1">
       <div text-sm op50>
         Dock devtools to
       </div>
@@ -46,7 +46,14 @@ function refreshPage() {
         />
       </div>
     </div>
-    <div px4 py3 flex="~ gap2">
+    <div px3 py2 border="b base">
+      <NDarkToggle v-slot="{ toggle, isDark }">
+        <NButton n="sm primary" @click="toggle()">
+          <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
+        </NButton>
+      </NDarkToggle>
+    </div>
+    <div px3 py2 flex="~ gap2">
       <NButton n="solid primary xs" @click="refreshData">
         Refetch Data
       </NButton>
