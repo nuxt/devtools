@@ -6,12 +6,15 @@ const props = defineProps<{
   asset: AssetInfo
 }>()
 
-const codeSnippet = computed(() => {
-  if (props.asset.type === 'image')
-    // TODO: NuxtImage when available
-    return `<img src="${props.asset.publicPath}" />`
+const codeSnippets = computed(() => {
+  if (props.asset.type === 'image') {
+    return [
+      ['html', `<NuxtImage src="${props.asset.publicPath}" />`],
+      ['html', `<img src="${props.asset.publicPath}" />`],
+    ]
+  }
   if (props.asset.type === 'video')
-    return `<video src="${props.asset.publicPath}" />`
+    return [['html', `<video src="${props.asset.publicPath}" />`]]
 })
 
 const copy = useCopy()
@@ -29,7 +32,7 @@ const fileSize = computed(() => {
 <template>
   <div flex="~ col gap-4" p2 h-full of-auto w-full of-hidden>
     <div flex="~" items-center justify-center>
-      <AssetPreview rounded max-h-50 w-auto border="~ base" :asset="asset" />
+      <AssetPreview rounded max-h-80 w-auto min-h-20 min-w-20 border="~ base" :asset="asset" />
     </div>
     <table w-full>
       <tbody>
@@ -72,8 +75,11 @@ const fileSize = computed(() => {
       Actions
     </div>
     <div flex="~ gap2 wrap">
-      <NButton icon="carbon-launch" @click="openInEditor(asset.filePath)">
+      <NButton icon="i-carbon-code" @click="openInEditor(asset.filePath)">
         Open in Editor
+      </NButton>
+      <NButton icon="carbon-launch" :to="asset.publicPath" target="_blank">
+        Open in browser
       </NButton>
       <NButton icon="carbon-copy" @click="copy(asset.publicPath)">
         Copy public path
@@ -85,13 +91,18 @@ const fileSize = computed(() => {
 
     <div flex-auto />
 
-    <div v-if="codeSnippet" border="~ base rounded" p2 of-hidden n-code-block>
-      <NCodeBlock :code="codeSnippet" lang="html" of-auto w-full :lines="false" px1 />
-      <div flex justify-end pt2>
-        <NButton icon="carbon-copy" n="sm primary" @click="copy(codeSnippet!)">
-          Copy snippet
-        </NButton>
-      </div>
+    <div v-if="codeSnippets?.length" n-code-block border="~ base rounded">
+      <template v-for="cs, idx of codeSnippets" :key="idx">
+        <div v-if="idx" x-divider />
+        <div v-if="cs" of-hidden p2>
+          <NCodeBlock :code="cs[1]" :lang="cs[0]" of-auto w-full :lines="false" px1 />
+          <div flex justify-end pt2>
+            <NButton icon="carbon-copy" n="sm primary" @click="copy(cs[1])">
+              Copy snippet
+            </NButton>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>

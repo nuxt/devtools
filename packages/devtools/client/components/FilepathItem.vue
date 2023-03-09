@@ -12,8 +12,8 @@ const short = computed(() => (props.filepath && config.value)
 
 <template>
   <button
-
     ws-nowrap of-hidden font-mono hover:underline truncate
+    :title="filepath"
     @click="openInEditor(filepath)"
   >
     {{ short }}

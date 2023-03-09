@@ -46,11 +46,13 @@ function toggleView() {
 onKeyDown('Escape', () => {
   selected.value = undefined
 })
+
+const navbar = ref<HTMLElement>()
 </script>
 
 <template>
   <div h-full of-auto>
-    <div flex="~ col gap-2" border="b base" navbar-glass p4 pb2 flex-1>
+    <div ref="navbar" flex="~ col gap-2" border="b base" navbar-glass p4 flex-1 pb2>
       <div flex="~ gap4">
         <NTextInput
           v-model="search"
@@ -98,8 +100,14 @@ onKeyDown('Escape', () => {
     <div v-else>
       <AssetListItem v-for="a of filtered" :key="a.path" :asset="a" @click="selected = a" />
     </div>
-    <DrawerRight :model-value="!!selected" top-96px w-120 @close="selected = undefined">
-      <AssetDetails v-if="selected" :asset="selected" px2 mt-10 />
+    <DrawerRight
+      :model-value="!!selected"
+      w-120
+      auto-close
+      :navbar="navbar"
+      @close="selected = undefined"
+    >
+      <AssetDetails v-if="selected" :asset="selected" px2 h-full of-auto mt-10 />
     </DrawerRight>
   </div>
 </template>

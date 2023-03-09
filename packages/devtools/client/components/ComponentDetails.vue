@@ -14,7 +14,7 @@ const copy = useCopy()
 </script>
 
 <template>
-  <div flex="~ col gap1">
+  <div flex="~ col gap1" of-hidden items-start>
     <div flex="~ gap2">
       <div>
         <ComponentName :component="component" />
@@ -32,7 +32,7 @@ const copy = useCopy()
     <FilepathItem
       v-if="filePath"
       :filepath="filePath"
-      text-sm op25 group-hover:op75
+      w-full text-sm op25 group-hover:op75
     />
     <slot />
   </div>

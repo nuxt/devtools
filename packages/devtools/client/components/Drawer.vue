@@ -4,8 +4,8 @@ const tabs = useTabs()
 </script>
 
 <template>
-  <div border="r base" flex="~ col gap-0.5" items-center justify-center h-full z-100 bg-base>
-    <div flex="~" items-center top-0 sticky z-1 pt3 pb2>
+  <div border="r base" flex="~ col gap-0.5" h-full items-center z-100 bg-base>
+    <div flex="~ col" items-center top-0 bg-base sticky z-1 pt3 mb1>
       <VDropdown placement="left-start" :distance="20">
         <button
 
@@ -17,9 +17,9 @@ const tabs = useTabs()
           <DockingPanel />
         </template>
       </VDropdown>
-    </div>
 
-    <div h-1px my1 w-8 border="b base" />
+      <div h-1px w-8 mt-2 border="b base" />
+    </div>
 
     <DrawerItem
       v-for="tab of tabs.builtin.value"

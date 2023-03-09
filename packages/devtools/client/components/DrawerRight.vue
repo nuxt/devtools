@@ -1,7 +1,24 @@
 <script setup lang="ts">
 const props = defineProps<{
   modelValue?: boolean
+  navbar?: HTMLElement
+  autoClose?: boolean
 }>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+
+const el = ref<HTMLElement>()
+
+const { height: top } = useElementSize(() => props.navbar, undefined, { box: 'border-box' })
+
+onClickOutside(el, () => {
+  if (props.modelValue && props.autoClose)
+    emit('close')
+}, {
+  ignore: ['a', 'button', 'summary'],
+})
 </script>
 
 <script lang="ts">
@@ -21,9 +38,11 @@ export default {
   >
     <div
       v-if="modelValue"
+      ref="el"
       border="l base"
       flex="~ col gap-1"
-      p2 of-hidden navbar-glass absolute right-0 bottom-0 text-sm
+      p2 of-auto right-0 text-sm absolute bottom-0 glass-effect z-10 z-20
+      :style="{ top: `${top}px` }"
       v-bind="$attrs"
     >
       <button absolute n-icon-btn text-xl right-2 top-2 @click="$emit('close')">
