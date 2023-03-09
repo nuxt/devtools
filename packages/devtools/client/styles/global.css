@@ -1,6 +1,7 @@
 html {
   --at-apply: font-sans;
 }
+
 html.dark {
   background: #151515;
   color-scheme: dark;
@@ -10,6 +11,7 @@ html.dark {
   counter-reset: step;
   counter-increment: step calc(var(--start, 1) - 1);
 }
+
 .shiki code .line::before {
   content: counter(step);
   counter-increment: step;
@@ -27,15 +29,18 @@ html.dark {
   --at-apply: bg-base dark:text-white rounded border border-base shadow;
   box-shadow: 0 6px 30px #0000001a;
 }
+
 .v-popper--theme-tooltip .v-popper__arrow-inner,
 .v-popper--theme-dropdown .v-popper__arrow-inner {
   visibility: visible;
   --at-apply: border-white dark:border-hex-121212;
 }
+
 .v-popper--theme-tooltip .v-popper__arrow-outer,
 .v-popper--theme-dropdown .v-popper__arrow-outer {
   --at-apply: border-base;
 }
+
 .v-popper--theme-tooltip.v-popper--shown,
 .v-popper--theme-tooltip.v-popper--shown * {
   transition: none !important;
@@ -51,39 +56,54 @@ html.dark {
   position: relative;
 }
 .splitpanes__splitter:before {
-  --at-apply: absolute left-0 top-0 transition; 
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: .2s ease;
   content: '';
-  transition: opacity 0.4s; 
+  transition: opacity 0.4s;
   z-index: 1;
 }
 .splitpanes__splitter:hover:before {
   background: #8881;
   opacity: 1;
 }
-.splitpanes--vertical > .splitpanes__splitter {
+.splitpanes--vertical>.splitpanes__splitter {
   width: 0 !important;
 }
-.splitpanes--horizontal > .splitpanes__splitter {
+.splitpanes--horizontal>.splitpanes__splitter {
   height: 0 !important;
 }
-.splitpanes--vertical > .splitpanes__splitter:before {left: -5px;right: -4px;height: 100%;}
-.splitpanes--horizontal > .splitpanes__splitter:before {top: -5px;bottom: -4px;width: 100%;}
+.splitpanes--vertical>.splitpanes__splitter:before {
+  left: -5px;
+  right: -4px;
+  height: 100%;
+}
+.splitpanes--horizontal>.splitpanes__splitter:before {
+  top: -5px;
+  bottom: -4px;
+  width: 100%;
+}
 
 /* JSON Editor */
 textarea {
   background: #8881
 }
+
 .json-editor-vue {
   --jse-theme-color: #8886 !important;
   --jse-theme-color-highlight: #8889 !important;
   --jse-background-color: #8881 !important;
 }
+
 .json-editor-vue .no-main-menu {
   border: none !important;
 }
+
 .json-editor-vue .jse-main {
   min-height: 1em !important;
 }
+
 .json-editor-vue .jse-contents {
   border-width: 0 !important;
   border-radius: 5px !important;

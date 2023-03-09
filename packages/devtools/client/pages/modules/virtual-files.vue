@@ -2,7 +2,7 @@
 import Fuse from 'fuse.js'
 
 definePageMeta({
-  icon: 'carbon-assembly-reference',
+  icon: 'i-carbon-border-none',
   title: 'Virtual Files',
 })
 
@@ -86,7 +86,7 @@ const filteredFiles = computed(() => {
         v-for="f of filteredFiles" :key="f.id"
       >
         <NuxtLink
-          px2 py1 text-sm font-mono block truncate select-none
+          px2 text-sm py1 font-mono block truncate select-none
           :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
           :class="f.id === current?.id ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >
@@ -98,7 +98,7 @@ const filteredFiles = computed(() => {
 
     <template #right>
       <div v-if="current?.content" h-full of-hidden flex="~ col">
-        <div border="b base" px4 py2 text-sm op75 flex-none>
+        <div border="b base" text-sm flex-none px4 py2 op75>
           <code>{{ current.id }}</code>
         </div>
         <NCodeBlock of-auto h-full text-sm :code="current.content" lang="typescript" />
