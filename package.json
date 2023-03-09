@@ -13,9 +13,6 @@
     "postinstall": "npx simple-git-hooks",
     "prepare": "pnpm -r run dev:prepare"
   },
-  "dependencies": {
-    "fast-glob": "^3.2.12"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.36.0",
     "@antfu/ni": "^0.20.0",
