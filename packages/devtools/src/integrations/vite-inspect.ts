@@ -18,7 +18,7 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions) {
   addCustomTab(() => ({
     name: 'builtin-vite-inspect',
     title: 'Inspect',
-    icon: 'carbon-search',
+    icon: 'carbon-ibm-watson-discovery',
     view: {
       type: 'iframe',
       src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`.replace(/\/\//g, '/'),

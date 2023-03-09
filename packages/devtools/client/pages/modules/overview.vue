@@ -34,7 +34,7 @@ function goIntro() {
 
       <!-- Banner -->
       <div flex="~ col" items-center mt-20>
-        <div flex="~" justify-center items-center mt--10>
+        <div flex="~" items-center justify-center mt--10>
           <NuxtLogo h-18 />
           <button mr--16 mt--6 @click="goIntro">
             <Badge
@@ -63,7 +63,7 @@ function goIntro() {
             />
             <Badge
               v-else
-              bg-gray-400:10 text-gray-400 mt--1
+              mt--1 bg-gray-400:10 text-gray-400
               title="latest"
               v-text="'latest'"
             />
@@ -75,7 +75,7 @@ function goIntro() {
             <div>{{ routes.length }} pages</div>
           </NuxtLink>
           <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
-            <div text-3xl carbon-nominal />
+            <div text-3xl i-carbon-assembly-cluster />
             <div>{{ components.length }} components</div>
           </NuxtLink>
           <NuxtLink v-if="config && autoImports" p4 min-w-40 theme-card-yellow flex="~ col auto" to="/modules/imports">
@@ -118,7 +118,7 @@ function goIntro() {
           Bug Reports
         </a>
         <VDropdown>
-          <button flex="~ gap1" items-center mxa inline-block op50 hover:op80>
+          <button flex="~ gap1" items-center op50 mxa inline-block hover:op80>
             <div i-carbon-settings />
             Settings
           </button>

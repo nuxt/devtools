@@ -4,7 +4,7 @@ import ComponentsGraph from '~/components/ComponentsGraph.vue'
 import ComponentsList from '~/components/ComponentsList.vue'
 
 definePageMeta({
-  icon: 'carbon-nominal',
+  icon: 'i-carbon-assembly-cluster',
   title: 'Components',
   order: 2,
 })
