@@ -28,7 +28,9 @@ const fileSize = computed(() => {
 
 <template>
   <div flex="~ col gap-4" p2 h-full of-auto w-full of-hidden>
-    <AssetPreview rounded h-50 border="~ base" :asset="asset" />
+    <div flex="~" items-center justify-center>
+      <AssetPreview rounded max-h-50 w-auto border="~ base" :asset="asset" />
+    </div>
     <table w-full>
       <tbody>
         <tr>
