@@ -4,7 +4,7 @@ import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { WizardActions, WizardArgs } from '../wizard'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AutoImportsWithMetadata, HookInfo, UpdateInfo } from './integrations'
+import type { AssetInfo, AutoImportsWithMetadata, HookInfo, UpdateInfo } from './integrations'
 import type { ComponentRelationship } from './module'
 
 export interface ServerFunctions {
@@ -21,6 +21,7 @@ export interface ServerFunctions {
   getCustomTabs(): ModuleCustomTab[]
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
+  getStaticAssets(): Promise<AssetInfo[]>
   usePackageVersions(): UpdateInfo[]
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: WizardArgs<T>): Promise<void>

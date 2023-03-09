@@ -118,6 +118,9 @@ export const unocssPreset = (): Preset => ({
 
     // icon
     'n-icon': 'flex-none',
+
+    // code
+    'n-code-block': 'dark:bg-[#121212] bg-white',
   },
 })
 

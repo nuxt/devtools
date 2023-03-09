@@ -21,6 +21,7 @@ importers:
       conventional-changelog-cli: ^2.2.2
       eslint: ^8.35.0
       execa: ^7.0.0
+      fast-glob: ^3.2.12
       get-port-please: ^3.0.1
       lint-staged: ^13.1.2
       nuxt: ^3.2.3
@@ -29,6 +30,8 @@ importers:
       typescript: ^4.9.5
       unocss: ^0.50.4
       vue-tsc: ^1.2.0
+    dependencies:
+      fast-glob: 3.2.12
     devDependencies:
       '@antfu/eslint-config': 0.36.0_ycpbpc6yetojsgtrx3mwntkhsu
       '@antfu/ni': 0.20.0
@@ -2807,7 +2810,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.7_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.1.4
+      vite: 4.1.4_@types+node@18.14.6
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
@@ -2819,7 +2822,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.1.4
+      vite: 4.1.4_@types+node@18.14.6
       vue: 3.2.47
 
   /@vitest/expect/0.28.3:
@@ -11582,7 +11585,6 @@ packages:
       rollup: 3.17.3
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
 
   /vitest-environment-nuxt/0.6.6_xxv2qhwlwx7kwned4rweutziga:
     resolution: {integrity: sha512-mGIwhB4lMxi4K3pcl/s+UGk0xZMXzlhbI5Pim3zLttNhiJBI9Op2IAquDHU9hihArVgt6N+w5zRhj0PBzhNFcw==}

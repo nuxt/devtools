@@ -4,8 +4,8 @@ const tabs = useTabs()
 </script>
 
 <template>
-  <div border="r base" flex="~ col gap-0.5" items-center justify-center h-full>
-    <div flex="~" items-center sticky top-0 z-1 pt3 pb2>
+  <div border="r base" flex="~ col gap-0.5" items-center justify-center h-full z-100 bg-base>
+    <div flex="~" items-center top-0 sticky z-1 pt3 pb2>
       <VDropdown placement="left-start" :distance="20">
         <button
 

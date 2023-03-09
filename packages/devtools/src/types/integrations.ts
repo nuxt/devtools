@@ -79,3 +79,14 @@ export interface HookInfo {
 }
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
+
+export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'json' | 'other'
+
+export interface AssetInfo {
+  path: string
+  type: AssetType
+  publicPath: string
+  filePath: string
+  size: number
+  mtime: number
+}

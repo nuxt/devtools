@@ -194,7 +194,7 @@ function setFilter() {
     <NCheckbox v-model="showNodeModules" n="primary sm">
       <span op75>Show node_modules</span>
     </NCheckbox>
-    <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
+    <button v-if="selectedFilter" flex="~ gap-1" items-center text-xs op50 py1 bg-gray:20 pl3 pr2 rounded-full hover:op100 @click="selectedFilter = undefined">
       Clear filter <div i-carbon-close />
     </button>
     <div flex-auto />
@@ -203,28 +203,17 @@ function setFilter() {
 
   <div w-full h-full relative>
     <div ref="container" w-full h-full />
-    <Transition
-      enter-active-class="duration-200 ease-in"
-      enter-from-class="transform translate-x-1/1"
-      enter-to-class="opacity-100"
-      leave-active-class="duration-200 ease-out"
-      leave-from-class="opacity-100"
-      leave-to-class="transform translate-x-1/1"
+    <DrawerRight
+      :model-value="!!(selected && selected.component)"
+      top-60px
+      @close="selected = undefined"
     >
-      <div
-        v-if="selected && selected.component"
-        border="l base"
-        flex="~ col gap-1" navbar-glass
-        text-sm items-center absolute right-0 p2 bottom-0 top-60px
-      >
-        <button n-icon-btn absolute text-xl right-2 top-2 @click="selected = undefined">
-          <div i-carbon-close />
-        </button>
+      <template v-if="selected?.component">
         <ComponentDetails :component="selected.component" p4 />
         <NButton n="primary solid" @click="setFilter()">
           Filter to this component
         </NButton>
-      </div>
-    </Transition>
+      </template>
+    </DrawerRight>
   </div>
 </template>

@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import fs from 'node:fs/promises'
 import type { TinyWSRequest } from 'tinyws'
 import type { NodeIncomingMessage, NodeServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
@@ -7,14 +8,15 @@ import type { ChannelOptions } from 'birpc'
 import c from 'picocolors'
 import type { Storage, StorageValue } from 'unstorage'
 import type { StorageMounts } from 'nitropack'
+import fg from 'fast-glob'
 
 import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
-import { resolve } from 'pathe'
+import { join, resolve } from 'pathe'
 import { logger } from '@nuxt/kit'
-import type { ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, UpdateInfo } from './types'
+import type { AssetType, ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, UpdateInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
 import type { WizardActions } from './wizard'
@@ -164,16 +166,16 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         suffix = match[2]
       }
 
-      // search for existing file
-      const file = [
+      // search for existing path
+      const path = [
         input,
         `${input}.js`,
         `${input}.mjs`,
         `${input}.ts`,
       ].find(i => existsSync(i))
-      if (file) {
+      if (path) {
         // @ts-expect-error missin types
-        await import('launch-editor').then(r => (r.default || r)(file + suffix))
+        await import('launch-editor').then(r => (r.default || r)(path + suffix))
       }
       else {
         console.error('File not found:', input)
@@ -200,7 +202,41 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       nuxt.callHook('devtools:customTabs:refresh')
       return true
     },
+    async getStaticAssets() {
+      const dir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
+      const baseURL = nuxt.options.app.baseURL
+      const files = await fg(['**/*'], {
+        cwd: dir,
+        onlyFiles: true,
+      })
 
+      function guessType(path: string): AssetType {
+        if (/\.(png|jpe?g|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(path))
+          return 'image'
+        if (/\.(mp4|webm|ogv|mov|avi|flv|wmv|mpg|mpeg|mkv|3gp|3g2|ts|mts|m2ts|vob|ogm|ogx|rm|rmvb|asf|amv|divx|m4v|svi|viv|f4v|f4p|f4a|f4b)$/i.test(path))
+          return 'video'
+        if (/\.(mp3|wav|ogg|flac|aac|wma|alac|ape|ac3|dts|tta|opus|amr|aiff|au|mid|midi|ra|rm|wv|weba|dss|spx|vox|tak|dsf|dff|dsd|cda)$/i.test(path))
+          return 'audio'
+        if (/\.(woff2?|eot|ttf|otf|ttc|pfa|pfb|pfm|afm)/i.test(path))
+          return 'font'
+        if (/\.(json(5|c)?)/i.test(path))
+          return 'json'
+        return 'other'
+      }
+
+      return await Promise.all(files.map(async (path) => {
+        const filePath = resolve(dir, path)
+        const stat = await fs.lstat(filePath)
+        return {
+          path,
+          publicPath: join(baseURL, path),
+          filePath,
+          type: guessType(path),
+          size: stat.size,
+          mtime: stat.mtimeMs,
+        }
+      }))
+    },
   } satisfies ServerFunctions)
 
   // Nuxt Hooks to collect data
@@ -226,7 +262,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       page.children?.forEach(searchChildren)
     }
     v.forEach(searchChildren)
-    serverPages.push(...Array.from(pagesSet).sort((a, b) => a.file.localeCompare(b.file)))
+    serverPages.push(...Array.from(pagesSet).sort((a, b) => a.path.localeCompare(b.path)))
 
     refresh('getServerPages')
   })

@@ -5,7 +5,7 @@
   <div
     v-if="wsError || wsConnecting"
     border="t base"
-    bottom-0 left-0 right-0 fixed p5 glass-effect z-10
+    left-0 right-0 bottom-0 fixed p5 glass-effect z-200
   >
     <div v-if="wsError" flex="~ gap-2" items-center text-rose>
       <NIcon icon="i-carbon-wifi-off" />

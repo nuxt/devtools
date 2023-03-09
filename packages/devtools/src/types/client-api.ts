@@ -50,7 +50,7 @@ export interface NuxtDevtoolsHostClient {
 
 export interface NuxtDevtoolsClient {
   rpc: BirpcReturn<ServerFunctions>
-  renderCodeHighlight: (code: string, lang: string, theme?: string) => string
+  renderCodeHighlight: (code: string, lang: string, lines?: boolean, theme?: string) => string
   renderMarkdown: (markdown: string) => string
   colorMode: string
 }
