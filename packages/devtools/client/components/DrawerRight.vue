@@ -23,7 +23,7 @@ export default {
       v-if="modelValue"
       border="l base"
       flex="~ col gap-1"
-      navbar-glass items-center absolute right-0 p2 bottom-0 text-sm
+      p2 of-hidden navbar-glass absolute right-0 bottom-0 text-sm
       v-bind="$attrs"
     >
       <button absolute n-icon-btn text-xl right-2 top-2 @click="$emit('close')">

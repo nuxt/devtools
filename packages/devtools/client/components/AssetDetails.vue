@@ -27,12 +27,12 @@ const fileSize = computed(() => {
 </script>
 
 <template>
-  <div flex="~ col gap-4" p2 h-full of-auto>
+  <div flex="~ col gap-4" p2 h-full of-auto w-full of-hidden>
     <AssetPreview rounded h-50 border="~ base" :asset="asset" />
     <table w-full>
       <tbody>
         <tr>
-          <td text-right op50 pr5 w-max>
+          <td text-right op50 pr5 w-max ws-nowrap>
             Filepath
           </td>
           <td ws-w>
@@ -40,25 +40,25 @@ const fileSize = computed(() => {
           </td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-max>
+          <td text-right op50 pr5 w-max ws-nowrap>
             Public
           </td>
           <td>{{ asset.publicPath }}</td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-max>
+          <td text-right op50 pr5 w-max ws-nowrap>
             Type
           </td>
           <td>{{ asset.type }}</td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-max>
+          <td text-right op50 pr5 w-max ws-nowrap>
             File size
           </td>
           <td>{{ fileSize }}</td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-max>
+          <td text-right op50 pr5 w-max ws-nowrap>
             Last modified
           </td>
           <td>{{ new Date(asset.mtime).toLocaleString() }} <span op70>({{ timeago }})</span></td>
@@ -83,7 +83,7 @@ const fileSize = computed(() => {
 
     <div flex-auto />
 
-    <div v-if="codeSnippet" border="~ base rounded" n-code-block p2 of-hidden>
+    <div v-if="codeSnippet" border="~ base rounded" p2 of-hidden n-code-block>
       <NCodeBlock :code="codeSnippet" lang="html" of-auto w-full :lines="false" px1 />
       <div flex justify-end pt2>
         <NButton icon="carbon-copy" n="sm primary" @click="copy(codeSnippet!)">
