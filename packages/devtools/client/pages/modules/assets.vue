@@ -52,7 +52,7 @@ const navbar = ref<HTMLElement>()
 
 <template>
   <div h-full of-auto>
-    <div ref="navbar" flex="~ col gap-2" border="b base" pb2 p4 navbar-glass flex-1>
+    <div ref="navbar" flex="~ col gap-2" border="b base" p4 pb2 navbar-glass flex-1>
       <div flex="~ gap4">
         <NTextInput
           v-model="search"
@@ -107,7 +107,7 @@ const navbar = ref<HTMLElement>()
       :navbar="navbar"
       @close="selected = undefined"
     >
-      <AssetDetails v-if="selected" :asset="selected" px2 />
+      <AssetDetails v-if="selected" :asset="selected" />
     </DrawerRight>
   </div>
 </template>

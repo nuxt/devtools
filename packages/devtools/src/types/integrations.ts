@@ -98,3 +98,10 @@ export interface AssetInfo {
   size: number
   mtime: number
 }
+
+export interface CodeSnippet {
+  code: string
+  lang: string
+  name: string
+  docs?: string
+}

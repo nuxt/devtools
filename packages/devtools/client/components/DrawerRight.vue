@@ -48,7 +48,7 @@ export default {
       <button absolute z-20 n-icon-btn text-xl right-2 top-2 @click="$emit('close')">
         <div i-carbon-close />
       </button>
-      <div w-full of-auto p2 h-full relative>
+      <div w-full of-auto h-full relative>
         <slot />
       </div>
     </div>

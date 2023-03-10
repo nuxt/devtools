@@ -14,6 +14,8 @@ getHighlighter({
     'javascript',
     'typescript',
     'html',
+    'vue',
+    'vue-html',
   ],
 }).then((i) => { shiki.value = i })
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   filepath: string
+  lineBreak?: boolean
 }>()
 
 const config = useServerConfig()
@@ -12,7 +13,8 @@ const short = computed(() => (props.filepath && config.value)
 
 <template>
   <button
-    ws-nowrap of-hidden font-mono hover:underline truncate
+    font-mono hover:underline
+    :class="lineBreak ? '' : 'ws-nowrap of-hidden truncate'"
     :title="filepath"
     @click="openInEditor(filepath)"
   >
