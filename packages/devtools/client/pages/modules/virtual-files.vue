@@ -74,7 +74,7 @@ const filteredFiles = computed(() => {
 <template>
   <PanelLeftRight class="virtual-files" storage-key="tab-virtual-files">
     <template #left>
-      <div pb2 p3>
+      <div pb2 p3 navbar-glass border="b base">
         <NTextInput
           v-model="searchString"
           icon="carbon-search"
@@ -101,9 +101,9 @@ const filteredFiles = computed(() => {
         <div border="b base" text-sm flex-none px4 py2 op75>
           <code>{{ current.id }}</code>
         </div>
-        <NCodeBlock of-auto h-full text-sm :code="current.content" lang="typescript" />
+        <NCodeBlock h-full text-sm of-auto :code="current.content" lang="typescript" />
       </div>
-      <span v-else flex items-center justify-center op50 h-full>Select one file to start</span>
+      <span v-else h-full flex items-center justify-center op50>Select one file to start</span>
     </template>
   </PanelLeftRight>
 </template>
