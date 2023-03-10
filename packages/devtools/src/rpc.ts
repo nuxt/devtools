@@ -9,6 +9,7 @@ import c from 'picocolors'
 import type { Storage, StorageValue } from 'unstorage'
 import type { StorageMounts } from 'nitropack'
 import fg from 'fast-glob'
+import { imageMeta } from 'image-meta'
 
 import { parse, stringify } from 'flatted'
 import type { Component, Nuxt, NuxtApp, NuxtPage } from 'nuxt/schema'
@@ -16,13 +17,13 @@ import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { join, resolve } from 'pathe'
 import { logger } from '@nuxt/kit'
-import type { AssetType, ClientFunctions, HookInfo, ModuleCustomTab, ServerFunctions, UpdateInfo } from './types'
+import type { AssetType, ClientFunctions, HookInfo, ImageMeta, ModuleCustomTab, ServerFunctions, UpdateInfo } from './types'
 import { setupHooksDebug } from './runtime/shared/hooks'
 import type { ModuleOptions } from './module'
 import type { WizardActions } from './wizard'
 import { wizard } from './wizard'
 import { LOG_PREFIX } from './logger'
-import { checkForUpdates, usePackageVersions } from './npm'
+import { checkForUpdates, getPackageVersions } from './npm'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
@@ -34,21 +35,25 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverPages: NuxtPage[] = []
   const iframeTabs: ModuleCustomTab[] = []
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
-  let storage: Storage | undefined
   const storageMounts: StorageMounts = {}
+
+  let storage: Storage | undefined
   let unimport: Unimport | undefined
   let app: NuxtApp | undefined
 
   let checkForUpdatePromise: Promise<any> | undefined
-  let versions: UpdateInfo[] = usePackageVersions()
+  let versions: UpdateInfo[] = getPackageVersions()
 
   const customTabs: ModuleCustomTab[] = []
-  if (options.customTabs?.length)
-    customTabs.push(...options.customTabs)
-
   const serverFunctions = {} as ServerFunctions
   const clients = new Set<WebSocket>()
   const birpc = createBirpcGroup<ClientFunctions>(serverFunctions, [])
+
+  const _imageMetaCache = new Map<string, ImageMeta | undefined>()
+
+  // Add static custom tabs from the config
+  if (options.customTabs?.length)
+    customTabs.push(...options.customTabs)
 
   function refresh(event: keyof ServerFunctions) {
     birpc.broadcast.refresh.asEvent(event)
@@ -143,10 +148,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     getServerHooks() {
       return Object.values(serverHooks)
     },
-    usePackageVersions() {
+    getPackageVersions() {
       checkForUpdatePromise = checkForUpdatePromise || checkForUpdates().then((v) => {
         versions = v
-        refresh('usePackageVersions')
+        refresh('getPackageVersions')
       })
       return versions
     },
@@ -219,8 +224,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
           return 'audio'
         if (/\.(woff2?|eot|ttf|otf|ttc|pfa|pfb|pfm|afm)/i.test(path))
           return 'font'
-        if (/\.(json(5|c)?)/i.test(path))
-          return 'json'
+        if (/\.(json[5c]?|te?xt|[mc]?[jt]sx?|md[cx]?|markdown)/i.test(path))
+          return 'text'
         return 'other'
       }
 
@@ -236,6 +241,30 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
           mtime: stat.mtimeMs,
         }
       }))
+    },
+    async getImageMeta(filepath: string) {
+      if (_imageMetaCache.has(filepath))
+        return _imageMetaCache.get(filepath)
+      try {
+        const meta = imageMeta(await fs.readFile(filepath)) || undefined
+        _imageMetaCache.set(filepath, meta)
+        return meta
+      }
+      catch (e) {
+        _imageMetaCache.set(filepath, undefined)
+        console.error(e)
+        return undefined
+      }
+    },
+    async getTextAssetContent(filepath: string, limit = 300) {
+      try {
+        const content = await fs.readFile(filepath, 'utf-8')
+        return content.slice(0, limit)
+      }
+      catch (e) {
+        console.error(e)
+        return undefined
+      }
     },
   } satisfies ServerFunctions)
 

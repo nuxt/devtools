@@ -1,6 +1,9 @@
 import type { Import, UnimportMeta } from 'unimport'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { RouteRecordNormalized } from 'vue-router'
+import type { imageMeta } from 'image-meta'
+
+export type ImageMeta = ReturnType<typeof imageMeta> extends infer T | void ? T : never
 
 export interface UpdateInfo {
   name: string
@@ -80,7 +83,7 @@ export interface HookInfo {
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
 
-export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'json' | 'other'
+export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'other'
 
 export interface AssetInfo {
   path: string
