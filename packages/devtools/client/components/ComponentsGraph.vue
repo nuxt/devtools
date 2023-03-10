@@ -9,6 +9,7 @@ const props = defineProps<{
 }>()
 
 const container = ref<HTMLElement>()
+const navbar = ref<HTMLElement>()
 const colorMode = useColorMode()
 
 const selected = ref<{
@@ -181,7 +182,7 @@ function setFilter() {
 </script>
 
 <template>
-  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0 h-60px>
+  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0 :navbar="navbar">
     <NCheckbox v-model="showPages" n="primary sm">
       <span op75>Show pages</span>
     </NCheckbox>
@@ -194,7 +195,7 @@ function setFilter() {
     <NCheckbox v-model="showNodeModules" n="primary sm">
       <span op75>Show node_modules</span>
     </NCheckbox>
-    <button v-if="selectedFilter" flex="~ gap-1" items-center py1 bg-gray:20 pl3 pr2 rounded-full text-xs op50 hover:op100 @click="selectedFilter = undefined">
+    <button v-if="selectedFilter" flex="~ gap-1" items-center op50 text-xs py1 bg-gray:20 pl3 pr2 rounded-full hover:op100 @click="selectedFilter = undefined">
       Clear filter <div i-carbon-close />
     </button>
     <div flex-auto />
@@ -203,28 +204,18 @@ function setFilter() {
 
   <div w-full h-full relative>
     <div ref="container" w-full h-full />
-    <Transition
-      enter-active-class="duration-200 ease-in"
-      enter-from-class="transform translate-x-1/1"
-      enter-to-class="opacity-100"
-      leave-active-class="duration-200 ease-out"
-      leave-from-class="opacity-100"
-      leave-to-class="transform translate-x-1/1"
+    <DrawerRight
+      :model-value="!!(selected && selected.component)"
+      :navbar="navbar"
+      w-80
+      @close="selected = undefined"
     >
-      <div
-        v-if="selected && selected.component"
-        border="l base"
-        flex="~ col gap-1" navbar-glass
-        text-sm items-center absolute right-0 p2 bottom-0 top-60px
-      >
-        <button n-icon-btn absolute text-xl right-2 top-2 @click="selected = undefined">
-          <div i-carbon-close />
-        </button>
-        <ComponentDetails :component="selected.component" p4 />
+      <div v-if="selected && selected.component" p4 pt6 flex="~ col gap4">
+        <ComponentDetails :component="selected.component" />
         <NButton n="primary solid" @click="setFilter()">
           Filter to this component
         </NButton>
       </div>
-    </Transition>
+    </DrawerRight>
   </div>
 </template>

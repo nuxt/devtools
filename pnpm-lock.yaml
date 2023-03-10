@@ -87,6 +87,7 @@ importers:
       consola: ^2.15.3
       esno: ^0.16.3
       execa: ^7.0.0
+      fast-glob: ^3.2.12
       flatted: ^3.2.7
       floating-vue: 2.0.0-beta.20
       fuse.js: ^6.6.2
@@ -94,6 +95,7 @@ importers:
       global-dirs: ^3.0.1
       h3: ^1.5.0
       hookable: ^5.4.2
+      image-meta: ^0.1.1
       is-installed-globally: ^0.4.0
       json-editor-vue: ^0.10.5
       launch-editor: ^2.6.0
@@ -101,6 +103,7 @@ importers:
       nuxt: ^3.2.3
       nuxt-vitest: ^0.6.6
       ofetch: ^1.0.1
+      ohash: ^1.0.0
       pacote: ^15.1.1
       pathe: ^1.1.0
       picocolors: ^1.0.0
@@ -131,8 +134,10 @@ importers:
       birpc: 0.2.5
       consola: 2.15.3
       execa: 7.0.0
+      fast-glob: 3.2.12
       h3: 1.5.0
       hookable: 5.4.2
+      image-meta: 0.1.1
       is-installed-globally: 0.4.0
       launch-editor: 2.6.0
       pacote: 15.1.1
@@ -168,6 +173,7 @@ importers:
       nuxt: 3.2.3_ebmhceqxtb6o6vbzh6kcrsm5gi
       nuxt-vitest: 0.6.6_yvegwsl5vqegbbjcry3pb53664
       ofetch: 1.0.1
+      ohash: 1.0.0
       picocolors: 1.0.0
       semver: 7.3.8
       shiki: 0.14.1
@@ -6366,6 +6372,11 @@ packages:
   /ignore/5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
+
+  /image-meta/0.1.1:
+    resolution: {integrity: sha512-+oXiHwOEPr1IE5zY0tcBLED/CYcre15J4nwL50x3o0jxWqEkyjrusiKP3YSU+tr9fvJp33ZcP5Gpj2295g3aEw==}
+    engines: {node: '>=10.18.0'}
+    dev: false
 
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}

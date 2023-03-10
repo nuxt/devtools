@@ -23,7 +23,7 @@ export async function checkForUpdateOf(info: UpdateInfo): Promise<Required<Updat
   }
 }
 
-export function usePackageVersions(): UpdateInfo[] {
+export function getPackageVersions(): UpdateInfo[] {
   return [
     { name: 'nuxt', current: getNuxtVersion() },
     { name: '@nuxt/devtools-edge', current: devToolsVersion },
@@ -31,7 +31,7 @@ export function usePackageVersions(): UpdateInfo[] {
 }
 
 export async function checkForUpdates() {
-  const versions = usePackageVersions()
+  const versions = getPackageVersions()
   const updates = await Promise.all(versions.map(checkForUpdateOf))
   return updates
 }

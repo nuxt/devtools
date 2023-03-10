@@ -37,8 +37,8 @@ export function useComponents() {
   ].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
 }
 
-export function usePackageVersions() {
-  return useAsyncState('usePackageVersions', () => rpc.usePackageVersions())
+export function getPackageVersions() {
+  return useAsyncState('getPackageVersions', () => rpc.getPackageVersions())
 }
 
 export function useServerPages() {
@@ -61,6 +61,10 @@ export function useLayouts() {
 
 export function useAutoImports() {
   return useAsyncState('getAutoImports', () => rpc.getAutoImports())
+}
+
+export function useStaticAssets() {
+  return useAsyncState('getStaticAssets', () => rpc.getStaticAssets())
 }
 
 export function useServerConfig() {

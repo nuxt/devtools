@@ -9,7 +9,7 @@ definePageMeta({
 
 const client = useClient()
 const config = useServerConfig()
-const versions = usePackageVersions()
+const versions = getPackageVersions()
 const components = useComponents()
 const autoImports = useAutoImports()
 const routes = useAllRoutes()
@@ -52,7 +52,7 @@ function goIntro() {
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
         <div v-if="nuxtVersion" p4 theme-card-green flex="~ col auto">
-          <div logos-nuxt-icon text-3xl />
+          <div text-3xl logos-nuxt-icon />
           <code>{{ `v${nuxtVersion.current}` }}</code>
           <template v-if="nuxtVersion.latest">
             <Badge
