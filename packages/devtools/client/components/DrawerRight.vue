@@ -41,14 +41,16 @@ export default {
       ref="el"
       border="l base"
       flex="~ col gap-1"
-      p2 of-auto right-0 text-sm absolute bottom-0 glass-effect z-10 z-20
+      of-auto right-0 text-sm absolute bottom-0 glass-effect z-10 z-20
       :style="{ top: `${top}px` }"
       v-bind="$attrs"
     >
-      <button absolute n-icon-btn text-xl right-2 top-2 @click="$emit('close')">
+      <button absolute z-20 n-icon-btn text-xl right-2 top-2 @click="$emit('close')">
         <div i-carbon-close />
       </button>
-      <slot />
+      <div w-full of-auto p2 h-full relative>
+        <slot />
+      </div>
     </div>
   </Transition>
 </template>

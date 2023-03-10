@@ -70,7 +70,7 @@ const supportsPreview = computed(() => {
 </script>
 
 <template>
-  <div flex="~ col gap-4" w-full of-hidden p2 h-full of-auto>
+  <div flex="~ col gap-4" w-full of-hidden p2>
     <template v-if="supportsPreview">
       <div op50 mb--2 flex="~ gap2" items-center>
         <div x-divider />
@@ -186,7 +186,7 @@ const supportsPreview = computed(() => {
               Copy
             </NButton>
           </div>
-          <NCodeBlock :code="cs[1]" :lang="cs[0]" of-auto w-full :lines="false" px1 />
+          <NCodeBlock :code="cs[1]" :lang="cs[0]" :lines="false" w-full of-auto px1 />
         </div>
       </template>
     </div>
