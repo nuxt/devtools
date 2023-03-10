@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
 import type { Nuxt } from 'nuxt/schema'
-import { addPlugin, logger } from '@nuxt/kit'
+import { addPlugin, addServerHandler, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
 import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
@@ -34,6 +34,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addPlugin({
     src: join(runtimeDir, 'plugins/devtools.client'),
     mode: 'client',
+  })
+
+  addServerHandler({
+    route: '/_devtools_storage/',
+    handler: join(runtimeDir, 'server/routes/storage'),
+  })
+  addServerHandler({
+    route: '/_devtools_storage/**',
+    handler: join(runtimeDir, 'server/routes/storage'),
   })
 
   const {

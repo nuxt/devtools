@@ -23,7 +23,7 @@ import { LOG_PREFIX } from './logger'
 import { checkForUpdates, usePackageVersions } from './npm'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
-const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
+const shouldIgnoreStorage = (base: string) => IGNORE_STORAGE_MOUNTS.includes(base.split(':')[0])
 
 export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
   const components: Component[] = []
@@ -54,7 +54,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
 
     nuxt.hook('ready', () => {
       storage!.watch((event, key) => {
-        if (shouldIgnoreStorageKey(key))
+        if (shouldIgnoreStorage(key))
           return
         birpc.broadcast.callHook.asEvent('storage:key:update', key, event)
       })
@@ -67,7 +67,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
       ...nitro.options.devStorage,
     }
     for (const name of Object.keys(mounts)) {
-      if (shouldIgnoreStorageKey(name))
+      if (shouldIgnoreStorage(name))
         continue
       storageMounts[name] = mounts[name]
     }
@@ -75,6 +75,9 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
 
   Object.assign(serverFunctions, {
     async getStorageMounts() {
+      // if (storage?.getMounts())
+      //   console.log(storage.getMounts().map(m => m.base).filter(shouldIgnoreStorage))
+
       return storageMounts
     },
     async getStorageKeys(base?: string) {
@@ -83,7 +86,7 @@ export function setupRPC(nuxt: Nuxt, _options: ModuleOptions) {
       try {
         const keys = await storage.getKeys(base)
 
-        return keys.filter(key => !shouldIgnoreStorageKey(key))
+        return keys.filter(key => !shouldIgnoreStorage(key))
       }
       catch (err) {
         console.error(`Cloud not fetch storage keys for ${base}:`, err)

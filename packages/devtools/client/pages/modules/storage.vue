@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
+import { createStorage } from 'unstorage'
+import httpDriver from 'unstorage/drivers/http'
 
 definePageMeta({
   icon: 'carbon-data-base',
   title: 'Storage',
   experimental: true,
+})
+
+const route = useRoute()
+const base = window.location.pathname.replace(route.path, '')
+const client = createStorage({
+  driver: httpDriver({
+    base: '/_devtools_storage',
+  }),
 })
 
 const nuxtApp = useNuxtApp()
