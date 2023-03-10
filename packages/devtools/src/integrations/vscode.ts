@@ -1,25 +1,26 @@
 import { hostname } from 'node:os'
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
-import type { Nuxt } from 'nuxt/schema'
 import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import waitOn from 'wait-on'
-import type { ServerFunctions, VSCodeIntegrationOptions } from '../types'
 import { LOG_PREFIX } from '../logger'
+import type { RPCContext } from '../server-rpc/types'
 
-export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VSCodeIntegrationOptions) {
+export async function setup({ nuxt, options }: RPCContext) {
   const installed = !!await which('code-server').catch(() => null)
 
-  let port = options?.port || 3080
+  const vsOptions = options?.vscode || {}
+
+  let port = vsOptions?.port || 3080
   let url = `http://localhost:${port}`
   let loaded = false
   let promise: Promise<void> | null = null
-  const mode = options?.mode || 'local-serve'
-  const computerHostName = options.tunnel?.name || hostname().split('.').join('')
+  const mode = vsOptions?.mode || 'local-serve'
+  const computerHostName = vsOptions.tunnel?.name || hostname().split('.').join('')
 
   async function startCodeServer() {
-    if (options?.reuseExistingServer && !(await checkPort(port))) {
+    if (vsOptions?.reuseExistingServer && !(await checkPort(port))) {
       loaded = true
       url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
       logger.info(LOG_PREFIX, `Existing VS Code Server found at port ${port}...`)
@@ -121,6 +122,6 @@ export async function setup(nuxt: Nuxt, _functions: ServerFunctions, options: VS
     })
   })
 
-  if (options?.startOnBoot)
+  if (vsOptions?.startOnBoot)
     promise = promise || start()
 }

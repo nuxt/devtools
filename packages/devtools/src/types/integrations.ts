@@ -1,9 +1,14 @@
 import type { Import, UnimportMeta } from 'unimport'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { RouteRecordNormalized } from 'vue-router'
-import type { imageMeta } from 'image-meta'
 
-export type ImageMeta = ReturnType<typeof imageMeta> extends infer T | void ? T : never
+export interface ImageMeta {
+  width: number
+  height: number
+  orientation?: number
+  type?: string
+  mimeType?: string
+}
 
 export interface UpdateInfo {
   name: string

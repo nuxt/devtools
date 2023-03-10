@@ -9,7 +9,7 @@ import sirv from 'sirv'
 import c from 'picocolors'
 import { version } from '../package.json'
 import type { ModuleOptions } from './types'
-import { setupRPC } from './rpc'
+import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
 import { ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
 
@@ -38,8 +38,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   const {
     middleware: rpcMiddleware,
-    initHooks,
-    serverFunctions,
+    ...ctx
   } = setupRPC(nuxt, options)
 
   const clientDirExists = existsSync(clientDir)
@@ -64,21 +63,17 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   const integrations = [
     options.viteInspect !== false
-      ? import('./integrations/vite-inspect').then(({ setup }) => setup(nuxt, serverFunctions))
+      ? import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
       : null,
     options.componentInspector !== false
-      ? import('./integrations/vue-inspector').then(({ setup }) => setup(nuxt, serverFunctions))
+      ? import('./integrations/vue-inspector').then(({ setup }) => setup(ctx))
       : null,
     options.vscode?.enabled
-      ? import('./integrations/vscode').then(({ setup }) => setup(nuxt, serverFunctions, options.vscode || {}))
+      ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
       : null,
   ]
 
   await Promise.all(integrations)
-
-  nuxt.hook('app:resolve', async () => {
-    await initHooks()
-  })
 
   await nuxt.callHook('devtools:initialized')
 
