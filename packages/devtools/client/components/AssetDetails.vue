@@ -19,17 +19,20 @@ const textContent = computedAsync(() => {
 })
 
 const codeSnippets = computed(() => {
+  const items: [string, string, string][] = []
   if (props.asset.type === 'image') {
     const attrs = imageMeta.value?.width
       ? ` width="${imageMeta.value.width}" height="${imageMeta.value.height}" `
       : ' '
-    return [
-      ['html', `<nuxt-image${attrs}src="${props.asset.publicPath}" />`],
-      ['html', `<img${attrs}src="${props.asset.publicPath}" />`],
-    ]
+    items.push(
+      ['html', `<nuxt-image${attrs}src="${props.asset.publicPath}" />`, 'with Nuxt Image'],
+      ['html', `<img${attrs}src="${props.asset.publicPath}" />`, 'Image'],
+    )
+    return items
   }
-  if (props.asset.type === 'video')
-    return [['html', `<video src="${props.asset.publicPath}" />`]]
+
+  items.push(['html', `<a download href="${props.asset.publicPath}">\n  Download ${props.asset.path}\n</a>`, 'Download link'])
+  return items
 })
 
 const copy = useCopy()
@@ -164,9 +167,9 @@ const supportsPreview = computed(() => {
       <NButton icon="carbon-copy" @click="copy(asset.publicPath)">
         Copy public path
       </NButton>
-      <NButton v-if="asset.type === 'image'" disabled icon="carbon-image-service">
+      <!-- <NButton v-if="asset.type === 'image'" disabled icon="carbon-image-service">
         Optimize image (WIP)
-      </NButton>
+      </NButton> -->
     </div>
 
     <div flex-auto />
@@ -175,12 +178,15 @@ const supportsPreview = computed(() => {
       <template v-for="cs, idx of codeSnippets" :key="idx">
         <div v-if="idx" x-divider />
         <div v-if="cs" of-hidden p2>
-          <NCodeBlock :code="cs[1]" :lang="cs[0]" of-auto w-full :lines="false" px1 />
-          <div flex justify-end pt2>
+          <div items-center flex justify-between pb2>
+            <div op50 ml1>
+              {{ cs[2] }}
+            </div>
             <NButton icon="carbon-copy" n="sm primary" @click="copy(cs[1])">
-              Copy snippet
+              Copy
             </NButton>
           </div>
+          <NCodeBlock :code="cs[1]" :lang="cs[0]" of-auto w-full :lines="false" px1 />
         </div>
       </template>
     </div>
