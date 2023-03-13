@@ -41,13 +41,11 @@ export default {
       ref="el"
       border="l base"
       flex="~ col gap-1"
-      of-auto right-0 text-sm absolute bottom-0 glass-effect z-10 z-20
+      text-sm absolute of-auto right-0 bottom-0 glass-effect z-10 z-20
       :style="{ top: `${top}px` }"
       v-bind="$attrs"
     >
-      <button absolute z-20 n-icon-btn text-xl right-2 top-2 @click="$emit('close')">
-        <div i-carbon-close />
-      </button>
+      <NIconButton absolute z-20 text-xl right-2 top-2 icon="carbon-close" @click="$emit('close')" />
       <div w-full of-auto h-full relative>
         <slot />
       </div>

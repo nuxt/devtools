@@ -78,7 +78,7 @@ const supportsPreview = computed(() => {
 <template>
   <div flex="~ col gap-4" w-full of-hidden min-h-full p4>
     <template v-if="supportsPreview">
-      <div op50 mb--2 flex="~ gap2" items-center>
+      <div flex="~ gap2" op50 items-center mb--2>
         <div x-divider />
         <div flex-none>
           Preview
@@ -113,9 +113,11 @@ const supportsPreview = computed(() => {
             <div flex="~ gap-1" items-center>
               <FilepathItem :filepath="asset.filePath" w-full line-break ws-normal text-left />
               <div flex-auto />
-              <button n-icon-btn title="Open in Editor" @click="openInEditor(asset.filePath)">
-                <div i-carbon-launch />
-              </button>
+              <NIconButton
+                title="Open in Editor"
+                icon="carbon-launch"
+                @click="openInEditor(asset.filePath)"
+              />
             </div>
           </td>
         </tr>
@@ -129,12 +131,17 @@ const supportsPreview = computed(() => {
                 {{ asset.publicPath }}
               </div>
               <div flex-auto />
-              <NuxtLink n-icon-btn :to="asset.publicPath" target="_blank" title="Open in browser">
-                <div i-carbon-launch />
-              </NuxtLink>
-              <button n-icon-btn title="Copy public path" @click="copy(asset.publicPath)">
-                <div i-carbon-copy />
-              </button>
+              <NIconButton
+                :to="asset.publicPath"
+                icon="carbon-launch"
+                target="_blank"
+                title="Open in browser"
+              />
+              <NIconButton
+                title="Copy public path"
+                icon="carbon-copy"
+                @click="copy(asset.publicPath)"
+              />
             </div>
           </td>
         </tr>

@@ -58,13 +58,19 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     nuxt.hook('app:resolve', () => {
-      const subprocess = startSubprocess({
-        name: 'Nuxt Devtools Local',
-        command: 'npx',
-        args: ['nuxi', 'dev', '--port', PORT.toString()],
-        cwd: clientDir,
-        stdio: 'pipe',
-      })
+      const subprocess = startSubprocess(
+        {
+          command: 'npx',
+          args: ['nuxi', 'dev', '--port', PORT.toString()],
+          cwd: clientDir,
+          stdio: 'pipe',
+        },
+        {
+          id: 'devtools:local',
+          name: 'Nuxt Devtools Local',
+          icon: 'logos-nuxt-icon',
+        },
+      )
 
       subprocess.stderr?.pipe(process.stderr)
     })

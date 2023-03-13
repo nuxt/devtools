@@ -33,16 +33,22 @@ export async function setup({ nuxt, options }: RPCContext) {
 
     logger.info(LOG_PREFIX, `Starting VS Code Server at ${url} ...`)
 
-    const command = startSubprocess({
-      name: 'VS Code Server',
-      command: 'code-server',
-      args: [
-        'serve-local',
-        '--accept-server-license-terms',
-        '--without-connection-token',
+    const command = startSubprocess(
+      {
+        command: 'code-server',
+        args: [
+          'serve-local',
+          '--accept-server-license-terms',
+          '--without-connection-token',
         `--port=${port}`,
-      ],
-    })
+        ],
+      },
+      {
+        id: 'devtools:vscode',
+        name: 'VS Code Server',
+        icon: 'logos-visual-studio-code',
+      },
+    )
 
     nuxt.hook('close', () => {
       command.kill()

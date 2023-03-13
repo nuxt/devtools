@@ -9,12 +9,13 @@ export function setupTerminalRPC({ nuxt, birpc }: RPCContext) {
       ...terminal,
     }
     clone.id ||= Math.random().toString() // TODO: use random id
-    clone.content ||= ''
-    clone.stream?.on('data', (data) => {
-      const delta = data.toString()
-      clone.content += delta
-      birpc.broadcast.onTerminalData.asEvent(clone.id, delta)
-    })
+    clone.buffer ||= ''
+    clone.streams
+      ?.forEach(s => s.on('data', (data) => {
+        const delta = data.toString()
+        clone.buffer += delta
+        birpc.broadcast.onTerminalData.asEvent(clone.id, delta)
+      }))
     terminals.push(clone)
   })
 

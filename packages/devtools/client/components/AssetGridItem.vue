@@ -14,9 +14,9 @@ const path = computed(() => {
 </script>
 
 <template>
-  <button flex="~ col gap-1" hover="bg-active" rounded p2 of-hidden items-center>
+  <button flex="~ col gap-1" hover="bg-active" rounded of-hidden items-center p2>
     <AssetPreview rounded w-30 h-30 border="~ base" :asset="asset" />
-    <div of-hidden w-full text-center ws-nowrap truncate text-xs>
+    <div of-hidden w-full ws-nowrap text-center truncate text-xs>
       {{ path }}
     </div>
   </button>

@@ -45,13 +45,13 @@ export default {
 
 <template>
   <div
-    class="n-transition fixed flex items-center justify-center n-dialog inset-0 z-100"
+    class="n-transition fixed flex items-center justify-center z-100 n-dialog inset-0"
     :class="[
       show ? '' : 'op0 pointer-events-none',
     ]"
   >
     <div
-      class="absolute inset-0 -z-1"
+      class="inset-0 absolute -z-1"
       :class="[
         dim ? 'bg-black/50' : '',
       ]"

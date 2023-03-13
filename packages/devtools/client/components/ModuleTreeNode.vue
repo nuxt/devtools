@@ -15,7 +15,7 @@ const route = useRoute()
   <details open>
     <summary
 
-      select-none text-sm cursor-default truncate
+      select-none text-sm truncate cursor-default
       p="y1"
       flex="~ gap2"
     >

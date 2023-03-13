@@ -121,9 +121,7 @@ async function renameCurrentItem() {
   <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
     <template #left>
       <div class="items-center flex justify-between px-3 h-[48px] gap1">
-        <button n-icon-btn ml--1 @click="currentStorage = ''">
-          <div i-carbon-chevron-left />
-        </button>
+        <NIconButton icon="carbon-chevron-left" ml--1 @click="currentStorage = ''" />
         <div class="w-full text-sm">
           <NSelect v-model="currentStorage" n="primary" icon="carbon-data-base">
             <option v-for="(_storage, name) of storageMounts" :key="name" :value="name">
@@ -163,10 +161,10 @@ async function renameCurrentItem() {
 
     <template #right>
       <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
-        <div border="b base" class="text-sm flex items-center justify-between px-4 flex-none h-[49px]">
+        <div border="b base" class="text-sm flex items-center justify-between flex-none px-4 h-[49px]">
           <div class="flex items-center gap-4">
             <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
-            <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 hover:op100 cursor-pointer" @click="currentItem.editingKey = true" /></code>
+            <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 cursor-pointer hover:op100" @click="currentItem.editingKey = true" /></code>
             <NButton v-if="!currentItem.editingKey" n="green xs" :disabled="currentItem.content === currentItem.updatedContent" :class="{ 'border-green': currentItem.content !== currentItem.updatedContent }" @click="saveCurrentItem">
               Save
             </NButton>

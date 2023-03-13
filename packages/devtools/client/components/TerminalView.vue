@@ -26,8 +26,8 @@ onMounted(async () => {
   })
 
   const data = await rpc.getTerminal(props.id)
-  if (data?.content)
-    term.write(data.content)
+  if (data?.buffer)
+    term.write(data.buffer)
 
   nuxt.hook('devtools:terminal:data', ({ id, data }) => {
     if (id === props.id)
@@ -37,5 +37,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div ref="container" h-full px4 bg-black />
+  <div ref="container" h-full w-full of-auto px4 bg-black />
 </template>

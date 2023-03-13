@@ -115,6 +115,23 @@ export interface TerminalInfo {
 }
 
 export interface TerminalData extends TerminalInfo {
-  stream?: Stream
-  content?: string
+  /**
+   * Streams to be piped to the terminal
+   */
+  streams?: Stream[]
+
+  /**
+   * User action to restart the terminal, when not provided, this action will be disabled
+   */
+  onRestart?: () => Promise<void>
+
+  /**
+   * User action to terminate the terminal, when not provided, this action will be disabled
+   */
+  onTerminate?: () => Promise<void>
+
+  /**
+   * Content buffer
+   */
+  buffer?: string
 }

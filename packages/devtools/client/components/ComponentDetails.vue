@@ -19,9 +19,7 @@ const copy = useCopy()
       <div>
         <ComponentName :component="component" />
       </div>
-      <button title="Copy name" n-icon-btn @click="copy(`<${name}></${name}>`)">
-        <div i-carbon-copy />
-      </button>
+      <NIconButton title="Copy name" icon="carbon-copy" @click="copy(`<${name}></${name}>`)" />
       <Badge
         v-if="component.global"
         bg-green-400:10 text-green-400
