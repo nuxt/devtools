@@ -1,6 +1,8 @@
 import { useNuxt } from '@nuxt/kit'
+import type { Options as ExecaOptions } from 'execa'
+import { execa } from 'execa'
 import type { ModuleCustomTab } from '../types'
-import '../types/hooks'
+import type {} from '../types/hooks'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -20,4 +22,41 @@ export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Pro
  */
 export function refreshCustomTabs(nuxt = useNuxt()) {
   return nuxt.callHook('devtools:customTabs:refresh')
+}
+
+interface SubprocessOptions extends ExecaOptions {
+  name: string
+  command: string
+  args?: string[]
+}
+
+/**
+ * Create a subprocess that handled by the DevTools.
+ */
+export function startSubprocess(options: SubprocessOptions, nuxt = useNuxt()) {
+  const process = execa(
+    options.command,
+    options.args,
+    {
+      ...options,
+      env: {
+        COLORS: 'true',
+        FORCE_COLOR: 'true',
+        ...options.env,
+      },
+    },
+  )
+
+  const id = (process.pid || options.command).toString()
+  nuxt.callHook('devtools:terminal:register', {
+    id,
+    name: options.name,
+    stream: process.stdout!,
+  })
+
+  process.on('exit', () => {
+    // TODO: unregister terminal
+  })
+
+  return process
 }

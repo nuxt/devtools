@@ -128,6 +128,8 @@ importers:
       wait-on: ^7.0.1
       which: ^3.0.0
       ws: ^8.12.1
+      xterm: ^5.1.0
+      xterm-addon-fit: ^0.7.0
     dependencies:
       '@antfu/install-pkg': 0.1.1
       '@nuxt/kit': 3.2.3
@@ -190,6 +192,8 @@ importers:
       wait-on: 7.0.1
       which: 3.0.0
       ws: 8.12.1
+      xterm: 5.1.0
+      xterm-addon-fit: 0.7.0_xterm@5.1.0
 
   packages/devtools-ui-kit:
     specifiers:
@@ -12425,6 +12429,18 @@ packages:
   /xtend/4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
+    dev: true
+
+  /xterm-addon-fit/0.7.0_xterm@5.1.0:
+    resolution: {integrity: sha512-tQgHGoHqRTgeROPnvmtEJywLKoC/V9eNs4bLLz7iyJr1aW/QFzRwfd3MGiJ6odJd9xEfxcW36/xRU47JkD5NKQ==}
+    peerDependencies:
+      xterm: ^5.0.0
+    dependencies:
+      xterm: 5.1.0
+    dev: true
+
+  /xterm/5.1.0:
+    resolution: {integrity: sha512-LovENH4WDzpwynj+OTkLyZgJPeDom9Gra4DMlGAgz6pZhIDCQ+YuO7yfwanY+gVbn/mmZIStNOnVRU/ikQuAEQ==}
     dev: true
 
   /xxhashjs/0.2.2:

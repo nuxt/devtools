@@ -1,3 +1,4 @@
+import type { Stream } from 'node:stream'
 import type { Import, UnimportMeta } from 'unimport'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { RouteRecordNormalized } from 'vue-router'
@@ -104,4 +105,16 @@ export interface CodeSnippet {
   lang: string
   name: string
   docs?: string
+}
+
+export interface TerminalInfo {
+  id: string
+  name: string
+  description?: string
+  icon?: string
+}
+
+export interface TerminalData extends TerminalInfo {
+  stream?: Stream
+  content?: string
 }

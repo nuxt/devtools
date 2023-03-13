@@ -6,6 +6,7 @@ import which from 'which'
 import waitOn from 'wait-on'
 import { LOG_PREFIX } from '../logger'
 import type { RPCContext } from '../server-rpc/types'
+import { startSubprocess } from '../kit'
 
 export async function setup({ nuxt, options }: RPCContext) {
   const installed = !!await which('code-server').catch(() => null)
@@ -32,12 +33,16 @@ export async function setup({ nuxt, options }: RPCContext) {
 
     logger.info(LOG_PREFIX, `Starting VS Code Server at ${url} ...`)
 
-    const command = execa('code-server', [
-      'serve-local',
-      '--accept-server-license-terms',
-      '--without-connection-token',
-      `--port=${port}`,
-    ])
+    const command = startSubprocess({
+      name: 'VS Code Server',
+      command: 'code-server',
+      args: [
+        'serve-local',
+        '--accept-server-license-terms',
+        '--without-connection-token',
+        `--port=${port}`,
+      ],
+    })
 
     nuxt.hook('close', () => {
       command.kill()

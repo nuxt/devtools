@@ -1,0 +1,28 @@
+<script setup lang="ts">
+import type { TerminalData } from '~~/../src/types'
+
+definePageMeta({
+  icon: 'carbon-terminal',
+  title: 'Terminals',
+})
+
+const terminals = await rpc.listTerminals()
+
+const selected = ref<TerminalData>(terminals[0])
+</script>
+
+<template>
+  <div v-if="terminals.length" h-full of-auto grid="~ rows-[max-content_1fr]">
+    <!-- TODO: Refactor to have general component -->
+    <div ref="navbar" flex="~ gap-2" border="b base" navbar-glass flex-1 items-center>
+      <button v-for="t of terminals" :key="t.id" border="r base" px3 py2 @click="selected = t">
+        {{ t.name }}
+      </button>
+    </div>
+
+    <TerminalView v-if="selected" :id="selected.id" :key="selected.id" />
+  </div>
+  <div h-full items-center flex justify-center>
+    <em op50>No terminal attached</em>
+  </div>
+</template>

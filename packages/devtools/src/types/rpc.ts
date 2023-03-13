@@ -4,7 +4,7 @@ import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { WizardActions, WizardArgs } from '../wizard'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, UpdateInfo } from './integrations'
+import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, TerminalData, TerminalInfo, UpdateInfo } from './integrations'
 import type { ComponentRelationship } from './module'
 
 export interface ServerFunctions {
@@ -19,6 +19,10 @@ export interface ServerFunctions {
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
   getPackageVersions(): UpdateInfo[]
+
+  // Terminal
+  listTerminals(): TerminalInfo[]
+  getTerminal(id: string): TerminalData | undefined
 
   // Storage
   getStorageMounts(): Promise<StorageMounts>
@@ -40,6 +44,8 @@ export interface ServerFunctions {
 export interface ClientFunctions {
   refresh(event: ClientUpdateEvent): void
   callHook(hook: string, ...args: any[]): Promise<void>
+
+  onTerminalData(id: string, data: string): void
 }
 
 export type ClientUpdateEvent = keyof ServerFunctions
