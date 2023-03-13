@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import type { TerminalData } from '~~/../src/types'
+import type { TerminalInfo } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',
 })
 
-const terminals = await rpc.listTerminals()
+const terminals = useTerminals()
 
-const selected = ref<TerminalData>(terminals[0])
+const selected = ref<TerminalInfo | undefined>(terminals.value?.[0])
+
+watchEffect(() => {
+  if (terminals.value?.length && !selected.value)
+    selected.value = terminals.value[0]
+})
 </script>
 
 <template>
-  <div v-if="terminals.length" h-full w-full of-hidden grid="~ rows-[max-content_max-content_1fr]">
+  <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_max-content_1fr]">
     <!-- TODO: Refactor to have general component -->
     <div ref="navbar" flex="~ gap-2" border="b base" navbar-glass flex-1 items-center>
-      <button v-for="t of terminals" :key="t.id" border="r base" px3 py2 flex="~ gap-1" items-center @click="selected = t">
+      <button v-for="t of terminals" :key="t.id" border="r base" flex="~ gap-1" items-center px3 py2 @click="selected = t">
         <NIcon v-if="t.icon " :icon="t.icon" />
         {{ t.name }}
       </button>
@@ -31,7 +36,7 @@ const selected = ref<TerminalData>(terminals[0])
       <TerminalView :id="selected.id" :key="selected.id" />
     </template>
   </div>
-  <div h-full items-center flex justify-center>
+  <div v-else h-full items-center flex justify-center>
     <em op50>No terminal attached</em>
   </div>
 </template>

@@ -4,7 +4,7 @@ import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { WizardActions, WizardArgs } from '../wizard'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, TerminalData, TerminalInfo, UpdateInfo } from './integrations'
+import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, TerminalInfo, UpdateInfo } from './integrations'
 import type { ComponentRelationship } from './module'
 
 export interface ServerFunctions {
@@ -21,8 +21,8 @@ export interface ServerFunctions {
   getPackageVersions(): UpdateInfo[]
 
   // Terminal
-  listTerminals(): TerminalInfo[]
-  getTerminal(id: string): TerminalData | undefined
+  getTerminals(): TerminalInfo[]
+  getTerminalDetail(id: string): TerminalInfo | undefined
 
   // Storage
   getStorageMounts(): Promise<StorageMounts>

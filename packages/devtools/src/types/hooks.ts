@@ -1,5 +1,5 @@
 import type { ModuleCustomTab } from './custom-tabs'
-import type { TerminalData } from './integrations'
+import type { TerminalState } from './integrations'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
@@ -26,7 +26,21 @@ declare module '@nuxt/schema' {
     /**
      * Register a terminal.
      */
-    'devtools:terminal:register': (terminal: TerminalData) => void
+    'devtools:terminal:register': (terminal: TerminalState) => void
+
+    /**
+     * Write to a terminal.
+     *
+     * Returns true if terminal is found.
+     */
+    'devtools:terminal:write': (id: string, content: string) => void
+
+    /**
+     * Remove a terminal from devtools.
+     *
+     * Returns true if terminal is found and deleted.
+     */
+    'devtools:terminal:remove': (id: string) => void
   }
 }
 
@@ -38,7 +52,7 @@ declare module '@nuxt/schema' {
     /**
      * On terminal data.
      */
-    'devtools:terminal:data': (data: { id: string; data: string }) => void
+    'devtools:terminal:data': (id: string, data: string) => void
   }
 }
 

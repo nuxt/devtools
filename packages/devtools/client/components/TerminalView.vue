@@ -25,11 +25,11 @@ onMounted(async () => {
     fitAddon.fit()
   })
 
-  const data = await rpc.getTerminal(props.id)
+  const data = await rpc.getTerminalDetail(props.id)
   if (data?.buffer)
     term.write(data.buffer)
 
-  nuxt.hook('devtools:terminal:data', ({ id, data }) => {
+  nuxt.hook('devtools:terminal:data', (id: string, data: string) => {
     if (id === props.id)
       term.write(data)
   })

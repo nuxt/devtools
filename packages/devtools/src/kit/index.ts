@@ -32,33 +32,72 @@ interface SubprocessOptions extends ExecaOptions {
 /**
  * Create a subprocess that handled by the DevTools.
  */
-export function startSubprocess(execaOptions: SubprocessOptions, tabOptions: TerminalInfo, nuxt = useNuxt()) {
-  const process = execa(
-    execaOptions.command,
-    execaOptions.args,
-    {
-      ...execaOptions,
-      env: {
-        COLORS: 'true',
-        FORCE_COLOR: 'true',
-        ...execaOptions.env,
+export function startSubprocess(
+  execaOptions: SubprocessOptions,
+  tabOptions: TerminalInfo,
+  nuxt = useNuxt(),
+) {
+  const id = tabOptions.id
+
+  function start() {
+    const process = execa(
+      execaOptions.command,
+      execaOptions.args,
+      {
+        ...execaOptions,
+        env: {
+          COLORS: 'true',
+          FORCE_COLOR: 'true',
+          ...execaOptions.env,
+        },
       },
-    },
-  )
+    )
 
-  const id = (tabOptions.id || process.pid || execaOptions.command).toString()
+    process.stdout!.on('data', (data) => {
+      nuxt.callHook('devtools:terminal:write', id, data)
+    })
+    process.stderr!.on('data', (data) => {
+      nuxt.callHook('devtools:terminal:write', id, data)
+    })
+    process.on('exit', () => {
+      nuxt.callHook('devtools:terminal:remove', id)
+    })
+
+    return process
+  }
+
   nuxt.callHook('devtools:terminal:register', {
+    onActionRestart: restart,
+    onActionTerminate: terminate,
     ...tabOptions,
-    id,
-    streams: [
-      process.stdout!,
-      process.stderr!,
-    ],
   })
 
-  process.on('exit', () => {
-    // TODO: unregister terminal
+  nuxt.hook('close', () => {
+    terminate()
   })
 
-  return process
+  let process = start()
+
+  function restart() {
+    process?.kill()
+    nuxt.callHook('devtools:terminal:register', tabOptions)
+    process = start()
+  }
+
+  function terminate() {
+    try {
+      process?.kill()
+    }
+    catch (e) {
+    }
+    nuxt.callHook('devtools:terminal:remove', id)
+  }
+
+  return {
+    getProcess() {
+      return process
+    },
+    terminate,
+    restart,
+  }
 }

@@ -33,7 +33,7 @@ export async function setup({ nuxt, options }: RPCContext) {
 
     logger.info(LOG_PREFIX, `Starting VS Code Server at ${url} ...`)
 
-    const command = startSubprocess(
+    startSubprocess(
       {
         command: 'code-server',
         args: [
@@ -49,10 +49,6 @@ export async function setup({ nuxt, options }: RPCContext) {
         icon: 'logos-visual-studio-code',
       },
     )
-
-    nuxt.hook('close', () => {
-      command.kill()
-    })
 
     await waitOn({
       resources: [url],

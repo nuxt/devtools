@@ -1,4 +1,3 @@
-import type { Stream } from 'node:stream'
 import type { Import, UnimportMeta } from 'unimport'
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { RouteRecordNormalized } from 'vue-router'
@@ -107,28 +106,29 @@ export interface CodeSnippet {
   docs?: string
 }
 
-export interface TerminalInfo {
+export interface TerminalBase {
   id: string
   name: string
   description?: string
   icon?: string
 }
 
-export interface TerminalData extends TerminalInfo {
-  /**
-   * Streams to be piped to the terminal
-   */
-  streams?: Stream[]
+export interface TerminalInfo extends TerminalBase {
+  restartable?: boolean
+  terminatable?: boolean
+  buffer?: string
+}
 
+export interface TerminalState extends TerminalBase {
   /**
    * User action to restart the terminal, when not provided, this action will be disabled
    */
-  onRestart?: () => Promise<void>
+  onActionRestart?: () => Promise<void> | void
 
   /**
    * User action to terminate the terminal, when not provided, this action will be disabled
    */
-  onTerminate?: () => Promise<void>
+  onActionTerminate?: () => Promise<void> | void
 
   /**
    * Content buffer

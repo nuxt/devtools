@@ -1,36 +1,60 @@
-import type { ServerFunctions, TerminalData } from '../types'
+import type { ServerFunctions, TerminalInfo, TerminalState } from '../types'
 import type { RPCContext } from './types'
+import type {} from '../types/hooks'
 
-export function setupTerminalRPC({ nuxt, birpc }: RPCContext) {
-  const terminals: TerminalData[] = []
+export function setupTerminalRPC({ nuxt, birpc, refresh }: RPCContext) {
+  const terminals = new Map<string, TerminalState>()
 
   nuxt.hook('devtools:terminal:register', (terminal) => {
-    const clone = {
-      ...terminal,
-    }
-    clone.id ||= Math.random().toString() // TODO: use random id
-    clone.buffer ||= ''
-    clone.streams
-      ?.forEach(s => s.on('data', (data) => {
-        const delta = data.toString()
-        clone.buffer += delta
-        birpc.broadcast.onTerminalData.asEvent(clone.id, delta)
-      }))
-    terminals.push(clone)
+    terminals.set(terminal.id, terminal)
+    refresh('getTerminals')
+    return terminal.id
   })
 
+  nuxt.hook('devtools:terminal:remove', (id) => {
+    if (!terminals.has(id))
+      return false
+    terminals.delete(id)
+    refresh('getTerminals')
+    return true
+  })
+
+  nuxt.hook('devtools:terminal:write', (id: string, data: string) => {
+    const terminal = terminals.get(id)
+    if (!terminal)
+      return false
+
+    terminal.buffer ||= ''
+    terminal.buffer += data
+    birpc.broadcast.onTerminalData.asEvent(id, data)
+    return true
+  })
+
+  function serializeTerminal(terminal: TerminalState, buffer?: boolean): TerminalInfo
+  function serializeTerminal(terminal: TerminalState | undefined, buffer?: boolean): TerminalInfo | undefined
+  function serializeTerminal(terminal?: TerminalState, buffer = false): TerminalInfo | undefined {
+    if (!terminal)
+      return
+    return {
+      id: terminal.id,
+      name: terminal.name,
+      description: terminal.description,
+      icon: terminal.icon,
+      terminatable: !!terminal.onActionTerminate,
+      restartable: !!terminal.onActionRestart,
+      buffer: buffer
+        ? terminal.buffer
+        : undefined,
+    }
+  }
+
   return {
-    listTerminals() {
-      return terminals.map(i => ({
-        id: i.id,
-        name: i.name,
-        description: i.description,
-        icon: i.icon,
-      }))
+    getTerminals() {
+      return Array.from(terminals.values())
+        .map(i => serializeTerminal(i))
     },
-    getTerminal(id: string) {
-      const terminal = terminals.find(t => t.id === id)
-      return terminal
+    getTerminalDetail(id: string) {
+      return serializeTerminal(terminals.get(id), true)
     },
   } satisfies Partial<ServerFunctions>
 }
