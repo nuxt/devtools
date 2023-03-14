@@ -1,7 +1,7 @@
 import { useNuxt } from '@nuxt/kit'
 import type { Options as ExecaOptions } from 'execa'
 import { execa } from 'execa'
-import type { ModuleCustomTab, TerminalInfo } from '../types'
+import type { ModuleCustomTab, TerminalState } from '../types'
 import type {} from '../types/hooks'
 
 /**
@@ -34,7 +34,7 @@ interface SubprocessOptions extends ExecaOptions {
  */
 export function startSubprocess(
   execaOptions: SubprocessOptions,
-  tabOptions: TerminalInfo,
+  tabOptions: TerminalState,
   nuxt = useNuxt(),
 ) {
   const id = tabOptions.id
@@ -59,19 +59,14 @@ export function startSubprocess(
     process.stderr!.on('data', (data) => {
       nuxt.callHook('devtools:terminal:write', id, data)
     })
-    process.on('exit', () => {
-      nuxt.callHook('devtools:terminal:remove', id)
+    process.on('exit', (code) => {
+      nuxt.callHook('devtools:terminal:write', id, `\nprocess terminalated with ${code}\n`)
     })
 
     return process
   }
 
-  nuxt.callHook('devtools:terminal:register', {
-    onActionRestart: restart,
-    onActionTerminate: terminate,
-    ...tabOptions,
-  })
-
+  register()
   nuxt.hook('close', () => {
     terminate()
   })
@@ -80,8 +75,14 @@ export function startSubprocess(
 
   function restart() {
     process?.kill()
-    nuxt.callHook('devtools:terminal:register', tabOptions)
+
+    clear()
     process = start()
+  }
+
+  function clear() {
+    tabOptions.buffer = ''
+    register()
   }
 
   function terminate() {
@@ -93,11 +94,20 @@ export function startSubprocess(
     nuxt.callHook('devtools:terminal:remove', id)
   }
 
+  function register() {
+    nuxt.callHook('devtools:terminal:register', {
+      onActionRestart: restart,
+      onActionTerminate: terminate,
+      ...tabOptions,
+    })
+  }
+
   return {
     getProcess() {
       return process
     },
     terminate,
     restart,
+    clear,
   }
 }

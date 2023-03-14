@@ -1,4 +1,4 @@
-import type { ServerFunctions, TerminalInfo, TerminalState } from '../types'
+import type { ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 import type { RPCContext } from './types'
 import type {} from '../types/hooks'
 
@@ -55,6 +55,28 @@ export function setupTerminalRPC({ nuxt, birpc, refresh }: RPCContext) {
     },
     getTerminalDetail(id: string) {
       return serializeTerminal(terminals.get(id), true)
+    },
+    async runTerminalAction(id: string, action: TerminalAction) {
+      const terminal = terminals.get(id)
+      if (!terminal)
+        return false
+
+      switch (action) {
+        case 'restart':
+          if (!terminal.onActionRestart)
+            return false
+          await terminal.onActionRestart()
+          return true
+        case 'terminate':
+          if (!terminal.onActionTerminate)
+            return false
+          await terminal.onActionTerminate()
+          return true
+        case 'clear':
+          terminal.buffer = ''
+          refresh('getTerminals')
+          return true
+      }
     },
   } satisfies Partial<ServerFunctions>
 }

@@ -1,42 +1,56 @@
 <script setup lang="ts">
-import type { TerminalInfo } from '~~/../src/types'
-
 definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',
 })
 
 const terminals = useTerminals()
+const route = useRoute()
+const router = useRouter()
 
-const selected = ref<TerminalInfo | undefined>(terminals.value?.[0])
+const selected = computed(() => {
+  const id = route.query.id as string
+  return terminals.value?.find(t => t.id === id)
+})
 
 watchEffect(() => {
-  if (terminals.value?.length && !selected.value)
-    selected.value = terminals.value[0]
+  if (!route.query.id && terminals.value?.length)
+    router.replace(`/modules/terminals?id=${encodeURIComponent(terminals.value[0].id)}`)
 })
 </script>
 
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_max-content_1fr]">
     <!-- TODO: Refactor to have general component -->
-    <div ref="navbar" flex="~ gap-2" border="b base" navbar-glass flex-1 items-center>
-      <button v-for="t of terminals" :key="t.id" border="r base" flex="~ gap-1" items-center px3 py2 @click="selected = t">
+    <div ref="navbar" flex="~" border="b base" navbar-glass flex-1 items-center>
+      <NuxtLink
+        v-for="t of terminals"
+        :key="t.id" border="r base"
+        flex="~ gap-2" items-center px3 py2
+        :to="`/modules/terminals?id=${encodeURIComponent(t.id)}` "
+      >
         <NIcon v-if="t.icon " :icon="t.icon" />
         {{ t.name }}
-      </button>
+      </NuxtLink>
     </div>
 
     <template v-if="selected">
-      <div border="b base" p2 flex="~">
-        <span>{{ selected.description }}</span>
-        <span class="flex-auto" />
-        <!-- TODO: -->
-        <NIconButton title="Refresh" icon="carbon-renew" />
-      </div>
       <TerminalView :id="selected.id" :key="selected.id" />
+    </template>
+    <template v-else>
+      <div>
+        Terminal not found
+      </div>
     </template>
   </div>
   <div v-else h-full items-center flex justify-center>
     <em op50>No terminal attached</em>
   </div>
 </template>
+
+<style>
+.xterm {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+</style>

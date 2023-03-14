@@ -113,6 +113,8 @@ export interface TerminalBase {
   icon?: string
 }
 
+export type TerminalAction = 'restart' | 'terminate' | 'clear'
+
 export interface TerminalInfo extends TerminalBase {
   restartable?: boolean
   terminatable?: boolean
