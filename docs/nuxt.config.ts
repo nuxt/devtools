@@ -2,6 +2,6 @@ export default defineNuxtConfig({
   extends: '@nuxt-themes/docus',
   modules: [
     '@nuxtjs/plausible',
-    process.env.CI ? undefined : '../local',
+    ...(process.env.CI ? [] : ['../local']),
   ],
 })
