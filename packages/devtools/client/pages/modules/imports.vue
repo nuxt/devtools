@@ -72,7 +72,7 @@ const filtered = computed(() => {
 
 <template>
   <div v-if="config" h-full of-auto>
-    <div flex="~ col gap4" border="b base" px4 flex-1 navbar-glass pt4 pb2>
+    <div flex="~ col gap4" border="b base" px4 flex-1 navbar-glass pb2 pt4>
       <NTextInput
         v-model="search"
         placeholder="Search..."

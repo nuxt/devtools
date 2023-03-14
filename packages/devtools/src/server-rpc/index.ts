@@ -14,6 +14,7 @@ import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
 import type { RPCContext } from './types'
+import { setupTerminalRPC } from './terminal'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -37,6 +38,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupAssetsRPC(ctx),
     ...setupNpmRPC(ctx),
     ...setupWizardRPC(ctx),
+    ...setupTerminalRPC(ctx),
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()

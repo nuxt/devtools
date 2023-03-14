@@ -11,13 +11,11 @@ const filePath = computed(() => props.component.filePath || props.component.file
 
 <template>
   <div
-    rounded
-    px2
-    py1
+
     hover="bg-active"
     class="group"
     flex="~ gap2"
-    w-full items-center
+    rounded w-full items-center px2 py1
   >
     <VDropdown>
       <button hover:text-primary>

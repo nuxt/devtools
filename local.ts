@@ -18,7 +18,6 @@
  * ```
  */
 import { defineNuxtModule, logger } from '@nuxt/kit'
-import { execa } from 'execa'
 import { resolve } from 'pathe'
 import { getPort } from 'get-port-please'
 import { searchForWorkspaceRoot } from 'vite'
@@ -26,6 +25,7 @@ import { ROUTE_CLIENT, defaultOptions } from './packages/devtools/src/constant'
 import type { ModuleOptions } from './packages/devtools/src/types'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
+import { startSubprocess } from './packages/devtools/src/kit'
 
 export type { ModuleOptions }
 
@@ -39,10 +39,6 @@ export default defineNuxtModule<ModuleOptions>({
     const clientDir = resolve(packageDir, 'client')
     const workspaceRoot = resolve(packageDir, '../..')
     const PORT = await getPort({ port: 12442 })
-
-    // TODO: add embedded terminal and forward logs to it
-    const subprocess = execa('npx', ['nuxi', 'dev', '--port', PORT.toString()], { cwd: clientDir, stdio: 'pipe' })
-    subprocess.stderr?.pipe(process.stderr)
 
     nuxt.hook('vite:extendConfig', (config) => {
       config.server ||= {}
@@ -59,6 +55,22 @@ export default defineNuxtModule<ModuleOptions>({
         searchForWorkspaceRoot(process.cwd()),
       ]
       config.server.fs.allow.push(workspaceRoot)
+    })
+
+    nuxt.hook('app:resolve', () => {
+      startSubprocess(
+        {
+          command: 'npx',
+          args: ['nuxi', 'dev', '--port', PORT.toString()],
+          cwd: clientDir,
+          stdio: 'pipe',
+        },
+        {
+          id: 'devtools:local',
+          name: 'Nuxt Devtools Local',
+          icon: 'logos-nuxt-icon',
+        },
+      )
     })
 
     logger.info(`Nuxt Devtools is using local client from \`${clientDir}\``)

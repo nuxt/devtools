@@ -28,13 +28,13 @@ export function useComponents() {
       .filter(i => !/^Lazy[A-Z]/.test(i.pascalName))
       // dedupe server components
       .filter(i => !(serverComponents.value || [])
-        .find(s => s.pascalName === i.pascalName)),
+        .find((s: any) => s.pascalName === i.pascalName)),
   )
 
   return computed(() => [
     ...globalComponents.value,
     ...serverComponents.value || [],
-  ].sort((a, b) => a.pascalName.localeCompare(b.pascalName)))
+  ].sort((a: any, b: any) => a.pascalName.localeCompare(b.pascalName)))
 }
 
 export function getPackageVersions() {
@@ -73,6 +73,10 @@ export function useServerConfig() {
 
 export function useCustomTabs() {
   return useAsyncState('getCustomTabs', () => rpc.getCustomTabs())
+}
+
+export function useTerminals() {
+  return useAsyncState('getTerminals', () => rpc.getTerminals())
 }
 
 export function useTabs() {
