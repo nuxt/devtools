@@ -13,7 +13,7 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
       </div>
     </div>
     <div v-else grid="~ cols-[50px_1fr]" h-full of-hidden>
-      <SideNav of-auto />
+      <SideNav of-x-hidden of-y-auto />
       <div h-full of-auto>
         <slot />
       </div>
