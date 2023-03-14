@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     },
   },
   alias: {
-    '@nuxt/devtools/iframe-client': r('../src/iframe-client'),
+    '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/iframe-client'),
   },
   appConfig: {
     fixture2: 'from nuxt.config.ts',

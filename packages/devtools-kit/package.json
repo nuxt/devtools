@@ -11,9 +11,14 @@
       "import": "./dist/index.mjs"
     },
     "./types": {
-      "types": "./dist/types.d.ts",
+      "types": "./types.d.ts",
       "require": "./dist/types.cjs",
       "import": "./dist/types.mjs"
+    },
+    "./iframe-client": {
+      "types": "./iframe-client.d.ts",
+      "require": "./dist/iframe-client.cjs",
+      "import": "./dist/iframe-client.mjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -28,12 +33,20 @@
     "build": "unbuild",
     "prepublishOnly": "pnpm build"
   },
+  "peerDependencies": {
+    "nuxt": "^3.2.3",
+    "vite": "*"
+  },
   "dependencies": {
     "@nuxt/kit": "^3.3.1",
     "@nuxt/schema": "^3.3.1",
     "execa": "^7.1.0"
   },
   "devDependencies": {
-    "unbuild": "^1.1.2"
+    "birpc": "^0.2.7",
+    "hookable": "^5.5.1",
+    "unbuild": "^1.1.2",
+    "unimport": "^3.0.2",
+    "vue-router": "^4.1.6"
   }
 }

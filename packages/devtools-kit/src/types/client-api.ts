@@ -1,11 +1,10 @@
+import type {} from '@nuxt/schema'
 import type { AppConfig } from 'nuxt/schema'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
-import type {} from '@nuxt/schema'
-import type { HookInfo, VueInspectorData } from './integrations'
 import type { ServerFunctions } from './rpc'
+import type { HookInfo, VueInspectorClient, VueInspectorData } from './integrations'
 
 export interface NuxtDevtoolsClientHooks {
   /**

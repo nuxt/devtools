@@ -5,11 +5,6 @@ export default defineBuildConfig({
     'src/module',
     'src/cli',
 
-    'src/kit',
-
-    // Client side API
-    'src/iframe-client',
-
     // Chunking
     'src/types',
     'src/dirs',
