@@ -2,9 +2,10 @@ import type { NuxtLayout, NuxtOptions, NuxtPage } from '@nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
+import type { TerminalAction, TerminalInfo } from '@nuxt/devtools-kit/types'
 import type { WizardActions, WizardArgs } from '../wizard'
-import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, TerminalAction, TerminalInfo, UpdateInfo } from './integrations'
+import type { ModuleCustomTab } from '../../../devtools-kit/src/types/custom-tabs'
+import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, UpdateInfo } from './integrations'
 import type { ComponentRelationship } from './module'
 
 export interface ServerFunctions {

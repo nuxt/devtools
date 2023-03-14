@@ -1,5 +1,5 @@
 import type { ModuleCustomTab } from './custom-tabs'
-import type { TerminalState } from './integrations'
+import type { TerminalState } from './terminals'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {

@@ -1,6 +1,5 @@
 import type { ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 import type { RPCContext } from './types'
-import type {} from '../types/hooks'
 
 export function setupTerminalRPC({ nuxt, birpc, refresh }: RPCContext) {
   const terminals = new Map<string, TerminalState>()

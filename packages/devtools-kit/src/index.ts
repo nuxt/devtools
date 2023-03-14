@@ -1,8 +1,9 @@
 import { useNuxt } from '@nuxt/kit'
 import type { Options as ExecaOptions } from 'execa'
 import { execa } from 'execa'
-import type { ModuleCustomTab, TerminalState } from '../types'
-import type {} from '../types/hooks'
+import type { ModuleCustomTab, TerminalState } from './types'
+
+export * from './types'
 
 /**
  * Hooks to extend a custom tab in devtools.
