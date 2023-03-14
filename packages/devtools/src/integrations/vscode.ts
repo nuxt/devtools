@@ -40,7 +40,7 @@ export async function setup({ nuxt, options }: RPCContext) {
           'serve-local',
           '--accept-server-license-terms',
           '--without-connection-token',
-        `--port=${port}`,
+          `--port=${port}`,
         ],
       },
       {

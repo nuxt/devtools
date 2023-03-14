@@ -24,7 +24,7 @@ export function refreshCustomTabs(nuxt = useNuxt()) {
   return nuxt.callHook('devtools:customTabs:refresh')
 }
 
-interface SubprocessOptions extends ExecaOptions {
+export interface SubprocessOptions extends ExecaOptions {
   command: string
   args?: string[]
 }
