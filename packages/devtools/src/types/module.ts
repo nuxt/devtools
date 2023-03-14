@@ -43,11 +43,6 @@ export interface ModuleGlobalOptions {
   projects?: string[]
 }
 
-export interface ComponentRelationship {
-  id: string
-  deps: string[]
-}
-
 export interface VSCodeIntegrationOptions {
   /**
    * Enable VS Code Server integration

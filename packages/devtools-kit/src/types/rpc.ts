@@ -1,12 +1,11 @@
-import type { NuxtLayout, NuxtOptions, NuxtPage } from '@nuxt/schema'
+import type { NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
-import type { TerminalAction, TerminalInfo } from '@nuxt/devtools-kit/types'
-import type { WizardActions, WizardArgs } from '../wizard'
-import type { ModuleCustomTab } from '../../../devtools-kit/src/types/custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, HookInfo, ImageMeta, UpdateInfo } from './integrations'
-import type { ComponentRelationship } from './module'
+import type { ModuleCustomTab } from './custom-tabs'
+import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, UpdateInfo } from './integrations'
+import type { TerminalAction, TerminalInfo } from './terminals'
+import type { GetWizardArgs, WizardActions } from './wizard'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
@@ -39,7 +38,7 @@ export interface ServerFunctions {
 
   // Actions
   customTabAction(name: string, action: number): Promise<boolean>
-  runWizard<T extends WizardActions>(name: T, ...args: WizardArgs<T>): Promise<void>
+  runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
 }
 

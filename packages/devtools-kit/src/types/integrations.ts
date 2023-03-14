@@ -1,6 +1,14 @@
-import type { Import, UnimportMeta } from 'unimport'
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { RouteRecordNormalized } from 'vue-router'
+import type { Import, UnimportMeta } from 'unimport'
+
+export interface HookInfo {
+  name: string
+  start: number
+  end?: number
+  duration?: number
+  listeners: number
+  executions: number[]
+}
 
 export interface ImageMeta {
   width: number
@@ -77,13 +85,22 @@ export interface GitHubContributor {
   avatar_url?: string
 }
 
-export interface HookInfo {
-  name: string
-  start: number
-  end?: number
-  duration?: number
-  listeners: number
-  executions: number[]
+export interface VueInspectorClient {
+  enabled: boolean
+  position: {
+    x: number
+    y: number
+  }
+  linkParams: {
+    file: string
+    line: number
+    column: number
+  }
+  enable: () => void
+  disable: () => void
+  toggleEnabled: () => void
+  openInEditor: (baseUrl: string, file: string, line: number, column: number) => void
+  onUpdated: () => void
 }
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
@@ -104,4 +121,9 @@ export interface CodeSnippet {
   lang: string
   name: string
   docs?: string
+}
+
+export interface ComponentRelationship {
+  id: string
+  deps: string[]
 }

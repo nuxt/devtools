@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { shallowRef, triggerRef } from 'vue'
-import type { NuxtDevtoolsIframeClient } from './types'
+import type { NuxtDevtoolsIframeClient } from './types/client-api'
 
 let clientRef: Ref<NuxtDevtoolsIframeClient | undefined> | undefined
 

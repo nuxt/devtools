@@ -203,19 +203,32 @@ importers:
     specifiers:
       '@nuxt/kit': ^3.3.1
       '@nuxt/schema': ^3.3.1
+      birpc: ^0.2.7
       execa: ^7.1.0
+      hookable: ^5.5.1
+      nuxt: ^3.2.3
       unbuild: ^1.1.2
+      unimport: ^3.0.2
+      vite: '*'
+      vue-router: ^4.1.6
     dependencies:
       '@nuxt/kit': 3.3.1_rollup@3.19.1
       '@nuxt/schema': 3.3.1_rollup@3.19.1
       execa: 7.1.0
+      nuxt: 3.3.1_h4kaxwm6ctjivrsm4cpxaz7nqu
+      vite: 4.1.4
     devDependencies:
+      birpc: 0.2.7
+      hookable: 5.5.1
       unbuild: 1.1.2
+      unimport: 3.0.2_rollup@3.19.1
+      vue-router: 4.1.6_vue@3.2.47
 
   packages/devtools-ui-kit:
     specifiers:
       '@iconify-json/carbon': ^1.1.16
       '@nuxt/devtools': workspace:*
+      '@nuxt/devtools-kit': workspace:*
       '@nuxt/kit': ^3.3.1
       '@nuxtjs/color-mode': ^3.2.0
       '@unocss/core': ^0.50.4
@@ -234,6 +247,7 @@ importers:
     dependencies:
       '@iconify-json/carbon': 1.1.16
       '@nuxt/devtools': link:../devtools
+      '@nuxt/devtools-kit': link:../devtools-kit
       '@nuxt/kit': 3.3.1
       '@nuxtjs/color-mode': 3.2.0
       '@unocss/core': 0.50.4
@@ -2014,7 +2028,6 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
-    dev: true
 
   /@nuxt/ui-templates/1.1.1:
     resolution: {integrity: sha512-PjVETP7+iZXAs5Q8O4ivl4t6qjWZMZqwiTVogUXHoHGZZcw7GZW3u3tzfYfE1HbzyYJfr236IXqQ02MeR8Fz2w==}
@@ -2139,7 +2152,6 @@ packages:
       - vls
       - vti
       - vue-tsc
-    dev: true
 
   /@nuxt/vite-builder/3.3.1_t7m3ib42dngsalbnriblxrakmm:
     resolution: {integrity: sha512-YDPDqMWRcZfI6ou2nfxj+IEaxfZXRoyoeMV917h7LbhmnqMBn1prJzFF+Li8br97emL958XANZ7GVZ9OVXgayA==}
@@ -3164,7 +3176,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/plugin-transform-typescript': 7.20.7_@babel+core@7.20.12
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.20.12
-      vite: 4.1.4_@types+node@18.15.3
+      vite: 4.1.4
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
@@ -3176,7 +3188,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.1.4_@types+node@18.15.3
+      vite: 4.1.4
       vue: 3.2.47
 
   /@vitest/expect/0.29.2:
@@ -3902,7 +3914,6 @@ packages:
 
   /birpc/0.2.7:
     resolution: {integrity: sha512-SXurFWfmrrgflAjYS/hSnP03PVerQ2X7f/RTsinVfP/AyC9o6UPG0s/R4J9Dhc4nQwtXuX7Y9jynaruXOUs/Sw==}
-    dev: false
 
   /bl/4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -9021,7 +9032,6 @@ packages:
       - vls
       - vti
       - vue-tsc
-    dev: true
 
   /object-assign/4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -11932,7 +11942,6 @@ packages:
       vscode-languageserver: 7.0.0
       vscode-languageserver-textdocument: 1.0.8
       vscode-uri: 3.0.7
-    dev: true
 
   /vite-plugin-inspect/0.7.16_vite@4.1.4:
     resolution: {integrity: sha512-WnyoicZ+mSQgrWoQdwrGydvlbfmlTKDVlMtub8RYCld3oXbC5kset3WmtgisrLmiDPobDvx2v7zUtPNQSySWXA==}
@@ -12036,6 +12045,7 @@ packages:
       rollup: 3.19.1
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vitest-environment-nuxt/0.6.8_vokwp2unsljehsudbqao6vjtqe:
     resolution: {integrity: sha512-mNtTsUNTpPZc8QeutMLpXBBHFGrh7k6sIWtTNAuY9pG9i61ommSq5p1QlbwbWrHJSJ7ubgrLIljWueMNusPn3Q==}
