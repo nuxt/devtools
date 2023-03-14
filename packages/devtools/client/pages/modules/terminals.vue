@@ -27,10 +27,13 @@ watchEffect(() => {
         v-for="t of terminals"
         :key="t.id" border="r base"
         flex="~ gap-2" items-center px3 py2
+        :class="t.id === selected?.id ? 'bg-active' : ''"
         :to="`/modules/terminals?id=${encodeURIComponent(t.id)}` "
       >
         <NIcon v-if="t.icon " :icon="t.icon" />
-        {{ t.name }}
+        <span :class="t.id === selected?.id ? '' : 'op50'">
+          {{ t.name }}
+        </span>
       </NuxtLink>
     </div>
 
