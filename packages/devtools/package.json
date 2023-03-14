@@ -37,7 +37,7 @@
     "client"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && cp ../../README.md .",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno index.ts",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module",
     "dev": "nuxi dev client",
