@@ -4,9 +4,9 @@ import { execa } from 'execa'
 import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import waitOn from 'wait-on'
+import { startSubprocess } from '@nuxt/devtools-kit'
 import { LOG_PREFIX } from '../logger'
 import type { RPCContext } from '../server-rpc/types'
-import { startSubprocess } from '../kit'
 
 export async function setup({ nuxt, options }: RPCContext) {
   const installed = !!await which('code-server').catch(() => null)

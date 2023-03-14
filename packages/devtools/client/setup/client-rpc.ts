@@ -1,5 +1,4 @@
 import type { ClientFunctions } from '../../src/types'
-import type {} from '../../src/types/hooks'
 
 export function setupClientRPC() {
   const nuxt = useNuxtApp()

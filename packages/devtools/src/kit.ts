@@ -1,1 +1,1 @@
-export * from './kit/index'
+export * from '@nuxt/devtools-kit'
