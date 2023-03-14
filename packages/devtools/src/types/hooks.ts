@@ -1,4 +1,5 @@
 import type { ModuleCustomTab } from './custom-tabs'
+import type { TerminalState } from './integrations'
 
 declare module '@nuxt/schema' {
   interface NuxtHooks {
@@ -21,6 +22,37 @@ declare module '@nuxt/schema' {
      * Retrigger update for custom tabs, `devtools:customTabs` will be called again.
      */
     'devtools:customTabs:refresh': () => void
+
+    /**
+     * Register a terminal.
+     */
+    'devtools:terminal:register': (terminal: TerminalState) => void
+
+    /**
+     * Write to a terminal.
+     *
+     * Returns true if terminal is found.
+     */
+    'devtools:terminal:write': (id: string, content: string) => void
+
+    /**
+     * Remove a terminal from devtools.
+     *
+     * Returns true if terminal is found and deleted.
+     */
+    'devtools:terminal:remove': (id: string) => void
+  }
+}
+
+declare module '@nuxt/schema' {
+  /**
+   * Runtime Hooks
+   */
+  interface RuntimeNuxtHooks {
+    /**
+     * On terminal data.
+     */
+    'devtools:terminal:data': (id: string, data: string) => void
   }
 }
 

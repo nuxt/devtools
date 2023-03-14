@@ -8,7 +8,7 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
     <Notification />
     <div v-if="waiting" h-full w-full flex>
       <div flex="~ col" text-lg items-center ma animate-pulse>
-        <div op50 i-carbon-circle-dash animate-spin text-4xl />
+        <div op50 i-carbon-circle-dash text-4xl animate-spin />
         Connecting...
       </div>
     </div>

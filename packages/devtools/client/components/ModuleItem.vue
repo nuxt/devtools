@@ -96,7 +96,7 @@ const npmBase = 'https://www.npmjs.com/package/'
       <div
         v-if="data.icon || isPackageModule"
 
-        p4 rounded flex-none h-20 w-20 bg-gray:3 flex
+        p4 rounded flex-none flex h-20 w-20 bg-gray:3
       >
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
         <div op50 ma i-carbon-circle-dash text-4xl />
