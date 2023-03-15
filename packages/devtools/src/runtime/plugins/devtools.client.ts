@@ -1,14 +1,19 @@
 import { createApp, markRaw } from 'vue'
 import { createHooks } from 'hookable'
+import type { Nuxt } from '@nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'
 import Container from './view/Container.vue'
 
 import { closePanel, togglePanel } from './view/state'
+// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// @ts-ignore tsconfig
 import { defineNuxtPlugin } from '#app'
+// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
 
-export default defineNuxtPlugin((nuxt) => {
+export default defineNuxtPlugin((nuxt: Nuxt) => {
   // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
