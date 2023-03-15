@@ -1,7 +1,8 @@
 import { useNuxt } from '@nuxt/kit'
+import type { BirpcGroup } from 'birpc'
 import type { Options as ExecaOptions } from 'execa'
 import { execa } from 'execa'
-import type { ModuleCustomTab, TerminalState } from './types'
+import type { ModuleCustomTab, NuxtDevtoolsServerContext, TerminalState } from './types'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -109,4 +110,21 @@ export function startSubprocess(
     restart,
     clear,
   }
+}
+
+export function registerServerRPC<ClientFunctions = {}, ServerFunctions = {}>(
+  namespace: string,
+  functions: ServerFunctions,
+  nuxt = useNuxt(),
+): BirpcGroup<ClientFunctions, ServerFunctions> {
+  const ctx = _getContext(nuxt)
+  if (!ctx)
+    throw new Error('Failed to get devtools context.')
+
+  return ctx.extendServerRpc<ClientFunctions, ServerFunctions>(namespace, functions)
+}
+
+function _getContext(nuxt = useNuxt()): NuxtDevtoolsServerContext | undefined {
+  // @ts-expect-error - internal
+  return nuxt?.devtools
 }

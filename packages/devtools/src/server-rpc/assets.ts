@@ -2,10 +2,9 @@ import fs from 'node:fs/promises'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import fg from 'fast-glob'
-import type { AssetType, ImageMeta, ServerFunctions } from '../types'
-import type { RPCContext } from './types'
+import type { AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupAssetsRPC({ nuxt }: RPCContext) {
+export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
 
   return {

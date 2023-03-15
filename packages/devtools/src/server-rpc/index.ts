@@ -6,30 +6,63 @@ import type { ChannelOptions } from 'birpc'
 
 import { parse, stringify } from 'flatted'
 import type { Nuxt } from 'nuxt/schema'
-import type { ClientFunctions, ModuleOptions, ServerFunctions } from '../types'
+import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupStorageRPC } from './storage'
 import { setupAssetsRPC } from './assets'
 import { setupNpmRPC } from './npm'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
-import type { RPCContext } from './types'
 import { setupTerminalRPC } from './terminal'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
-  const birpc = createBirpcGroup<ClientFunctions, ServerFunctions>(serverFunctions, [])
+  const extendedRpcMap = new Map<string, any>()
+  const rpc = createBirpcGroup<ClientFunctions, ServerFunctions>(
+    serverFunctions,
+    [],
+    {
+      resolver: (name, fn) => {
+        if (fn)
+          return fn
+
+        if (!name.includes(':'))
+          return
+
+        const [namespace, fnName] = name.split(':')
+        return extendedRpcMap.get(namespace)?.[fnName]
+      },
+    },
+  )
 
   function refresh(event: keyof ServerFunctions) {
-    birpc.broadcast.refresh.asEvent(event)
+    rpc.broadcast.refresh.asEvent(event)
   }
 
-  const ctx: RPCContext = {
+  function extendServerRpc(namespace: string, functions: any): any {
+    extendedRpcMap.set(namespace, functions)
+
+    return {
+      boardcast: new Proxy({}, {
+        get: (_, key) => {
+          if (typeof key !== 'string')
+            return
+          return (rpc.broadcast as any)[`${namespace}:${key}`]
+        },
+      }),
+    }
+  }
+
+  const ctx: NuxtDevtoolsServerContext = {
     nuxt,
     options,
-    birpc,
+    rpc,
     refresh,
+    extendServerRpc,
   }
+
+  // @ts-expect-error untyped
+  nuxt.devtools = ctx
 
   Object.assign(serverFunctions, {
     ...setupGeneralRPC(ctx),
@@ -53,12 +86,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         serialize: stringify,
         deserialize: parse,
       }
-      birpc.updateChannels((c) => {
+      rpc.updateChannels((c) => {
         c.push(channel)
       })
       ws.on('close', () => {
         wsClients.delete(ws)
-        birpc.updateChannels((c) => {
+        rpc.updateChannels((c) => {
           const index = c.indexOf(channel)
           if (index >= 0)
             c.splice(index, 1)

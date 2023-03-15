@@ -1,4 +1,5 @@
 import type { ModuleCustomTab } from './custom-tabs'
+import type { NuxtDevtoolsServerContext } from './server-ctx'
 import type { TerminalState } from './terminals'
 
 declare module '@nuxt/schema' {
@@ -41,6 +42,13 @@ declare module '@nuxt/schema' {
      * Returns true if terminal is found and deleted.
      */
     'devtools:terminal:remove': (id: string) => void
+
+    /**
+     * DevTools context on the server side.
+     *
+     * @internal Internal and should not be used directly.
+     */
+    'devtools:internal:ctx': (ctx: NuxtDevtoolsServerContext) => void
   }
 }
 

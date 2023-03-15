@@ -6,9 +6,9 @@ import which from 'which'
 import waitOn from 'wait-on'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { LOG_PREFIX } from '../logger'
-import type { RPCContext } from '../server-rpc/types'
+import type { NuxtDevtoolsServerContext } from '../types'
 
-export async function setup({ nuxt, options }: RPCContext) {
+export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const installed = !!await which('code-server').catch(() => null)
 
   const vsOptions = options?.vscode || {}
@@ -48,6 +48,7 @@ export async function setup({ nuxt, options }: RPCContext) {
         name: 'VS Code Server',
         icon: 'logos-visual-studio-code',
       },
+      nuxt,
     )
 
     await waitOn({

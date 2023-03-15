@@ -1,5 +1,4 @@
-import type {} from '@nuxt/schema'
-import type { ModuleCustomTab } from '@nuxt/devtools-kit/types'
+import type { ModuleCustomTab } from './custom-tabs'
 
 export interface ModuleOptions {
   /**

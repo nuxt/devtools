@@ -21,7 +21,7 @@ importers:
       conventional-changelog-cli: ^2.2.2
       eslint: ^8.36.0
       esno: ^0.16.3
-      execa: ^7.1.0
+      execa: ^7.1.1
       get-port-please: ^3.0.1
       lint-staged: ^13.2.0
       nuxt: ^3.3.1
@@ -48,7 +48,7 @@ importers:
       conventional-changelog-cli: 2.2.2
       eslint: 8.36.0
       esno: 0.16.3
-      execa: 7.1.0
+      execa: 7.1.1
       get-port-please: 3.0.1
       lint-staged: 13.2.0
       nuxt: 3.3.1_cr6hbc5gf7ruifoqtdgbyugxne
@@ -86,10 +86,10 @@ importers:
       '@unocss/preset-uno': ^0.50.4
       '@unocss/runtime': ^0.50.4
       '@vueuse/nuxt': ^9.13.0
-      birpc: ^0.2.7
+      birpc: ^0.2.8
       consola: ^2.15.3
       esno: ^0.16.3
-      execa: ^7.1.0
+      execa: ^7.1.1
       fast-glob: ^3.2.12
       flatted: ^3.2.7
       floating-vue: 2.0.0-beta.20
@@ -137,9 +137,9 @@ importers:
       '@antfu/install-pkg': 0.1.1
       '@nuxt/devtools-kit': link:../devtools-kit
       '@nuxt/kit': 3.3.1
-      birpc: 0.2.7
+      birpc: 0.2.8
       consola: 2.15.3
-      execa: 7.1.0
+      execa: 7.1.1
       fast-glob: 3.2.12
       h3: 1.6.0
       hookable: 5.5.1
@@ -203,8 +203,8 @@ importers:
     specifiers:
       '@nuxt/kit': ^3.3.1
       '@nuxt/schema': ^3.3.1
-      birpc: ^0.2.7
-      execa: ^7.1.0
+      birpc: ^0.2.8
+      execa: ^7.1.1
       hookable: ^5.5.1
       nuxt: ^3.2.3
       unbuild: ^1.1.2
@@ -214,11 +214,11 @@ importers:
     dependencies:
       '@nuxt/kit': 3.3.1_rollup@3.19.1
       '@nuxt/schema': 3.3.1_rollup@3.19.1
-      execa: 7.1.0
+      execa: 7.1.1
       nuxt: 3.3.1_h4kaxwm6ctjivrsm4cpxaz7nqu
       vite: 4.1.4
     devDependencies:
-      birpc: 0.2.7
+      birpc: 0.2.8
       hookable: 5.5.1
       unbuild: 1.1.2
       unimport: 3.0.2_rollup@3.19.1
@@ -3912,8 +3912,8 @@ packages:
     dependencies:
       file-uri-to-path: 1.0.0
 
-  /birpc/0.2.7:
-    resolution: {integrity: sha512-SXurFWfmrrgflAjYS/hSnP03PVerQ2X7f/RTsinVfP/AyC9o6UPG0s/R4J9Dhc4nQwtXuX7Y9jynaruXOUs/Sw==}
+  /birpc/0.2.8:
+    resolution: {integrity: sha512-ag5M7Ikcnru1XPJy46FdsSmtNzAzeVTcQ5b8ANAG7lBUbY5Ua5RTLnFw6V5ZQ+DToLpgp5LVuA0B2vPwGJ8VMw==}
 
   /bl/4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -5907,8 +5907,8 @@ packages:
       strip-final-newline: 3.0.0
     dev: true
 
-  /execa/7.1.0:
-    resolution: {integrity: sha512-T6nIJO3LHxUZ6ahVRaxXz9WLEruXLqdcluA+UuTptXmLM7nDAn9lx9IfkxPyzEL21583qSt4RmL44pO71EHaJQ==}
+  /execa/7.1.1:
+    resolution: {integrity: sha512-wH0eMf/UXckdUYnO21+HDztteVv05rq2GXksxT4fCGeHkBhw1DROXh40wcjMcRqDOWE7iPJ4n3M7e2+YFP+76Q==}
     engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
     dependencies:
       cross-spawn: 7.0.3
@@ -7389,7 +7389,7 @@ packages:
       cli-truncate: 3.1.0
       commander: 10.0.0
       debug: 4.3.4
-      execa: 7.1.0
+      execa: 7.1.1
       lilconfig: 2.1.0
       listr2: 5.0.7
       micromatch: 4.0.5

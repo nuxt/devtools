@@ -25,7 +25,7 @@ import { ROUTE_CLIENT, defaultOptions } from './packages/devtools/src/constant'
 import type { ModuleOptions } from './packages/devtools/src/types'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
-import { startSubprocess } from './packages/devtools/src/kit'
+import { startSubprocess } from './packages/devtools-kit/src/index'
 
 export type { ModuleOptions }
 
@@ -70,6 +70,7 @@ export default defineNuxtModule<ModuleOptions>({
           name: 'Nuxt Devtools Local',
           icon: 'logos-nuxt-icon',
         },
+        nuxt,
       )
     })
 
