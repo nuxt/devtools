@@ -5,10 +5,13 @@ const props = defineProps<{
   tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
+const settings = useDevToolsSettings()
 const client = useClient()
 const isEnabled = computed(() => {
   const _tab = props.tab as ModuleBuiltinTab
   if (_tab.requireClient && !client.value)
+    return false
+  if (settings.hiddenTabs.value.includes(_tab.name))
     return false
   return true
 })
