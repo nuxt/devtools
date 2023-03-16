@@ -1,6 +1,6 @@
 import { addPluginTemplate, defineNuxtModule } from '@nuxt/kit'
 // @nuxt/devtools-kit
-import { onDevToolsInitialized, registerServerRPC } from '../../../devtools-kit/src/index'
+import { extendServerRpc, onDevToolsInitialized } from '../../../devtools-kit/src/index'
 
 interface ServerFunctions {
   toUpperCase(t: string): string
@@ -20,9 +20,9 @@ export default defineNuxtModule({
       return
 
     onDevToolsInitialized(() => {
-      const rpc = registerServerRPC<ClientFunctions, ServerFunctions>('custom-rpc', {
+      const rpc = extendServerRpc<ClientFunctions, ServerFunctions>('custom-rpc', {
         toUpperCase(t: string) {
-          rpc.boardcast.greeting('world')
+          rpc.broadcast.greeting('world')
           return `${t.toUpperCase()} [from server]`
         },
       })
@@ -32,10 +32,10 @@ export default defineNuxtModule({
       filename: 'custom-rpc.ts',
       getContents() {
         return `
-          import { onDevToolsClientConnected } from '@nuxt/devtools-kit/iframe-client'
+          import { onDevtoolsClientConnected } from '@nuxt/devtools-kit/iframe-client'
 
           export default () => {
-            onDevToolsClientConnected((client) => {
+            onDevtoolsClientConnected((client) => {
               const rpc = client.devtools.extendClientRpc('custom-rpc', {
                 greeting(t: string) {
                   console.log(\`[custom-rpc] Hello \${t}!\`)

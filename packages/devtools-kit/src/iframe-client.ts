@@ -6,7 +6,7 @@ let clientRef: Ref<NuxtDevtoolsIframeClient | undefined> | undefined
 const hasSetup = false
 const fns = [] as ((client: NuxtDevtoolsIframeClient) => void)[]
 
-export function onDevToolsClientConnected(fn: (client: NuxtDevtoolsIframeClient) => void) {
+export function onDevtoolsClientConnected(fn: (client: NuxtDevtoolsIframeClient) => void) {
   fns.push(fn)
 
   if (hasSetup)
@@ -40,7 +40,7 @@ export function useDevtoolsClient() {
   if (!clientRef) {
     clientRef = shallowRef<NuxtDevtoolsIframeClient | undefined>()
 
-    onDevToolsClientConnected(setup)
+    onDevtoolsClientConnected(setup)
   }
 
   function setup(client: NuxtDevtoolsIframeClient) {

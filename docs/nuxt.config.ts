@@ -4,4 +4,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
     ...(process.env.CI ? [] : ['../local']),
   ],
+  css: [
+    '~/style.css',
+  ],
 })

@@ -46,7 +46,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     extendedRpcMap.set(namespace, functions)
 
     return {
-      boardcast: new Proxy({}, {
+      broadcast: new Proxy({}, {
         get: (_, key) => {
           if (typeof key !== 'string')
             return
