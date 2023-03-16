@@ -1,3 +1,4 @@
+import { startSubprocess } from '@nuxt/devtools-kit'
 import type { NuxtDevtoolsServerContext, ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 
 export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerContext) {
@@ -46,6 +47,8 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
     }
   }
 
+  const processes = new Map<string, ReturnType<typeof startSubprocess>>()
+
   return {
     getTerminals() {
       return Array.from(terminals.values())
@@ -75,6 +78,10 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
           refresh('getTerminals')
           return true
       }
+    },
+    async executeBashCommand(options, tab) {
+      const p = startSubprocess(options, tab, nuxt)
+      processes.set(tab.id, p)
     },
   } satisfies Partial<ServerFunctions>
 }

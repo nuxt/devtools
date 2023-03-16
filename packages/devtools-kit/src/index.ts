@@ -1,8 +1,7 @@
 import { useNuxt } from '@nuxt/kit'
 import type { BirpcGroup } from 'birpc'
-import type { Options as ExecaOptions } from 'execa'
 import { execa } from 'execa'
-import type { ModuleCustomTab, NuxtDevtoolsServerContext, TerminalState } from './types'
+import type { ModuleCustomTab, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -22,11 +21,6 @@ export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Pro
  */
 export function refreshCustomTabs(nuxt = useNuxt()) {
   return nuxt.callHook('devtools:customTabs:refresh')
-}
-
-export interface SubprocessOptions extends ExecaOptions {
-  command: string
-  args?: string[]
 }
 
 /**
@@ -53,6 +47,8 @@ export function startSubprocess(
       },
     )
 
+    nuxt.callHook('devtools:terminal:write', id, `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n`)
+
     process.stdout!.on('data', (data) => {
       nuxt.callHook('devtools:terminal:write', id, data)
     })
@@ -60,7 +56,7 @@ export function startSubprocess(
       nuxt.callHook('devtools:terminal:write', id, data)
     })
     process.on('exit', (code) => {
-      nuxt.callHook('devtools:terminal:write', id, `\nprocess terminalated with ${code}\n`)
+      nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)
     })
 
     return process

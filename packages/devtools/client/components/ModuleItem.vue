@@ -36,7 +36,7 @@ const npmBase = 'https://www.npmjs.com/package/'
   <div border="~ base" p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-        text-lg of-hidden ws-nowrap text-ellipsis
+        of-hidden text-lg ws-nowrap text-ellipsis
       >
         <NuxtLink
           v-if="isPackageModule"
@@ -91,6 +91,26 @@ const npmBase = 'https://www.npmjs.com/package/'
         <span text-lg op50 i-carbon-folder-move-to />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
+      <NpmVersionCheck v-if="data.npm" :package-name="data.npm" :args="['-D']" text-sm>
+        <template #default="{ info, update }">
+          <div v-if="info?.needsUpdate" mx--2>
+            <button
+              flex="~ gap-2" title="Click to upgrade" text-sm items-center px2 rounded
+              hover="bg-active"
+              @click="update()"
+            >
+              <span text-lg op50 i-carbon-intent-request-upgrade />
+              <code op50>v{{ info.current }}</code>
+              <div op50 i-carbon-arrow-right />
+              <code text-green>v{{ info.latest }}</code>
+            </button>
+          </div>
+          <duv v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
+            <span text-lg op50 i-carbon-cube />
+            <code text-sm op50>v{{ info.current }}</code>
+          </duv>
+        </template>
+      </NpmVersionCheck>
     </div>
     <div flex="~ col">
       <div

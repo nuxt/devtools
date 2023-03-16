@@ -1,3 +1,5 @@
+import type { Options as ExecaOptions } from 'execa'
+
 export interface TerminalBase {
   id: string
   name: string
@@ -6,6 +8,11 @@ export interface TerminalBase {
 }
 
 export type TerminalAction = 'restart' | 'terminate' | 'clear'
+
+export interface SubprocessOptions extends ExecaOptions {
+  command: string
+  args?: string[]
+}
 
 export interface TerminalInfo extends TerminalBase {
   restartable?: boolean

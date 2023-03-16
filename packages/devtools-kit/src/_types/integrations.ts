@@ -18,12 +18,14 @@ export interface ImageMeta {
   mimeType?: string
 }
 
-export interface UpdateInfo {
+export interface PackageUpdateInfo {
   name: string
   current: string
-  latest?: string
-  needsUpdate?: boolean
+  latest: string
+  needsUpdate: boolean
 }
+
+export type PackageManagerName = 'npm' | 'yarn' | 'pnpm'
 
 export interface AutoImportsWithMetadata {
   imports: Import[]

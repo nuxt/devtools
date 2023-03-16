@@ -37,10 +37,6 @@ export function useComponents() {
   ].sort((a: any, b: any) => a.pascalName.localeCompare(b.pascalName)))
 }
 
-export function getPackageVersions() {
-  return useAsyncState('getPackageVersions', () => rpc.getPackageVersions())
-}
-
 export function useServerPages() {
   return useAsyncState('getServerPages', () => rpc.getServerPages())
 }

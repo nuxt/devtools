@@ -33,7 +33,7 @@ onMounted(async () => {
     term.write(info.value.buffer)
 
   // @ts-expect-error missing hooks type
-  nuxt.hook('devtools:terminal:data', (id: string, data: string) => {
+  nuxt.hook('devtools:terminal:data', ({ id, data }) => {
     if (id === props.id)
       term.write(data)
   })
