@@ -1,15 +1,14 @@
 import type { StorageMounts } from 'nitropack'
 import type { Storage, StorageValue } from 'unstorage'
-import type { ServerFunctions } from '../types'
-import type { RPCContext } from './types'
+import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
 
 export function setupStorageRPC({
   nuxt,
-  birpc,
-}: RPCContext) {
+  rpc,
+}: NuxtDevtoolsServerContext) {
   const storageMounts: StorageMounts = {}
 
   let storage: Storage | undefined
@@ -21,7 +20,7 @@ export function setupStorageRPC({
       storage!.watch((event, key) => {
         if (shouldIgnoreStorageKey(key))
           return
-        birpc.broadcast.callHook.asEvent('storage:key:update', key, event)
+        rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
       })
     })
 

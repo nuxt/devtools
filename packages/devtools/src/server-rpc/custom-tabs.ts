@@ -1,7 +1,6 @@
-import type { ModuleCustomTab, ServerFunctions } from '../types'
-import type { RPCContext } from './types'
+import type { ModuleCustomTab, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupCustomTabRPC({ nuxt, options, refresh }: RPCContext) {
+export function setupCustomTabRPC({ nuxt, options, refresh }: NuxtDevtoolsServerContext) {
   const iframeTabs: ModuleCustomTab[] = []
   const customTabs: ModuleCustomTab[] = []
 

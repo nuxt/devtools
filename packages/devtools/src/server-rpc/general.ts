@@ -4,11 +4,10 @@ import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
 
-import type { HookInfo, ServerFunctions } from '../types'
+import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
-import type { RPCContext } from './types'
 
-export function setupGeneralRPC({ nuxt, refresh }: RPCContext) {
+export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
