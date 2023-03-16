@@ -4,12 +4,14 @@
   "packageManager": "pnpm@7.29.1",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
-    "dev": "pnpm -C packages/devtools dev",
+    "stub": "pnpm -r run stub",
+    "dev": "pnpm run stub && pnpm -C packages/devtools dev",
     "lint": "eslint .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
     "test": "pnpm lint",
     "docs": "nuxi dev docs",
+    "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks",
     "prepare": "pnpm -r run dev:prepare"
   },

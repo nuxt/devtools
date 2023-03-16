@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// @ts-ignore tsconfig
 import { NuxtLink } from '#components'
 
 defineProps<{
@@ -12,7 +14,7 @@ defineProps<{
   <Component
     :is="(href || target) ? 'a' : NuxtLink"
     v-bind="$props"
-    class="n-link n-link-base hover:n-link-hover n-transition"
+    class="n-transition n-link n-link-base hover:n-link-hover"
   >
     <slot />
   </Component>
