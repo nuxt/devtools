@@ -70,6 +70,7 @@ export default defineNuxtModule<ModuleOptions>({
           name: 'Nuxt Devtools Local',
           icon: 'logos-nuxt-icon',
         },
+        nuxt,
       )
     })
 

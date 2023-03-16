@@ -4,7 +4,8 @@
   "packageManager": "pnpm@7.29.1",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
-    "dev": "pnpm -C packages/devtools dev",
+    "stub": "pnpm -r run stub",
+    "dev": "pnpm run stub && pnpm -C packages/devtools dev",
     "lint": "eslint .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
@@ -32,7 +33,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "eslint": "^8.36.0",
     "esno": "^0.16.3",
-    "execa": "^7.1.0",
+    "execa": "^7.1.1",
     "get-port-please": "^3.0.1",
     "lint-staged": "^13.2.0",
     "nuxt": "^3.3.1",
