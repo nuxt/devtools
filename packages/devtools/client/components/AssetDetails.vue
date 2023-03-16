@@ -18,6 +18,12 @@ const textContent = computedAsync(() => {
   return rpc.getTextAssetContent(props.asset.filePath)
 })
 
+const config = useServerConfig()
+const hasNuxtImage = computed(() => {
+  const modules = config.value?._installedModules || []
+  return modules.some(m => m.meta?.name === '@nuxt/image' || m.meta?.name === '@nuxt/image-edge')
+})
+
 const codeSnippets = computed(() => {
   const items: CodeSnippet[] = []
   if (props.asset.type === 'image') {
@@ -26,7 +32,8 @@ const codeSnippets = computed(() => {
       : ' '
     items.push(
       { lang: 'vue-html', code: `<img${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Plain Image' },
-      // TODO: conditional if nuxt/image is installed
+    )
+    hasNuxtImage.value && items.push(
       { lang: 'vue-html', code: `<NuxtImage${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Image', docs: 'https://image.nuxtjs.org/components/nuxt-img' },
       { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxtjs.org/components/nuxt-picture' },
     )
