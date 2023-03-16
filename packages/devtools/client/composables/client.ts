@@ -2,7 +2,7 @@ import type { Lang } from 'shiki-es'
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '@nuxt/devtools-kit/types'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
-import { rpc } from './rpc'
+import { extendedRpcMap, rpc } from './rpc'
 
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
@@ -31,8 +31,6 @@ export const showConnectionWarning = computed(() => {
   return connectionTimeout.value && !useClient().value
 })
 
-const extendedRpcMap = new Map<string, any>()
-
 export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
   const client = useClient()
   const mode = useColorMode()
@@ -50,6 +48,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
       },
       extendClientRpc(namespace, functions) {
         extendedRpcMap.set(namespace, functions)
+
         return new Proxy({}, {
           get(_, key) {
             if (typeof key !== 'string')

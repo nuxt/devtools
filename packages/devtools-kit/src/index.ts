@@ -124,6 +124,10 @@ export function registerServerRPC<ClientFunctions = {}, ServerFunctions = {}>(
   return ctx.extendServerRpc<ClientFunctions, ServerFunctions>(namespace, functions)
 }
 
+export function onDevToolsInitialized(fn: () => void, nuxt = useNuxt()) {
+  nuxt.hook('devtools:initialized', fn)
+}
+
 function _getContext(nuxt = useNuxt()): NuxtDevtoolsServerContext | undefined {
   // @ts-expect-error - internal
   return nuxt?.devtools

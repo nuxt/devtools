@@ -32,6 +32,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         const [namespace, fnName] = name.split(':')
         return extendedRpcMap.get(namespace)?.[fnName]
       },
+      onError(error, name) {
+        console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
+      },
     },
   )
 
