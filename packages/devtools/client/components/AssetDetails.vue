@@ -19,6 +19,9 @@ const textContent = computedAsync(() => {
 })
 
 const codeSnippets = computed(() => {
+  const config = useServerConfig()
+  const modules = computed(() => config.value?._installedModules || [])
+  const moduleImage = modules.value.find(m => m.meta?.name === '@nuxt/image')
   const items: CodeSnippet[] = []
   if (props.asset.type === 'image') {
     const attrs = imageMeta.value?.width
@@ -26,7 +29,8 @@ const codeSnippets = computed(() => {
       : ' '
     items.push(
       { lang: 'vue-html', code: `<img${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Plain Image' },
-      // TODO: conditional if nuxt/image is installed
+    )
+    moduleImage && items.push(
       { lang: 'vue-html', code: `<NuxtImage${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Image', docs: 'https://image.nuxtjs.org/components/nuxt-img' },
       { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxtjs.org/components/nuxt-picture' },
     )
