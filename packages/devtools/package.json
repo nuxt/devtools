@@ -29,7 +29,7 @@
     "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module",
-    "dev": "nuxi dev client",
+    "dev": "pnpm -C ../devtools-kit build && nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "nuxi prepare client",
     "prepublishOnly": "pnpm build"
