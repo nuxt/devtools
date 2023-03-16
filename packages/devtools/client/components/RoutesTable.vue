@@ -68,20 +68,20 @@ function openLayout(name: string) {
               />
               <div op0 group-hover:op100 flex="~ gap1">
                 <button
-                  v-if="item.file"
+                  v-if="item.file || item.meta?.file"
                   text-sm op40 hover="op100 text-primary"
                   title="Open in editor"
-                  @click="openInEditor(item.file!)"
+                  @click="openInEditor((item.file || item.meta?.file) as string)"
                 >
                   <div i-carbon-script-reference />
                 </button>
               </div>
             </div>
           </td>
-          <td text-left font-mono op50 text-sm w-0 ws-nowrap pr-1>
+          <td text-left text-sm pr-1 font-mono op50 w-0 ws-nowrap>
             {{ item.name }}
           </td>
-          <td text-center font-mono w-0 ws-nowrap text-sm>
+          <td font-mono w-0 ws-nowrap text-sm text-center>
             <span v-if="item.meta.layout === false">-</span>
             <button v-else-if="item.meta.layout" @click="openLayout(item.meta.layout as string)">
               {{ item.meta.layout }}
