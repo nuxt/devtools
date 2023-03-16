@@ -44,7 +44,7 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-center text-sm mt--1 op30 mb6>
+        <div text-sm text-center mt--1 op30 mb6>
           Nuxt DevTools
           <code>v{{ version }}</code>
         </div>
@@ -117,15 +117,10 @@ function goIntro() {
           <div i-carbon-debug />
           Bug Reports
         </a>
-        <VDropdown>
-          <button flex="~ gap1" items-center op50 mxa inline-block hover:op80>
-            <div i-carbon-settings />
-            Settings
-          </button>
-          <template #popper>
-            <SettingsPanel />
-          </template>
-        </VDropdown>
+        <NuxtLink to="/settings" flex="~ gap1" items-center op50 inline-block hover:op80>
+          <div i-carbon-settings />
+          Settings
+        </NuxtLink>
       </div>
       <div flex-auto />
       <NTip n="green6" justify-center icon="carbon-keyboard">

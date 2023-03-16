@@ -14,6 +14,8 @@ export const clientFunctions = {
   // will be added in app.vue
 } as ClientFunctions
 
+export const extendedRpcMap = new Map<string, any>()
+
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   post: async (d) => {
     (await connectPromise).send(d)
@@ -21,6 +23,17 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   on: (fn) => { onMessage = fn },
   serialize: stringify,
   deserialize: parse,
+  resolver(name, fn) {
+    if (fn)
+      return fn
+    if (!name.includes(':'))
+      return
+    const [namespace, fnName] = name.split(':')
+    return extendedRpcMap.get(namespace)?.[fnName]
+  },
+  onError(error, name) {
+    console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
+  },
 })
 
 async function connectWS() {

@@ -28,10 +28,8 @@ const checked = useVModel(props, 'modelValue', emit, { passive: true })
       @keypress.enter="checked = !checked"
     >
     <div class="n-transition peer-active:n-active-base peer-focus-visible:n-focus-base n-switch-slider n-checked:n-switch-slider-checked">
-      <div
-        class="n-transition n-switch-thumb n-checked:n-switch-thumb-checked"
-      />
+      <div class="n-transition n-switch-thumb n-checked:n-switch-thumb-checked" />
     </div>
-    <span><slot /></span>
+    <slot />
   </label>
 </template>

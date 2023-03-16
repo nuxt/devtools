@@ -2,9 +2,9 @@ import { addVitePlugin } from '@nuxt/kit'
 import type { ViteInspectAPI } from 'vite-plugin-inspect'
 import Inspect from 'vite-plugin-inspect'
 import { addCustomTab } from '@nuxt/devtools-kit'
-import type { RPCContext } from '../server-rpc/types'
+import type { NuxtDevtoolsServerContext } from '../types'
 
-export async function setup({ nuxt, birpc }: RPCContext) {
+export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
   const plugin = Inspect()
   addVitePlugin(plugin)
 
@@ -52,5 +52,5 @@ export async function setup({ nuxt, birpc }: RPCContext) {
     return graph
   }
 
-  birpc.functions.getComponentsRelationships = getComponentsRelationships
+  rpc.functions.getComponentsRelationships = getComponentsRelationships
 }

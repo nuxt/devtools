@@ -1,8 +1,7 @@
-import type { ServerFunctions, UpdateInfo } from '../types'
+import type { NuxtDevtoolsServerContext, ServerFunctions, UpdateInfo } from '../types'
 import { checkForUpdates, getPackageVersions } from '../npm'
-import type { RPCContext } from './types'
 
-export function setupNpmRPC({ refresh }: RPCContext) {
+export function setupNpmRPC({ refresh }: NuxtDevtoolsServerContext) {
   let checkForUpdatePromise: Promise<any> | undefined
   let versions: UpdateInfo[] = getPackageVersions()
 

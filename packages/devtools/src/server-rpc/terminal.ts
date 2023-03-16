@@ -1,7 +1,6 @@
-import type { ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
-import type { RPCContext } from './types'
+import type { NuxtDevtoolsServerContext, ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 
-export function setupTerminalRPC({ nuxt, birpc, refresh }: RPCContext) {
+export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerContext) {
   const terminals = new Map<string, TerminalState>()
 
   nuxt.hook('devtools:terminal:register', (terminal) => {
@@ -25,7 +24,7 @@ export function setupTerminalRPC({ nuxt, birpc, refresh }: RPCContext) {
 
     terminal.buffer ||= ''
     terminal.buffer += data
-    birpc.broadcast.onTerminalData.asEvent(id, data)
+    rpc.broadcast.onTerminalData.asEvent(id, data)
     return true
   })
 

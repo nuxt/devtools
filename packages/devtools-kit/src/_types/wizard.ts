@@ -1,5 +1,5 @@
 export interface WizardFunctions {
-  enablePages: (nuxt: any, pages: string[]) => Promise<void>
+  enablePages: (nuxt: any) => Promise<void>
 }
 
 export type WizardActions = keyof WizardFunctions

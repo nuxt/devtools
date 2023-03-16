@@ -17,4 +17,5 @@ export interface DevToolsUISettings {
   interactionCloseOnOutsideClick: boolean
   showExperimentalFeatures: boolean
   scale: number
+  hiddenTabs: string[]
 }
