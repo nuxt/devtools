@@ -48,6 +48,7 @@ export async function setup({ nuxt, options }: RPCContext) {
         name: 'VS Code Server',
         icon: 'logos-visual-studio-code',
       },
+      nuxt,
     )
 
     await waitOn({
