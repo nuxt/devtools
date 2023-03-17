@@ -32,6 +32,7 @@ export function startSubprocess(
   nuxt = useNuxt(),
 ) {
   const id = tabOptions.id
+  let restarting = false
 
   function start() {
     const process = execa(
@@ -56,7 +57,10 @@ export function startSubprocess(
       nuxt.callHook('devtools:terminal:write', id, data.toString())
     })
     process.on('exit', (code) => {
-      nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)
+      if (!restarting) {
+        nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)
+        nuxt.callHook('devtools:terminal:exit', id, code || 0)
+      }
     })
 
     return process
@@ -70,10 +74,12 @@ export function startSubprocess(
   let process = start()
 
   function restart() {
+    restarting = true
     process?.kill()
 
     clear()
     process = start()
+    restarting = false
   }
 
   function clear() {
@@ -82,6 +88,7 @@ export function startSubprocess(
   }
 
   function terminate() {
+    restarting = false
     try {
       process?.kill()
     }
@@ -92,8 +99,9 @@ export function startSubprocess(
 
   function register() {
     nuxt.callHook('devtools:terminal:register', {
-      onActionRestart: restart,
-      onActionTerminate: terminate,
+      onActionRestart: tabOptions.restartable === false ? undefined : restart,
+      onActionTerminate: tabOptions.terminatable === false ? undefined : terminate,
+      isTerminated: false,
       ...tabOptions,
     })
   }

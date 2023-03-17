@@ -7,7 +7,7 @@ export interface TerminalBase {
   icon?: string
 }
 
-export type TerminalAction = 'restart' | 'terminate' | 'clear'
+export type TerminalAction = 'restart' | 'terminate' | 'clear' | 'remove'
 
 export interface SubprocessOptions extends ExecaOptions {
   command: string
@@ -15,12 +15,27 @@ export interface SubprocessOptions extends ExecaOptions {
 }
 
 export interface TerminalInfo extends TerminalBase {
+  /**
+   * Whether the terminal can be restarted
+   */
   restartable?: boolean
+  /**
+   * Whether the terminal can be terminated
+   */
   terminatable?: boolean
+
+  /**
+   * Whether the terminal is terminated
+   */
+  isTerminated?: boolean
+
+  /**
+   * Content buffer
+   */
   buffer?: string
 }
 
-export interface TerminalState extends TerminalBase {
+export interface TerminalState extends TerminalInfo {
   /**
    * User action to restart the terminal, when not provided, this action will be disabled
    */
@@ -30,9 +45,4 @@ export interface TerminalState extends TerminalBase {
    * User action to terminate the terminal, when not provided, this action will be disabled
    */
   onActionTerminate?: () => Promise<void> | void
-
-  /**
-   * Content buffer
-   */
-  buffer?: string
 }

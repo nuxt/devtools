@@ -44,6 +44,7 @@ export interface ServerFunctions {
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
+  restartNuxt(hard?: boolean): Promise<void>
 }
 
 export interface ClientFunctions {
@@ -52,6 +53,7 @@ export interface ClientFunctions {
   navigateTo(path: string): void
 
   onTerminalData(id: string, data: string): void
+  onTerminalExit(id: string, code: number): void
 }
 
 export type ClientUpdateEvent = keyof ServerFunctions

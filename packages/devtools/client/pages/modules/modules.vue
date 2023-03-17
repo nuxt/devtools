@@ -57,14 +57,15 @@ watchEffect(() => {
       v-if="userModules.length"
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
-      container-class="grid grid-cols-minmax-400px gap2"
+      container-class="grid grid-cols-minmax-450px gap2"
       :description="`Total modules: ${userModules.length}`"
     >
-      <ModuleItem
-        v-for="m of userModules"
-        :key="m.meta?.name || m.entryPath"
-        :mod="m"
-      />
+      <template v-for="m of userModules" :key="m.meta?.name || m.entryPath">
+        <ModuleItem
+          v-if="m.meta?.name || m.entryPath"
+          :mod="m"
+        />
+      </template>
     </NSectionBlock>
   </div>
 </template>

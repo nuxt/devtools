@@ -16,6 +16,11 @@ const selected = computed(() => {
   return terminals.value?.find(t => t.id === id)
 })
 
+function remove(id: string) {
+  rpc.runTerminalAction(id, 'remove')
+  router.replace('/modules/terminals')
+}
+
 watchEffect(() => {
   if (!route.query.id && terminals.value?.length)
     router.replace(`/modules/terminals?id=${encodeURIComponent(terminals.value[0].id)}`)
@@ -23,8 +28,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_max-content_1fr]">
-    <!-- TODO: Refactor to have general component -->
+  <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
     <div ref="navbar" flex="~" border="b base" items-center navbar-glass flex-1>
       <NuxtLink
         v-for="t of terminals"
@@ -35,8 +39,13 @@ watchEffect(() => {
       >
         <NIcon v-if="t.icon " :icon="t.icon" />
         <span :class="t.id === selected?.id ? '' : 'op50'">
-          {{ t.name }}
+          {{ t.name }}{{ t.isTerminated ? ' (terminated)' : '' }}
         </span>
+        <NIconButton
+          v-if="t.isTerminated"
+          icon="carbon-close" mx--2
+          @click.stop="remove(t.id)"
+        />
       </NuxtLink>
     </div>
 
@@ -44,8 +53,8 @@ watchEffect(() => {
       <TerminalView :id="selected.id" :key="selected.id" />
     </template>
     <template v-else>
-      <div>
-        Terminal not found
+      <div p10>
+        Terminal <code>{{ route.query.id }}</code> not found
       </div>
     </template>
   </div>

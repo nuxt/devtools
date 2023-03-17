@@ -91,9 +91,30 @@ const npmBase = 'https://www.npmjs.com/package/'
         <span text-lg op50 i-carbon-folder-move-to />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
-      <NpmVersionCheck v-if="data.npm" :package-name="data.npm" :args="['-D']" text-sm>
-        <template #default="{ info, update }">
-          <div v-if="info?.needsUpdate" mx--2>
+
+      <!-- NPM Version bump -->
+      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :args="['-D']" text-sm>
+        <template #default="{ info, update, state, id, restart }">
+          <NuxtLink
+            v-if="state === 'running'" flex="~ gap-2"
+            items-center animate-pulse
+            :to="`/modules/terminals?id=${encodeURIComponent(id)}`"
+          >
+            <span text-lg op50 i-carbon-circle-dash animate-spin />
+            <code text-sm op50>Upgrading...</code>
+          </NuxtLink>
+          <div v-else-if="state === 'updated'" mx--2>
+            <button
+              flex="~ gap-2"
+              hover="bg-primary/20"
+              items-center text-sm text-primary bg-primary:10 px2 rounded
+              @click="restart"
+            >
+              <span text-lg text-primary i-carbon-intent-request-active />
+              <code text-xs>Update installed, click to restart</code>
+            </button>
+          </div>
+          <div v-else-if="info?.needsUpdate" mx--2>
             <button
               flex="~ gap-2" title="Click to upgrade" text-sm items-center px2 rounded
               hover="bg-active"
@@ -105,10 +126,10 @@ const npmBase = 'https://www.npmjs.com/package/'
               <code text-green>v{{ info.latest }}</code>
             </button>
           </div>
-          <duv v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
+          <div v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
             <span text-lg op50 i-carbon-cube />
             <code text-sm op50>v{{ info.current }}</code>
-          </duv>
+          </div>
         </template>
       </NpmVersionCheck>
     </div>

@@ -113,5 +113,8 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
         console.error('File not found:', input)
       }
     },
+    restartNuxt(hard = true) {
+      return nuxt.callHook('restart', { hard })
+    },
   } satisfies Partial<ServerFunctions>
 }

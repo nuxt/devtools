@@ -41,6 +41,11 @@ declare module '@nuxt/schema' {
      * Returns true if terminal is found and deleted.
      */
     'devtools:terminal:remove': (id: string) => void
+
+    /**
+     * Mark a terminal as terminated.
+     */
+    'devtools:terminal:exit': (id: string, code?: number) => void
   }
 }
 
