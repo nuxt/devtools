@@ -50,10 +50,10 @@ export function startSubprocess(
     nuxt.callHook('devtools:terminal:write', id, `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n`)
 
     process.stdout!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data)
+      nuxt.callHook('devtools:terminal:write', id, data.toString())
     })
     process.stderr!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data)
+      nuxt.callHook('devtools:terminal:write', id, data.toString())
     })
     process.on('exit', (code) => {
       nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)

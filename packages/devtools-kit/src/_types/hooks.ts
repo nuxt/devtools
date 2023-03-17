@@ -52,7 +52,7 @@ declare module '@nuxt/schema' {
     /**
      * On terminal data.
      */
-    'devtools:terminal:data': (id: string, data: string) => void
+    'devtools:terminal:data': (payload: { id: string; data: string }) => void
   }
 }
 

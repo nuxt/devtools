@@ -2,6 +2,9 @@
 definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',
+  shouldShow() {
+    return useTerminals().value?.length
+  },
 })
 
 const terminals = useTerminals()
@@ -22,7 +25,7 @@ watchEffect(() => {
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_max-content_1fr]">
     <!-- TODO: Refactor to have general component -->
-    <div ref="navbar" flex="~" border="b base" navbar-glass flex-1 items-center>
+    <div ref="navbar" flex="~" border="b base" items-center navbar-glass flex-1>
       <NuxtLink
         v-for="t of terminals"
         :key="t.id" border="r base"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
+
 const props = defineProps<{
   packageName: string
   flags?: string[]
@@ -40,12 +41,13 @@ async function update() {
   <slot :info="info" :update="update">
     <code v-if="info">{{ `v${info.current}` }}</code>
     <template v-if="info?.latest">
-      <Badge
-        v-if="info.needsUpdate"
-        bg-green-400:10 text-green-400
-        title="updates available"
-        v-text="'updates available'"
-      />
+      <button v-if="info.needsUpdate" @click="update">
+        <Badge
+          bg-green-400:10 text-green-400
+          title="updates available"
+          v-text="'updates available'"
+        />
+      </button>
       <Badge
         v-else
         bg-gray-400:10 text-gray-400

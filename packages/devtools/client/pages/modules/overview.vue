@@ -50,7 +50,7 @@ function goIntro() {
       <div flex="~ gap2 wrap">
         <div p4 theme-card-green flex="~ col auto">
           <div text-3xl logos-nuxt-icon />
-          <NpmVersionCheck package-name="nuxt" />
+          <NpmVersionCheck package-name="nuxt" :args="['-D']" />
         </div>
         <template v-if="config">
           <NuxtLink v-if="config && config.pages && client" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/pages">

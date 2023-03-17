@@ -46,11 +46,11 @@ function clear() {
 </script>
 
 <template>
-  <div border="b base" p2 flex="~ gap-2">
-    <span>{{ info?.description }}</span>
+  <div border="b base" flex="~ gap-2" items-center p2>
+    <span op50 text-sm>{{ info?.description }}</span>
     <span class="flex-auto" />
     <NIconButton title="Clear" icon="i-carbon-clean" @click="clear()" />
-    <NIconButton v-if="info?.restartable" title="Refresh" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
+    <NIconButton v-if="info?.restartable" title="Restart" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
     <NIconButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" @click="rpc.runTerminalAction(id, 'terminate')" />
   </div>
   <div ref="container" h-full w-full of-auto bg-black />
