@@ -94,11 +94,30 @@ textarea {
   border-radius: 5px !important;
 }
 
-*::-webkit-scrollbar{
-  width: 3px;
-  height: 3px;
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-*::-webkit-scrollbar-thumb{
-  background: #878787;
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-border);
+  border-radius: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8885;
+  border-radius: 1px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8886;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
 }
