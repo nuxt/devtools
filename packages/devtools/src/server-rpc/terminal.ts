@@ -28,6 +28,17 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
     return true
   })
 
+  nuxt.hook('devtools:terminal:exit', (id: string, code = 0) => {
+    const terminal = terminals.get(id)
+    if (!terminal)
+      return false
+
+    terminal.isTerminated = true
+    rpc.broadcast.onTerminalExit.asEvent(id, code)
+    refresh('getTerminals')
+    return true
+  })
+
   function serializeTerminal(terminal: TerminalState, buffer?: boolean): TerminalInfo
   function serializeTerminal(terminal: TerminalState | undefined, buffer?: boolean): TerminalInfo | undefined
   function serializeTerminal(terminal?: TerminalState, buffer = false): TerminalInfo | undefined {
@@ -38,8 +49,9 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
       name: terminal.name,
       description: terminal.description,
       icon: terminal.icon,
-      terminatable: !!terminal.onActionTerminate,
-      restartable: !!terminal.onActionRestart,
+      terminatable: terminal.terminatable ?? !!terminal.onActionTerminate,
+      restartable: terminal.restartable ?? !!terminal.onActionRestart,
+      isTerminated: terminal.isTerminated,
       buffer: buffer
         ? terminal.buffer
         : undefined,
@@ -69,6 +81,12 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
           if (!terminal.onActionTerminate)
             return false
           await terminal.onActionTerminate()
+          return true
+        case 'remove':
+          if (!terminal.isTerminated)
+            terminal.onActionTerminate?.()
+          terminals.delete(id)
+          refresh('getTerminals')
           return true
         case 'clear':
           terminal.buffer = ''

@@ -36,7 +36,7 @@ const npmBase = 'https://www.npmjs.com/package/'
   <div border="~ base" p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-        text-lg of-hidden ws-nowrap text-ellipsis
+        of-hidden text-lg ws-nowrap text-ellipsis
       >
         <NuxtLink
           v-if="isPackageModule"
@@ -91,6 +91,47 @@ const npmBase = 'https://www.npmjs.com/package/'
         <span text-lg op50 i-carbon-folder-move-to />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
+
+      <!-- NPM Version bump -->
+      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :options="{ dev: true }" text-sm>
+        <template #default="{ info, update, state, id, restart }">
+          <NuxtLink
+            v-if="state === 'running'" flex="~ gap-2"
+            items-center animate-pulse
+            :to="id ? `/modules/terminals?id=${encodeURIComponent(id)}` : undefined"
+          >
+            <span text-lg op50 i-carbon-circle-dash animate-spin />
+            <code text-sm op50>Upgrading...</code>
+          </NuxtLink>
+          <div v-else-if="state === 'updated'" mx--2>
+            <button
+              flex="~ gap-2"
+              hover="bg-primary/20"
+              items-center text-sm text-primary bg-primary:10 px2 rounded
+              @click="restart"
+            >
+              <span text-lg text-primary i-carbon-intent-request-active />
+              <code text-xs>Update installed, click to restart</code>
+            </button>
+          </div>
+          <div v-else-if="info?.needsUpdate" mx--2>
+            <button
+              flex="~ gap-2" title="Click to upgrade" text-sm items-center px2 rounded
+              hover="bg-active"
+              @click="update()"
+            >
+              <span text-lg op50 i-carbon-intent-request-upgrade />
+              <code op50>v{{ info.current }}</code>
+              <div op50 i-carbon-arrow-right />
+              <code text-green>v{{ info.latest }}</code>
+            </button>
+          </div>
+          <div v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
+            <span text-lg op50 i-carbon-cube />
+            <code text-sm op50>v{{ info.current }}</code>
+          </div>
+        </template>
+      </NpmVersionCheck>
     </div>
     <div flex="~ col">
       <div

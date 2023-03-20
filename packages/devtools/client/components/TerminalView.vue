@@ -11,6 +11,7 @@ const props = defineProps<{
 const container = ref<HTMLElement>()
 const nuxt = useNuxtApp()
 const info = ref<TerminalInfo>()
+const router = useRouter()
 let term: Terminal
 
 onMounted(async () => {
@@ -33,7 +34,7 @@ onMounted(async () => {
     term.write(info.value.buffer)
 
   // @ts-expect-error missing hooks type
-  nuxt.hook('devtools:terminal:data', (id: string, data: string) => {
+  nuxt.hook('devtools:terminal:data', ({ id, data }) => {
     if (id === props.id)
       term.write(data)
   })
@@ -46,12 +47,11 @@ function clear() {
 </script>
 
 <template>
-  <div border="b base" p2 flex="~ gap-2">
-    <span>{{ info?.description }}</span>
-    <span class="flex-auto" />
-    <NIconButton title="Clear" icon="i-carbon-clean" @click="clear()" />
-    <NIconButton v-if="info?.restartable" title="Refresh" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
-    <NIconButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" @click="rpc.runTerminalAction(id, 'terminate')" />
-  </div>
   <div ref="container" h-full w-full of-auto bg-black />
+  <div border="t base" flex="~ gap-2" items-center p2>
+    <NIconButton title="Clear" icon="i-carbon-clean" @click="clear()" />
+    <NIconButton v-if="info?.restartable" title="Restart" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
+    <NIconButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" @click="rpc.runTerminalAction(id, 'terminate')" />
+    <span op50 text-sm>{{ info?.description }}</span>
+  </div>
 </template>

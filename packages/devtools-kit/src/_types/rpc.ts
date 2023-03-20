@@ -3,7 +3,7 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, UpdateInfo } from './integrations'
+import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 
@@ -18,7 +18,12 @@ export interface ServerFunctions {
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
-  getPackageVersions(): UpdateInfo[]
+
+  // Updates
+  checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
+  getPackageManager(): Promise<PackageManagerName>
+  getNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<string[] | undefined>
+  runNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<{ processId: string } | undefined>
 
   // Terminal
   getTerminals(): TerminalInfo[]
@@ -40,6 +45,7 @@ export interface ServerFunctions {
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
+  restartNuxt(hard?: boolean): Promise<void>
 }
 
 export interface ClientFunctions {
@@ -48,6 +54,7 @@ export interface ClientFunctions {
   navigateTo(path: string): void
 
   onTerminalData(id: string, data: string): void
+  onTerminalExit(id: string, code: number): void
 }
 
 export type ClientUpdateEvent = keyof ServerFunctions

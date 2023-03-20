@@ -9,6 +9,8 @@ const settings = useDevToolsSettings()
 const client = useClient()
 const isEnabled = computed(() => {
   const _tab = props.tab as ModuleBuiltinTab
+  if (_tab.shouldShow && !_tab.shouldShow())
+    return false
   if (_tab.requireClient && !client.value)
     return false
   if (settings.hiddenTabs.value.includes(_tab.name))
@@ -23,7 +25,7 @@ const isEnabled = computed(() => {
       :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
       flex="~"
       hover="bg-active"
-      items-center justify-center p1 select-none w-10 text-secondary rounded-xl h-10
+      select-none items-center justify-center p1 w-10 text-secondary rounded-xl h-10
       exact-active-class="!text-primary bg-active"
     >
       <TabIcon

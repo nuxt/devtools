@@ -106,6 +106,7 @@ export interface ModuleBuiltinTab {
   title?: string
   path?: string
   requireClient?: boolean
+  shouldShow?: () => boolean
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab

@@ -9,13 +9,10 @@ definePageMeta({
 
 const client = useClient()
 const config = useServerConfig()
-const versions = getPackageVersions()
 const components = useComponents()
 const autoImports = useAutoImports()
 const routes = useAllRoutes()
 const isMacOS = getIsMacOS()
-
-const nuxtVersion = computed(() => versions.value?.find(v => v.name === 'nuxt'))
 
 const router = useRouter()
 function goIntro() {
@@ -25,7 +22,7 @@ function goIntro() {
 </script>
 
 <template>
-  <div h-full w-full flex>
+  <div flex h-full w-full>
     <div v-if="!config">
       Loading...
     </div>
@@ -44,30 +41,16 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-sm text-center mt--1 op30 mb6>
+        <div text-sm mt--1 text-center op30 mb6>
           Nuxt DevTools
           <code>v{{ version }}</code>
         </div>
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
-        <div v-if="nuxtVersion" p4 theme-card-green flex="~ col auto">
+        <div p4 theme-card-green flex="~ col auto">
           <div text-3xl logos-nuxt-icon />
-          <code>{{ `v${nuxtVersion.current}` }}</code>
-          <template v-if="nuxtVersion.latest">
-            <Badge
-              v-if="nuxtVersion.needsUpdate"
-              bg-green-400:10 text-green-400 mt--1
-              title="updates available"
-              v-text="'updates available'"
-            />
-            <Badge
-              v-else
-              mt--1 bg-gray-400:10 text-gray-400
-              title="latest"
-              v-text="'latest'"
-            />
-          </template>
+          <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
         </div>
         <template v-if="config">
           <NuxtLink v-if="config && config.pages && client" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/pages">

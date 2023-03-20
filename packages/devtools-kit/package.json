@@ -32,6 +32,7 @@
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub",
+    "dev:prepare": "nr stub",
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {

@@ -1,8 +1,7 @@
 import { useNuxt } from '@nuxt/kit'
 import type { BirpcGroup } from 'birpc'
-import type { Options as ExecaOptions } from 'execa'
 import { execa } from 'execa'
-import type { ModuleCustomTab, NuxtDevtoolsServerContext, TerminalState } from './types'
+import type { ModuleCustomTab, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -24,11 +23,6 @@ export function refreshCustomTabs(nuxt = useNuxt()) {
   return nuxt.callHook('devtools:customTabs:refresh')
 }
 
-export interface SubprocessOptions extends ExecaOptions {
-  command: string
-  args?: string[]
-}
-
 /**
  * Create a subprocess that handled by the DevTools.
  */
@@ -38,6 +32,7 @@ export function startSubprocess(
   nuxt = useNuxt(),
 ) {
   const id = tabOptions.id
+  let restarting = false
 
   function start() {
     const process = execa(
@@ -53,14 +48,19 @@ export function startSubprocess(
       },
     )
 
+    nuxt.callHook('devtools:terminal:write', id, `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n`)
+
     process.stdout!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data)
+      nuxt.callHook('devtools:terminal:write', id, data.toString())
     })
     process.stderr!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data)
+      nuxt.callHook('devtools:terminal:write', id, data.toString())
     })
     process.on('exit', (code) => {
-      nuxt.callHook('devtools:terminal:write', id, `\nprocess terminalated with ${code}\n`)
+      if (!restarting) {
+        nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)
+        nuxt.callHook('devtools:terminal:exit', id, code || 0)
+      }
     })
 
     return process
@@ -74,10 +74,12 @@ export function startSubprocess(
   let process = start()
 
   function restart() {
+    restarting = true
     process?.kill()
 
     clear()
     process = start()
+    restarting = false
   }
 
   function clear() {
@@ -86,6 +88,7 @@ export function startSubprocess(
   }
 
   function terminate() {
+    restarting = false
     try {
       process?.kill()
     }
@@ -96,8 +99,9 @@ export function startSubprocess(
 
   function register() {
     nuxt.callHook('devtools:terminal:register', {
-      onActionRestart: restart,
-      onActionTerminate: terminate,
+      onActionRestart: tabOptions.restartable === false ? undefined : restart,
+      onActionTerminate: tabOptions.terminatable === false ? undefined : terminate,
+      isTerminated: false,
       ...tabOptions,
     })
   }

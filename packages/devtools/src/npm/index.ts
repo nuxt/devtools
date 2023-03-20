@@ -1,41 +1,31 @@
-import { getNuxtVersion } from '@nuxt/kit'
-import type { Nuxt } from 'nuxt/schema'
+import { useNuxt } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
-import { version as devToolsVersion } from '../../package.json'
-import type { UpdateInfo } from '../types'
+import { getPackageInfo } from 'local-pkg'
+import type { PackageUpdateInfo } from '../types'
 
-export async function getMainPackageJSON(nuxt: Nuxt) {
+export async function getMainPackageJSON(nuxt = useNuxt()) {
   return readPackageJSON(nuxt.options.rootDir)
 }
 
-export async function checkForUpdateOf(info: UpdateInfo): Promise<Required<UpdateInfo>> {
+export async function checkForUpdateOf(name: string, current?: string, nuxt = useNuxt()): Promise<PackageUpdateInfo | undefined> {
+  if (!current) {
+    const info = await getPackageInfo(name)
+    if (!info)
+      return
+    current = info.packageJson.version
+  }
+
   const packument = await import('pacote').then(r => r.default?.packument || r.packument)
-  const manifest = await packument(info.name)
+  const manifest = await packument(name)
 
   const latest = manifest['dist-tags'].latest
-  const needsUpdate = latest !== info.current && semver.lt(info.current, latest)
+  const needsUpdate = latest !== current && semver.lt(current, latest)
 
   return {
-    ...info,
+    name,
+    current,
     latest,
     needsUpdate,
   }
-}
-
-export function getPackageVersions(): UpdateInfo[] {
-  return [
-    { name: 'nuxt', current: getNuxtVersion() },
-    { name: '@nuxt/devtools-edge', current: devToolsVersion },
-  ]
-}
-
-export async function checkForUpdates() {
-  const versions = getPackageVersions()
-  const updates = await Promise.all(versions.map(checkForUpdateOf))
-  return updates
-}
-
-export async function installPackage(name: string) {
-  await (await import('@antfu/install-pkg')).installPackage(name, { dev: true })
 }
