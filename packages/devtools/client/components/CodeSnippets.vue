@@ -15,7 +15,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="codeSnippets.length" n-code-block>
+  <div v-if="codeSnippets.length" n-code-block relative>
     <div flex="~ wrap" w-full>
       <template v-for="cs, idx of codeSnippets" :key="idx">
         <button
