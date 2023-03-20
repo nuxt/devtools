@@ -93,12 +93,12 @@ const npmBase = 'https://www.npmjs.com/package/'
       </div>
 
       <!-- NPM Version bump -->
-      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :args="['-D']" text-sm>
+      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :options="{ dev: true }" text-sm>
         <template #default="{ info, update, state, id, restart }">
           <NuxtLink
             v-if="state === 'running'" flex="~ gap-2"
             items-center animate-pulse
-            :to="`/modules/terminals?id=${encodeURIComponent(id)}`"
+            :to="id ? `/modules/terminals?id=${encodeURIComponent(id)}` : undefined"
           >
             <span text-lg op50 i-carbon-circle-dash animate-spin />
             <code text-sm op50>Upgrading...</code>

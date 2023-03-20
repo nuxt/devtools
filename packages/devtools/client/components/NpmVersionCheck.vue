@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { NpmCommandOptions } from '../../src/types'
+
 const props = defineProps<{
   packageName: string
-  flags?: string[]
+  options?: NpmCommandOptions
 }>()
 
 const {
@@ -10,7 +12,7 @@ const {
   state,
   processId,
   restart,
-} = usePackageUpdate(props.packageName, props.flags)
+} = usePackageUpdate(props.packageName, props.options)
 </script>
 
 <template>

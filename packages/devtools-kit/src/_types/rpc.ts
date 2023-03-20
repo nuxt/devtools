@@ -3,8 +3,8 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, PackageManagerName, PackageUpdateInfo } from './integrations'
-import type { SubprocessOptions, TerminalAction, TerminalInfo, TerminalState } from './terminals'
+import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo } from './integrations'
+import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 
 export interface ServerFunctions {
@@ -22,12 +22,13 @@ export interface ServerFunctions {
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
   getPackageManager(): Promise<PackageManagerName>
+  getNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<string[] | undefined>
+  runNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<{ processId: string } | undefined>
 
   // Terminal
   getTerminals(): TerminalInfo[]
   getTerminalDetail(id: string): TerminalInfo | undefined
   runTerminalAction(id: string, action: TerminalAction): Promise<boolean>
-  executeBashCommand(execaOptions: SubprocessOptions, tabOptions: TerminalState,): Promise<void>
 
   // Storage
   getStorageMounts(): Promise<StorageMounts>

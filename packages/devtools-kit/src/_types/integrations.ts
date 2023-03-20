@@ -27,6 +27,13 @@ export interface PackageUpdateInfo {
 
 export type PackageManagerName = 'npm' | 'yarn' | 'pnpm'
 
+export type NpmCommandType = 'install' | 'uninstall' | 'update'
+
+export interface NpmCommandOptions {
+  dev?: boolean
+  global?: boolean
+}
+
 export interface AutoImportsWithMetadata {
   imports: Import[]
   metadata?: UnimportMeta
