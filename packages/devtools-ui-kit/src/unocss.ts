@@ -124,6 +124,9 @@ export const unocssPreset = (): Preset => ({
 
     // icon-button
     'n-icon-button': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:bg-active',
+
+    // loading
+    'n-loading': 'flex h-full w-full justify-center items-center',
   },
 })
 
