@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
+import { computed } from 'vue'
 import { devToolsClient } from '../runtime/client'
 
 const props = withDefaults(
@@ -11,26 +12,23 @@ const props = withDefaults(
     lines: true,
   },
 )
-// @ts-expect-error types
-const parseCode = computed(() => {
-  const code = devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string)
-  return {
-    code,
-    styleStatus: code?.startsWith('<pre'),
-  }
-})
+const rendered = computed(() => devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string) || { code: props.code, supported: false })
 </script>
 
 <template>
-  <template v-if="lang && devToolsClient?.devtools?.renderCodeHighlight">
+  <template v-if="lang && rendered.supported">
     <pre
-      class="n-code-block" :class="lines ? 'n-code-block-lines' : ''"
-      v-html="parseCode.code"
+      class="n-code-block"
+      :class="lines ? 'n-code-block-lines' : ''"
+      v-html="rendered.code"
     />
-    <NLoading v-if="!parseCode.styleStatus" />
   </template>
   <template v-else>
-    <pre class="n-code-block" :class="lines ? 'n-code-block-lines' : ''" v-text="code" />
+    <pre
+      class="n-code-block"
+      :class="lines ? 'n-code-block-lines' : ''"
+      v-text="code"
+    />
   </template>
 </template>
 

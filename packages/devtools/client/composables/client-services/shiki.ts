@@ -3,20 +3,34 @@ import { getHighlighter } from 'shiki-es'
 
 export const shiki = ref<Highlighter>()
 
+let promise: Promise<any> | null = null
+
 export function renderCodeHighlight(code: string, lang: Lang) {
   const mode = useColorMode()
-  if (!shiki.value) {
+
+  if (!promise && !shiki.value) {
     // Only loading when needed
-    getHighlighter({
+    promise = getHighlighter({
       themes: ['vitesse-dark', 'vitesse-light'],
       langs: ['css', 'javascript', 'typescript', 'html', 'vue', 'vue-html'],
     }).then((i) => {
       shiki.value = i
     })
-    return code
   }
-  return shiki.value.codeToHtml(code, {
-    lang,
-    theme: mode.value === 'dark' ? 'vitesse-dark' : 'vitesse-light',
-  })
+
+  const supported = shiki.value?.getLoadedLanguages().includes(lang)
+  if (!supported) {
+    return {
+      code,
+      supported,
+    }
+  }
+
+  return {
+    code: shiki.value!.codeToHtml(code, {
+      lang,
+      theme: mode.value === 'dark' ? 'vitesse-dark' : 'vitesse-light',
+    }),
+    supported: true,
+  }
 }
