@@ -237,6 +237,16 @@ const radio = ref('a')
         </div>
         <ShowSource src="/playground/pages/index.vue#L215-L231" />
       </NCard>
+
+      <NCard class="p4">
+        <div class="n-header-upper">
+          Loading
+        </div>
+        <div class="flex flex-col gap-2">
+          <NLoading />
+        </div>
+        <ShowSource src="/playground/pages/index.vue#L246" />
+      </NCard>
     </div>
   </div>
 </template>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
+import { computed } from 'vue'
 import { devToolsClient } from '../runtime/client'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     code: string
     lang?: string
@@ -11,14 +12,15 @@ withDefaults(
     lines: true,
   },
 )
+const rendered = computed(() => devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string) || { code: props.code, supported: false })
 </script>
 
 <template>
-  <template v-if="lang && devToolsClient?.devtools?.renderCodeHighlight">
+  <template v-if="lang && rendered.supported">
     <pre
       class="n-code-block"
       :class="lines ? 'n-code-block-lines' : ''"
-      v-html="devToolsClient.devtools.renderCodeHighlight(code, lang)"
+      v-html="rendered.code"
     />
   </template>
   <template v-else>

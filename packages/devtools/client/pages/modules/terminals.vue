@@ -29,7 +29,8 @@ watchEffect(() => {
 
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
-    <div ref="navbar" flex="~" border="b base" items-center navbar-glass flex-1>
+    <!-- TODO: Refactor to have general component -->
+    <div flex="~" border="b base" items-center navbar-glass flex-1>
       <NuxtLink
         v-for="t of terminals"
         :key="t.id" border="r base"
