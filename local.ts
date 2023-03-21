@@ -64,6 +64,9 @@ export default defineNuxtModule<ModuleOptions>({
           args: ['nuxi', 'dev', '--port', PORT.toString()],
           cwd: clientDir,
           stdio: 'pipe',
+          env: {
+            NUXT_DEVTOOLS_LOCAL: 'true',
+          },
         },
         {
           id: 'devtools:local',

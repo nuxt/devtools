@@ -16,7 +16,7 @@ export default defineNuxtModule({
     name: 'custom-rpc',
   },
   setup(_, nuxt) {
-    if (!nuxt.options.dev)
+    if (!nuxt.options.dev || process.env.NUXT_DEVTOOLS_LOCAL)
       return
 
     onDevToolsInitialized(() => {
