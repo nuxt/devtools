@@ -27,7 +27,8 @@ onMounted(() => {
   watch(show, (v) => {
     if (v)
       activate()
-    else deactivate()
+    else
+      deactivate()
   }, { immediate: true })
 })
 
@@ -44,21 +45,23 @@ export default {
 </script>
 
 <template>
-  <div
-    class="n-transition fixed flex items-center justify-center z-100 n-dialog inset-0"
-    :class="[
-      show ? '' : 'op0 pointer-events-none',
-    ]"
-  >
+  <Teleport v-if="show" to="body">
     <div
-      class="inset-0 absolute -z-1"
+      class="n-transition fixed flex items-center justify-center z-100 n-dialog inset-0"
       :class="[
-        dim ? 'bg-black/50' : '',
+        show ? '' : 'op0 pointer-events-none visibility-none',
       ]"
-      @click="close"
-    />
-    <NCard v-bind="$attrs" ref="card">
-      <slot />
-    </NCard>
-  </div>
+    >
+      <div
+        class="inset-0 absolute -z-1"
+        :class="[
+          dim ? 'bg-black/50' : '',
+        ]"
+        @click="close()"
+      />
+      <NCard v-bind="$attrs" ref="card">
+        <slot />
+      </NCard>
+    </div>
+  </Teleport>
 </template>

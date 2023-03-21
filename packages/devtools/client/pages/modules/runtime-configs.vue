@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  icon: 'carbon-settings',
+  icon: 'carbon-settings-services',
   title: 'Runtime Configs',
   requireClient: true,
   order: 6,
@@ -43,7 +43,7 @@ const privateConfig = computed(() => {
     </NSectionBlock>
 
     <NSectionBlock
-      icon="carbon-locked"
+      icon="i-carbon-code-signing-service"
       :open="false"
       text="Private Runtime Config"
       description="These values are not exposed to the client. Readonly in the DevTools."

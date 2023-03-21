@@ -27,7 +27,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
     state.value = code === 0 ? 'updated' : 'idle'
   })
 
-  async function update() {
+  async function update(confirm: (command: string) => Promise<boolean>) {
     if (state.value !== 'idle')
       return
 
@@ -35,7 +35,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
     if (!command)
       return
 
-    if (!confirm(`Going to run "${command.join(' ')}", are you sure?`))
+    if (!await confirm(command.join(' ')))
       return
 
     state.value = 'running'

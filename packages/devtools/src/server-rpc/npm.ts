@@ -17,7 +17,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
     // TODO: smartly detect dev/global installs as default
     if (command === 'install' || command === 'update')
-      return [agent, agent === 'npm' ? 'install' : 'add', packageName, options.dev ? '-D' : '', options.global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
+      return [agent, agent === 'npm' ? 'install' : 'add', `${packageName}@latest`, options.dev ? '-D' : '', options.global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
   }
 
   async function runNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {

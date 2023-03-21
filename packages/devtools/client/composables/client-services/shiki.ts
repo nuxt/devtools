@@ -11,8 +11,19 @@ export function renderCodeHighlight(code: string, lang: Lang) {
   if (!promise && !shiki.value) {
     // Only loading when needed
     promise = getHighlighter({
-      themes: ['vitesse-dark', 'vitesse-light'],
-      langs: ['css', 'javascript', 'typescript', 'html', 'vue', 'vue-html'],
+      themes: [
+        'vitesse-dark',
+        'vitesse-light',
+      ],
+      langs: [
+        'css',
+        'javascript',
+        'typescript',
+        'html',
+        'vue',
+        'vue-html',
+        'bash',
+      ],
     }).then((i) => {
       shiki.value = i
     })
