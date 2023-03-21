@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplatePromise } from 'vue-template-promise'
 import type { NpmCommandOptions } from '../../src/types'
 
 const props = defineProps<{
