@@ -14,7 +14,6 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
 function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   const nuxt = useNuxtApp()
   const info = useAsyncData(`npm:check:${name}`, () => rpc.checkForUpdateFor(name)).data
-  const router = useRouter()
 
   const state = ref<PackageUpdateState>('idle')
 
@@ -42,8 +41,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
     processId.value = (await rpc.runNpmCommand('update', name, options))?.processId
 
-    if (processId.value)
-      router.push(`/modules/terminals?id=${encodeURIComponent(processId.value)}`)
+    return processId.value
   }
 
   async function restart() {

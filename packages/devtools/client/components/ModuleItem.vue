@@ -93,7 +93,7 @@ const npmBase = 'https://www.npmjs.com/package/'
       </div>
 
       <!-- NPM Version bump -->
-      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :options="{ dev: true }" text-sm>
+      <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :options="{ dev: true }">
         <template #default="{ info, update, state, id, restart }">
           <NuxtLink
             v-if="state === 'running'" flex="~ gap-2"

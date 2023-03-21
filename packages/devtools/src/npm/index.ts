@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module'
 import { useNuxt } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
@@ -10,7 +11,8 @@ export async function getMainPackageJSON(nuxt = useNuxt()) {
 
 export async function checkForUpdateOf(name: string, current?: string, nuxt = useNuxt()): Promise<PackageUpdateInfo | undefined> {
   if (!current) {
-    const info = await getPackageInfo(name)
+    const require = createRequire(nuxt.options.rootDir)
+    const info = await getPackageInfo(name, { paths: require.resolve.paths(name) || undefined })
     if (!info)
       return
     current = info.packageJson.version

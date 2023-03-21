@@ -42,18 +42,6 @@ export default defineConfig({
     }),
     devtoolsUIKitUnoPreset(),
   ],
-  safelist: [
-    'carbon-nominal',
-    'carbon-function',
-    'carbon-chart-treemap',
-    'carbon-3d-mpr-toggle',
-    'carbon-tree-view-alt',
-    'carbon-information',
-    'carbon-data-set',
-    'carbon-layers',
-    'carbon-cloud',
-    'carbon-plug',
-  ],
   transformers: [
     transformerDirectives(),
   ],

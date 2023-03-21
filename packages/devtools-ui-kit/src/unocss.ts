@@ -96,9 +96,10 @@ export const unocssPreset = (): Preset => ({
     'n-button-icon': '-ml-0.2em mr-0.2em text-1.1em',
 
     // checkbox
+    'n-checkbox': 'inline-flex gap-1 items-center',
     'n-checkbox-box': 'border n-border-base w-1.1em h-1.1em mr-1 text-white flex flex-none items-center rounded-sm overflow-visible',
     'n-checkbox-box-checked': 'bg-context border-context',
-    'n-checkbox-icon': 'carbon-checkmark',
+    'n-checkbox-icon': 'carbon-checkmark w-1em h-1em m-auto',
 
     // radio
     'n-radio-box': 'border n-border-base w-1.2em h-1.2em mr-1 text-white flex flex-none rounded-full overflow-visible',

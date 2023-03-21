@@ -27,6 +27,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
       return
 
     const processId = `npm:${command}:${packageName}`
+
     startSubprocess({
       command: args[0],
       args: args.slice(1),
