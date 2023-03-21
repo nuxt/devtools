@@ -7,18 +7,15 @@ const props = defineProps<{
 }>()
 
 const config = useServerConfig()
-
-const shortPath = computed(() => config.value ? getShortPath(props.plugin.src, config.value.rootDir, true)! : '')
+const shortPath = computed(() => parseReadablePath(props.plugin.src, config.value?.rootDir || '').path)
 </script>
 
 <template>
   <div flex="~ gap2" items-center>
-    <div op25 text-right text-sm w8>
+    <div text-sm op25 text-right w8>
       {{ index }}
     </div>
-    <button hover:underline :class="shortPath.startsWith('.') ? '' : 'op50'" @click="openInEditor(plugin.src)">
-      <code text-sm font-mono>{{ shortPath }}</code>
-    </button>
+    <FilepathItem :filepath="props.plugin.src" :subpath="true" />
     <div>
       <Badge
         v-if="shortPath.startsWith('#')"

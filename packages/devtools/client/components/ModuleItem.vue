@@ -14,7 +14,7 @@ const name = computed(() => {
     return isPackageModule.value
       ? getModuleNameFromPath(props.mod.entryPath)
       : config.value?.rootDir
-        ? getShortPath(props.mod.entryPath, config.value?.rootDir)
+        ? parseReadablePath(props.mod.entryPath, config.value?.rootDir).path
         : ''
   }
   return ''

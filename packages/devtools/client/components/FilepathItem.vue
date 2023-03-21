@@ -2,12 +2,13 @@
 const props = defineProps<{
   filepath: string
   lineBreak?: boolean
+  subpath?: boolean
 }>()
 
 const config = useServerConfig()
-const short = computed(() => (props.filepath && config.value)
-  ? getShortPath(props.filepath, config.value.rootDir)
-  : props.filepath,
+const parsed = computed(() => (props.filepath && config.value)
+  ? parseReadablePath(props.filepath, config.value.rootDir)
+  : { path: props.filepath },
 )
 </script>
 
@@ -18,6 +19,14 @@ const short = computed(() => (props.filepath && config.value)
     :title="filepath"
     @click="openInEditor(filepath)"
   >
-    {{ short }}
+    <template v-if="parsed.moduleName">
+      <span>{{ parsed.moduleName }}</span>
+      <span v-if="subpath" op50>
+        {{ parsed.path.slice(parsed.moduleName.length) }}
+      </span>
+    </template>
+    <template v-else>
+      {{ parsed.path }}
+    </template>
   </button>
 </template>
