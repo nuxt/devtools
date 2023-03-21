@@ -22,16 +22,20 @@ withDefaults(
     <summary class="select-none cursor-pointer p4 hover:bg-active" :class="collapse ? '' : 'pointer-events-none'">
       <NIconTitle :icon="icon" :text="text" class="text-xl op75">
         <div>
-          {{ text }}
-          <div v-if="description" class="op50 text-sm">
-            {{ description }}
+          <slot name="text">
+            {{ text }}
+          </slot>
+          <div v-if="description || $slots.description" class="op50 text-sm">
+            <slot name="description">
+              {{ description }}
+            </slot>
           </div>
         </div>
         <div class="flex-auto" />
         <NIcon
           v-if="collapse"
           icon="carbon-chevron-down"
-          class="text-base op50 cursor-pointer transition duration-500 place-self-start chevron"
+          class="op50 cursor-pointer text-base transition duration-500 place-self-start chevron"
         />
       </NIconTitle>
     </summary>

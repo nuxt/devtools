@@ -84,7 +84,7 @@ function toggleSortedBy(by: SortBy) {
   <table w-full>
     <thead border="b base">
       <tr>
-        <th p1 ws-nowrap text-right select-none font-bold>
+        <th select-none p1 ws-nowrap text-right font-bold>
           <button @click="toggleSortedBy('start')">
             Order
             <div text-xs ml--1 :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
@@ -96,7 +96,7 @@ function toggleSortedBy(by: SortBy) {
             <div text-xs ml--1 :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-center font-bold ws-nowrap>
+        <th p1 font-bold ws-nowrap text-center>
           <button @click="toggleSortedBy('listener')">
             Listeners
             <div text-xs ml--1 :class="[sortby === 'listener' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
@@ -133,8 +133,8 @@ function toggleSortedBy(by: SortBy) {
         <td text-center text-sm w-0>
           {{ item.executions.length + 1 }}
         </td>
-        <td text-right text-sm w-0 :class="getLatencyColor(item.duration)">
-          {{ formatDuration(item.duration) }}<span op50 text-xs ml-1>ms</span>
+        <td text-right text-sm w-0>
+          <DurationDisplay :duration="item.duration" />
         </td>
       </tr>
     </tbody>

@@ -34,6 +34,10 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     appConfig: useAppConfig() as any,
     hooks: createHooks(),
     getClientHooksMetrics: () => Object.values(clientHooks),
+    getClientPluginMetrics: () => {
+      // @ts-expect-error injected
+      return globalThis.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
+    },
     closeDevTools: closePanel,
   })
 

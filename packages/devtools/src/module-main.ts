@@ -62,6 +62,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   })
 
   const integrations = [
+    import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx)),
     options.viteInspect !== false
       ? import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
       : null,

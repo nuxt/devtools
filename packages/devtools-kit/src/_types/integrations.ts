@@ -51,6 +51,18 @@ export interface Payload {
   functions?: Record<string, any>
 }
 
+export interface PluginInfoWithMetic {
+  src: string
+  mode?: 'client' | 'server' | 'all'
+  ssr?: boolean
+  metric?: PluginMetric
+}
+
+export interface PluginMetric {
+  src: string
+  duration: number
+}
+
 export interface BasicModuleInfo {
   entryPath?: string
   meta?: {

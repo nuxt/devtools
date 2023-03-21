@@ -1,20 +1,14 @@
 <script setup lang="ts">
-import type { NuxtPlugin } from 'nuxt/schema'
+import type { PluginInfoWithMetic } from '@nuxt/devtools-kit/types'
 
 const props = defineProps<{
-  plugin: any
+  plugin: PluginInfoWithMetic
   index?: number
 }>()
 
 const config = useServerConfig()
 
-const normalized = computed((): NuxtPlugin => {
-  if (typeof props.plugin === 'string')
-    return { src: props.plugin }
-  return props.plugin
-})
-
-const shortPath = computed(() => config.value ? getShortPath(normalized.value.src, config.value.rootDir, true)! : '')
+const shortPath = computed(() => config.value ? getShortPath(props.plugin.src, config.value.rootDir, true)! : '')
 </script>
 
 <template>
@@ -22,8 +16,8 @@ const shortPath = computed(() => config.value ? getShortPath(normalized.value.sr
     <div op25 text-right text-sm w8>
       {{ index }}
     </div>
-    <button hover:underline :class="shortPath.startsWith('.') ? '' : 'op50'" @click="openInEditor(normalized.src)">
-      <code font-mono text-sm>{{ shortPath }}</code>
+    <button hover:underline :class="shortPath.startsWith('.') ? '' : 'op50'" @click="openInEditor(plugin.src)">
+      <code text-sm font-mono>{{ shortPath }}</code>
     </button>
     <div>
       <Badge
@@ -36,17 +30,19 @@ const shortPath = computed(() => config.value ? getShortPath(normalized.value.sr
         bg-gray-400:10 text-gray-400
         v-text="'module'"
       />
-
       <Badge
-        v-if="normalized.mode === 'server'"
+        v-if="plugin.mode === 'server'"
         bg-teal-400:10 text-teal-400
         v-text="'server'"
       />
       <Badge
-        v-if="normalized.mode === 'client'"
+        v-if="plugin.mode === 'client'"
         bg-orange-400:10 text-orange-400
         v-text="'client'"
       />
+    </div>
+    <div v-if="plugin.metric?.duration != null" text-right flex-auto>
+      <DurationDisplay :duration="plugin.metric?.duration" :factor="10" />
     </div>
   </div>
 </template>
