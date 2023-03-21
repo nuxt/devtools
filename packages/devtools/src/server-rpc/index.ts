@@ -13,7 +13,7 @@ import { setupNpmRPC } from './npm'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
-import { setupTerminalRPC } from './terminal'
+import { setupTerminalRPC } from './terminals'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
