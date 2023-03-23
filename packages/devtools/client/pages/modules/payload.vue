@@ -38,14 +38,14 @@ async function refreshData(keys?: string[]) {
           icon="i-carbon-recycle"
           @click="refreshData()"
         >
-          Re-evaluate All Data
+          Re-fetch all data
         </NButton>
       </template>
       <StateGroup :state="payload.data">
         <template #actions="{ isOpen, name }">
           <NIconButton
             v-if="isOpen && name"
-            title="`Re-evaluate '${name}'`"
+            :title="`Re-fetch '${name}'`"
             icon="carbon-recycle"
             @click="refreshData([name])"
           />
