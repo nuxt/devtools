@@ -10,7 +10,7 @@ const client = useClient()
 const payload = computed(() => client.value?.nuxt.payload)
 
 async function refreshData(keys?: string[]) {
-  await client.value?.nuxt.callHook('app:data:refresh', keys)
+  await client.value?.nuxt.hooks.callHookParallel('app:data:refresh', keys)
 }
 </script>
 
@@ -33,17 +33,21 @@ async function refreshData(keys?: string[]) {
       :padding="false"
     >
       <template #actions>
-        <NButton n="xs primary" self-start icon="i-carbon-recycle" @click="refreshData()">
-          Refresh All Data
+        <NButton
+          n="xs primary" self-start
+          icon="i-carbon-recycle"
+          @click="refreshData()"
+        >
+          Re-evaluate All Data
         </NButton>
       </template>
-      <StateGroup
-        :state="payload.data"
-      >
+      <StateGroup :state="payload.data">
         <template #actions="{ isOpen, name }">
           <NIconButton
             v-if="isOpen && name"
-            title="Refresh Data" icon="carbon-recycle" @click="refreshData([name])"
+            title="`Re-evaluate '${name}'`"
+            icon="carbon-recycle"
+            @click="refreshData([name])"
           />
         </template>
       </StateGroup>
