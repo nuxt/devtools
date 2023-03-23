@@ -104,7 +104,7 @@ export default defineNuxtConfig({
 })
 ```
 
-For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/src/types.ts#L11).
+For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/packages/devtools-kit/src/_types/module-options.ts).
 
 ## Features
 
