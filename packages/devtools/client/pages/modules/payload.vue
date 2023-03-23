@@ -8,6 +8,10 @@ definePageMeta({
 
 const client = useClient()
 const payload = computed(() => client.value?.nuxt.payload)
+
+async function refreshData(keys?: string[]) {
+  await client.value?.nuxt.callHook('app:data:refresh', keys)
+}
 </script>
 
 <template>
@@ -28,9 +32,21 @@ const payload = computed(() => client.value?.nuxt.payload)
       description="Keyed state from `useAsyncData`"
       :padding="false"
     >
+      <template #actions>
+        <NButton n="xs primary" self-start icon="i-carbon-recycle" @click="refreshData()">
+          Refresh All Data
+        </NButton>
+      </template>
       <StateGroup
         :state="payload.data"
-      />
+      >
+        <template #actions="{ isOpen, name }">
+          <NIconButton
+            v-if="isOpen && name"
+            title="Refresh Data" icon="carbon-recycle" @click="refreshData([name])"
+          />
+        </template>
+      </StateGroup>
     </NSectionBlock>
     <NSectionBlock
       v-if="payload.functions && Object.keys(payload.functions).length"

@@ -49,7 +49,6 @@ async function refresh() {
 <template>
   <div class="state-editor-details" :open="!name ? true : isOpen">
     <div
-
       flex="~ gap2" select-none items-center px4
     >
       <button
@@ -64,8 +63,9 @@ async function refresh() {
           :class="isOpen ? 'bg-[#8881] rounded-t' : 'rounded hover:bg-active'"
         >{{ name }}</code>
       </button>
+      <slot name="actions" v-bind="{ isOpen, name, state }" />
       <template v-if="isOpen">
-        <NIconButton title="Refresh" icon="carbon-renew " @click="refresh" />
+        <NIconButton title="Refresh View" icon="carbon-renew" @click="refresh" />
       </template>
     </div>
     <template v-if="isOpen || !name">
@@ -85,8 +85,8 @@ async function refresh() {
         :indentation="2"
         :tab-size="2"
       />
-      <div v-else mt2 italic op35>
-        No data
+      <div v-else italic p5 bg-active>
+        <span op50>No data</span>
       </div>
     </template>
   </div>

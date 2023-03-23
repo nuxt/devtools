@@ -12,15 +12,19 @@ withDefaults(
 
 <template>
   <div>
-    <template v-if="state && Object.keys(state).length > 0">
-      <div v-for="value, key of state" :key="key">
-        <StateEditor
-          :state="value"
-          :name="key.startsWith(prefix) ? key.slice(prefix.length) : key"
-        />
-      </div>
-    </template>
-    <div v-else italic op35 mt2 px4>
+    <div v-if="state && Object.keys(state).length > 0" flex="~ col gap-1">
+      <StateEditor
+        v-for="value, key of state"
+        :key="key"
+        :state="value"
+        :name="key.startsWith(prefix) ? key.slice(prefix.length) : key"
+      >
+        <template #actions="props">
+          <slot name="actions" v-bind="props" />
+        </template>
+      </StateEditor>
+    </div>
+    <div v-else italic px4 op35 mt2>
       No data
     </div>
   </div>

@@ -32,6 +32,7 @@ withDefaults(
           </div>
         </div>
         <div class="flex-auto" />
+        <slot name="actions" />
         <NIcon
           v-if="collapse"
           icon="carbon-chevron-down"
