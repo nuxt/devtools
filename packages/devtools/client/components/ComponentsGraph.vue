@@ -182,7 +182,7 @@ function setFilter() {
 </script>
 
 <template>
-  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0 :navbar="navbar">
+  <div ref="navbar" p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0>
     <NCheckbox v-model="showPages" n="primary sm">
       <span op75>Show pages</span>
     </NCheckbox>
@@ -210,11 +210,13 @@ function setFilter() {
       w-80
       @close="selected = undefined"
     >
-      <div v-if="selected && selected.component" p4 pt6 flex="~ col gap4">
+      <div v-if="selected && selected.component" p4 pr10 pt4 flex="~ col gap4">
         <ComponentDetails :component="selected.component" />
-        <NButton n="primary solid" @click="setFilter()">
-          Filter to this component
-        </NButton>
+        <div>
+          <NButton n="primary solid" @click="setFilter()">
+            Filter to this component
+          </NButton>
+        </div>
       </div>
     </DrawerRight>
   </div>
