@@ -8,7 +8,7 @@ export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
     return
 
   addVitePlugin(VueInspector({
-    appendTo: 'app/entry.js',
+    appendTo: /\/entry\.m?js$/,
     toggleComboKey: '',
     toggleButtonVisibility: 'never',
   }) as Plugin)
