@@ -26,7 +26,7 @@ function goIntro() {
     <div v-if="!config">
       Loading...
     </div>
-    <div v-else flex="~ col gap2" w-full h-full ma max-w-300 p10 px20>
+    <div v-else flex="~ col gap2" w-full h-full ma max-w-300 px20 p8>
       <div flex-auto />
 
       <!-- Banner -->
@@ -106,24 +106,28 @@ function goIntro() {
         </NuxtLink>
       </div>
       <div flex-auto />
-      <NTip n="green6" justify-center icon="carbon-keyboard">
-        You can press
+      <div flex="~ gap-1" justify-center items-center text-sm op40>
+        Press
         <template v-if="isMacOS">
-          <NButton n="xs green" class="px2">
+          <NButton n="xs" class="px2">
             ⌥ Option
-          </NButton>+<NButton n="xs green" class="px2">
+          </NButton>
+          <span>+</span>
+          <NButton n="xs" class="px2">
             D
           </NButton>
         </template>
         <template v-else>
-          <NButton n="xs green" class="px2">
+          <NButton n="xs" class="px2">
             Alt
-          </NButton>+<NButton n="xs green" class="px2">
+          </NButton>
+          <span>+</span>
+          <NButton n="xs" class="px2">
             D
           </NButton>
         </template>
-        to toggle the DevTools.
-      </NTip>
+        to toggle DevTools
+      </div>
     </div>
   </div>
 </template>
