@@ -1,3 +1,52 @@
+# [0.3.0](https://github.com/nuxt/devtools-poc/compare/v0.2.5...v0.3.0) (2023-03-27)
+
+
+### Bug Fixes
+
+* **assets:** show `<NuxtImage>` snippet when `@nuxt/image` is installed ([#133](https://github.com/nuxt/devtools-poc/issues/133)) ([d440f14](https://github.com/nuxt/devtools-poc/commit/d440f140a198f4f15a13b915e627e4405c0e1630))
+* change shortcut to `Shift + Alt + D`, close [#153](https://github.com/nuxt/devtools-poc/issues/153) ([ede19a7](https://github.com/nuxt/devtools-poc/commit/ede19a7daf70a748c4a00c75585d70209a63718d))
+* component inspector, close [#137](https://github.com/nuxt/devtools-poc/issues/137) ([d608a0f](https://github.com/nuxt/devtools-poc/commit/d608a0fed339f436bf83ff6e24807366b858f7d1))
+* components graph layout ([b853005](https://github.com/nuxt/devtools-poc/commit/b8530057ce6dadd7b8864a0d721ebf2d08f03bae))
+* display font preview in assets detail ([a18c762](https://github.com/nuxt/devtools-poc/commit/a18c76253f25f5117ec3bb5f9d3337860bc0e47f))
+* extra scrollbar ([#139](https://github.com/nuxt/devtools-poc/issues/139)) ([a94fd4d](https://github.com/nuxt/devtools-poc/commit/a94fd4de967a7f862f2d8ed21a05818598c08d57))
+* improve path display ([7ed9657](https://github.com/nuxt/devtools-poc/commit/7ed9657f4a0518d55d8893d1ed420fe98f9e6345))
+* make assets detail scrollable ([f0a547d](https://github.com/nuxt/devtools-poc/commit/f0a547d423a8090787ce34de6388a07b9f7aa5ea))
+* popper text color in light mode ([254b45e](https://github.com/nuxt/devtools-poc/commit/254b45e1406b673697e9689c0e7f07dc1a2d8061))
+* scrolling regression after splitpanes ([455ec6c](https://github.com/nuxt/devtools-poc/commit/455ec6ceef264099dd08bde7d3bfc23c95e38c56))
+* **ui:** fix unexpected sidenav icon scale on windows chrome ([#138](https://github.com/nuxt/devtools-poc/issues/138)) ([310117a](https://github.com/nuxt/devtools-poc/commit/310117a7200fba4d642f31a30662ade01f9c554a))
+* vue inspector in latest Nuxt ([f736291](https://github.com/nuxt/devtools-poc/commit/f736291d6e91d3e94166b72f0f2ea44291d26057))
+
+
+### Features
+
+* able to disable tabs, close [#132](https://github.com/nuxt/devtools-poc/issues/132) ([0572b18](https://github.com/nuxt/devtools-poc/commit/0572b180e732b115f7afd982365895730a3480ce))
+* add `customTabs` option, close [#113](https://github.com/nuxt/devtools-poc/issues/113) ([f172ffb](https://github.com/nuxt/devtools-poc/commit/f172ffbfc319ac47302d6e6935cbbfd765b848af))
+* add visual dialog to upgrade ([d4b43c2](https://github.com/nuxt/devtools-poc/commit/d4b43c267b5d46cc05f20a223ed6675f8b2c0888))
+* ask for restart once upgrade finished ([8a97d78](https://github.com/nuxt/devtools-poc/commit/8a97d78cc33b68842873817695a475be1ea1013e))
+* expose info on `devtools:initialized` ([71f300d](https://github.com/nuxt/devtools-poc/commit/71f300dcabbeff2897e2a32405fc50387df283fa))
+* extendable rpc ([#131](https://github.com/nuxt/devtools-poc/issues/131)) ([96080a8](https://github.com/nuxt/devtools-poc/commit/96080a81a05d1e9e983039b5e85df2abf4304935))
+* improve assets details view ([7b03da3](https://github.com/nuxt/devtools-poc/commit/7b03da30bcdd8519fa1b1f6f01ef9b2456004d57))
+* init terminal support ([#125](https://github.com/nuxt/devtools-poc/issues/125)) ([df3b1db](https://github.com/nuxt/devtools-poc/commit/df3b1db0155b0fb9810e08919aa7946c5346bc19))
+* initial assets tab ([#120](https://github.com/nuxt/devtools-poc/issues/120)) ([fd99453](https://github.com/nuxt/devtools-poc/commit/fd9945345e21b6050bfca31c754cf90618a58328))
+* initial support for upgrading packages in devtools ([#134](https://github.com/nuxt/devtools-poc/issues/134)) ([4deb883](https://github.com/nuxt/devtools-poc/commit/4deb883e190149dad3b1c5475b02d3db44edec6e))
+* introduce `@nuxt/devtools/kit` ([#116](https://github.com/nuxt/devtools-poc/issues/116)) ([4a403e2](https://github.com/nuxt/devtools-poc/commit/4a403e275fbfeb940ebd4840f523e45306cbfa04))
+* measuring plugins time ([38acefb](https://github.com/nuxt/devtools-poc/commit/38acefbcc77661dc71e240e1b0027880b2b135cc))
+* option in npm version check ([370f799](https://github.com/nuxt/devtools-poc/commit/370f799f3ac7e4634587ba113641a26cc5f6b087))
+* refresh data ([09bf33f](https://github.com/nuxt/devtools-poc/commit/09bf33f2c767c66453b0b390609f04b7bd5c23ae))
+* self upgrade ([1a56f53](https://github.com/nuxt/devtools-poc/commit/1a56f53b89b2c746ca9928107c68d0b14b0543f5))
+* sticky drawer header ([#105](https://github.com/nuxt/devtools-poc/issues/105)) ([0813626](https://github.com/nuxt/devtools-poc/commit/0813626dfe192dfeff7f72b1f3cb8fea8cc2e914))
+* support file path as meta ([6faec60](https://github.com/nuxt/devtools-poc/commit/6faec6005c2fc02ee886394ac1cc653d0a2d103f))
+* support load shiki-es only when needed ([#142](https://github.com/nuxt/devtools-poc/issues/142)) ([ca6a64a](https://github.com/nuxt/devtools-poc/commit/ca6a64adb1f31c7c619e635782d6ce8cb6f15c54))
+* support ui scaling, close [#117](https://github.com/nuxt/devtools-poc/issues/117) ([df4a35f](https://github.com/nuxt/devtools-poc/commit/df4a35f8140d4619c49c0533937d2b6bdb57ee42))
+* **ui:** always collapse drawer to give more spaces ([b7c8add](https://github.com/nuxt/devtools-poc/commit/b7c8addc3fc4990bda708d0f52d99f5ef87a7012))
+
+
+### Performance Improvements
+
+* hide the horizontal scroll bar ([#124](https://github.com/nuxt/devtools-poc/issues/124)) ([6f73c6f](https://github.com/nuxt/devtools-poc/commit/6f73c6f496c3c0db7783c874bffa3e56143743c5))
+
+
+
 ## [0.2.5](https://github.com/nuxt/devtools-poc/compare/v0.2.4...v0.2.5) (2023-02-28)
 
 
