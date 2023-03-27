@@ -48,7 +48,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
   // Shortcut to toggle devtools
   addEventListener('keypress', (e) => {
-    if (e.code === 'KeyD' && e.altKey)
+    if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       togglePanel()
   })
 

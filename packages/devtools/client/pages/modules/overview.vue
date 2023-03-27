@@ -110,6 +110,10 @@ function goIntro() {
         Press
         <template v-if="isMacOS">
           <NButton n="xs" class="px2">
+            ⇧ Shift
+          </NButton>
+          <span>+</span>
+          <NButton n="xs" class="px2">
             ⌥ Option
           </NButton>
           <span>+</span>
@@ -118,6 +122,10 @@ function goIntro() {
           </NButton>
         </template>
         <template v-else>
+          <NButton n="xs" class="px2">
+            Shift
+          </NButton>
+          <span>+</span>
           <NButton n="xs" class="px2">
             Alt
           </NButton>

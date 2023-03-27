@@ -37,7 +37,7 @@ You can opt-in Nuxt DevTools per-project by going to the project root and run:
 npx nuxi@latest devtools enable
 ```
 
-Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press <kbd>Alt</kbd> / <kbd>⌥ Option</kbd> + <kbd>D</kbd>) to toggle the DevTools.
+Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd>) to toggle the DevTools.
 
 > **Note**: If you using `nvm` or other Node version managers, we suggest to run the enable command again after switching Node version.
 
