@@ -3,6 +3,7 @@ import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolvePreset } from 'unimport'
 import { resolve } from 'pathe'
+import { logger } from '@nuxt/kit'
 
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
@@ -114,6 +115,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
       }
     },
     restartNuxt(hard = true) {
+      logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },
   } satisfies Partial<ServerFunctions>
