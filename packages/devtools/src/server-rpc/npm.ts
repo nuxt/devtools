@@ -1,4 +1,5 @@
 import { startSubprocess } from '@nuxt/devtools-kit'
+import isInstalledGlobally from 'is-installed-globally'
 import { detectPackageManager } from 'nypm'
 import { checkForUpdateOf } from '../npm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageManagerName, PackageUpdateInfo, ServerFunctions } from '../types'
@@ -13,11 +14,15 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
   }
 
   async function getNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {
+    const {
+      dev = true,
+      global = (packageName === '@nuxt/devtools' && isInstalledGlobally),
+    } = options
     const agent = await getPackageManager()
 
     // TODO: smartly detect dev/global installs as default
     if (command === 'install' || command === 'update')
-      return [agent, agent === 'npm' ? 'install' : 'add', `${packageName}@latest`, options.dev ? '-D' : '', options.global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
+      return [agent, agent === 'npm' ? 'install' : 'add', `${packageName}@latest`, dev ? '-D' : '', global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
   }
 
   async function runNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {

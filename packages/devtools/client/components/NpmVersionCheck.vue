@@ -2,10 +2,16 @@
 import { useTemplatePromise } from 'vue-template-promise'
 import type { NpmCommandOptions } from '../../src/types'
 
-const props = defineProps<{
-  packageName: string
-  options?: NpmCommandOptions
-}>()
+const props = withDefaults(
+  defineProps<{
+    packageName: string
+    options?: NpmCommandOptions
+    showVersion?: boolean
+  }>(),
+  {
+    showVersion: true,
+  },
+)
 
 const router = useRouter()
 const {
@@ -32,7 +38,7 @@ async function updateWithConfirm() {
 
 <template>
   <slot :id="processId" :info="info" :update="updateWithConfirm" :state="state" :restart="restart">
-    <code v-if="info">{{ `v${info.current}` }}</code>
+    <code v-if="info && showVersion">{{ `v${info.current}` }}</code>
     <template v-if="info?.latest">
       <button v-if="info.needsUpdate" @click="updateWithConfirm()">
         <Badge

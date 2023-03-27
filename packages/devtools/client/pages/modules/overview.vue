@@ -41,9 +41,16 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-sm mt--1 text-center op30 mb6>
-          Nuxt DevTools
-          <code>v{{ version }}</code>
+        <div text-sm mt--1 text-center mb6 flex="~ gap-1">
+          <span op40>
+            Nuxt DevTools
+          </span>
+          <code op40>v{{ version }}</code>
+          <NpmVersionCheck
+            package-name="@nuxt/devtools"
+            :options="{ dev: true }"
+            :show-version="false"
+          />
         </div>
       </div>
       <!-- Main Grid -->
