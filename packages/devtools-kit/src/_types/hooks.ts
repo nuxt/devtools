@@ -1,4 +1,5 @@
 import type { ModuleCustomTab } from './custom-tabs'
+import type { NuxtDevtoolsInfo } from './server-ctx'
 import type { TerminalState } from './terminals'
 
 declare module '@nuxt/schema' {
@@ -11,7 +12,7 @@ declare module '@nuxt/schema' {
     /**
      * Called after devtools is initialized.
      */
-    'devtools:initialized': () => void
+    'devtools:initialized': (info: NuxtDevtoolsInfo) => void
 
     /**
      * Hooks to extend devtools tabs.

@@ -76,7 +76,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await Promise.all(integrations)
 
-  await nuxt.callHook('devtools:initialized')
+  await nuxt.callHook('devtools:initialized', {
+    version,
+    packagePath: packageDir,
+    isGlobalInstall: isGlobalInstall(),
+  })
 
   logger.success(`Nuxt Devtools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
 }

@@ -1,7 +1,7 @@
 import { useNuxt } from '@nuxt/kit'
 import type { BirpcGroup } from 'birpc'
 import { execa } from 'execa'
-import type { ModuleCustomTab, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
+import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -128,7 +128,7 @@ export function extendServerRpc<ClientFunctions = {}, ServerFunctions = {}>(
   return ctx.extendServerRpc<ClientFunctions, ServerFunctions>(namespace, functions)
 }
 
-export function onDevToolsInitialized(fn: () => void, nuxt = useNuxt()) {
+export function onDevToolsInitialized(fn: (info: NuxtDevtoolsInfo) => void, nuxt = useNuxt()) {
   nuxt.hook('devtools:initialized', fn)
 }
 

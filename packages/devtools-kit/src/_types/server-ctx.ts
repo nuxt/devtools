@@ -19,3 +19,9 @@ export interface NuxtDevtoolsServerContext {
 
   extendServerRpc: <ClientFunctions = {}, ServerFunctions = {}>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
+
+export interface NuxtDevtoolsInfo {
+  version: string
+  packagePath: string
+  isGlobalInstall: boolean
+}
