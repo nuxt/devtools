@@ -19,7 +19,7 @@ const model = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <label
-    class="n-disabled:n-disabled inline-flex items-center select-none n-radio hover:n-radio-hover"
+    class="n-disabled:n-disabled items-center select-none inline-flex n-radio hover:n-radio-hover"
     :checked="model === value || null"
     :disabled="disabled || null"
   >

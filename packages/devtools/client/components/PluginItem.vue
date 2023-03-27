@@ -19,7 +19,7 @@ const shortPath = computed(() => parseReadablePath(props.plugin.src, config.valu
     <div>
       <Badge
         v-if="shortPath.startsWith('#')"
-        bg-rose-400:10 text-rose
+        text-rose bg-rose-400:10
         v-text="'virtual'"
       />
       <Badge

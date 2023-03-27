@@ -28,14 +28,6 @@ const sorted = computed(() => {
   return sorted
 })
 
-function formatDuration(duration: number | undefined) {
-  if (!duration)
-    return '-'
-  if (duration < 1)
-    return '<1'
-  return duration.toFixed(2)
-}
-
 function getNamePrefix(name: string) {
   const parts = name.split(':')
   if (parts.length === 1)
@@ -48,20 +40,6 @@ function getNameRest(name: string) {
   if (parts.length === 1)
     return name
   return parts.slice(1).join(':')
-}
-
-function getLatencyColor(latency: number | undefined) {
-  if (!latency)
-    return 'text-gray-400'
-  if (latency < 0.5)
-    return 'text-gray:50'
-  if (latency > 1000)
-    return 'text-red-400'
-  if (latency > 500)
-    return 'text-orange-400'
-  if (latency > 200)
-    return 'text-yellow-400'
-  return ''
 }
 
 function getHashColorFromString(name: string) {

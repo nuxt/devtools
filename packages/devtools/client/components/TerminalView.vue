@@ -11,7 +11,6 @@ const props = defineProps<{
 const container = ref<HTMLElement>()
 const nuxt = useNuxtApp()
 const info = ref<TerminalInfo>()
-const router = useRouter()
 let term: Terminal
 
 onMounted(async () => {

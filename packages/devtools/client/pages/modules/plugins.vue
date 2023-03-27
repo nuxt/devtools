@@ -40,7 +40,7 @@ const plugins = computed((): PluginInfoWithMetic[] => {
         :key="plugin.src"
         :plugin="plugin"
         :index="idx + 1"
-        py2 ml--4 border-base :class="idx ? 'border-t' : ''"
+        py2 border-base ml--4 :class="idx ? 'border-t' : ''"
       />
     </div>
   </NSectionBlock>

@@ -36,7 +36,7 @@ const npmBase = 'https://www.npmjs.com/package/'
   <div border="~ base" p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-        of-hidden text-lg ws-nowrap text-ellipsis
+        of-hidden ws-nowrap text-lg text-ellipsis
       >
         <NuxtLink
           v-if="isPackageModule"
@@ -100,14 +100,14 @@ const npmBase = 'https://www.npmjs.com/package/'
             items-center animate-pulse
             :to="id ? `/modules/terminals?id=${encodeURIComponent(id)}` : undefined"
           >
-            <span text-lg op50 i-carbon-circle-dash animate-spin />
+            <span text-lg op50 animate-spin i-carbon-circle-dash />
             <code text-sm op50>Upgrading...</code>
           </NuxtLink>
           <div v-else-if="state === 'updated'" mx--2>
             <button
               flex="~ gap-2"
               hover="bg-primary/20"
-              items-center text-sm text-primary bg-primary:10 px2 rounded
+              items-center text-sm text-primary px2 rounded bg-primary:10
               @click="restart"
             >
               <span text-lg text-primary i-carbon-intent-request-active />

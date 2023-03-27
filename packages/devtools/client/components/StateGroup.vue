@@ -24,7 +24,7 @@ withDefaults(
         </template>
       </StateEditor>
     </div>
-    <div v-else italic px4 op35 mt2>
+    <div v-else italic px4 mt2 op35>
       No data
     </div>
   </div>

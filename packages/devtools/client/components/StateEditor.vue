@@ -59,7 +59,7 @@ async function refresh() {
       >
         <div transition i-carbon-chevron-right :class="isOpen ? 'rotate-90 op0' : ''" />
         <code
-          font-mono py1 px3
+          py1 font-mono px3
           :class="isOpen ? 'bg-[#8881] rounded-t' : 'rounded hover:bg-active'"
         >{{ name }}</code>
       </button>
@@ -85,7 +85,7 @@ async function refresh() {
         :indentation="2"
         :tab-size="2"
       />
-      <div v-else italic p5 bg-active>
+      <div v-else p5 bg-active italic>
         <span op50>No data</span>
       </div>
     </template>

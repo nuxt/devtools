@@ -182,7 +182,7 @@ function setFilter() {
 </script>
 
 <template>
-  <div ref="navbar" p4 flex="~ gap4" flex-1 border="b base" navbar-glass absolute left-0 top-0 right-0>
+  <div ref="navbar" flex="~ gap4" border="b base" absolute p4 flex-1 navbar-glass left-0 top-0 right-0>
     <NCheckbox v-model="showPages" n="primary sm">
       <span op75>Show pages</span>
     </NCheckbox>
@@ -202,7 +202,7 @@ function setFilter() {
     <slot />
   </div>
 
-  <div w-full h-full relative>
+  <div w-full relative h-full>
     <div ref="container" w-full h-full />
     <DrawerRight
       :model-value="!!(selected && selected.component)"
