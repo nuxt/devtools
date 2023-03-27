@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/nuxt/devtools-poc/compare/v0.3.0...v0.3.1) (2023-03-27)
+
+
+### Bug Fixes
+
+* explicit import `defineNuxtPlugin` ([03535dc](https://github.com/nuxt/devtools-poc/commit/03535dc82d6efe145388ef5df48bf2e073330e4c))
+
+
+
 # [0.3.0](https://github.com/nuxt/devtools-poc/compare/v0.2.5...v0.3.0) (2023-03-27)
 
 ## Changes
