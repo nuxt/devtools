@@ -35,7 +35,50 @@ const byFolders = computed(() => {
   return Object.entries(result).sort(([a], [b]) => a.localeCompare(b))
 })
 
+interface Tree {
+  name: string
+  path: string
+  assets: AssetInfo[]
+  folders?: Tree[]
+}
+
+const treeView = computed(() => {
+  const result: Tree[] = [{ name: 'root', path: '/', assets: [] }]
+
+  for (const asset of filtered.value) {
+    const currentFolder = asset.path.split('/').slice(0, -1).join('/')
+    if (currentFolder.length === 0) {
+      result[0].assets.push(asset)
+    }
+    else {
+      const folders = currentFolder.split('/')
+      let currentTree = result[0]
+      for (const folder of folders) {
+        if (!currentTree.folders)
+          currentTree.folders = []
+
+        const foundTree = currentTree.folders.find(tree => tree.name === folder)
+        if (foundTree) {
+          currentTree = foundTree
+        }
+        else {
+          const newTree: Tree = {
+            name: folder,
+            path: `${currentTree.path}${folder}/`,
+            assets: [],
+          }
+          currentTree.folders?.push(newTree)
+          currentTree = newTree
+        }
+      }
+      currentTree.assets.push(asset)
+    }
+  }
+  return result
+})
+
 const selected = ref<AssetInfo>()
+const selectAsset = (asset: AssetInfo) => selected.value = asset
 
 const view = ref<'list' | 'grid'>('grid')
 
@@ -89,16 +132,16 @@ const navbar = ref<HTMLElement>()
           :padding="false"
         >
           <div px2 mt--4 grid="~ cols-minmax-8rem">
-            <AssetGridItem v-for="a of items" :key="a.path" :asset="a" :folder="folder" @click="selected = a" />
+            <AssetGridItem v-for="a of items" :key="a.path" :asset="a" :folder="folder" @click="selectAsset(a)" />
           </div>
         </NSectionBlock>
       </template>
       <div v-else p2 grid="~ cols-minmax-8rem">
-        <AssetGridItem v-for="a of filtered" :key="a.path" :asset="a" @click="selected = a" />
+        <AssetGridItem v-for="a of filtered" :key="a.path" :asset="a" @click="selectAsset(a)" />
       </div>
     </template>
     <div v-else>
-      <AssetListItem v-for="a of filtered" :key="a.path" :asset="a" @click="selected = a" />
+      <AssetListFolder v-for="item in treeView" :key="item.path" :item="item" @select="selectAsset" />
     </div>
     <DrawerRight
       :model-value="!!selected"
