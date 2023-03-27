@@ -39,7 +39,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
     }, {
       id: processId,
       name: `${command} ${packageName}`,
-      icon: 'i-mdi-npm-variant-outline text-red',
+      icon: 'i-mdi-npm-variant-outline text-rose',
       restartable: false,
     })
 

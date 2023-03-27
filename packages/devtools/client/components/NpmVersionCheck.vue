@@ -23,7 +23,8 @@ const {
 } = usePackageUpdate(props.packageName, props.options)
 
 const shouldGotoTerminal = ref(true)
-const shouldRestartServer = ref(false)
+const shouldRestartServer = ref(true)
+const restartDialogs = useRestartDialogs()
 
 const PromiseConfirm = useTemplatePromise<boolean, [string]>()
 
@@ -31,6 +32,12 @@ async function updateWithConfirm() {
   const processId = await update(async (command) => {
     return PromiseConfirm.start(command)
   })
+  if (processId && shouldRestartServer.value) {
+    restartDialogs.value.push({
+      id: processId,
+      message: `${props.packageName} has been updated. Do you want to restart the Nuxt server now?`,
+    })
+  }
   if (processId && shouldGotoTerminal.value)
     router.push(`/modules/terminals?id=${encodeURIComponent(processId)}`)
 }
@@ -69,10 +76,14 @@ async function updateWithConfirm() {
         <NCheckbox v-model="shouldGotoTerminal" n="primary">
           Navigate to terminal
         </NCheckbox>
-        <!-- <NCheckbox v-model="shouldRestartServer" n="primary">
+        <NCheckbox v-model="shouldRestartServer" n="primary">
           Restart Nuxt server after update
-        </NCheckbox> -->
-        <div flex="~ gap-3" justify-end>
+        </NCheckbox>
+
+        <div flex="~ gap-3" justify-end mt2>
+          <NTip n="sm purple" flex-auto icon="carbon-chemistry">
+            Experimental feature. Please make sure to backup your project first.
+          </NTip>
           <NButton @click="resolve(false)">
             Cancel
           </NButton>

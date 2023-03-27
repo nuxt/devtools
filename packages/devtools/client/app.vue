@@ -57,4 +57,5 @@ onMounted(() => {
     <NuxtPage />
   </NuxtLayout>
   <DisconnectIndicator />
+  <RestartDialogs />
 </template>

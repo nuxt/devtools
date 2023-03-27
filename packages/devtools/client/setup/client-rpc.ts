@@ -12,13 +12,13 @@ export function setupClientRPC() {
     async callHook(hook: string, ...args: any[]) {
       nuxt.hooks.callHookParallel(hook as any, ...args)
     },
-    async onTerminalData(id: string, data: string) {
+    async onTerminalData(data) {
       // @ts-expect-error fail to extend hooks
-      nuxt.hooks.callHookParallel('devtools:terminal:data', { id, data })
+      nuxt.hooks.callHookParallel('devtools:terminal:data', data)
     },
-    async onTerminalExit(id: string, code: number) {
+    async onTerminalExit(data) {
       // @ts-expect-error fail to extend hooks
-      nuxt.hooks.callHookParallel('devtools:terminal:exit', { id, code })
+      nuxt.hooks.callHookParallel('devtools:terminal:exit', data)
     },
     async navigateTo(path: string) {
       router.push(path)

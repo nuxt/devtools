@@ -53,8 +53,8 @@ export interface ClientFunctions {
   callHook(hook: string, ...args: any[]): Promise<void>
   navigateTo(path: string): void
 
-  onTerminalData(id: string, data: string): void
-  onTerminalExit(id: string, code: number): void
+  onTerminalData(_: { id: string; data: string }): void
+  onTerminalExit(_: { id: string; code?: number }): void
 }
 
 export type ClientUpdateEvent = keyof ServerFunctions

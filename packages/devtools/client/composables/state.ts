@@ -137,3 +137,12 @@ export function useAllRoutes() {
       })
   })
 }
+
+interface RestartDialog {
+  id: string
+  message: string
+}
+
+export function useRestartDialogs() {
+  return useState<RestartDialog[]>('devtools:restart-dialogs', () => [])
+}

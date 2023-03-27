@@ -9,7 +9,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
     return terminal.id
   })
 
-  nuxt.hook('devtools:terminal:remove', (id) => {
+  nuxt.hook('devtools:terminal:remove', ({ id }) => {
     if (!terminals.has(id))
       return false
     terminals.delete(id)
@@ -17,24 +17,24 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
     return true
   })
 
-  nuxt.hook('devtools:terminal:write', (id: string, data: string) => {
+  nuxt.hook('devtools:terminal:write', ({ id, data }) => {
     const terminal = terminals.get(id)
     if (!terminal)
       return false
 
     terminal.buffer ||= ''
     terminal.buffer += data
-    rpc.broadcast.onTerminalData.asEvent(id, data)
+    rpc.broadcast.onTerminalData.asEvent({ id, data })
     return true
   })
 
-  nuxt.hook('devtools:terminal:exit', (id: string, code = 0) => {
+  nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
     const terminal = terminals.get(id)
     if (!terminal)
       return false
 
     terminal.isTerminated = true
-    rpc.broadcast.onTerminalExit.asEvent(id, code)
+    rpc.broadcast.onTerminalExit.asEvent({ id, code })
     refresh('getTerminals')
     return true
   })

@@ -34,19 +34,19 @@ declare module '@nuxt/schema' {
      *
      * Returns true if terminal is found.
      */
-    'devtools:terminal:write': (id: string, content: string) => void
+    'devtools:terminal:write': (_: { id: string; data: string }) => void
 
     /**
      * Remove a terminal from devtools.
      *
      * Returns true if terminal is found and deleted.
      */
-    'devtools:terminal:remove': (id: string) => void
+    'devtools:terminal:remove': (_: { id: string }) => void
 
     /**
      * Mark a terminal as terminated.
      */
-    'devtools:terminal:exit': (id: string, code?: number) => void
+    'devtools:terminal:exit': (_: { id: string; code?: number }) => void
   }
 }
 

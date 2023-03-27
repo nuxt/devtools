@@ -45,6 +45,8 @@ export interface NuxtDevtoolsHostClient {
 
   getClientHooksMetrics(): HookInfo[]
   getClientPluginMetrics(): PluginMetric[]
+
+  reloadPage(): void
   closeDevTools(): void
 }
 

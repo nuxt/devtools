@@ -48,18 +48,18 @@ export function startSubprocess(
       },
     )
 
-    nuxt.callHook('devtools:terminal:write', id, `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n`)
+    nuxt.callHook('devtools:terminal:write', { id, data: `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n` })
 
     process.stdout!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data.toString())
+      nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
     })
     process.stderr!.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', id, data.toString())
+      nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
     })
     process.on('exit', (code) => {
       if (!restarting) {
-        nuxt.callHook('devtools:terminal:write', id, `\n> process terminalated with ${code}\n`)
-        nuxt.callHook('devtools:terminal:exit', id, code || 0)
+        nuxt.callHook('devtools:terminal:write', { id, data: `\n> process terminalated with ${code}\n` })
+        nuxt.callHook('devtools:terminal:exit', { id, code: code || 0 })
       }
     })
 
@@ -94,7 +94,7 @@ export function startSubprocess(
     }
     catch (e) {
     }
-    nuxt.callHook('devtools:terminal:remove', id)
+    nuxt.callHook('devtools:terminal:remove', { id })
   }
 
   function register() {
