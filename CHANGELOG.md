@@ -1,5 +1,42 @@
 # [0.3.0](https://github.com/nuxt/devtools-poc/compare/v0.2.5...v0.3.0) (2023-03-27)
 
+## Changes
+
+- Panel toggle shortcut changed to `Shift + Alt + D` (#153)
+- Some design improvements
+- New tabs
+  - Assets
+  - Terminals
+- Support upgrading packages in devtools
+- Able to measure plugins execution time
+- For module authors:
+  - `@nuxt/devtools-kit` is introduced, you can safely depend on it
+  - `@nuxt/devtools/kit` is moved `@nuxt/devtools-kit`
+  - `@nuxt/devtools/iframe-client` is moved to `@nuxt/devtools-kit/iframe-client`
+  - Extendable RPC is introduced, you can now integration your own client-server communication
+- Learn more at [docs](https://devtools.nuxtjs.org/)
+
+## New Tabs
+
+### Assets
+
+The assets tab that shows all your static assets and their information. You can copy the paths of the assets, or the code snippets of using them. In the future, with the integrations of [Nuxt Image](https://image.nuxtjs.org/), you can even optimize images with a single click.
+
+<img width="1526" alt="tab-assets" src="https://user-images.githubusercontent.com/11247099/227901468-1089c0a9-8229-4a66-8dee-a3d2a20c9466.png">
+
+### Plugins
+
+Plugins tab shows all the plugins you are using in your app. As plugins runs before the app is mounted,the time spent in each plugin should be minimal to avoid blocking the app from rendering. The time cost of each plugin provided can be helpful to find performance bottlenecks.
+
+<img width="1526" alt="tab-plugins" src="https://user-images.githubusercontent.com/11247099/227901482-b4c84fe2-6649-4088-a8f3-d2fa285121ea.png">
+
+### Terminals Tab
+
+In some integrations, they might require to have subprocesses running to do certain jobs. Before DevTools, you either hide the output of the subprocess entirely and swallow the potential warnings/errors, or pipe to stdout and pollute your terminal with multiple outputs. Now you can now have the outputs in DevTools for each process and clearly isolated.
+
+<img width="1526" alt="tab-terminals" src="https://user-images.githubusercontent.com/11247099/227901494-20e993f2-1010-4d3c-a713-324914e28028.png">
+
+----
 
 ### Bug Fixes
 
