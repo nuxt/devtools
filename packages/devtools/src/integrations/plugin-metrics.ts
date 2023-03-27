@@ -54,6 +54,8 @@ function ${WRAPPER_KEY} (plugin, src) {
             return `\n${snippets}\nexport default [\n${items.join(',\n')}\n]\n`
           })
 
+          content = `import { defineNuxtPlugin } from "#imports"\n${content}`
+
           return content
         }
       })
