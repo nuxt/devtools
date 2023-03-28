@@ -182,7 +182,7 @@ function setFilter() {
 </script>
 
 <template>
-  <div ref="navbar" flex="~ gap4" border="b base" absolute p4 flex-1 navbar-glass left-0 top-0 right-0>
+  <div ref="navbar" flex="~ gap4" border="b base" p4 absolute flex-1 navbar-glass left-0 top-0 right-0>
     <NCheckbox v-model="showPages" n="primary sm">
       <span op75>Show pages</span>
     </NCheckbox>
