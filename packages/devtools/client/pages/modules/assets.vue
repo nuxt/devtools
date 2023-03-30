@@ -48,7 +48,7 @@ const byFolders = computed(() => {
 })
 
 const selected = ref<AssetInfo>()
-const selectAsset = (asset: AssetInfo) => {
+function selectAsset(asset: AssetInfo) {
   if (wsConnecting.value || wsError.value)
     return
 
@@ -58,13 +58,13 @@ const selectAsset = (asset: AssetInfo) => {
   selected.value = asset
 }
 
-const changeFolder = (folder: string) => {
+function changeFolder(folder: string) {
   if (folder === currentFolder.value || wsConnecting.value || wsError.value || showAll.value)
     return
   folders.value = folders.value.slice(0, folders.value.indexOf(folder) + 1)
 }
 
-const goBackFolder = () => {
+function goBackFolder() {
   if (currentFolder.value === '/' || wsConnecting.value || wsError.value || showAll.value)
     return
   folders.value.pop()
