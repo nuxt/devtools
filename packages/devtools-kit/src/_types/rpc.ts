@@ -17,7 +17,6 @@ export interface ServerFunctions {
   getCustomTabs(): ModuleCustomTab[]
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
-  getStaticAssets(): Promise<AssetInfo[]>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
@@ -38,6 +37,7 @@ export interface ServerFunctions {
   removeStorageItem(key: string): Promise<void>
 
   // Queries
+  getStaticAssets(folder: string, allFiles?: boolean): Promise<AssetInfo[]>
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
 

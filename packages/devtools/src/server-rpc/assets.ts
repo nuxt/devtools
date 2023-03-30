@@ -8,12 +8,14 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
 
   return {
-    async getStaticAssets() {
-      const dir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
+    async getStaticAssets(folder: string, allFiles?: boolean) {
+      const dir = resolve(nuxt.options.srcDir, allFiles ? nuxt.options.dir.public : nuxt.options.dir.public + folder)
       const baseURL = nuxt.options.app.baseURL
       const files = await fg(['**/*'], {
         cwd: dir,
-        onlyFiles: true,
+        deep: allFiles ? Infinity : 1,
+        markDirectories: true,
+        onlyFiles: allFiles,
       })
 
       function guessType(path: string): AssetType {
@@ -27,6 +29,8 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
           return 'font'
         if (/\.(json[5c]?|te?xt|[mc]?[jt]sx?|md[cx]?|markdown)/i.test(path))
           return 'text'
+        if (path.endsWith('/'))
+          return 'folder'
         return 'other'
       }
 
@@ -35,7 +39,7 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
         const stat = await fs.lstat(filePath)
         return {
           path,
-          publicPath: join(baseURL, path),
+          publicPath: allFiles ? join(baseURL, path) : join(baseURL, folder, path),
           filePath,
           type: guessType(path),
           size: stat.size,

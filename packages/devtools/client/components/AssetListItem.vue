@@ -18,6 +18,8 @@ const icon = computed(() => {
     return 'i-carbon-document'
   if (props.asset.type === 'json')
     return 'i-carbon-json'
+  if (props.asset.type === 'folder')
+    return 'i-carbon-folder'
   return 'i-carbon-document-blank'
 })
 </script>

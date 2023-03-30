@@ -59,10 +59,6 @@ export function useAutoImports() {
   return useAsyncState('getAutoImports', () => rpc.getAutoImports())
 }
 
-export function useStaticAssets() {
-  return useAsyncState('getStaticAssets', () => rpc.getStaticAssets())
-}
-
 export function useServerConfig() {
   return useAsyncState('getServerConfig', () => rpc.getServerConfig())
 }
