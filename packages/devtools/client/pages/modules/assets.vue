@@ -127,7 +127,7 @@ const navbar = ref<HTMLElement>()
       <div items-center flex justify-between>
         <div flex items-center>
           <NIconButton icon="carbon-arrow-left" w-8 h-8 mr-2 @click="goBackFolder" />
-          <div v-for="folder of folders" :key="folder" underline cursor-pointer hover-text-gray :class="{ 'text-green': folder === currentFolder }" @click="changeFolder(folder)">
+          <div v-for="folder of folders" :key="folder" cursor-pointer underline hover-text-gray :class="{ 'text-green': folder === currentFolder }" @click="changeFolder(folder)">
             <span>
               {{ folder }}
             </span>
