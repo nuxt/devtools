@@ -10,7 +10,7 @@ const folders = ['api', 'routes']
 const disabledFolders = ref<string[]>([])
 
 const routes = computedAsync(() => {
-  return rpc.getRouets([...disabledFolders.value])
+  return rpc.getServerRouets([...disabledFolders.value])
 })
 const search = ref('')
 

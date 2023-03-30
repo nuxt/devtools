@@ -3,9 +3,9 @@ import { resolve } from 'pathe'
 import fg from 'fast-glob'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupRoutesRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupServerRoutesRPC({ nuxt }: NuxtDevtoolsServerContext) {
   return {
-    async getRouets(exclude: string[] = []) {
+    async getServerRouets(exclude: string[] = []) {
       const dir = resolve(nuxt.options.serverDir)
       const baseURL = nuxt.options.app.baseURL
       const methods = ['get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace', 'patch']

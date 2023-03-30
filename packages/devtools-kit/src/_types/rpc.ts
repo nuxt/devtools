@@ -38,7 +38,7 @@ export interface ServerFunctions {
   removeStorageItem(key: string): Promise<void>
 
   // Queries
-  getRouets(exclude?: string[]): Promise<ServerRouteInfo[]>
+  getServerRouets(exclude?: string[]): Promise<ServerRouteInfo[]>
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
 
