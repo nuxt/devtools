@@ -19,7 +19,7 @@ const folders = ref<string[]>(['/'])
 const foldersFlat = computed(() => folders.value.join(''))
 const currentFolder = computed(() => folders.value[folders.value.length - 1])
 
-const assets = asyncComputed(async () => {
+const assets = computedAsync(async () => {
   return await rpc.getStaticAssets(foldersFlat.value, showAll.value)
 })
 
