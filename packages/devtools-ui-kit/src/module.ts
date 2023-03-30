@@ -5,7 +5,9 @@ import { extendUnocssOptions } from './unocss'
 
 export { unocssPreset } from './unocss'
 
-const rPath = (p: string) => fileURLToPath(new URL(p, import.meta.url).toString())
+function rPath(p: string) {
+  return fileURLToPath(new URL(p, import.meta.url).toString())
+}
 
 export interface ModuleOptions {
   dev?: boolean
