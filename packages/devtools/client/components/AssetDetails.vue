@@ -119,7 +119,7 @@ const supportsPreview = computed(() => {
           </td>
           <td>
             <div flex="~ gap-1" items-center>
-              <FilepathItem :filepath="asset.filePath" w-full line-break ws-normal text-left />
+              <FilepathItem :filepath="asset.filePath" w-full line-break ws-normal text-left overflow-auto />
               <div flex-auto />
               <NIconButton
                 title="Open in Editor"
@@ -135,7 +135,7 @@ const supportsPreview = computed(() => {
           </td>
           <td>
             <div flex="~ gap-1" items-center>
-              <div font-mono>
+              <div overflow-auto font-mono>
                 {{ asset.publicPath }}
               </div>
               <div flex-auto />
