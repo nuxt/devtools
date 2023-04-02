@@ -87,8 +87,8 @@ function methodColor(method: string) {
         </div>
 
         <NSectionBlock v-for="group, index in byFolder" :key="group.key" :text="group.key" :open="index === 0 ? true : false" :padding="false" :icon="group.key === 'api' ? 'carbon-api' : 'carbon:app-connectivity'">
-          <div v-for="item in group.value" :key="item.path" flex items-center m-4 p-4 rounded-lg hover-bg-dark-6 :class="{ 'bg-dark': selectedRoute === item }" @click="selectedRoute = item">
-            <div flex items-center h-10 w-20 justify-center rounded text-sm capitalize mr-2 :class="[methodColor(item.method)]">
+          <div v-for="item in group.value" :key="item.path" flex items-center m-4 p-4 rounded-lg dark:hover-bg-dark-6 hover-bg-active :class="{ 'dark:bg-dark bg-light': selectedRoute === item }" @click="selectedRoute = item">
+            <div flex items-center h-10 text-white w-20 justify-center rounded text-sm capitalize mr-2 :class="[methodColor(item.method)]">
               <span>{{ item.method }}</span>
             </div>
             <span>{{ item.url }}</span>

@@ -105,7 +105,7 @@ const tabPanelButton = computed(() => {
       <NCodeBlock absolute top-0 left-0 right-0 overflow-auto py-2 bottom-30 :code="response ? JSON.stringify(response, null, 2) : ''" lang="json" />
     </div>
     <div v-if="tabPanelButton" absolute bottom-0 right-0 z-20 max-h-10>
-      <div bg-dark-1>
+      <div bg-primary text-white>
         <NIconButton v-if="activeTab === 'query' && routeQueries.length === 0" icon="carbon:add" w-10 h-10 @click="routeQueries.push({ key: '', value: '' })" />
         <NIconButton v-if="activeTab === 'body' && routeBodies.length === 0" icon="carbon:add" w-10 h-10 @click="routeBodies.push({ key: '' })" />
         <NIconButton v-if="activeTab === 'headers' && routeHeaders.length === 0" icon="carbon:add" w-10 h-10 @click="routeHeaders.push({ key: '' })" />
@@ -113,10 +113,10 @@ const tabPanelButton = computed(() => {
       </div>
     </div>
 
-    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 bg-dark>
+    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 dark:bg-dark bg-light border-t dark:border-gray-6>
       <div :class="{ 'mr-10': tabPanelButton }">
         <div flex justify-between w-full items-center text-center mt-2>
-          <button v-for="tab in tabs" :key="tab" :class="{ 'border-b': activeTab === tab }" @click="activeTab = tab">
+          <button v-for="tab in tabs" :key="tab" :class="{ 'text-primary': activeTab === tab }" @click="activeTab = tab">
             {{ tab }}
           </button>
         </div>
