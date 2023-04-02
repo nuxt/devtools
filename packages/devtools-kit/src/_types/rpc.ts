@@ -40,6 +40,7 @@ export interface ServerFunctions {
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
+  writeStaticAssets(file: { name: string; data: string }[], path: string): Promise<string[]>
 
   // Actions
   customTabAction(name: string, action: number): Promise<boolean>
