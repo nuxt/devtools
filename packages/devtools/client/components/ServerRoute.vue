@@ -17,6 +17,10 @@ const fetchTime = ref(0)
 
 const params = props.route.params
 const routeParams = ref<RouteParam>({})
+const routeBodies = ref<RouteParam[]>([{ key: '', value: '' }])
+const routeQueries = ref<RouteParam[]>([{ key: '', value: '' }])
+const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'application/json' }])
+
 const finalURL = computed(() => {
   let result = props.route.url
 
@@ -31,41 +35,133 @@ const finalURL = computed(() => {
   return result
 })
 
-const routeBody = ref()
-const routeQuery = ref()
-
-const fetchData = async () => {
+async function fetchData() {
   const start = Date.now()
-  return await useLazyAsyncData(finalURL.value, () => $fetch(finalURL.value, {
-    method: props.route.method as any,
-    body: JSON.stringify(routeBody.value),
-    query: routeQuery.value,
+  return await useLazyAsyncData(`${props.route.method}:${finalURL.value}`, () => $fetch(finalURL.value, {
+    method: props.route.method.toUpperCase() as any,
+    headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
+    query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
+    body: routeBodies.value.reduce((acc: any, cur: any) => {
+      if (cur.key && cur.value)
+        acc[cur.key] = cur.value
+      return acc
+    }, null),
   }))
     .then((res: any) => {
       response.value = res
       fetchTime.value = Date.now() - start
     })
 }
+
+const tabs = ['params', 'query', 'body', 'headers']
+const activeTab = ref(tabs[0])
+
+const tabPanelButton = computed(() => {
+  switch (activeTab.value) {
+    case 'params':
+      return !params.length
+    case 'query':
+      return !routeQueries.value.length
+    case 'body':
+      return !routeBodies.value.length
+    case 'headers':
+      return !routeHeaders.value.length
+    default:
+      return true
+  }
+})
 </script>
 
 <template>
-  <!-- TODO: make a better ui with more opttions -->
-  <div grid="~ lg:cols-2 gap5" h-full of-hidden>
-    <div grid="~ rows-[min-content_min-content_1fr]" h-full of-hidden relative>
-      <div v-if="params.length" flex justify-between my-4>
-        <NTextInput v-for="param in params" :key="param" v-model="routeParams[param]" :placeholder="`${param}...`" />
-      </div>
-      <!-- TODO: add body, query and ... -->
-      <div>
-        <NButton w-full icon="carbon:send" @click="fetchData">
-          Fetch {{ finalURL }}
+  <div absolute top-0 right-0 left-0 bottom-0>
+    <div flex="~ col gap-2" border="b base" p4 navbar-glass flex-1 pb2>
+      <div flex="~ gap2">
+        <NButton>
+          {{ route.method.toUpperCase() }}
+        </NButton>
+        <NTextInput
+          disabled
+          :placeholder="finalURL"
+          flex-auto
+          p="x5 y2"
+          n="primary"
+        />
+        <NButton @click="fetchData">
+          <NIcon icon="carbon:send" />
         </NButton>
       </div>
+      <div op50>
+        <div flex justify-between>
+          <div />
+          <div flex>
+            <Badge text-green-400 bg-green-400:10>
+              {{ fetchTime }} ms
+            </Badge>
+          </div>
+        </div>
+      </div>
     </div>
-    <div v-if="response" relative>
-      <small absolute right-4 top-2>{{ fetchTime }}ms</small>
-      <NCodeBlock py-2 :code="JSON.stringify(response, null, 2)" lang="json" />
-      <small absolute right-4 bottom-2>{{ route.method.toUpperCase() }}</small>
+    <div relative h-full>
+      <NCodeBlock absolute top-0 left-0 right-0 overflow-auto py-2 bottom-30 :code="response ? JSON.stringify(response, null, 2) : ''" lang="json" />
+    </div>
+    <div v-if="tabPanelButton" absolute bottom-0 right-0 z-20 max-h-10>
+      <div bg-dark-1>
+        <NIconButton v-if="activeTab === 'query' && routeQueries.length === 0" icon="carbon:add" w-10 h-10 @click="routeQueries.push({ key: '', value: '' })" />
+        <NIconButton v-if="activeTab === 'body' && routeBodies.length === 0" icon="carbon:add" w-10 h-10 @click="routeBodies.push({ key: '' })" />
+        <NIconButton v-if="activeTab === 'headers' && routeHeaders.length === 0" icon="carbon:add" w-10 h-10 @click="routeHeaders.push({ key: '' })" />
+        <NIconButton v-else icon="carbon:parameter" w-10 h-10 />
+      </div>
+    </div>
+
+    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 bg-dark>
+      <div :class="{ 'mr-10': tabPanelButton }">
+        <div flex justify-between w-full items-center text-center mt-2>
+          <button v-for="tab in tabs" :key="tab" :class="{ 'border-b': activeTab === tab }" @click="activeTab = tab">
+            {{ tab }}
+          </button>
+        </div>
+        <div my-2>
+          <div v-if="params.length && activeTab === 'params'" flex justify-around my-4>
+            <NTextInput v-for="param in params" :key="param" v-model="routeParams[param]" :placeholder="param" />
+          </div>
+          <div v-if="activeTab === 'query'">
+            <div v-for="(query, index) in routeQueries" :key="index" flex justify-around my-4>
+              <NButton @click="routeQueries.splice(index, 1)">
+                <NIcon icon="carbon:subtract" />
+              </NButton>
+              <NTextInput v-model="query.key" placeholder="key" />
+              <NTextInput v-model="query.value" placeholder="value" />
+              <NButton @click="routeQueries.push({ key: '', value: '' })">
+                <NIcon icon="carbon:add" />
+              </NButton>
+            </div>
+          </div>
+          <div v-if="activeTab === 'body'">
+            <div v-for="(body, index) in routeBodies" :key="index" flex justify-around my-4>
+              <NButton @click="routeBodies.splice(index, 1)">
+                <NIcon icon="carbon:subtract" />
+              </NButton>
+              <NTextInput v-model="body.key" placeholder="key" />
+              <NTextInput v-model="body.value" placeholder="value" />
+              <NButton @click="routeBodies.push({ key: '', value: '' })">
+                <NIcon icon="carbon:add" />
+              </NButton>
+            </div>
+          </div>
+          <div v-if="activeTab === 'headers'">
+            <div v-for="(body, index) in routeHeaders" :key="index" flex justify-around my-4>
+              <NButton @click="routeHeaders.splice(index, 1)">
+                <NIcon icon="carbon:subtract" />
+              </NButton>
+              <NTextInput v-model="body.key" placeholder="key" />
+              <NTextInput v-model="body.value" placeholder="value" />
+              <NButton @click="routeHeaders.push({ key: '', value: '' })">
+                <NIcon icon="carbon:add" />
+              </NButton>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
