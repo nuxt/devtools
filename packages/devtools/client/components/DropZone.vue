@@ -52,7 +52,7 @@ function setFiles(data: FileList | null) {
       }
       else {
         if (file.type === '')
-          showNotification('Folders and hidden files are not supported yet', 'carbon:face-dissatisfied')
+          showNotification('Folders are not supported yet', 'carbon:face-dissatisfied')
         else if (uploadTypes.some(type => file.type.includes(type)))
           newFiles.push(file)
         else
@@ -74,6 +74,7 @@ async function uploadFiles() {
     const result = await new Promise((resolve) => {
       reader.onload = () => resolve(reader.result as string)
     }) as string
+    // TODO: add validation
     const data = result.split(';base64,').pop() as string
     readyFiles.push({
       name: file.name,
