@@ -123,62 +123,73 @@ function close() {
   clearFiles()
 }
 
-onMounted(() => {
-  window.addEventListener('dragenter', onDragEnter)
-  window.addEventListener('dragleave', onDragLeave)
-  window.addEventListener('dragover', onDragOver)
-  window.addEventListener('drop', onDrop)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('dragenter', onDragEnter)
-  window.removeEventListener('dragleave', onDragLeave)
-  window.removeEventListener('dragover', onDragOver)
-  window.removeEventListener('drop', onDrop)
-})
+useEventListener('dragenter', onDragEnter)
+useEventListener('dragleave', onDragLeave)
+useEventListener('dragover', onDragOver)
+useEventListener('drop', onDrop)
 </script>
 
 <template>
-  <div fixed top-0 left-10 right-0 bottom-0 z-10 backdrop-blur transition-all :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'">
-    <NIconButton icon="carbon-close" absolute top-5 right-5 dark-bg-dark bg-light border shadow-lg rounded-lg z-20 p-6 @click="close" />
+  <div
+    fixed top-0 right-0 bottom-0 z-10 transition-all left-13 backdrop-blur-20
+    :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'"
+  >
+    <NIconButton
+      icon="carbon-close" absolute top-5 right-5 z-20
+      text-xl
+      @click="close"
+    />
     <div v-if="!files?.length" flex justify-center items-center h-full w-full>
       <label for="drop-zone-input" text-3xl>
         <NIcon icon="carbon-cloud-upload" mr-2 /> Drop files here or click to select
       </label>
-      <input id="drop-zone-input" type="file" multiple hidden @change="setFiles(($event.target as HTMLInputElement).files)">
+      <input
+        id="drop-zone-input" type="file" multiple hidden
+        @change="setFiles(($event.target as HTMLInputElement).files)"
+      >
     </div>
-    <div v-else h-full w-full relative>
-      <div grid="~ cols-minmax-8rem" absolute top-0 right-0 bottom-0 left-0 gap-20 p-30 overflow-auto>
-        <div v-for="file, index of files" :key="file.name" relative w-50 h-50>
-          <button absolute shadow-lg rounded-lg flex dark:bg-dark bg-white top--4 p-2 right--4>
-            <NIcon icon="carbon-close" @click="removeFile(index)" />
-          </button>
-          <!-- <div rounded-t-lg items-center of-hidden justify-center flex p1 bg-active object-cover rounded w-40 h-40 border="~ base"> -->
-          <img w-full h-full rounded-t-lg object-cover :src="blobIt(file)">
-          <!-- </div> -->
-          <input w-full type="text" :value="file.name" @change="changeName(file, ($event.target as HTMLInputElement).value)">
+    <div v-else h-full w-full relative grid="~ rows-[max-content_1fr_max-content]">
+      <div px6 py6>
+        <h1 text-2xl>
+          Upload
+        </h1>
+        <p text-sm op50>
+          Drag and drop files to upload
+        </p>
+      </div>
+      <div grid="~ cols-minmax-8rem" overflow-auto p6>
+        <div
+          v-for="file, index of files" :key="file.name"
+          flex="~ col gap-2" relative items-center w-40 h-50
+        >
+          <div
+            items-center justify-center flex rounded-t-lg object-cover of-hidden bg-active rounded
+            class="aspect-1/1" border="~ base"
+          >
+            <img w-full h-full rounded-t-lg object-cover :src="blobIt(file)">
+          </div>
+          <div flex="~ gap1" items-center>
+            <NTextInput
+              n="xs" flex-auto
+              :model-value="file.name"
+              @update:model-value="changeName(file, ($event.target as HTMLInputElement).value)"
+            />
+            <NIconButton
+              icon="carbon-delete" flex-none
+              title="Remove file"
+              @click="removeFile(index)"
+            />
+          </div>
         </div>
       </div>
-      <div fixed left-10 flex items-center justify-center bottom-10 right-10>
-        <NButton v-if="files.length" p-2 backdrop-blur dark-bg-dark bg-white bg-opacity-50 mx-4 @click="clearFiles">
-          <NIcon icon="carbon-close" /> Clear
+      <div flex="~ gap-2" items-center justify-center p8>
+        <NButton v-if="files.length" n="red" @click="clearFiles">
+          <NIcon icon="carbon-clean" /> Clear
         </NButton>
-        <NButton :disabled="!files.length" :class="files.length ? 'bg-green-6 hover-bg-green-5 hover:text-white' : 'bg-gray-5'" backdrop-blur bg-opacity-50 p-2 @click="uploadFiles">
-          <NIcon icon="carbon-cloud-upload" /> Upload Files
+        <NButton :disabled="!files.length" n="primary solid" @click="uploadFiles">
+          <NIcon icon="carbon-cloud-upload" /> Upload
         </NButton>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.content:before {
-  border: 5px dashed #fff;
-  content: "";
-  bottom: 60px;
-  left: 60px;
-  position: absolute;
-  right: 60px;
-  top: 60px;
-}
-</style>
