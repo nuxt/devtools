@@ -118,10 +118,10 @@ const supportsPreview = computed(() => {
             Filepath
           </td>
           <td>
-            <div flex="~ gap-1" items-center>
-              <FilepathItem :filepath="asset.filePath" w-full line-break ws-normal text-left />
-              <div flex-auto />
+            <div flex="~ gap-1" items-center w-full>
+              <FilepathItem :filepath="asset.filePath" text-left />
               <NIconButton
+                flex-none
                 title="Open in Editor"
                 icon="carbon-launch"
                 @click="openInEditor(asset.filePath)"
@@ -134,21 +134,22 @@ const supportsPreview = computed(() => {
             Public Path
           </td>
           <td>
-            <div flex="~ gap-1" items-center>
-              <div font-mono>
+            <div flex="~ gap-1" items-center w-full of-hidden>
+              <div of-hidden font-mono flex-auto ws-pre truncate>
                 {{ asset.publicPath }}
               </div>
-              <div flex-auto />
               <NIconButton
+                flex-none
+                title="Copy public path"
+                icon="carbon-copy"
+                @click="copy(asset.publicPath)"
+              />
+              <NIconButton
+                flex-none
                 :to="asset.publicPath"
                 icon="carbon-launch"
                 target="_blank"
                 title="Open in browser"
-              />
-              <NIconButton
-                title="Copy public path"
-                icon="carbon-copy"
-                @click="copy(asset.publicPath)"
               />
             </div>
           </td>
