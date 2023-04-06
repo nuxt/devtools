@@ -1,4 +1,4 @@
-import { createApp, markRaw } from 'vue'
+import { createApp, h, markRaw } from 'vue'
 import { createHooks } from 'hookable'
 import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
@@ -55,6 +55,11 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
       togglePanel()
   })
 
-  const app = createApp(Container, { client })
+  const app = createApp({
+    render: () => h(Container, { client }),
+    devtools: {
+      hide: true,
+    },
+  })
   app.mount(holder)
 })
