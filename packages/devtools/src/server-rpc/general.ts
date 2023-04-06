@@ -101,14 +101,14 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
 
       // search for existing path
       const path = [
-        input,
+        input + suffix,
         `${input}.js`,
         `${input}.mjs`,
         `${input}.ts`,
       ].find(i => existsSync(i))
       if (path) {
         // @ts-expect-error missin types
-        await import('launch-editor').then(r => (r.default || r)(path + suffix))
+        await import('launch-editor').then(r => (r.default || r)(path))
       }
       else {
         console.error('File not found:', input)
