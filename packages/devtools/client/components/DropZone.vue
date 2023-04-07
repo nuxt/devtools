@@ -106,6 +106,8 @@ function changeName(file: File, newName: string) {
   const baseName = newName.replace(/\.\w+$/, '')
   const newFileName = `${baseName}.${ext}`
   if (baseName.length === 0) {
+    // TODO: with proper dialog
+    // @eslint-disable-next-line no-alert
     alert('File name must be at least 1 characters long')
     return name
   }
