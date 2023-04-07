@@ -3,8 +3,6 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
   entries: [
     'src/module',
-    'src/cli',
-
     // Chunking
     'src/types',
     'src/dirs',

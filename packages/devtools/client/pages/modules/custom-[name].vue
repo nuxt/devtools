@@ -2,15 +2,35 @@
 import type { ModuleCustomTab } from '~/../src/types'
 
 const route = useRoute()
+const router = useRouter()
 const name = computed(() => route.params.name)
 const tabs = useTabs()
 const tab = computed(() => tabs.all.value.find(i => i.name === name.value) as ModuleCustomTab)
+
+onMounted(() => {
+  // if the tab is not found and passed a certain timeout, redirect to the overview page
+  if (!tab.value) {
+    setTimeout(() => {
+      if (!tab.value)
+        router.push('/modules/overview')
+    }, 2000)
+  }
+})
 </script>
 
 <template>
   <template v-if="!tab">
-    <div flex="~ col" h-full items-center justify-center>
-      Tab not found
+    <div flex="~ col gap-2" h-full items-center justify-center>
+      <div op50 text-5xl mb2 i-carbon-queued />
+      <p text-xl>
+        Tab <code text-rose>{{ name }}</code> not found
+      </p>
+      <p op50>
+        It might because the module contributing this tab is not installed or enabled
+      </p>
+      <p animate-pulse mt8>
+        Redirecting to overview page...
+      </p>
     </div>
   </template>
   <template v-else-if="tab.view.type === 'iframe'">

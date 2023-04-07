@@ -48,6 +48,8 @@ onKeyDown('Escape', () => {
 })
 
 const navbar = ref<HTMLElement>()
+
+function refreshAssets() {}
 </script>
 
 <template>
@@ -77,6 +79,9 @@ const navbar = ref<HTMLElement>()
         <span>{{ assets?.length }} assets in total</span>
       </div>
     </div>
+
+    <!-- TODO: fix this after PR 162  -->
+    <DropZone folder="/" @uploaded="refreshAssets" />
 
     <template v-if="view === 'grid'">
       <template v-if="byFolders.length > 1">
@@ -111,3 +116,13 @@ const navbar = ref<HTMLElement>()
     </DrawerRight>
   </div>
 </template>
+
+<style>
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+</style>

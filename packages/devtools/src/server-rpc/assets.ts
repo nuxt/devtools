@@ -67,5 +67,28 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
         return undefined
       }
     },
+    async writeStaticAssets(files: { name: string; data: string }[], path: string) {
+      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + path)
+
+      return await Promise.all(
+        files.map(async ({ name, data }) => {
+          let dir = resolve(baseDir, name)
+          try {
+            await fs.stat(dir)
+            const ext = dir.split('.').pop() as string
+            const base = dir.slice(0, dir.length - ext.length - 1)
+            let i = 1
+            while (await fs.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
+              i++
+            dir = `${base}-${i}.${ext}`
+          }
+          catch (err) {
+            // Ignore error if file doesn't exist
+          }
+          await fs.writeFile(dir, data, 'base64')
+          return dir
+        }),
+      )
+    },
   } satisfies Partial<ServerFunctions>
 }

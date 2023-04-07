@@ -3,7 +3,9 @@ import { resolve } from 'node:path'
 import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
 
-const r = (p: string) => resolve(__dirname, p)
+function r(p: string) {
+  return resolve(__dirname, p)
+}
 
 export default defineNuxtConfig({
   modules: [

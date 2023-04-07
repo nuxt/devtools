@@ -26,7 +26,7 @@ function goIntro() {
     <div v-if="!config">
       Loading...
     </div>
-    <div v-else flex="~ col gap2" w-full h-full ma max-w-300 px20 p8>
+    <div v-else flex="~ col gap2" w-full h-full p8 ma max-w-300 px20>
       <div flex-auto />
 
       <!-- Banner -->
@@ -41,7 +41,7 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-sm mt--1 text-center mb6 flex="~ gap-1">
+        <div text-sm text-center mt--1 mb6 flex="~ gap-1">
           <span op40>
             Nuxt DevTools
           </span>

@@ -5,7 +5,9 @@ import { extendUnocssOptions } from './unocss'
 
 export { unocssPreset } from './unocss'
 
-const rPath = (p: string) => fileURLToPath(new URL(p, import.meta.url).toString())
+function rPath(p: string) {
+  return fileURLToPath(new URL(p, import.meta.url).toString())
+}
 
 export interface ModuleOptions {
   dev?: boolean
@@ -39,5 +41,6 @@ export default defineNuxtModule<ModuleOptions>({
     await installModule(await resolver.resolvePath('@unocss/nuxt'))
     await installModule(await resolver.resolvePath('@vueuse/nuxt'))
     await installModule(await resolver.resolvePath('@nuxtjs/color-mode'))
+    await installModule(await resolver.resolvePath('v-lazy-show/nuxt'))
   },
 })

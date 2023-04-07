@@ -92,7 +92,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
         input = resolve(process.cwd(), input)
 
       // separate line and column syntax
-      const match = input.match(/^(.*?)([:\d]*)$/)
+      const match = input.match(/^(.*?)(:[:\d]*)$/)
       let suffix = ''
       if (match) {
         input = match[1]

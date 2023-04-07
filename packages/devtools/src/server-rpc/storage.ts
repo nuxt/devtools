@@ -3,7 +3,9 @@ import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
-const shouldIgnoreStorageKey = (key: string) => IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
+function shouldIgnoreStorageKey(key: string) {
+  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
+}
 
 export function setupStorageRPC({
   nuxt,
