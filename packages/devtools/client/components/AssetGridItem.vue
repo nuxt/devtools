@@ -16,7 +16,7 @@ const path = computed(() => {
 <template>
   <button flex="~ col gap-1" hover="bg-active" rounded of-hidden items-center p2>
     <AssetPreview rounded w-30 h-30 border="~ base" :asset="asset" />
-    <div of-hidden w-full ws-nowrap text-center truncate text-xs>
+    <div of-hidden w-full ws-nowrap truncate text-center text-xs>
       {{ path }}
     </div>
   </button>
