@@ -1,5 +1,7 @@
 <script setup lang="ts">
-withDefaults(
+import { useVModel } from '@vueuse/core'
+
+const props = withDefaults(
   defineProps<{
     icon?: string
     text: string
@@ -15,10 +17,15 @@ withDefaults(
     collapse: true,
   },
 )
+
+const open = useVModel(props, 'open', undefined, { passive: true })
+function onToggle(e: any) {
+  open.value = e.target.open
+}
 </script>
 
 <template>
-  <details :open="open">
+  <details :open="open" @toggle="onToggle">
     <summary class="select-none cursor-pointer p4 hover:bg-active" :class="collapse ? '' : 'pointer-events-none'">
       <NIconTitle :icon="icon" :text="text" class="text-xl op75">
         <div>
@@ -40,7 +47,7 @@ withDefaults(
         />
       </NIconTitle>
     </summary>
-    <div class="flex flex-col flex-gap2 pt2 pb6" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
+    <div v-lazy-if="open" class="flex flex-col flex-gap2 pt2 pb6" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
       <div :class="containerClass" class="mt1">
         <slot />
