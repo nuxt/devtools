@@ -5,7 +5,8 @@ import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupServerRoutesRPC({ nuxt }: NuxtDevtoolsServerContext) {
   return {
-    async getServerRouets(exclude: string[] = []) {
+    async getServerRoutes(exclude: string[] = []) {
+      // TODO: read from nitro hooks
       const dir = resolve(nuxt.options.serverDir)
       const baseURL = nuxt.options.app.baseURL
       const methods = ['get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace', 'patch']

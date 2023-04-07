@@ -113,7 +113,7 @@ const tabPanelButton = computed(() => {
       </div>
     </div>
 
-    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 dark:bg-dark bg-light border-t dark:border-gray-6>
+    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 bg-base border="t base">
       <div :class="{ 'mr-10': tabPanelButton }">
         <div flex justify-between w-full items-center text-center mt-2>
           <button v-for="tab in tabs" :key="tab" :class="{ 'text-primary': activeTab === tab }" @click="activeTab = tab">
