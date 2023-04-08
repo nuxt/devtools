@@ -14,6 +14,7 @@ const props = defineProps({
 
 const response = ref()
 const fetchTime = ref(0)
+const fetching = ref(false)
 
 const params = props.route.params
 const routeParams = ref<RouteParam>({})
@@ -36,6 +37,7 @@ const finalURL = computed(() => {
 })
 
 async function fetchData() {
+  fetching.value = true
   const start = Date.now()
   return await useLazyAsyncData(`${props.route.method}:${finalURL.value}`, () => $fetch(finalURL.value, {
     method: props.route.method.toUpperCase() as any,
@@ -49,6 +51,7 @@ async function fetchData() {
   }))
     .then((res: any) => {
       response.value = res
+      fetching.value = false
       fetchTime.value = Date.now() - start
     })
 }
@@ -101,19 +104,21 @@ const tabPanelButton = computed(() => {
         </div>
       </div>
     </div>
-    <div relative h-full>
-      <NCodeBlock absolute top-0 left-0 right-0 overflow-auto py-2 bottom-30 :code="response ? JSON.stringify(response, null, 2) : ''" lang="json" />
-    </div>
+
+    <NLoading v-lazy-show="fetching" absolute top-0 bottom-0 z-10 backdrop-blur>
+      Fetching...
+    </NLoading>
+    <NCodeBlock absolute left-0 right-0 bottom-0 top-22 overflow-auto py-2 bottom-10 :code="response ? JSON.stringify(response, null, 2) : ''" lang="json" />
+
     <div v-if="tabPanelButton" absolute bottom-0 right-0 z-20 max-h-10>
       <div bg-primary text-white>
         <NIconButton v-if="activeTab === 'query' && routeQueries.length === 0" icon="carbon:add" w-10 h-10 @click="routeQueries.push({ key: '', value: '' })" />
-        <NIconButton v-if="activeTab === 'body' && routeBodies.length === 0" icon="carbon:add" w-10 h-10 @click="routeBodies.push({ key: '' })" />
-        <NIconButton v-if="activeTab === 'headers' && routeHeaders.length === 0" icon="carbon:add" w-10 h-10 @click="routeHeaders.push({ key: '' })" />
+        <NIconButton v-else-if="activeTab === 'body' && routeBodies.length === 0" icon="carbon:add" w-10 h-10 @click="routeBodies.push({ key: '' })" />
+        <NIconButton v-else-if="activeTab === 'headers' && routeHeaders.length === 0" icon="carbon:add" w-10 h-10 @click="routeHeaders.push({ key: '' })" />
         <NIconButton v-else icon="carbon:parameter" w-10 h-10 />
       </div>
     </div>
-
-    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto px-4 z-10 min-h-10 bg-base border="t base">
+    <div class="max-h-1/2" absolute bottom-0 left-0 right-0 overflow-auto z-10 px-4 min-h-10 bg-base border="t base">
       <div :class="{ 'mr-10': tabPanelButton }">
         <div flex justify-between w-full items-center text-center mt-2>
           <button v-for="tab in tabs" :key="tab" :class="{ 'text-primary': activeTab === tab }" @click="activeTab = tab">
