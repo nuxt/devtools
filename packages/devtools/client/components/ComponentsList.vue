@@ -72,17 +72,11 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <div p4 flex="~ gap4" flex-1 border="b base" navbar-glass>
-    <NTextInput
-      v-model="search"
-      placeholder="Search..."
-      icon="carbon-search"
-      p="x5 y2"
-      n="primary"
-      flex-auto bg-base border-base
-    />
-    <slot />
-  </div>
+  <Navbar v-model:search="search">
+    <template #flex>
+      <slot />
+    </template>
+  </Navbar>
   <NSectionBlock
     v-if="filtered.user.length"
     icon="carbon-nominal"

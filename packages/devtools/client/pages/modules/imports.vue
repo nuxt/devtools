@@ -72,20 +72,13 @@ const filtered = computed(() => {
 
 <template>
   <div v-if="config" h-full of-auto>
-    <div flex="~ col gap4" border="b base" px4 flex-1 navbar-glass pb2 pt4>
-      <NTextInput
-        v-model="search"
-        placeholder="Search..."
-        icon="carbon-search"
-        p="x5 y2"
-        n="primary"
-      />
+    <Navbar v-model:search="search" pb2>
       <div v-if="importsMetadata">
         <NSwitch v-model="onlyUsed" n="primary sm">
           Show used only
         </NSwitch>
       </div>
-    </div>
+    </Navbar>
     <NSectionBlock
       v-if="filtered.user.size"
       icon="carbon-function"

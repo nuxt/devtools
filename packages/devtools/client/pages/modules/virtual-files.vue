@@ -74,19 +74,12 @@ const filteredFiles = computed(() => {
 <template>
   <PanelLeftRight class="virtual-files" storage-key="tab-virtual-files">
     <template #left>
-      <div pb2 p3 navbar-glass border="b base">
-        <NTextInput
-          v-model="searchString"
-          icon="carbon-search"
-          placeholder="Search..."
-          n="primary"
-        />
-      </div>
+      <Navbar v-model:search="searchString" no-padding p3 />
       <template
         v-for="f of filteredFiles" :key="f.id"
       >
         <NuxtLink
-          px2 text-sm py1 font-mono block truncate select-none
+          px2 py1 text-sm font-mono block truncate select-none
           :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
           :class="f.id === current?.id ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >
@@ -98,12 +91,12 @@ const filteredFiles = computed(() => {
 
     <template #right>
       <div v-if="current?.content" h-full of-hidden flex="~ col">
-        <div border="b base" text-sm flex-none px4 py2 op75>
+        <div border="b base" text-sm flex-none op75 px4 py2>
           <code>{{ current.id }}</code>
         </div>
         <NCodeBlock h-full text-sm of-auto :code="current.content" lang="typescript" />
       </div>
-      <span v-else h-full flex items-center justify-center op50>Select one file to start</span>
+      <span v-else h-full items-center op50 flex justify-center>Select one file to start</span>
     </template>
   </PanelLeftRight>
 </template>

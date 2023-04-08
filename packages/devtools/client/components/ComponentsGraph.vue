@@ -182,25 +182,27 @@ function setFilter() {
 </script>
 
 <template>
-  <div ref="navbar" flex="~ gap4" border="b base" p4 absolute flex-1 navbar-glass left-0 top-0 right-0>
-    <NCheckbox v-model="showPages" n="primary sm">
-      <span op75>Show pages</span>
-    </NCheckbox>
-    <NCheckbox v-model="showLayouts" n="primary sm">
-      <span op75>Show layouts</span>
-    </NCheckbox>
-    <NCheckbox v-model="showWorkspace" n="primary sm">
-      <span op75>Show workspace</span>
-    </NCheckbox>
-    <NCheckbox v-model="showNodeModules" n="primary sm">
-      <span op75>Show node_modules</span>
-    </NCheckbox>
-    <button v-if="selectedFilter" flex="~ gap-1" items-center op50 text-xs py1 bg-gray:20 pl3 pr2 rounded-full hover:op100 @click="selectedFilter = undefined">
-      Clear filter <div i-carbon-close />
-    </button>
-    <div flex-auto />
-    <slot />
-  </div>
+  <Navbar ref="navbar" absolute left-0 top-0 right-0>
+    <template #flex>
+      <NCheckbox v-model="showPages" n="primary sm">
+        <span op75>Show pages</span>
+      </NCheckbox>
+      <NCheckbox v-model="showLayouts" n="primary sm">
+        <span op75>Show layouts</span>
+      </NCheckbox>
+      <NCheckbox v-model="showWorkspace" n="primary sm">
+        <span op75>Show workspace</span>
+      </NCheckbox>
+      <NCheckbox v-model="showNodeModules" n="primary sm">
+        <span op75>Show node_modules</span>
+      </NCheckbox>
+      <button v-if="selectedFilter" flex="~ gap-1" items-center op50 text-xs py1 bg-gray:20 pl3 pr2 rounded-full hover:op100 @click="selectedFilter = undefined">
+        Clear filter <div i-carbon-close />
+      </button>
+      <div flex-auto />
+      <slot />
+    </template>
+  </Navbar>
 
   <div w-full relative h-full>
     <div ref="container" w-full h-full />
