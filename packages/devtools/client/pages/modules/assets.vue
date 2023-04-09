@@ -54,16 +54,8 @@ function refreshAssets() {}
 
 <template>
   <div h-full of-auto>
-    <div ref="navbar" flex="~ col gap-2" border="b base" p4 navbar-glass flex-1 pb2>
-      <div flex="~ gap4">
-        <NTextInput
-          v-model="search"
-          placeholder="Search..."
-          icon="carbon-search"
-          flex-auto
-          p="x5 y2"
-          n="primary"
-        />
+    <Navbar ref="navbar" v-model:search="search" pb2>
+      <template #actions>
         <div flex-none flex="~ gap4">
           <button
             title="Toggle view"
@@ -73,12 +65,12 @@ function refreshAssets() {}
             <NIcon v-else icon="i-carbon-grid" />
           </button>
         </div>
-      </div>
+      </template>
       <div op50>
         <span v-if="search">{{ filtered.length }} matched · </span>
         <span>{{ assets?.length }} assets in total</span>
       </div>
-    </div>
+    </Navbar>
 
     <!-- TODO: fix this after PR 162  -->
     <DropZone folder="/" @uploaded="refreshAssets" />
