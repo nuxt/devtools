@@ -73,7 +73,7 @@ const filtered = computed(() => {
 
 <template>
   <Navbar v-model:search="search">
-    <template #flex>
+    <template #actions>
       <slot />
     </template>
   </Navbar>

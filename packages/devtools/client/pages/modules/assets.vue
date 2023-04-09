@@ -55,7 +55,7 @@ function refreshAssets() {}
 <template>
   <div h-full of-auto>
     <Navbar ref="navbar" v-model:search="search" pb2>
-      <template #flex>
+      <template #actions>
         <div flex-none flex="~ gap4">
           <button
             title="Toggle view"

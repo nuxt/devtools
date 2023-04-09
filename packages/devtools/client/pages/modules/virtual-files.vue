@@ -74,7 +74,10 @@ const filteredFiles = computed(() => {
 <template>
   <PanelLeftRight class="virtual-files" storage-key="tab-virtual-files">
     <template #left>
-      <Navbar v-model:search="searchString" no-padding p3 />
+      <Navbar
+        v-model:search="searchString"
+        no-padding p3
+      />
       <template
         v-for="f of filteredFiles" :key="f.id"
       >

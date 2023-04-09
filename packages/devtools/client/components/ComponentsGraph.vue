@@ -183,7 +183,7 @@ function setFilter() {
 
 <template>
   <Navbar ref="navbar" absolute left-0 top-0 right-0>
-    <template #flex>
+    <template #search>
       <NCheckbox v-model="showPages" n="primary sm">
         <span op75>Show pages</span>
       </NCheckbox>

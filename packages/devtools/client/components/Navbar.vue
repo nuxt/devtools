@@ -20,29 +20,20 @@ function update(event: any) {
 </script>
 
 <template>
-  <div flex="~ col gap4" border="b base" flex-1 navbar-glass :class="[{ p4: !noPadding }]">
-    <div v-if="$slots.flex" flex="~ gap4">
-      <NTextInput
-        v-if="search !== undefined"
-        placeholder="Search..."
-        icon="carbon-search"
-        flex-auto
-        n="primary"
-        :class="{ 'px-5 py-2': !noPadding }"
-        :value="search"
-        @input="update"
-      />
-      <slot name="flex" />
+  <div flex="~ col gap2" border="b base" flex-1 navbar-glass :class="[{ p4: !noPadding }]">
+    <div flex="~ gap4">
+      <slot name="search">
+        <NTextInput
+          placeholder="Search..."
+          icon="carbon-search"
+          n="primary" flex-auto
+          :class="{ 'px-5 py-2': !noPadding }"
+          :value="search"
+          @input="update"
+        />
+      </slot>
+      <slot name="actions" />
     </div>
-    <NTextInput
-      v-else-if="search !== undefined"
-      placeholder="Search..."
-      icon="carbon-search"
-      n="primary"
-      :class="{ 'px-5 py-2': !noPadding }"
-      :value="search"
-      @input="update"
-    />
     <slot />
   </div>
 </template>
