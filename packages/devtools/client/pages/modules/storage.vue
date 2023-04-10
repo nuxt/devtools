@@ -189,33 +189,35 @@ async function renameCurrentItem() {
           @keyup.ctrl.enter="saveCurrentItem"
         />
       </div>
-      <div v-else flex items-center op50 h-full justify-center text-center>
-        <p>
+      <NPanelGrids v-else>
+        <NCard px6 py4>
           Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
             Nitro storage
           </NLink>
-        </p>
-      </div>
+        </NCard>
+      </NPanelGrids>
     </template>
   </PanelLeftRight>
-  <div v-else grid="~" class="h-full of-hidden">
-    <div class="flex gap-4 justify-center op50 text-center flex-col">
-      <p v-if="Object.keys(storageMounts as any).length">
-        Select one storage to start:
-      </p>
-      <p v-else>
-        No custom storage defined in <code>nitro.storage</code>.<br>
-        Learn more about <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
-          Nitro storage
-        </NLink>
-      </p>
-      <div class="mx-auto">
-        <NCard v-for="(storage, name) of storageMounts" :key="name" class="p-4 cursor-pointer text-left border mb-4 hover:border-green" @click="currentStorage = name">
-          <span class="font-bold">{{ name }}</span><br>
-          <span class="text-sm">{{ storage.driver }} driver</span><br>
-          <span v-if="storage.base" class="font-mono text-xs">{{ storage.base }}</span>
-        </NCard>
-      </div>
-    </div>
-  </div>
+  <NPanelGrids v-else card-class="flex flex-col gap-2 items-center text-center p6">
+    <p v-if="Object.keys(storageMounts as any).length" op50>
+      Select one storage to start:
+    </p>
+    <p v-else>
+      No custom storage defined in <code>nitro.storage</code>.<br>
+      Learn more about <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
+        Nitro storage
+      </NLink>
+    </p>
+    <NCard
+      v-for="(storage, name) of storageMounts"
+      :key="name"
+      p-4 cursor-pointer text-left min-w-80
+      hover="border-green"
+      @click="currentStorage = name"
+    >
+      <span font-bold>{{ name }}</span><br>
+      <span text-sm>{{ storage.driver }} driver</span><br>
+      <FilepathItem v-if="storage.base" text-xs :filepath="storage.base" />
+    </NCard>
+  </NPanelGrids>
 </template>

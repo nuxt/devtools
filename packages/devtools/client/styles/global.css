@@ -54,9 +54,11 @@ html.dark {
   opacity: 1;
 }
 .splitpanes--vertical>.splitpanes__splitter {
+  min-width: 0 !important;
   width: 0 !important;
 }
 .splitpanes--horizontal>.splitpanes__splitter {
+  min-height: 0 !important;
   height: 0 !important;
 }
 .splitpanes--vertical>.splitpanes__splitter:before {

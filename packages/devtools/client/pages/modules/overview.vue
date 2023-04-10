@@ -22,7 +22,7 @@ function goIntro() {
 </script>
 
 <template>
-  <div flex h-full w-full>
+  <NPanelGrids flex h-full w-full>
     <div v-if="!config">
       Loading...
     </div>
@@ -41,7 +41,7 @@ function goIntro() {
             />
           </button>
         </div>
-        <div text-sm text-center mt--1 mb6 flex="~ gap-1">
+        <div text-center mt--1 text-sm mb6 flex="~ gap-1">
           <span op40>
             Nuxt DevTools
           </span>
@@ -54,7 +54,7 @@ function goIntro() {
         </div>
       </div>
       <!-- Main Grid -->
-      <div flex="~ gap2 wrap">
+      <div flex="~ gap2 wrap" bg-base>
         <div p4 theme-card-green flex="~ col auto">
           <div text-3xl logos-nuxt-icon />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
@@ -144,5 +144,5 @@ function goIntro() {
         to toggle DevTools
       </div>
     </div>
-  </div>
+  </NPanelGrids>
 </template>
