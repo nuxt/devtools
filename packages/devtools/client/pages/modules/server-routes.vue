@@ -5,17 +5,13 @@ definePageMeta({
   experimental: true,
 })
 
-// TODO: add selectable folder
-const folders = ['api', 'routes']
-const disabledFolders = ref<string[]>([])
-
 const route = useRoute()
 
 const type = computed(() => route.query?.type as string | undefined)
 const url = computed(() => route.query?.url as string | undefined)
 
 const routes = computedAsync(() => {
-  return rpc.getServerRoutes([...disabledFolders.value])
+  return rpc.getServerRoutes()
 })
 
 const selectedRoute = computed(() => routes.value?.find(i => i.url === url.value && i.method === type.value))
@@ -35,39 +31,17 @@ const filtered = computed(() =>
     ),
   ),
 )
-
-function methodColor(method: string) {
-  const methods = {
-    get: 'bg-green-400:10 text-green-400',
-    post: 'bg-blue-400:10 text-blue-400',
-    put: 'bg-orange-400:10 text-orange-400',
-    delete: 'bg-red-400:10 text-red-400',
-    patch: 'bg-purple-400:10 text-purple-400',
-    head: 'bg-teal-400:10 text-teal-400',
-  } as any
-  return methods[method.toLowerCase()] || 'bg-gray-400:10 text-gray-400'
-}
 </script>
 
 <template>
   <PanelLeftRight>
     <template #left>
-      <div flex="~ col gap-2" border="b base" p4 navbar-glass flex-1 pb2>
-        <div flex="~ gap4">
-          <NTextInput
-            v-model="search"
-            placeholder="Search..."
-            icon="carbon-search"
-            flex-auto
-            p="x5 y2"
-            n="primary"
-          />
-        </div>
+      <Navbar v-model:search="search" pb2>
         <div flex="~ gap1" op50 text-sm>
           <span v-if="search">{{ filtered.length }} matched · </span>
           <span>{{ routes?.length }} routes in total</span>
         </div>
-      </div>
+      </Navbar>
 
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
@@ -79,9 +53,9 @@ function methodColor(method: string) {
             },
           }"
         >
-          <div w-12 text-right>
+          <div text-right w-12>
             <Badge
-              :class="methodColor(item.method)"
+              :class="getRequestMethodClass(item.method)"
               title="updates available"
               v-text="item.method.toUpperCase()"
             />
@@ -92,7 +66,11 @@ function methodColor(method: string) {
       </template>
     </template>
     <template #right>
-      <ServerRouteDetails v-if="selectedRoute" :route="selectedRoute" />
+      <ServerRouteDetails
+        v-if="selectedRoute"
+        :key="selectedRoute.method + selectedRoute.url"
+        :route="selectedRoute"
+      />
       <span v-else h-full flex items-center op50 justify-center>
         Select a route to start
       </span>
