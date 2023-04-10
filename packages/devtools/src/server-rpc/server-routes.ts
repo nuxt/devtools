@@ -1,47 +1,18 @@
-import { join } from 'node:path'
-import { resolve } from 'pathe'
-import fg from 'fast-glob'
+import type { NitroConfig, NitroEventHandler } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupServerRoutesRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
+  let nitroConfig: NitroConfig
+
+  nuxt.hook('nitro:config', (config: any) => {
+    nitroConfig = config
+    refresh('getServerRoutes')
+  })
+
   return {
-    async getServerRoutes(exclude: string[] = []) {
-      // TODO: read from nitro hooks
-      const dir = resolve(nuxt.options.serverDir)
-      const baseURL = nuxt.options.app.baseURL
-      const methods = ['get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace', 'patch']
-
-      const files = await fg(['**/*', ...exclude?.map(e => `!**/${e}`)], {
-        cwd: dir,
-        onlyFiles: true,
-      })
-      return await Promise.all(files.map(async (path) => {
-        const filePath = resolve(dir, path)
-        let method = 'get'
-        methods.forEach((m) => {
-          if (path.includes(m))
-            method = m
-        })
-
-        const type = path.split('/')[0]
-
-        const url = path
-          .replace(`.${method}`, '')
-          .replace(/\.[^/.]+$/, '')
-          .replace(/\/index$/, '')
-
-        const params = url.match(/\[(.*?)\]/g)?.map(p => p.replace('[', '').replace(']', '')) || []
-
-        return {
-          type,
-          url: `/${url}`,
-          params,
-          baseURL: join(baseURL, url),
-          method,
-          path,
-          filePath,
-        }
-      }))
+    async getServerRoutes() {
+      return (nitroConfig?.handlers || [])
+        .filter(handler => handler?.route?.startsWith('/api/')) as NitroEventHandler[]
     },
   } satisfies Partial<ServerFunctions>
 }

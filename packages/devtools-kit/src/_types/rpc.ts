@@ -18,6 +18,7 @@ export interface ServerFunctions {
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
+  getServerRoutes(): Promise<ServerRouteInfo[]>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
@@ -38,7 +39,6 @@ export interface ServerFunctions {
   removeStorageItem(key: string): Promise<void>
 
   // Queries
-  getServerRoutes(exclude?: string[]): Promise<ServerRouteInfo[]>
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
   writeStaticAssets(file: { name: string; data: string }[], path: string): Promise<string[]>

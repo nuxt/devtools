@@ -41,6 +41,10 @@ export function useServerPages() {
   return useAsyncState('getServerPages', () => rpc.getServerPages())
 }
 
+export function useServerRoutes() {
+  return useAsyncState('getServerRoutes', () => rpc.getServerRoutes())
+}
+
 export function useComponentsRelationships() {
   return useAsyncState('getComponentsRelationships', () => rpc.getComponentsRelationships())
 }

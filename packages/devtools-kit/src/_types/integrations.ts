@@ -1,5 +1,6 @@
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Import, UnimportMeta } from 'unimport'
+import type { NitroEventHandler } from 'nitropack'
 
 export interface HookInfo {
   name: string
@@ -43,14 +44,8 @@ export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' |
   file?: string
 }
 
-export interface ServerRouteInfo {
-  type: string
-  url: string
-  baseURL: string
-  method: string
-  path: string
-  filePath: string
-  params: string[]
+export interface ServerRouteInfo extends NitroEventHandler {
+
 }
 
 export interface Payload {

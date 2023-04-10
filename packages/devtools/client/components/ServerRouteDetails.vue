@@ -12,35 +12,43 @@ const props = defineProps({
   },
 })
 
+const config = useServerConfig()
 const response = ref()
 const fetchTime = ref(0)
 const fetching = ref(false)
 const started = ref(false)
 
-const params = props.route.params
+// parse url params like /api/:id
+const parsedRoute = computed(() => {
+  return props.route.route?.split(/((?:\*\*)?:[\w_]+)/g)
+})
+const paramNames = computed(() => {
+  return parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || []
+})
+
+const method = computed(() => (props.route.method || 'GET').toUpperCase())
 const routeParams = ref<RouteParam>({})
 const routeBodies = ref<RouteParam[]>([{ key: '', value: '' }])
 const routeQueries = ref<RouteParam[]>([{ key: '', value: '' }])
 const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'application/json' }])
 
+const domain = computed(() => {
+  return `http://localhost:${config.value?.devServer.port || 3000}`
+})
 const finalURL = computed(() => {
-  // TODO: get domain, use absolute url
-  let result = props.route.url
-
-  params.forEach((param) => {
-    const currentParam = routeParams.value[param]
-    result = result.replace(`[${param}]`, currentParam || param)
-  })
-
-  return result
+  return domain.value + (parsedRoute.value?.map((i) => {
+    if (i.startsWith(':') || i.startsWith('**:'))
+      return routeParams.value[i] || i
+    return i
+  }).join('') || '')
 })
 
 async function fetchData() {
   started.value = true
   fetching.value = true
   const start = Date.now()
-  return await useLazyAsyncData(`${props.route.method}:${finalURL.value}`, () => $fetch(finalURL.value, {
-    method: props.route.method.toUpperCase() as any,
+  return await useLazyAsyncData(`${method.value}:${finalURL.value}`, () => $fetch(finalURL.value, {
+    method: method.value.toUpperCase() as any,
     headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
     query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
     body: routeBodies.value.reduce((acc: any, cur: any) => {
@@ -66,8 +74,8 @@ const rawFetchRequestCode = computed(() => {
 
   const items: string[] = []
 
-  if (props.route.method.toUpperCase() !== 'GET')
-    items.push(`method: '${props.route.method.toUpperCase()}'`)
+  if (method.value.toUpperCase() !== 'GET')
+    items.push(`method: '${method.value.toUpperCase()}'`)
 
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value]))).toString()
   if (query)
@@ -100,8 +108,8 @@ const currentParams = computed(() => {
   <div h-full w-full flex="~ col">
     <div flex="~ col gap-2" p4 navbar-glass flex-none>
       <div flex="~ gap2">
-        <NButton :class="getRequestMethodClass(route.method)" pointer-events-none tabindex="-1">
-          {{ route.method.toUpperCase() }}
+        <NButton :class="getRequestMethodClass(method)" pointer-events-none tabindex="-1">
+          {{ method.toUpperCase() }}
         </NButton>
         <NTextInput
           disabled
@@ -130,25 +138,23 @@ const currentParams = computed(() => {
       </button>
     </div>
     <div v-if="activeTab === 'params'" justify-around border="b base" px4 py2>
-      <div v-if="!params.length" op50 italic>
+      <div v-if="!paramNames.length" op50 italic>
         No params
       </div>
       <template v-else>
-        <div v-for="param in params" :key="param" flex="~ gap-2" items-center>
+        <div v-for="name in paramNames" :key="name" flex="~ gap-2" items-center>
           <div font-mono text-right w-25>
-            {{ param }}
+            {{ name }}
           </div>
           <NTextInput
-            v-model="routeParams[param]"
-            :placeholder="param"
+            v-model="routeParams[name]"
+            :placeholder="name"
             flex-1
           />
         </div>
       </template>
     </div>
-    <template
-      v-if="activeTab === 'fetch'"
-    >
+    <template v-if="activeTab === 'fetch'">
       <NCodeBlock
         p2 border="b base"
         :code="rawFetchRequestCode"

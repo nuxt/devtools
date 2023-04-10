@@ -1,36 +1,35 @@
 <script setup lang="ts">
+import Fuse from 'fuse.js'
+
 definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
   experimental: true,
 })
 
-const route = useRoute()
+const vueRoute = useRoute()
 
-const type = computed(() => route.query?.type as string | undefined)
-const url = computed(() => route.query?.url as string | undefined)
+const serverRoutes = useServerRoutes()
+const fuse = computed(() => new Fuse(serverRoutes.value || [], {
+  keys: [
+    'method',
+    'route',
+  ],
+  shouldSort: true,
+}))
 
-const routes = computedAsync(() => {
-  return rpc.getServerRoutes()
-})
-
-const selectedRoute = computed(() => routes.value?.find(i => i.url === url.value && i.method === type.value))
+const selectedRoute = computed(() => serverRoutes.value
+  ?.find(i => i.route === vueRoute.query?.route && i.method === vueRoute.query?.method),
+)
 const search = ref('')
 
-const methods = ['get', 'post', 'put', 'delete', 'patch', 'head', 'options', 'connect', 'trace']
-const filtered = computed(() =>
-  // TODO: use fuse.js
-  routes.value?.sort((a, b) =>
-    a.url === b.url
-      ? methods.indexOf(a.method) - methods.indexOf(b.method)
-      : a.url.localeCompare(b.url),
-  ).filter(item =>
-    search.value.split(' ').every(word =>
-      item.url.toLowerCase().includes(word.toLowerCase())
-      || item.method.toLowerCase().includes(word.toLowerCase()),
-    ),
-  ),
-)
+const filtered = computed(() => {
+  if (!serverRoutes.value)
+    return []
+  if (!search.value)
+    return serverRoutes.value
+  return fuse.value.search(search.value).map(i => i.item)
+})
 </script>
 
 <template>
@@ -39,7 +38,7 @@ const filtered = computed(() =>
       <Navbar v-model:search="search" pb2>
         <div flex="~ gap1" op50 text-sm>
           <span v-if="search">{{ filtered.length }} matched · </span>
-          <span>{{ routes?.length }} routes in total</span>
+          <span>{{ serverRoutes?.length }} routes in total</span>
         </div>
       </Navbar>
 
@@ -48,19 +47,19 @@ const filtered = computed(() =>
           flex="~ gap-2" items-center hover-bg-active px2 py1
           :to="{
             query: {
-              type: item.method,
-              url: item.url,
+              method: item.method,
+              route: item.route,
             },
           }"
         >
-          <div text-right w-12>
+          <div text-right flex-none w-12>
             <Badge
-              :class="getRequestMethodClass(item.method)"
+              :class="getRequestMethodClass(item.method || 'All')"
               title="updates available"
-              v-text="item.method.toUpperCase()"
+              v-text="(item.method || 'all').toUpperCase()"
             />
           </div>
-          <span text-sm font-mono>{{ item.url }}</span>
+          <span text-sm font-mono>{{ item.route }}</span>
         </NuxtLink>
         <div x-divider />
       </template>
@@ -68,10 +67,10 @@ const filtered = computed(() =>
     <template #right>
       <ServerRouteDetails
         v-if="selectedRoute"
-        :key="selectedRoute.method + selectedRoute.url"
+        :key="`${selectedRoute.method}${selectedRoute.route}`"
         :route="selectedRoute"
       />
-      <span v-else h-full flex items-center op50 justify-center>
+      <span v-else items-center op50 h-full flex justify-center>
         Select a route to start
       </span>
     </template>
