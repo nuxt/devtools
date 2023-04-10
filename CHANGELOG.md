@@ -1,3 +1,23 @@
+## [0.3.2](https://github.com/nuxt/devtools-poc/compare/v0.3.1...v0.3.2) (2023-04-07)
+
+
+### Bug Fixes
+
+* `imports.preset` resolution, close  [#165](https://github.com/nuxt/devtools-poc/issues/165) ([bba0496](https://github.com/nuxt/devtools-poc/commit/bba0496ecace206e13bbb3393d79c409a0fc3f8d))
+* hide injected app from the Vue devtools ([#167](https://github.com/nuxt/devtools-poc/issues/167)) ([26ee4a4](https://github.com/nuxt/devtools-poc/commit/26ee4a47c79d62876febf5f2a68f1532a34e1f64))
+* improve tab not found view ([02bd365](https://github.com/nuxt/devtools-poc/commit/02bd3653330a9bffe31b428ff3b62279d1cc91ef))
+* open in editor regex, close [#169](https://github.com/nuxt/devtools-poc/issues/169) ([8bec14f](https://github.com/nuxt/devtools-poc/commit/8bec14ffe7cb11d4669ef2d99a97cace665026fc))
+* **ui:** truncate test in asset details, close [#163](https://github.com/nuxt/devtools-poc/issues/163) ([e1af4a0](https://github.com/nuxt/devtools-poc/commit/e1af4a0d8ac328ead3910664aff8f395637f8162))
+
+
+### Features
+
+* initial drag & drop & write assets ([#164](https://github.com/nuxt/devtools-poc/issues/164)) ([02bd75d](https://github.com/nuxt/devtools-poc/commit/02bd75de14b81047d8907735be4155c3b480cddc))
+* new cli wizard ([#170](https://github.com/nuxt/devtools-poc/issues/170)) ([069ac33](https://github.com/nuxt/devtools-poc/commit/069ac330104a81f8b3e14cafe3512d81b5be1888))
+* **ui-kit:** support `v-lazy-show` for `NSectionBlock` ([4351a6b](https://github.com/nuxt/devtools-poc/commit/4351a6b66fc1faa13617027e5c9001f8891d5c50))
+
+
+
 ## [0.3.1](https://github.com/nuxt/devtools-poc/compare/v0.3.0...v0.3.1) (2023-03-27)
 
 

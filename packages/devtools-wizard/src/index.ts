@@ -1,6 +1,7 @@
 import consola from 'consola'
 import { readPackageJSON } from 'pkg-types'
 import c from 'picocolors'
+import semver from 'semver'
 import { name as moduleName, version } from '../package.json'
 
 async function getNuxtVersion(path: string): Promise<string | null> {
@@ -36,7 +37,7 @@ async function run() {
   }
   // Nuxt 3.4.0 will have devtools built-in
   // https://github.com/nuxt/nuxt/pull/20126
-  const isDevToolsBuiltIn = nuxtVersion.startsWith('3.4.')
+  const isDevToolsBuiltIn = semver.gte(nuxtVersion, '3.4.0')
 
   if (command === 'enable') {
     consola.log(c.green('Enabling Nuxt Devtools...'))

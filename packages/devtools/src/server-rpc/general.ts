@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
-import { resolvePreset } from 'unimport'
+import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import { logger } from '@nuxt/kit'
 
@@ -47,7 +47,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
     refresh('getServerPages')
   })
   nuxt.hook('imports:sources', async (v) => {
-    const result = (await Promise.all(v.map(i => resolvePreset(i)))).flat()
+    const result = (await resolveBuiltinPresets(v)).flat()
     importPresets.length = 0
     importPresets.push(...result)
     refresh('getAutoImports')
