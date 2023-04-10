@@ -94,12 +94,16 @@ const filteredFiles = computed(() => {
 
     <template #right>
       <div v-if="current?.content" h-full of-hidden flex="~ col">
-        <div border="b base" text-sm flex-none op75 px4 py2>
+        <div border="b base" text-sm flex-none py2 op75 px4>
           <code>{{ current.id }}</code>
         </div>
         <NCodeBlock h-full text-sm of-auto :code="current.content" lang="typescript" />
       </div>
-      <span v-else h-full items-center op50 flex justify-center>Select one file to start</span>
+      <NPanelGrids v-else>
+        <NCard px6 py4>
+          <span op75>Select one file to start</span>
+        </NCard>
+      </NPanelGrids>
     </template>
   </PanelLeftRight>
 </template>
