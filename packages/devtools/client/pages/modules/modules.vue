@@ -35,15 +35,16 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div>
+  <div h-full w-full of-auto>
     <NSectionBlock
       icon="carbon-3d-mpr-toggle"
       text="Installed Modules"
-      container-class="grid grid-cols-minmax-400px gap2"
+      container-class="grid grid-cols-minmax-400px gap3 px4"
+      :padding="false"
       :description="`Total modules: ${packageModules.length}`"
     >
       <template #footer>
-        <div>
+        <div px4>
           <span op50>Find more modules at </span><a href="https://nuxt.com/modules" target="_blank" hover="text-primary underline">nuxt.com/modules</a>
         </div>
       </template>
@@ -57,7 +58,8 @@ watchEffect(() => {
       v-if="userModules.length"
       icon="carbon-3d-mpr-toggle"
       text="User Modules"
-      container-class="grid grid-cols-minmax-450px gap2"
+      container-class="grid grid-cols-minmax-400px gap3 px4"
+      :padding="false"
       :description="`Total modules: ${userModules.length}`"
     >
       <template v-for="m of userModules" :key="m.meta?.name || m.entryPath">
