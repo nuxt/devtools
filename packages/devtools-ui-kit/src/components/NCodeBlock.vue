@@ -27,8 +27,7 @@ const rendered = computed(() => devToolsClient.value?.devtools.renderCodeHighlig
     <pre
       class="n-code-block"
       :class="lines ? 'n-code-block-lines' : ''"
-      v-text="code"
-    />
+    ><pre class="shiki"><code><template v-for="line, _idx in code.split('\n')" :key="_idx"><span class="line" v-text="line" /><br></template></code></pre></pre>
   </template>
 </template>
 

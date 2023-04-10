@@ -5,6 +5,9 @@ definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
   experimental: true,
+  // shouldShow() {
+  //   return useServerRoutes().value?.length
+  // },
 })
 
 const vueRoute = useRoute()
@@ -70,9 +73,11 @@ const filtered = computed(() => {
         :key="`${selectedRoute.method}${selectedRoute.route}`"
         :route="selectedRoute"
       />
-      <span v-else items-center op50 h-full flex justify-center>
-        Select a route to start
-      </span>
+      <NPanelGrids v-else>
+        <NCard py2 px6>
+          <span op75>Select a route to start</span>
+        </NCard>
+      </NPanelGrids>
     </template>
   </PanelLeftRight>
 </template>
