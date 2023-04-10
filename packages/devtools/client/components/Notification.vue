@@ -23,7 +23,7 @@ provideNotification((_text, _icon, duration = 1500) => {
 
       border="~ base"
       flex="~ inline gap2"
-      rounded items-center transition-all bg-base text-primary px-4 py-1 inline-block m-3 duration-300
+      rounded items-center py-1 transition-all text-primary bg-base px-4 inline-block m-3 duration-300
       :style="show ? {} : { transform: 'translateY(-300%)' }"
       :class="show ? 'shadow' : 'shadow-none'"
     >

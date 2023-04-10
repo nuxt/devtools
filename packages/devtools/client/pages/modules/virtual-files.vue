@@ -76,7 +76,7 @@ const filteredFiles = computed(() => {
     <template #left>
       <Navbar
         v-model:search="searchString"
-        no-padding p3
+        p3 no-padding
       />
       <template
         v-for="f of filteredFiles" :key="f.id"
