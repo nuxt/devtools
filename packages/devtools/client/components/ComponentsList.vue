@@ -81,6 +81,7 @@ const filtered = computed(() => {
     v-if="filtered.user.length"
     icon="carbon-nominal"
     text="User components"
+    :open="filtered.user.length <= DETAILS_MAX_ITEMS"
     :description="`Total components: ${filtered.count.user}`"
   >
     <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
@@ -88,7 +89,7 @@ const filtered = computed(() => {
   <NSectionBlock
     v-if="filtered.runtime.length"
     icon="carbon-load-balancer-global"
-
+    :open="filtered.runtime.length <= DETAILS_MAX_ITEMS"
     text="Runtime components"
     :description="`Total components: ${filtered.count.runtime}`"
   >
@@ -104,6 +105,7 @@ const filtered = computed(() => {
   </NSectionBlock>
   <NSectionBlock
     v-if="filtered.lib.size"
+    :open="filtered.count.lib <= DETAILS_MAX_ITEMS"
     icon="carbon-3d-mpr-toggle"
     text="Components from libraries"
     :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"

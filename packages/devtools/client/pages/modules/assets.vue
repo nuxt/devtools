@@ -82,7 +82,7 @@ function refreshAssets() {}
           :key="folder"
           :text="folder"
           :description="`${items.length} items`"
-          :open="items.length < 30"
+          :open="items.length <= DETAILS_MAX_ITEMS"
           :padding="false"
         >
           <div px2 mt--4 grid="~ cols-minmax-8rem">

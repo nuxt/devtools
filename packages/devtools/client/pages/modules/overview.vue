@@ -22,7 +22,7 @@ function goIntro() {
 </script>
 
 <template>
-  <NPanelGrids flex h-full w-full>
+  <NPanelGrids h-full flex w-full>
     <div v-if="!config">
       Loading...
     </div>
@@ -54,7 +54,7 @@ function goIntro() {
         </div>
       </div>
       <!-- Main Grid -->
-      <div flex="~ gap2 wrap" bg-base>
+      <div flex="~ gap2 wrap">
         <div p4 theme-card-green flex="~ col auto">
           <div text-3xl logos-nuxt-icon />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />

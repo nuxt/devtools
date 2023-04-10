@@ -16,7 +16,7 @@ export default defineConfig({
       // Reusable
       'x-divider': 'h-1px w-full bg-gray/15',
     },
-    [/^theme-card-(\w+)$/, $ => `p2 flex gap2 items-center rounded min-w-40 min-h-30 justify-center transition-all saturate-0 bg-gray/10 op50 hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
+    [/^theme-card-(\w+)$/, $ => `p2 flex gap2 border border-base bg-base items-center rounded min-w-40 min-h-25 justify-center transition-all saturate-0 op50 shadow hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
   ],
   theme: {
     colors: {
