@@ -100,8 +100,8 @@ const filteredFiles = computed(() => {
         <NCodeBlock h-full text-sm of-auto :code="current.content" lang="typescript" />
       </div>
       <NPanelGrids v-else>
-        <NCard px6 py4>
-          <span op75>Select one file to start</span>
+        <NCard py2 px6>
+          <span op75>Select a file to start</span>
         </NCard>
       </NPanelGrids>
     </template>
