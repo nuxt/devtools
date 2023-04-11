@@ -45,7 +45,7 @@ const filtered = computed(() => {
 
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
-          flex="~ gap-2" items-center hover-bg-active px2 py1
+          flex="~ gap-2" items-center px2 py1 hover-bg-active
           :to="{ query: { path: item.path } }"
         >
           <div text-right flex-none w-12>

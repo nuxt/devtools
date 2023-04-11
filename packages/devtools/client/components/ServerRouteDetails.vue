@@ -145,17 +145,17 @@ const currentParams = computed(() => {
 
 <template>
   <div h-full w-full flex="~ col">
-    <div flex="~ col gap-2" p4 navbar-glass flex-none>
+    <div flex="~ col gap-2" flex-none p4 navbar-glass>
       <div flex="~ gap2">
         <!-- TODO: when route.method is not defined, make this a dropdown -->
         <NButton :class="getRequestMethodClass(method)" pointer-events-none tabindex="-1">
           {{ method.toUpperCase() }}
         </NButton>
         <NTextInput
-          disabled
+
           :placeholder="finalURL"
-          font-mono
-          flex-auto
+
+          flex-auto disabled font-mono
           p="x5 y2"
           n="primary xs"
         />
@@ -165,7 +165,7 @@ const currentParams = computed(() => {
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
+    <div flex="~ gap2" w-full items-center text-center text-sm px4 pb2 border="b base">
       <NButton
         v-if="paramNames.length"
         :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent!'"
@@ -260,7 +260,7 @@ const currentParams = computed(() => {
         >
           Error
         </Badge>
-        <code v-if="response.contentType" text-xs op50>
+        <code v-if="response.contentType" op50 text-xs>
           {{ response.contentType }}
         </code>
         <div flex-auto />

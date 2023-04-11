@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { relative } from 'node:path'
-import consola from 'consola'
+import { consola } from 'consola'
 import c from 'picocolors'
 import { parseModule } from 'magicast'
 import { diffLines } from 'diff'

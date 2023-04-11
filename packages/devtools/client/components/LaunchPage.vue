@@ -15,7 +15,7 @@ defineEmits<{
 
 <template>
   <NPanelGrids>
-    <NCard flex="~ col gap2" mxa p6 items-center min-w-100>
+    <NCard flex="~ col gap2" p6 items-center mxa min-w-100>
       <TabIcon text-5xl mb2 :icon="icon || icon" :title="title" />
       <h1 text-xl>
         {{ title }}

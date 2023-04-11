@@ -107,7 +107,7 @@ function changeName(file: File, newName: string) {
   const newFileName = `${baseName}.${ext}`
   if (baseName.length === 0) {
     // TODO: with proper dialog
-    // @eslint-disable-next-line no-alert
+    // eslint-disable-next-line no-alert
     alert('File name must be at least 1 characters long')
     return name
   }
@@ -133,7 +133,7 @@ useEventListener('drop', onDrop)
 
 <template>
   <div
-    fixed top-0 right-0 bottom-0 z-10 transition-all left-13 backdrop-blur-20
+    fixed right-0 bottom-0 z-10 top-0 transition-all left-13 backdrop-blur-20
     :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'"
   >
     <NIconButton
@@ -141,7 +141,7 @@ useEventListener('drop', onDrop)
       absolute z-20 text-xl top-5 right-5
       @click="close"
     />
-    <div v-if="!files?.length" items-center w-full flex justify-center h-full>
+    <div v-if="!files?.length" items-center flex justify-center w-full h-full>
       <label for="drop-zone-input" text-3xl>
         <NIcon icon="carbon-cloud-upload" mr-2 /> Drop files here or click to select
       </label>
@@ -165,7 +165,7 @@ useEventListener('drop', onDrop)
           flex="~ col gap-2" relative items-center w-40 h-50
         >
           <div
-            items-center justify-center flex of-hidden rounded object-cover bg-active rounded-t-lg
+            items-center justify-center flex rounded of-hidden object-cover bg-active rounded-t-lg
             class="aspect-1/1" border="~ base"
           >
             <img w-full h-full rounded-t-lg object-cover :src="blobIt(file)">

@@ -9,7 +9,7 @@ function visit() {
 </script>
 
 <template>
-  <div flex="~ col gap4" h-screen items-center justify-center text-center w-160 mxa>
+  <div flex="~ col gap4" items-center justify-center text-center mxa h-screen w-160>
     <div flex="~" justify-center items-center>
       <NuxtLogo h-16 />
       <Badge
@@ -25,7 +25,7 @@ function visit() {
       <b font-bold>Nuxt DevTools</b> is a set of visual tools that help you to know your app/site better, and enhance your development experience with Nuxt.
     </p>
     <p text-lg>
-      Be aware that <span px2 rounded font-bold bg-orange:10 py0.5 text-orange>Nuxt DevTools is still in early preview</span>, features might be incomplete and unstable. <a href="https://github.com/nuxt/devtools" target="_blank" text-primary hover-underline>Create an issue or discussion</a> if you find any bugs or have any suggestions. Thank you and have fun!
+      Be aware that <span rounded font-bold px2 bg-orange:10 py0.5 text-orange>Nuxt DevTools is still in early preview</span>, features might be incomplete and unstable. <a href="https://github.com/nuxt/devtools" target="_blank" text-primary hover-underline>Create an issue or discussion</a> if you find any bugs or have any suggestions. Thank you and have fun!
     </p>
 
     <NButton to="/modules/overview" mt-4 n="xl primary" @click="visit">

@@ -7,7 +7,7 @@ import fs from 'node:fs'
 import { readUser, writeUser } from 'rc9'
 import globalDirs from 'global-dirs'
 import { resolve } from 'pathe'
-import consola from 'consola'
+import { consola } from 'consola'
 import { execa } from 'execa'
 
 const moduleName = '@nuxt/devtools'

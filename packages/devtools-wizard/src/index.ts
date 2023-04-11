@@ -1,4 +1,4 @@
-import consola from 'consola'
+import { consola } from 'consola'
 import { readPackageJSON } from 'pkg-types'
 import c from 'picocolors'
 import semver from 'semver'

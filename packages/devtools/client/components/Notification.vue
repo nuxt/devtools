@@ -20,10 +20,9 @@ provideNotification((_text, _icon, duration = 1500) => {
     :class="show ? '' : 'pointer-events-none overflow-hidden'"
   >
     <div
-
       border="~ base"
       flex="~ inline gap2"
-      rounded items-center py-1 transition-all text-primary bg-base px-4 inline-block m-3 duration-300
+      rounded items-center transition-all text-primary py-1 bg-base px-4 inline-block m-3 duration-300
       :style="show ? {} : { transform: 'translateY(-300%)' }"
       :class="show ? 'shadow' : 'shadow-none'"
     >

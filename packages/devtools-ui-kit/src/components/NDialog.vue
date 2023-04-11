@@ -47,7 +47,7 @@ export default {
 <template>
   <Teleport v-if="show" to="body">
     <div
-      class="n-transition fixed flex items-center justify-center z-100 n-dialog inset-0"
+      class="n-transition fixed flex items-center justify-center z-100 inset-0 n-dialog"
       :class="[
         show ? '' : 'op0 pointer-events-none visibility-none',
       ]"
