@@ -56,7 +56,7 @@ const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'applicati
 const queriesCount = computed(() => routeQueries.value.filter(({ key }) => key).length)
 const headersCount = computed(() => routeHeaders.value.filter(({ key }) => key).length)
 
-const domain = computed(() => `http://localhost:${config.value?.devServer.port || 3000}${props.route.type === 'api' ? '/api' : ''}`)
+const domain = computed(() => `http://localhost:${config.value?.devServer.port || 3000}`)
 const finalURL = computed(() => {
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
   if (query)

@@ -71,6 +71,9 @@ function scanFileHandler(type: ServerRouteInfo['type'], prefix = '/') {
 
     route = route.replace(/\/index$/, '') || '/'
 
+    if (type === 'api')
+      route = `/api${route}`
+
     return {
       filepath: file.fullPath,
       path: file.path,
