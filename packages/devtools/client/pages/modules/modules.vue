@@ -35,7 +35,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div h-full w-full of-auto>
+  <div h-full of-auto w-full>
     <NSectionBlock
       icon="carbon-3d-mpr-toggle"
       text="Installed Modules"

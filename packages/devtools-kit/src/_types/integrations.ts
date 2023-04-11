@@ -43,6 +43,14 @@ export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' |
   file?: string
 }
 
+export interface ServerRouteInfo {
+  route: string
+  filepath: string
+  path: string
+  method?: string
+  type: 'api' | 'route'
+}
+
 export interface Payload {
   url: string
   time: number

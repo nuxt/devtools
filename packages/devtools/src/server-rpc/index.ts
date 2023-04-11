@@ -14,6 +14,7 @@ import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
 import { setupTerminalRPC } from './terminals'
+import { setupServerRoutesRPC } from './server-routes'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -75,6 +76,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupNpmRPC(ctx),
     ...setupWizardRPC(ctx),
     ...setupTerminalRPC(ctx),
+    ...setupServerRoutesRPC(ctx),
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()

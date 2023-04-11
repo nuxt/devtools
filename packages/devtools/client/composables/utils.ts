@@ -82,3 +82,18 @@ export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: As
 export function getIsMacOS() {
   return typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('mac')
 }
+
+// @unocss-include
+const requestMethodClass: Record<string, string> = {
+  get: 'bg-green-400:10 text-green-400',
+  post: 'bg-blue-400:10 text-blue-400',
+  put: 'bg-orange-400:10 text-orange-400',
+  delete: 'bg-red-400:10 text-red-400',
+  patch: 'bg-purple-400:10 text-purple-400',
+  head: 'bg-teal-400:10 text-teal-400',
+  default: 'bg-gray-400:10 text-gray-400',
+}
+
+export function getRequestMethodClass(method: string) {
+  return requestMethodClass[method.toLowerCase()] || requestMethodClass.default
+}

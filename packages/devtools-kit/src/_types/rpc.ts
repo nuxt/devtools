@@ -3,7 +3,7 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo } from './integrations'
+import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 
@@ -18,6 +18,7 @@ export interface ServerFunctions {
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
+  getServerRoutes(): Promise<ServerRouteInfo[]>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
