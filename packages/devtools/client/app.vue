@@ -52,10 +52,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLoadingIndicator />
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
-  <DisconnectIndicator />
-  <RestartDialogs />
+  <div w-screen h-screen inset-0 fixed>
+    <NuxtLoadingIndicator />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <DisconnectIndicator />
+    <RestartDialogs />
+  </div>
 </template>

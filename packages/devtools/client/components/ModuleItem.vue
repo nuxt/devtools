@@ -33,7 +33,7 @@ const npmBase = 'https://www.npmjs.com/package/'
 </script>
 
 <template>
-  <div border="~ base" p4 flex="~ gap2">
+  <NCard p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
         of-hidden ws-nowrap text-lg text-ellipsis
@@ -59,7 +59,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         </span>
       </div>
 
-      <div v-if="data.description " op50 text-sm mt--1>
+      <div v-if="data.description " op50 text-sm mt--1 line-clamp-2>
         {{ data.description }}
       </div>
 
@@ -137,7 +137,7 @@ const npmBase = 'https://www.npmjs.com/package/'
       <div
         v-if="data.icon || isPackageModule"
 
-        p4 rounded flex-none flex h-20 w-20 bg-gray:3
+        p4 rounded flex flex-none h-20 w-20 bg-gray:3
       >
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
         <div op50 ma i-carbon-circle-dash text-4xl />
@@ -154,5 +154,5 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
     </div>
-  </div>
+  </NCard>
 </template>

@@ -81,6 +81,7 @@ const filtered = computed(() => {
     </Navbar>
     <NSectionBlock
       v-if="filtered.user.size"
+      :open="filtered.count.user <= DETAILS_MAX_ITEMS"
       icon="carbon-function"
       text="User composables"
       :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
@@ -89,6 +90,7 @@ const filtered = computed(() => {
     </NSectionBlock>
     <NSectionBlock
       v-if="filtered.builtin.size"
+      :open="filtered.count.builtin <= DETAILS_MAX_ITEMS"
       icon="simple-icons-nuxtdotjs"
       text="Built-in composables"
       :description="`${filtered.count.builtin} composables`"
@@ -97,6 +99,7 @@ const filtered = computed(() => {
     </NSectionBlock>
     <NSectionBlock
       v-if="filtered.lib.size"
+      :open="filtered.count.lib <= DETAILS_MAX_ITEMS"
       icon="carbon-3d-mpr-toggle"
       text="Composables from libraries"
       :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"

@@ -1,6 +1,16 @@
 html {
   --at-apply: font-sans;
-  overflow: hidden;
+  overflow-y: scroll;
+  overscroll-behavior: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+  /* trap scroll inside iframe */
+  height: calc(100vh + 1px);
 }
 
 html.dark {
