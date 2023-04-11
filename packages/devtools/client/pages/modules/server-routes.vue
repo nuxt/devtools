@@ -5,9 +5,9 @@ definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
   experimental: true,
-  // shouldShow() {
-  //   return useServerRoutes().value?.length
-  // },
+  shouldShow() {
+    return useServerRoutes().value?.length
+  },
 })
 
 const vueRoute = useRoute()
@@ -21,9 +21,7 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selectedRoute = computed(() => serverRoutes.value
-  ?.find(i => i.route === vueRoute.query?.route && i.method === vueRoute.query?.method),
-)
+const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
 const search = ref('')
 
 const filtered = computed(() => {
@@ -48,18 +46,13 @@ const filtered = computed(() => {
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
           flex="~ gap-2" items-center hover-bg-active px2 py1
-          :to="{
-            query: {
-              method: item.method,
-              route: item.route,
-            },
-          }"
+          :to="{ query: { path: item.path } }"
         >
           <div text-right flex-none w-12>
             <Badge
-              :class="getRequestMethodClass(item.method || 'All')"
+              :class="getRequestMethodClass(item.method || '*')"
               title="updates available"
-              v-text="(item.method || 'all').toUpperCase()"
+              v-text="(item.method || '*').toUpperCase()"
             />
           </div>
           <span text-sm font-mono>{{ item.route }}</span>
@@ -69,9 +62,9 @@ const filtered = computed(() => {
     </template>
     <template #right>
       <ServerRouteDetails
-        v-if="selectedRoute"
-        :key="`${selectedRoute.method}${selectedRoute.route}`"
-        :route="selectedRoute"
+        v-if="selected"
+        :key="selected.path"
+        :route="selected"
       />
       <NPanelGrids v-else>
         <NCard py2 px6>

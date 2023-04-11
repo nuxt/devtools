@@ -13,10 +13,33 @@ const props = defineProps({
 })
 
 const config = useServerConfig()
-const responseData = ref<any>()
-const responseContent = ref('')
-const responseLang = ref('json')
-const responseError = ref<Error>()
+
+const response = reactive({
+  contentType: 'text/plain',
+  data: '' as any,
+  error: undefined as Error | undefined,
+})
+
+const responseLang = computed(() => {
+  if (response.contentType.includes('application/json'))
+    return 'json'
+  if (response.contentType.includes('text/html'))
+    return 'html'
+  if (response.contentType.includes('text/css'))
+    return 'css'
+  if (response.contentType.includes('text/javascript'))
+    return 'javascript'
+  if (response.contentType.includes('text/xml') || response.contentType.includes('application/xml'))
+    return 'xml'
+  return 'text'
+})
+
+const responseContent = computed(() => {
+  if (responseLang.value === 'json')
+    return JSON.stringify(response.data, null, 2)
+  return response.data
+})
+
 const fetchTime = ref(0)
 const fetching = ref(false)
 const started = ref(false)
@@ -38,6 +61,7 @@ const finalURL = computed(() => {
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
   if (query)
     query = `?${query}`
+
   return domain.value + (parsedRoute.value?.map((i) => {
     if (i.startsWith(':') || i.startsWith('**:'))
       return routeParams.value[i] || i
@@ -48,10 +72,17 @@ const finalURL = computed(() => {
 async function fetchData() {
   started.value = true
   fetching.value = true
-  responseError.value = undefined
+  Object.assign(response, {
+    lang: 'text',
+    contentType: '',
+    data: '',
+    content: '',
+    error: undefined,
+  })
+
   const start = Date.now()
   try {
-    responseData.value = await $fetch(finalURL.value, {
+    response.data = await $fetch(finalURL.value, {
       method: method.value.toUpperCase() as any,
       headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
       query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
@@ -60,29 +91,15 @@ async function fetchData() {
           acc[cur.key] = cur.value
         return acc
       }, null),
-      onResponse({ response }) {
-        const type = response.headers.get('content-type')
-        if (type?.includes('application/json'))
-          responseLang.value = 'json'
-        else if (type?.includes('text/html'))
-          responseLang.value = 'html'
-        else
-          responseLang.value = 'text'
+      onResponse({ response: res }) {
+        response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
       },
       onResponseError({ error }) {
         console.error(error)
-        responseError.value = error
-        responseLang.value = 'text'
-        responseContent.value = error?.message || error?.toString?.() || 'Unknown error'
+        response.error = error
+        response.data = error?.message || error?.toString?.() || 'Unknown error'
       },
     })
-
-    if (responseLang.value === 'json')
-      responseContent.value = JSON.stringify(responseData.value, null, 2)
-    else if (responseLang.value === 'html')
-      responseContent.value = responseData.value
-    else
-      responseContent.value = responseData.value?.toString?.()
   }
   catch (err: any) {
 
@@ -238,11 +255,14 @@ const currentParams = computed(() => {
       <div px4 py2 border="b base" flex="~ gap2" items-center>
         <div>Response</div>
         <Badge
-          v-if="responseError"
+          v-if="response.error"
           text-red-400 bg-red-400:10
         >
           Error
         </Badge>
+        <code v-if="response.contentType" text-xs op50>
+          {{ response.contentType }}
+        </code>
         <div flex-auto />
         <div op50>
           Request finished in
