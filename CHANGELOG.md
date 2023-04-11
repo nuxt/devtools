@@ -1,3 +1,26 @@
+# [0.4.0](https://github.com/nuxt/devtools-poc/compare/v0.3.2...v0.4.0) (2023-04-11)
+
+
+### Bug Fixes
+
+* **server-route:** added route type to url ([#175](https://github.com/nuxt/devtools-poc/issues/175)) ([0bbeb28](https://github.com/nuxt/devtools-poc/commit/0bbeb28b221b8e682bb02ee8b9c4e24f61bd39ed))
+* **server-routes:** route resolving ([1895a16](https://github.com/nuxt/devtools-poc/commit/1895a1682d298030e79ec775d88e9cbaf0d5f783))
+* styling ([d08b233](https://github.com/nuxt/devtools-poc/commit/d08b23355e1a473bc9662c02eab1b98153ec2119))
+* **ui-kit:** NCodeBlock layout shift ([875ff88](https://github.com/nuxt/devtools-poc/commit/875ff88c39b2acaba4f2e773efcad03c30e92047))
+* **wizard:** also check versions greater than 3.4 ([dd14aac](https://github.com/nuxt/devtools-poc/commit/dd14aacfd9f27ad07f37ec160a761cf672a5064e))
+* **wizard:** remove global module install in 3.4 ([c5fdf23](https://github.com/nuxt/devtools-poc/commit/c5fdf2358d9c689981feafede54c1f8bbe5a6a0b))
+
+
+### Features
+
+* add panel grids ([7304c7b](https://github.com/nuxt/devtools-poc/commit/7304c7b519e1fc0aafc7c1c5bafa5b600b81e613))
+* improve style consistentency ([4459cf5](https://github.com/nuxt/devtools-poc/commit/4459cf59c617dfd683e9d0b9c113d26718f146a3))
+* init server routes tab ([#159](https://github.com/nuxt/devtools-poc/issues/159)) ([5722c5b](https://github.com/nuxt/devtools-poc/commit/5722c5b8eef28de9fae50319373e7505e26a77a0))
+* optimize tab performance ([69dc864](https://github.com/nuxt/devtools-poc/commit/69dc8640d0b8001312acf799f7b9f8af780eef38))
+* scroll trap in iframe ([0abc4b3](https://github.com/nuxt/devtools-poc/commit/0abc4b3cc931534431f4a1aa9134926814d489ce))
+
+
+
 ## [0.3.2](https://github.com/nuxt/devtools-poc/compare/v0.3.1...v0.3.2) (2023-04-07)
 
 
