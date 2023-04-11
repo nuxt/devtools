@@ -48,6 +48,12 @@ function markEnable(rc: RC, path: string) {
   writeUser(rc, RC_PATH)
 }
 
+export function disableSilently(cwd: string) {
+  const rc = readUser(RC_PATH)
+  if (markDisable(rc, cwd))
+    writeUser(rc, RC_PATH)
+}
+
 export async function disable(cwd: string, args: string[]) {
   const rc = readUser(RC_PATH)
   const isRemove = args.includes('--remove')

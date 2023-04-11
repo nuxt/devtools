@@ -84,13 +84,19 @@ async function toggleConfig(cwd: string, value?: boolean) {
 }
 
 export async function enable(cwd: string) {
-  if (await toggleConfig(cwd, true))
+  if (await toggleConfig(cwd, true)) {
+    // disable global devtools
+    await import('./global').then(r => r.disableSilently(cwd))
     consola.success(c.green('Nuxt Devtools is enabled! Restart your Nuxt app to start using it.'))
+  }
 }
 
 export async function disable(cwd: string) {
-  if (await toggleConfig(cwd, false))
+  if (await toggleConfig(cwd, false)) {
+    // disable global devtools
+    await import('./global').then(r => r.disableSilently(cwd))
     consola.success('Nuxt Devtools disabled for this project.')
+  }
 }
 
 // diff `from` and `to` by line and pretty print to console with line numbers, using the `diff` package
