@@ -95,5 +95,5 @@ function updateIframeBox() {
 </script>
 
 <template>
-  <div ref="anchor" w-full h-full />
+  <div ref="anchor" h-full w-full />
 </template>

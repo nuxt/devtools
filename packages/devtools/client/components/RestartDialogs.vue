@@ -38,7 +38,7 @@ nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
         <p op50>
           {{ args[0] }}
         </p>
-        <div flex="~ gap-3" justify-end mt2>
+        <div flex="~ gap-3" mt2 justify-end>
           <NButton @click="resolve(false)">
             Cancel
           </NButton>

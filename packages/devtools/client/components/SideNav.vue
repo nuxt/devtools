@@ -4,12 +4,12 @@ const tabs = useTabs()
 </script>
 
 <template>
-  <div border="r base" flex="~ col gap-0.5" h-full items-center bg-base z-100 class="no-scrollbar">
-    <div flex="~ col" items-center bg-base top-0 pt3 sticky z-1 mb1>
+  <div border="r base" flex="~ col gap-0.5" z-100 h-full items-center bg-base class="no-scrollbar">
+    <div flex="~ col" sticky top-0 z-1 mb1 items-center pt3 bg-base>
       <VDropdown placement="left-start" :distance="20">
         <button
 
-          text-lg w-6 h-6 i-logos-nuxt-icon
+          i-logos-nuxt-icon h-6 w-6 text-lg
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
         />
@@ -18,7 +18,7 @@ const tabs = useTabs()
         </template>
       </VDropdown>
 
-      <div h-1px w-8 mt-2 border="b base" />
+      <div mt-2 h-1px w-8 border="b base" />
     </div>
 
     <SideNavItem
@@ -27,7 +27,7 @@ const tabs = useTabs()
       :tab="tab"
     />
     <template v-if="tabs.custom.value.length">
-      <div h-1px w-8 my1 border="b base" />
+      <div my1 h-1px w-8 border="b base" />
       <SideNavItem
         v-for="tab of tabs.custom.value"
         :key="tab.name"

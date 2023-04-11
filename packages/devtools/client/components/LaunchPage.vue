@@ -15,12 +15,12 @@ defineEmits<{
 
 <template>
   <NPanelGrids>
-    <NCard flex="~ col gap2" p6 items-center mxa min-w-100>
-      <TabIcon text-5xl mb2 :icon="icon || icon" :title="title" />
+    <NCard flex="~ col gap2" mxa min-w-100 items-center p6>
+      <TabIcon mb2 text-5xl :icon="icon || icon" :title="title" />
       <h1 text-xl>
         {{ title }}
       </h1>
-      <NMarkdown v-if="description" mb2 op50 text-center text-base mt--1 :markdown="description" />
+      <NMarkdown v-if="description" mb2 mt--1 text-center text-base op50 :markdown="description" />
       <div flex="~ gap2 wrap">
         <template v-for="action, idx of actions" :key="idx">
           <NButton

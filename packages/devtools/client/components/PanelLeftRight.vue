@@ -25,7 +25,7 @@ const size = key
     <Pane border="r base" h-full class="of-auto!" :size="size" min-size="10">
       <slot name="left" />
     </Pane>
-    <Pane h-full relative class="of-auto!" min-size="10">
+    <Pane relative h-full class="of-auto!" min-size="10">
       <slot name="right" />
     </Pane>
   </Splitpanes>

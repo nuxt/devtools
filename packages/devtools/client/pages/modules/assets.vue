@@ -85,7 +85,7 @@ function refreshAssets() {}
           :open="items.length <= DETAILS_MAX_ITEMS"
           :padding="false"
         >
-          <div px2 mt--4 grid="~ cols-minmax-8rem">
+          <div mt--4 px2 grid="~ cols-minmax-8rem">
             <AssetGridItem v-for="a of items" :key="a.path" :asset="a" :folder="folder" @click="selected = a" />
           </div>
         </NSectionBlock>
@@ -99,8 +99,8 @@ function refreshAssets() {}
     </div>
     <DrawerRight
       :model-value="!!selected"
-      w-120
-      auto-close
+
+      auto-close w-120
       :navbar="navbar"
       @close="selected = undefined"
     >

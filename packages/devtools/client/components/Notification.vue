@@ -16,13 +16,13 @@ provideNotification((_text, _icon, duration = 1500) => {
 <template>
   <div
 
-    text-center top-0 right-0 fixed left-0 z-50
+    fixed left-0 right-0 top-0 z-50 text-center
     :class="show ? '' : 'pointer-events-none overflow-hidden'"
   >
     <div
       border="~ base"
       flex="~ inline gap2"
-      rounded items-center transition-all text-primary py-1 bg-base px-4 inline-block m-3 duration-300
+      m-3 inline-block items-center rounded px-4 py-1 text-primary transition-all duration-300 bg-base
       :style="show ? {} : { transform: 'translateY(-300%)' }"
       :class="show ? 'shadow' : 'shadow-none'"
     >

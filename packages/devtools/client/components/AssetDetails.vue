@@ -84,9 +84,9 @@ const supportsPreview = computed(() => {
 </script>
 
 <template>
-  <div flex="~ col gap-4" w-full of-hidden min-h-full p4>
+  <div flex="~ col gap-4" min-h-full w-full of-hidden p4>
     <template v-if="supportsPreview">
-      <div flex="~ gap2" op50 items-center mb--2>
+      <div flex="~ gap2" mb--2 items-center op50>
         <div x-divider />
         <div flex-none>
           Preview
@@ -96,14 +96,14 @@ const supportsPreview = computed(() => {
 
       <div flex="~" items-center justify-center>
         <AssetPreview
-          rounded max-h-80 w-auto min-h-20 min-w-20 border="~ base"
+          max-h-80 min-h-20 min-w-20 w-auto rounded border="~ base"
           :asset="asset"
           :text-content="textContent"
         />
       </div>
     </template>
 
-    <div op50 mb--2 flex="~ gap2" items-center>
+    <div flex="~ gap2" mb--2 items-center op50>
       <div x-divider />
       <div flex-none>
         Details
@@ -111,14 +111,14 @@ const supportsPreview = computed(() => {
       <div x-divider />
     </div>
 
-    <table w-full max-w-full table-fixed>
+    <table max-w-full w-full table-fixed>
       <tbody>
         <tr>
-          <td op50 text-right pr5 ws-nowrap w-30>
+          <td w-30 ws-nowrap pr5 text-right op50>
             Filepath
           </td>
           <td>
-            <div flex="~ gap-1" items-center w-full>
+            <div flex="~ gap-1" w-full items-center>
               <FilepathItem :filepath="asset.filePath" text-left />
               <NIconButton
                 flex-none
@@ -130,12 +130,12 @@ const supportsPreview = computed(() => {
           </td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-30 ws-nowrap>
+          <td w-30 ws-nowrap pr5 text-right op50>
             Public Path
           </td>
           <td>
-            <div flex="~ gap-1" items-center w-full of-hidden>
-              <div of-hidden font-mono flex-auto ws-pre truncate>
+            <div flex="~ gap-1" w-full items-center of-hidden>
+              <div flex-auto of-hidden truncate ws-pre font-mono>
                 {{ asset.publicPath }}
               </div>
               <NIconButton
@@ -155,7 +155,7 @@ const supportsPreview = computed(() => {
           </td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-30 ws-nowrap>
+          <td w-30 ws-nowrap pr5 text-right op50>
             Type
           </td>
           <td capitalize>
@@ -164,26 +164,26 @@ const supportsPreview = computed(() => {
         </tr>
         <template v-if="imageMeta?.width">
           <tr>
-            <td text-right op50 pr5 w-30 ws-nowrap>
+            <td w-30 ws-nowrap pr5 text-right op50>
               Image Size
             </td>
             <td>{{ imageMeta.width }} x {{ imageMeta.height }}</td>
           </tr>
           <tr v-if="aspectRatio">
-            <td text-right op50 pr5 w-30 ws-nowrap>
+            <td w-30 ws-nowrap pr5 text-right op50>
               Aspect Ratio
             </td>
             <td>{{ aspectRatio }}</td>
           </tr>
         </template>
         <tr>
-          <td text-right op50 pr5 w-30 ws-nowrap>
+          <td w-30 ws-nowrap pr5 text-right op50>
             File size
           </td>
           <td>{{ fileSize }}</td>
         </tr>
         <tr>
-          <td text-right op50 pr5 w-30 ws-nowrap>
+          <td w-30 ws-nowrap pr5 text-right op50>
             Last modified
           </td>
           <td>{{ new Date(asset.mtime).toLocaleString() }} <span op70>({{ timeago }})</span></td>
@@ -191,7 +191,7 @@ const supportsPreview = computed(() => {
       </tbody>
     </table>
 
-    <div op50 mb--2 flex="~ gap2" items-center>
+    <div flex="~ gap2" mb--2 items-center op50>
       <div x-divider />
       <div flex-none>
         Actions

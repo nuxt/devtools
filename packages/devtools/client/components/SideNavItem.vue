@@ -25,7 +25,7 @@ const isEnabled = computed(() => {
       :to="'path' in tab ? tab.path : `/modules/custom-${tab.name}`"
       flex="~"
       hover="bg-active"
-      select-none items-center justify-center p1 w-10 text-secondary rounded-xl h-10
+      h-10 w-10 select-none items-center justify-center rounded-xl p1 text-secondary
       exact-active-class="!text-primary bg-active"
     >
       <TabIcon

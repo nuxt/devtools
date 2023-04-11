@@ -22,7 +22,7 @@ onClickOutside(el, () => {
     </slot>
 
     <div
-      class="absolute n-transition n-bg-base rounded z-10 border n-border-base shadow"
+      class="absolute z-10 border n-border-base rounded shadow n-transition n-bg-base"
       :class="[enabled ? 'op-100' : 'op0 pointer-events-none -translate-y-1']"
     >
       <slot />

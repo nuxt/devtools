@@ -21,14 +21,14 @@ onMounted(() => {
 <template>
   <template v-if="!tab">
     <div flex="~ col gap-2" h-full items-center justify-center>
-      <div op50 text-5xl mb2 i-carbon-queued />
+      <div i-carbon-queued mb2 text-5xl op50 />
       <p text-xl>
         Tab <code text-rose>{{ name }}</code> not found
       </p>
       <p op50>
         It might because the module contributing this tab is not installed or enabled
       </p>
-      <p animate-pulse mt8>
+      <p mt8 animate-pulse>
         Redirecting to overview page...
       </p>
     </div>

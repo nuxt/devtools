@@ -155,7 +155,7 @@ const currentParams = computed(() => {
 
           :placeholder="finalURL"
 
-          flex-auto disabled font-mono
+          disabled flex-auto font-mono
           p="x5 y2"
           n="primary xs"
         />
@@ -165,7 +165,7 @@ const currentParams = computed(() => {
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center text-center text-sm px4 pb2 border="b base">
+    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
         v-if="paramNames.length"
         :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent!'"
@@ -206,11 +206,11 @@ const currentParams = computed(() => {
     </div>
     <div
       v-if="activeTab === 'params'"
-      border="b base" px4 items-center py2
+      border="b base" items-center px4 py2
       grid="~ cols-[max-content_1fr] gap-2"
     >
       <template v-for="name in paramNames" :key="name">
-        <div font-mono text-right>
+        <div text-right font-mono>
           {{ name }}
         </div>
         <NTextInput
@@ -248,26 +248,26 @@ const currentParams = computed(() => {
         Send request
       </NButton>
     </NPanelGrids>
-    <NLoading v-else-if="fetching" flex-auto z-10 backdrop-blur>
+    <NLoading v-else-if="fetching" z-10 flex-auto backdrop-blur>
       Fetching...
     </NLoading>
     <template v-else>
-      <div px4 py2 border="b base" flex="~ gap2" items-center>
+      <div border="b base" flex="~ gap2" items-center px4 py2>
         <div>Response</div>
         <Badge
           v-if="response.error"
-          text-red-400 bg-red-400:10
+          bg-red-400:10 text-red-400
         >
           Error
         </Badge>
-        <code v-if="response.contentType" op50 text-xs>
+        <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
         <div flex-auto />
         <div op50>
           Request finished in
         </div>
-        <Badge text-green-400 bg-green-400:10>
+        <Badge bg-green-400:10 text-green-400>
           {{ fetchTime }} ms
         </Badge>
       </div>

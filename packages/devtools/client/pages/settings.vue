@@ -25,7 +25,7 @@ function toggleTab(name: string, v: boolean) {
 </script>
 
 <template>
-  <div px6 max-w-100 py8>
+  <div max-w-100 px6 py8>
     <NIconTitle
       class="text-xl op75"
       icon="i-carbon-settings"
@@ -33,7 +33,7 @@ function toggleTab(name: string, v: boolean) {
     />
 
     <div py3 flex="~ col gap-1" border="b base">
-      <h3 text-lg mb1>
+      <h3 mb1 text-lg>
         UI Scale
       </h3>
       <NSelect v-model="scale" n="primary">
@@ -43,7 +43,7 @@ function toggleTab(name: string, v: boolean) {
       </NSelect>
     </div>
     <div py3 flex="~ col gap-1" border="b base">
-      <h3 text-lg mb1>
+      <h3 mb1 text-lg>
         Features
       </h3>
       <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
@@ -54,16 +54,16 @@ function toggleTab(name: string, v: boolean) {
       </NCheckbox>
     </div>
     <div py3 flex="~ col gap-1">
-      <h3 text-lg mb1>
+      <h3 mb1 text-lg>
         Tabs
       </h3>
       <template v-for="tab of allTabs.all.value" :key="tab.name">
         <NSwitch
-          n-primary flex="~ row-reverse" py1
+          flex="~ row-reverse" py1 n-primary
           :model-value="!hiddenTabs.includes(tab.name)"
           @update:model-value="v => toggleTab(tab.name, v)"
         >
-          <div flex="~ gap-2" items-center flex-auto justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+          <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
             <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
             <span>{{ tab.title }}</span>
           </div>

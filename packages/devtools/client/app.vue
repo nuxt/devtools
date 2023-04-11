@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div w-screen h-screen inset-0 fixed>
+  <div fixed inset-0 h-screen w-screen>
     <NuxtLoadingIndicator />
     <NuxtLayout>
       <NuxtPage />

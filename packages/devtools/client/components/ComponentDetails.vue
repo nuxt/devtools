@@ -14,7 +14,7 @@ const copy = useCopy()
 </script>
 
 <template>
-  <div flex="~ col gap1" of-hidden items-start>
+  <div flex="~ col gap1" items-start of-hidden>
     <div flex="~ gap2">
       <ComponentName :component="component" />
       <NIconButton title="Copy name" flex-none icon="carbon-copy" @click="copy(`<${name}></${name}>`)" />

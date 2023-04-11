@@ -5,13 +5,13 @@
   <div
     v-if="wsError || wsConnecting"
     border="t base"
-    fixed left-0 right-0 bottom-0 p5 glass-effect z-200
+    fixed bottom-0 left-0 right-0 z-200 p5 glass-effect
   >
     <div v-if="wsError" flex="~ gap-2" items-center text-rose>
       <NIcon icon="i-carbon-wifi-off" />
       WebSocket disconnected
     </div>
-    <div v-else-if="wsConnecting" flex="~ gap-2" items-center text-yellow animate-pulse>
+    <div v-else-if="wsConnecting" flex="~ gap-2" animate-pulse items-center text-yellow>
       <NIcon icon="i-carbon-circle-dash" animate-spin />
       Connecting to the server...
     </div>

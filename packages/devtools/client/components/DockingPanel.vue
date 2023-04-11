@@ -19,7 +19,7 @@ function refreshPage() {
 
 <template>
   <div>
-    <div v-if="client" py2 px3 border="b base" flex="~ col gap-1">
+    <div v-if="client" px3 py2 border="b base" flex="~ col gap-1">
       <div text-sm op50>
         Dock devtools to
       </div>
@@ -53,7 +53,7 @@ function refreshPage() {
         </NButton>
       </NDarkToggle>
       <NButton n="sm primary" to="/settings">
-        <div translate-y--1px carbon-settings /> Settings
+        <div carbon-settings translate-y--1px /> Settings
       </NButton>
     </div>
     <div px3 py2 flex="~ gap2">

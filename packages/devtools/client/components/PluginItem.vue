@@ -12,14 +12,14 @@ const shortPath = computed(() => parseReadablePath(props.plugin.src, config.valu
 
 <template>
   <div flex="~ gap2" items-center>
-    <div text-sm op25 text-right w8>
+    <div w8 text-right text-sm op25>
       {{ index }}
     </div>
     <FilepathItem :filepath="props.plugin.src" :subpath="true" />
     <div>
       <Badge
         v-if="shortPath.startsWith('#')"
-        text-rose bg-rose-400:10
+        bg-rose-400:10 text-rose
         v-text="'virtual'"
       />
       <Badge
@@ -38,7 +38,7 @@ const shortPath = computed(() => parseReadablePath(props.plugin.src, config.valu
         v-text="'client'"
       />
     </div>
-    <div v-if="plugin.metric?.duration != null" text-right flex-auto>
+    <div v-if="plugin.metric?.duration != null" flex-auto text-right>
       <DurationDisplay :duration="plugin.metric?.duration" :factor="10" />
     </div>
   </div>

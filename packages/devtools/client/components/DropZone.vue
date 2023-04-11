@@ -133,15 +133,15 @@ useEventListener('drop', onDrop)
 
 <template>
   <div
-    fixed right-0 bottom-0 z-10 top-0 transition-all left-13 backdrop-blur-20
+    fixed bottom-0 left-13 right-0 top-0 z-10 backdrop-blur-20 transition-all
     :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'"
   >
     <NIconButton
       icon="carbon-close"
-      absolute z-20 text-xl top-5 right-5
+      absolute right-5 top-5 z-20 text-xl
       @click="close"
     />
-    <div v-if="!files?.length" items-center flex justify-center w-full h-full>
+    <div v-if="!files?.length" h-full w-full flex items-center justify-center>
       <label for="drop-zone-input" text-3xl>
         <NIcon icon="carbon-cloud-upload" mr-2 /> Drop files here or click to select
       </label>
@@ -150,7 +150,7 @@ useEventListener('drop', onDrop)
         @change="setFiles(($event.target as HTMLInputElement).files)"
       >
     </div>
-    <div v-else h-full w-full relative grid="~ rows-[max-content_1fr_max-content]">
+    <div v-else relative h-full w-full grid="~ rows-[max-content_1fr_max-content]">
       <div px6 py6>
         <h1 text-2xl>
           Upload
@@ -162,13 +162,13 @@ useEventListener('drop', onDrop)
       <div grid="~ cols-minmax-8rem" overflow-auto p6>
         <div
           v-for="file, index of files" :key="file.name"
-          flex="~ col gap-2" relative items-center w-40 h-50
+          flex="~ col gap-2" relative h-50 w-40 items-center
         >
           <div
-            items-center justify-center flex rounded of-hidden object-cover bg-active rounded-t-lg
+            flex items-center justify-center of-hidden rounded rounded-t-lg bg-active object-cover
             class="aspect-1/1" border="~ base"
           >
-            <img w-full h-full rounded-t-lg object-cover :src="blobIt(file)">
+            <img h-full w-full rounded-t-lg object-cover :src="blobIt(file)">
           </div>
           <div flex="~ gap1" items-center>
             <NTextInput

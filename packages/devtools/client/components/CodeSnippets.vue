@@ -15,7 +15,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="codeSnippets.length" n-code-block relative>
+  <div v-if="codeSnippets.length" relative n-code-block>
     <div flex="~ wrap" w-full>
       <template v-for="cs, idx of codeSnippets" :key="idx">
         <button
@@ -33,7 +33,7 @@ watchEffect(() => {
       <NButton v-if="selected?.docs" :to="selected.docs" target="_blank" icon="carbon-help" n="sm primary" border="none" my1 px-2>
         Docs
       </NButton>
-      <NButton v-if="selected" icon="carbon-copy" n="sm primary" border="none" px-2 my1 mr1 @click="copy(selected!.code)">
+      <NButton v-if="selected" icon="carbon-copy" n="sm primary" border="none" my1 mr1 px-2 @click="copy(selected!.code)">
         Copy
       </NButton>
     </div>

@@ -14,7 +14,7 @@ defineProps<{
     :is="to ? NuxtLink : 'button'"
     :to="to"
     v-bind="$attrs"
-    class="n-transition n-button n-button-base hover:n-button-hover active:n-button-active focus-visible:n-focus-base n-disabled:n-disabled"
+    class="n-button n-button-base active:n-button-active focus-visible:n-focus-base n-transition hover:n-button-hover n-disabled:n-disabled"
   >
     <slot name="icon">
       <NIcon v-if="icon" :icon="icon" class="n-button-icon" />

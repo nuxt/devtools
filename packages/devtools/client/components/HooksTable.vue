@@ -62,56 +62,56 @@ function toggleSortedBy(by: SortBy) {
   <table w-full>
     <thead border="b base">
       <tr>
-        <th select-none p1 ws-nowrap text-right font-bold>
+        <th select-none ws-nowrap p1 text-right font-bold>
           <button @click="toggleSortedBy('start')">
             Order
-            <div text-xs ml--1 :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div ml--1 text-xs :class="[sortby === 'start' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th colspan="2" font-bold p1 text-left pl5>
+        <th colspan="2" p1 pl5 text-left font-bold>
           <button @click="toggleSortedBy('name')">
             Hook name
-            <div text-xs ml--1 :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div ml--1 text-xs :class="[sortby === 'name' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 font-bold ws-nowrap text-center>
+        <th ws-nowrap p1 text-center font-bold>
           <button @click="toggleSortedBy('listener')">
             Listeners
-            <div text-xs ml--1 :class="[sortby === 'listener' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div ml--1 text-xs :class="[sortby === 'listener' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-center font-bold ws-nowrap>
+        <th ws-nowrap p1 text-center font-bold>
           <button @click="toggleSortedBy('executions')">
             Executions
-            <div text-xs ml--1 :class="[sortby === 'executions' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div ml--1 text-xs :class="[sortby === 'executions' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
-        <th p1 text-right font-bold ws-nowrap>
+        <th ws-nowrap p1 text-right font-bold>
           <button @click="toggleSortedBy('duration')">
             Duration
-            <div text-xs ml--1 :class="[sortby === 'duration' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
+            <div ml--1 text-xs :class="[sortby === 'duration' ? 'op50' : 'op0', direction === 'asc' ? 'carbon-arrow-down' : 'carbon-arrow-up']" />
           </button>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item of sorted" :key="item.name" border="b dashed transparent hover:base">
-        <td text-center ws-nowrap text-sm op25 w-0>
+        <td w-0 ws-nowrap text-center text-sm op25>
           {{ startTimes.indexOf(item.start) }}
         </td>
-        <td text-right w-0 ws-nowrap :style="{ color: getHashColorFromString(getNamePrefix(item.name)) }">
+        <td w-0 ws-nowrap text-right :style="{ color: getHashColorFromString(getNamePrefix(item.name)) }">
           <code text-sm>{{ getNamePrefix(item.name) }}</code>
         </td>
         <td ws-nowrap>
           <code text-sm>{{ getNameRest(item.name) }}</code>
         </td>
-        <td text-center text-sm w-0>
+        <td w-0 text-center text-sm>
           {{ item.listeners }}
         </td>
-        <td text-center text-sm w-0>
+        <td w-0 text-center text-sm>
           {{ item.executions.length + 1 }}
         </td>
-        <td text-right text-sm w-0>
+        <td w-0 text-right text-sm>
           <DurationDisplay :duration="item.duration" />
         </td>
       </tr>

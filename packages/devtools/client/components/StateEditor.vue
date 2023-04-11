@@ -53,13 +53,13 @@ async function refresh() {
     >
       <button
         v-if="name" flex="~"
-        items-center cursor-pointer
+        cursor-pointer items-center
         :class="isOpen ? '' : 'op50'"
         @click="isOpen = !isOpen"
       >
-        <div transition i-carbon-chevron-right :class="isOpen ? 'rotate-90 op0' : ''" />
+        <div i-carbon-chevron-right transition :class="isOpen ? 'rotate-90 op0' : ''" />
         <code
-          py1 font-mono px3
+          px3 py1 font-mono
           :class="isOpen ? 'bg-[#8881] rounded-t' : 'rounded hover:bg-active'"
         >{{ name }}</code>
       </button>
@@ -85,7 +85,7 @@ async function refresh() {
         :indentation="2"
         :tab-size="2"
       />
-      <div v-else p5 bg-active italic>
+      <div v-else bg-active p5 italic>
         <span op50>No data</span>
       </div>
     </template>

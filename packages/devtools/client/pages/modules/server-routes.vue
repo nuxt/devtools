@@ -37,7 +37,7 @@ const filtered = computed(() => {
   <PanelLeftRight>
     <template #left>
       <Navbar v-model:search="search" pb2>
-        <div flex="~ gap1" op50 text-sm>
+        <div flex="~ gap1" text-sm op50>
           <span v-if="search">{{ filtered.length }} matched · </span>
           <span>{{ serverRoutes?.length }} routes in total</span>
         </div>
@@ -45,17 +45,17 @@ const filtered = computed(() => {
 
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
-          flex="~ gap-2" items-center px2 py1 hover-bg-active
+          flex="~ gap-2" items-center hover-bg-active px2 py1
           :to="{ query: { path: item.path } }"
         >
-          <div text-right flex-none w-12>
+          <div w-12 flex-none text-right>
             <Badge
               :class="getRequestMethodClass(item.method || '*')"
               title="updates available"
               v-text="(item.method || '*').toUpperCase()"
             />
           </div>
-          <span text-sm font-mono>{{ item.route }}</span>
+          <span font-mono text-sm>{{ item.route }}</span>
         </NuxtLink>
         <div x-divider />
       </template>
@@ -67,7 +67,7 @@ const filtered = computed(() => {
         :route="selected"
       />
       <NPanelGrids v-else>
-        <NCard py2 px6>
+        <NCard px6 py2>
           <span op75>Select a route to start</span>
         </NCard>
       </NPanelGrids>

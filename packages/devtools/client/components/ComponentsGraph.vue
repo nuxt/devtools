@@ -182,7 +182,7 @@ function setFilter() {
 </script>
 
 <template>
-  <Navbar ref="navbar" absolute left-0 top-0 right-0>
+  <Navbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
       <NCheckbox v-model="showPages" n="primary sm">
         <span op75>Show pages</span>
@@ -196,7 +196,7 @@ function setFilter() {
       <NCheckbox v-model="showNodeModules" n="primary sm">
         <span op75>Show node_modules</span>
       </NCheckbox>
-      <button v-if="selectedFilter" flex="~ gap-1" items-center op50 text-xs py1 bg-gray:20 pl3 pr2 rounded-full hover:op100 @click="selectedFilter = undefined">
+      <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
       <div flex-auto />
@@ -204,8 +204,8 @@ function setFilter() {
     </template>
   </Navbar>
 
-  <div w-full relative h-full>
-    <div ref="container" w-full h-full />
+  <div relative h-full w-full>
+    <div ref="container" h-full w-full />
     <DrawerRight
       :model-value="!!(selected && selected.component)"
       :navbar="navbar"

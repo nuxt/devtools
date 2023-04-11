@@ -19,7 +19,7 @@ watch(show, async () => {
 
 <template>
   <div class="mt-2">
-    <span n="xs" class="cursor-pointer text-gray n-link n-link-base hover:n-link-hover n-transition" @click="show = !show">
+    <span n="xs" class="n-link cursor-pointer hover:n-link-hover text-gray n-transition n-link-base" @click="show = !show">
       {{ show ? 'Hide' : 'Show' }} source
     </span>
     <div v-if="show" ref="embed" class="dark:filter-invert-100" />

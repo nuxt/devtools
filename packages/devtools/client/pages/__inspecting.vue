@@ -16,9 +16,9 @@ function close() {
 </script>
 
 <template>
-  <div flex="~" items-center justify-center bg-base h-screen px5>
+  <div flex="~" h-screen items-center justify-center px5 bg-base>
     <div absolute right-0 top-0 p2>
-      <button text-xl op50 hover:op100 ma carbon-close @click="close" />
+      <button carbon-close ma text-xl op50 hover:op100 @click="close" />
     </div>
     <div>
       Inspecting Vue components

@@ -120,7 +120,7 @@ async function renameCurrentItem() {
 <template>
   <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
     <template #left>
-      <div class="items-center flex justify-between px-3 h-[48px] gap1">
+      <div class="h-[48px] flex items-center justify-between gap1 px-3">
         <NIconButton icon="carbon-chevron-left" ml--1 @click="currentStorage = ''" />
         <div class="w-full text-sm">
           <NSelect v-model="currentStorage" n="primary" icon="carbon-data-base">
@@ -140,7 +140,7 @@ async function renameCurrentItem() {
       />
       <template v-for="key of filteredKeys" :key="key">
         <NuxtLink
-          text-sm px2 py1 font-mono block truncate
+          block truncate px2 py1 font-mono text-sm
           :to="{ query: { key, storage: currentStorage } }"
           :class="key === currentItem?.key ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >
@@ -154,17 +154,17 @@ async function renameCurrentItem() {
         placeholder="key"
         n="sm"
         border="t-none x-none base! rounded-0"
-        class="w-full py2 ring-0! font-mono"
+        class="w-full py2 font-mono ring-0!"
         @keyup.enter="saveNewItem"
       />
     </template>
 
     <template #right>
       <div v-if="currentItem?.key" h-full of-hidden flex="~ col">
-        <div border="b base" class="text-sm flex items-center justify-between flex-none px-4 h-[49px]">
+        <div border="b base" class="h-[49px] flex flex-none items-center justify-between px-4 text-sm">
           <div class="flex items-center gap-4">
             <NTextInput v-if="currentItem.editingKey" v-model="currentItem.updatedKey" @keyup.enter="renameCurrentItem" />
-            <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="op50 cursor-pointer hover:op100" @click="currentItem.editingKey = true" /></code>
+            <code v-else>{{ keyName(currentItem.key) }} <NIcon icon="carbon-edit" class="cursor-pointer op50 hover:op100" @click="currentItem.editingKey = true" /></code>
             <NButton v-if="!currentItem.editingKey" n="green xs" :disabled="currentItem.content === currentItem.updatedContent" :class="{ 'border-green': currentItem.content !== currentItem.updatedContent }" @click="saveCurrentItem">
               Save
             </NButton>
@@ -179,13 +179,13 @@ async function renameCurrentItem() {
           v-if="typeof currentItem.content === 'object'"
           v-model="currentItem.updatedContent"
           :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
-          class="h-full text-sm json-editor-vue of-auto outline-none"
+          class="json-editor-vue h-full of-auto text-sm outline-none"
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
         <textarea
           v-else v-model="currentItem.updatedContent"
           placeholder="Item value..."
-          class="of-auto h-full text-sm outline-none font-mono p-4"
+          class="h-full of-auto p-4 font-mono text-sm outline-none"
           @keyup.ctrl.enter="saveCurrentItem"
         />
       </div>
@@ -211,7 +211,7 @@ async function renameCurrentItem() {
     <NCard
       v-for="(storage, name) of storageMounts"
       :key="name"
-      p-4 cursor-pointer text-left min-w-80
+      min-w-80 cursor-pointer p-4 text-left
       hover="border-green"
       @click="currentStorage = name"
     >

@@ -26,13 +26,13 @@ function onToggle(e: any) {
 
 <template>
   <details :open="open" @toggle="onToggle">
-    <summary class="select-none cursor-pointer p4 hover:bg-active" :class="collapse ? '' : 'pointer-events-none'">
+    <summary class="cursor-pointer select-none hover:bg-active p4" :class="collapse ? '' : 'pointer-events-none'">
       <NIconTitle :icon="icon" :text="text" class="text-xl op75">
         <div>
           <slot name="text">
             {{ text }}
           </slot>
-          <div v-if="description || $slots.description" class="op50 text-sm">
+          <div v-if="description || $slots.description" class="text-sm op50">
             <slot name="description">
               {{ description }}
             </slot>
@@ -43,11 +43,11 @@ function onToggle(e: any) {
         <NIcon
           v-if="collapse"
           icon="carbon-chevron-down"
-          class="op50 cursor-pointer text-base transition duration-500 place-self-start chevron"
+          class="chevron cursor-pointer place-self-start text-base op50 transition duration-500"
         />
       </NIconTitle>
     </summary>
-    <div v-lazy-show="open" class="flex flex-col flex-gap2 pt2 pb6" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
+    <div v-lazy-show="open" class="flex flex-col flex-gap2 pb6 pt2" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
       <slot name="details" />
       <div :class="containerClass" class="mt1">
         <slot />

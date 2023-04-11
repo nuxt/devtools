@@ -25,7 +25,7 @@ const icon = computed(() => {
 <template>
   <button flex="~ gap-1" w-full items-center hover="bg-active" rounded px4 py2>
     <div :class="icon" />
-    <div text-center ws-nowrap of-hidden truncate>
+    <div of-hidden truncate ws-nowrap text-center>
       {{ asset.path }}
     </div>
   </button>

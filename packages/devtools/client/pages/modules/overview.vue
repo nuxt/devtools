@@ -22,16 +22,16 @@ function goIntro() {
 </script>
 
 <template>
-  <NPanelGrids h-full flex w-full>
+  <NPanelGrids h-full w-full flex>
     <div v-if="!config">
       Loading...
     </div>
-    <div v-else flex="~ col gap2" w-full h-full ma p8 max-w-300 px20>
+    <div v-else flex="~ col gap2" ma h-full max-w-300 w-full p8 px20>
       <div flex-auto />
 
       <!-- Banner -->
-      <div flex="~ col" items-center mt-20>
-        <div flex="~" items-center justify-center mt--10>
+      <div flex="~ col" mt-20 items-center>
+        <div flex="~" mt--10 items-center justify-center>
           <NuxtLogo h-18 />
           <button mr--16 mt--6 @click="goIntro">
             <Badge
@@ -41,7 +41,7 @@ function goIntro() {
             />
           </button>
         </div>
-        <div mt--1 text-sm text-center mb6 flex="~ gap-1">
+        <div mb6 mt--1 text-center text-sm flex="~ gap-1">
           <span op40>
             Nuxt DevTools
           </span>
@@ -56,28 +56,28 @@ function goIntro() {
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
         <div p4 theme-card-green flex="~ col auto">
-          <div text-3xl logos-nuxt-icon />
+          <div logos-nuxt-icon text-3xl />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
         </div>
         <template v-if="config">
-          <NuxtLink v-if="config && config.pages && client" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/pages">
-            <div text-3xl carbon-tree-view-alt />
+          <NuxtLink v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/pages">
+            <div carbon-tree-view-alt text-3xl />
             <div>{{ routes.length }} pages</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 theme-card-lime min-w-40 flex="~ col auto" to="/modules/components">
-            <div text-3xl i-carbon-assembly-cluster />
+          <NuxtLink v-if="config" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/components">
+            <div i-carbon-assembly-cluster text-3xl />
             <div>{{ components.length }} components</div>
           </NuxtLink>
-          <NuxtLink v-if="config && autoImports" p4 min-w-40 theme-card-yellow flex="~ col auto" to="/modules/imports">
-            <div text-3xl carbon-function />
+          <NuxtLink v-if="config && autoImports" min-w-40 p4 theme-card-yellow flex="~ col auto" to="/modules/imports">
+            <div carbon-function text-3xl />
             <div>{{ autoImports.imports.length }} imports</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 min-w-40 theme-card-purple flex="~ col auto" to="/modules/modules">
-            <div text-3xl carbon-3d-mpr-toggle />
+          <NuxtLink v-if="config" min-w-40 p4 theme-card-purple flex="~ col auto" to="/modules/modules">
+            <div carbon-3d-mpr-toggle text-3xl />
             <div>{{ config._installedModules.length }} modules</div>
           </NuxtLink>
-          <NuxtLink v-if="config" p4 min-w-40 theme-card-teal flex="~ col auto" to="/modules/plugins">
-            <div text-3xl carbon-plug />
+          <NuxtLink v-if="config" min-w-40 p4 theme-card-teal flex="~ col auto" to="/modules/plugins">
+            <div carbon-plug text-3xl />
             <div>{{ config.plugins.length }} plugins</div>
           </NuxtLink>
         </template>
@@ -90,7 +90,7 @@ function goIntro() {
           Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
         </NTip>
       </div>
-      <div flex="~ gap-6 wrap" items-center justify-center mt-5>
+      <div flex="~ gap-6 wrap" mt-5 items-center justify-center>
         <a href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue" transition>
           <div i-carbon-star />
           Star on GitHub
@@ -107,13 +107,13 @@ function goIntro() {
           <div i-carbon-debug />
           Bug Reports
         </a>
-        <NuxtLink to="/settings" flex="~ gap1" items-center op50 inline-block hover:op80>
+        <NuxtLink to="/settings" flex="~ gap1" inline-block items-center op50 hover:op80>
           <div i-carbon-settings />
           Settings
         </NuxtLink>
       </div>
       <div flex-auto />
-      <div flex="~ gap-1" justify-center items-center text-sm op40>
+      <div flex="~ gap-1" items-center justify-center text-sm op40>
         Press
         <template v-if="isMacOS">
           <NButton n="xs" class="px2">

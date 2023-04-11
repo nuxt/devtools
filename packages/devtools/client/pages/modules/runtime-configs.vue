@@ -49,9 +49,9 @@ const privateConfig = computed(() => {
       description="These values are not exposed to the client. Readonly in the DevTools."
     >
       <StateEditor
-        ml--6
+
         :state="privateConfig"
-        readonly
+        readonly ml--6
       />
     </NSectionBlock>
   </div>

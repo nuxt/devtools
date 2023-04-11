@@ -51,6 +51,6 @@ function clear() {
     <NIconButton title="Clear" icon="i-carbon-clean" @click="clear()" />
     <NIconButton v-if="info?.restartable" title="Restart" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
     <NIconButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" @click="rpc.runTerminalAction(id, 'terminate')" />
-    <span op50 text-sm>{{ info?.description }}</span>
+    <span text-sm op50>{{ info?.description }}</span>
   </div>
 </template>

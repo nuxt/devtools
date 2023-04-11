@@ -9,6 +9,6 @@ const path = computed(() => client.value?.nuxt?.vueApp.config.globalProperties.$
     <div text-lg>
       Route path
     </div>
-    <code op75 px2 py1 border="~ base rounded">{{ path }}</code>
+    <code px2 py1 op75 border="~ base rounded">{{ path }}</code>
   </div>
 </template>

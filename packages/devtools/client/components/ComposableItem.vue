@@ -18,7 +18,7 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
   <VDropdown :disabled="!props.metadata">
     <button hover:text-primary>
       <code
-        px2 py1 rounded font-mono text-sm bg-gray:5
+        rounded bg-gray:5 px2 py1 font-mono text-sm
         :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
       >
         {{ name }}
@@ -27,11 +27,11 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
     </button>
     <template #popper>
       <div max-w-100>
-        <div text-sm px4 py3>
+        <div px4 py3 text-sm>
           <NMarkdown
             v-if="item.meta?.description"
             tag="div"
-            text-sm pb3
+            pb3 text-sm
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
@@ -51,7 +51,7 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
             <div text-sm>
               <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
             </div>
-            <div flex="~ col gap-2" text-sm items-start pt3>
+            <div flex="~ col gap-2" items-start pt3 text-sm>
               <FilepathItem
                 v-for="id of modules" :key="id"
                 :filepath="id"
@@ -59,7 +59,7 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
             </div>
           </template>
           <template v-else>
-            <div op50 text-sm>
+            <div text-sm op50>
               Not in use via auto import.
             </div>
           </template>

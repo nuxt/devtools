@@ -33,6 +33,6 @@ function formatDuration(duration: number | undefined) {
 
 <template>
   <div :class="getLatencyColor(duration)">
-    {{ formatDuration(duration) }}<span op50 text-xs ml-1>ms</span>
+    {{ formatDuration(duration) }}<span ml-1 text-xs op50>ms</span>
   </div>
 </template>

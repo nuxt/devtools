@@ -8,7 +8,7 @@ const radio = ref('a')
 
 <template>
   <div class="relative p-10 n-bg-base">
-    <div class="w-full flex gap-4 mx-auto flex-col container">
+    <div class="mx-auto w-full flex flex-col gap-4 container">
       <NTip n="hover:yellow-600 dark:hover:yellow-500">
         This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
       </NTip>
@@ -22,7 +22,7 @@ const radio = ref('a')
         </sup>
       </div>
 
-      <div class="flex gap-1 mb-5">
+      <div class="mb-5 flex gap-1">
         <NButton
           n="sm"
           to="https://github.com/nuxt/devtools/tree/main/packages/devtools-ui-kit"
@@ -45,7 +45,7 @@ const radio = ref('a')
         <div class="n-header-upper">
           Buttons
         </div>
-        <div id="buttons" class="flex items-center flex-wrap gap-3">
+        <div id="buttons" class="flex flex-wrap items-center gap-3">
           <NButton n="yellow6 dark:yellow5 xs">
             XS Yellow
           </NButton>
@@ -69,7 +69,7 @@ const radio = ref('a')
         <div class="n-header-upper">
           Checkboxes
         </div>
-        <div class="flex gap-3 items-center">
+        <div class="flex items-center gap-3">
           <NCheckbox n="sky6 dark:sky5 sm" :model-value="true">
             Small
           </NCheckbox>
@@ -87,7 +87,7 @@ const radio = ref('a')
         <div class="n-header-upper">
           Links
         </div>
-        <form class="flex gap-3 items-center">
+        <form class="flex items-center gap-3">
           <NLink to="/" n="green">
             NuxtLink
           </NLink>
@@ -102,7 +102,7 @@ const radio = ref('a')
         <div class="n-header-upper">
           Radios
         </div>
-        <form class="flex gap-3 items-center">
+        <form class="flex items-center gap-3">
           <NRadio v-model="radio" n="red6 dark:red5" name="name" value="a">
             Apple
           </NRadio>
@@ -130,7 +130,7 @@ const radio = ref('a')
         <div class="n-header-upper">
           Switches
         </div>
-        <div class="flex gap-3 items-center">
+        <div class="flex items-center gap-3">
           <NSwitch n="lime6 dark:lime5 sm" :model-value="true">
             SM
           </NSwitch>
@@ -222,7 +222,7 @@ const radio = ref('a')
           </NButton>
           <NDialog
             v-model="showDialog"
-            class="p4 flex flex-col gap-4 min-w-100"
+            class="min-w-100 flex flex-col gap-4 p4"
           >
             <h1 text-4xl>
               Hi

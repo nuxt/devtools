@@ -30,7 +30,7 @@ function toggleView() {
 </script>
 
 <template>
-  <div h-full of-auto relative>
+  <div relative h-full of-auto>
     <component
       :is="view === 'list' ? ComponentsList : ComponentsGraph"
       :components="components"

@@ -36,7 +36,7 @@ const npmBase = 'https://www.npmjs.com/package/'
   <NCard p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div
-        of-hidden ws-nowrap text-lg text-ellipsis
+        of-hidden text-ellipsis ws-nowrap text-lg
       >
         <NuxtLink
           v-if="isPackageModule"
@@ -59,14 +59,14 @@ const npmBase = 'https://www.npmjs.com/package/'
         </span>
       </div>
 
-      <div v-if="data.description " op50 text-sm mt--1 line-clamp-2>
+      <div v-if="data.description " line-clamp-2 mt--1 text-sm op50>
         {{ data.description }}
       </div>
 
       <div flex-auto />
 
       <div v-if="data.website" flex="~ gap-2" title="Documentation">
-        <span text-lg op50 i-carbon-link />
+        <span i-carbon-link text-lg op50 />
         <NuxtLink
           :to="data.website"
           target="_blank"
@@ -77,7 +77,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
       <div v-if="data.github" flex="~ gap-2">
-        <span text-lg op50 i-carbon-logo-github />
+        <span i-carbon-logo-github text-lg op50 />
         <NuxtLink
           :to="data.github"
           target="_blank"
@@ -88,7 +88,7 @@ const npmBase = 'https://www.npmjs.com/package/'
         </NuxtLink>
       </div>
       <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
-        <span text-lg op50 i-carbon-folder-move-to />
+        <span i-carbon-folder-move-to text-lg op50 />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
 
@@ -97,37 +97,37 @@ const npmBase = 'https://www.npmjs.com/package/'
         <template #default="{ info, update, state, id, restart }">
           <NuxtLink
             v-if="state === 'running'" flex="~ gap-2"
-            items-center animate-pulse
+            animate-pulse items-center
             :to="id ? `/modules/terminals?id=${encodeURIComponent(id)}` : undefined"
           >
-            <span text-lg op50 animate-spin i-carbon-circle-dash />
+            <span i-carbon-circle-dash animate-spin text-lg op50 />
             <code text-sm op50>Upgrading...</code>
           </NuxtLink>
           <div v-else-if="state === 'updated'" mx--2>
             <button
               flex="~ gap-2"
               hover="bg-primary/20"
-              items-center text-sm text-primary px2 rounded bg-primary:10
+              items-center rounded bg-primary:10 px2 text-sm text-primary
               @click="restart"
             >
-              <span text-lg text-primary i-carbon-intent-request-active />
+              <span i-carbon-intent-request-active text-lg text-primary />
               <code text-xs>Update installed, click to restart</code>
             </button>
           </div>
           <div v-else-if="info?.needsUpdate" mx--2>
             <button
-              flex="~ gap-2" title="Click to upgrade" text-sm items-center px2 rounded
+              flex="~ gap-2" title="Click to upgrade" items-center rounded px2 text-sm
               hover="bg-active"
               @click="update()"
             >
-              <span text-lg op50 i-carbon-intent-request-upgrade />
+              <span i-carbon-intent-request-upgrade text-lg op50 />
               <code op50>v{{ info.current }}</code>
-              <div op50 i-carbon-arrow-right />
+              <div i-carbon-arrow-right op50 />
               <code text-green>v{{ info.latest }}</code>
             </button>
           </div>
           <div v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
-            <span text-lg op50 i-carbon-cube />
+            <span i-carbon-cube text-lg op50 />
             <code text-sm op50>v{{ info.current }}</code>
           </div>
         </template>
@@ -137,12 +137,12 @@ const npmBase = 'https://www.npmjs.com/package/'
       <div
         v-if="data.icon || isPackageModule"
 
-        p4 rounded flex flex-none h-20 w-20 bg-gray:3
+        h-20 w-20 flex flex-none rounded bg-gray:3 p4
       >
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
-        <div op50 ma i-carbon-circle-dash text-4xl />
+        <div i-carbon-circle-dash ma text-4xl op50 />
       </div>
-      <div v-if="data.maintainers?.length" flex="~" flex-auto items-end mt2 justify-end>
+      <div v-if="data.maintainers?.length" flex="~" mt2 flex-auto items-end justify-end>
         <NuxtLink
           v-for="m of data.maintainers"
           :key="m.name"
@@ -150,7 +150,7 @@ const npmBase = 'https://www.npmjs.com/package/'
           :to="githubBase + m.github"
           :title="m.name"
         >
-          <img :src="avatarBase + m.github" rounded-full w-6 h-6>
+          <img :src="avatarBase + m.github" h-6 w-6 rounded-full>
         </NuxtLink>
       </div>
     </div>

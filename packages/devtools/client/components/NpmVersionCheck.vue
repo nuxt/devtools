@@ -72,7 +72,7 @@ async function updateWithConfirm() {
         <p op50>
           The following command will be executed in your terminal:
         </p>
-        <NCodeBlock :code="args[0]" lang="bash" px4 py2 my3 border="~ base rounded" :lines="false" />
+        <NCodeBlock :code="args[0]" lang="bash" my3 px4 py2 border="~ base rounded" :lines="false" />
         <NCheckbox v-model="shouldGotoTerminal" n="primary">
           Navigate to terminal
         </NCheckbox>
@@ -80,7 +80,7 @@ async function updateWithConfirm() {
           Restart Nuxt server after update
         </NCheckbox>
 
-        <div flex="~ gap-3" justify-end mt2>
+        <div flex="~ gap-3" mt2 justify-end>
           <NTip n="sm purple" flex-auto icon="carbon-chemistry">
             Experimental feature. Please make sure to backup your project first.
           </NTip>

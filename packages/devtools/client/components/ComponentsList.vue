@@ -111,7 +111,7 @@ const filtered = computed(() => {
     :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
   >
     <div v-for="[key, value] of filtered.lib.entries()" :key="key">
-      <NIconTitle :text="`${key} (${value.length})`" op50 py1 />
+      <NIconTitle :text="`${key} (${value.length})`" py1 op50 />
       <div pl4>
         <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />
       </div>

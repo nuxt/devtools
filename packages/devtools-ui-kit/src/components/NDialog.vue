@@ -47,13 +47,13 @@ export default {
 <template>
   <Teleport v-if="show" to="body">
     <div
-      class="n-transition fixed flex items-center justify-center z-100 inset-0 n-dialog"
+      class="n-dialog fixed inset-0 z-100 flex items-center justify-center n-transition"
       :class="[
         show ? '' : 'op0 pointer-events-none visibility-none',
       ]"
     >
       <div
-        class="inset-0 absolute -z-1"
+        class="absolute inset-0 -z-1"
         :class="[
           dim ? 'bg-black/50' : '',
         ]"
