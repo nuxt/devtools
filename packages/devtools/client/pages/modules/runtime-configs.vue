@@ -25,34 +25,27 @@ const privateConfig = computed(() => {
     <NSectionBlock
       icon="carbon-settings-services"
       text="App Config"
+      :padding="false"
     >
-      <StateEditor
-        ml--6
-        :state="client.appConfig"
-      />
+      <StateEditor :state="client.appConfig" />
     </NSectionBlock>
 
     <NSectionBlock
       icon="carbon-settings"
       text="Public Runtime Config"
+      :padding="false"
     >
-      <StateEditor
-        ml--6
-        :state="payload.config?.public"
-      />
+      <StateEditor :state="payload.config?.public" />
     </NSectionBlock>
 
     <NSectionBlock
       icon="i-carbon-code-signing-service"
-      :open="false"
       text="Private Runtime Config"
+      :open="false"
+      :padding="false"
       description="These values are not exposed to the client. Readonly in the DevTools."
     >
-      <StateEditor
-
-        :state="privateConfig"
-        readonly ml--6
-      />
+      <StateEditor :state="privateConfig" readonly />
     </NSectionBlock>
   </div>
 </template>

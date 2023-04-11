@@ -84,7 +84,7 @@ const filtered = computed(() => {
     :open="filtered.user.length <= DETAILS_MAX_ITEMS"
     :description="`Total components: ${filtered.count.user}`"
   >
-    <ComponentItem v-for="c of filtered.user" :key="c.filePath" ml--5 :component="c" />
+    <ComponentItem v-for="c of filtered.user" :key="c.filePath" :component="c" />
   </NSectionBlock>
   <NSectionBlock
     v-if="filtered.runtime.length"
@@ -93,7 +93,7 @@ const filtered = computed(() => {
     text="Runtime components"
     :description="`Total components: ${filtered.count.runtime}`"
   >
-    <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" ml--5 :component="c" />
+    <ComponentItem v-for="c of filtered.runtime" :key="c.filePath" :component="c" />
   </NSectionBlock>
   <NSectionBlock
     v-if="filtered.builtin.length"
@@ -101,7 +101,7 @@ const filtered = computed(() => {
     text="Built-in components"
     :description="`Total components: ${filtered.count.builtin}`"
   >
-    <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" ml--5 :component="c" />
+    <ComponentItem v-for="c of filtered.builtin" :key="c.filePath" :component="c" />
   </NSectionBlock>
   <NSectionBlock
     v-if="filtered.lib.size"
@@ -110,7 +110,7 @@ const filtered = computed(() => {
     text="Components from libraries"
     :description="`${filtered.count.lib} components from ${filtered.lib.size} packages`"
   >
-    <div v-for="[key, value] of filtered.lib.entries()" :key="key">
+    <div v-for="[key, value] of filtered.lib.entries()" :key="key" ml-2>
       <NIconTitle :text="`${key} (${value.length})`" py1 op50 />
       <div pl4>
         <ComponentItem v-for="c of value" :key="c.filePath" :component="c" />

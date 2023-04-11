@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex items-center flex-gap2">
+  <div flex="~ gap-3" items-center>
     <div v-if="icon" :class="icon" />
     <slot>
       <div>{{ text }}</div>

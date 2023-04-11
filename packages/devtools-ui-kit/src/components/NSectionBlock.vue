@@ -27,12 +27,14 @@ function onToggle(e: any) {
 <template>
   <details :open="open" @toggle="onToggle">
     <summary class="cursor-pointer select-none hover:bg-active p4" :class="collapse ? '' : 'pointer-events-none'">
-      <NIconTitle :icon="icon" :text="text" class="text-xl op75">
+      <NIconTitle :icon="icon" :text="text" text-xl transition :class="open ? 'op100' : 'op60'">
         <div>
-          <slot name="text">
-            {{ text }}
-          </slot>
-          <div v-if="description || $slots.description" class="text-sm op50">
+          <div text-base>
+            <slot name="text">
+              {{ text }}
+            </slot>
+          </div>
+          <div v-if="description || $slots.description" text-sm op50>
             <slot name="description">
               {{ description }}
             </slot>
@@ -43,11 +45,16 @@ function onToggle(e: any) {
         <NIcon
           v-if="collapse"
           icon="carbon-chevron-down"
-          class="chevron cursor-pointer place-self-start text-base op50 transition duration-500"
+          class="chevron"
+          cursor-pointer place-self-start text-base op75 transition duration-500
         />
       </NIconTitle>
     </summary>
-    <div v-lazy-show="open" class="flex flex-col flex-gap2 pb6 pt2" :class="typeof padding === 'string' ? padding : padding ? 'px8' : ''">
+    <div
+      v-lazy-show="open"
+      class="flex flex-col flex-gap2 pb6 pt2"
+      :class="typeof padding === 'string' ? padding : padding ? 'px4' : ''"
+    >
       <slot name="details" />
       <div :class="containerClass" class="mt1">
         <slot />
