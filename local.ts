@@ -1,5 +1,5 @@
 /**
- * Local developement module entry
+ * Local development module entry
  *
  * Change `@nuxt/devtools` to the absolute path of this module in any of your Nuxt projects,
  * allows you to try Nuxt Devtools locally directly from the source code. HMR is supported
