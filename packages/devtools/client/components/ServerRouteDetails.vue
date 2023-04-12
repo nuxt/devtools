@@ -56,7 +56,12 @@ const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'applicati
 const queriesCount = computed(() => routeQueries.value.filter(({ key }) => key).length)
 const headersCount = computed(() => routeHeaders.value.filter(({ key }) => key).length)
 
-const domain = computed(() => `http://localhost:${config.value?.devServer.port || 3000}`)
+const domain = computed(() => { 
+  let url = config.value?.devServer.url || 'http://localhost'
+  if (url.charAt(url.length - 1) === '/')
+    url = url.slice(0,-1)
+  return `{url}:${config.value?.devServer.port || 3000}`
+})
 const finalURL = computed(() => {
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
   if (query)
