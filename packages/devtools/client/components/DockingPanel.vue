@@ -3,6 +3,7 @@ const frameState = useDevToolsFrameState()
 
 const client = useClient()
 const nuxt = useNuxtApp()
+const splitted = useLayoutSplitState()
 
 function refreshData() {
   nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
@@ -49,11 +50,15 @@ function refreshPage() {
     <div px3 py2 border="b base" flex="~ gap-2">
       <NDarkToggle v-slot="{ toggle, isDark }">
         <NButton n="sm primary" @click="toggle()">
-          <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
+          <div carbon-sun translate-y--1px dark:carbon-moon /> {{ isDark.value ? 'Dark' : 'Light' }}
         </NButton>
       </NDarkToggle>
       <NButton n="sm primary" to="/settings">
         <div carbon-settings translate-y--1px /> Settings
+      </NButton>
+      <NButton v-if="client" @click="splitted = !splitted">
+        <div carbon-split-screen translate-y--1px />
+        {{ splitted ? 'Unsplit Screen' : 'Split Screen' }}
       </NButton>
     </div>
     <div px3 py2 flex="~ gap2">

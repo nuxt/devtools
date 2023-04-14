@@ -150,3 +150,7 @@ interface RestartDialog {
 export function useRestartDialogs() {
   return useState<RestartDialog[]>('devtools:restart-dialogs', () => [])
 }
+
+export function useLayoutSplitState() {
+  return useState<boolean>('devtools:layout-split', () => false)
+}
