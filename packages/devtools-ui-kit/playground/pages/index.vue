@@ -188,27 +188,38 @@ const radio = ref('a')
       </NCard>
 
       <NCard class="p4">
-        <div class="n-header-upper">
-          TextInput
-        </div>
-        <div class="flex flex-col gap-2">
-          <NTextInput
-            n="lime6 dark:lime5"
-            icon="carbon:checkmark-outline"
-            placeholder="Hi!"
-          />
-          <NTextInput
-            n="pink6 dark:pink5"
-            icon="carbon:user"
-            placeholder="Your name..."
-          />
-          <NTextInput
-            n="lime6 dark:lime5"
-            icon="carbon:password"
-            type="password"
-            placeholder="Your password..."
-          />
-        </div>
+        <form>
+          <div class="n-header-upper">
+            TextInput
+          </div>
+          <div class="flex flex-col gap-2">
+            <NTextInput
+              n="lime6 dark:lime5"
+              icon="carbon:checkmark-outline"
+              placeholder="Hi!"
+            />
+            <NTextInput
+              n="pink6 dark:pink5"
+              icon="carbon:user"
+              placeholder="Your name..."
+              disabled
+            />
+            <NTextInput
+              n="pink6 dark:pink5"
+              icon="carbon:user"
+              placeholder="Your age..."
+              type="number"
+            />
+            <NTextInput
+              n="lime6 dark:lime5"
+              icon="carbon:password"
+              type="password"
+              placeholder="Your password..."
+              required
+            />
+            <input type="submit" value="Submit" class="n-button n-button-base cursor-pointer self-start active:n-button-active focus-visible:n-focus-base n-transition hover:n-button-hover n-disabled:n-disabled">
+          </div>
+        </form>
         <ShowSource src="/playground/pages/index.vue#L190-L205" />
       </NCard>
 
