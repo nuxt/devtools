@@ -217,7 +217,9 @@ const radio = ref('a')
               placeholder="Your password..."
               required
             />
-            <input type="submit" value="Submit" class="n-button n-button-base cursor-pointer self-start active:n-button-active focus-visible:n-focus-base n-transition hover:n-button-hover n-disabled:n-disabled">
+            <NButton class="self-start">
+              Submit
+            </NButton>
           </div>
         </form>
         <ShowSource src="/playground/pages/index.vue#L190-L205" />
