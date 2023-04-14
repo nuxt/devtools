@@ -134,7 +134,7 @@ export interface VueInspectorClient {
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
 
-export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'other'
+export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'json' | 'other'
 
 export interface AssetInfo {
   path: string
