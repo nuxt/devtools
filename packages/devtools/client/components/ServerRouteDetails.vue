@@ -56,11 +56,22 @@ const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'applicati
 const queriesCount = computed(() => routeQueries.value.filter(({ key }) => key).length)
 const headersCount = computed(() => routeHeaders.value.filter(({ key }) => key).length)
 
+const formattedBody = computed(() => {
+  const obj: RouteParam = {}
+  for (let i = 0; i < routeBodies.value.length; i++) {
+    const { key, value } = routeBodies.value[i]
+    obj[key] = value
+  }
+  return Object.keys(obj)[0] ? obj : null
+})
+
 const domain = computed(() => {
   let url = config.value?.devServer.url || 'http://localhost'
   if (url.charAt(url.length - 1) === '/')
     url = url.slice(0, -1)
-  return `${url}:${config.value?.devServer.port || 3000}`
+  const port = config.value?.devServer.port || 3000
+  const hasPort = url.includes(`:${port}`)
+  return hasPort ? url : `${url}:${port}`
 })
 const finalURL = computed(() => {
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
@@ -91,11 +102,7 @@ async function fetchData() {
       method: method.value.toUpperCase() as any,
       headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
       query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
-      body: routeBodies.value.reduce((acc: any, cur: any) => {
-        if (cur.key && cur.value)
-          acc[cur.key] = cur.value
-        return acc
-      }, null),
+      body: formattedBody.value,
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
       },
@@ -115,11 +122,6 @@ async function fetchData() {
 
 const rawFetchRequestCode = computed(() => {
   const headers = routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
-  const body = routeBodies.value.reduce((acc: any, cur: any) => {
-    if (cur.key && cur.value)
-      acc[cur.key] = cur.value
-    return acc
-  }, {})
 
   const items: string[] = []
 
@@ -128,8 +130,8 @@ const rawFetchRequestCode = computed(() => {
 
   if (headers)
     items.push(`headers: {\n${headers}\n}`)
-  if (Object.keys(body).length)
-    items.push(`body: ${JSON.stringify(body, null, 2)}`)
+  if (formattedBody.value)
+    items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
 
   return `await fetch('${finalURL.value}', {
 ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
