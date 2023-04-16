@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { ServerRouteInfo } from '~/../src/types'
 
 definePageMeta({
   icon: 'carbon-cloud',
@@ -21,7 +22,13 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
+const selectedRoutes = reactive<ServerRouteInfo[]>([])
+const selected = computed(() => {
+  const route = serverRoutes.value?.find(i => i.path === vueRoute.query?.path)
+  if (route && !selectedRoutes.includes(route))
+    selectedRoutes.push(route)
+  return route
+})
 const search = ref('')
 
 const filtered = computed(() => {
@@ -46,6 +53,7 @@ const filtered = computed(() => {
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
           flex="~ gap-2" items-center hover-bg-active px2 py1
+          :class="[{ 'bg-active': selected?.path === item.path }]"
           :to="{ query: { path: item.path } }"
         >
           <div w-12 flex-none text-right>
@@ -61,11 +69,14 @@ const filtered = computed(() => {
       </template>
     </template>
     <template #right>
-      <ServerRouteDetails
-        v-if="selected"
-        :key="selected.path"
-        :route="selected"
-      />
+      <template v-if="selected">
+        <ServerRouteDetails
+          v-for="item of selectedRoutes"
+          v-show="item.path === selected.path"
+          :key="item.path"
+          :route="item"
+        />
+      </template>
       <NPanelGrids v-else>
         <NCard px6 py2>
           <span op75>Select a route to start</span>
