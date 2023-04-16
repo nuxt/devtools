@@ -17,6 +17,7 @@ const config = useServerConfig()
 const response = reactive({
   contentType: 'text/plain',
   data: '' as any,
+  statusCode: 200,
   error: undefined as Error | undefined,
 })
 
@@ -105,11 +106,11 @@ async function fetchData() {
       body: formattedBody.value,
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
+        response.statusCode = res.status
       },
-      onResponseError({ error }) {
-        console.error(error)
-        response.error = error
-        response.data = error?.message || error?.toString?.() || 'Unknown error'
+      onResponseError(res) {
+        response.error = res.response._data
+        response.data = res.response._data
       },
     })
   }
@@ -133,7 +134,7 @@ const rawFetchRequestCode = computed(() => {
   if (formattedBody.value)
     items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
 
-  return `await fetch('${finalURL.value}', {
+  return `await $fetch('${finalURL.value}', {
 ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
 })`
 })
@@ -278,6 +279,14 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
           bg-red-400:10 text-red-400
         >
           Error
+        </Badge>
+        <Badge
+          :class="{
+            'bg-orange-400:10 text-orange-400': response.error,
+            'bg-green-400:10 text-green-400': !response.error,
+          }"
+        >
+          {{ response.statusCode }}
         </Badge>
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
