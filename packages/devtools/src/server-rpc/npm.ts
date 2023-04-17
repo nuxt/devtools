@@ -9,7 +9,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
   function getPackageManager() {
-    detectPromise ||= detectPackageManager(nuxt.options.rootDir).then(r => r.name)
+    detectPromise ||= detectPackageManager(nuxt.options.rootDir).then(r => r?.name || 'npm')
     return detectPromise
   }
 

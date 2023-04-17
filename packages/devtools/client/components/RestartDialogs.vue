@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useTemplatePromise } from 'vue-template-promise'
-
 const nuxt = useNuxtApp()
 const state = useRestartDialogs()
 const client = useClient()
 
-const PromiseConfirm = useTemplatePromise<boolean, [string]>()
+const PromiseConfirm = createTemplatePromise<boolean, [string]>()
 
 // @ts-expect-error - missing type
 nuxt.hook('devtools:terminal:exit', ({ id, code }) => {

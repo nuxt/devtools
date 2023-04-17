@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useTemplatePromise } from 'vue-template-promise'
 import type { NpmCommandOptions } from '../../src/types'
 
 const props = withDefaults(
@@ -26,7 +25,7 @@ const shouldGotoTerminal = ref(true)
 const shouldRestartServer = ref(true)
 const restartDialogs = useRestartDialogs()
 
-const PromiseConfirm = useTemplatePromise<boolean, [string]>()
+const PromiseConfirm = createTemplatePromise<boolean, [string]>()
 
 async function updateWithConfirm() {
   const processId = await update(async (command) => {
