@@ -17,6 +17,7 @@ const config = useServerConfig()
 const response = reactive({
   contentType: 'text/plain',
   data: '' as any,
+  statusCode: 200,
   error: undefined as Error | undefined,
 })
 
@@ -47,7 +48,7 @@ const started = ref(false)
 const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/g))
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 
-const method = computed(() => (props.route.method || 'GET').toUpperCase())
+const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<RouteParam>({})
 const routeBodies = ref<RouteParam[]>([{ key: '', value: '' }])
 const routeQueries = ref<RouteParam[]>([{ key: '', value: '' }])
@@ -78,7 +79,7 @@ const finalURL = computed(() => {
   if (query)
     query = `?${query}`
 
-  return domain.value + (parsedRoute.value?.map((i) => {
+  return (parsedRoute.value?.map((i) => {
     if (i.startsWith(':') || i.startsWith('**:'))
       return routeParams.value[i] || i
     return i
@@ -98,18 +99,18 @@ async function fetchData() {
 
   const start = Date.now()
   try {
-    response.data = await $fetch(finalURL.value, {
-      method: method.value.toUpperCase() as any,
+    response.data = await $fetch(domain.value + finalURL.value, {
+      method: routeMethod.value.toUpperCase() as any,
       headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
       query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
       body: formattedBody.value,
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
+        response.statusCode = res.status
       },
-      onResponseError({ error }) {
-        console.error(error)
-        response.error = error
-        response.data = error?.message || error?.toString?.() || 'Unknown error'
+      onResponseError(res) {
+        response.error = res.response._data
+        response.data = res.response._data
       },
     })
   }
@@ -125,15 +126,15 @@ const rawFetchRequestCode = computed(() => {
 
   const items: string[] = []
 
-  if (method.value.toUpperCase() !== 'GET')
-    items.push(`method: '${method.value.toUpperCase()}'`)
+  if (routeMethod.value.toUpperCase() !== 'GET')
+    items.push(`method: '${routeMethod.value.toUpperCase()}'`)
 
   if (headers)
     items.push(`headers: {\n${headers}\n}`)
   if (formattedBody.value)
     items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
 
-  return `await fetch('${finalURL.value}', {
+  return `await $fetch('${finalURL.value}', {
 ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
 })`
 })
@@ -148,16 +149,23 @@ const currentParams = computed(() => {
   if (activeTab.value === 'headers')
     return routeHeaders.value
 })
+
+const copy = useCopy()
+const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 </script>
 
 <template>
   <div h-full w-full flex="~ col">
     <div flex="~ col gap-2" flex-none p4 navbar-glass>
       <div flex="~ gap2">
-        <!-- TODO: when route.method is not defined, make this a dropdown -->
-        <NButton :class="getRequestMethodClass(method)" pointer-events-none tabindex="-1">
-          {{ method.toUpperCase() }}
+        <NButton v-if="route.method" :class="getRequestMethodClass(routeMethod)" pointer-events-none tabindex="-1">
+          {{ routeMethod.toUpperCase() }}
         </NButton>
+        <NSelect v-else v-model="routeMethod" :class="getRequestMethodClass(routeMethod)">
+          <option v-for="method of methods" :key="method" :class="getRequestMethodClass(method)">
+            {{ method.toUpperCase() }}
+          </option>
+        </NSelect>
         <NTextInput
 
           :placeholder="finalURL"
@@ -189,7 +197,7 @@ const currentParams = computed(() => {
         Query {{ queriesCount ? `(${queriesCount})` : '' }}
       </NButton>
       <NButton
-        v-if="method !== 'GET'"
+        v-if="routeMethod !== 'GET'"
         :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent!'"
         @click="activeTab = 'body'"
       >
@@ -227,13 +235,18 @@ const currentParams = computed(() => {
         />
       </template>
     </div>
-    <template v-if="activeTab === 'snippet'">
+    <div v-if="activeTab === 'snippet'" relative>
       <NCodeBlock
         p2 border="b base"
         :code="rawFetchRequestCode"
         lang="js"
       />
-    </template>
+      <NIconButton
+        icon="carbon:copy"
+        absolute bottom-4 right-4 z-100 p4
+        @click="copy(rawFetchRequestCode)"
+      />
+    </div>
     <div v-else-if="currentParams" px4 py2 flex="~ col gap-2" border="b base">
       <div v-for="(item, index) in currentParams" :key="index" flex="~ gap-2" justify-around>
         <NTextInput v-model="item.key" placeholder="Key" flex-1 font-mono n="sm" />
@@ -266,6 +279,14 @@ const currentParams = computed(() => {
           bg-red-400:10 text-red-400
         >
           Error
+        </Badge>
+        <Badge
+          :class="{
+            'bg-orange-400:10 text-orange-400': response.error,
+            'bg-green-400:10 text-green-400': !response.error,
+          }"
+        >
+          {{ response.statusCode }}
         </Badge>
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
