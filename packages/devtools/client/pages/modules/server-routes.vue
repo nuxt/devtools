@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import type { ServerRouteInfo } from '~/../src/types'
 
 definePageMeta({
   icon: 'carbon-cloud',
@@ -22,13 +21,7 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selectedRoutes = reactive<ServerRouteInfo[]>([])
-const selected = computed(() => {
-  const route = serverRoutes.value?.find(i => i.path === vueRoute.query?.path)
-  if (route && !selectedRoutes.includes(route))
-    selectedRoutes.push(route)
-  return route
-})
+const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
 const search = ref('')
 
 const filtered = computed(() => {
