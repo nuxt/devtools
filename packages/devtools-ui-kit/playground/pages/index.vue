@@ -202,11 +202,10 @@ const radio = ref('a')
               n="pink6 dark:pink5"
               icon="carbon:user"
               placeholder="Your name..."
-              disabled
             />
             <NTextInput
               n="pink6 dark:pink5"
-              icon="carbon:user"
+              icon="carbon-character-whole-number"
               placeholder="Your age..."
               type="number"
             />
