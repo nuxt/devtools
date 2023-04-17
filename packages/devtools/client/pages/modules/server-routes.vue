@@ -46,6 +46,7 @@ const filtered = computed(() => {
       <template v-for="item of filtered" :key="item.id">
         <NuxtLink
           flex="~ gap-2" items-center hover-bg-active px2 py1
+          :class="[{ 'bg-active': selected?.path === item.path }]"
           :to="{ query: { path: item.path } }"
         >
           <div w-12 flex-none text-right>
@@ -61,12 +62,14 @@ const filtered = computed(() => {
       </template>
     </template>
     <template #right>
-      <ServerRouteDetails
-        v-if="selected"
-        :key="selected.path"
-        :route="selected"
-      />
-      <NPanelGrids v-else>
+      <KeepAlive :max="10">
+        <ServerRouteDetails
+          v-if="selected"
+          :key="selected.path"
+          :route="selected"
+        />
+      </KeepAlive>
+      <NPanelGrids v-if="!selected">
         <NCard px6 py2>
           <span op75>Select a route to start</span>
         </NCard>
