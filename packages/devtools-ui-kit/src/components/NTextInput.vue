@@ -4,15 +4,10 @@ import { useVModel } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
     modelValue?: string | number
-    placeholder?: string
     icon?: string
-    disabled?: boolean
-    type?: string
   }>(),
   {
     modelValue: '',
-    disabled: false,
-    type: 'text',
   },
 )
 const emit = defineEmits<{ (...args: any): void }>()
@@ -26,10 +21,9 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
     </slot>
     <input
       v-model="input"
+      type="text"
+      v-bind="$attrs"
       class="ml-0.4em w-full flex-auto n-bg-base !outline-none"
-      :type="type"
-      :disabled="disabled"
-      :placeholder="placeholder"
     >
   </div>
 </template>
