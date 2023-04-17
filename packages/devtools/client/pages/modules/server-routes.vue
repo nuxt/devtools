@@ -69,15 +69,14 @@ const filtered = computed(() => {
       </template>
     </template>
     <template #right>
-      <template v-if="selected">
+      <KeepAlive :max="10">
         <ServerRouteDetails
-          v-for="item of selectedRoutes"
-          v-show="item.path === selected.path"
-          :key="item.path"
-          :route="item"
+          v-if="selected"
+          :key="selected.path"
+          :route="selected"
         />
-      </template>
-      <NPanelGrids v-else>
+      </KeepAlive>
+      <NPanelGrids v-if="!selected">
         <NCard px6 py2>
           <span op75>Select a route to start</span>
         </NCard>
