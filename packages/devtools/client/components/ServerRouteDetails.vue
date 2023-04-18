@@ -74,17 +74,25 @@ const domain = computed(() => {
   const hasPort = url.includes(`:${port}`)
   return hasPort ? url : `${url}:${port}`
 })
-const finalURL = computed(() => {
+
+const finalPath = computed(() => {
   let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
   if (query)
     query = `?${query}`
-
-  return (parsedRoute.value?.map((i) => {
+  const path = (parsedRoute.value?.map((i) => {
     if (i.startsWith(':') || i.startsWith('**:'))
       return routeParams.value[i] || i
     return i
   }).join('') || '') + query
+
+  let base = config.value?.app.baseURL || ''
+  if (base === './' || base === '.')
+    base = ''
+  if (base.endsWith('/'))
+    base = base.slice(0, -1)
+  return (base + path)
 })
+const finalURL = computed(() => domain.value + finalPath.value)
 
 async function fetchData() {
   started.value = true
@@ -99,7 +107,7 @@ async function fetchData() {
 
   const start = Date.now()
   try {
-    response.data = await $fetch(domain.value + finalURL.value, {
+    response.data = await $fetch(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
       headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
       query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
@@ -146,14 +154,14 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
     name: 'useFetch',
     lang: 'javascript',
     docs: 'https://nuxt.com/docs/api/composables/use-fetch',
-    code: `const { data, pending, error, refresh } = useFetch('${finalURL.value}'${options})`,
+    code: `const { data, pending, error, refresh } = useFetch('${finalPath.value}'${options})`,
   })
 
   snippets.push({
     name: '$fetch',
     lang: 'javascript',
     docs: 'https://nuxt.com/docs/api/utils/dollarfetch#fetch',
-    code: `await $fetch('${finalURL.value}'${options})`,
+    code: `await $fetch('${finalPath.value}'${options})`,
   })
 
   return snippets
@@ -187,9 +195,7 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
           </option>
         </NSelect>
         <NTextInput
-
-          :placeholder="finalURL"
-
+          :model-value="finalPath"
           disabled flex-auto font-mono
           p="x5 y2"
           n="primary xs"

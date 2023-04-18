@@ -21,17 +21,17 @@ watchEffect(() => {
         <button
           px4 py2 border="r base"
           hover="bg-active"
-          :class="cs === selected ? 'bg-active' : ''"
+          :class="cs === selected ? '' : 'border-b'"
           @click="selected = cs"
         >
-          <div :class="cs === selected ? '' : 'op50' " font-mono>
+          <div :class="cs === selected ? '' : 'op30' " font-mono>
             {{ cs.name }}
           </div>
         </button>
       </template>
+      <div border="b base" flex-auto />
     </div>
 
-    <div x-divider />
     <template v-if="selected">
       <NCodeBlock
         :code="selected.code"
