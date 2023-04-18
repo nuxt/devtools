@@ -153,14 +153,14 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
   snippets.push({
     name: 'useFetch',
     lang: 'javascript',
-    docs: 'https://nuxt.com/docs/api/composables/use-fetch',
+    docs: ComposablesDocs.nuxt.useFetch,
     code: `const { data, pending, error, refresh } = useFetch('${finalPath.value}'${options})`,
   })
 
   snippets.push({
     name: '$fetch',
     lang: 'javascript',
-    docs: 'https://nuxt.com/docs/api/utils/dollarfetch#fetch',
+    docs: ComposablesDocs.nuxt.$fetch,
     code: `await $fetch('${finalPath.value}'${options})`,
   })
 
@@ -284,7 +284,10 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
         </NButton>
       </div>
       <div>
-        <NButton icon="carbon:add" @click="currentParams!.push({ key: '', value: '' })">
+        <NButton
+          icon="carbon-add" n="sm primary"
+          my1 px-3 @click="currentParams!.push({ key: '', value: '' })"
+        >
           Add
         </NButton>
       </div>

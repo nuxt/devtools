@@ -39,17 +39,16 @@ watchEffect(() => {
         :lines="false"
         w-full of-auto p3
       />
-      <div flex="~ gap-2" px3 pb2>
+      <div flex="~ gap-2" px3 pb3 n="sm primary">
         <NButton
-          icon="carbon-copy" n="sm primary"
-          my1 px-3 @click="copy(selected!.code)"
+          icon="carbon-copy"
+          @click="copy(selected!.code)"
         >
           Copy
         </NButton>
         <NButton
           v-if="selected?.docs" :to="selected.docs" target="_blank"
-          icon="carbon-catalog" n="sm primary"
-          my1 px-3
+          icon="carbon-catalog"
         >
           Docs
         </NButton>

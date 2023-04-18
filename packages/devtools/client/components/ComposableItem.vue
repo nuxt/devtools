@@ -12,6 +12,15 @@ const copy = useCopy()
 const name = computed(() => props.item.as || props.item.name)
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
 const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
+
+const docsUrl = computed(() => {
+  if (props.item.meta?.docsUrl)
+    return props.item.meta.docsUrl
+  if (['nuxt', '#app', 'nuxt3'].includes(props.item.from))
+    return (ComposablesDocs.nuxt as any)[props.item.name]
+  if (props.item.from === 'vue')
+    return (ComposablesDocs.vue as any)[props.item.name]
+})
 </script>
 
 <template>
@@ -35,18 +44,18 @@ const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.mod
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
-            <NButton n-solid @click="copy(name)">
+            <NButton icon="carbon-copy" @click="copy(name)">
               Copy
             </NButton>
-            <NButton v-if="filepath" n-solid @click="filepath && openInEditor(filepath)">
+            <NButton v-if="filepath" icon="carbon-code" @click="filepath && openInEditor(filepath)">
               Source
             </NButton>
-            <NButton v-if="item.meta?.docsUrl" n-solid :to="item.meta?.docsUrl" target="_blank">
+            <NButton v-if="docsUrl" icon="carbon-catalog" :to="docsUrl" target="_blank">
               Docs
             </NButton>
           </div>
         </div>
-        <div border="t base" px4 py3>
+        <div border="t base" max-h-60 of-auto px4 py3>
           <template v-if="usageCount">
             <div text-sm>
               <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
