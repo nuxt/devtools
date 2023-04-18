@@ -1,4 +1,5 @@
 import { addPluginTemplate, defineNuxtModule } from '@nuxt/kit'
+
 // @nuxt/devtools-kit
 import { extendServerRpc, onDevToolsInitialized } from '../../../devtools-kit/src/index'
 

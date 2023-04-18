@@ -1,7 +1,7 @@
 {
   "version": "0.4.0",
   "private": false,
-  "packageManager": "pnpm@8.2.0",
+  "packageManager": "pnpm@8.3.0",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
     "stub": "pnpm -r run stub",
@@ -16,7 +16,7 @@
     "prepare": "pnpm -r run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.4",
+    "@antfu/eslint-config": "^0.38.5",
     "@antfu/ni": "^0.21.3",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",

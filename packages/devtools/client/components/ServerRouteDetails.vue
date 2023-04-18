@@ -178,7 +178,6 @@ const currentParams = computed(() => {
     return routeHeaders.value
 })
 
-const copy = useCopy()
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 </script>
 
