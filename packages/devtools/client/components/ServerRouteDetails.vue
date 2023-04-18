@@ -218,6 +218,13 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
         <NIcon icon="carbon:code" />
         Fetch Snippet
       </NButton>
+      <div flex-auto />
+      <NButton
+        icon="carbon-launch"
+        @click="openInEditor(route.filepath)"
+      >
+        Open in Editor
+      </NButton>
     </div>
     <div
       v-if="activeTab === 'params'"
