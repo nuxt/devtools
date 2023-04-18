@@ -5,9 +5,13 @@ const props = withDefaults(
   defineProps<{
     modelValue?: string | number
     icon?: string
+    placeholder?: string
+    disabled?: boolean
+    type?: string
   }>(),
   {
     modelValue: '',
+    type: 'text',
   },
 )
 const emit = defineEmits<{ (...args: any): void }>()
@@ -21,8 +25,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
     </slot>
     <input
       v-model="input"
-      type="text"
-      v-bind="$attrs"
+      v-bind="$props"
       class="ml-0.4em w-full flex-auto n-bg-base !outline-none"
     >
   </div>
