@@ -1,3 +1,27 @@
+## [0.4.1](https://github.com/nuxt/devtools-poc/compare/v0.4.0...v0.4.1) (2023-04-18)
+
+
+### Bug Fixes
+
+* fix domain to work with https ([#178](https://github.com/nuxt/devtools-poc/issues/178)) ([646fb9b](https://github.com/nuxt/devtools-poc/commit/646fb9b36022df763ee15b3bce971f0da99119cb))
+* **server-routes:** add method dropdown ([#187](https://github.com/nuxt/devtools-poc/issues/187)) ([f47060e](https://github.com/nuxt/devtools-poc/commit/f47060e50ee9cd6ba9134a1a0c2061fdbe9ac859))
+* **server-routes:** handle base url ([06eb4d7](https://github.com/nuxt/devtools-poc/commit/06eb4d73106f7f0217375bc275cc3af76fa0c309))
+* **server-routes:** persistence between route switches ([#186](https://github.com/nuxt/devtools-poc/issues/186)) ([2791d3e](https://github.com/nuxt/devtools-poc/commit/2791d3e239acc7162ea652baa764f43db1a6c6ae))
+* **ServerRouteDetail:** fix domain port & body ([#185](https://github.com/nuxt/devtools-poc/issues/185)) ([7b1fbf1](https://github.com/nuxt/devtools-poc/commit/7b1fbf1306426857b81020eeb445196877bf74de))
+* **ui-kit:** NTextInput styles ([0ed638e](https://github.com/nuxt/devtools-poc/commit/0ed638e466c50ec0701c6afbc3bf98ee5e32e59c))
+* **ui-kit:** ssr compatibility, close [#183](https://github.com/nuxt/devtools-poc/issues/183) ([4f49cd4](https://github.com/nuxt/devtools-poc/commit/4f49cd4d6a15d5d02348031b603c4d5d1bb0c845))
+
+
+### Features
+
+* provide docs for built-in composables ([e32b8d5](https://github.com/nuxt/devtools-poc/commit/e32b8d5e1b30a1637dc08493a2cd6cb708460315))
+* **server-routes:** more code snippets ([40913b9](https://github.com/nuxt/devtools-poc/commit/40913b93f6d3d163c20ede708eedf4909072ec5b))
+* **server-routes:** open route in editor button ([#189](https://github.com/nuxt/devtools-poc/issues/189)) ([c0cbfdb](https://github.com/nuxt/devtools-poc/commit/c0cbfdb270878a123a087851e9fad01ce99ccf61))
+* styling ([4be0a97](https://github.com/nuxt/devtools-poc/commit/4be0a97567b4d2bc7c1cc33ae488a18bfa2c2d33))
+* **ui-kit:** Make NTextInput more generic ([#181](https://github.com/nuxt/devtools-poc/issues/181)) ([f3d61da](https://github.com/nuxt/devtools-poc/commit/f3d61daa3fb44e370c99f70ed0a79640afeb023c))
+
+
+
 # [0.4.0](https://github.com/nuxt/devtools-poc/compare/v0.3.2...v0.4.0) (2023-04-11)
 
 
