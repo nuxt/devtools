@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ServerRouteInfo } from '~/../src/types'
+import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
 
 interface RouteParam {
   [key: string]: string
@@ -121,22 +121,42 @@ async function fetchData() {
   fetchTime.value = Date.now() - start
 }
 
-const rawFetchRequestCode = computed(() => {
-  const headers = routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
+const codeSnippets = computed(() => {
+  const snippets: CodeSnippet[] = []
 
   const items: string[] = []
+  const headers = routeHeaders.value
+    .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
+    .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
-
   if (headers)
     items.push(`headers: {\n${headers}\n}`)
   if (formattedBody.value)
     items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
 
-  return `await $fetch('${finalURL.value}', {
+  const options = items.length
+    ? `, {
 ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
-})`
+}`
+    : ''
+
+  snippets.push({
+    name: 'useFetch',
+    lang: 'javascript',
+    docs: 'https://nuxt.com/docs/api/composables/use-fetch',
+    code: `const { data, pending, error, refresh } = useFetch('${finalURL.value}'${options})`,
+  })
+
+  snippets.push({
+    name: '$fetch',
+    lang: 'javascript',
+    docs: 'https://nuxt.com/docs/api/utils/dollarfetch#fetch',
+    code: `await $fetch('${finalURL.value}'${options})`,
+  })
+
+  return snippets
 })
 
 const activeTab = ref(paramNames.value.length ? 'params' : 'query')
@@ -183,14 +203,14 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
     <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
         v-if="paramNames.length"
-        :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent!'"
+        :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = 'params'"
       >
         <NIcon icon="i-carbon-text-selection" />
         Params ({{ paramNames.length }})
       </NButton>
       <NButton
-        :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent!'"
+        :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = 'query'"
       >
         <NIcon icon="i-carbon-help" />
@@ -198,25 +218,25 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
       </NButton>
       <NButton
         v-if="routeMethod !== 'GET'"
-        :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent!'"
+        :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = 'body'"
       >
         <NIcon icon="i-carbon-document" />
         Body
       </NButton>
       <NButton
-        :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent!'"
+        :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = 'headers'"
       >
         <NIcon icon="i-carbon-html-reference" />
         Headers {{ headersCount ? `(${headersCount})` : '' }}
       </NButton>
       <NButton
-        :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent!'"
+        :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = 'snippet'"
       >
         <NIcon icon="carbon:code" />
-        Fetch Snippet
+        Snippets
       </NButton>
       <div flex-auto />
       <NButton
@@ -243,15 +263,10 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
       </template>
     </div>
     <div v-if="activeTab === 'snippet'" relative>
-      <NCodeBlock
-        p2 border="b base"
-        :code="rawFetchRequestCode"
-        lang="js"
-      />
-      <NIconButton
-        icon="carbon:copy"
-        absolute bottom-4 right-4 z-100 p4
-        @click="copy(rawFetchRequestCode)"
+      <CodeSnippets
+        v-if="codeSnippets.length"
+        border="b base"
+        :code-snippets="codeSnippets"
       />
     </div>
     <div v-else-if="currentParams" px4 py2 flex="~ col gap-2" border="b base">

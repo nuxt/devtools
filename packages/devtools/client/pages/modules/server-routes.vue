@@ -4,6 +4,7 @@ import Fuse from 'fuse.js'
 definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
+  layout: 'full',
   experimental: true,
   shouldShow() {
     return useServerRoutes().value?.length

@@ -19,23 +19,16 @@ watchEffect(() => {
     <div flex="~ wrap" w-full>
       <template v-for="cs, idx of codeSnippets" :key="idx">
         <button
-          p2 border="r base"
+          px4 py2 border="r base"
           hover="bg-active"
           :class="cs === selected ? 'bg-active' : ''"
           @click="selected = cs"
         >
-          <div :class="cs === selected ? '' : 'op50' ">
+          <div :class="cs === selected ? '' : 'op50' " font-mono>
             {{ cs.name }}
           </div>
         </button>
       </template>
-      <div flex-auto />
-      <NButton v-if="selected?.docs" :to="selected.docs" target="_blank" icon="carbon-help" n="sm primary" border="none" my1 px-2>
-        Docs
-      </NButton>
-      <NButton v-if="selected" icon="carbon-copy" n="sm primary" border="none" my1 mr1 px-2 @click="copy(selected!.code)">
-        Copy
-      </NButton>
     </div>
 
     <div x-divider />
@@ -46,6 +39,21 @@ watchEffect(() => {
         :lines="false"
         w-full of-auto p3
       />
+      <div flex="~ gap-2" px3 pb2>
+        <NButton
+          icon="carbon-copy" n="sm primary"
+          my1 px-3 @click="copy(selected!.code)"
+        >
+          Copy
+        </NButton>
+        <NButton
+          v-if="selected?.docs" :to="selected.docs" target="_blank"
+          icon="carbon-catalog" n="sm primary"
+          my1 px-3
+        >
+          Docs
+        </NButton>
+      </div>
     </template>
   </div>
 </template>
