@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { ModuleCustomTab } from '~/../src/types'
 
+definePageMeta({
+  layout: 'full',
+})
+
 const route = useRoute()
 const router = useRouter()
 const name = computed(() => route.params.name)
@@ -20,18 +24,20 @@ onMounted(() => {
 
 <template>
   <template v-if="!tab">
-    <div flex="~ col gap-2" h-full items-center justify-center>
-      <div i-carbon-queued mb2 text-5xl op50 />
-      <p text-xl>
-        Tab <code text-rose>{{ name }}</code> not found
-      </p>
-      <p op50>
-        It might because the module contributing this tab is not installed or enabled
-      </p>
-      <p mt8 animate-pulse>
-        Redirecting to overview page...
-      </p>
-    </div>
+    <NPanelGrids>
+      <div flex="~ col gap2" mxa items-center>
+        <div i-carbon-queued mb2 text-5xl op50 />
+        <p text-xl>
+          Tab <code text-rose>{{ name }}</code> not found
+        </p>
+        <p op50>
+          It might because the module contributing this tab is not installed or enabled
+        </p>
+        <p mt8 animate-pulse>
+          Redirecting to overview page...
+        </p>
+      </div>
+    </NPanelGrids>
   </template>
   <template v-else-if="tab.view.type === 'iframe'">
     <IframeView :tab="tab" />
@@ -49,8 +55,10 @@ onMounted(() => {
     />
   </template>
   <template v-else>
-    <div flex="~ col" h-full items-center justify-center>
-      Unknown tab type {{ tab.view }}
-    </div>
+    <NPanelGrids>
+      <NCard flex="~ col" h-full items-center justify-center>
+        Unknown tab type {{ tab.view }}
+      </NCard>
+    </NPanelGrids>
   </template>
 </template>

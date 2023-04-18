@@ -144,7 +144,8 @@ export function unocssPreset(): Preset {
 
       // loading
       'n-loading': 'flex h-full w-full justify-center items-center',
-      'n-panel-grids': 'n-panel-grids-light dark:n-panel-grids-dark flex flex-col h-full gap-2 items-center justify-center',
+      'n-panel-grids': 'n-panel-grids-light dark:n-panel-grids-dark',
+      'n-panel-grids-center': 'n-panel-grids flex flex-col h-full gap-2 items-center justify-center',
     },
   }
 }

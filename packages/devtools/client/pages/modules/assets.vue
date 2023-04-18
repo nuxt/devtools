@@ -6,6 +6,7 @@ import type { AssetInfo } from '~/../src/types'
 definePageMeta({
   icon: 'carbon-image-copy',
   title: 'Assets',
+  layout: 'full',
 })
 
 const assets = useStaticAssets()
@@ -99,7 +100,6 @@ function refreshAssets() {}
     </div>
     <DrawerRight
       :model-value="!!selected"
-
       auto-close w-120
       :navbar="navbar"
       @close="selected = undefined"

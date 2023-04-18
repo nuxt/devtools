@@ -5,6 +5,7 @@ definePageMeta({
   icon: 'carbon-data-base',
   title: 'Storage',
   experimental: true,
+  layout: 'full',
 })
 
 const nuxtApp = useNuxtApp()
@@ -198,7 +199,7 @@ async function renameCurrentItem() {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
-  <NPanelGrids v-else card-class="flex flex-col gap-2 items-center text-center p6">
+  <NPanelGrids v-else>
     <p v-if="Object.keys(storageMounts as any).length" op50>
       Select one storage to start:
     </p>

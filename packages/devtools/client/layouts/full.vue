@@ -1,5 +1,5 @@
 <template>
-  <div class="n-panel-grids-center">
+  <div h-full of-auto>
     <slot />
   </div>
 </template>

@@ -22,7 +22,7 @@ function goIntro() {
 </script>
 
 <template>
-  <NPanelGrids h-full w-full flex>
+  <NPanelGrids h-screen w-full flex>
     <div v-if="!config">
       Loading...
     </div>

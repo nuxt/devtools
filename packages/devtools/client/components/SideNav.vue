@@ -8,7 +8,6 @@ const tabs = useTabs()
     <div flex="~ col" sticky top-0 z-1 mb1 items-center pt3 bg-base>
       <VDropdown placement="left-start" :distance="20">
         <button
-
           i-logos-nuxt-icon h-6 w-6 text-lg
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
