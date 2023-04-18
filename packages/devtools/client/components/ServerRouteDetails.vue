@@ -180,43 +180,51 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
+    <div flex="~ gap2" w-full items-center justify-between px4 pb2 text-center text-sm border="b base">
+      <div flex="~ gap2">
+        <NButton
+          v-if="paramNames.length"
+          :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent!'"
+          @click="activeTab = 'params'"
+        >
+          <NIcon icon="i-carbon-text-selection" />
+          Params ({{ paramNames.length }})
+        </NButton>
+        <NButton
+          :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent!'"
+          @click="activeTab = 'query'"
+        >
+          <NIcon icon="i-carbon-help" />
+          Query {{ queriesCount ? `(${queriesCount})` : '' }}
+        </NButton>
+        <NButton
+          v-if="routeMethod !== 'GET'"
+          :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent!'"
+          @click="activeTab = 'body'"
+        >
+          <NIcon icon="i-carbon-document" />
+          Body
+        </NButton>
+        <NButton
+          :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent!'"
+          @click="activeTab = 'headers'"
+        >
+          <NIcon icon="i-carbon-html-reference" />
+          Headers {{ headersCount ? `(${headersCount})` : '' }}
+        </NButton>
+        <NButton
+          :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent!'"
+          @click="activeTab = 'snippet'"
+        >
+          <NIcon icon="carbon:code" />
+          Fetch Snippet
+        </NButton>
+      </div>
       <NButton
-        v-if="paramNames.length"
-        :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent!'"
-        @click="activeTab = 'params'"
+        icon="carbon-launch"
+        @click="openInEditor(route.filepath)"
       >
-        <NIcon icon="i-carbon-text-selection" />
-        Params ({{ paramNames.length }})
-      </NButton>
-      <NButton
-        :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent!'"
-        @click="activeTab = 'query'"
-      >
-        <NIcon icon="i-carbon-help" />
-        Query {{ queriesCount ? `(${queriesCount})` : '' }}
-      </NButton>
-      <NButton
-        v-if="routeMethod !== 'GET'"
-        :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent!'"
-        @click="activeTab = 'body'"
-      >
-        <NIcon icon="i-carbon-document" />
-        Body
-      </NButton>
-      <NButton
-        :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent!'"
-        @click="activeTab = 'headers'"
-      >
-        <NIcon icon="i-carbon-html-reference" />
-        Headers {{ headersCount ? `(${headersCount})` : '' }}
-      </NButton>
-      <NButton
-        :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent!'"
-        @click="activeTab = 'snippet'"
-      >
-        <NIcon icon="carbon:code" />
-        Fetch Snippet
+        Open in Editor
       </NButton>
     </div>
     <div
