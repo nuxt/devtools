@@ -10,7 +10,7 @@ index 926ba8c1e265d3f1f88ca2c91f72ede8fe25743a..62f49f5a0674b57eadce25211dda1502
  import 'node:path';
  import 'node:process';
 diff --git a/dist/chunks/analyze.mjs b/dist/chunks/analyze.mjs
-index 6aedc5c63249669a35126117a9f64c468b6d62fc..a87ed635d548427d725453313b0570cb9b8a1402 100644
+index 6aedc5c63249669a35126117a9f64c468b6d62fc..4f52f5f1a68b7c521af02ce0baa45bb58baca6da 100644
 --- a/dist/chunks/analyze.mjs
 +++ b/dist/chunks/analyze.mjs
 @@ -1,9 +1,9 @@
@@ -47,7 +47,7 @@ index 6aedc5c63249669a35126117a9f64c468b6d62fc..a87ed635d548427d725453313b0570cb
 +    const name = args.name || "default";
      const rootDir = resolve(args._[0] || ".");
 -    const statsDir = join(rootDir, ".nuxt/stats");
-+    let analyzeDir = join(rootDir, ".nuxt-analyze", name);
++    let analyzeDir = join(rootDir, ".nuxt/analyze", name);
 +    let buildDir = join(analyzeDir, ".nuxt");
 +    let outDir = join(analyzeDir, ".output");
 +    const startTime = Date.now();

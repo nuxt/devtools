@@ -1,9 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
   icon: 'carbon-edge-node',
-  title: 'Build',
+  title: 'Build Analyze',
   layout: 'full',
 })
+
+const ROUTE_ANALYZE = '/__nuxt_devtools__/analyze/'
 
 const info = useAnalyzeBuildInfo()
 const router = useRouter()
@@ -25,24 +27,66 @@ function gotoTerminal() {
     router.push(`/modules/terminals?id=${encodeURIComponent(processId.value)}`)
 }
 
-const timeAgo = useTimeAgo(() => info.value?.lastBuild?.buildTime ?? 0)
+const timeAgo = useTimeAgo(() => info.value?.lastBuild?.endTime ?? 0)
+
+const tabs = computed(() => {
+  const items = [
+    { name: 'Overview', id: 'overview' },
+  ]
+  if (info.value?.lastBuild) {
+    items.push(
+      { name: 'Client Size Map', id: 'client-dist' },
+      { name: 'Nitro Size Map', id: 'nitro-dist' },
+    )
+  }
+  return items
+})
+
+const selected = ref(tabs.value[0])
 </script>
 
 <template>
-  <NPanelGrids>
-    <div v-if="info?.lastBuild">
-      Last build: {{ timeAgo }}
+  <div h-full grid="~ rows-[max-content_1fr]">
+    <div flex="~ wrap" w-full>
+      <template v-for="tab, idx of tabs" :key="idx">
+        <button
+          px4 py2 border="r base"
+          hover="bg-active"
+          :class="tab === selected ? '' : 'border-b'"
+          @click="selected = tab"
+        >
+          <div :class="tab === selected ? '' : 'op30' ">
+            {{ tab.name }}
+          </div>
+        </button>
+      </template>
+      <div border="b base" flex-auto />
     </div>
-    <div v-else>
-      Last build: Never
+    <div v-if="selected.id === 'overview'" flex="~ col gap-2 items-center justify-center">
+      <div v-if="info?.lastBuild">
+        Last build: {{ timeAgo }}
+      </div>
+      <div v-else>
+        Last build: Never
+      </div>
+      <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
+        Build Now
+      </NButton>
+      <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
+        Building...
+      </NButton>
     </div>
-    <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
-      Build Now
-    </NButton>
-    <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
-      Building...
-    </NButton>
-  </NPanelGrids>
+    <iframe
+      v-if="selected.id === 'client-dist'"
+      :src="`${ROUTE_ANALYZE}${info?.lastBuild?.name}/client.html`"
+      h-full w-full
+    />
+    <iframe
+      v-if="selected.id === 'nitro-dist'"
+      :src="`${ROUTE_ANALYZE}${info?.lastBuild?.name}/nitro.html`"
+      h-full w-full
+    />
+  </div>
 
   <PromiseConfirm v-slot="{ resolve }">
     <NDialog :model-value="true" @close="resolve(false)">

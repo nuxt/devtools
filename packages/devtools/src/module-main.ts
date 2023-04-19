@@ -11,7 +11,7 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
+import { ROUTE_ANALYZE, ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -29,14 +29,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   }
 
   await nuxt.callHook('devtools:before')
-
-  // exclude .nuxt-analyse from watch
-  nuxt.options.vite.server ||= {}
-  nuxt.options.vite.server!.watch ||= {}
-  nuxt.options.vite.server!.watch!.ignored ||= []
-  if (!Array.isArray(nuxt.options.vite.server!.watch!.ignored))
-    nuxt.options.vite.server!.watch!.ignored = [nuxt.options.vite.server!.watch!.ignored]
-  nuxt.options.vite.server!.watch!.ignored!.push('**/.nuxt-analyze/**')
 
   nuxt.options.imports.collectMeta = true
 
@@ -61,10 +53,13 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     config.server.fs.allow.push(packageDir)
   })
 
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
+
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
     server.middlewares.use(ROUTE_ENTRY, tinyws() as any)
     server.middlewares.use(ROUTE_ENTRY, rpcMiddleware as any)
+    server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
     // serve the front end in production
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))

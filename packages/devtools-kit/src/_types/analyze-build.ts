@@ -1,9 +1,6 @@
-export interface AnalyticBuild {
-  buildTime: number
-  dir: string
-}
+import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 
 export interface AnalyticBuildInfo {
   isBuilding: boolean
-  lastBuild?: AnalyticBuild
+  lastBuild?: NuxtAnalyzeMeta
 }

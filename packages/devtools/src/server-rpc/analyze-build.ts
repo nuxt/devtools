@@ -2,17 +2,18 @@ import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { join } from 'pathe'
-import type { AnalyticBuild, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { NuxtAnalyzeMeta } from '@nuxt/schema'
+import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let lastBuild: AnalyticBuild | undefined
+  let lastBuild: NuxtAnalyzeMeta | undefined
   let promise: Promise<any> | undefined
-  let tryLoaded = false
+  let initalized = false
 
-  const id = 'devtools:analyze-build'
+  const processId = 'devtools:analyze-build'
 
-  // TODO: dynamic
-  const statsDir = join(nuxt.options.rootDir, '.nuxt/stats')
+  // TODO:
+  const statsDir = join(nuxt.options.rootDir, '.nuxt/analyze/default')
 
   async function startAnalyzeBuild() {
     if (promise)
@@ -23,7 +24,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
       args: ['nuxi', 'analyze', '--no-serve'],
       cwd: nuxt.options.rootDir,
     }, {
-      id,
+      id: processId,
       name: 'Analyze Build',
       icon: 'logos-nuxt-icon',
     }, nuxt)
@@ -37,11 +38,11 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         refresh('getAnalyzeBuildInfo')
       })
 
-    return id
+    return processId
   }
 
   async function readBuildInfo() {
-    const index = join(statsDir, 'index.json')
+    const index = join(statsDir, 'meta.json')
     if (!fs.existsSync(index))
       return
 
@@ -51,8 +52,8 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
 
   return {
     async getAnalyzeBuildInfo() {
-      if (!tryLoaded) {
-        tryLoaded = true
+      if (!initalized) {
+        initalized = true
         await readBuildInfo()
       }
       return {
