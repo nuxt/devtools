@@ -42,6 +42,12 @@
     "unocss": "^0.51.4",
     "vue-tsc": "^1.2.0"
   },
+  "pnpm": {
+    "patchedDependencies": {
+      "nuxi@3.4.1": "patches/nuxi@3.4.1.patch",
+      "nuxt@3.4.1": "patches/nuxt@3.4.1.patch"
+    }
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },

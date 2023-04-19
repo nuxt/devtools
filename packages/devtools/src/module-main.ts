@@ -18,16 +18,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (process.env.TEST || process.env.NODE_ENV === 'test')
     return
 
-  // TODO: Support devtools in production
-  if (!nuxt.options.dev)
-    return
-
   if (nuxt.options.builder !== '@nuxt/vite-builder') {
     logger.warn('Nuxt Devtools only supports Vite mode, module is disabled.')
     return
   }
 
+  if (!nuxt.options.dev) {
+    await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt))
+    return
+  }
+
   await nuxt.callHook('devtools:before')
+
+  // exclude .nuxt-analyse from watch
+  nuxt.options.vite.server ||= {}
+  nuxt.options.vite.server!.watch ||= {}
+  nuxt.options.vite.server!.watch!.ignored ||= []
+  if (!Array.isArray(nuxt.options.vite.server!.watch!.ignored))
+    nuxt.options.vite.server!.watch!.ignored = [nuxt.options.vite.server!.watch!.ignored]
+  nuxt.options.vite.server!.watch!.ignored!.push('**/.nuxt-analyze/**')
 
   nuxt.options.imports.collectMeta = true
 

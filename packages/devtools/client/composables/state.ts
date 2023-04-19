@@ -79,6 +79,10 @@ export function useTerminals() {
   return useAsyncState('getTerminals', () => rpc.getTerminals())
 }
 
+export function useAnalyzeBuildInfo() {
+  return useAsyncState('getAnalyzeBuildInfo', () => rpc.getAnalyzeBuildInfo())
+}
+
 export function useTabs() {
   const router = useRouter()
   const customTabs = useCustomTabs()

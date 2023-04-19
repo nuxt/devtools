@@ -2,6 +2,7 @@
 definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',
+  layout: 'full',
   shouldShow() {
     return useTerminals().value?.length
   },

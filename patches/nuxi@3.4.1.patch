@@ -1,0 +1,825 @@
+diff --git a/dist/chunks/add.mjs b/dist/chunks/add.mjs
+index 926ba8c1e265d3f1f88ca2c91f72ede8fe25743a..62f49f5a0674b57eadce25211dda15021d394252 100644
+--- a/dist/chunks/add.mjs
++++ b/dist/chunks/add.mjs
+@@ -1,5 +1,5 @@
+ import { existsSync, promises } from 'node:fs';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+diff --git a/dist/chunks/analyze.mjs b/dist/chunks/analyze.mjs
+index 6aedc5c63249669a35126117a9f64c468b6d62fc..a87ed635d548427d725453313b0570cb9b8a1402 100644
+--- a/dist/chunks/analyze.mjs
++++ b/dist/chunks/analyze.mjs
+@@ -1,9 +1,9 @@
+ import { promises } from 'node:fs';
+ import { createApp, eventHandler, toNodeListener, lazyEventHandler } from './index2.mjs';
+ import { listen } from './index.mjs';
+-import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
++import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
+ import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
+-import { c as clearDir } from '../shared/nuxi.d045d192.mjs';
++import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
+ import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve, j as join } from '../shared/nuxi.ffb4843d.mjs';
+@@ -27,61 +27,91 @@ import 'node:net';
+ import 'http';
+ import 'https';
+ import 'node:child_process';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ import '../shared/nuxi.1d8d2e21.mjs';
+-import '../shared/nuxi.70d48494.mjs';
++import '../shared/nuxi.114b1a98.mjs';
+ 
+ const analyze = defineNuxtCommand({
+   meta: {
+     name: "analyze",
+-    usage: "npx nuxi analyze [--log-level] [rootDir]",
++    usage: "npx nuxi analyze [--log-level] [--name] [--no-serve] [rootDir]",
+     description: "Build nuxt and analyze production bundle (experimental)"
+   },
+   async invoke(args) {
+     overrideEnv("production");
++    const name = args.name || "default";
+     const rootDir = resolve(args._[0] || ".");
+-    const statsDir = join(rootDir, ".nuxt/stats");
++    let analyzeDir = join(rootDir, ".nuxt-analyze", name);
++    let buildDir = join(analyzeDir, ".nuxt");
++    let outDir = join(analyzeDir, ".output");
++    const startTime = Date.now();
+     const { loadNuxt, buildNuxt } = await loadKit(rootDir);
+     const nuxt = await loadNuxt({
+       rootDir,
+       overrides: {
+-        build: { analyze: true },
++        build: {
++          analyze: true
++        },
++        analyzeDir,
++        buildDir,
++        nitro: {
++          output: {
++            dir: outDir
++          }
++        },
+         logLevel: args["log-level"]
+       }
+     });
+-    await clearDir(nuxt.options.buildDir);
++    analyzeDir = nuxt.options.analyzeDir;
++    buildDir = nuxt.options.buildDir;
++    outDir = nuxt.options.nitro.output?.dir || outDir;
++    await clearDir(analyzeDir);
+     await writeTypes(nuxt);
+     await buildNuxt(nuxt);
+-    const app = createApp();
+-    const serveFile = (filePath) => lazyEventHandler(async () => {
+-      const contents = await promises.readFile(filePath, "utf-8");
+-      return eventHandler((event) => {
+-        event.node.res.end(contents);
+-      });
+-    });
++    const endTime = Date.now();
++    const meta = {
++      name,
++      startTime,
++      endTime,
++      analyzeDir,
++      buildDir,
++      outDir
++    };
++    await nuxt.callHook("build:analyze:done", meta);
++    await promises.writeFile(join(analyzeDir, "meta.json"), JSON.stringify(meta, null, 2), "utf-8");
++    console.info("Analyze results are available at: `" + analyzeDir + "`");
+     console.warn("Do not deploy analyze results! Use `nuxi build` before deploying.");
+-    console.info("Starting stats server...");
+-    app.use("/client", serveFile(join(statsDir, "client.html")));
+-    app.use("/nitro", serveFile(join(statsDir, "nitro.html")));
+-    app.use(eventHandler(() => `<!DOCTYPE html>
+-    <html lang="en">
+-    <head>
+-    <meta charset="utf-8">
+-    <title>Nuxt Bundle Stats (experimental)</title>
+-    </head>
+-      <h1>Nuxt Bundle Stats (experimental)</h1>
+-      <ul>
+-        <li>
+-          <a href="/nitro">Nitro server bundle stats</a>
+-        </li>
+-        <li>
+-          <a href="/client">Client bundle stats</a>
+-        </li>
+-      </ul>
+-    </html>
+-    `));
+-    await listen(toNodeListener(app));
+-    return "wait";
++    if (args.serve !== false && !process.env.CI) {
++      const app = createApp();
++      const serveFile = (filePath) => lazyEventHandler(async () => {
++        const contents = await promises.readFile(filePath, "utf-8");
++        return eventHandler((event) => {
++          event.node.res.end(contents);
++        });
++      });
++      console.info("Starting stats server...");
++      app.use("/client", serveFile(join(analyzeDir, "client.html")));
++      app.use("/nitro", serveFile(join(analyzeDir, "nitro.html")));
++      app.use(eventHandler(() => `<!DOCTYPE html>
++        <html lang="en">
++        <head>
++        <meta charset="utf-8">
++        <title>Nuxt Bundle Stats (experimental)</title>
++        </head>
++          <h1>Nuxt Bundle Stats (experimental)</h1>
++          <ul>
++            <li>
++              <a href="/nitro">Nitro server bundle stats</a>
++            </li>
++            <li>
++              <a href="/client">Client bundle stats</a>
++            </li>
++          </ul>
++        </html>
++      `));
++      await listen(toNodeListener(app));
++      return "wait";
++    }
+   }
+ });
+ 
+diff --git a/dist/chunks/build-module.mjs b/dist/chunks/build-module.mjs
+index 709d93729d664161ba20b76c0b93c10effa5ccea..1b2d0c951a26abf49f6d901866bca66aea4d7800 100644
+--- a/dist/chunks/build-module.mjs
++++ b/dist/chunks/build-module.mjs
+@@ -1,5 +1,5 @@
+ import { e as execa } from '../shared/nuxi.63bda57d.mjs';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+diff --git a/dist/chunks/build.mjs b/dist/chunks/build.mjs
+index b6652f386fc98b3e8e5be41f35a93b93172ebebb..77fdd35c1571a1f882867bc1cf813b152ef461a4 100644
+--- a/dist/chunks/build.mjs
++++ b/dist/chunks/build.mjs
+@@ -1,18 +1,18 @@
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
++import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
+ import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
+-import { c as clearDir } from '../shared/nuxi.d045d192.mjs';
++import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
+ import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
+-import { a as showVersions } from '../shared/nuxi.1ee66a2a.mjs';
++import { a as showVersions } from '../shared/nuxi.abb7c9ca.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve, a as relative } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:fs';
+ import '../shared/nuxi.a685c563.mjs';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ import 'node:module';
+ import '../shared/nuxi.1d8d2e21.mjs';
+ import 'node:url';
+diff --git a/dist/chunks/cleanup.mjs b/dist/chunks/cleanup.mjs
+index 7c04fb7903d67c492203f16d41328f8f05323390..ee45403068dec2d3d5fb9dbde6a482952e8b3299 100644
+--- a/dist/chunks/cleanup.mjs
++++ b/dist/chunks/cleanup.mjs
+@@ -1,13 +1,13 @@
+-import { c as cleanupNuxtDirs } from '../shared/nuxi.e29c38a1.mjs';
++import { c as cleanupNuxtDirs } from '../shared/nuxi.cc672940.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:fs';
+-import '../shared/nuxi.70d48494.mjs';
++import '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import '../shared/nuxi.d045d192.mjs';
++import '../shared/nuxi.2535cbee.mjs';
+ 
+ const cleanup = defineNuxtCommand({
+   meta: {
+diff --git a/dist/chunks/dev.mjs b/dist/chunks/dev.mjs
+index 9a050051f6eb06caef10f1532b5353d9043b77ef..fc66e4bec0567a289e60bd3fa8fcd8c487e6ce9b 100644
+--- a/dist/chunks/dev.mjs
++++ b/dist/chunks/dev.mjs
+@@ -4,19 +4,19 @@ import require$$0 from 'path';
+ import require$$2 from 'util';
+ import require$$1 from 'stream';
+ import require$$0$2 from 'os';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+ import { w as withTrailingSlash } from '../shared/nuxi.da4c08ec.mjs';
+-import { s as setupDotenv } from '../shared/nuxi.cb8e73b6.mjs';
+-import { a as showVersions, s as showBanner } from '../shared/nuxi.1ee66a2a.mjs';
+-import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
++import { s as setupDotenv } from '../shared/nuxi.f4cdb938.mjs';
++import { a as showVersions, s as showBanner } from '../shared/nuxi.abb7c9ca.mjs';
++import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
+ import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
+ import { i as importModule } from '../shared/nuxi.1d8d2e21.mjs';
+ import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
+-import { l as loadNuxtManifest, w as writeNuxtManifest, c as cleanupNuxtDirs } from '../shared/nuxi.e29c38a1.mjs';
++import { l as loadNuxtManifest, w as writeNuxtManifest, c as cleanupNuxtDirs } from '../shared/nuxi.cc672940.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve, a as relative } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:module';
+@@ -36,9 +36,9 @@ import 'assert';
+ import 'process';
+ import 'v8';
+ import '../shared/nuxi.a3b9dacd.mjs';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ import '../shared/nuxi.a685c563.mjs';
+-import '../shared/nuxi.d045d192.mjs';
++import '../shared/nuxi.2535cbee.mjs';
+ 
+ var chokidar = {};
+ 
+diff --git a/dist/chunks/generate.mjs b/dist/chunks/generate.mjs
+index 817c8fbccea6ab7c07d603f234ae5899577f74ea..8ab3888f57d2ef513b7814149b9dd2b8ec10dac3 100644
+--- a/dist/chunks/generate.mjs
++++ b/dist/chunks/generate.mjs
+@@ -1,14 +1,14 @@
+ import buildCommand from './build.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+-import '../shared/nuxi.70d48494.mjs';
++import '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import '../shared/nuxi.4c58f8a5.mjs';
++import '../shared/nuxi.89758cc3.mjs';
+ import 'node:fs';
+ import '../shared/nuxi.a685c563.mjs';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ import 'node:module';
+ import '../shared/nuxi.ffb4843d.mjs';
+ import '../shared/nuxi.0318c2bd.mjs';
+@@ -17,9 +17,9 @@ import 'node:url';
+ import '../shared/nuxi.da4c08ec.mjs';
+ import 'node:assert';
+ import 'node:v8';
+-import '../shared/nuxi.d045d192.mjs';
++import '../shared/nuxi.2535cbee.mjs';
+ import '../shared/nuxi.d21ab543.mjs';
+-import '../shared/nuxi.1ee66a2a.mjs';
++import '../shared/nuxi.abb7c9ca.mjs';
+ import 'assert';
+ import '../shared/nuxi.a3b9dacd.mjs';
+ 
+diff --git a/dist/chunks/info.mjs b/dist/chunks/info.mjs
+index 11c0641d7129cc7ae025c6773a0b0af38a52f3c4..cc9bfe169bc220a3a38ef39c0272af3fac162d3d 100644
+--- a/dist/chunks/info.mjs
++++ b/dist/chunks/info.mjs
+@@ -18,8 +18,8 @@ import tty__default from 'tty';
+ import { d as destr } from '../shared/nuxi.4d4de9c7.mjs';
+ import { s as splitByCase } from '../shared/nuxi.e5ae87db.mjs';
+ import clipboard from './index3.mjs';
+-import { g as getPackageManager, a as getPackageManagerVersion } from '../shared/nuxi.8b7e2742.mjs';
+-import { f as findup } from '../shared/nuxi.d045d192.mjs';
++import { g as getPackageManager, a as getPackageManagerVersion } from '../shared/nuxi.390be480.mjs';
++import { f as findup } from '../shared/nuxi.2535cbee.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:process';
+@@ -31,7 +31,7 @@ import 'stream';
+ import 'node:path';
+ import 'node:url';
+ import 'node:child_process';
+-import '../shared/nuxi.70d48494.mjs';
++import '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ 
+ var jitiExports = {};
+diff --git a/dist/chunks/init.mjs b/dist/chunks/init.mjs
+index 99eb3c143e72ca9d0436400f1bbc8d9021565af3..5c744ad029eddd61f4ebffe4fe271e726807ea35 100644
+--- a/dist/chunks/init.mjs
++++ b/dist/chunks/init.mjs
+@@ -1,5 +1,5 @@
+ import { rm, mkdir as mkdir$2, readFile, writeFile } from 'node:fs/promises';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import { promisify as promisify$3, deprecate, types as types$2 } from 'node:util';
+ import 'node:path';
+ import 'node:process';
+diff --git a/dist/chunks/multipart-parser.mjs b/dist/chunks/multipart-parser.mjs
+index 4c5b877a21db79f63af6de9e8a32546c5d83139c..76298926ade9d5ed146fd2497167033979ae7924 100644
+--- a/dist/chunks/multipart-parser.mjs
++++ b/dist/chunks/multipart-parser.mjs
+@@ -10,7 +10,7 @@ import 'node:util';
+ import 'node:url';
+ import 'node:net';
+ import 'node:fs/promises';
+-import '../shared/nuxi.70d48494.mjs';
++import '../shared/nuxi.114b1a98.mjs';
+ import 'node:process';
+ import 'tty';
+ import '../shared/nuxi.c68ce99d.mjs';
+diff --git a/dist/chunks/prepare.mjs b/dist/chunks/prepare.mjs
+index f17318934ba64bbd67dac884e52e0555fd3fdfb0..9198a2b4ae0d590201b348a02c1484227ab3fa67 100644
+--- a/dist/chunks/prepare.mjs
++++ b/dist/chunks/prepare.mjs
+@@ -1,12 +1,12 @@
+ import { buildNuxt } from '@nuxt/kit';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import { c as clearDir } from '../shared/nuxi.d045d192.mjs';
++import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
+ import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
+-import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
++import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve, a as relative } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:fs';
+@@ -17,7 +17,7 @@ import 'node:module';
+ import 'node:assert';
+ import 'node:v8';
+ import '../shared/nuxi.a685c563.mjs';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ 
+ const prepare = defineNuxtCommand({
+   meta: {
+diff --git a/dist/chunks/preview.mjs b/dist/chunks/preview.mjs
+index 6c978576d829260c35f49b2fa1b5ad6f2650ef97..e38a03c60a42ff567b42580a493ec5dcd1bcb6d0 100644
+--- a/dist/chunks/preview.mjs
++++ b/dist/chunks/preview.mjs
+@@ -1,8 +1,8 @@
+ import { existsSync, promises } from 'node:fs';
+ import { dirname, relative } from 'node:path';
+ import { e as execa } from '../shared/nuxi.63bda57d.mjs';
+-import { s as setupDotenv } from '../shared/nuxi.cb8e73b6.mjs';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { s as setupDotenv } from '../shared/nuxi.f4cdb938.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:process';
+ import 'tty';
+diff --git a/dist/chunks/prompt.mjs b/dist/chunks/prompt.mjs
+index 595ddc54322bdcd0eeff59114f5d147e6c3b0d84..305c1c2fd3d3209981fb17e974e160eaf9467475 100644
+--- a/dist/chunks/prompt.mjs
++++ b/dist/chunks/prompt.mjs
+@@ -2,7 +2,7 @@ import { stdin, stdout } from 'node:process';
+ import f from 'node:readline';
+ import { WriteStream } from 'node:tty';
+ import tty__default from 'tty';
+-import { i as isUnicodeSupported, g as gray, a as inverse, d as dim, h as hidden, b as cyan, s as strikethrough, y as yellow, e as green, r as reset, f as bgWhite, j as red } from '../shared/nuxi.70d48494.mjs';
++import { i as isUnicodeSupported, g as gray, a as inverse, d as dim, h as hidden, b as cyan, s as strikethrough, y as yellow, e as green, r as reset, f as bgWhite, j as red } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ 
+diff --git a/dist/chunks/satisfies.mjs b/dist/chunks/satisfies.mjs
+index 49cd1dddbc67116fafefb196ada24fd77fe5c80d..3dd3eef1d0ba7d98e8d4094bb789e40a892e3bba 100644
+--- a/dist/chunks/satisfies.mjs
++++ b/dist/chunks/satisfies.mjs
+@@ -1,4 +1,5 @@
+ import { y as yallist } from '../shared/nuxi.cc8dd4a9.mjs';
++import require$$2 from 'util';
+ 
+ function _mergeNamespaces(n, m) {
+   for (var i = 0; i < m.length; i++) {
+@@ -635,7 +636,7 @@ let SemVer$1 = class SemVer {
+         version = version.version;
+       }
+     } else if (typeof version !== 'string') {
+-      throw new TypeError(`Invalid Version: ${version}`)
++      throw new TypeError(`Invalid Version: ${require$$2.inspect(version)}`)
+     }
+ 
+     if (version.length > MAX_LENGTH) {
+@@ -865,9 +866,15 @@ let SemVer$1 = class SemVer {
+         break
+       // This probably shouldn't be used publicly.
+       // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
+-      case 'pre':
++      case 'pre': {
++        const base = Number(identifierBase) ? 1 : 0;
++
++        if (!identifier && identifierBase === false) {
++          throw new Error('invalid increment argument: identifier is empty')
++        }
++
+         if (this.prerelease.length === 0) {
+-          this.prerelease = [0];
++          this.prerelease = [base];
+         } else {
+           let i = this.prerelease.length;
+           while (--i >= 0) {
+@@ -878,23 +885,29 @@ let SemVer$1 = class SemVer {
+           }
+           if (i === -1) {
+             // didn't increment anything
+-            this.prerelease.push(0);
++            if (identifier === this.prerelease.join('.') && identifierBase === false) {
++              throw new Error('invalid increment argument: identifier already exists')
++            }
++            this.prerelease.push(base);
+           }
+         }
+         if (identifier) {
+-          const base = Number(identifierBase) ? 1 : 0;
+           // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
+           // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
++          let prerelease = [identifier, base];
++          if (identifierBase === false) {
++            prerelease = [identifier];
++          }
+           if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
+             if (isNaN(this.prerelease[1])) {
+-              this.prerelease = [identifier, base];
++              this.prerelease = prerelease;
+             }
+           } else {
+-            this.prerelease = [identifier, base];
++            this.prerelease = prerelease;
+           }
+         }
+         break
+-
++      }
+       default:
+         throw new Error(`invalid increment argument: ${release}`)
+     }
+diff --git a/dist/chunks/typecheck.mjs b/dist/chunks/typecheck.mjs
+index 6373a5522c6b7ca89d5c06d9eb61c8a33886e712..e834281c579c3066f3d401961ee6283efb65b35a 100644
+--- a/dist/chunks/typecheck.mjs
++++ b/dist/chunks/typecheck.mjs
+@@ -1,7 +1,7 @@
+ import { e as execa } from '../shared/nuxi.63bda57d.mjs';
+ import { t as tryResolveModule } from '../shared/nuxi.1d8d2e21.mjs';
+ import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
+-import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
++import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import { r as resolve } from '../shared/nuxi.ffb4843d.mjs';
+ import 'node:buffer';
+@@ -27,7 +27,7 @@ import 'node:module';
+ import 'node:assert';
+ import 'node:v8';
+ import '../shared/nuxi.a685c563.mjs';
+-import '../shared/nuxi.aaefd8a8.mjs';
++import '../shared/nuxi.602e8160.mjs';
+ 
+ const typecheck = defineNuxtCommand({
+   meta: {
+diff --git a/dist/chunks/upgrade.mjs b/dist/chunks/upgrade.mjs
+index 4e0c736aae63c0275f83cde69e9ca08e5ebe0150..564e96ab0cebadf9444407faae2e5f3fb3891d6c 100644
+--- a/dist/chunks/upgrade.mjs
++++ b/dist/chunks/upgrade.mjs
+@@ -1,5 +1,5 @@
+ import { execSync } from 'node:child_process';
+-import { c as consola } from '../shared/nuxi.70d48494.mjs';
++import { c as consola } from '../shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+@@ -7,9 +7,9 @@ import 'tty';
+ import { promises, statSync } from 'node:fs';
+ import { r as resolvePath } from '../shared/nuxi.da4c08ec.mjs';
+ import { i as isAbsolute, r as resolve, j as join } from '../shared/nuxi.ffb4843d.mjs';
+-import { g as getPackageManager, p as packageManagerLocks } from '../shared/nuxi.8b7e2742.mjs';
+-import { r as rmRecursive, t as touchFile } from '../shared/nuxi.d045d192.mjs';
+-import { c as cleanupNuxtDirs, n as nuxtVersionToGitIdentifier } from '../shared/nuxi.e29c38a1.mjs';
++import { g as getPackageManager, p as packageManagerLocks } from '../shared/nuxi.390be480.mjs';
++import { r as rmRecursive, t as touchFile } from '../shared/nuxi.2535cbee.mjs';
++import { c as cleanupNuxtDirs, n as nuxtVersionToGitIdentifier } from '../shared/nuxi.cc672940.mjs';
+ import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
+ import 'node:module';
+ import 'node:url';
+diff --git a/dist/cli.mjs b/dist/cli.mjs
+index 4e9774b8e0f5cae2d69ae9b3b495d9fbb2998241..436a0017715af803e175107860e38f04fca00356 100644
+--- a/dist/cli.mjs
++++ b/dist/cli.mjs
+@@ -1,14 +1,14 @@
+ import { m as mri, c as commands } from './shared/nuxi.c68ce99d.mjs';
+ import { r as red } from './shared/nuxi.a3b9dacd.mjs';
+-import { c as consola } from './shared/nuxi.70d48494.mjs';
++import { c as consola } from './shared/nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import { e as engines, s as showBanner } from './shared/nuxi.1ee66a2a.mjs';
++import { e as engines, s as showBanner } from './shared/nuxi.abb7c9ca.mjs';
+ import { s as showHelp } from './shared/nuxi.2135311a.mjs';
+ import 'assert';
+-import './shared/nuxi.aaefd8a8.mjs';
++import './shared/nuxi.602e8160.mjs';
+ import 'node:module';
+ import './shared/nuxi.ffb4843d.mjs';
+ 
+diff --git a/dist/shared/nuxi.70d48494.mjs b/dist/shared/nuxi.114b1a98.mjs
+similarity index 99%
+rename from dist/shared/nuxi.70d48494.mjs
+rename to dist/shared/nuxi.114b1a98.mjs
+index d5e5408ded5186795281fccd3cff5b2889e8a68c..ebe1359fc61371a63c78609ec15a206a06979132 100644
+--- a/dist/shared/nuxi.70d48494.mjs
++++ b/dist/shared/nuxi.114b1a98.mjs
+@@ -156,7 +156,10 @@ class Consola {
+         ...types[type]
+       };
+       this[type] = this._wrapLogFn(defaults);
+-      this[type].raw = this._wrapLogFn(defaults, true);
++      this[type].raw = this._wrapLogFn(
++        defaults,
++        true
++      );
+     }
+     if (this.options.mockFn) {
+       this.mockTypes();
+@@ -286,7 +289,7 @@ class Consola {
+       return;
+     }
+     for (const type in this.options.types) {
+-      this[type] = _mockFn(type, this._types[type]) || this[type];
++      this[type] = _mockFn(type, this.options.types[type]) || this[type];
+       this[type].raw = this[type];
+     }
+   }
+@@ -396,10 +399,61 @@ Consola.prototype.withScope = Consola.prototype.withTag;
+ Consola.prototype.mock = Consola.prototype.mockTypes;
+ Consola.prototype.pause = Consola.prototype.pauseLogs;
+ Consola.prototype.resume = Consola.prototype.resumeLogs;
+-function createConsola$1(options) {
++function createConsola$1(options = {}) {
+   return new Consola(options);
+ }
+ 
++function parseStack(stack) {
++  const cwd = process.cwd() + sep;
++  const lines = stack.split("\n").splice(1).map((l) => l.trim().replace("file://", "").replace(cwd, ""));
++  return lines;
++}
++
++function writeStream(data, stream) {
++  const write = stream.__write || stream.write;
++  return write.call(stream, data);
++}
++
++const bracket = (x) => x ? `[${x}]` : "";
++class BasicReporter {
++  formatStack(stack, opts) {
++    return "  " + parseStack(stack).join("\n  ");
++  }
++  formatArgs(args, opts) {
++    const _args = args.map((arg) => {
++      if (arg && typeof arg.stack === "string") {
++        return arg.message + "\n" + this.formatStack(arg.stack, opts);
++      }
++      return arg;
++    });
++    return formatWithOptions(opts, ..._args);
++  }
++  formatDate(date, opts) {
++    return opts.date ? date.toLocaleTimeString() : "";
++  }
++  filterAndJoin(arr) {
++    return arr.filter(Boolean).join(" ");
++  }
++  formatLogObj(logObj, opts) {
++    const message = this.formatArgs(logObj.args, opts);
++    return this.filterAndJoin([
++      bracket(logObj.type),
++      bracket(logObj.tag),
++      message
++    ]);
++  }
++  log(logObj, ctx) {
++    const line = this.formatLogObj(logObj, {
++      columns: ctx.options.stdout.columns || 0,
++      ...ctx.options.formatOptions
++    });
++    return writeStream(
++      line + "\n",
++      logObj.level < 2 ? ctx.options.stderr || process.stderr : ctx.options.stdout || process.stdout
++    );
++  }
++}
++
+ const providers = [
+   ["APPVEYOR"],
+   ["AZURE_PIPELINES", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],
+@@ -482,57 +536,6 @@ function toBoolean(val) {
+   return val ? val !== "false" : false;
+ }
+ 
+-function parseStack(stack) {
+-  const cwd = process.cwd() + sep;
+-  const lines = stack.split("\n").splice(1).map((l) => l.trim().replace("file://", "").replace(cwd, ""));
+-  return lines;
+-}
+-
+-function writeStream(data, stream) {
+-  const write = stream.__write || stream.write;
+-  return write.call(stream, data);
+-}
+-
+-const bracket = (x) => x ? `[${x}]` : "";
+-class BasicReporter {
+-  formatStack(stack, opts) {
+-    return "  " + parseStack(stack).join("\n  ");
+-  }
+-  formatArgs(args, opts) {
+-    const _args = args.map((arg) => {
+-      if (arg && typeof arg.stack === "string") {
+-        return arg.message + "\n" + this.formatStack(arg.stack, opts);
+-      }
+-      return arg;
+-    });
+-    return formatWithOptions(opts, ..._args);
+-  }
+-  formatDate(date, opts) {
+-    return opts.date ? date.toLocaleTimeString() : "";
+-  }
+-  filterAndJoin(arr) {
+-    return arr.filter(Boolean).join(" ");
+-  }
+-  formatLogObj(logObj, opts) {
+-    const message = this.formatArgs(logObj.args, opts);
+-    return this.filterAndJoin([
+-      bracket(logObj.type),
+-      bracket(logObj.tag),
+-      message
+-    ]);
+-  }
+-  log(logObj, ctx) {
+-    const line = this.formatLogObj(logObj, {
+-      columns: ctx.options.stdout.columns || 0,
+-      ...ctx.options.formatOptions
+-    });
+-    return writeStream(
+-      line + "\n",
+-      logObj.level < 2 ? ctx.options.stderr || process.stderr : ctx.options.stdout || process.stdout
+-    );
+-  }
+-}
+-
+ function ansiRegex({onlyFirst = false} = {}) {
+ 	const pattern = [
+ 	    '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+@@ -1226,7 +1229,7 @@ function createConsola(options = {}) {
+     stderr: process.stderr,
+     prompt: (...args) => import('../chunks/prompt.mjs').then((m) => m.prompt(...args)),
+     reporters: options.reporters || [
+-      isCI$1 || isTest ? new BasicReporter() : new FancyReporter()
++      options.fancy ?? !(isCI$1 || isTest) ? new FancyReporter() : new BasicReporter()
+     ],
+     ...options
+   });
+diff --git a/dist/shared/nuxi.d045d192.mjs b/dist/shared/nuxi.2535cbee.mjs
+similarity index 94%
+rename from dist/shared/nuxi.d045d192.mjs
+rename to dist/shared/nuxi.2535cbee.mjs
+index 8158e908bf2e8416640717c27311b9ae62a2fca4..ca25bb4a9aa1ebc6815699e6cb843492add73a50 100644
+--- a/dist/shared/nuxi.d045d192.mjs
++++ b/dist/shared/nuxi.2535cbee.mjs
+@@ -1,5 +1,5 @@
+ import { promises } from 'node:fs';
+-import { c as consola } from './nuxi.70d48494.mjs';
++import { c as consola } from './nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+diff --git a/dist/shared/nuxi.8b7e2742.mjs b/dist/shared/nuxi.390be480.mjs
+similarity index 93%
+rename from dist/shared/nuxi.8b7e2742.mjs
+rename to dist/shared/nuxi.390be480.mjs
+index 9b6a5a96629a241443ea0ec8a35173898e37fb47..40f8c21cec6cd8e02ee84cf40be9dd69ce5f8e07 100644
+--- a/dist/shared/nuxi.8b7e2742.mjs
++++ b/dist/shared/nuxi.390be480.mjs
+@@ -1,6 +1,6 @@
+ import { execSync } from 'node:child_process';
+ import { existsSync } from 'node:fs';
+-import { f as findup } from './nuxi.d045d192.mjs';
++import { f as findup } from './nuxi.2535cbee.mjs';
+ import { r as resolve } from './nuxi.ffb4843d.mjs';
+ 
+ const packageManagerLocks = {
+diff --git a/dist/shared/nuxi.aaefd8a8.mjs b/dist/shared/nuxi.602e8160.mjs
+similarity index 92%
+rename from dist/shared/nuxi.aaefd8a8.mjs
+rename to dist/shared/nuxi.602e8160.mjs
+index 925b6a5e82603cfb9a205a2ac4bbdf46917192bf..9270c2b8dadcd2081323b6a3750b94e57ae0fd34 100644
+--- a/dist/shared/nuxi.aaefd8a8.mjs
++++ b/dist/shared/nuxi.602e8160.mjs
+@@ -3,11 +3,9 @@ import { d as dirname, n as normalize } from './nuxi.ffb4843d.mjs';
+ 
+ function getModulePaths(paths) {
+   return [].concat(
+-    // @ts-expect-error global object
+     global.__NUXT_PREPATHS__,
+     paths,
+     process.cwd(),
+-    // @ts-expect-error global object
+     global.__NUXT_PATHS__
+   ).filter(Boolean);
+ }
+diff --git a/dist/shared/nuxi.4c58f8a5.mjs b/dist/shared/nuxi.89758cc3.mjs
+similarity index 99%
+rename from dist/shared/nuxi.4c58f8a5.mjs
+rename to dist/shared/nuxi.89758cc3.mjs
+index 81ce47413d0d1d086465358678aca17a0fb8e51e..d36d31b346c695cdc7cfd4bf48f3533710b65424 100644
+--- a/dist/shared/nuxi.4c58f8a5.mjs
++++ b/dist/shared/nuxi.89758cc3.mjs
+@@ -1,6 +1,6 @@
+ import { promises } from 'node:fs';
+ import { d as defu } from './nuxi.a685c563.mjs';
+-import { g as getModulePaths, a as getNearestPackage } from './nuxi.aaefd8a8.mjs';
++import { g as getModulePaths, a as getNearestPackage } from './nuxi.602e8160.mjs';
+ import { a as relative, j as join, r as resolve, i as isAbsolute } from './nuxi.ffb4843d.mjs';
+ 
+ const writeTypes = async (nuxt) => {
+diff --git a/dist/shared/nuxi.1ee66a2a.mjs b/dist/shared/nuxi.abb7c9ca.mjs
+similarity index 95%
+rename from dist/shared/nuxi.1ee66a2a.mjs
+rename to dist/shared/nuxi.abb7c9ca.mjs
+index d67796eed7973523c0ea95a463a00b0f396cee04..3cd54c1b3d932e8fb182b958e6c01f696079de84 100644
+--- a/dist/shared/nuxi.1ee66a2a.mjs
++++ b/dist/shared/nuxi.abb7c9ca.mjs
+@@ -1,6 +1,6 @@
+ import require$$0 from 'assert';
+ import { g as gray, b as bold, a as green } from './nuxi.a3b9dacd.mjs';
+-import { t as tryRequireModule } from './nuxi.aaefd8a8.mjs';
++import { t as tryRequireModule } from './nuxi.602e8160.mjs';
+ 
+ const version = "3.4.1";
+ const engines = {
+diff --git a/dist/shared/nuxi.e29c38a1.mjs b/dist/shared/nuxi.cc672940.mjs
+similarity index 99%
+rename from dist/shared/nuxi.e29c38a1.mjs
+rename to dist/shared/nuxi.cc672940.mjs
+index 1e6b68daa12e5aca423289b5b4459da77cdfacf8..fac3d372a45faefe422c0fadc6b7eb092dc7dadc 100644
+--- a/dist/shared/nuxi.e29c38a1.mjs
++++ b/dist/shared/nuxi.cc672940.mjs
+@@ -1,10 +1,10 @@
+ import { promises } from 'node:fs';
+-import { c as consola } from './nuxi.70d48494.mjs';
++import { c as consola } from './nuxi.114b1a98.mjs';
+ import 'node:util';
+ import 'node:path';
+ import 'node:process';
+ import 'tty';
+-import { r as rmRecursive } from './nuxi.d045d192.mjs';
++import { r as rmRecursive } from './nuxi.2535cbee.mjs';
+ import { r as resolve, d as dirname } from './nuxi.ffb4843d.mjs';
+ 
+ const defaults = {
+diff --git a/dist/shared/nuxi.cb8e73b6.mjs b/dist/shared/nuxi.f4cdb938.mjs
+similarity index 97%
+rename from dist/shared/nuxi.cb8e73b6.mjs
+rename to dist/shared/nuxi.f4cdb938.mjs
+index c4c2ca8ee3a6341fb81ade228f4683556f3600fe..982c29ce723f12a061a3f08de2da0ffdb47020d7 100644
+--- a/dist/shared/nuxi.cb8e73b6.mjs
++++ b/dist/shared/nuxi.f4cdb938.mjs
+@@ -252,7 +252,7 @@ async function loadDotenv(options) {
+     const parsed = parse_1(await promises.readFile(dotenvFile, "utf8"));
+     Object.assign(environment, parsed);
+   }
+-  if (!options.env._applied) {
++  if (!options.env?._applied) {
+     Object.assign(environment, options.env);
+     environment._applied = true;
+   }
+@@ -273,15 +273,15 @@ function interpolate(target, source = {}, parse = (v) => v) {
+     return parse(
+       // eslint-disable-next-line unicorn/no-array-reduce
+       matches.reduce((newValue, match) => {
+-        const parts = /(.?)\${?([\w:]+)?}?/g.exec(match);
++        const parts = /(.?)\${?([\w:]+)?}?/g.exec(match) || [];
+         const prefix = parts[1];
+         let value2, replacePart;
+         if (prefix === "\\") {
+-          replacePart = parts[0];
++          replacePart = parts[0] || "";
+           value2 = replacePart.replace("\\$", "$");
+         } else {
+           const key = parts[2];
+-          replacePart = parts[0].slice(prefix.length);
++          replacePart = (parts[0] || "").slice(prefix.length);
+           if (parents.includes(key)) {
+             console.warn(
+               `Please avoid recursive environment variables ( loop: ${parents.join(

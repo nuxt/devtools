@@ -1,5 +1,13 @@
 lockfileVersion: '6.0'
 
+patchedDependencies:
+  nuxi@3.4.1:
+    hash: nopqflyjqxj7zlj77o5zpmrlrm
+    path: patches/nuxi@3.4.1.patch
+  nuxt@3.4.1:
+    hash: 5c5ckbvnxlcdfbjdydscylrqb4
+    path: patches/nuxt@3.4.1.patch
+
 importers:
 
   .:
@@ -63,7 +71,7 @@ importers:
         version: 13.2.1
       nuxt:
         specifier: ^3.4.1
-        version: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+        version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
       pathe:
         specifier: ^1.1.0
         version: 1.1.0
@@ -90,7 +98,7 @@ importers:
         version: 0.2.0(rollup@3.20.2)
       nuxt:
         specifier: ^3.4.1
-        version: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+        version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
 
   packages/devtools:
     dependencies:
@@ -250,7 +258,7 @@ importers:
         version: 4.0.2
       nuxt:
         specifier: ^3.4.1
-        version: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+        version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
       nuxt-vitest:
         specifier: ^0.6.9
         version: 0.6.9(rollup@3.20.2)(vite@4.1.4)(vue@3.2.47)
@@ -307,7 +315,7 @@ importers:
         version: 7.1.1
       nuxt:
         specifier: ^3.3.1
-        version: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+        version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
       vite:
         specifier: '*'
         version: 4.1.4(@types/node@18.15.11)
@@ -387,7 +395,7 @@ importers:
     devDependencies:
       nuxt:
         specifier: ^3.4.1
-        version: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+        version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
 
   packages/devtools-wizard:
     dependencies:
@@ -3121,7 +3129,7 @@ packages:
       '@vueuse/core': 10.0.2(vue@3.2.47)
       '@vueuse/metadata': 10.0.2
       local-pkg: 0.4.3
-      nuxt: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+      nuxt: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
       vue-demi: 0.14.0(vue@3.2.47)
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -3138,7 +3146,7 @@ packages:
       '@vueuse/core': 9.13.0(vue@3.2.47)
       '@vueuse/metadata': 9.13.0
       local-pkg: 0.4.3
-      nuxt: 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
+      nuxt: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0)
       vue-demi: 0.14.0(vue@3.2.47)
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -8234,12 +8242,13 @@ packages:
     dependencies:
       boolbase: 1.0.0
 
-  /nuxi@3.4.1:
+  /nuxi@3.4.1(patch_hash=nopqflyjqxj7zlj77o5zpmrlrm):
     resolution: {integrity: sha512-vp6unzdCxRvWyKoQCMN0Qq6D8ETqV5INuwAWG1WfhINXiQ34WRvwcTwU2zxKe29pzek1gGF30mxWK50OXGSepw==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    patched: true
 
   /nuxt-component-meta@0.5.1(rollup@3.20.2):
     resolution: {integrity: sha512-vwx5wySyVX+QbFrNb3wLYNMPlADho8E66MO45d5i5fTlEkmhopVpQ9YXwlAvM3pLCPjupxG3R3D5rKpLDeitkw==}
@@ -8308,7 +8317,7 @@ packages:
       - vue
     dev: true
 
-  /nuxt@3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0):
+  /nuxt@3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.2)(typescript@5.0.4)(vue-tsc@1.2.0):
     resolution: {integrity: sha512-wKT5iZebO1D7QtAN1fDNNsjaTFbAC5pO4kWzw2qX2OOg2SWP/k42sCfxbcz/JkLL4FJVwpya+9OD9/2MwEdt1g==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     hasBin: true
@@ -8344,7 +8353,7 @@ packages:
       magic-string: 0.30.0
       mlly: 1.2.0
       nitropack: 2.3.3
-      nuxi: 3.4.1
+      nuxi: 3.4.1(patch_hash=nopqflyjqxj7zlj77o5zpmrlrm)
       nypm: 0.2.0
       ofetch: 1.0.1
       ohash: 1.0.0
@@ -8388,6 +8397,7 @@ packages:
       - vls
       - vti
       - vue-tsc
+    patched: true
 
   /nypm@0.2.0:
     resolution: {integrity: sha512-auBv78LkHyU9TywBE91N+RTkanVyFLsVayZaHW+YYvJDJ3u2PCwLaYB3eecPQD9tgCIXGuH871HlHTdKSf6rtw==}
