@@ -52,10 +52,10 @@ const selected = ref(tabs.value[0])
         <button
           px4 py2 border="r base"
           hover="bg-active"
-          :class="tab === selected ? '' : 'border-b'"
+          :class="tab.id === selected.id ? '' : 'border-b'"
           @click="selected = tab"
         >
-          <div :class="tab === selected ? '' : 'op30' ">
+          <div :class="tab.id === selected.id ? '' : 'op30' ">
             {{ tab.name }}
           </div>
         </button>
