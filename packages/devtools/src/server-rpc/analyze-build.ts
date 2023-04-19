@@ -1,19 +1,19 @@
-import fs from 'node:fs'
 import fsp from 'node:fs/promises'
+import fs from 'node:fs'
 import { startSubprocess } from '@nuxt/devtools-kit'
-import { join } from 'pathe'
+import { dirname, join } from 'pathe'
+import fg from 'fast-glob'
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
-import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let lastBuild: NuxtAnalyzeMeta | undefined
+  let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
-  let initalized = false
+  let initalized: Promise<any> | undefined
 
   const processId = 'devtools:analyze-build'
 
-  // TODO:
-  const statsDir = join(nuxt.options.rootDir, '.nuxt/analyze/default')
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   async function startAnalyzeBuild() {
     if (promise)
@@ -42,23 +42,30 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
   }
 
   async function readBuildInfo() {
-    const index = join(statsDir, 'meta.json')
-    if (!fs.existsSync(index))
-      return
-
-    lastBuild = JSON.parse(await fsp.readFile(index, 'utf-8'))
-    return lastBuild
+    const files = await fg('*/meta.json', { cwd: analyzeDir, onlyFiles: true, absolute: true })
+    builds = await Promise.all(files.map(async (file) => {
+      const dir = dirname(file)
+      const json = JSON.parse(await fsp.readFile(file, 'utf-8')) as NuxtAnalyzeMeta
+      return <AnalyzeBuildMeta>{
+        ...json,
+        features: {
+          bundleClient: fs.existsSync(join(dir, 'client.html')),
+          bundleNitro: fs.existsSync(join(dir, 'nitro.html')),
+          viteInspect: false, // TODO:
+        },
+      }
+    }))
+    return builds
   }
 
   return {
     async getAnalyzeBuildInfo() {
-      if (!initalized) {
-        initalized = true
-        await readBuildInfo()
-      }
+      if (!initalized)
+        initalized = readBuildInfo()
+      await initalized
       return {
         isBuilding: !!promise,
-        lastBuild,
+        builds,
       }
     },
     startAnalyzeBuild,

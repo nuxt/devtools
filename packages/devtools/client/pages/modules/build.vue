@@ -8,6 +8,7 @@ definePageMeta({
 const ROUTE_ANALYZE = '/__nuxt_devtools__/analyze/'
 
 const info = useAnalyzeBuildInfo()
+const lastestBuild = computed(() => info.value?.builds[0])
 const router = useRouter()
 const processId = ref<string>()
 const PromiseConfirm = createTemplatePromise<boolean>()
@@ -27,16 +28,16 @@ function gotoTerminal() {
     router.push(`/modules/terminals?id=${encodeURIComponent(processId.value)}`)
 }
 
-const timeAgo = useTimeAgo(() => info.value?.lastBuild?.endTime ?? 0)
+const timeAgo = useTimeAgo(() => lastestBuild.value?.endTime ?? 0)
 
 const tabs = computed(() => {
   const items = [
     { name: 'Overview', id: 'overview' },
   ]
-  if (info.value?.lastBuild) {
+  if (lastestBuild.value) {
     items.push(
-      { name: 'Client Size Map', id: 'client-dist' },
-      { name: 'Nitro Size Map', id: 'nitro-dist' },
+      { name: 'Client Bundle', id: 'client-dist' },
+      { name: 'Nitro Bundle', id: 'nitro-dist' },
     )
   }
   return items
@@ -62,8 +63,11 @@ const selected = ref(tabs.value[0])
       </template>
       <div border="b base" flex-auto />
     </div>
-    <div v-if="selected.id === 'overview'" flex="~ col gap-2 items-center justify-center">
-      <div v-if="info?.lastBuild">
+    <div
+      v-if="selected.id === 'overview'"
+      flex="~ col gap-2 items-center justify-center"
+    >
+      <div v-if="lastestBuild">
         Last build: {{ timeAgo }}
       </div>
       <div v-else>
@@ -77,13 +81,13 @@ const selected = ref(tabs.value[0])
       </NButton>
     </div>
     <iframe
-      v-if="selected.id === 'client-dist'"
-      :src="`${ROUTE_ANALYZE}${info?.lastBuild?.name}/client.html`"
+      v-lazy-show="selected.id === 'client-dist'"
+      :src="`${ROUTE_ANALYZE}${lastestBuild?.name}/client.html`"
       h-full w-full
     />
     <iframe
-      v-if="selected.id === 'nitro-dist'"
-      :src="`${ROUTE_ANALYZE}${info?.lastBuild?.name}/nitro.html`"
+      v-lazy-show="selected.id === 'nitro-dist'"
+      :src="`${ROUTE_ANALYZE}${lastestBuild?.name}/nitro.html`"
       h-full w-full
     />
   </div>

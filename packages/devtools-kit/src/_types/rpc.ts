@@ -6,7 +6,7 @@ import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
-import type { AnalyticBuildInfo } from './analyze-build'
+import type { AnalyzeBuildsInfo } from './analyze-build'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
@@ -20,7 +20,7 @@ export interface ServerFunctions {
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
   getServerRoutes(): Promise<ServerRouteInfo[]>
-  getAnalyzeBuildInfo(): Promise<AnalyticBuildInfo>
+  getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
