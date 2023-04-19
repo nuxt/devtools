@@ -4,6 +4,7 @@ import Fuse from 'fuse.js'
 definePageMeta({
   icon: 'i-carbon-border-none',
   title: 'Virtual Files',
+  layout: 'full',
 })
 
 interface VfsData {
