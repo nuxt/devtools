@@ -2,10 +2,10 @@ lockfileVersion: '6.0'
 
 patchedDependencies:
   '@nuxt/schema@3.4.1':
-    hash: smq6bquejwlp5vatffnbmavd34
+    hash: d32vjbzfgq5cautm7gun67hd5i
     path: patches/@nuxt__schema@3.4.1.patch
   nuxi@3.4.1:
-    hash: ek6yvelc6ctjanpsnsk4fb6m2y
+    hash: a474utytm74zv5mkpx5novtdwq
     path: patches/nuxi@3.4.1.patch
   nuxt@3.4.1:
     hash: 5c5ckbvnxlcdfbjdydscylrqb4
@@ -32,7 +32,7 @@ importers:
         version: 0.3.0
       '@nuxt/schema':
         specifier: ^3.4.1
-        version: 3.4.1(patch_hash=smq6bquejwlp5vatffnbmavd34)(rollup@3.20.6)
+        version: 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
@@ -187,8 +187,8 @@ importers:
         specifier: '*'
         version: 4.1.4(@types/node@18.15.11)
       vite-plugin-inspect:
-        specifier: ^0.7.22
-        version: 0.7.22(rollup@3.20.6)(vite@4.1.4)
+        specifier: ^0.7.23
+        version: 0.7.23(rollup@3.20.6)(vite@4.1.4)
       vite-plugin-vue-inspector:
         specifier: ^3.4.0
         version: 3.4.0(vite@4.1.4)
@@ -315,7 +315,7 @@ importers:
         version: 3.4.1(rollup@3.20.6)
       '@nuxt/schema':
         specifier: ^3.4.1
-        version: 3.4.1(patch_hash=smq6bquejwlp5vatffnbmavd34)(rollup@3.20.6)
+        version: 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
       execa:
         specifier: ^7.1.1
         version: 7.1.1
@@ -1727,7 +1727,7 @@ packages:
     resolution: {integrity: sha512-VeH26umZW6Rf4F1QX9nTIuTBp6HeL/MgmKY3+FgQiLD07afgFTLUJZohVE5xU7hb66zCnYvwKxa3JpjXFJZrhQ==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     dependencies:
-      '@nuxt/schema': 3.4.1(patch_hash=smq6bquejwlp5vatffnbmavd34)(rollup@3.20.6)
+      '@nuxt/schema': 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
       c12: 1.3.0
       consola: 3.1.0
       defu: 6.1.2
@@ -1785,7 +1785,7 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxt/schema@3.4.1(patch_hash=smq6bquejwlp5vatffnbmavd34)(rollup@3.20.6):
+  /@nuxt/schema@3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6):
     resolution: {integrity: sha512-xhPh9JfVKXRQVfdUT6BKieDTCljBjbIGgGCQnxplVi4FUTWRKUXR7MFwsobr5D9AJpeE0mg5/kRRh5gUX37vAQ==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     dependencies:
@@ -8271,7 +8271,7 @@ packages:
     dependencies:
       boolbase: 1.0.0
 
-  /nuxi@3.4.1(patch_hash=ek6yvelc6ctjanpsnsk4fb6m2y):
+  /nuxi@3.4.1(patch_hash=a474utytm74zv5mkpx5novtdwq):
     resolution: {integrity: sha512-vp6unzdCxRvWyKoQCMN0Qq6D8ETqV5INuwAWG1WfhINXiQ34WRvwcTwU2zxKe29pzek1gGF30mxWK50OXGSepw==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     hasBin: true
@@ -8361,7 +8361,7 @@ packages:
     dependencies:
       '@nuxt/devalue': 2.0.0
       '@nuxt/kit': 3.4.1(rollup@3.20.6)
-      '@nuxt/schema': 3.4.1(patch_hash=smq6bquejwlp5vatffnbmavd34)(rollup@3.20.6)
+      '@nuxt/schema': 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
       '@nuxt/telemetry': 2.2.0(rollup@3.20.6)
       '@nuxt/ui-templates': 1.1.1
       '@nuxt/vite-builder': 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.6)(typescript@5.0.4)(vue-tsc@1.2.0)(vue@3.2.47)
@@ -8388,7 +8388,7 @@ packages:
       magic-string: 0.30.0
       mlly: 1.2.0
       nitropack: 2.3.3
-      nuxi: 3.4.1(patch_hash=ek6yvelc6ctjanpsnsk4fb6m2y)
+      nuxi: 3.4.1(patch_hash=a474utytm74zv5mkpx5novtdwq)
       nypm: 0.2.0
       ofetch: 1.0.1
       ohash: 1.1.1
@@ -11085,8 +11085,8 @@ packages:
       vscode-uri: 3.0.7
       vue-tsc: 1.2.0(typescript@5.0.4)
 
-  /vite-plugin-inspect@0.7.22(rollup@3.20.6)(vite@4.1.4):
-    resolution: {integrity: sha512-Z4y3MPuvn//0/XcpNLwTBqjfSt+c2utIFZu8Dw+nbR2HrPoIrKHedvSuqC8mLzxOpRKRoW60HWvZUDz8J2zRIA==}
+  /vite-plugin-inspect@0.7.23(rollup@3.20.6)(vite@4.1.4):
+    resolution: {integrity: sha512-VodzewpE9ufA8aPQhzTihbiMKAJ1aFoXNe+BB/3L52HB4Hf7I2WEOc1Yu4BC45rvw2VFuVnlXYlXL7JVQuseUw==}
     engines: {node: '>=14'}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0

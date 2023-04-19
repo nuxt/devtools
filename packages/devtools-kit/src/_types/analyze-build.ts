@@ -2,9 +2,9 @@ import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 
 export interface AnalyzeBuildMeta extends NuxtAnalyzeMeta {
   features: {
-    bundleClient?: boolean
-    bundleServer?: boolean
-    viteInspect?: boolean
+    bundleClient: boolean
+    bundleNitro: boolean
+    viteInspect: boolean
   }
 }
 

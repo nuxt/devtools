@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 6f93104d72b971925f8e0b5d51e0a433657d3e08..c65d08bca6ab58f5de2fef9de830eaac142f9686 100644
+index 6f93104d72b971925f8e0b5d51e0a433657d3e08..aa1ca8f31acbe0d7973057ffd8aae6c9eb952151 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -20,6 +20,7 @@ import { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
@@ -56,7 +56,7 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..c65d08bca6ab58f5de2fef9de830eaac
 +  * 
 +  * If a relative path is specified, it will be relative to your `rootDir`.
 +  * 
-+  * @default "/<rootDir>/.nuxt/analyze"
++  * @default "/<rootDir>/.nuxt-analyze"
 + */
 + analyzeDir: string,
 +
@@ -96,7 +96,7 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..c65d08bca6ab58f5de2fef9de830eaac
 -export { AppConfig, AppConfigInput, AppHeadMetaObject, Component, ComponentsDir, ComponentsOptions, CustomAppConfig, GenerateAppOptions, HeadAugmentations, HookResult, ImportPresetWithDeprecation, ImportsOptions, MetaObject, MetaObjectRaw, ModuleDefinition, ModuleMeta, ModuleOptions, ModuleSetupReturn, Nuxt, NuxtApp, NuxtAppConfig, NuxtCompatibility, NuxtCompatibilityIssue, NuxtCompatibilityIssues, NuxtConfig, NuxtConfigLayer, _default as NuxtConfigSchema, NuxtHookName, NuxtHooks, NuxtLayout, NuxtMiddleware, NuxtModule, NuxtOptions, NuxtPage, NuxtPlugin, NuxtPluginTemplate, NuxtTemplate, PublicRuntimeConfig, ResolvedNuxtTemplate, RouterConfig, RouterConfigSerializable, RouterOptions, RuntimeConfig, RuntimeValue, ScanDir, TSReference, ViteConfig, WatchEvent };
 +export { AppConfig, AppConfigInput, AppHeadMetaObject, Component, ComponentsDir, ComponentsOptions, CustomAppConfig, GenerateAppOptions, HeadAugmentations, HookResult, ImportPresetWithDeprecation, ImportsOptions, MetaObject, MetaObjectRaw, ModuleDefinition, ModuleMeta, ModuleOptions, ModuleSetupReturn, Nuxt, NuxtAnalyzeMeta, NuxtApp, NuxtAppConfig, NuxtCompatibility, NuxtCompatibilityIssue, NuxtCompatibilityIssues, NuxtConfig, NuxtConfigLayer, _default as NuxtConfigSchema, NuxtHookName, NuxtHooks, NuxtLayout, NuxtMiddleware, NuxtModule, NuxtOptions, NuxtPage, NuxtPlugin, NuxtPluginTemplate, NuxtTemplate, PublicRuntimeConfig, ResolvedNuxtTemplate, RouterConfig, RouterConfigSerializable, RouterOptions, RuntimeConfig, RuntimeValue, ScanDir, TSReference, ViteConfig, WatchEvent };
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..184f2a52ed138796c8d95d7c94a6853c86834ca6 100644
+index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..74cbac3d3786296aa2224b8fc81534d09fb25447 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -382,10 +382,11 @@ const build = defineUntypedSchema({
@@ -157,7 +157,7 @@ index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..184f2a52ed138796c8d95d7c94a6853c
 +   * If a relative path is specified, it will be relative to your `rootDir`.
 +   */
 +  analyzeDir: {
-+    $resolve: async (val, get) => resolve(await get("rootDir"), val || ".nuxt/analyze")
++    $resolve: async (val, get) => resolve(await get("rootDir"), val || ".nuxt-analyze")
 +  },
    /**
     * Whether Nuxt is running in development mode.
@@ -215,7 +215,7 @@ index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..184f2a52ed138796c8d95d7c94a6853c
      /**
       * See [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) for available options.
 diff --git a/schema/config.d.ts b/schema/config.d.ts
-index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..b2023484ef8d3dbfc1eb328a5f8ce5690a2d6bcf 100644
+index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..9019b880769e7e18caef3243e02f700b7dbb6eee 100644
 --- a/schema/config.d.ts
 +++ b/schema/config.d.ts
 @@ -13,6 +13,7 @@ import type { PluginOptions } from 'mini-css-extract-plugin'
@@ -244,7 +244,7 @@ index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..b2023484ef8d3dbfc1eb328a5f8ce569
 +  * 
 +  * If a relative path is specified, it will be relative to your `rootDir`.
 +  * 
-+  * @default "/<rootDir>/.nuxt/analyze"
++  * @default "/<rootDir>/.nuxt-analyze"
 + */
 + analyzeDir: string,
 +
@@ -278,7 +278,7 @@ index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..b2023484ef8d3dbfc1eb328a5f8ce569
    /**
     * See [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) for available options.
 diff --git a/schema/config.defaults.json b/schema/config.defaults.json
-index 18a0128cc8f529c8329632726a82ccb1805a571b..f42b24f7f3765046ef8a7816c880c50402e0fc9a 100644
+index 18a0128cc8f529c8329632726a82ccb1805a571b..485e2fc50a3e241cb9e375caabdd171e5af3b27d 100644
 --- a/schema/config.defaults.json
 +++ b/schema/config.defaults.json
 @@ -42,6 +42,11 @@
@@ -287,7 +287,7 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..f42b24f7f3765046ef8a7816c880c504
      "server": {
 +      "watch": {
 +        "ignored": [
-+          "/<rootDir>/.nuxt/analyze"
++          "/<rootDir>/.nuxt-analyze"
 +        ]
 +      },
        "fs": {
@@ -306,7 +306,7 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..f42b24f7f3765046ef8a7816c880c504
      "templates": [],
      "analyze": false
    },
-+  "analyzeDir": "/<rootDir>/.nuxt/analyze",
++  "analyzeDir": "/<rootDir>/.nuxt-analyze",
    "buildDir": "/<rootDir>/.nuxt",
    "workspaceDir": "/<rootDir>",
    "modulesDir": [
@@ -327,7 +327,7 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..f42b24f7f3765046ef8a7816c880c504
      "devMiddleware": {
        "stats": "none"
 diff --git a/schema/config.md b/schema/config.md
-index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..3efd278e96f73263329e9895509427e7934f601e 100644
+index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..a8b84432d697f8e4c6597fe772909e168c9f2531 100644
 --- a/schema/config.md
 +++ b/schema/config.md
 @@ -317,7 +317,7 @@ Many tools assume that `.nuxt` is a hidden directory (because it starts with a `
@@ -345,7 +345,7 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..3efd278e96f73263329e9895509427e7
  
 +# `analyzeDir`
 +- **Type**: `string`
-+- **Default**: `"/<rootDir>/.nuxt/analyze"`
++- **Default**: `"/<rootDir>/.nuxt-analyze"`
 +
 +> The directory where Nuxt will store the generated files when running `nuxt analyze`.
 +
@@ -364,7 +364,7 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..3efd278e96f73263329e9895509427e7
 +
 +#### `ignored`
 +- **Type**: `array`
-+- **Default**: `["/<rootDir>/.nuxt/analyze"]`
++- **Default**: `["/<rootDir>/.nuxt-analyze"]`
 +
 +
  ### `fs`
@@ -411,7 +411,7 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..3efd278e96f73263329e9895509427e7
  
  ### `stats`
 diff --git a/schema/config.schema.json b/schema/config.schema.json
-index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee127ba448 100644
+index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..1110be0ee01cde91a4a9e14a262ca841b6bb3616 100644
 --- a/schema/config.schema.json
 +++ b/schema/config.schema.json
 @@ -751,13 +751,21 @@
@@ -431,7 +431,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
 +      "description": "If a relative path is specified, it will be relative to your `rootDir`.",
 +      "tags": [],
 +      "id": "#analyzeDir",
-+      "default": "/<rootDir>/.nuxt/analyze",
++      "default": "/<rootDir>/.nuxt-analyze",
 +      "type": "string"
 +    },
      "dev": {
@@ -447,7 +447,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
 +                "ignored": {
 +                  "id": "#vite/server/watch/ignored",
 +                  "default": [
-+                    "/<rootDir>/.nuxt/analyze"
++                    "/<rootDir>/.nuxt-analyze"
 +                  ],
 +                  "type": "array",
 +                  "items": {
@@ -457,7 +457,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
 +              },
 +              "default": {
 +                "ignored": [
-+                  "/<rootDir>/.nuxt/analyze"
++                  "/<rootDir>/.nuxt-analyze"
 +                ]
 +              },
 +              "type": "object"
@@ -488,7 +488,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
            "default": {
 +            "watch": {
 +              "ignored": [
-+                "/<rootDir>/.nuxt/analyze"
++                "/<rootDir>/.nuxt-analyze"
 +              ]
 +            },
              "fs": {
@@ -509,7 +509,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
          "server": {
 +          "watch": {
 +            "ignored": [
-+              "/<rootDir>/.nuxt/analyze"
++              "/<rootDir>/.nuxt-analyze"
 +            ]
 +          },
            "fs": {
@@ -583,7 +583,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
 -      "/Users/daniel/code/nuxt.js/packages/schema/node_modules"
 +      "/Users/antfu/i/nuxt/packages/schema/node_modules"
      ],
-+    "analyzeDir": "/<rootDir>/.nuxt/analyze",
++    "analyzeDir": "/<rootDir>/.nuxt-analyze",
      "dev": false,
      "test": false,
      "debug": false,
@@ -593,7 +593,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..f5b190e1ee99f9f84a9524b85f4ec3ee
        "server": {
 +        "watch": {
 +          "ignored": [
-+            "/<rootDir>/.nuxt/analyze"
++            "/<rootDir>/.nuxt-analyze"
 +          ]
 +        },
          "fs": {

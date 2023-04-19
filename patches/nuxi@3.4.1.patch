@@ -10,27 +10,25 @@ index 926ba8c1e265d3f1f88ca2c91f72ede8fe25743a..62f49f5a0674b57eadce25211dda1502
  import 'node:path';
  import 'node:process';
 diff --git a/dist/chunks/analyze.mjs b/dist/chunks/analyze.mjs
-index 6aedc5c63249669a35126117a9f64c468b6d62fc..4f52f5f1a68b7c521af02ce0baa45bb58baca6da 100644
+index 6aedc5c63249669a35126117a9f64c468b6d62fc..df92fdc1e0fb6c367f593b9ac75a34bf4fefd277 100644
 --- a/dist/chunks/analyze.mjs
 +++ b/dist/chunks/analyze.mjs
-@@ -1,9 +1,9 @@
+@@ -1,9 +1,8 @@
  import { promises } from 'node:fs';
  import { createApp, eventHandler, toNodeListener, lazyEventHandler } from './index2.mjs';
  import { listen } from './index.mjs';
 -import { w as writeTypes } from '../shared/nuxi.4c58f8a5.mjs';
-+import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
  import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
 -import { c as clearDir } from '../shared/nuxi.d045d192.mjs';
 +import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
  import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import { r as resolve, j as join } from '../shared/nuxi.ffb4843d.mjs';
-@@ -27,61 +27,91 @@ import 'node:net';
+@@ -27,61 +26,89 @@ import 'node:net';
  import 'http';
  import 'https';
  import 'node:child_process';
 -import '../shared/nuxi.aaefd8a8.mjs';
-+import '../shared/nuxi.602e8160.mjs';
  import '../shared/nuxi.1d8d2e21.mjs';
 -import '../shared/nuxi.70d48494.mjs';
 +import '../shared/nuxi.114b1a98.mjs';
@@ -47,7 +45,7 @@ index 6aedc5c63249669a35126117a9f64c468b6d62fc..4f52f5f1a68b7c521af02ce0baa45bb5
 +    const name = args.name || "default";
      const rootDir = resolve(args._[0] || ".");
 -    const statsDir = join(rootDir, ".nuxt/stats");
-+    let analyzeDir = join(rootDir, ".nuxt/analyze", name);
++    let analyzeDir = join(rootDir, ".nuxt-analyze", name);
 +    let buildDir = join(analyzeDir, ".nuxt");
 +    let outDir = join(analyzeDir, ".output");
 +    const startTime = Date.now();
@@ -70,11 +68,11 @@ index 6aedc5c63249669a35126117a9f64c468b6d62fc..4f52f5f1a68b7c521af02ce0baa45bb5
        }
      });
 -    await clearDir(nuxt.options.buildDir);
+-    await writeTypes(nuxt);
 +    analyzeDir = nuxt.options.analyzeDir;
 +    buildDir = nuxt.options.buildDir;
 +    outDir = nuxt.options.nitro.output?.dir || outDir;
 +    await clearDir(analyzeDir);
-     await writeTypes(nuxt);
      await buildNuxt(nuxt);
 -    const app = createApp();
 -    const serveFile = (filePath) => lazyEventHandler(async () => {

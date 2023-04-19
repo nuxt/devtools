@@ -13,7 +13,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
 
   const processId = 'devtools:analyze-build'
 
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt-analyze')
 
   async function startAnalyzeBuild() {
     if (promise)
@@ -51,7 +51,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         features: {
           bundleClient: fs.existsSync(join(dir, 'client.html')),
           bundleNitro: fs.existsSync(join(dir, 'nitro.html')),
-          viteInspect: false, // TODO:
+          viteInspect: fs.existsSync(join(dir, '.vite-inspect')),
         },
       }
     }))

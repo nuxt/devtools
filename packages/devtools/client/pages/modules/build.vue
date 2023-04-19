@@ -34,12 +34,13 @@ const tabs = computed(() => {
   const items = [
     { name: 'Overview', id: 'overview' },
   ]
-  if (lastestBuild.value) {
-    items.push(
-      { name: 'Client Bundle', id: 'client-dist' },
-      { name: 'Nitro Bundle', id: 'nitro-dist' },
-    )
-  }
+  if (lastestBuild.value?.features.bundleClient)
+    items.push({ name: 'Client Bundle', id: 'bundle-client' })
+  if (lastestBuild.value?.features.bundleNitro)
+    items.push({ name: 'Nitro Bundle', id: 'bundle-nitro' })
+  if (lastestBuild.value?.features.viteInspect)
+    items.push({ name: 'Vite Inspect', id: 'vite-inspect' })
+
   return items
 })
 
@@ -81,13 +82,18 @@ const selected = ref(tabs.value[0])
       </NButton>
     </div>
     <iframe
-      v-lazy-show="selected.id === 'client-dist'"
+      v-lazy-show="selected.id === 'bundle-client'"
       :src="`${ROUTE_ANALYZE}${lastestBuild?.name}/client.html`"
       h-full w-full
     />
     <iframe
-      v-lazy-show="selected.id === 'nitro-dist'"
+      v-lazy-show="selected.id === 'bundle-nitro'"
       :src="`${ROUTE_ANALYZE}${lastestBuild?.name}/nitro.html`"
+      h-full w-full
+    />
+    <iframe
+      v-lazy-show="selected.id === 'vite-inspect'"
+      :src="`${ROUTE_ANALYZE}${lastestBuild?.name}/.vite-inspect/`"
       h-full w-full
     />
   </div>
