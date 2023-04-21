@@ -44,6 +44,9 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/__nuxt_devtools__/client',
   },
+  experimental: {
+    watcher: 'parcel',
+  },
   vite: {
     define: {
       'process.env.VSCODE_TEXTMATE_DEBUG': 'false',

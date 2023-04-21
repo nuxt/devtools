@@ -13,7 +13,6 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
   let initalized: Promise<any> | undefined
 
   const processId = 'devtools:analyze-build'
-
   const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   async function startAnalyzeBuild(name: string) {
@@ -79,6 +78,17 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         isBuilding: !!promise,
         builds,
       }
+    },
+    async clearAnalyzeBuilds(names?: string[]) {
+      if (!names) {
+        await fsp.rm(analyzeDir, { recursive: true, force: true })
+      }
+      else {
+        const targets = builds.filter(build => names.includes(build.name))
+        await Promise.all(targets.map(target => fsp.rm(join(analyzeDir, target.slug), { recursive: true, force: true })))
+      }
+      initalized = readBuildInfo()
+      refresh('getAnalyzeBuildInfo')
     },
     generateAnalyzeBuildName,
     startAnalyzeBuild,

@@ -6,6 +6,10 @@ export interface AnalyzeBuildMeta extends NuxtAnalyzeMeta {
     bundleNitro: boolean
     viteInspect: boolean
   }
+  size: {
+    clientBundle?: number
+    nitroBundle?: number
+  }
 }
 
 export interface AnalyzeBuildsInfo {

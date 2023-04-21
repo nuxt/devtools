@@ -20,7 +20,6 @@ export interface ServerFunctions {
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
   getServerRoutes(): Promise<ServerRouteInfo[]>
-  getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
@@ -40,10 +39,15 @@ export interface ServerFunctions {
   setStorageItem(key: string, value: StorageValue): Promise<void>
   removeStorageItem(key: string): Promise<void>
 
+  // Analyze
+  getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>
+  generateAnalyzeBuildName(): Promise<string>
+  startAnalyzeBuild(name: string): Promise<string>
+  clearAnalyzeBuilds(names?: string[]): Promise<void>
+
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
-  generateAnalyzeBuildName(): Promise<string>
   writeStaticAssets(file: { name: string; data: string }[], path: string): Promise<string[]>
 
   // Actions
@@ -51,7 +55,6 @@ export interface ServerFunctions {
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
   restartNuxt(hard?: boolean): Promise<void>
-  startAnalyzeBuild(name: string): Promise<string>
 }
 
 export interface ClientFunctions {

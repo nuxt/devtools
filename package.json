@@ -43,17 +43,17 @@
     "unocss": "^0.51.5",
     "vue-tsc": "^1.4.2"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*": "eslint --fix"
-  },
   "pnpm": {
     "patchedDependencies": {
       "nuxt@3.4.2": "patches/nuxt@3.4.2.patch",
       "nuxi@3.4.2": "patches/nuxi@3.4.2.patch",
       "@nuxt/schema@3.4.2": "patches/@nuxt__schema@3.4.2.patch"
     }
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
   }
 }

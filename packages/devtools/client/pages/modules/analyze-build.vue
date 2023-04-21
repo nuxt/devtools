@@ -18,8 +18,8 @@ const route = useRoute()
 const processId = ref<string>()
 
 const selected = computed(() => {
-  const name = route.query.name as string
-  return info.value?.builds.find(b => b.name === name) ?? info.value?.builds[0]
+  const slug = route.query.slug as string
+  return info.value?.builds.find(b => b.slug === slug) ?? info.value?.builds[0]
 })
 
 const shouldGotoTerminal = ref(false)
@@ -35,10 +35,6 @@ async function start() {
   processId.value = await rpc.startAnalyzeBuild(buildNameInput.value)
   if (shouldGotoTerminal.value)
     gotoTerminal()
-}
-
-function escapeName(name?: string) {
-  return name?.replace(/[^a-z0-9-]/ig, '_')
 }
 
 function gotoTerminal() {
@@ -65,17 +61,27 @@ const selectedTab = ref(tabs.value[0])
 function formatDuration(build: AnalyzeBuildMeta) {
   return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024)
+    return `${bytes}B`
+  if (bytes < 1024 * 1024)
+    return `${(bytes / 1024).toFixed(1)}KB`
+  if (bytes < 1024 * 1024 * 1024)
+    return `${(bytes / 1024 / 1024).toFixed(1)}MB`
+  return `${(bytes / 1024 / 1024 / 1024).toFixed(1)}GB`
+}
 </script>
 
 <template>
   <PanelLeftRight :left-size="20">
     <template #left>
       <div flex="~ col">
-        <template v-for="build of info?.builds" :key="build.name">
+        <template v-for="build of info?.builds" :key="build.slug">
           <NuxtLink
             flex="~ col gap1" hover:bg-active p3
-            :class="build.name === selected?.name ? 'text-primary bg-active' : ''"
-            :to="`?name=${encodeURIComponent(build.name)}`"
+            :class="build.slug === selected?.slug ? 'text-primary bg-active' : ''"
+            :to="`?slug=${encodeURIComponent(build.slug)}`"
           >
             <code>{{ build.name }}</code>
             <div flex="~ gap-1 items-center" text-sm op60>
@@ -116,30 +122,71 @@ function formatDuration(build: AnalyzeBuildMeta) {
         </div>
         <div
           v-if="selectedTab.id === 'overview'"
-          flex="~"
+          flex="~ col gap-4 items-center justify-center" p4
         >
-          <div v-if="selected" grid="~ cols-[30px_1fr] gap2 items-center justify-center" ma w-100>
-            <div i-carbon-commit title="Name" />
-            <div>{{ selected.name }}</div>
-            <div i-carbon-edge-node title="Build time" />
-            <div>{{ formatTimeAgo(new Date(selected.endTime)) }}</div>
-            <div i-carbon-time title="Build duration" />
-            <div>{{ formatDuration(selected) }}</div>
+          <div flex-auto />
+          <div v-if="selected" grid="~ cols-[30px_1fr] gap-x-2 gap-y-3 items-center justify-center" w-100>
+            <div i-carbon-commit text-xl />
+            <div>
+              <div text-sm op50>
+                Name
+              </div>
+              <div>{{ selected.name }}</div>
+            </div>
+            <div i-carbon-time text-xl />
+            <div>
+              <div text-sm op50>
+                Build duration
+              </div>
+              <div>{{ formatDuration(selected) }}</div>
+            </div>
+            <template v-if="selected.size?.clientBundle">
+              <div i-carbon-cics-program text-xl />
+              <div>
+                <div text-sm op50>
+                  Client bundle size
+                </div>
+                <div>{{ formatFileSize(selected.size.clientBundle) }}</div>
+              </div>
+            </template>
+            <template v-if="selected.size?.nitroBundle">
+              <div i-carbon-bare-metal-server text-xl />
+              <div>
+                <div text-sm op50>
+                  Nitro bundle size
+                </div>
+                <div>{{ formatFileSize(selected.size.nitroBundle) }}</div>
+              </div>
+            </template>
+            <div i-carbon-edge-node text-xl />
+            <div>
+              <div text-sm op50>
+                Built
+              </div>
+              <div>{{ formatTimeAgo(new Date(selected.endTime)) }}</div>
+            </div>
           </div>
+          <NButton n="primary" icon="carbon-launch" @click="openInEditor(selected!.analyzeDir)">
+            Open in Editor
+          </NButton>
+          <div flex-auto />
+          <NButton n="rose" icon="carbon-delete" @click="rpc.clearAnalyzeBuilds([selected!.name])">
+            Delete this report
+          </NButton>
         </div>
         <iframe
           v-lazy-show="selectedTab.id === 'bundle-client'"
-          :src="`${ROUTE_ANALYZE}${escapeName(selected?.name)}/client.html`"
+          :src="`${ROUTE_ANALYZE}${selected?.slug}/client.html`"
           h-full w-full
         />
         <iframe
           v-lazy-show="selectedTab.id === 'bundle-nitro'"
-          :src="`${ROUTE_ANALYZE}${escapeName(selected?.name)}/nitro.html`"
+          :src="`${ROUTE_ANALYZE}${selected?.slug}/nitro.html`"
           h-full w-full
         />
         <iframe
           v-lazy-show="selectedTab.id === 'vite-inspect'"
-          :src="`${ROUTE_ANALYZE}${escapeName(selected?.name)}/.vite-inspect/`"
+          :src="`${ROUTE_ANALYZE}${selected?.slug}/.vite-inspect/`"
           h-full w-full
         />
       </div>

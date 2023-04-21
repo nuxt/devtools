@@ -1,5 +1,5 @@
 diff --git a/dist/chunks/analyze.mjs b/dist/chunks/analyze.mjs
-index 13bc24a0d170bd3fef39ffaf461aad45833817c0..4b6bfe8ebd0cd461fe7e50440da9a680bbf80e1e 100644
+index 13bc24a0d170bd3fef39ffaf461aad45833817c0..26325c18fa5f4d8403342f44ca1f160350145f25 100644
 --- a/dist/chunks/analyze.mjs
 +++ b/dist/chunks/analyze.mjs
 @@ -1,9 +1,8 @@
@@ -9,11 +9,11 @@ index 13bc24a0d170bd3fef39ffaf461aad45833817c0..4b6bfe8ebd0cd461fe7e50440da9a680
 -import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
  import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
 -import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
-+import { c as clearDir } from '../shared/nuxi.f4cf7e39.mjs';
++import { a as clearDir } from '../shared/nuxi.04a0178b.mjs';
  import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import { r as resolve, j as join } from '../shared/nuxi.ffb4843d.mjs';
-@@ -24,65 +23,94 @@ import 'node:os';
+@@ -24,65 +23,96 @@ import 'node:os';
  import '../shared/nuxi.a3b9dacd.mjs';
  import 'tty';
  import 'node:net';
@@ -54,7 +54,9 @@ index 13bc24a0d170bd3fef39ffaf461aad45833817c0..4b6bfe8ebd0cd461fe7e50440da9a680
 +        buildDir,
 +        nitro: {
 +          output: {
-+            dir: outDir
++            dir: outDir,
++            publicDir: join(outDir, "public"),
++            serverDir: join(outDir, "server")
 +          }
 +        },
          logLevel: args["log-level"]
@@ -168,7 +170,7 @@ index 9a89213276546337090c24e5f7c713c8946c85ba..1b2d0c951a26abf49f6d901866bca66a
  import 'assert';
  import 'events';
 diff --git a/dist/chunks/build.mjs b/dist/chunks/build.mjs
-index c1d492a88dd93deac422eb1f388e6d1a8f9d1e78..98d7432b915d8cdc9411af36ee2ccbd4017d9975 100644
+index c1d492a88dd93deac422eb1f388e6d1a8f9d1e78..41243450acc19076fbbea2ab5d1045d7b0d77f1e 100644
 --- a/dist/chunks/build.mjs
 +++ b/dist/chunks/build.mjs
 @@ -5,9 +5,9 @@ import 'node:process';
@@ -176,7 +178,7 @@ index c1d492a88dd93deac422eb1f388e6d1a8f9d1e78..98d7432b915d8cdc9411af36ee2ccbd4
  import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
  import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
 -import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
-+import { a as clearBuildDir } from '../shared/nuxi.f4cf7e39.mjs';
++import { c as clearBuildDir } from '../shared/nuxi.04a0178b.mjs';
  import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
 -import { a as showVersions } from '../shared/nuxi.c4aa4a85.mjs';
 +import { a as showVersions } from '../shared/nuxi.24ebce42.mjs';
@@ -268,12 +270,12 @@ index dedcfdfd6b49a5b98aa47c8986dbdd005d581fb7..d2dd027b1c244c01fab87a6691c8f117
  const word = '[a-fA-F\\d:]';
  
 diff --git a/dist/chunks/cleanup.mjs b/dist/chunks/cleanup.mjs
-index 02c3e74a14e3501063f5152092ede8d15366a964..a7c18563958a3e901069dde952eeb81900fadd0d 100644
+index 02c3e74a14e3501063f5152092ede8d15366a964..0a2d9d48ba7bc05d3c6364be954ae8ed2ea9e651 100644
 --- a/dist/chunks/cleanup.mjs
 +++ b/dist/chunks/cleanup.mjs
 @@ -1,4 +1,4 @@
 -import { c as cleanupNuxtDirs } from '../shared/nuxi.7327fc9d.mjs';
-+import { c as cleanupNuxtDirs } from '../shared/nuxi.84cd26a4.mjs';
++import { c as cleanupNuxtDirs } from '../shared/nuxi.c76adf94.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import { r as resolve } from '../shared/nuxi.ffb4843d.mjs';
  import 'node:fs';
@@ -282,15 +284,15 @@ index 02c3e74a14e3501063f5152092ede8d15366a964..a7c18563958a3e901069dde952eeb819
  import 'node:process';
  import 'tty';
 -import '../shared/nuxi.2535cbee.mjs';
-+import '../shared/nuxi.f4cf7e39.mjs';
++import '../shared/nuxi.04a0178b.mjs';
  
  const cleanup = defineNuxtCommand({
    meta: {
 diff --git a/dist/chunks/dev.mjs b/dist/chunks/dev.mjs
-index 5d2f3a90726a1154efb5a5b8d4cbd7d80407456b..6b7dc3358468d63aa2e72e23168dc2e3c87795ec 100644
+index 5d2f3a90726a1154efb5a5b8d4cbd7d80407456b..47d3248690b2859319d795ba43bd7d8dc7aa2a2b 100644
 --- a/dist/chunks/dev.mjs
 +++ b/dist/chunks/dev.mjs
-@@ -1,23 +1,23 @@
+@@ -1,23 +1,24 @@
 -import { s as setupDotenv, c as chokidar } from '../shared/nuxi.ea5b9d19.mjs';
 +import { s as setupDotenv, c as chokidar } from '../shared/nuxi.511a2e74.mjs';
  import { c as consola } from '../shared/nuxi.114b1a98.mjs';
@@ -306,7 +308,8 @@ index 5d2f3a90726a1154efb5a5b8d4cbd7d80407456b..6b7dc3358468d63aa2e72e23168dc2e3
  import { i as importModule } from '../shared/nuxi.1d8d2e21.mjs';
  import { o as overrideEnv } from '../shared/nuxi.d21ab543.mjs';
 -import { l as loadNuxtManifest, w as writeNuxtManifest, c as cleanupNuxtDirs } from '../shared/nuxi.7327fc9d.mjs';
-+import { l as loadNuxtManifest, w as writeNuxtManifest, c as cleanupNuxtDirs } from '../shared/nuxi.84cd26a4.mjs';
++import { l as loadNuxtManifest, w as writeNuxtManifest } from '../shared/nuxi.c76adf94.mjs';
++import { c as clearBuildDir } from '../shared/nuxi.04a0178b.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import { r as resolve, a as relative } from '../shared/nuxi.ffb4843d.mjs';
  import 'node:fs';
@@ -318,15 +321,23 @@ index 5d2f3a90726a1154efb5a5b8d4cbd7d80407456b..6b7dc3358468d63aa2e72e23168dc2e3
  import 'node:fs/promises';
  import 'node:os';
  import 'crypto';
-@@ -38,7 +38,7 @@ import 'node:v8';
+@@ -38,7 +39,6 @@ import 'node:v8';
  import '../shared/nuxi.a3b9dacd.mjs';
  import '../shared/nuxi.602e8160.mjs';
  import '../shared/nuxi.a685c563.mjs';
 -import '../shared/nuxi.2535cbee.mjs';
-+import '../shared/nuxi.f4cf7e39.mjs';
  
  const DEBOUNCE_DEFAULTS = {
    trailing: true
+@@ -177,7 +177,7 @@ const dev = defineNuxtCommand({
+           const previousManifest = await loadNuxtManifest(currentNuxt.options.buildDir);
+           const newManifest = await writeNuxtManifest(currentNuxt);
+           if (previousManifest && newManifest && previousManifest._hash !== newManifest._hash) {
+-            await cleanupNuxtDirs(currentNuxt.options.rootDir);
++            await clearBuildDir(currentNuxt.options.buildDir);
+           }
+         }
+         await currentNuxt.ready();
 diff --git a/dist/chunks/devtools.mjs b/dist/chunks/devtools.mjs
 index ca92d34abb79c6e0ec7d63925645c479a1e336b4..409fd6b325f0b51d042e4e327660aed29d39516e 100644
 --- a/dist/chunks/devtools.mjs
@@ -351,7 +362,7 @@ index ca92d34abb79c6e0ec7d63925645c479a1e336b4..409fd6b325f0b51d042e4e327660aed2
  import 'assert';
  import 'events';
 diff --git a/dist/chunks/generate.mjs b/dist/chunks/generate.mjs
-index a83e348147e63594148a55ad60c950fbe3978b04..d4c06bc301eb98cb412917cac02c815f90b5c5d1 100644
+index a83e348147e63594148a55ad60c950fbe3978b04..166f348b59c8ec1a39c4a7177e9d1935dc6f1b67 100644
 --- a/dist/chunks/generate.mjs
 +++ b/dist/chunks/generate.mjs
 @@ -17,10 +17,9 @@ import 'node:url';
@@ -359,7 +370,7 @@ index a83e348147e63594148a55ad60c950fbe3978b04..d4c06bc301eb98cb412917cac02c815f
  import 'node:assert';
  import 'node:v8';
 -import '../shared/nuxi.2535cbee.mjs';
-+import '../shared/nuxi.f4cf7e39.mjs';
++import '../shared/nuxi.04a0178b.mjs';
  import '../shared/nuxi.d21ab543.mjs';
 -import '../shared/nuxi.c4aa4a85.mjs';
 -import '../shared/nuxi.24198af3.mjs';
@@ -719,7 +730,7 @@ index 5474f1ef334bd0e53ca6a5e19484f8451dab704a..ba013467ad840a7a8b2c75e4d42138b4
  			}
  
 diff --git a/dist/chunks/info.mjs b/dist/chunks/info.mjs
-index b5a540401654ff1b5ade56ad3f268de2da5238bb..87197788ecaaf924aec123d4f5d580ca98d10ba9 100644
+index b5a540401654ff1b5ade56ad3f268de2da5238bb..12ff61275ba5b95389abb201848ff2553db958f8 100644
 --- a/dist/chunks/info.mjs
 +++ b/dist/chunks/info.mjs
 @@ -1,7 +1,6 @@
@@ -741,8 +752,8 @@ index b5a540401654ff1b5ade56ad3f268de2da5238bb..87197788ecaaf924aec123d4f5d580ca
  import clipboard from './index3.mjs';
 -import { g as getPackageManager, a as getPackageManagerVersion } from '../shared/nuxi.390be480.mjs';
 -import { f as findup } from '../shared/nuxi.2535cbee.mjs';
-+import { g as getPackageManager, a as getPackageManagerVersion } from '../shared/nuxi.c005bfbd.mjs';
-+import { f as findup } from '../shared/nuxi.f4cf7e39.mjs';
++import { g as getPackageManager, a as getPackageManagerVersion } from '../shared/nuxi.b31b4c56.mjs';
++import { f as findup } from '../shared/nuxi.04a0178b.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import { r as resolve } from '../shared/nuxi.ffb4843d.mjs';
  import 'node:process';
@@ -1003,7 +1014,7 @@ index f25b608bc1f93f0054fcc918a015997efa5c5315..76298926ade9d5ed146fd24971670339
  import 'stream';
  import 'string_decoder';
 diff --git a/dist/chunks/prepare.mjs b/dist/chunks/prepare.mjs
-index af1c577e4b5bda7540f9c7051478ce99b7fe7c9f..30d82fc32cf520bfb0dba23bb5ec91d3052050c3 100644
+index af1c577e4b5bda7540f9c7051478ce99b7fe7c9f..d0404fa2d7703602acd26c648e1fa843ec7095d3 100644
 --- a/dist/chunks/prepare.mjs
 +++ b/dist/chunks/prepare.mjs
 @@ -3,7 +3,7 @@ import 'node:util';
@@ -1011,7 +1022,7 @@ index af1c577e4b5bda7540f9c7051478ce99b7fe7c9f..30d82fc32cf520bfb0dba23bb5ec91d3
  import 'node:process';
  import 'tty';
 -import { c as clearDir } from '../shared/nuxi.2535cbee.mjs';
-+import { a as clearBuildDir } from '../shared/nuxi.f4cf7e39.mjs';
++import { c as clearBuildDir } from '../shared/nuxi.04a0178b.mjs';
  import { l as loadKit } from '../shared/nuxi.0318c2bd.mjs';
  import { w as writeTypes } from '../shared/nuxi.89758cc3.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
@@ -1125,7 +1136,7 @@ index fac64d9c1a5b06bbff2037fa3b35b4def1b38bcd..e834281c579c3066f3d401961ee6283e
  import 'assert';
  import 'events';
 diff --git a/dist/chunks/upgrade.mjs b/dist/chunks/upgrade.mjs
-index 8cfdc9208633dfbad7a203e4a21a0a3086fa0388..993801b59707c962be4d63b0f2e80f9630278a4f 100644
+index 8cfdc9208633dfbad7a203e4a21a0a3086fa0388..5a9ecaa552fda8e2305e38d10b65327d109db91f 100644
 --- a/dist/chunks/upgrade.mjs
 +++ b/dist/chunks/upgrade.mjs
 @@ -7,9 +7,9 @@ import 'tty';
@@ -1135,9 +1146,9 @@ index 8cfdc9208633dfbad7a203e4a21a0a3086fa0388..993801b59707c962be4d63b0f2e80f96
 -import { g as getPackageManager, p as packageManagerLocks } from '../shared/nuxi.390be480.mjs';
 -import { r as rmRecursive, t as touchFile } from '../shared/nuxi.2535cbee.mjs';
 -import { c as cleanupNuxtDirs, n as nuxtVersionToGitIdentifier } from '../shared/nuxi.7327fc9d.mjs';
-+import { g as getPackageManager, p as packageManagerLocks } from '../shared/nuxi.c005bfbd.mjs';
-+import { r as rmRecursive, t as touchFile } from '../shared/nuxi.f4cf7e39.mjs';
-+import { c as cleanupNuxtDirs, n as nuxtVersionToGitIdentifier } from '../shared/nuxi.84cd26a4.mjs';
++import { g as getPackageManager, p as packageManagerLocks } from '../shared/nuxi.b31b4c56.mjs';
++import { r as rmRecursive, t as touchFile } from '../shared/nuxi.04a0178b.mjs';
++import { c as cleanupNuxtDirs, n as nuxtVersionToGitIdentifier } from '../shared/nuxi.c76adf94.mjs';
  import { d as defineNuxtCommand } from '../shared/nuxi.c68ce99d.mjs';
  import 'node:module';
  import 'node:url';
@@ -1156,6 +1167,61 @@ index 146caf1f9695cda36e15190d54cd3ec0a2931350..8a28883aa9c181c09a7afe5d8d5a2b15
  import 'assert';
  import './shared/nuxi.602e8160.mjs';
  import 'node:module';
+diff --git a/dist/shared/nuxi.04a0178b.mjs b/dist/shared/nuxi.04a0178b.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..019e022d2c8cef6f61c3b9af69cf3af976c18a21
+--- /dev/null
++++ b/dist/shared/nuxi.04a0178b.mjs
+@@ -0,0 +1,49 @@
++import { promises, existsSync } from 'node:fs';
++import { c as consola } from './nuxi.114b1a98.mjs';
++import 'node:util';
++import 'node:path';
++import 'node:process';
++import 'tty';
++import { j as join, d as dirname } from './nuxi.ffb4843d.mjs';
++
++async function clearDir(path, exclude) {
++  if (!exclude) {
++    await promises.rm(path, { recursive: true, force: true });
++  } else if (existsSync(path)) {
++    const files = await promises.readdir(path);
++    await Promise.all(files.map(async (name) => {
++      if (!exclude.includes(name)) {
++        await promises.rm(join(path, name), { recursive: true, force: true });
++      }
++    }));
++  }
++  await promises.mkdir(path, { recursive: true });
++}
++function clearBuildDir(path) {
++  return clearDir(path, ["cache", "analyze"]);
++}
++async function rmRecursive(paths) {
++  await Promise.all(paths.filter((p) => typeof p === "string").map(async (path) => {
++    consola.debug("Removing recursive path", path);
++    await promises.rm(path, { recursive: true, force: true }).catch(() => {
++    });
++  }));
++}
++async function touchFile(path) {
++  const time = /* @__PURE__ */ new Date();
++  await promises.utimes(path, time, time).catch(() => {
++  });
++}
++function findup(rootDir, fn) {
++  let dir = rootDir;
++  while (dir !== dirname(dir)) {
++    const res = fn(dir);
++    if (res) {
++      return res;
++    }
++    dir = dirname(dir);
++  }
++  return null;
++}
++
++export { clearDir as a, clearBuildDir as c, findup as f, rmRecursive as r, touchFile as t };
 diff --git a/dist/shared/nuxi.24ebce42.mjs b/dist/shared/nuxi.24ebce42.mjs
 new file mode 100644
 index 0000000000000000000000000000000000000000..22e1fe7a60d39cea6c129cbfe4fb5ca5446dbd74
@@ -10008,6 +10074,37 @@ index 0000000000000000000000000000000000000000..93285ba728f06d47ab39575a202943d3
 +}
 +
 +export { cleanupNuxtDirs as c, loadNuxtManifest as l, nuxtVersionToGitIdentifier as n, writeNuxtManifest as w };
+diff --git a/dist/shared/nuxi.b31b4c56.mjs b/dist/shared/nuxi.b31b4c56.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d44fec48aaac9a24b3ccff6022dc924b65f3a3a
+--- /dev/null
++++ b/dist/shared/nuxi.b31b4c56.mjs
+@@ -0,0 +1,25 @@
++import { execSync } from 'node:child_process';
++import { existsSync } from 'node:fs';
++import { f as findup } from './nuxi.04a0178b.mjs';
++import { r as resolve } from './nuxi.ffb4843d.mjs';
++
++const packageManagerLocks = {
++  yarn: "yarn.lock",
++  npm: "package-lock.json",
++  pnpm: "pnpm-lock.yaml"
++};
++function getPackageManager(rootDir) {
++  return findup(rootDir, (dir) => {
++    for (const name in packageManagerLocks) {
++      const path = packageManagerLocks[name];
++      if (path && existsSync(resolve(dir, path))) {
++        return name;
++      }
++    }
++  });
++}
++function getPackageManagerVersion(name) {
++  return execSync(`${name} --version`).toString("utf8").trim();
++}
++
++export { getPackageManagerVersion as a, getPackageManager as g, packageManagerLocks as p };
 diff --git a/dist/shared/nuxi.c005bfbd.mjs b/dist/shared/nuxi.c005bfbd.mjs
 new file mode 100644
 index 0000000000000000000000000000000000000000..e665876458a541945f2768cd37cd489fc1795a00
@@ -10039,6 +10136,638 @@ index 0000000000000000000000000000000000000000..e665876458a541945f2768cd37cd489f
 +}
 +
 +export { getPackageManagerVersion as a, getPackageManager as g, packageManagerLocks as p };
+diff --git a/dist/shared/nuxi.c76adf94.mjs b/dist/shared/nuxi.c76adf94.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..6a653217e51435c087fc43a5c060bd1cf5d5417b
+--- /dev/null
++++ b/dist/shared/nuxi.c76adf94.mjs
+@@ -0,0 +1,626 @@
++import { promises } from 'node:fs';
++import { c as consola } from './nuxi.114b1a98.mjs';
++import 'node:util';
++import 'node:path';
++import 'node:process';
++import 'tty';
++import { r as rmRecursive } from './nuxi.04a0178b.mjs';
++import { r as resolve, d as dirname } from './nuxi.ffb4843d.mjs';
++
++const defaults = {
++  ignoreUnknown: false,
++  respectType: false,
++  respectFunctionNames: false,
++  respectFunctionProperties: false,
++  unorderedObjects: true,
++  unorderedArrays: false,
++  unorderedSets: false
++};
++function objectHash(object, options = {}) {
++  options = { ...defaults, ...options };
++  const hasher = createHasher(options);
++  hasher.dispatch(object);
++  return hasher.toString();
++}
++function createHasher(options) {
++  const buff = [];
++  let context = [];
++  const write = (str) => {
++    buff.push(str);
++  };
++  return {
++    toString() {
++      return buff.join("");
++    },
++    getContext() {
++      return context;
++    },
++    dispatch(value) {
++      if (options.replacer) {
++        value = options.replacer(value);
++      }
++      const type = value === null ? "null" : typeof value;
++      return this["_" + type](value);
++    },
++    _object(object) {
++      if (object && typeof object.toJSON === "function") {
++        return this._object(object.toJSON());
++      }
++      const pattern = /\[object (.*)]/i;
++      const objString = Object.prototype.toString.call(object);
++      const _objType = pattern.exec(objString);
++      const objType = _objType ? _objType[1].toLowerCase() : "unknown:[" + objString.toLowerCase() + "]";
++      let objectNumber = null;
++      if ((objectNumber = context.indexOf(object)) >= 0) {
++        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
++      } else {
++        context.push(object);
++      }
++      if (typeof Buffer !== "undefined" && Buffer.isBuffer && Buffer.isBuffer(object)) {
++        write("buffer:");
++        return write(object.toString("utf8"));
++      }
++      if (objType !== "object" && objType !== "function" && objType !== "asyncfunction") {
++        if (this["_" + objType]) {
++          this["_" + objType](object);
++        } else if (!options.ignoreUnknown) {
++          this._unkown(object, objType);
++        }
++      } else {
++        let keys = Object.keys(object);
++        if (options.unorderedObjects) {
++          keys = keys.sort();
++        }
++        if (options.respectType !== false && !isNativeFunction(object)) {
++          keys.splice(0, 0, "prototype", "__proto__", "letructor");
++        }
++        if (options.excludeKeys) {
++          keys = keys.filter(function(key) {
++            return !options.excludeKeys(key);
++          });
++        }
++        write("object:" + keys.length + ":");
++        for (const key of keys) {
++          this.dispatch(key);
++          write(":");
++          if (!options.excludeValues) {
++            this.dispatch(object[key]);
++          }
++          write(",");
++        }
++      }
++    },
++    _array(arr, unordered) {
++      unordered = typeof unordered !== "undefined" ? unordered : options.unorderedArrays !== false;
++      write("array:" + arr.length + ":");
++      if (!unordered || arr.length <= 1) {
++        for (const entry of arr) {
++          this.dispatch(entry);
++        }
++        return;
++      }
++      const contextAdditions = [];
++      const entries = arr.map((entry) => {
++        const hasher = createHasher(options);
++        hasher.dispatch(entry);
++        contextAdditions.push(hasher.getContext());
++        return hasher.toString();
++      });
++      context = [...context, ...contextAdditions];
++      entries.sort();
++      return this._array(entries, false);
++    },
++    _date(date) {
++      return write("date:" + date.toJSON());
++    },
++    _symbol(sym) {
++      return write("symbol:" + sym.toString());
++    },
++    _unkown(value, type) {
++      write(type);
++      if (!value) {
++        return;
++      }
++      write(":");
++      if (value && typeof value.entries === "function") {
++        return this._array(
++          Array.from(value.entries()),
++          true
++          /* ordered */
++        );
++      }
++    },
++    _error(err) {
++      return write("error:" + err.toString());
++    },
++    _boolean(bool) {
++      return write("boolean:" + bool.toString());
++    },
++    _string(string) {
++      write("string:" + string.length + ":");
++      write(string.toString());
++    },
++    _function(fn) {
++      write("fn:");
++      if (isNativeFunction(fn)) {
++        this.dispatch("[native]");
++      } else {
++        this.dispatch(fn.toString());
++      }
++      if (options.respectFunctionNames !== false) {
++        this.dispatch("function-name:" + String(fn.name));
++      }
++      if (options.respectFunctionProperties) {
++        this._object(fn);
++      }
++    },
++    _number(number) {
++      return write("number:" + number.toString());
++    },
++    _xml(xml) {
++      return write("xml:" + xml.toString());
++    },
++    _null() {
++      return write("Null");
++    },
++    _undefined() {
++      return write("Undefined");
++    },
++    _regexp(regex) {
++      return write("regex:" + regex.toString());
++    },
++    _uint8array(arr) {
++      write("uint8array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _uint8clampedarray(arr) {
++      write("uint8clampedarray:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _int8array(arr) {
++      write("int8array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _uint16array(arr) {
++      write("uint16array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _int16array(arr) {
++      write("int16array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _uint32array(arr) {
++      write("uint32array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _int32array(arr) {
++      write("int32array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _float32array(arr) {
++      write("float32array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _float64array(arr) {
++      write("float64array:");
++      return this.dispatch(Array.prototype.slice.call(arr));
++    },
++    _arraybuffer(arr) {
++      write("arraybuffer:");
++      return this.dispatch(new Uint8Array(arr));
++    },
++    _url(url) {
++      return write("url:" + url.toString());
++    },
++    _map(map) {
++      write("map:");
++      const arr = [...map];
++      return this._array(arr, options.unorderedSets !== false);
++    },
++    _set(set) {
++      write("set:");
++      const arr = [...set];
++      return this._array(arr, options.unorderedSets !== false);
++    },
++    _file(file) {
++      write("file:");
++      return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
++    },
++    _blob() {
++      if (options.ignoreUnknown) {
++        return write("[blob]");
++      }
++      throw new Error(
++        'Hashing Blob objects is currently not supported\nUse "options.replacer" or "options.ignoreUnknown"\n'
++      );
++    },
++    _domwindow() {
++      return write("domwindow");
++    },
++    _bigint(number) {
++      return write("bigint:" + number.toString());
++    },
++    /* Node.js standard native objects */
++    _process() {
++      return write("process");
++    },
++    _timer() {
++      return write("timer");
++    },
++    _pipe() {
++      return write("pipe");
++    },
++    _tcp() {
++      return write("tcp");
++    },
++    _udp() {
++      return write("udp");
++    },
++    _tty() {
++      return write("tty");
++    },
++    _statwatcher() {
++      return write("statwatcher");
++    },
++    _securecontext() {
++      return write("securecontext");
++    },
++    _connection() {
++      return write("connection");
++    },
++    _zlib() {
++      return write("zlib");
++    },
++    _context() {
++      return write("context");
++    },
++    _nodescript() {
++      return write("nodescript");
++    },
++    _httpparser() {
++      return write("httpparser");
++    },
++    _dataview() {
++      return write("dataview");
++    },
++    _signal() {
++      return write("signal");
++    },
++    _fsevent() {
++      return write("fsevent");
++    },
++    _tlswrap() {
++      return write("tlswrap");
++    }
++  };
++}
++function isNativeFunction(f) {
++  if (typeof f !== "function") {
++    return false;
++  }
++  const exp = /^function\s+\w*\s*\(\s*\)\s*{\s+\[native code]\s+}$/i;
++  return exp.exec(Function.prototype.toString.call(f)) != null;
++}
++
++class WordArray {
++  constructor(words, sigBytes) {
++    words = this.words = words || [];
++    this.sigBytes = sigBytes !== void 0 ? sigBytes : words.length * 4;
++  }
++  toString(encoder) {
++    return (encoder || Hex).stringify(this);
++  }
++  concat(wordArray) {
++    this.clamp();
++    if (this.sigBytes % 4) {
++      for (let i = 0; i < wordArray.sigBytes; i++) {
++        const thatByte = wordArray.words[i >>> 2] >>> 24 - i % 4 * 8 & 255;
++        this.words[this.sigBytes + i >>> 2] |= thatByte << 24 - (this.sigBytes + i) % 4 * 8;
++      }
++    } else {
++      for (let j = 0; j < wordArray.sigBytes; j += 4) {
++        this.words[this.sigBytes + j >>> 2] = wordArray.words[j >>> 2];
++      }
++    }
++    this.sigBytes += wordArray.sigBytes;
++    return this;
++  }
++  clamp() {
++    this.words[this.sigBytes >>> 2] &= 4294967295 << 32 - this.sigBytes % 4 * 8;
++    this.words.length = Math.ceil(this.sigBytes / 4);
++  }
++  clone() {
++    return new WordArray([...this.words]);
++  }
++}
++const Hex = {
++  stringify(wordArray) {
++    const hexChars = [];
++    for (let i = 0; i < wordArray.sigBytes; i++) {
++      const bite = wordArray.words[i >>> 2] >>> 24 - i % 4 * 8 & 255;
++      hexChars.push((bite >>> 4).toString(16), (bite & 15).toString(16));
++    }
++    return hexChars.join("");
++  }
++};
++const Base64 = {
++  stringify(wordArray) {
++    const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
++    const base64Chars = [];
++    for (let i = 0; i < wordArray.sigBytes; i += 3) {
++      const byte1 = wordArray.words[i >>> 2] >>> 24 - i % 4 * 8 & 255;
++      const byte2 = wordArray.words[i + 1 >>> 2] >>> 24 - (i + 1) % 4 * 8 & 255;
++      const byte3 = wordArray.words[i + 2 >>> 2] >>> 24 - (i + 2) % 4 * 8 & 255;
++      const triplet = byte1 << 16 | byte2 << 8 | byte3;
++      for (let j = 0; j < 4 && i * 8 + j * 6 < wordArray.sigBytes * 8; j++) {
++        base64Chars.push(keyStr.charAt(triplet >>> 6 * (3 - j) & 63));
++      }
++    }
++    return base64Chars.join("");
++  }
++};
++const Latin1 = {
++  parse(latin1Str) {
++    const latin1StrLength = latin1Str.length;
++    const words = [];
++    for (let i = 0; i < latin1StrLength; i++) {
++      words[i >>> 2] |= (latin1Str.charCodeAt(i) & 255) << 24 - i % 4 * 8;
++    }
++    return new WordArray(words, latin1StrLength);
++  }
++};
++const Utf8 = {
++  parse(utf8Str) {
++    return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
++  }
++};
++class BufferedBlockAlgorithm {
++  constructor() {
++    this._minBufferSize = 0;
++    this.blockSize = 512 / 32;
++    this.reset();
++  }
++  reset() {
++    this._data = new WordArray();
++    this._nDataBytes = 0;
++  }
++  _append(data) {
++    if (typeof data === "string") {
++      data = Utf8.parse(data);
++    }
++    this._data.concat(data);
++    this._nDataBytes += data.sigBytes;
++  }
++  // eslint-disable-next-line @typescript-eslint/no-unused-vars
++  _doProcessBlock(_dataWords, _offset) {
++  }
++  _process(doFlush) {
++    let processedWords;
++    let nBlocksReady = this._data.sigBytes / (this.blockSize * 4);
++    if (doFlush) {
++      nBlocksReady = Math.ceil(nBlocksReady);
++    } else {
++      nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
++    }
++    const nWordsReady = nBlocksReady * this.blockSize;
++    const nBytesReady = Math.min(nWordsReady * 4, this._data.sigBytes);
++    if (nWordsReady) {
++      for (let offset = 0; offset < nWordsReady; offset += this.blockSize) {
++        this._doProcessBlock(this._data.words, offset);
++      }
++      processedWords = this._data.words.splice(0, nWordsReady);
++      this._data.sigBytes -= nBytesReady;
++    }
++    return new WordArray(processedWords, nBytesReady);
++  }
++}
++class Hasher extends BufferedBlockAlgorithm {
++  update(messageUpdate) {
++    this._append(messageUpdate);
++    this._process();
++    return this;
++  }
++  finalize(messageUpdate) {
++    if (messageUpdate) {
++      this._append(messageUpdate);
++    }
++  }
++}
++
++const H = [
++  1779033703,
++  -1150833019,
++  1013904242,
++  -1521486534,
++  1359893119,
++  -1694144372,
++  528734635,
++  1541459225
++];
++const K = [
++  1116352408,
++  1899447441,
++  -1245643825,
++  -373957723,
++  961987163,
++  1508970993,
++  -1841331548,
++  -1424204075,
++  -670586216,
++  310598401,
++  607225278,
++  1426881987,
++  1925078388,
++  -2132889090,
++  -1680079193,
++  -1046744716,
++  -459576895,
++  -272742522,
++  264347078,
++  604807628,
++  770255983,
++  1249150122,
++  1555081692,
++  1996064986,
++  -1740746414,
++  -1473132947,
++  -1341970488,
++  -1084653625,
++  -958395405,
++  -710438585,
++  113926993,
++  338241895,
++  666307205,
++  773529912,
++  1294757372,
++  1396182291,
++  1695183700,
++  1986661051,
++  -2117940946,
++  -1838011259,
++  -1564481375,
++  -1474664885,
++  -1035236496,
++  -949202525,
++  -778901479,
++  -694614492,
++  -200395387,
++  275423344,
++  430227734,
++  506948616,
++  659060556,
++  883997877,
++  958139571,
++  1322822218,
++  1537002063,
++  1747873779,
++  1955562222,
++  2024104815,
++  -2067236844,
++  -1933114872,
++  -1866530822,
++  -1538233109,
++  -1090935817,
++  -965641998
++];
++const W = [];
++class SHA256 extends Hasher {
++  constructor() {
++    super();
++    this.reset();
++  }
++  reset() {
++    super.reset();
++    this._hash = new WordArray([...H]);
++  }
++  _doProcessBlock(M, offset) {
++    const H2 = this._hash.words;
++    let a = H2[0];
++    let b = H2[1];
++    let c = H2[2];
++    let d = H2[3];
++    let e = H2[4];
++    let f = H2[5];
++    let g = H2[6];
++    let h = H2[7];
++    for (let i = 0; i < 64; i++) {
++      if (i < 16) {
++        W[i] = M[offset + i] | 0;
++      } else {
++        const gamma0x = W[i - 15];
++        const gamma0 = (gamma0x << 25 | gamma0x >>> 7) ^ (gamma0x << 14 | gamma0x >>> 18) ^ gamma0x >>> 3;
++        const gamma1x = W[i - 2];
++        const gamma1 = (gamma1x << 15 | gamma1x >>> 17) ^ (gamma1x << 13 | gamma1x >>> 19) ^ gamma1x >>> 10;
++        W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
++      }
++      const ch = e & f ^ ~e & g;
++      const maj = a & b ^ a & c ^ b & c;
++      const sigma0 = (a << 30 | a >>> 2) ^ (a << 19 | a >>> 13) ^ (a << 10 | a >>> 22);
++      const sigma1 = (e << 26 | e >>> 6) ^ (e << 21 | e >>> 11) ^ (e << 7 | e >>> 25);
++      const t1 = h + sigma1 + ch + K[i] + W[i];
++      const t2 = sigma0 + maj;
++      h = g;
++      g = f;
++      f = e;
++      e = d + t1 | 0;
++      d = c;
++      c = b;
++      b = a;
++      a = t1 + t2 | 0;
++    }
++    H2[0] = H2[0] + a | 0;
++    H2[1] = H2[1] + b | 0;
++    H2[2] = H2[2] + c | 0;
++    H2[3] = H2[3] + d | 0;
++    H2[4] = H2[4] + e | 0;
++    H2[5] = H2[5] + f | 0;
++    H2[6] = H2[6] + g | 0;
++    H2[7] = H2[7] + h | 0;
++  }
++  finalize(messageUpdate) {
++    super.finalize(messageUpdate);
++    const nBitsTotal = this._nDataBytes * 8;
++    const nBitsLeft = this._data.sigBytes * 8;
++    this._data.words[nBitsLeft >>> 5] |= 128 << 24 - nBitsLeft % 32;
++    this._data.words[(nBitsLeft + 64 >>> 9 << 4) + 14] = Math.floor(
++      nBitsTotal / 4294967296
++    );
++    this._data.words[(nBitsLeft + 64 >>> 9 << 4) + 15] = nBitsTotal;
++    this._data.sigBytes = this._data.words.length * 4;
++    this._process();
++    return this._hash;
++  }
++}
++function sha256base64(message) {
++  return new SHA256().finalize(message).toString(Base64);
++}
++
++function hash(object, options = {}) {
++  const hashed = typeof object === "string" ? object : objectHash(object, options);
++  return sha256base64(hashed).slice(0, 10);
++}
++
++async function cleanupNuxtDirs(rootDir) {
++  consola.info("Cleaning up generated nuxt files and caches...");
++  await rmRecursive([
++    ".nuxt",
++    ".output",
++    "dist",
++    "node_modules/.vite",
++    "node_modules/.cache"
++  ].map((dir) => resolve(rootDir, dir)));
++}
++function nuxtVersionToGitIdentifier(version) {
++  const id = /\.([0-9a-f]{7,8})$/.exec(version);
++  if (id?.[1]) {
++    return id[1];
++  }
++  return `v${version}`;
++}
++function resolveNuxtManifest(nuxt) {
++  const manifest = {
++    _hash: null,
++    project: {
++      rootDir: nuxt.options.rootDir
++    },
++    versions: {
++      nuxt: nuxt._version
++    }
++  };
++  manifest._hash = hash(manifest);
++  return manifest;
++}
++async function writeNuxtManifest(nuxt) {
++  const manifest = resolveNuxtManifest(nuxt);
++  const manifestPath = resolve(nuxt.options.buildDir, "nuxt.json");
++  await promises.mkdir(dirname(manifestPath), { recursive: true });
++  await promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2), "utf-8");
++  return manifest;
++}
++async function loadNuxtManifest(buildDir) {
++  const manifestPath = resolve(buildDir, "nuxt.json");
++  const manifest = await promises.readFile(manifestPath, "utf-8").then((data) => JSON.parse(data)).catch(() => null);
++  return manifest;
++}
++
++export { cleanupNuxtDirs as c, loadNuxtManifest as l, nuxtVersionToGitIdentifier as n, writeNuxtManifest as w };
 diff --git a/dist/shared/nuxi.f1d29136.mjs b/dist/shared/nuxi.f1d29136.mjs
 new file mode 100644
 index 0000000000000000000000000000000000000000..6f3027575bc1607d2b45a28f8dcaf18e37cd75f2

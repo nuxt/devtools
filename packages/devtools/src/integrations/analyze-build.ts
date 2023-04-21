@@ -1,12 +1,15 @@
+import { promisify } from 'node:util'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addVitePlugin } from '@nuxt/kit'
 import Inspect from 'vite-plugin-inspect'
-import type { ModuleOptions } from '../types'
+import folderSizeCallback from 'fast-folder-size'
+import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
+
+const folderSize = promisify(folderSizeCallback)
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
-  // TODO: not sure why this triggers main server to restart
-  if (false && options.viteInspect !== false) {
+  if (options.viteInspect !== false) {
     addVitePlugin(
       Inspect({
         build: true,
@@ -16,10 +19,9 @@ export async function setup(nuxt: Nuxt, options: ModuleOptions) {
   }
 
   nuxt.hook('build:analyze:done', async (meta) => {
-    // await fsp.writeFile(join(statsDir, 'index.json'), JSON.stringify(<AnalyticBuild>{
-    //   buildTime: Date.now(),
-    //   dir: statsDir,
-    // }, null, 2))
-    // console.log('build:analyze:done', meta)
+    const _meta = meta as AnalyzeBuildMeta
+    _meta.size = _meta.size || {}
+    _meta.size.clientBundle = await folderSize(join(meta.buildDir, 'dist/client'))
+    _meta.size.nitroBundle = await folderSize(meta.outDir)
   })
 }
