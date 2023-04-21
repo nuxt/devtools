@@ -10,7 +10,6 @@ definePageMeta({
 
 const ROUTE_ANALYZE = '/__nuxt_devtools__/analyze/'
 
-const [BuildButtonDefine, BuildButton] = createReusableTemplate()
 const PromiseConfirm = createTemplatePromise<boolean>()
 
 const info = useAnalyzeBuildInfo()
@@ -69,15 +68,6 @@ function formatDuration(build: AnalyzeBuildMeta) {
 </script>
 
 <template>
-  <BuildButtonDefine>
-    <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
-      Build Now
-    </NButton>
-    <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
-      Building...
-    </NButton>
-  </BuildButtonDefine>
-
   <PanelLeftRight :left-size="20">
     <template #left>
       <div flex="~ col">
@@ -88,8 +78,8 @@ function formatDuration(build: AnalyzeBuildMeta) {
             :to="`?name=${encodeURIComponent(build.name)}`"
           >
             <code>{{ build.name }}</code>
-            <div flex="~ gap-1 items-center" op75>
-              <div i-carbon-timer />
+            <div flex="~ gap-1 items-center" text-sm op60>
+              <div i-carbon-time />
               <span>{{ formatDuration(build) }}</span>
               <div flex-auto />
               <span>{{ formatTimeAgo(new Date(build.endTime)) }}</span>
@@ -98,7 +88,12 @@ function formatDuration(build: AnalyzeBuildMeta) {
           <div x-divider />
         </template>
         <div flex="~ items-center justify-center" p4>
-          <BuildButton />
+          <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
+            Start a new build
+          </NButton>
+          <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
+            Building...
+          </NButton>
         </div>
       </div>
     </template>
