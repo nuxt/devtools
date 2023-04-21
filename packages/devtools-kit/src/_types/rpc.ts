@@ -43,6 +43,7 @@ export interface ServerFunctions {
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
+  generateAnalyzeBuildName(): Promise<string>
   writeStaticAssets(file: { name: string; data: string }[], path: string): Promise<string[]>
 
   // Actions
@@ -50,7 +51,7 @@ export interface ServerFunctions {
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): void
   restartNuxt(hard?: boolean): Promise<void>
-  startAnalyzeBuild(): Promise<string>
+  startAnalyzeBuild(name: string): Promise<string>
 }
 
 export interface ClientFunctions {

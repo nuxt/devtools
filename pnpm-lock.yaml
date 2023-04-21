@@ -2,10 +2,10 @@ lockfileVersion: '6.0'
 
 patchedDependencies:
   '@nuxt/schema@3.4.1':
-    hash: d32vjbzfgq5cautm7gun67hd5i
+    hash: n5xj25yohsrbetwsyb24wwmggq
     path: patches/@nuxt__schema@3.4.1.patch
   nuxi@3.4.1:
-    hash: a474utytm74zv5mkpx5novtdwq
+    hash: of5fz2vcwbab757ya4jmja2dou
     path: patches/nuxi@3.4.1.patch
   nuxt@3.4.1:
     hash: 5c5ckbvnxlcdfbjdydscylrqb4
@@ -32,7 +32,7 @@ importers:
         version: 0.3.0
       '@nuxt/schema':
         specifier: ^3.4.1
-        version: 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
+        version: 3.4.1(patch_hash=n5xj25yohsrbetwsyb24wwmggq)(rollup@3.20.6)
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
@@ -185,13 +185,13 @@ importers:
         version: 3.0.6(rollup@3.20.6)
       vite:
         specifier: '*'
-        version: 4.1.4(@types/node@18.15.11)
+        version: 4.2.2(@types/node@18.15.11)
       vite-plugin-inspect:
         specifier: ^0.7.23
-        version: 0.7.23(rollup@3.20.6)(vite@4.1.4)
+        version: 0.7.23(rollup@3.20.6)(vite@4.2.2)
       vite-plugin-vue-inspector:
         specifier: ^3.4.0
-        version: 3.4.0(vite@4.1.4)
+        version: 3.4.0(vite@4.2.2)
       wait-on:
         specifier: ^7.0.1
         version: 7.0.1
@@ -228,7 +228,7 @@ importers:
         version: 3.2.0(rollup@3.20.6)
       '@unocss/nuxt':
         specifier: ^0.51.5
-        version: 0.51.5(postcss@8.4.22)(rollup@3.20.6)(vite@4.1.4)(webpack@5.79.0)
+        version: 0.51.5(postcss@8.4.22)(rollup@3.20.6)(vite@4.2.2)(webpack@5.79.0)
       '@unocss/preset-icons':
         specifier: ^0.51.5
         version: 0.51.5
@@ -267,7 +267,7 @@ importers:
         version: 3.4.1(patch_hash=5c5ckbvnxlcdfbjdydscylrqb4)(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.6)(typescript@5.0.4)(vue-tsc@1.2.0)
       nuxt-vitest:
         specifier: ^0.6.10
-        version: 0.6.10(@vitejs/plugin-vue-jsx@3.0.1)(@vitejs/plugin-vue@4.1.0)(rollup@3.20.6)(vite@4.1.4)(vue@3.2.47)
+        version: 0.6.10(@vitejs/plugin-vue-jsx@3.0.1)(@vitejs/plugin-vue@4.1.0)(rollup@3.20.6)(vite@4.2.2)(vue@3.2.47)
       ofetch:
         specifier: ^1.0.1
         version: 1.0.1
@@ -280,6 +280,9 @@ importers:
       shiki-es:
         specifier: ^0.2.0
         version: 0.2.0
+      simple-git:
+        specifier: ^3.17.0
+        version: 3.17.0
       splitpanes:
         specifier: ^3.1.5
         version: 3.1.5
@@ -315,7 +318,7 @@ importers:
         version: 3.4.1(rollup@3.20.6)
       '@nuxt/schema':
         specifier: ^3.4.1
-        version: 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
+        version: 3.4.1(patch_hash=n5xj25yohsrbetwsyb24wwmggq)(rollup@3.20.6)
       execa:
         specifier: ^7.1.1
         version: 7.1.1
@@ -910,6 +913,7 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-arm64@0.17.17:
@@ -934,6 +938,7 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-arm@0.17.17:
@@ -950,6 +955,7 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-x64@0.17.17:
@@ -966,6 +972,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/darwin-arm64@0.17.17:
@@ -982,6 +989,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/darwin-x64@0.17.17:
@@ -998,6 +1006,7 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/freebsd-arm64@0.17.17:
@@ -1014,6 +1023,7 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/freebsd-x64@0.17.17:
@@ -1030,6 +1040,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-arm64@0.17.17:
@@ -1046,6 +1057,7 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-arm@0.17.17:
@@ -1062,6 +1074,7 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-ia32@0.17.17:
@@ -1086,6 +1099,7 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-loong64@0.17.17:
@@ -1102,6 +1116,7 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-mips64el@0.17.17:
@@ -1118,6 +1133,7 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-ppc64@0.17.17:
@@ -1134,6 +1150,7 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-riscv64@0.17.17:
@@ -1150,6 +1167,7 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-s390x@0.17.17:
@@ -1166,6 +1184,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-x64@0.17.17:
@@ -1182,6 +1201,7 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/netbsd-x64@0.17.17:
@@ -1198,6 +1218,7 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/openbsd-x64@0.17.17:
@@ -1214,6 +1235,7 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/sunos-x64@0.17.17:
@@ -1230,6 +1252,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-arm64@0.17.17:
@@ -1246,6 +1269,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-ia32@0.17.17:
@@ -1262,6 +1286,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-x64@0.17.17:
@@ -1449,6 +1474,18 @@ packages:
       cross-spawn: 7.0.3
       string-argv: 0.3.1
       type-detect: 4.0.8
+    dev: true
+
+  /@kwsites/file-exists@1.1.1:
+    resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@kwsites/promise-deferred@1.1.1:
+    resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
     dev: true
 
   /@mapbox/node-pre-gyp@1.0.10:
@@ -1727,7 +1764,7 @@ packages:
     resolution: {integrity: sha512-VeH26umZW6Rf4F1QX9nTIuTBp6HeL/MgmKY3+FgQiLD07afgFTLUJZohVE5xU7hb66zCnYvwKxa3JpjXFJZrhQ==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     dependencies:
-      '@nuxt/schema': 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
+      '@nuxt/schema': 3.4.1(patch_hash=n5xj25yohsrbetwsyb24wwmggq)(rollup@3.20.6)
       c12: 1.3.0
       consola: 3.1.0
       defu: 6.1.2
@@ -1785,7 +1822,7 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxt/schema@3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6):
+  /@nuxt/schema@3.4.1(patch_hash=n5xj25yohsrbetwsyb24wwmggq)(rollup@3.20.6):
     resolution: {integrity: sha512-xhPh9JfVKXRQVfdUT6BKieDTCljBjbIGgGCQnxplVi4FUTWRKUXR7MFwsobr5D9AJpeE0mg5/kRRh5gUX37vAQ==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     dependencies:
@@ -2455,17 +2492,6 @@ packages:
       unhead: 1.1.26
       vue: 3.2.47
 
-  /@unocss/astro@0.51.5(rollup@3.20.6)(vite@4.1.4):
-    resolution: {integrity: sha512-NQ3KrhtmTWXBk7a/RuZvMTK2e4L83W/TZ5v5ok82mdooOAdOrxmwpdU9qUixISDSxCPDOCs3NLxYutw66ErC3g==}
-    dependencies:
-      '@unocss/core': 0.51.5
-      '@unocss/reset': 0.51.5
-      '@unocss/vite': 0.51.5(rollup@3.20.6)(vite@4.1.4)
-    transitivePeerDependencies:
-      - rollup
-      - vite
-    dev: true
-
   /@unocss/astro@0.51.5(rollup@3.20.6)(vite@4.2.2):
     resolution: {integrity: sha512-NQ3KrhtmTWXBk7a/RuZvMTK2e4L83W/TZ5v5ok82mdooOAdOrxmwpdU9qUixISDSxCPDOCs3NLxYutw66ErC3g==}
     dependencies:
@@ -2544,31 +2570,6 @@ packages:
       gzip-size: 6.0.0
       sirv: 2.0.2
 
-  /@unocss/nuxt@0.51.5(postcss@8.4.22)(rollup@3.20.6)(vite@4.1.4)(webpack@5.79.0):
-    resolution: {integrity: sha512-RycTFZPKJHUMcB0h0dmdXGATtxNoXuMss5KW9qXMhivsOgFlVKx4Er9GZddyBW4jp3eOa6clGy4Z3cnJNAOF3g==}
-    dependencies:
-      '@nuxt/kit': 3.4.1(rollup@3.20.6)
-      '@unocss/config': 0.51.5
-      '@unocss/core': 0.51.5
-      '@unocss/preset-attributify': 0.51.5
-      '@unocss/preset-icons': 0.51.5
-      '@unocss/preset-tagify': 0.51.5
-      '@unocss/preset-typography': 0.51.5
-      '@unocss/preset-uno': 0.51.5
-      '@unocss/preset-web-fonts': 0.51.5
-      '@unocss/preset-wind': 0.51.5
-      '@unocss/reset': 0.51.5
-      '@unocss/vite': 0.51.5(rollup@3.20.6)(vite@4.1.4)
-      '@unocss/webpack': 0.51.5(rollup@3.20.6)(webpack@5.79.0)
-      unocss: 0.51.5(@unocss/webpack@0.51.5)(postcss@8.4.22)(rollup@3.20.6)(vite@4.1.4)
-    transitivePeerDependencies:
-      - postcss
-      - rollup
-      - supports-color
-      - vite
-      - webpack
-    dev: true
-
   /@unocss/nuxt@0.51.5(postcss@8.4.22)(rollup@3.20.6)(vite@4.2.2)(webpack@5.79.0):
     resolution: {integrity: sha512-RycTFZPKJHUMcB0h0dmdXGATtxNoXuMss5KW9qXMhivsOgFlVKx4Er9GZddyBW4jp3eOa6clGy4Z3cnJNAOF3g==}
     dependencies:
@@ -2592,7 +2593,6 @@ packages:
       - supports-color
       - vite
       - webpack
-    dev: false
 
   /@unocss/postcss@0.51.5(postcss@8.4.22):
     resolution: {integrity: sha512-giVFslvTc3tmnx7b4B20mJRFwsiulrci+FH7NJbOl1AriHrMxz1s+nS17iDdS+5/QWRBTkFSIAYjZUh/4Inr5g==}
@@ -2701,26 +2701,6 @@ packages:
     dependencies:
       '@unocss/core': 0.51.5
 
-  /@unocss/vite@0.51.5(rollup@3.20.6)(vite@4.1.4):
-    resolution: {integrity: sha512-Esg7PnQ93Ao7i9EZdfDNysaOpfIUgbYmKkTVWs/yi0R7wnEPCRS24PhNAEysC1x1B+JHnfsddPSisS3RDrGQSg==}
-    peerDependencies:
-      vite: ^2.9.0 || ^3.0.0-0 || ^4.0.0
-    dependencies:
-      '@ampproject/remapping': 2.2.1
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.6)
-      '@unocss/config': 0.51.5
-      '@unocss/core': 0.51.5
-      '@unocss/inspector': 0.51.5
-      '@unocss/scope': 0.51.5
-      '@unocss/transformer-directives': 0.51.5
-      chokidar: 3.5.3
-      fast-glob: 3.2.12
-      magic-string: 0.30.0
-      vite: 4.1.4(@types/node@18.15.11)
-    transitivePeerDependencies:
-      - rollup
-    dev: true
-
   /@unocss/vite@0.51.5(rollup@3.20.6)(vite@4.2.2):
     resolution: {integrity: sha512-Esg7PnQ93Ao7i9EZdfDNysaOpfIUgbYmKkTVWs/yi0R7wnEPCRS24PhNAEysC1x1B+JHnfsddPSisS3RDrGQSg==}
     peerDependencies:
@@ -2778,22 +2758,6 @@ packages:
       - encoding
       - supports-color
 
-  /@vitejs/plugin-vue-jsx@3.0.1(vite@4.1.4)(vue@3.2.47):
-    resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      vite: ^4.0.0
-      vue: ^3.0.0
-    dependencies:
-      '@babel/core': 7.21.3
-      '@babel/plugin-transform-typescript': 7.21.3(@babel/core@7.21.3)
-      '@vue/babel-plugin-jsx': 1.1.1(@babel/core@7.21.3)
-      vite: 4.1.4(@types/node@18.15.11)
-      vue: 3.2.47
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /@vitejs/plugin-vue-jsx@3.0.1(vite@4.2.2)(vue@3.2.47):
     resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -2808,17 +2772,6 @@ packages:
       vue: 3.2.47
     transitivePeerDependencies:
       - supports-color
-
-  /@vitejs/plugin-vue@4.1.0(vite@4.1.4)(vue@3.2.47):
-    resolution: {integrity: sha512-++9JOAFdcXI3lyer9UKUV4rfoQ3T1RN8yDqoCLar86s0xQct5yblxAE+yWgRnU5/0FOlVCpTZpYSBV/bGWrSrQ==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      vite: ^4.0.0
-      vue: ^3.2.25
-    dependencies:
-      vite: 4.1.4(@types/node@18.15.11)
-      vue: 3.2.47
-    dev: true
 
   /@vitejs/plugin-vue@4.1.0(vite@4.2.2)(vue@3.2.47):
     resolution: {integrity: sha512-++9JOAFdcXI3lyer9UKUV4rfoQ3T1RN8yDqoCLar86s0xQct5yblxAE+yWgRnU5/0FOlVCpTZpYSBV/bGWrSrQ==}
@@ -5046,6 +4999,7 @@ packages:
       '@esbuild/win32-arm64': 0.16.17
       '@esbuild/win32-ia32': 0.16.17
       '@esbuild/win32-x64': 0.16.17
+    dev: false
 
   /esbuild@0.17.17:
     resolution: {integrity: sha512-/jUywtAymR8jR4qsa2RujlAF7Krpt5VWi72Q2yuLD4e/hvtNcFQ0I1j8m/bxq238pf3/0KO5yuXNpuLx8BE1KA==}
@@ -8271,7 +8225,7 @@ packages:
     dependencies:
       boolbase: 1.0.0
 
-  /nuxi@3.4.1(patch_hash=a474utytm74zv5mkpx5novtdwq):
+  /nuxi@3.4.1(patch_hash=of5fz2vcwbab757ya4jmja2dou):
     resolution: {integrity: sha512-vp6unzdCxRvWyKoQCMN0Qq6D8ETqV5INuwAWG1WfhINXiQ34WRvwcTwU2zxKe29pzek1gGF30mxWK50OXGSepw==}
     engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
     hasBin: true
@@ -8317,7 +8271,7 @@ packages:
       - vue
     dev: true
 
-  /nuxt-vitest@0.6.10(@vitejs/plugin-vue-jsx@3.0.1)(@vitejs/plugin-vue@4.1.0)(rollup@3.20.6)(vite@4.1.4)(vue@3.2.47):
+  /nuxt-vitest@0.6.10(@vitejs/plugin-vue-jsx@3.0.1)(@vitejs/plugin-vue@4.1.0)(rollup@3.20.6)(vite@4.2.2)(vue@3.2.47):
     resolution: {integrity: sha512-jkAx07lfLghk7Ca4yPkkWOodgH17verEXqCmps8UyDC3qDkFcxIJiJ8BImVz26XtYl0ONBFL0LqjIFKni9hDNw==}
     peerDependencies:
       '@vitejs/plugin-vue': '*'
@@ -8325,13 +8279,13 @@ packages:
       vite: '*'
     dependencies:
       '@nuxt/kit': 3.4.1(rollup@3.20.6)
-      '@vitejs/plugin-vue': 4.1.0(vite@4.1.4)(vue@3.2.47)
-      '@vitejs/plugin-vue-jsx': 3.0.1(vite@4.1.4)(vue@3.2.47)
+      '@vitejs/plugin-vue': 4.1.0(vite@4.2.2)(vue@3.2.47)
+      '@vitejs/plugin-vue-jsx': 3.0.1(vite@4.2.2)(vue@3.2.47)
       '@vitest/ui': 0.30.1
       get-port-please: 3.0.1
       perfect-debounce: 0.1.3
       std-env: 3.3.2
-      vite: 4.1.4(@types/node@18.15.11)
+      vite: 4.2.2(@types/node@18.15.11)
       vitest: 0.30.1(@vitest/ui@0.30.1)
       vitest-environment-nuxt: 0.6.10(rollup@3.20.6)(vitest@0.30.1)(vue@3.2.47)
     transitivePeerDependencies:
@@ -8361,7 +8315,7 @@ packages:
     dependencies:
       '@nuxt/devalue': 2.0.0
       '@nuxt/kit': 3.4.1(rollup@3.20.6)
-      '@nuxt/schema': 3.4.1(patch_hash=d32vjbzfgq5cautm7gun67hd5i)(rollup@3.20.6)
+      '@nuxt/schema': 3.4.1(patch_hash=n5xj25yohsrbetwsyb24wwmggq)(rollup@3.20.6)
       '@nuxt/telemetry': 2.2.0(rollup@3.20.6)
       '@nuxt/ui-templates': 1.1.1
       '@nuxt/vite-builder': 3.4.1(@types/node@18.15.11)(eslint@8.38.0)(rollup@3.20.6)(typescript@5.0.4)(vue-tsc@1.2.0)(vue@3.2.47)
@@ -8388,7 +8342,7 @@ packages:
       magic-string: 0.30.0
       mlly: 1.2.0
       nitropack: 2.3.3
-      nuxi: 3.4.1(patch_hash=a474utytm74zv5mkpx5novtdwq)
+      nuxi: 3.4.1(patch_hash=of5fz2vcwbab757ya4jmja2dou)
       nypm: 0.2.0
       ofetch: 1.0.1
       ohash: 1.1.1
@@ -9837,6 +9791,16 @@ packages:
     requiresBuild: true
     dev: true
 
+  /simple-git@3.17.0:
+    resolution: {integrity: sha512-JozI/s8jr3nvLd9yn2jzPVHnhVzt7t7QWfcIoDcqRIGN+f1IINGv52xoZti2kkYfoRhhRvzMSNPfogHMp97rlw==}
+    dependencies:
+      '@kwsites/file-exists': 1.1.1
+      '@kwsites/promise-deferred': 1.1.1
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /sirv@2.0.2:
     resolution: {integrity: sha512-4Qog6aE29nIjAOKe/wowFTxOdmbEZKb+3tsLljaBRzJwtqto0BChD2zzH0LhgCSXiI+V7X+Y45v14wBZQ1TK3w==}
     engines: {node: '>= 10'}
@@ -10728,43 +10692,6 @@ packages:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
 
-  /unocss@0.51.5(@unocss/webpack@0.51.5)(postcss@8.4.22)(rollup@3.20.6)(vite@4.1.4):
-    resolution: {integrity: sha512-stHCKGlkGAaKdjr18lAysEy+Zjk02nBIwHSg5IzQ9AaHQNRuBpcIeDZelW3+AKwaxDjH6FHasfE/SDJ09wZdGA==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@unocss/webpack': 0.51.5
-    peerDependenciesMeta:
-      '@unocss/webpack':
-        optional: true
-    dependencies:
-      '@unocss/astro': 0.51.5(rollup@3.20.6)(vite@4.1.4)
-      '@unocss/cli': 0.51.5(rollup@3.20.6)
-      '@unocss/core': 0.51.5
-      '@unocss/extractor-arbitrary-variants': 0.51.5
-      '@unocss/postcss': 0.51.5(postcss@8.4.22)
-      '@unocss/preset-attributify': 0.51.5
-      '@unocss/preset-icons': 0.51.5
-      '@unocss/preset-mini': 0.51.5
-      '@unocss/preset-tagify': 0.51.5
-      '@unocss/preset-typography': 0.51.5
-      '@unocss/preset-uno': 0.51.5
-      '@unocss/preset-web-fonts': 0.51.5
-      '@unocss/preset-wind': 0.51.5
-      '@unocss/reset': 0.51.5
-      '@unocss/transformer-attributify-jsx': 0.51.5
-      '@unocss/transformer-attributify-jsx-babel': 0.51.5
-      '@unocss/transformer-compile-class': 0.51.5
-      '@unocss/transformer-directives': 0.51.5
-      '@unocss/transformer-variant-group': 0.51.5
-      '@unocss/vite': 0.51.5(rollup@3.20.6)(vite@4.1.4)
-      '@unocss/webpack': 0.51.5(rollup@3.20.6)(webpack@5.79.0)
-    transitivePeerDependencies:
-      - postcss
-      - rollup
-      - supports-color
-      - vite
-    dev: true
-
   /unocss@0.51.5(@unocss/webpack@0.51.5)(postcss@8.4.22)(rollup@3.20.6)(vite@4.2.2):
     resolution: {integrity: sha512-stHCKGlkGAaKdjr18lAysEy+Zjk02nBIwHSg5IzQ9AaHQNRuBpcIeDZelW3+AKwaxDjH6FHasfE/SDJ09wZdGA==}
     engines: {node: '>=14'}
@@ -11085,7 +11012,7 @@ packages:
       vscode-uri: 3.0.7
       vue-tsc: 1.2.0(typescript@5.0.4)
 
-  /vite-plugin-inspect@0.7.23(rollup@3.20.6)(vite@4.1.4):
+  /vite-plugin-inspect@0.7.23(rollup@3.20.6)(vite@4.2.2):
     resolution: {integrity: sha512-VodzewpE9ufA8aPQhzTihbiMKAJ1aFoXNe+BB/3L52HB4Hf7I2WEOc1Yu4BC45rvw2VFuVnlXYlXL7JVQuseUw==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -11097,13 +11024,13 @@ packages:
       fs-extra: 11.1.1
       picocolors: 1.0.0
       sirv: 2.0.2
-      vite: 4.1.4(@types/node@18.15.11)
+      vite: 4.2.2(@types/node@18.15.11)
     transitivePeerDependencies:
       - rollup
       - supports-color
     dev: false
 
-  /vite-plugin-vue-inspector@3.4.0(vite@4.1.4):
+  /vite-plugin-vue-inspector@3.4.0(vite@4.2.2):
     resolution: {integrity: sha512-gAdJ6fCPO7+PcUZJexgdOz27yuzQfEviBSS4c+zLLsItHdUq79oYgoWpPZwIYcE0FDFcAtz8dfG6I1ugWuykrw==}
     peerDependencies:
       vite: ^3.0.0-0 || ^4.0.0-0
@@ -11117,7 +11044,7 @@ packages:
       kolorist: 1.7.0
       magic-string: 0.30.0
       shell-quote: 1.8.0
-      vite: 4.1.4(@types/node@18.15.11)
+      vite: 4.2.2(@types/node@18.15.11)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -11154,6 +11081,7 @@ packages:
       rollup: 3.20.6
     optionalDependencies:
       fsevents: 2.3.2
+    dev: false
 
   /vite@4.2.2(@types/node@18.15.11):
     resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}

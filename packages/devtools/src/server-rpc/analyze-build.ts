@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
 import fg from 'fast-glob'
+import Git from 'simple-git'
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
@@ -15,13 +16,13 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
 
   const analyzeDir = join(nuxt.options.rootDir, '.nuxt-analyze')
 
-  async function startAnalyzeBuild() {
+  async function startAnalyzeBuild(name: string) {
     if (promise)
       throw new Error('Already building')
 
     const result = startSubprocess({
       command: 'npx',
-      args: ['nuxi', 'analyze', '--no-serve'],
+      args: ['nuxi', 'analyze', '--no-serve', '--name', name],
       cwd: nuxt.options.rootDir,
     }, {
       id: processId,
@@ -55,7 +56,18 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         },
       }
     }))
-    return builds
+    return builds.sort((a, b) => b.endTime - a.endTime)
+  }
+
+  async function generateAnalyzeBuildName() {
+    const git = Git(nuxt.options.rootDir)
+    const branch = await git.branch()
+    const branchName = branch.current || 'head'
+    const sha = await git.revparse(['--short', 'HEAD'])
+    const isWorkingTreeClean = (await git.status()).isClean()
+    if (isWorkingTreeClean)
+      return `${branchName}#${sha}`
+    return `${branchName}#${sha}-dirty`
   }
 
   return {
@@ -68,6 +80,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         builds,
       }
     },
+    generateAnalyzeBuildName,
     startAnalyzeBuild,
   } satisfies Partial<ServerFunctions>
 }

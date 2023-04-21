@@ -5,7 +5,8 @@ import Inspect from 'vite-plugin-inspect'
 import type { ModuleOptions } from '../types'
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
-  if (options.viteInspect !== false) {
+  // if (options.viteInspect !== false) {
+  if (false) {
     addVitePlugin(
       Inspect({
         build: true,
