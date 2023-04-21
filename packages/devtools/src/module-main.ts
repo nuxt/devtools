@@ -44,7 +44,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   } = setupRPC(nuxt, options)
 
   const clientDirExists = existsSync(clientDir)
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt-analyze')
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   nuxt.hook('vite:extendConfig', (config) => {
     config.server ||= {}
@@ -58,7 +58,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     config.server.watch.ignored ||= []
     if (!Array.isArray(config.server.watch.ignored))
       config.server.watch.ignored = [config.server.watch.ignored]
-    config.server.watch.ignored.push('**/.nuxt-analyze/**')
+    config.server.watch.ignored.push('**/.nuxt/analyze/**')
   })
 
   // TODO: Use WS from nitro server when possible

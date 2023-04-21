@@ -5,8 +5,8 @@ import Inspect from 'vite-plugin-inspect'
 import type { ModuleOptions } from '../types'
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
-  // if (options.viteInspect !== false) {
-  if (false) {
+  // TODO: not sure why this triggers main server to restart
+  if (false && options.viteInspect !== false) {
     addVitePlugin(
       Inspect({
         build: true,

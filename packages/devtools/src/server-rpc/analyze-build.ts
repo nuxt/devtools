@@ -14,7 +14,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
 
   const processId = 'devtools:analyze-build'
 
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt-analyze')
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   async function startAnalyzeBuild(name: string) {
     if (promise)

@@ -1,21 +1,14 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 6f93104d72b971925f8e0b5d51e0a433657d3e08..ed51a0283aef9ff1f2f7227ac17b32bded760879 100644
+index 7b90a2bf8297c4aeef4027488a8c0dff63e0f30b..c025c765bf4158890502082c8c8767cf08c403ee 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
-@@ -20,6 +20,7 @@ import { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
- import { PluginOptions } from 'mini-css-extract-plugin';
- import { BasePluginOptions, DefinedDefaultMinimizerAndOptions } from 'terser-webpack-plugin';
- import { BasePluginOptions as BasePluginOptions$1, DefinedDefaultMinimizerAndOptions as DefinedDefaultMinimizerAndOptions$1 } from 'css-minimizer-webpack-plugin';
-+import { ProcessOptions } from 'postcss';
- import { Options } from 'webpack-dev-middleware';
- import { IncomingMessage, ServerResponse } from 'http';
- import { MiddlewareOptions, ClientOptions } from 'webpack-hot-middleware';
-@@ -537,6 +538,14 @@ interface ImportPresetWithDeprecation extends InlinePreset {
+@@ -539,6 +539,15 @@ interface ImportPresetWithDeprecation extends InlinePreset {
  interface GenerateAppOptions {
      filter?: (template: ResolvedNuxtTemplate<any>) => boolean;
  }
 +interface NuxtAnalyzeMeta {
 +    name: string;
++    slug: string;
 +    startTime: number;
 +    endTime: number;
 +    analyzeDir: string;
@@ -25,7 +18,7 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..ed51a0283aef9ff1f2f7227ac17b32bd
  /**
   * The listeners to Nuxt build time events
   */
-@@ -614,6 +623,12 @@ interface NuxtHooks {
+@@ -616,6 +625,12 @@ interface NuxtHooks {
       * @returns Promise
       */
      'build:manifest': (manifest: Manifest) => HookResult;
@@ -38,7 +31,7 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..ed51a0283aef9ff1f2f7227ac17b32bd
      /**
       * Called before generating the app.
       * @param options GenerateAppOptions object
-@@ -1396,7 +1411,7 @@ interface ConfigSchema {
+@@ -1398,7 +1413,7 @@ interface ConfigSchema {
    * The configuration path is relative to `options.rootDir` (default is current working directory).
    * Setting this field may be necessary if your project is organized as a yarn workspace-styled mono-repository.
    * 
@@ -47,7 +40,7 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..ed51a0283aef9ff1f2f7227ac17b32bd
    * 
    * @example
    * ```js
-@@ -1407,6 +1422,15 @@ interface ConfigSchema {
+@@ -1409,6 +1424,15 @@ interface ConfigSchema {
   */
   modulesDir: Array<string>,
  
@@ -56,56 +49,30 @@ index 6f93104d72b971925f8e0b5d51e0a433657d3e08..ed51a0283aef9ff1f2f7227ac17b32bd
 +  * 
 +  * If a relative path is specified, it will be relative to your `rootDir`.
 +  * 
-+  * @default "/<rootDir>/.nuxt-analyze"
++  * @default "/<rootDir>/.nuxt/analyze"
 + */
 + analyzeDir: string,
 +
   /**
    * Whether Nuxt is running in development mode.
    * 
-@@ -1604,7 +1628,7 @@ interface ConfigSchema {
+@@ -1606,7 +1630,7 @@ interface ConfigSchema {
   /**
    * More customizable than `ignorePrefix`: all files matching glob patterns specified inside the `ignore` array will be ignored in building.
    * 
--  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output","**\/-*.*"]
-+  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output","/<rootDir>/.nuxt-analyze","**\/-*.*"]
+-  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output",".git","**\/-*.*"]
++  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output",".git","/<rootDir>/.nuxt/analyze","**\/-*.*"]
   */
   ignore: Array<string>,
  
-@@ -2435,24 +2459,7 @@ interface ConfigSchema {
-    * Customize PostCSS Loader. Same options as https://github.com/webpack-contrib/postcss-loader#options
-    * 
-   */
--  postcss: {
--   execute: any,
--
--   postcssOptions: {
--    config: any,
--
--    plugins: {
--     [key: string]: any
--    },
--   },
--
--   sourceMap: any,
--
--   implementation: any,
--
--   /** @default "" */
--   order: string,
--  },
-+  postcss: { execute?: boolean, postcssOptions: ProcessOptions, sourceMap?: boolean, implementation?: any },
- 
-   /**
-    * See [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) for available options.
-@@ -2610,4 +2617,4 @@ declare const _default: {
+@@ -2610,4 +2634,4 @@ declare const _default: {
      [x: string]: untyped_dist_types_a20127ea.a | untyped_dist_types_a20127ea.J | untyped_dist_types_a20127ea.I;
  };
  
 -export { AppConfig, AppConfigInput, AppHeadMetaObject, Component, ComponentsDir, ComponentsOptions, CustomAppConfig, GenerateAppOptions, HeadAugmentations, HookResult, ImportPresetWithDeprecation, ImportsOptions, MetaObject, MetaObjectRaw, ModuleDefinition, ModuleMeta, ModuleOptions, ModuleSetupReturn, Nuxt, NuxtApp, NuxtAppConfig, NuxtCompatibility, NuxtCompatibilityIssue, NuxtCompatibilityIssues, NuxtConfig, NuxtConfigLayer, _default as NuxtConfigSchema, NuxtHookName, NuxtHooks, NuxtLayout, NuxtMiddleware, NuxtModule, NuxtOptions, NuxtPage, NuxtPlugin, NuxtPluginTemplate, NuxtTemplate, PublicRuntimeConfig, ResolvedNuxtTemplate, RouterConfig, RouterConfigSerializable, RouterOptions, RuntimeConfig, RuntimeValue, ScanDir, TSReference, ViteConfig, WatchEvent };
 +export { AppConfig, AppConfigInput, AppHeadMetaObject, Component, ComponentsDir, ComponentsOptions, CustomAppConfig, GenerateAppOptions, HeadAugmentations, HookResult, ImportPresetWithDeprecation, ImportsOptions, MetaObject, MetaObjectRaw, ModuleDefinition, ModuleMeta, ModuleOptions, ModuleSetupReturn, Nuxt, NuxtAnalyzeMeta, NuxtApp, NuxtAppConfig, NuxtCompatibility, NuxtCompatibilityIssue, NuxtCompatibilityIssues, NuxtConfig, NuxtConfigLayer, _default as NuxtConfigSchema, NuxtHookName, NuxtHooks, NuxtLayout, NuxtMiddleware, NuxtModule, NuxtOptions, NuxtPage, NuxtPlugin, NuxtPluginTemplate, NuxtTemplate, PublicRuntimeConfig, ResolvedNuxtTemplate, RouterConfig, RouterConfigSerializable, RouterOptions, RuntimeConfig, RuntimeValue, ScanDir, TSReference, ViteConfig, WatchEvent };
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..8e687cd3c1fe71d8353d82124948466fca614fe3 100644
+index 239ce22edfa5aaae8b39a8cf78a3ed2539f07a0a..9f9af017c0b1a74e1a47ade9df401a5569382a0f 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -382,10 +382,11 @@ const build = defineUntypedSchema({
@@ -166,20 +133,20 @@ index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..8e687cd3c1fe71d8353d82124948466f
 +   * If a relative path is specified, it will be relative to your `rootDir`.
 +   */
 +  analyzeDir: {
-+    $resolve: async (val, get) => resolve(await get("rootDir"), val || ".nuxt-analyze")
++    $resolve: async (val, get) => val ? resolve(await get("rootDir"), val) : resolve(await get("buildDir"), "analyze")
 +  },
    /**
     * Whether Nuxt is running in development mode.
     *
-@@ -782,6 +791,7 @@ const common = defineUntypedSchema({
-       "**/*.d.ts",
+@@ -783,6 +792,7 @@ const common = defineUntypedSchema({
        // ignore type declarations
        ".output",
+       ".git",
 +      await get("analyzeDir"),
        await get("ignorePrefix") && `**/${await get("ignorePrefix")}*.*`
      ].concat(val).filter(Boolean)
    },
-@@ -1372,6 +1382,14 @@ const vite = defineUntypedSchema({
+@@ -1386,6 +1396,14 @@ const vite = defineUntypedSchema({
        emptyOutDir: false
      },
      server: {
@@ -194,7 +161,7 @@ index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..8e687cd3c1fe71d8353d82124948466f
        fs: {
          allow: {
            $resolve: async (val, get) => [
-@@ -1409,10 +1427,11 @@ const webpack = defineUntypedSchema({
+@@ -1423,10 +1441,11 @@ const webpack = defineUntypedSchema({
            return val ?? false;
          }
          const rootDir = await get("rootDir");
@@ -207,43 +174,11 @@ index 7f89a32faaf83ccd20b0a299b4db1d112bb8fc00..8e687cd3c1fe71d8353d82124948466f
          };
        }
      },
-@@ -1638,9 +1657,10 @@ const webpack = defineUntypedSchema({
-     /**
-      * Customize PostCSS Loader.
-      * Same options as https://github.com/webpack-contrib/postcss-loader#options
-+     *
-+     * @type {{ execute?: boolean, postcssOptions: typeof import('postcss').ProcessOptions, sourceMap?: boolean, implementation?: any }}
-      */
-     postcss: {
--      execute: void 0,
-       postcssOptions: {
-         config: {
-           $resolve: async (val, get) => val ?? await get("postcss.config")
-@@ -1648,10 +1668,7 @@ const webpack = defineUntypedSchema({
-         plugins: {
-           $resolve: async (val, get) => val ?? await get("postcss.plugins")
-         }
--      },
--      sourceMap: void 0,
--      implementation: void 0,
--      order: ""
-+      }
-     },
-     /**
-      * See [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) for available options.
 diff --git a/schema/config.d.ts b/schema/config.d.ts
-index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..6be33171150e3583fee5fbfcd83fbabc652201aa 100644
+index 6be0f8d6e7083c6a4ca43114755955e53eec4c36..05f04d50019565889aeb7020554e21d7634cfd66 100644
 --- a/schema/config.d.ts
 +++ b/schema/config.d.ts
-@@ -13,6 +13,7 @@ import type { PluginOptions } from 'mini-css-extract-plugin'
- import type { BasePluginOptions, DefinedDefaultMinimizerAndOptions } from 'terser-webpack-plugin'
- import type { BasePluginOptions as BasePluginOptions0, DefinedDefaultMinimizerAndOptions as DefinedDefaultMinimizerAndOptions0 } from 'css-minimizer-webpack-plugin'
- import type { Configuration, WebpackError } from 'webpack'
-+import type { ProcessOptions } from 'postcss'
- import type { Options } from 'webpack-dev-middleware'
- import type { IncomingMessage, ServerResponse } from 'http'
- import type { MiddlewareOptions, ClientOptions } from 'webpack-hot-middleware'
-@@ -475,7 +476,7 @@ export interface ConfigSchema {
+@@ -477,7 +477,7 @@ export interface ConfigSchema {
    * The configuration path is relative to `options.rootDir` (default is current working directory).
    * Setting this field may be necessary if your project is organized as a yarn workspace-styled mono-repository.
    * 
@@ -252,7 +187,7 @@ index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..6be33171150e3583fee5fbfcd83fbabc
    * 
    * @example
    * ```js
-@@ -486,6 +487,15 @@ export interface ConfigSchema {
+@@ -488,6 +488,15 @@ export interface ConfigSchema {
   */
   modulesDir: Array<string>,
  
@@ -261,50 +196,24 @@ index 588fb9905bd37abe7f05a37d45ae14f25a2dd19d..6be33171150e3583fee5fbfcd83fbabc
 +  * 
 +  * If a relative path is specified, it will be relative to your `rootDir`.
 +  * 
-+  * @default "/<rootDir>/.nuxt-analyze"
++  * @default "/<rootDir>/.nuxt/analyze"
 + */
 + analyzeDir: string,
 +
   /**
    * Whether Nuxt is running in development mode.
    * 
-@@ -683,7 +693,7 @@ export interface ConfigSchema {
+@@ -685,7 +694,7 @@ export interface ConfigSchema {
   /**
    * More customizable than `ignorePrefix`: all files matching glob patterns specified inside the `ignore` array will be ignored in building.
    * 
--  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output","**\/-*.*"]
-+  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output","/<rootDir>/.nuxt-analyze","**\/-*.*"]
+-  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output",".git","**\/-*.*"]
++  * @default ["**\/*.stories.{js,ts,jsx,tsx}","**\/*.{spec,test}.{js,ts,jsx,tsx}","**\/*.d.ts",".output",".git","/<rootDir>/.nuxt/analyze","**\/-*.*"]
   */
   ignore: Array<string>,
  
-@@ -1514,24 +1524,7 @@ export interface ConfigSchema {
-    * Customize PostCSS Loader. Same options as https://github.com/webpack-contrib/postcss-loader#options
-    * 
-   */
--  postcss: {
--   execute: any,
--
--   postcssOptions: {
--    config: any,
--
--    plugins: {
--     [key: string]: any
--    },
--   },
--
--   sourceMap: any,
--
--   implementation: any,
--
--   /** @default "" */
--   order: string,
--  },
-+  postcss: { execute?: boolean, postcssOptions: ProcessOptions, sourceMap?: boolean, implementation?: any },
- 
-   /**
-    * See [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) for available options.
 diff --git a/schema/config.defaults.json b/schema/config.defaults.json
-index 18a0128cc8f529c8329632726a82ccb1805a571b..cd594ab668d1005b2493bd15fc895185da540216 100644
+index c72d793649faf8de265f9900d3bbad4afdfbceed..c53d992ba97a1c2f5c3a7d04ca8a526fc267de02 100644
 --- a/schema/config.defaults.json
 +++ b/schema/config.defaults.json
 @@ -42,6 +42,11 @@
@@ -313,7 +222,7 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..cd594ab668d1005b2493bd15fc895185
      "server": {
 +      "watch": {
 +        "ignored": [
-+          "/<rootDir>/.nuxt-analyze"
++          "/<rootDir>/.nuxt/analyze"
 +        ]
 +      },
        "fs": {
@@ -328,12 +237,11 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..cd594ab668d1005b2493bd15fc895185
          ]
        }
      }
-@@ -115,11 +120,12 @@
-     "templates": [],
+@@ -117,10 +122,11 @@
      "analyze": false
    },
-+  "analyzeDir": "/<rootDir>/.nuxt-analyze",
    "buildDir": "/<rootDir>/.nuxt",
++  "analyzeDir": "/<rootDir>/.nuxt/analyze",
    "workspaceDir": "/<rootDir>",
    "modulesDir": [
      "/<rootDir>/node_modules",
@@ -342,26 +250,16 @@ index 18a0128cc8f529c8329632726a82ccb1805a571b..cd594ab668d1005b2493bd15fc895185
    ],
    "builder": "@nuxt/vite-builder",
    "sourcemap": {
-@@ -229,6 +235,7 @@
-     "**/*.{spec,test}.{js,ts,jsx,tsx}",
+@@ -231,6 +237,7 @@
      "**/*.d.ts",
      ".output",
-+    "/<rootDir>/.nuxt-analyze",
+     ".git",
++    "/<rootDir>/.nuxt/analyze",
      "**/-*.*"
    ],
    "watch": [],
-@@ -408,8 +415,7 @@
-           "autoprefixer": {},
-           "cssnano": true
-         }
--      },
--      "order": ""
-+      }
-     },
-     "devMiddleware": {
-       "stats": "none"
 diff --git a/schema/config.md b/schema/config.md
-index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..fa0a57e0d0c38460f14ee17794e8c5256b6bf55b 100644
+index db2128497e7f4d4d754ab5c5e363655921a02e47..3cda558e8d0e2efdeb6f948bf6b547dcfc4cbea5 100644
 --- a/schema/config.md
 +++ b/schema/config.md
 @@ -317,7 +317,7 @@ Many tools assume that `.nuxt` is a hidden directory (because it starts with a `
@@ -379,7 +277,7 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..fa0a57e0d0c38460f14ee17794e8c525
  
 +# `analyzeDir`
 +- **Type**: `string`
-+- **Default**: `"/<rootDir>/.nuxt-analyze"`
++- **Default**: `"/<rootDir>/.nuxt/analyze"`
 +
 +> The directory where Nuxt will store the generated files when running `nuxt analyze`.
 +
@@ -394,12 +292,12 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..fa0a57e0d0c38460f14ee17794e8c525
  
  # `ignore`
  - **Type**: `array`
--- **Default**: `["**/*.stories.{js,ts,jsx,tsx}","**/*.{spec,test}.{js,ts,jsx,tsx}","**/*.d.ts",".output","**/-*.*"]`
-+- **Default**: `["**/*.stories.{js,ts,jsx,tsx}","**/*.{spec,test}.{js,ts,jsx,tsx}","**/*.d.ts",".output","/<rootDir>/.nuxt-analyze","**/-*.*"]`
+-- **Default**: `["**/*.stories.{js,ts,jsx,tsx}","**/*.{spec,test}.{js,ts,jsx,tsx}","**/*.d.ts",".output",".git","**/-*.*"]`
++- **Default**: `["**/*.stories.{js,ts,jsx,tsx}","**/*.{spec,test}.{js,ts,jsx,tsx}","**/*.d.ts",".output",".git","/<rootDir>/.nuxt/analyze","**/-*.*"]`
  
  > More customizable than `ignorePrefix`: all files matching glob patterns specified inside the `ignore` array will be ignored in building.
  
-@@ -985,11 +995,18 @@ We recommend instead either enabling [**Take Over Mode**](https://vuejs.org/guid
+@@ -995,11 +1005,18 @@ We recommend instead either enabling [**Take Over Mode**](https://vuejs.org/guid
  
  ## `server`
  
@@ -407,7 +305,7 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..fa0a57e0d0c38460f14ee17794e8c525
 +
 +#### `ignored`
 +- **Type**: `array`
-+- **Default**: `["/<rootDir>/.nuxt-analyze"]`
++- **Default**: `["/<rootDir>/.nuxt/analyze"]`
 +
 +
  ### `fs`
@@ -419,45 +317,11 @@ index ca09a3bc2f70caf6bd97df265b7e4a8f3b24a676..fa0a57e0d0c38460f14ee17794e8c525
  
  
  # `webpack`
-@@ -1322,11 +1339,6 @@ Defaults to true when `extractCSS` is enabled.
- 
- ## `postcss`
- 
--### `execute`
--- **Type**: `undefined`
--- **Default**: `undefined`
--
--
- ### `postcssOptions`
- 
- #### `config`
-@@ -1336,21 +1348,6 @@ Defaults to true when `extractCSS` is enabled.
- 
- #### `plugins`
- 
--### `sourceMap`
--- **Type**: `undefined`
--- **Default**: `undefined`
--
--
--### `implementation`
--- **Type**: `undefined`
--- **Default**: `undefined`
--
--
--### `order`
--- **Type**: `string`
--- **Default**: `""`
--
--
- ## `devMiddleware`
- 
- ### `stats`
 diff --git a/schema/config.schema.json b/schema/config.schema.json
-index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d91d7b61a1 100644
+index f3b693930018e0b8f2fbae540bd6d98ede5c8308..2586cd300506e9373c68c15e12fa474a836f83d9 100644
 --- a/schema/config.schema.json
 +++ b/schema/config.schema.json
-@@ -751,13 +751,21 @@
+@@ -753,13 +753,21 @@
        "id": "#modulesDir",
        "default": [
          "/<rootDir>/node_modules",
@@ -474,21 +338,21 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
 +      "description": "If a relative path is specified, it will be relative to your `rootDir`.",
 +      "tags": [],
 +      "id": "#analyzeDir",
-+      "default": "/<rootDir>/.nuxt-analyze",
++      "default": "/<rootDir>/.nuxt/analyze",
 +      "type": "string"
 +    },
      "dev": {
        "title": "Whether Nuxt is running in development mode.",
        "description": "Normally, you should not need to set this.",
-@@ -955,6 +963,7 @@
-         "**/*.{spec,test}.{js,ts,jsx,tsx}",
+@@ -958,6 +966,7 @@
          "**/*.d.ts",
          ".output",
-+        "/<rootDir>/.nuxt-analyze",
+         ".git",
++        "/<rootDir>/.nuxt/analyze",
          "**/-*.*"
        ],
        "type": "array",
-@@ -1894,6 +1903,27 @@
+@@ -1911,6 +1920,27 @@
          "server": {
            "id": "#vite/server",
            "properties": {
@@ -498,7 +362,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
 +                "ignored": {
 +                  "id": "#vite/server/watch/ignored",
 +                  "default": [
-+                    "/<rootDir>/.nuxt-analyze"
++                    "/<rootDir>/.nuxt/analyze"
 +                  ],
 +                  "type": "array",
 +                  "items": {
@@ -508,7 +372,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
 +              },
 +              "default": {
 +                "ignored": [
-+                  "/<rootDir>/.nuxt-analyze"
++                  "/<rootDir>/.nuxt/analyze"
 +                ]
 +              },
 +              "type": "object"
@@ -516,7 +380,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
              "fs": {
                "id": "#vite/server/fs",
                "properties": {
-@@ -1905,7 +1935,7 @@
+@@ -1922,7 +1952,7 @@
                      "/<rootDir>",
                      "/<rootDir>",
                      "/<rootDir>/node_modules",
@@ -525,7 +389,7 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
                    ],
                    "type": "array",
                    "items": {
-@@ -1920,13 +1950,18 @@
+@@ -1937,13 +1967,18 @@
                    "/<rootDir>",
                    "/<rootDir>",
                    "/<rootDir>/node_modules",
@@ -539,13 +403,13 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
            "default": {
 +            "watch": {
 +              "ignored": [
-+                "/<rootDir>/.nuxt-analyze"
++                "/<rootDir>/.nuxt/analyze"
 +              ]
 +            },
              "fs": {
                "allow": [
                  "/<rootDir>/.nuxt",
-@@ -1934,7 +1969,7 @@
+@@ -1951,7 +1986,7 @@
                  "/<rootDir>",
                  "/<rootDir>",
                  "/<rootDir>/node_modules",
@@ -554,19 +418,19 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
                ]
              }
            },
-@@ -1983,6 +2018,11 @@
+@@ -2000,6 +2035,11 @@
            "emptyOutDir": false
          },
          "server": {
 +          "watch": {
 +            "ignored": [
-+              "/<rootDir>/.nuxt-analyze"
++              "/<rootDir>/.nuxt/analyze"
 +            ]
 +          },
            "fs": {
              "allow": [
                "/<rootDir>/.nuxt",
-@@ -1990,7 +2030,7 @@
+@@ -2007,7 +2047,7 @@
                "/<rootDir>",
                "/<rootDir>",
                "/<rootDir>/node_modules",
@@ -575,90 +439,38 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
              ]
            }
          }
-@@ -2528,11 +2568,10 @@
-           "title": "Customize PostCSS Loader. Same options as https://github.com/webpack-contrib/postcss-loader#options",
-           "description": "",
-           "tags": [],
-+          "tsType": "{ execute?: boolean, postcssOptions: typeof import('postcss').ProcessOptions, sourceMap?: boolean, implementation?: any }",
-+          "markdownType": "{ execute?: boolean, postcssOptions: PostcssProcessOptions, sourceMap?: boolean, implementation?: any }",
-           "id": "#webpack/postcss",
-           "properties": {
--            "execute": {
--              "id": "#webpack/postcss/execute"
--            },
-             "postcssOptions": {
-               "id": "#webpack/postcss/postcssOptions",
-               "properties": {
-@@ -2562,17 +2601,6 @@
-                 }
-               },
-               "type": "object"
--            },
--            "sourceMap": {
--              "id": "#webpack/postcss/sourceMap"
--            },
--            "implementation": {
--              "id": "#webpack/postcss/implementation"
--            },
--            "order": {
--              "type": "string",
--              "id": "#webpack/postcss/order",
--              "default": ""
-             }
-           },
-           "default": {
-@@ -2584,8 +2612,7 @@
-                 "autoprefixer": {},
-                 "cssnano": true
-               }
--            },
--            "order": ""
-+            }
-           },
-           "type": "object"
-         },
-@@ -2727,8 +2754,7 @@
-               "autoprefixer": {},
-               "cssnano": true
-             }
--          },
--          "order": ""
-+          }
-         },
-         "devMiddleware": {
-           "stats": "none"
-@@ -2877,8 +2903,9 @@
+@@ -2881,8 +2921,9 @@
      "buildDir": "/<rootDir>/.nuxt",
      "modulesDir": [
        "/<rootDir>/node_modules",
 -      "/Users/daniel/code/nuxt.js/packages/schema/node_modules"
 +      "/Users/antfu/i/nuxt/packages/schema/node_modules"
      ],
-+    "analyzeDir": "/<rootDir>/.nuxt-analyze",
++    "analyzeDir": "/<rootDir>/.nuxt/analyze",
      "dev": false,
      "test": false,
      "debug": false,
-@@ -2917,6 +2944,7 @@
-       "**/*.{spec,test}.{js,ts,jsx,tsx}",
+@@ -2922,6 +2963,7 @@
        "**/*.d.ts",
        ".output",
-+      "/<rootDir>/.nuxt-analyze",
+       ".git",
++      "/<rootDir>/.nuxt/analyze",
        "**/-*.*"
      ],
      "watch": [],
-@@ -3051,6 +3079,11 @@
+@@ -3057,6 +3099,11 @@
          "emptyOutDir": false
        },
        "server": {
 +        "watch": {
 +          "ignored": [
-+            "/<rootDir>/.nuxt-analyze"
++            "/<rootDir>/.nuxt/analyze"
 +          ]
 +        },
          "fs": {
            "allow": [
              "/<rootDir>/.nuxt",
-@@ -3058,7 +3091,7 @@
+@@ -3064,7 +3111,7 @@
              "/<rootDir>",
              "/<rootDir>",
              "/<rootDir>/node_modules",
@@ -667,13 +479,3 @@ index 2e8e389c257e52cfb1c874ac041d0b03c8ac8231..b35dbf8ddac521e47e02d8f379a9c1d9
            ]
          }
        }
-@@ -3150,8 +3183,7 @@
-             "autoprefixer": {},
-             "cssnano": true
-           }
--        },
--        "order": ""
-+        }
-       },
-       "devMiddleware": {
-         "stats": "none"

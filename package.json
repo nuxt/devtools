@@ -21,10 +21,10 @@
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "^0.3.0",
-    "@nuxt/schema": "^3.4.1",
+    "@nuxt/schema": "^3.4.2",
     "@types/fs-extra": "^11.0.1",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.15.13",
     "@types/pacote": "^11.1.5",
     "@types/wait-on": "^5.3.1",
     "@types/which": "^3.0.0",
@@ -36,24 +36,24 @@
     "esno": "^0.16.3",
     "execa": "^7.1.1",
     "lint-staged": "^13.2.1",
-    "nuxt": "^3.4.1",
+    "nuxt": "^3.4.2",
     "pathe": "^1.1.0",
     "simple-git-hooks": "^2.8.1",
     "typescript": "^5.0.4",
     "unocss": "^0.51.5",
-    "vue-tsc": "^1.2.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "nuxi@3.4.1": "patches/nuxi@3.4.1.patch",
-      "nuxt@3.4.1": "patches/nuxt@3.4.1.patch",
-      "@nuxt/schema@3.4.1": "patches/@nuxt__schema@3.4.1.patch"
-    }
+    "vue-tsc": "^1.4.2"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "nuxt@3.4.2": "patches/nuxt@3.4.2.patch",
+      "nuxi@3.4.2": "patches/nuxi@3.4.2.patch",
+      "@nuxt/schema@3.4.2": "patches/@nuxt__schema@3.4.2.patch"
+    }
   }
 }
