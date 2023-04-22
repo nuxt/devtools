@@ -48,6 +48,15 @@ html.dark {
 .prose a {
   --uno: hover:text-primary;
 }
+.prose code::before {
+  content: ""
+}
+.prose code::after {
+  content: ""
+}
+.prose hr {
+  --uno: border-solid border-1 border-b border-base h-1px w-full block my-2 op50;
+}
 
 /* Splitpanes */
 .splitpanes__splitter {

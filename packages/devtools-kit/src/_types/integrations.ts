@@ -37,6 +37,7 @@ export interface NpmCommandOptions {
 export interface AutoImportsWithMetadata {
   imports: Import[]
   metadata?: UnimportMeta
+  dirs: string[]
 }
 
 export interface RouteInfo extends Pick<RouteRecordNormalized, 'name' | 'path' | 'meta' | 'props' | 'children'> {
