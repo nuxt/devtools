@@ -48,4 +48,6 @@ const privateConfig = computed(() => {
       <StateEditor :state="privateConfig" readonly />
     </NSectionBlock>
   </div>
+
+  <HelpFab path="/runtime-configs" />
 </template>

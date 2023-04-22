@@ -29,4 +29,6 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
       <HooksTable :hooks="serverHooks" />
     </NSectionBlock>
   </div>
+
+  <HelpFab path="/hooks" />
 </template>

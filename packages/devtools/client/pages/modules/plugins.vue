@@ -44,4 +44,6 @@ const plugins = computed((): PluginInfoWithMetic[] => {
       />
     </div>
   </NSectionBlock>
+
+  <HelpFab path="/plugins" />
 </template>
