@@ -1,4 +1,5 @@
 import type { VNode } from 'vue'
+import type { TabCategory } from './common'
 
 export interface ModuleCustomTab {
   /**
@@ -17,6 +18,11 @@ export interface ModuleCustomTab {
    * Main view of the tab
    */
   view: ModuleView
+  /**
+   * Category of the tab
+   * @default 'app'
+   */
+  category?: TabCategory
   /**
    * Insert static vnode to the tab entry
    *
@@ -105,8 +111,9 @@ export interface ModuleBuiltinTab {
   icon?: string
   title?: string
   path?: string
-  requireClient?: boolean
-  shouldShow?: () => boolean
+  category?: TabCategory
+  shouldShow?: () => any
+  badge?: () => number | string | undefined
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab

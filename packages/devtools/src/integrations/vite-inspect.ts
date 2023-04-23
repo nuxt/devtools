@@ -18,6 +18,7 @@ export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
     name: 'builtin-vite-inspect',
     title: 'Inspect',
     icon: 'carbon-ibm-watson-discovery',
+    category: 'analyze',
     view: {
       type: 'iframe',
       src: `${nuxt.options.app.baseURL}/_nuxt/__inspect/`.replace(/\/\//g, '/'),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const client = useClient()
-const tabs = useTabs()
+const categories = useCategorizedTabs()
 </script>
 
 <template>
@@ -16,23 +16,20 @@ const tabs = useTabs()
           <DockingPanel />
         </template>
       </VDropdown>
-
-      <div mt-2 h-1px w-8 border="b base" />
     </div>
 
-    <SideNavItem
-      v-for="tab of tabs.builtin.value"
-      :key="tab.name"
-      :tab="tab"
-    />
-    <template v-if="tabs.custom.value.length">
-      <div my1 h-1px w-8 border="b base" />
-      <SideNavItem
-        v-for="tab of tabs.custom.value"
-        :key="tab.name"
-        :tab="tab"
-      />
-      <div flex-auto />
+    <template v-for="[name, tabs] of categories" :key="name">
+      <template v-if="tabs.length">
+        <div my1 h-1px w-8 border="b base" />
+
+        <SideNavItem
+          v-for="tab of tabs"
+          :key="tab.name"
+          :tab="tab"
+        />
+      </template>
     </template>
+
+    <div flex-auto />
   </div>
 </template>

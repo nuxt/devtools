@@ -4,7 +4,10 @@ definePageMeta({
   title: 'Terminals',
   layout: 'full',
   shouldShow() {
-    return useTerminals().value?.length
+    return !!useTerminals().value?.length
+  },
+  badge() {
+    return useTerminals().value?.filter(i => !i.isTerminated).length
   },
 })
 

@@ -6,6 +6,7 @@ definePageMeta({
   title: 'Storage',
   experimental: true,
   layout: 'full',
+  category: 'server',
 })
 
 const nuxtApp = useNuxtApp()
