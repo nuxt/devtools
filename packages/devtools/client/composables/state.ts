@@ -2,7 +2,7 @@ import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, ModuleBuiltinTab, ModuleMetric, RouteInfo } from '../../src/types'
+import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleMetric, RouteInfo, TabCategory } from '../../src/types'
 
 let modules: ModuleMetric[] | undefined
 
@@ -79,13 +79,13 @@ export function useTerminals() {
   return useAsyncState('getTerminals', () => rpc.getTerminals())
 }
 
-export function useTabs() {
-  const router = useRouter()
+export function useAllTabs() {
   const customTabs = useCustomTabs()
   const settings = useDevToolsSettings()
+  const router = useRouter()
 
-  const builtin = computed(() => {
-    return router.getRoutes()
+  const builtin = computed(() => [
+    ...router.getRoutes()
       .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
       .filter(route => !route.meta.experimental || (route.meta.experimental && settings.showExperimentalFeatures.value))
       .sort((a, b) => (a.meta.order || 100) - (b.meta.order || 100))
@@ -95,33 +95,54 @@ export function useTabs() {
           path: i.path,
           ...i.meta,
         }
-      })
+      }),
+    ...(customTabs.value || []).filter(i => i.name.startsWith('builtin-')),
+  ])
+
+  const custom = computed(() => (customTabs.value || [])
+    .filter(i => !i.name.startsWith('builtin-')))
+
+  return computed(() => [
+    ...builtin.value,
+    ...custom.value,
+  ])
+}
+
+export function useCategorizedTabs(enabledOnly = true) {
+  const tabs = enabledOnly
+    ? useEnabledTabs()
+    : useAllTabs()
+
+  const settings = useDevToolsSettings()
+
+  return computed(() => {
+    const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
+      app: [],
+      analyze: [],
+      server: [],
+      modules: [],
+    }
+
+    for (const tab of tabs.value) {
+      const category = tab.category || 'app'
+      if (enabledOnly && settings.hiddenTabCategories.value.includes(category))
+        continue
+      if (!categories[category])
+        console.warn(`Unknown tab category: ${category}`)
+      else
+        categories[category].push(tab)
+    }
+
+    return Object.entries(categories)
   })
-
-  const builtInCustom = computed(() => (customTabs.value || []).filter(i => i.name.startsWith('builtin-')))
-  const customCustom = computed(() => (customTabs.value || []).filter(i => !i.name.startsWith('builtin-')))
-
-  return {
-    custom: customCustom,
-    builtin: computed(() => [
-      ...builtin.value,
-      ...builtInCustom.value,
-    ]),
-    all: computed(() => [
-      ...builtin.value,
-      ...builtInCustom.value,
-      ...customCustom.value,
-    ]),
-  }
 }
 
 export function useEnabledTabs() {
-  const client = useClient()
-  const tabs = useTabs()
+  const tabs = useAllTabs()
 
-  return computed(() => tabs.all.value.filter((tab) => {
+  return computed(() => tabs.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab
-    if (_tab.requireClient && !client.value)
+    if (_tab.shouldShow && !_tab.shouldShow())
       return false
     return true
   }))

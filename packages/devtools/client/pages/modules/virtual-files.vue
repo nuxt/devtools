@@ -5,6 +5,7 @@ definePageMeta({
   icon: 'i-carbon-border-none',
   title: 'Virtual Files',
   layout: 'full',
+  category: 'analyze',
 })
 
 interface VfsData {

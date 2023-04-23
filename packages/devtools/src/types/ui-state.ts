@@ -18,4 +18,5 @@ export interface DevToolsUISettings {
   showExperimentalFeatures: boolean
   scale: number
   hiddenTabs: string[]
+  hiddenTabCategories: string[]
 }

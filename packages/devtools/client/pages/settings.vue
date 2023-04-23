@@ -4,6 +4,7 @@ const {
   showExperimentalFeatures,
   scale,
   hiddenTabs,
+  hiddenTabCategories,
 } = useDevToolsSettings()
 
 const scaleOptions = [
@@ -14,13 +15,20 @@ const scaleOptions = [
   ['Huge', 18 / 15],
 ]
 
-const allTabs = useTabs()
+const categories = useCategorizedTabs(false)
 
 function toggleTab(name: string, v: boolean) {
   if (v)
     hiddenTabs.value = hiddenTabs.value.filter(i => i !== name)
   else
     hiddenTabs.value.push(name)
+}
+
+function toggleTabCategory(name: string, v: boolean) {
+  if (v)
+    hiddenTabCategories.value = hiddenTabCategories.value.filter(i => i !== name)
+  else
+    hiddenTabCategories.value.push(name)
 }
 </script>
 
@@ -57,17 +65,34 @@ function toggleTab(name: string, v: boolean) {
       <h3 mb1 text-lg>
         Tabs
       </h3>
-      <template v-for="tab of allTabs.all.value" :key="tab.name">
-        <NSwitch
-          flex="~ row-reverse" py1 n-primary
-          :model-value="!hiddenTabs.includes(tab.name)"
-          @update:model-value="v => toggleTab(tab.name, v)"
+      <template v-for="[name, tabs] of categories" :key="name">
+        <div
+          v-if="tabs.length"
+          flex="~ col gap-1"
+          :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''" pt-2
         >
-          <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
-            <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-            <span>{{ tab.title }}</span>
-          </div>
-        </NSwitch>
+          <NSwitch
+            flex="~ row-reverse" py1 n-lime border="b base"
+            :model-value="!hiddenTabCategories.includes(name)"
+            @update:model-value="v => toggleTabCategory(name, v)"
+          >
+            <div flex="~ gap-2" flex-auto items-center justify-start>
+              <span capitalize op75>{{ name }}</span>
+            </div>
+          </NSwitch>
+          <template v-for="tab of tabs" :key="tab.name">
+            <NSwitch
+              flex="~ row-reverse" py1 n-primary
+              :model-value="!hiddenTabs.includes(tab.name)"
+              @update:model-value="v => toggleTab(tab.name, v)"
+            >
+              <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
+                <span>{{ tab.title }}</span>
+              </div>
+            </NSwitch>
+          </template>
+        </div>
       </template>
     </div>
   </div>

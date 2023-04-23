@@ -8,8 +8,8 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const name = computed(() => route.params.name)
-const tabs = useTabs()
-const tab = computed(() => tabs.all.value.find(i => i.name === name.value) as ModuleCustomTab)
+const tabs = useAllTabs()
+const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab)
 
 onMounted(() => {
   // if the tab is not found and passed a certain timeout, redirect to the overview page

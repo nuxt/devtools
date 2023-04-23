@@ -13,6 +13,7 @@ const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-sett
   showExperimentalFeatures: false,
   scale: 1,
   hiddenTabs: [],
+  hiddenTabCategories: [],
 }, { mergeDefaults: true })
 
 const devToolsSettingsRefs = toRefs(devToolsSettings)

@@ -5,6 +5,7 @@ definePageMeta({
   icon: 'carbon-plug',
   title: 'Plugins',
   order: 5,
+  category: 'analyze',
 })
 
 const config = useServerConfig()
