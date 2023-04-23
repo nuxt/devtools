@@ -51,4 +51,9 @@ export default defineConfig({
       'content/*.md',
     ],
   },
+  safelist: [
+    'carbon-ibm-watson-discovery',
+    'simple-icons-nuxtdotjs',
+    'bxl-visual-studio',
+  ],
 })

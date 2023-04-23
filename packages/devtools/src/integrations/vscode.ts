@@ -102,7 +102,7 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
     tabs.push({
       name: 'builtin-vscode',
       title: 'VS Code',
-      icon: 'i-bxl-visual-studio',
+      icon: 'bxl-visual-studio',
       category: 'modules',
       view: !installed
         ? {
