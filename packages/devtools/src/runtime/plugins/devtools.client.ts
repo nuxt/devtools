@@ -31,37 +31,41 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
-  const client: NuxtDevtoolsHostClient = markRaw({
-    nuxt: markRaw(nuxt as any),
-    appConfig: useAppConfig() as any,
-    hooks: createHooks(),
-    getClientHooksMetrics: () => Object.values(clientHooks),
-    getClientPluginMetrics: () => {
+  function init() {
+    const client: NuxtDevtoolsHostClient = markRaw({
+      nuxt: markRaw(nuxt as any),
+      appConfig: useAppConfig() as any,
+      hooks: createHooks(),
+      getClientHooksMetrics: () => Object.values(clientHooks),
+      getClientPluginMetrics: () => {
       // @ts-expect-error injected
-      return globalThis.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
-    },
-    reloadPage() {
-      location.reload()
-    },
-    closeDevTools: closePanel,
-  })
+        return globalThis.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
+      },
+      reloadPage() {
+        location.reload()
+      },
+      closeDevTools: closePanel,
+    })
 
-  const holder = document.createElement('div')
-  holder.id = 'nuxt-devtools-container'
-  holder.setAttribute('data-v-inspector-ignore', 'true')
-  document.body.appendChild(holder)
+    const holder = document.createElement('div')
+    holder.id = 'nuxt-devtools-container'
+    holder.setAttribute('data-v-inspector-ignore', 'true')
+    document.body.appendChild(holder)
 
-  // Shortcut to toggle devtools
-  addEventListener('keypress', (e) => {
-    if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      togglePanel()
-  })
+    // Shortcut to toggle devtools
+    addEventListener('keypress', (e) => {
+      if (e.code === 'KeyD' && e.altKey && e.shiftKey)
+        togglePanel()
+    })
 
-  const app = createApp({
-    render: () => h(Container, { client }),
-    devtools: {
-      hide: true,
-    },
-  })
-  app.mount(holder)
+    const app = createApp({
+      render: () => h(Container, { client }),
+      devtools: {
+        hide: true,
+      },
+    })
+    app.mount(holder)
+  }
+
+  setTimeout(init, 1)
 })
