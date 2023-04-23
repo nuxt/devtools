@@ -1,11 +1,8 @@
 import { createApp, h, markRaw } from 'vue'
-import { createHooks } from 'hookable'
+
 import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient } from '../../types'
-import Container from './view/Container.vue'
-
-import { closePanel, togglePanel } from './view/state'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
@@ -31,7 +28,11 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
 
-  function init() {
+  async function init() {
+    const { closePanel, togglePanel } = await import('./view/state')
+    const { createHooks } = await import('hookable')
+    const { default: Container } = await import('./view/Container.vue')
+
     const client: NuxtDevtoolsHostClient = markRaw({
       nuxt: markRaw(nuxt as any),
       appConfig: useAppConfig() as any,
