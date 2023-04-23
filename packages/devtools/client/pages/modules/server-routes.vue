@@ -6,6 +6,7 @@ definePageMeta({
   title: 'Server Routes',
   layout: 'full',
   experimental: true,
+  category: 'server',
   shouldShow() {
     return useServerRoutes().value?.length
   },

@@ -30,7 +30,10 @@ export function setupCustomTabRPC({ nuxt, options, refresh }: NuxtDevtoolsServer
       return [
         ...iframeTabs,
         ...customTabs,
-      ]
+      ].map((i) => {
+        i.category = i.category || 'modules'
+        return i
+      })
     },
     async customTabAction(name, actionIndex) {
       const tab = customTabs.find(i => i.name === name)

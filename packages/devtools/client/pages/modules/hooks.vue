@@ -2,6 +2,7 @@
 definePageMeta({
   icon: 'carbon-ibm-cloud-direct-link-2-connect',
   title: 'Hooks',
+  category: 'analyze',
 })
 
 const serverHooks = useServerHooks()
@@ -29,4 +30,6 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
       <HooksTable :hooks="serverHooks" />
     </NSectionBlock>
   </div>
+
+  <HelpFab path="/hooks" />
 </template>

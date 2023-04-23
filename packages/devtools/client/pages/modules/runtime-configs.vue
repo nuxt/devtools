@@ -2,7 +2,8 @@
 definePageMeta({
   icon: 'carbon-settings-services',
   title: 'Runtime Configs',
-  requireClient: true,
+  category: 'analyze',
+  shouldShow: () => !!useClient().value,
   order: 6,
 })
 
@@ -48,4 +49,6 @@ const privateConfig = computed(() => {
       <StateEditor :state="privateConfig" readonly />
     </NSectionBlock>
   </div>
+
+  <HelpFab path="/runtime-configs" />
 </template>

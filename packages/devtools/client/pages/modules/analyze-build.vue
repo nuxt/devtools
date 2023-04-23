@@ -6,6 +6,7 @@ definePageMeta({
   icon: 'carbon-edge-node',
   title: 'Build Analyze',
   layout: 'full',
+  category: 'analyze',
 })
 
 const ROUTE_ANALYZE = '/__nuxt_devtools__/analyze/'

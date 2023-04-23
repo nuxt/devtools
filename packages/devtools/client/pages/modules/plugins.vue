@@ -4,7 +4,7 @@ import type { PluginInfoWithMetic } from '@nuxt/devtools-kit/types'
 definePageMeta({
   icon: 'carbon-plug',
   title: 'Plugins',
-  order: 5,
+  category: 'analyze',
 })
 
 const config = useServerConfig()
@@ -31,9 +31,6 @@ const plugins = computed((): PluginInfoWithMetic[] => {
     text="Plugins"
     :description="`Total plugins: ${config.plugins.length}`"
   >
-    <NTip n="green6" icon="carbon-meter">
-      Plugins runs before your application at runtime, the time plugins cost will directly affect your application's initial loading time.
-    </NTip>
     <div pt4>
       <PluginItem
         v-for="plugin, idx of plugins"
@@ -44,4 +41,6 @@ const plugins = computed((): PluginInfoWithMetic[] => {
       />
     </div>
   </NSectionBlock>
+
+  <HelpFab path="/plugins" />
 </template>

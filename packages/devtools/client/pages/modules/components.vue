@@ -53,4 +53,6 @@ function toggleView() {
       </div>
     </component>
   </div>
+
+  <HelpFab path="/components" />
 </template>

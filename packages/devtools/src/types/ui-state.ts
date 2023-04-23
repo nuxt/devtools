@@ -16,6 +16,8 @@ export interface DevToolsUISettings {
   componentsGraphShowWorkspace: boolean
   interactionCloseOnOutsideClick: boolean
   showExperimentalFeatures: boolean
+  showHelpButtons: boolean
   scale: number
   hiddenTabs: string[]
+  hiddenTabCategories: string[]
 }

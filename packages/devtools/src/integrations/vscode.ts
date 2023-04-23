@@ -103,6 +103,7 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
       name: 'builtin-vscode',
       title: 'VS Code',
       icon: 'i-bxl-visual-studio',
+      category: 'app',
       view: !installed
         ? {
             type: 'launch',

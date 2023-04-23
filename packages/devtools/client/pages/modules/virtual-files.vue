@@ -5,6 +5,7 @@ definePageMeta({
   icon: 'i-carbon-border-none',
   title: 'Virtual Files',
   layout: 'full',
+  category: 'analyze',
 })
 
 interface VfsData {
@@ -107,6 +108,8 @@ const filteredFiles = computed(() => {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
+
+  <HelpFab path="/virtual-files" />
 </template>
 
 <style>

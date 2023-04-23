@@ -12,6 +12,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
+  let importDirs: string[] = []
   const serverPages: NuxtPage[] = []
 
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
@@ -55,6 +56,9 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   nuxt.hook('imports:context', (_unimport: Unimport) => {
     unimport = _unimport
   })
+  nuxt.hook('imports:dirs', (dirs) => {
+    importDirs = dirs
+  })
   nuxt.hook('app:resolve', (v) => {
     app = v
   })
@@ -79,6 +83,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
           ...importPresets,
         ],
         metadata: unimport?.getMetadata(),
+        dirs: importDirs,
       }
     },
     getServerLayouts() {
