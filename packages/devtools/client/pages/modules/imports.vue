@@ -71,7 +71,7 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <div v-if="config" h-full of-auto>
+  <div v-if="config" relative h-full of-auto>
     <Navbar v-model:search="search" pb2>
       <div v-if="importsMetadata">
         <NSwitch v-model="onlyUsed" n="primary sm">
@@ -107,4 +107,6 @@ const filtered = computed(() => {
       <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
   </div>
+
+  <HelpFab path="/imports" />
 </template>

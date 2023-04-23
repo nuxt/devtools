@@ -11,6 +11,7 @@ const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-sett
   componentsGraphShowWorkspace: true,
   interactionCloseOnOutsideClick: false,
   showExperimentalFeatures: false,
+  showHelpButtons: true,
   scale: 1,
   hiddenTabs: [],
   hiddenTabCategories: [],

@@ -2,6 +2,7 @@
 const {
   interactionCloseOnOutsideClick,
   showExperimentalFeatures,
+  showHelpButtons,
   scale,
   hiddenTabs,
   hiddenTabCategories,
@@ -59,6 +60,9 @@ function toggleTabCategory(name: string, v: boolean) {
       </NCheckbox>
       <NCheckbox v-model="showExperimentalFeatures" n-primary>
         <span>Show experimental features</span>
+      </NCheckbox>
+      <NCheckbox v-model="showHelpButtons" n-primary>
+        <span>Show help buttons</span>
       </NCheckbox>
     </div>
     <div py3 flex="~ col gap-1">

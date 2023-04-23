@@ -138,4 +138,6 @@ function navigateToRoute(path: string) {
       },
     ]"
   />
+
+  <HelpFab path="/pages" />
 </template>
