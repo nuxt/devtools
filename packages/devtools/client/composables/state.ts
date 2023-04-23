@@ -118,9 +118,11 @@ export function useCategorizedTabs(enabledOnly = true) {
   return computed(() => {
     const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
       app: [],
-      analyze: [],
       server: [],
+      analyze: [],
       modules: [],
+      documentation: [],
+      advanced: [],
     }
 
     for (const tab of tabs.value) {
