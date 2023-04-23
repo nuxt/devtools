@@ -6,7 +6,7 @@ import type { RouteInfo } from '~~/../src/types'
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Pages',
-  shouldShow: () => !!useClient().value,
+  show: () => !!useClient().value,
   order: 1,
 })
 

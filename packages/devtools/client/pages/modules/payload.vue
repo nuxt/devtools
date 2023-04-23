@@ -3,7 +3,7 @@ definePageMeta({
   icon: 'carbon-data-set',
   title: 'Payload',
   category: 'analyze',
-  shouldShow: () => !!useClient().value,
+  show: () => !!useClient().value,
   order: 7,
 })
 

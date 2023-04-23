@@ -7,7 +7,7 @@ definePageMeta({
   layout: 'full',
   experimental: true,
   category: 'server',
-  shouldShow() {
+  show() {
     return useServerRoutes().value?.length
   },
 })

@@ -143,7 +143,7 @@ export function useEnabledTabs() {
 
   return computed(() => tabs.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab
-    if (_tab.shouldShow && !_tab.shouldShow())
+    if (_tab.show && !_tab.show())
       return false
     if (settings.hiddenTabs.value.includes(_tab.name))
       return false
