@@ -108,6 +108,8 @@ const filteredFiles = computed(() => {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
+
+  <HelpFab path="/virtual-files" />
 </template>
 
 <style>
