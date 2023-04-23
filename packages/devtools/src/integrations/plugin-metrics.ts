@@ -33,6 +33,8 @@ function ${WRAPPER_KEY} (plugin, src) {
     const end = performance.now()
     globalThis.${PAYLOAD_KEY}.push({
       src,
+      start,
+      end,
       duration: end - start,
     })
     return result

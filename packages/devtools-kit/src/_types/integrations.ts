@@ -69,6 +69,8 @@ export interface PluginInfoWithMetic {
 
 export interface PluginMetric {
   src: string
+  start: number
+  end: number
   duration: number
 }
 

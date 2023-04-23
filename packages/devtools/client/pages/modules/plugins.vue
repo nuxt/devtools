@@ -22,6 +22,13 @@ const plugins = computed((): PluginInfoWithMetic[] => {
     }
   })
 })
+
+const totalTime = computed(() => {
+  const metics = client.value.getClientPluginMetrics()
+  const minStart = Math.min(...metics.map(m => m.start))
+  const maxEnd = Math.max(...metics.map(m => m.end))
+  return maxEnd - minStart
+})
 </script>
 
 <template>
@@ -39,6 +46,12 @@ const plugins = computed((): PluginInfoWithMetic[] => {
         :index="idx + 1"
         ml--4 border-base py2 :class="idx ? 'border-t' : ''"
       />
+
+      <div class="text-sm" flex="~ gap-1 items-center justify-end" mt-3>
+        <div i-carbon-timer text-lg op75 />
+        <span op50>Total execution time:</span>
+        <DurationDisplay :duration="totalTime" :factor="10" />
+      </div>
     </div>
   </NSectionBlock>
 
