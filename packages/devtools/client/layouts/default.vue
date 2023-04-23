@@ -1,6 +1,6 @@
 <template>
   <div h-full of-auto n-panel-grids>
-    <div bg-base>
+    <div h-full bg-base>
       <slot />
     </div>
   </div>
