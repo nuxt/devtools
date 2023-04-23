@@ -139,10 +139,13 @@ export function useCategorizedTabs(enabledOnly = true) {
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
+  const settings = useDevToolsSettings()
 
   return computed(() => tabs.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab
     if (_tab.shouldShow && !_tab.shouldShow())
+      return false
+    if (settings.hiddenTabs.value.includes(_tab.name))
       return false
     return true
   }))

@@ -7,7 +7,7 @@ definePageMeta({
     return !!useTerminals().value?.length
   },
   badge() {
-    return useTerminals().value?.length
+    return useTerminals().value?.filter(i => !i.isTerminated).length
   },
 })
 

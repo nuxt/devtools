@@ -4,7 +4,6 @@ import type { PluginInfoWithMetic } from '@nuxt/devtools-kit/types'
 definePageMeta({
   icon: 'carbon-plug',
   title: 'Plugins',
-  order: 5,
   category: 'analyze',
 })
 

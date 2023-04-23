@@ -113,6 +113,7 @@ export interface ModuleBuiltinTab {
   path?: string
   category?: TabCategory
   shouldShow?: () => any
+  badge?: () => number | string | undefined
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab
