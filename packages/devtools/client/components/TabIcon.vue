@@ -1,8 +1,11 @@
 <script setup lang="ts">
-defineProps<{
+withDefaults(defineProps<{
   icon?: string
   title?: string
-}>()
+  showTitle?: boolean
+}>(), {
+  showTitle: true,
+})
 </script>
 
 <template>
@@ -24,6 +27,6 @@ defineProps<{
     }"
     v-bind="$attrs"
     :class="icon || 'carbon-bring-forward'"
-    :title="title"
+    :title="showTitle ? title : undefined"
   />
 </template>
