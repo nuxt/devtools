@@ -5,7 +5,6 @@ const props = defineProps<{
   tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
-const settings = useDevToolsSettings()
 const route = useRoute()
 
 const badge = computed(() => 'badge' in props.tab && props.tab.badge?.())
