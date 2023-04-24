@@ -1,3 +1,33 @@
+## [0.4.2](https://github.com/nuxt/devtools-poc/compare/v0.4.1...v0.4.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* code style ([4a082d1](https://github.com/nuxt/devtools-poc/commit/4a082d173660add2ddde863e4548cf033d5e74ae))
+* components in graph view style ([#197](https://github.com/nuxt/devtools-poc/issues/197)) ([3075fc1](https://github.com/nuxt/devtools-poc/commit/3075fc162939a2bc66e2d8ed9c6647e7c1097cf8))
+* ui layout ([eeb1744](https://github.com/nuxt/devtools-poc/commit/eeb1744b65a6f93b6cd4ae661893bef8c5e8005b))
+* **ui:** sidenav tooltip overlaps with title ([#199](https://github.com/nuxt/devtools-poc/issues/199)) ([aec5192](https://github.com/nuxt/devtools-poc/commit/aec51923a7c0c332b8874ca2571b0678f0a9c115))
+* **wizard:** builtin `enable` setup fails on new installs ([#200](https://github.com/nuxt/devtools-poc/issues/200)) ([9551479](https://github.com/nuxt/devtools-poc/commit/9551479e6ee62849ae0f33467068af3b410bb0a1))
+
+
+### Features
+
+* add more categories ([3d41495](https://github.com/nuxt/devtools-poc/commit/3d41495d6b9c1ca34c262d1f2b331cc0e809acb7))
+* categorize tabs ([64c48cd](https://github.com/nuxt/devtools-poc/commit/64c48cdf55a756d5263cf8ebfa308258b68a47b5))
+* help page for each tab ([#194](https://github.com/nuxt/devtools-poc/issues/194)) ([5ce8df3](https://github.com/nuxt/devtools-poc/commit/5ce8df368527ab614d428f12e3f099c11f072199))
+* **plugins:** add total execution time ([2cbb52e](https://github.com/nuxt/devtools-poc/commit/2cbb52eca682b8b35e43772153a22d421df56987))
+* support tab badge ([80a5ba2](https://github.com/nuxt/devtools-poc/commit/80a5ba2d193a1c263138cae6da3ce4510985bfce))
+* syncing color mode backward for iframe, close [#195](https://github.com/nuxt/devtools-poc/issues/195) ([76b3c7a](https://github.com/nuxt/devtools-poc/commit/76b3c7ab45b4677b38c86d135459034e1eeb627d))
+
+
+### Performance Improvements
+
+* defer devtools client initialization ([2949e0d](https://github.com/nuxt/devtools-poc/commit/2949e0dbae1a8eb41a9baafaf37e165676e81bbb))
+* defer devtools client loading ([ebc9a38](https://github.com/nuxt/devtools-poc/commit/ebc9a388f45cd9a1ae76281b931bf74ae4c5ada8))
+* improve runtime icons render ([ea37a07](https://github.com/nuxt/devtools-poc/commit/ea37a07ffdc392bf2802b33bbb2da7d17a1b7707))
+
+
+
 ## [0.4.1](https://github.com/nuxt/devtools-poc/compare/v0.4.0...v0.4.1) (2023-04-18)
 
 
