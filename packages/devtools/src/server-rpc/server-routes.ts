@@ -2,6 +2,7 @@ import type { Nitro } from 'nitropack'
 import { join, resolve } from 'pathe'
 import fg from 'fast-glob'
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
+import { debounce } from 'perfect-debounce'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
@@ -9,18 +10,21 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
 
   let promiseCache: Promise<ServerRouteInfo[]> | null = null
 
+  const refreshDebounced = debounce(() => {
+    promiseCache = null
+    refresh('getServerRoutes')
+  }, 500)
+
   nuxt.hook('nitro:init', (_) => {
     nitro = _
     promiseCache = null
     refresh('getServerRoutes')
+  })
 
-    nuxt.hook('ready', () => {
-      nitro.storage.watch((event, key) => {
-        if (key.split(':')[0] !== 'src')
-          return
-        promiseCache = null
-        refresh('getServerRoutes')
-      })
+  nuxt.hook('ready', () => {
+    nitro?.storage.watch((event, key) => {
+      if (key.startsWith('src:api:'))
+        refreshDebounced()
     })
   })
 
