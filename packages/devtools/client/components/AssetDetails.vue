@@ -6,6 +6,8 @@ const props = defineProps<{
   asset: AssetInfo
 }>()
 
+const openInEditor = useOpenInEditor()
+
 const imageMeta = computedAsync(() => {
   if (props.asset.type !== 'image')
     return undefined

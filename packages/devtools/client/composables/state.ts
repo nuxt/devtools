@@ -176,3 +176,25 @@ interface RestartDialog {
 export function useRestartDialogs() {
   return useState<RestartDialog[]>('devtools:restart-dialogs', () => [])
 }
+
+export interface VfsData {
+  rootDir: string
+  entries: {
+    id: string
+    path: string
+  }[]
+}
+
+export interface VfsFile {
+  id: string
+  content: string
+}
+
+export function useVirtualFiles() {
+  const { data } = useFetch<VfsData>('/_vfs.json', {
+    key: 'vfs-list',
+    baseURL: '/',
+    responseType: 'json',
+  })
+  return data
+}

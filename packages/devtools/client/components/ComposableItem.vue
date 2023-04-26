@@ -8,6 +8,7 @@ const props = defineProps<{
 }>()
 
 const copy = useCopy()
+const openInEditor = useOpenInEditor()
 
 const name = computed(() => props.item.as || props.item.name)
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)

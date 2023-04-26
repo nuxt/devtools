@@ -13,6 +13,7 @@ defineEmits<{
   (e: 'navigate', path: string): void
 }>()
 
+const openInEditor = useOpenInEditor()
 const sorted = computed(() => {
   return [...props.pages].sort((a, b) => a.path.localeCompare(b.path))
 })

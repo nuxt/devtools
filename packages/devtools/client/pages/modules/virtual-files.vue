@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { VfsFile } from '~/composables/state'
 
 definePageMeta({
   icon: 'i-carbon-border-none',
@@ -8,26 +9,9 @@ definePageMeta({
   category: 'advanced',
 })
 
-interface VfsData {
-  rootDir: string
-  entries: {
-    id: string
-    path: string
-  }[]
-}
-
-interface VfsFile {
-  id: string
-  content: string
-}
-
 const searchString = ref('')
 
-const { data } = await useFetch<VfsData>('/_vfs.json', {
-  key: 'vfs-list',
-  baseURL: '/',
-  responseType: 'json',
-})
+const data = useVirtualFiles()
 
 const fileId = computed(() => useRoute().query?.id as string | undefined)
 

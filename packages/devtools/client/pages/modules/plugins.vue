@@ -12,7 +12,7 @@ const client = useClient()
 
 const plugins = computed((): PluginInfoWithMetic[] => {
   const plugins = config.value?.plugins || []
-  const metics = client.value.getClientPluginMetrics()
+  const metics = client.value?.getClientPluginMetrics() || []
 
   return plugins.map((plugin) => {
     const p = typeof plugin === 'string' ? { src: plugin } : plugin
@@ -24,7 +24,7 @@ const plugins = computed((): PluginInfoWithMetic[] => {
 })
 
 const totalTime = computed(() => {
-  const metics = client.value.getClientPluginMetrics()
+  const metics = client.value?.getClientPluginMetrics() || []
   const minStart = Math.min(...metics.map(m => m.start))
   const maxEnd = Math.max(...metics.map(m => m.end))
   return maxEnd - minStart
