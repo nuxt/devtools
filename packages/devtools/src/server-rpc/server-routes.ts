@@ -1,7 +1,6 @@
 import type { Nitro } from 'nitropack'
 import { join, resolve } from 'pathe'
 import fg from 'fast-glob'
-import { watch } from 'chokidar'
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
 
@@ -15,24 +14,13 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     promiseCache = null
     refresh('getServerRoutes')
 
-    // Ported from Nitropack:
-    // https://github.com/unjs/nitro/blob/f49384d5540e10d97f3743670771aa5cb0b63d24/src/build.ts#L365
-    const watchReloadEvents = new Set(['add', 'addDir', 'unlink', 'unlinkDir'])
-    const watcher = watch([
-      join(nuxt.options.serverDir, 'api'),
-      join(nuxt.options.serverDir, 'routes'),
-    ], { ignoreInitial: true }).on(
-      'all',
-      (event) => {
-        if (watchReloadEvents.has(event)) {
-          promiseCache = null
-          refresh('getServerRoutes')
-        }
-      },
-    )
-
-    nitro.hooks.hook('close', () => {
-      watcher.close()
+    nuxt.hook('ready', () => {
+      nitro.storage.watch((event, key) => {
+        if (key.split(':')[0] !== 'src')
+          return
+        promiseCache = null
+        refresh('getServerRoutes')
+      })
     })
   })
 
