@@ -112,7 +112,7 @@ export interface ModuleBuiltinTab {
   title?: string
   path?: string
   category?: TabCategory
-  shouldShow?: () => any
+  show?: () => any
   badge?: () => number | string | undefined
 }
 

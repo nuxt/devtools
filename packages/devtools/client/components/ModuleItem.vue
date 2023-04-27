@@ -30,6 +30,8 @@ const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/mai
 const avatarBase = 'https://api.nuxtjs.org/api/ipx/s_44,f_webp/gh_avatar/'
 const githubBase = 'https://github.com/'
 const npmBase = 'https://www.npmjs.com/package/'
+
+const openInEditor = useOpenInEditor()
 </script>
 
 <template>
@@ -50,7 +52,7 @@ const npmBase = 'https://www.npmjs.com/package/'
           v-else-if="mod.entryPath"
           role="button"
           hover="underline text-primary"
-          @click="rpc.openInEditor(mod.entryPath!)"
+          @click="openInEditor(mod.entryPath!)"
         >
           {{ data.name }}
         </button>

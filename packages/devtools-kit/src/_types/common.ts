@@ -3,3 +3,5 @@ export type TabCategory =
   | 'analyze'
   | 'server'
   | 'modules'
+  | 'documentation'
+  | 'advanced'

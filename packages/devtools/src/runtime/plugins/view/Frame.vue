@@ -263,7 +263,7 @@ declare global {
   height: 100%;
   outline: none;
   border: 1px solid rgba(125,125,125,0.2);
-  border-radius: 0.5rem;
+  border-radius: 10px;
 }
 
 .nuxt-devtools-resize-handle-horizontal {

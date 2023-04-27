@@ -3,7 +3,7 @@ definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',
   layout: 'full',
-  shouldShow() {
+  show() {
     return !!useTerminals().value?.length
   },
   badge() {

@@ -34,70 +34,73 @@ function toggleTabCategory(name: string, v: boolean) {
 </script>
 
 <template>
-  <div max-w-100 px6 py8>
+  <div px6 py6>
     <NIconTitle
-      class="text-xl op75"
+      class="mb-5 text-xl op75"
       icon="i-carbon-settings"
       text="DevTools Settings"
     />
-
-    <div py3 flex="~ col gap-1" border="b base">
-      <h3 mb1 text-lg>
-        UI Scale
-      </h3>
-      <NSelect v-model="scale" n="primary">
-        <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
-          {{ i[0] }}
-        </option>
-      </NSelect>
-    </div>
-    <div py3 flex="~ col gap-1" border="b base">
-      <h3 mb1 text-lg>
-        Features
-      </h3>
-      <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
-        <span>Close DevTools when clicking outside</span>
-      </NCheckbox>
-      <NCheckbox v-model="showExperimentalFeatures" n-primary>
-        <span>Show experimental features</span>
-      </NCheckbox>
-      <NCheckbox v-model="showHelpButtons" n-primary>
-        <span>Show help buttons</span>
-      </NCheckbox>
-    </div>
-    <div py3 flex="~ col gap-1">
-      <h3 mb1 text-lg>
-        Tabs
-      </h3>
-      <template v-for="[name, tabs] of categories" :key="name">
-        <div
-          v-if="tabs.length"
-          flex="~ col gap-1"
-          :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''" pt-2
-        >
-          <NSwitch
-            flex="~ row-reverse" py1 n-lime border="b base"
-            :model-value="!hiddenTabCategories.includes(name)"
-            @update:model-value="v => toggleTabCategory(name, v)"
+    <div grid="~ cols-2 gap-10">
+      <div>
+        <div py3 flex="~ col gap-1" border="b base">
+          <h3 mb1 text-lg>
+            UI Scale
+          </h3>
+          <NSelect v-model="scale" n="primary">
+            <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
+        </div>
+        <div py3 flex="~ col gap-1" border="b base">
+          <h3 mb1 text-lg>
+            Features
+          </h3>
+          <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
+            <span>Close DevTools when clicking outside</span>
+          </NCheckbox>
+          <NCheckbox v-model="showExperimentalFeatures" n-primary>
+            <span>Show experimental features</span>
+          </NCheckbox>
+          <NCheckbox v-model="showHelpButtons" n-primary>
+            <span>Show help buttons</span>
+          </NCheckbox>
+        </div>
+      </div>
+      <div flex="~ col gap-1" max-w-150 py3>
+        <h3 mb1 text-lg>
+          Tabs
+        </h3>
+        <template v-for="[name, tabs] of categories" :key="name">
+          <div
+            v-if="tabs.length"
+            flex="~ col gap-1"
+            :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''" pt-2
           >
-            <div flex="~ gap-2" flex-auto items-center justify-start>
-              <span capitalize op75>{{ name }}</span>
-            </div>
-          </NSwitch>
-          <template v-for="tab of tabs" :key="tab.name">
             <NSwitch
-              flex="~ row-reverse" py1 n-primary
-              :model-value="!hiddenTabs.includes(tab.name)"
-              @update:model-value="v => toggleTab(tab.name, v)"
+              flex="~ row-reverse" py1 n-lime border="b base"
+              :model-value="!hiddenTabCategories.includes(name)"
+              @update:model-value="v => toggleTabCategory(name, v)"
             >
-              <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
-                <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-                <span>{{ tab.title }}</span>
+              <div flex="~ gap-2" flex-auto items-center justify-start>
+                <span capitalize op75>{{ name }}</span>
               </div>
             </NSwitch>
-          </template>
-        </div>
-      </template>
+            <template v-for="tab of tabs" :key="tab.name">
+              <NSwitch
+                flex="~ row-reverse" py1 n-primary
+                :model-value="!hiddenTabs.includes(tab.name)"
+                @update:model-value="v => toggleTab(tab.name, v)"
+              >
+                <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                  <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
+                  <span>{{ tab.title }}</span>
+                </div>
+              </NSwitch>
+            </template>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>

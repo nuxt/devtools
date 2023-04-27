@@ -45,6 +45,8 @@ const fetchTime = ref(0)
 const fetching = ref(false)
 const started = ref(false)
 
+const openInEditor = useOpenInEditor()
+
 const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/g))
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 

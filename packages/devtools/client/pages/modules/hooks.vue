@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-ibm-cloud-direct-link-2-connect',
   title: 'Hooks',
-  category: 'analyze',
+  category: 'advanced',
 })
 
 const serverHooks = useServerHooks()

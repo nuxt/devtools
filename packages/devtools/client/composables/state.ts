@@ -122,9 +122,11 @@ export function useCategorizedTabs(enabledOnly = true) {
   return computed(() => {
     const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
       app: [],
-      analyze: [],
       server: [],
+      analyze: [],
       modules: [],
+      documentation: [],
+      advanced: [],
     }
 
     for (const tab of tabs.value) {
@@ -147,7 +149,7 @@ export function useEnabledTabs() {
 
   return computed(() => tabs.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab
-    if (_tab.shouldShow && !_tab.shouldShow())
+    if (_tab.show && !_tab.show())
       return false
     if (settings.hiddenTabs.value.includes(_tab.name))
       return false
@@ -177,4 +179,26 @@ interface RestartDialog {
 
 export function useRestartDialogs() {
   return useState<RestartDialog[]>('devtools:restart-dialogs', () => [])
+}
+
+export interface VfsData {
+  rootDir: string
+  entries: {
+    id: string
+    path: string
+  }[]
+}
+
+export interface VfsFile {
+  id: string
+  content: string
+}
+
+export function useVirtualFiles() {
+  const { data } = useFetch<VfsData>('/_vfs.json', {
+    key: 'vfs-list',
+    baseURL: '/',
+    responseType: 'json',
+  })
+  return data
 }

@@ -5,7 +5,6 @@ const props = defineProps<{
   tab: ModuleCustomTab | ModuleBuiltinTab
 }>()
 
-const settings = useDevToolsSettings()
 const route = useRoute()
 
 const badge = computed(() => 'badge' in props.tab && props.tab.badge?.())
@@ -25,7 +24,7 @@ const isActive = computed(() => route.path.startsWith(tabPath.value))
     >
       <TabIcon
         text-xl
-        :icon="tab.icon" :title="tab.title"
+        :icon="tab.icon" :title="tab.title" :show-title="false"
       />
       <div
         v-if="badge" absolute bottom-0 right-0 h-4 w-4 rounded-full text-9px text-white flex="~ items-center justify-center"

@@ -63,6 +63,11 @@ function syncColorMode() {
     const html = iframeEl.value.contentWindow.document.querySelector('html')
     html?.classList.toggle('dark', colorMode.value === 'dark')
     html?.classList.toggle('light', colorMode.value === 'dark')
+
+    const ob = new MutationObserver(() => {
+      colorMode.value = iframeEl.value?.contentWindow?.document.querySelector('html')?.classList.contains('dark') ? 'dark' : 'light'
+    })
+    ob.observe(html!, { attributes: true, attributeFilter: ['class'] })
   }
   catch (e) {
   }

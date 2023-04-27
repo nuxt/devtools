@@ -1,8 +1,8 @@
 // @ts-expect-error missin types
 import presetIcons from '@unocss/preset-icons/browser'
-import initUnocssRuntime from '@unocss/runtime'
+import init from '@unocss/runtime'
 
-initUnocssRuntime({
+init({
   defaults: {
     presets: [
       presetIcons({
@@ -17,4 +17,5 @@ initUnocssRuntime({
       }),
     ],
   },
+  bypassDefined: true,
 })

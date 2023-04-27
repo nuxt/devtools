@@ -72,12 +72,12 @@ export async function disable(cwd: string, args: string[]) {
 }
 
 function markDisable(rc: RC, path: string) {
-  if (rc.devtoolsGlobal?.projects?.includes(path)) {
+  if (rc?.devtoolsGlobal?.projects?.includes(path)) {
     rc.devtoolsGlobal.projects = rc.devtoolsGlobal.projects.filter((p: string) => p !== path)
     return true
   }
   // remove module if no projects
-  if (!rc.devtoolsGlobal.projects?.length)
+  if (!rc?.devtoolsGlobal?.projects?.length)
     removeModule(rc)
   return false
 }

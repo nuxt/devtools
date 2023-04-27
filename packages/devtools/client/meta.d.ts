@@ -6,7 +6,7 @@ declare module '#app' {
     title?: string
     order?: number
     category?: TabCategory
-    shouldShow?: () => any
+    show?: () => any
     badge?: () => string | number | undefined
   }
 }

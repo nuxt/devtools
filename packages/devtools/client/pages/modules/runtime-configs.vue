@@ -3,7 +3,7 @@ definePageMeta({
   icon: 'carbon-settings-services',
   title: 'Runtime Configs',
   category: 'analyze',
-  shouldShow: () => !!useClient().value,
+  show: () => !!useClient().value,
   order: 6,
 })
 
