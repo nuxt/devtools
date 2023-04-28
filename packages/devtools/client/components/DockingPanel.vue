@@ -53,7 +53,7 @@ function refreshPage() {
         </NButton>
       </NDarkToggle>
       <NButton n="sm primary" to="/settings">
-        <div carbon-settings translate-y--1px /> Settings
+        <div carbon-settings-adjust translate-y--1px /> Settings
       </NButton>
     </div>
     <div px3 py2 flex="~ gap2">
