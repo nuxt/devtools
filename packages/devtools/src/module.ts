@@ -12,6 +12,9 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: defaultOptions,
   setup(options, nuxt) {
+    if (typeof options === 'boolean')
+      options = { enabled: options }
+
     // Explicitly disabled
     if (options.enabled === false)
       return
@@ -30,6 +33,6 @@ export default defineNuxtModule<ModuleOptions>({
      * - Installed locally
      * - Installed globally, and enabled via `nuxi enable devtools`, or `enabled` is explicitly set to true
      */
-    return import('./module-main').then(({ enableModule }) => enableModule(options, nuxt))
+    return import('./module-main').then(({ enableModule }) => enableModule(options as ModuleOptions, nuxt))
   },
 })
