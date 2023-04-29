@@ -1,3 +1,22 @@
+## [0.4.3](https://github.com/nuxt/devtools-poc/compare/v0.4.2...v0.4.3) (2023-04-29)
+
+
+### Bug Fixes
+
+* disconnect indicator zindex, close [#202](https://github.com/nuxt/devtools-poc/issues/202) ([e9ab49f](https://github.com/nuxt/devtools-poc/commit/e9ab49fce40524d66fea2a068408748eb0cb4d40))
+* server-routes watcher ([#205](https://github.com/nuxt/devtools-poc/issues/205)) ([19fda12](https://github.com/nuxt/devtools-poc/commit/19fda12c19b983043894763900f9233c92b31e33))
+* **wizard:** update disable logic ([95353b6](https://github.com/nuxt/devtools-poc/commit/95353b6c9976923b31e8580e75785cd3edabbb0c))
+* **wizard:** use object options instead, close [#206](https://github.com/nuxt/devtools-poc/issues/206) ([d63cf58](https://github.com/nuxt/devtools-poc/commit/d63cf5882f0fd08af691148d218e65023e1b5f64))
+
+
+### Features
+
+* improve settings ui ([c0b4bd6](https://github.com/nuxt/devtools-poc/commit/c0b4bd664588332242cd978dc75f6da4c3781596))
+* support middleware, close [#184](https://github.com/nuxt/devtools-poc/issues/184) ([73ef44c](https://github.com/nuxt/devtools-poc/commit/73ef44ca5a7e87928a1366be50edf3124bc0f1ee))
+* support navigating to virtual file ([ff27b92](https://github.com/nuxt/devtools-poc/commit/ff27b9249f55e8c53f04c8bafffc3fe099f82813))
+
+
+
 ## [0.4.2](https://github.com/nuxt/devtools-poc/compare/v0.4.1...v0.4.2) (2023-04-24)
 
 
