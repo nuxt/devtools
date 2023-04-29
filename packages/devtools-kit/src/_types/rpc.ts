@@ -19,7 +19,7 @@ export interface ServerFunctions {
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
   getServerRoutes(): Promise<ServerRouteInfo[]>
-  getServerApp(): Promise<NuxtApp | undefined>
+  getServerApp(): NuxtApp | undefined
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
