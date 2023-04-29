@@ -14,6 +14,7 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   const importPresets: Import[] = []
   let importDirs: string[] = []
   const serverPages: NuxtPage[] = []
+  let serverApp: NuxtApp | undefined
 
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
 
@@ -47,6 +48,9 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
 
     refresh('getServerPages')
   })
+  nuxt.hook('app:resolve', (app) => {
+    serverApp = app
+  })
   nuxt.hook('imports:sources', async (v) => {
     const result = (await resolveBuiltinPresets(v)).flat()
     importPresets.length = 0
@@ -66,6 +70,9 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   return {
     getServerConfig() {
       return nuxt.options
+    },
+    getServerApp() {
+      return serverApp
     },
     getComponents() {
       return components

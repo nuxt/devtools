@@ -71,6 +71,10 @@ export function useServerConfig() {
   return useAsyncState('getServerConfig', () => rpc.getServerConfig())
 }
 
+export function useServerApp() {
+  return useAsyncState('getServerApp', () => rpc.getServerApp())
+}
+
 export function useCustomTabs() {
   return useAsyncState('getCustomTabs', () => rpc.getCustomTabs())
 }

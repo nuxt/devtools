@@ -1,4 +1,4 @@
-import type { NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
+import type { NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { Component } from 'vue'
@@ -19,6 +19,7 @@ export interface ServerFunctions {
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
   getServerRoutes(): Promise<ServerRouteInfo[]>
+  getServerApp(): Promise<NuxtApp | undefined>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>

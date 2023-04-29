@@ -14,6 +14,8 @@ defineEmits<{
 }>()
 
 const openInEditor = useOpenInEditor()
+const serverApp = useServerApp()
+
 const sorted = computed(() => {
   return [...props.pages].sort((a, b) => a.path.localeCompare(b.path))
 })
@@ -22,6 +24,12 @@ function openLayout(name: string) {
   const layout = props.layouts.find(i => i.name === name)
   if (layout)
     openInEditor(layout.file)
+}
+
+function getMiddlewarePath(name: any) {
+  if (typeof name !== 'string')
+    return
+  return serverApp.value?.middleware.find(i => i.name === name)?.path
 }
 </script>
 
@@ -36,6 +44,9 @@ function openLayout(name: string) {
           </th>
           <th text-left>
             Name
+          </th>
+          <th text-left>
+            Middleware
           </th>
           <th>
             Layout
@@ -81,6 +92,12 @@ function openLayout(name: string) {
           </td>
           <td w-0 ws-nowrap pr-1 text-left font-mono text-sm op50>
             {{ item.name }}
+          </td>
+          <td w-0 ws-nowrap pr-1 text-center font-mono text-sm op50>
+            <FilepathItem
+              :filepath="getMiddlewarePath(item.meta.middleware)"
+              :override="`${item.meta.middleware || '-'}`"
+            />
           </td>
           <td w-0 ws-nowrap text-center font-mono text-sm>
             <span v-if="item.meta.layout === false">-</span>
