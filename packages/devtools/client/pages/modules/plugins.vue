@@ -55,5 +55,7 @@ const totalTime = computed(() => {
     </div>
   </NSectionBlock>
 
-  <HelpFab path="/plugins" />
+  <HelpFab>
+    <DocsPlugins />
+  </HelpFab>
 </template>

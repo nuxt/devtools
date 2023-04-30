@@ -31,5 +31,7 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
     </NSectionBlock>
   </div>
 
-  <HelpFab path="/hooks" />
+  <HelpFab>
+    <DocsHooks />
+  </HelpFab>
 </template>

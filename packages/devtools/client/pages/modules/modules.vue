@@ -71,5 +71,7 @@ watchEffect(() => {
     </NSectionBlock>
   </div>
 
-  <HelpFab path="/modules" />
+  <HelpFab>
+    <DocsModules />
+  </HelpFab>
 </template>

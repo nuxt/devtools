@@ -178,5 +178,7 @@ function navigateToRoute(path: string) {
     ]"
   />
 
-  <HelpFab path="/pages" />
+  <HelpFab>
+    <DocsPages />
+  </HelpFab>
 </template>
