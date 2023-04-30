@@ -108,8 +108,8 @@ function updateClient() {
 
   if (componentInspector) {
     componentInspector.openInEditor = async (baseUrl, file, line, column) => {
-      await props.client!.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
       disableComponentInspector()
+      await props.client!.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
     }
     componentInspector.onUpdated = () => {
       props.client!.hooks.callHook('host:inspector:update', {

@@ -13,6 +13,11 @@ export interface NuxtDevtoolsServerContext {
   rpc: BirpcGroup<ClientFunctions, ServerFunctions>
 
   /**
+   * Hook to open file in editor
+   */
+  openInEditorHooks: ((filepath: string) => boolean | void | Promise<boolean | void>)[]
+
+  /**
    * Invalidate client cache for a function and ask for re-fetching
    */
   refresh: (event: keyof ServerFunctions) => void
