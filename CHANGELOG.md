@@ -1,3 +1,13 @@
+## [0.4.5](https://github.com/nuxt/devtools-poc/compare/v0.4.4...v0.4.5) (2023-04-30)
+
+
+### Bug Fixes
+
+* correctly read plugins list ([76bc71d](https://github.com/nuxt/devtools-poc/commit/76bc71d87a3bd7f195ec362ea46c28aaf7da2421))
+* use compile time markdown ([f9979b9](https://github.com/nuxt/devtools-poc/commit/f9979b9cb9eb36044954a5c4a5bd02dab113671c))
+
+
+
 ## [0.4.4](https://github.com/nuxt/devtools-poc/compare/v0.4.3...v0.4.4) (2023-04-30)
 
 
