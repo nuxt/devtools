@@ -8,7 +8,7 @@ import { logger } from '@nuxt/kit'
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 
-export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -118,12 +118,25 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
         `${input}.mjs`,
         `${input}.ts`,
       ].find(i => existsSync(i))
-      if (path) {
+
+      if (!path) {
+        console.error('File not found:', input)
+        return false
+      }
+
+      try {
+        for (const hook of openInEditorHooks) {
+          const result = await hook(path)
+          if (result)
+            return true
+        }
         // @ts-expect-error missin types
         await import('launch-editor').then(r => (r.default || r)(path + suffix))
+        return true
       }
-      else {
-        console.error('File not found:', input)
+      catch (e) {
+        console.error(e)
+        return false
       }
     },
     restartNuxt(hard = true) {

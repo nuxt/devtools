@@ -47,7 +47,7 @@ export interface ServerFunctions {
   // Actions
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
-  openInEditor(filepath: string): void
+  openInEditor(filepath: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
 }
 
