@@ -1,3 +1,12 @@
+## [0.4.4](https://github.com/nuxt/devtools-poc/compare/v0.4.3...v0.4.4) (2023-04-30)
+
+
+### Features
+
+* open in file in embeded vscode ([#207](https://github.com/nuxt/devtools-poc/issues/207)) ([9f17662](https://github.com/nuxt/devtools-poc/commit/9f176624fcf0c2e2192fcd77104cd33401761604))
+
+
+
 ## [0.4.3](https://github.com/nuxt/devtools-poc/compare/v0.4.2...v0.4.3) (2023-04-29)
 
 
