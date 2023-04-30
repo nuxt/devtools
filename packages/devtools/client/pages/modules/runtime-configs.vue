@@ -51,6 +51,6 @@ const privateConfig = computed(() => {
   </div>
 
   <HelpFab>
-    <DocsRuntimeConfig />
+    <DocsRuntimeConfigs />
   </HelpFab>
 </template>
