@@ -1,4 +1,4 @@
-export const DETAILS_MAX_ITEMS = 20
+export const DETAILS_MAX_ITEMS = 35
 
 export const ComposablesDocs = {
   nuxt: {
