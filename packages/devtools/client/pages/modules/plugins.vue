@@ -7,11 +7,11 @@ definePageMeta({
   category: 'analyze',
 })
 
-const config = useServerConfig()
+const app = useServerApp()
 const client = useClient()
 
 const plugins = computed((): PluginInfoWithMetic[] => {
-  const plugins = config.value?.plugins || []
+  const plugins = app.value?.plugins || []
   const metics = client.value?.getClientPluginMetrics() || []
 
   return plugins.map((plugin) => {
@@ -33,10 +33,9 @@ const totalTime = computed(() => {
 
 <template>
   <NSectionBlock
-    v-if="config"
     icon="carbon-plug"
     text="Plugins"
-    :description="`Total plugins: ${config.plugins.length}`"
+    :description="`Total plugins: ${plugins.length}`"
   >
     <div pt4>
       <PluginItem
