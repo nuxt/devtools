@@ -32,7 +32,7 @@ const route = useRoute()
 const isUtilityView = computed(() => route.path.startsWith('/__'))
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
-addEventListener('keypress', (e) => {
+addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
     client.value?.closeDevTools()
     e.preventDefault()
