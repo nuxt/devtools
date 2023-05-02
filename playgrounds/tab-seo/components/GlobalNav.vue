@@ -9,11 +9,11 @@
     <NuxtLink to="/bar">
       Bar
     </NuxtLink> |
-    <NuxtLink to="/dynamic-baz">
-      Dynamic Baz
+    <NuxtLink to="/dynamic-life">
+      Dynamic Life
     </NuxtLink> |
-    <NuxtLink to="/dynamic-qux">
-      Dynamic Qux
+    <NuxtLink to="/dynamic-power">
+      Dynamic Power
     </NuxtLink>
   </div>
 </template>
