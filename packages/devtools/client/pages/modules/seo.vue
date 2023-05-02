@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import type { HeadTag } from '@vueuse/head'
 
 definePageMeta({
   icon: 'carbon-cloud-monitoring',
@@ -66,8 +65,8 @@ const tagList = [
 
 const head = useClientHead()
 
-const headTags = computedAsync<HeadTag[]>(async () => {
-  return await head.value.resolveTags()
+const headTags = computedAsync(async () => {
+  return await head.value?.resolveTags()
 })
 
 const search = ref('')
@@ -75,6 +74,7 @@ const fuse = computed(() => new Fuse(headTags.value || [], {
   keys: [
     'tag',
     'props.name',
+    'props.property',
     'props.content',
   ],
 }))
@@ -103,6 +103,8 @@ function getTags(tags: string[]) {
   }))
 }
 
+const showPreview = ref(true)
+
 const missingTags = computed(() => {
   return tagList.map(group => ({
     name: group.name,
@@ -119,57 +121,63 @@ async function refresh() {
 </script>
 
 <template>
-  <PanelLeftRight storage-key="tab-seo">
-    <template #left>
-      <div border="r base" px4 py3>
-        <SeoSocialCards v-if="headTags" :tags="headTags" />
-        <NSectionBlock v-if="missingTagsCount" :text="`Missing Tags (${missingTagsCount})`" icon="carbon:warning-filled" :padding="false">
-          <NSectionBlock v-for="group in missingTags" :key="group.name" :text="`${group.name} (${group.tags.length})`" :icon="group.icon" :open="false">
-            <NCard v-for="tag of group.tags" :key="tag" mb4 flex items-center justify-between p4>
-              <div flex items-center>
-                <NIcon icon="carbon:warning-filled" mr2 bg-red />
-                {{ tag }}
-              </div>
-              <span class="text-gray-400">
-                Missing
-              </span>
-            </NCard>
-          </NSectionBlock>
-        </NSectionBlock>
-      </div>
-    </template>
-    <template #right>
-      <div bg-active>
-        <Navbar v-model:search="search" no-padding px4 pb2 pt4>
-          <template #actions>
-            <div flex-none flex="~ gap4">
-              <NButton n="green" title="Refresh Data" @click="refresh">
-                <NIcon icon="carbon:reset" />
-              </NButton>
+  <div flex="~" h-full w-full of-hidden>
+    <div flex-auto of-auto bg-active>
+      <Navbar v-model:search="search">
+        <template #actions>
+          <div flex-none flex="~ gap4">
+            <button
+              title="Refresh Data"
+              @click="refresh"
+            >
+              <NIcon icon="carbon:reset" />
+            </button>
+            <button
+              title="Toggle Preview"
+              @click="showPreview = !showPreview"
+            >
+              <NIcon :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'" />
+            </button>
+          </div>
+        </template>
+        <div op50>
+          <span v-if="search">{{ filtered.length }} matched · </span>
+          <span>{{ headTags?.length }} tags in total</span>
+        </div>
+      </Navbar>
+      <NSectionBlock text="Tags" icon="carbon:checkmark-filled">
+        <NCard mb4 grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
+          <template v-for="item, index of filtered" :key="index">
+            <div v-if="index" x-divider />
+            <div v-if="index" x-divider />
+            <div mr2 px4 py2 op50>
+              {{ item.props?.name ?? item.props?.property ?? Object.keys(item.props)[0] ?? item.tag }}
+            </div>
+            <div w-full p2 font-mono>
+              {{ item.props?.content ?? item.props?.href ?? item.textContent ?? JSON.stringify(item.props) }}
             </div>
           </template>
-          <div op50>
-            <span v-if="search">{{ filtered.length }} matched · </span>
-            <span>{{ headTags?.length }} tags in total</span>
-          </div>
-        </Navbar>
-        <NSectionBlock text="Tags" icon="carbon:checkmark-filled">
-          <NCard v-for="item, index of filtered" :key="index" mb4 flex items-center justify-between p4>
+        </NCard>
+        <div v-if="!filtered.length" py4 text-center text-gray-400>
+          No tags found
+        </div>
+      </NSectionBlock>
+      <NSectionBlock v-if="missingTagsCount" :text="`Missing Tags (${missingTagsCount})`" icon="carbon:warning-filled" :padding="false">
+        <NSectionBlock v-for="group in missingTags" :key="group.name" :text="`${group.name} (${group.tags.length})`" :icon="group.icon" :open="false">
+          <NCard v-for="tag of group.tags" :key="tag" mb4 flex items-center justify-between p4>
             <div flex items-center>
-              <NIcon icon="carbon:checkmark-filled" mr2 bg-green />
-              {{ item.props?.name ?? Object.keys(item.props)[0] ?? item.tag }}
+              <NIcon icon="carbon:warning-filled" mr2 bg-red />
+              {{ tag }}
             </div>
-            <div text-end class="max-w-4/5">
-              {{ item.props?.content ?? item.textContent ?? JSON.stringify(item.props) }}
-            </div>
+            <span class="text-gray-400">
+              Missing
+            </span>
           </NCard>
-          <div v-if="!filtered.length" py4 text-center text-gray-400>
-            No tags found
-          </div>
         </NSectionBlock>
-      </div>
-    </template>
-  </PanelLeftRight>
+      </NSectionBlock>
+    </div>
+    <SeoSocialCards v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />
+  </div>
   <HelpFab>
     <DocsSeo />
   </HelpFab>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { HeadTag } from '@vueuse/head'
+import type { HeadTag } from '@unhead/vue'
+import type { SocialPreviewResolved } from '../../src/types'
 
 const props = defineProps({
   tags: {
@@ -8,132 +9,53 @@ const props = defineProps({
   },
 })
 
-const groups = [
-  {
-    name: 'facebook',
-    tag: 'og',
-    color: 'text-[#3b5998]',
-    icon: 'carbon-logo-facebook',
-  },
-  {
-    name: 'twitter',
-    tag: 'twitter',
-    color: 'text-[#00acee]',
-    icon: 'carbon-logo-twitter',
-  },
-  {
-    name: 'linkedin',
-    tag: 'og',
-    color: 'text-[#0072b1]',
-    icon: 'carbon-logo-linkedin',
-  },
-  {
-    name: 'google',
-    tag: null,
-    color: 'text-[#4285f4]',
-    icon: 'carbon-logo-google',
-  },
+const types = [
+  'twitter',
+  'facebook',
+  'linkedin',
 ]
 
-const selectedGroup = ref(groups[0])
+const selected = ref(types[0])
 
-const url = window.location.host
-const urlOrigin = window.location.origin
-
-const metaProps = computed(() => {
-  const result = props.tags?.reduce((accumulator: any, currentTag) => {
-    const tag = currentTag.tag
-
-    if (!selectedGroup.value.tag) {
-      if (tag === 'meta' && !currentTag.props.name?.includes(':'))
-        accumulator[currentTag.props.name] = currentTag.props.content
-
-      else if (tag === 'title')
-        accumulator.title = currentTag.textContent
-
-      else if (tag === 'link' && currentTag.props.rel === 'icon')
-        accumulator.icon = currentTag.props.href
-    }
-
-    else if (currentTag.props.name?.startsWith(`${selectedGroup.value.tag}:`)) {
-      accumulator[currentTag.props.name.replace(`${selectedGroup.value.tag}:`, '')] = currentTag.props.content
-    }
-
-    return accumulator
-  }, {})
-
-  return result ?? {}
+const card = computed((): SocialPreviewResolved => {
+  return {
+    url: window.location.host,
+    title: props.tags.find(tag => tag.tag === 'title')?.textContent,
+    image: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:image')?.props.content,
+    imageAlt: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:image:alt')?.props.content,
+    description: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:description')?.props.content,
+    favicon: props.tags.find(tag => tag.tag === 'link' && tag.props.rel === 'icon')?.props.href,
+  }
 })
 </script>
 
 <template>
-  <div border="b base" pb4>
-    <div mb2 flex justify-between>
-      <NButton
-        v-for="group of groups"
-        :key="group.name"
-        @click="selectedGroup = group"
-      >
-        <NIcon
-          :icon="group.icon"
-          h-5 w-5
-          :class="group.name === selectedGroup.name ? selectedGroup.color : ''"
-        />
-      </NButton>
-    </div>
-    <div v-if="Object.keys(metaProps).length" border="~ base">
-      <div v-if="selectedGroup.name === 'google'" p4>
-        <div mb1 flex items-center>
-          <img v-if="metaProps.icon" width="35" mr2 rounded-full bg-white p2 :src="metaProps.icon">
-          <div flex="~ col">
-            <div>{{ url }}</div>
-            <small>{{ urlOrigin }}</small>
+  <div h-full w-525px flex="~ col">
+    <div flex="~ wrap" w-full flex-none>
+      <template v-for="name, idx of types" :key="idx">
+        <button
+          px4 py2 border="r base"
+          hover="bg-active"
+          :class="name === selected ? '' : 'border-b'"
+          @click="selected = name"
+        >
+          <div :class="name === selected ? '' : 'op30' " capitalize>
+            {{ name }}
           </div>
-        </div>
-        <p text-lg>
-          {{ metaProps?.title }}
-        </p>
-        <div text-secondary>
-          {{ metaProps?.description }}
-        </div>
-      </div>
-      <template v-else>
-        <img :src="metaProps.image" :alt="metaProps.image">
-        <div v-if="selectedGroup.name === 'facebook'" p2>
-          <small>
-            {{ url }}
-          </small>
-          <p text-lg font-bold>
-            {{ metaProps?.title }}
-          </p>
-          <div text-sm text-secondary>
-            {{ metaProps?.description }}
-          </div>
-        </div>
-        <div v-else-if="selectedGroup.name === 'twitter'" p2>
-          <p text-lg font-bold>
-            {{ metaProps?.title }}
-          </p>
-          <div text-sm>
-            {{ metaProps?.description }}
-          </div>
-          <small>
-            {{ url }}
-          </small>
-        </div>
-        <div v-else-if="selectedGroup.name === 'linkedin'" p2>
-          <div text-lg font-bold>
-            {{ metaProps?.title }}
-          </div>
-          <small>
-            {{ url }}
-          </small>
-        </div>
+        </button>
       </template>
+      <div border="b base" flex-auto />
     </div>
-    <div v-else text-center text-gray-500>
-      <div mb2 min-h-30 w-full bg-active />
-      No "{{ selectedGroup.name }}" meta tags found
+    <div flex="~ items-center justify-center" flex-auto>
+      <div v-if="selected === 'facebook'">
+        <SocialFacebook :card="card" />
+      </div>
+      <div v-else-if="selected === 'twitter'">
+        <SocialTwitter :card="card" />
+      </div>
+      <div v-else-if="selected === 'linkedin'">
+        <SocialLinkedin :card="card" />
+      </div>
     </div>
   </div>
 </template>

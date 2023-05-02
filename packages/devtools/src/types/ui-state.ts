@@ -21,3 +21,12 @@ export interface DevToolsUISettings {
   hiddenTabs: string[]
   hiddenTabCategories: string[]
 }
+
+export interface SocialPreviewResolved {
+  url?: string
+  title?: string
+  description?: string
+  favicon?: string
+  image?: string
+  imageAlt?: string
+}
