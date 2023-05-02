@@ -18,6 +18,11 @@ export function useClientRouter() {
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$router)
 }
 
+export function useClientHead() {
+  const client = useClient()
+  return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$head)
+}
+
 export function useComponentInspectorData() {
   return useState<VueInspectorData>('devtools-component-inspector-data')
 }
