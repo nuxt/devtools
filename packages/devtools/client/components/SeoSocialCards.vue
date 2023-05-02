@@ -84,7 +84,7 @@ const metaProps = computed(() => {
     <div v-if="Object.keys(metaProps).length" border="~ base">
       <div v-if="selectedGroup.name === 'google'" p4>
         <div mb1 flex items-center>
-          <img v-if="metaProps?.icon" width="35" mr2 rounded-full bg-white p2 :src="metaProps?.icon">
+          <img v-if="metaProps.icon" width="35" mr2 rounded-full bg-white p2 :src="metaProps.icon">
           <div flex="~ col">
             <div>{{ url }}</div>
             <small>{{ urlOrigin }}</small>
@@ -98,7 +98,7 @@ const metaProps = computed(() => {
         </div>
       </div>
       <template v-else>
-        <img :src="metaProps?.image" :alt="metaProps?.image">
+        <img :src="metaProps.image" :alt="metaProps.image">
         <div v-if="selectedGroup.name === 'facebook'" p2>
           <small>
             {{ url }}
