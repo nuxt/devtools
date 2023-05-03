@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { HeadTag } from '@unhead/vue'
-import type { SocialPreviewResolved } from '../../src/types'
+import type { NormalizedHeadTag, SocialPreviewResolved } from '../../src/types'
 
 const props = defineProps({
   tags: {
-    type: Array as PropType<HeadTag[]>,
+    type: Array as PropType<NormalizedHeadTag[]>,
     required: true,
   },
 })
@@ -20,11 +19,11 @@ const selected = ref(types[0])
 const card = computed((): SocialPreviewResolved => {
   return {
     url: window.location.host,
-    title: props.tags.find(tag => tag.tag === 'title')?.textContent,
-    image: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:image')?.props.content,
-    imageAlt: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:image:alt')?.props.content,
-    description: props.tags.find(tag => tag.tag === 'meta' && tag.props.property === 'og:description')?.props.content,
-    favicon: props.tags.find(tag => tag.tag === 'link' && tag.props.rel === 'icon')?.props.href,
+    title: props.tags.find(tag => tag.tag === 'title')?.value,
+    image: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'og:image')?.value,
+    imageAlt: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'og:image:alt')?.value,
+    description: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'og:description')?.value,
+    favicon: props.tags.find(tag => tag.tag === 'link' && tag.name === 'icon')?.value,
   }
 })
 </script>

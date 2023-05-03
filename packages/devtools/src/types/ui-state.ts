@@ -30,3 +30,9 @@ export interface SocialPreviewResolved {
   image?: string
   imageAlt?: string
 }
+
+export interface NormalizedHeadTag {
+  tag: string
+  name: string
+  value: string
+}

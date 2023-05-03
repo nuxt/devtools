@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { NormalizedHeadTag } from '~/../src/types/ui-state'
 
 definePageMeta({
-  icon: 'carbon-cloud-monitoring',
+  icon: 'icon-park-outline:seo',
   title: 'SEO',
   layout: 'full',
   category: 'analyze',
@@ -10,74 +11,65 @@ definePageMeta({
   show: () => !!useClient().value,
 })
 
-// TODO:
-const tagList = [
-  {
-    name: 'main',
-    icon: 'carbon-tag-group',
-    tags: [
-      'lang',
-      'title',
-      'description',
-      'keywords',
-      'favicon',
-      'viewport',
-      'robots',
-    ],
-  },
-  {
-    name: 'og',
-    icon: 'carbon-logo-facebook',
-    tags: [
-      'og:title',
-      'og:description',
-      'og:image',
-      'og:url',
-      'og:site_name',
-      'og:type',
-      'og:locale',
-    ],
-  },
-  {
-    name: 'twitter',
-    icon: 'carbon-logo-twitter',
-    tags: [
-      'twitter:card',
-      'twitter:site',
-      'twitter:creator',
-      'twitter:title',
-      'twitter:description',
-      'twitter:image',
-      'twitter:image:alt',
-    ],
-  },
-  {
-    name: 'other',
-    icon: 'carbon-tag-export',
-    tags: [
-      'apple-touch-icon',
-      'theme-color',
-      'copyright',
-      'author',
-    ],
-  },
-]
+const seoTags = [
+  // TODO: docs, links, default, types
+  ['title', { suggestion: 'required' }],
+  ['description', { suggestion: 'required' }],
+  ['og:url', { suggestion: 'recommended' }],
+  ['og:title', { suggestion: 'required' }],
+  ['og:description', { suggestion: 'required' }],
+  ['og:image', { suggestion: 'required' }],
+  ['og:image:alt', { suggestion: 'required' }],
+  ['og:type', { suggestion: 'optional' }],
+  ['og:site_name', { suggestion: 'recommended' }],
+  ['twitter:card', { suggestion: 'required' }],
+  ['twitter:site', { suggestion: 'recommended' }],
+  ['twitter:creator', { suggestion: 'recommended' }],
+  ['twitter:title', { suggestion: 'recommended' }],
+  ['twitter:description', { suggestion: 'recommended' }],
+  ['twitter:image', { suggestion: 'required' }],
+  ['twitter:image:alt', { suggestion: 'recommended' }],
+] as const
 
+const counter = ref(0)
 const head = useClientHead()
-
 const headTags = computedAsync(async () => {
-  return await head.value?.resolveTags()
+  // eslint-disable-next-line no-unused-expressions
+  counter.value // for force refresh
+  const tags = await head.value?.resolveTags()
+  return tags.map((tag): NormalizedHeadTag => {
+    const props = tag.props || {}
+    if (tag.tag === 'htmlAttrs' && props.lang) {
+      return {
+        tag: 'html',
+        name: 'lang',
+        value: props.lang,
+      }
+    }
+    if (props.charset) {
+      return {
+        tag: 'meta',
+        name: 'charset',
+        value: props.charset,
+      }
+    }
+    return {
+      tag: tag.tag,
+      name: props.property ?? props.name ?? props.rel ?? tag.tag,
+      value: props.content ?? props.href ?? tag.textContent ?? JSON.stringify(props),
+    }
+  })
 })
 
 const search = ref('')
 const fuse = computed(() => new Fuse(headTags.value || [], {
   keys: [
     'tag',
-    'props.name',
-    'props.property',
-    'props.content',
+    'name',
+    'value',
   ],
 }))
+
 const filtered = computed(() => {
   const result = search.value
     ? fuse.value.search(search.value).map(i => i.item)
@@ -85,44 +77,27 @@ const filtered = computed(() => {
   return result
 })
 
-function getTags(tags: string[]) {
-  return tags.filter(tag => !headTags.value?.some((item) => {
-    if (item.tag === 'meta')
-      return item.props.name?.includes(tag)
-    if (item.tag === 'title')
-      return tag === 'title'
-    if (item.tag === 'htmlAttrs') {
-      if (tag === 'lang')
-        return item.props.lang
-    }
-    if (item.tag === 'link') {
-      if (item.props.rel === 'icon')
-        return tag === 'favicon'
-    }
-    return false
-  }))
-}
+const missingTags = computed(() => {
+  return seoTags.filter(([name]) => !headTags.value?.some(tag => tag.name === name))
+})
+
+const missingRequiredTags = computed(() => {
+  return missingTags.value.filter(i => i[1].suggestion === 'required')
+})
+const missingRecommendedTags = computed(() => {
+  return missingTags.value.filter(i => i[1].suggestion === 'recommended')
+})
 
 const showPreview = ref(true)
 
-const missingTags = computed(() => {
-  return tagList.map(group => ({
-    name: group.name,
-    icon: group.icon,
-    tags: getTags(group.tags),
-  })).filter(group => group.tags.length)
-})
-
-const missingTagsCount = computed(() => missingTags.value.reduce((acc, cur) => acc + cur.tags.length, 0))
-
 async function refresh() {
-  headTags.value = await head.value.resolveTags()
+  counter.value += 1
 }
 </script>
 
 <template>
   <div flex="~" h-full w-full of-hidden>
-    <div flex-auto of-auto bg-active>
+    <div flex-auto of-auto>
       <Navbar v-model:search="search">
         <template #actions>
           <div flex-none flex="~ gap4">
@@ -145,16 +120,20 @@ async function refresh() {
           <span>{{ headTags?.length }} tags in total</span>
         </div>
       </Navbar>
-      <NSectionBlock text="Tags" icon="carbon:checkmark-filled">
+      <NSectionBlock
+        text="SEO Tags"
+        icon="carbon:tag"
+        :description="`${headTags?.length} tags`"
+      >
         <NCard mb4 grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
           <template v-for="item, index of filtered" :key="index">
             <div v-if="index" x-divider />
             <div v-if="index" x-divider />
             <div mr2 px4 py2 op50>
-              {{ item.props?.name ?? item.props?.property ?? Object.keys(item.props)[0] ?? item.tag }}
+              {{ item.name }}
             </div>
             <div w-full p2 font-mono>
-              {{ item.props?.content ?? item.props?.href ?? item.textContent ?? JSON.stringify(item.props) }}
+              {{ item.value }}
             </div>
           </template>
         </NCard>
@@ -162,18 +141,27 @@ async function refresh() {
           No tags found
         </div>
       </NSectionBlock>
-      <NSectionBlock v-if="missingTagsCount" :text="`Missing Tags (${missingTagsCount})`" icon="carbon:warning-filled" :padding="false">
-        <NSectionBlock v-for="group in missingTags" :key="group.name" :text="`${group.name} (${group.tags.length})`" :icon="group.icon" :open="false">
-          <NCard v-for="tag of group.tags" :key="tag" mb4 flex items-center justify-between p4>
-            <div flex items-center>
-              <NIcon icon="carbon:warning-filled" mr2 bg-red />
-              {{ tag }}
+      <NSectionBlock
+        v-if="missingTags.length"
+        text="Missing Tags"
+        icon="carbon:warning"
+        :open="false"
+        :description="`${missingRequiredTags.length} required, ${missingRecommendedTags.length} recommended`"
+      >
+        <NCard mb4 grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
+          <template v-for="item, index of missingTags" :key="index">
+            <div v-if="index" x-divider />
+            <div v-if="index" x-divider />
+            <div mr2 px4 py2 op50>
+              {{ item[0] }}
             </div>
-            <span class="text-gray-400">
-              Missing
-            </span>
-          </NCard>
-        </NSectionBlock>
+            <!-- TODO: use icons instead, show link to documentation -->
+            <div w-full p2 text-end font-mono :class="item[1].suggestion === 'required' ? 'text-red' : 'text-orange' ">
+              {{ item[1].suggestion }}
+            </div>
+            <!-- TODO: generate snippet for copy -->
+          </template>
+        </NCard>
       </NSectionBlock>
     </div>
     <SeoSocialCards v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />

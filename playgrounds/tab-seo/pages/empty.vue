@@ -4,6 +4,6 @@
 
 <template>
   <div>
-    Foo, is empty!
+    Empty!
   </div>
 </template>
