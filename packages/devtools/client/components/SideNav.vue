@@ -1,19 +1,35 @@
 <script setup lang="ts">
 const client = useClient()
 const categories = useCategorizedTabs()
+
+const show = ref(true)
+const panel = ref()
+
+onClickOutside(panel, () => {
+  show.value = false
+}, {
+  detectIframe: true,
+})
 </script>
 
 <template>
   <div border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
     <div flex="~ none col items-center">
-      <VDropdown placement="left-start" :distance="20">
+      <VDropdown
+        placement="left-start"
+        :distance="20"
+        :triggers="[]"
+        :shown="show"
+        :auto-hide="false"
+      >
         <button
           i-logos-nuxt-icon my3 h-6 w-6 pb-2 text-lg
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
+          @click="show = !show"
         />
         <template #popper>
-          <DockingPanel />
+          <DockingPanel ref="panel" />
         </template>
       </VDropdown>
       <div h-1px w-8 border="b base" />
