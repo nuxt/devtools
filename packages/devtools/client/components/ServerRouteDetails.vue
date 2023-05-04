@@ -76,7 +76,7 @@ const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<RouteParam>({})
 const routeInputs = reactive<RouteInputs>({
   query: [{ key: '', value: '' }],
-  body: [{ key: '', value: '', type: 'text' }],
+  body: [{ key: '', value: '' }],
   headers: [{ key: 'Content-Type', value: 'application/json' }],
 })
 
