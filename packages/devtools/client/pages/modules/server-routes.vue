@@ -36,7 +36,7 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <PanelLeftRight>
+  <PanelLeftRight storage-key="tab-server-routes">
     <template #left>
       <Navbar v-model:search="search" pb2>
         <div flex="~ gap1" text-sm op50>

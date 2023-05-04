@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
+import JsonEditorVue from 'json-editor-vue'
 
-interface RouteParam {
-  [key: string]: string
-}
+import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
 
 const props = defineProps({
   route: {
@@ -11,6 +9,25 @@ const props = defineProps({
     required: true,
   },
 })
+
+const currentRoute = useRoute()
+
+// TODO: move these
+interface RouteInput {
+  key: string
+  value: any
+  type?: string
+}
+
+interface RouteInputs {
+  body: RouteInput[]
+  query: RouteInput[]
+  headers: RouteInput[]
+}
+
+interface RouteParam {
+  [key: string]: string | boolean | number
+}
 
 const config = useServerConfig()
 
@@ -52,21 +69,38 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<RouteParam>({})
-const routeBodies = ref<RouteParam[]>([{ key: '', value: '' }])
-const routeQueries = ref<RouteParam[]>([{ key: '', value: '' }])
-const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'application/json' }])
-
-const queriesCount = computed(() => routeQueries.value.filter(({ key }) => key).length)
-const headersCount = computed(() => routeHeaders.value.filter(({ key }) => key).length)
-
-const formattedBody = computed(() => {
-  const obj: RouteParam = {}
-  for (let i = 0; i < routeBodies.value.length; i++) {
-    const { key, value } = routeBodies.value[i]
-    obj[key] = value
-  }
-  return Object.keys(obj)[0] ? obj : null
+const routeInputs = reactive<RouteInputs>({
+  query: [{ key: '', value: '' }],
+  body: [{ key: '', value: '', type: 'text' }],
+  headers: [{ key: 'Content-Type', value: 'application/json' }],
 })
+
+const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
+// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
+const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
+const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
+
+const parsedQuery = computed(() => parseInputs(routeInputs.query))
+const parsedHeader = computed(() => parseInputs(routeInputs.headers))
+const parsedBody = computed(() => hasBody.value ? parseInputs(routeInputs.body) : undefined)
+
+const inputTabs = ['inputs', 'json']
+const activeInputTab = ref(inputTabs[0])
+
+// TODO: add better support for file, color, etc
+const inputTypes = ['text', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
+
+function onFileInputChange(index: number, event: Event) {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    const file = target.files[0]
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      routeInputs.body[index].value = reader.result as any
+    }
+  }
+}
 
 const domain = computed(() => {
   let url = config.value?.devServer.url || 'http://localhost'
@@ -78,7 +112,7 @@ const domain = computed(() => {
 })
 
 const finalPath = computed(() => {
-  let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
+  let query = new URLSearchParams(parsedQuery.value).toString()
   if (query)
     query = `?${query}`
   const path = (parsedRoute.value?.map((i) => {
@@ -96,6 +130,13 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
+function parseInputs(inputs: RouteParam[]) {
+  const formatted = Object.fromEntries(
+    inputs.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value]),
+  )
+  return Object.entries(formatted).length ? formatted : undefined
+}
+
 async function fetchData() {
   started.value = true
   fetching.value = true
@@ -111,9 +152,9 @@ async function fetchData() {
   try {
     response.data = await $fetch(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
-      headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
-      query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
-      body: formattedBody.value,
+      headers: parsedHeader.value,
+      query: parsedQuery.value,
+      body: parsedBody.value,
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
         response.statusCode = res.status
@@ -135,7 +176,7 @@ const codeSnippets = computed(() => {
   const snippets: CodeSnippet[] = []
 
   const items: string[] = []
-  const headers = routeHeaders.value
+  const headers = routeInputs.headers
     .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
     .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
 
@@ -143,8 +184,8 @@ const codeSnippets = computed(() => {
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
   if (headers)
     items.push(`headers: {\n${headers}\n}`)
-  if (formattedBody.value)
-    items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
+  if (parsedBody.value)
+    items.push(`body: ${JSON.stringify(parsedBody.value, null, 2)}`)
 
   const options = items.length
     ? `, {
@@ -169,18 +210,65 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
   return snippets
 })
 
-const activeTab = ref(paramNames.value.length ? 'params' : 'query')
+const tabs = computed(() => {
+  const tabs = []
 
-const currentParams = computed(() => {
-  if (activeTab.value === 'query')
-    return routeQueries.value
-  if (activeTab.value === 'body')
-    return routeBodies.value
-  if (activeTab.value === 'headers')
-    return routeHeaders.value
+  if (paramNames.value.length) {
+    tabs.push({
+      name: 'params',
+      label: 'Params',
+      icon: 'carbon-text-selection',
+      length: paramNames.value.length,
+    })
+  }
+
+  tabs.push({
+    name: 'query',
+    label: 'Query',
+    icon: 'carbon-help',
+    length: routeInputs.query.length,
+  })
+
+  if (hasBody.value) {
+    tabs.push({
+      name: 'body',
+      label: 'Body',
+      icon: 'carbon-document',
+      length: routeInputs.body.length,
+    })
+  }
+
+  tabs.push({
+    name: 'headers',
+    label: 'Headers',
+    icon: 'carbon-html-reference',
+    length: routeInputs.headers.length,
+  })
+
+  tabs.push({
+    name: 'snippet',
+    label: 'Snippet',
+    icon: 'carbon-code',
+  })
+
+  return tabs
 })
 
-const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+
+// TODO: fix routeInputs[activeTab.value] type error
+const currentParams = computed<RouteInput[]>({
+  get: () => routeInputs[activeTab.value],
+  set: (value) => {
+    routeInputs[activeTab.value] = value
+  },
+})
+watchEffect(() => {
+  if (activeInputTab.value === 'json') {
+    if (typeof routeInputs[activeTab.value] === 'string')
+      routeInputs[activeTab.value] = JSON.parse(routeInputs[activeTab.value])
+  }
+})
 </script>
 
 <template>
@@ -209,41 +297,14 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 
     <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
-        v-if="paramNames.length"
-        :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'params'"
+        v-for="tab of tabs"
+        :key="tab.label"
+        :to="{ query: { ...$route.query, tab: tab.name } }"
+        :class="activeTab === tab.name ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
+        @click="activeTab = tab.name"
       >
-        <NIcon icon="i-carbon-text-selection" />
-        Params ({{ paramNames.length }})
-      </NButton>
-      <NButton
-        :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'query'"
-      >
-        <NIcon icon="i-carbon-help" />
-        Query {{ queriesCount ? `(${queriesCount})` : '' }}
-      </NButton>
-      <NButton
-        v-if="routeMethod !== 'GET'"
-        :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'body'"
-      >
-        <NIcon icon="i-carbon-document" />
-        Body
-      </NButton>
-      <NButton
-        :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'headers'"
-      >
-        <NIcon icon="i-carbon-html-reference" />
-        Headers {{ headersCount ? `(${headersCount})` : '' }}
-      </NButton>
-      <NButton
-        :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'snippet'"
-      >
-        <NIcon icon="carbon:code" />
-        Snippets
+        <NIcon :icon="tab.icon" />
+        {{ tab.label }} {{ tab?.length ? `(${tab.length})` : '' }}
       </NButton>
       <div flex-auto />
       <NButton
@@ -276,24 +337,47 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
         :code-snippets="codeSnippets"
       />
     </div>
-    <div v-else-if="currentParams" px4 py2 flex="~ col gap-2" border="b base">
-      <div v-for="(item, index) in currentParams" :key="index" flex="~ gap-2" justify-around>
-        <NTextInput v-model="item.key" placeholder="Key" flex-1 font-mono n="sm" />
-        <NTextInput v-model="item.value" placeholder="Value" flex-1 font-mono n="sm" />
-        <NButton n="red" @click="currentParams!.splice(index, 1)">
-          <NIcon icon="carbon:delete" />
-        </NButton>
-      </div>
-      <div>
-        <NButton
-          icon="carbon-add" n="sm primary"
-          my1 px-3 @click="currentParams!.push({ key: '', value: '' })"
-        >
-          Add
-        </NButton>
-      </div>
-    </div>
-
+    <template v-else-if="currentParams">
+      <NTabs v-model="activeInputTab" :tabs="inputTabs">
+        <template v-if="activeInputTab === 'inputs'">
+          <div v-for="(item, index) in currentParams" :key="index" flex="~ gap-2" justify-around>
+            <NTextInput v-model="item.key" placeholder="Key" flex-1 font-mono n="sm" />
+            <template v-if="item.type">
+              <NTextInput v-if="item.type === 'file'" type="file" @change="onFileInputChange(index, $event)" />
+              <div v-else-if="item.type === 'boolean'" ml2 flex>
+                <NCheckbox v-model="item.value" placeholder="Value" n="green lg" />
+              </div>
+              <NTextInput v-else v-model="item.value" :type="item.type" placeholder="Value" flex-1 font-mono n="sm" />
+            </template>
+            <NTextInput v-else v-model="item.value" placeholder="Value" flex-1 font-mono n="sm" />
+            <NSelect v-if="item?.type" v-model="item.type" n="sm">
+              <option v-for="inType of inputTypes" :key="inType" :value="inType">
+                {{ inType }}
+              </option>
+            </NSelect>
+            <NButton n="red" @click="currentParams!.splice(index, 1)">
+              <NIcon icon="carbon:delete" />
+            </NButton>
+          </div>
+          <div>
+            <NButton
+              icon="carbon-add" n="sm primary"
+              my1 px-3 @click="currentParams!.push({ key: '', value: '' })"
+            >
+              Add
+            </NButton>
+          </div>
+        </template>
+        <div v-else-if="activeInputTab === 'json'">
+          <JsonEditorVue
+            v-model="currentParams"
+            :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+            class="json-editor-vue h-full of-auto text-sm outline-none"
+            v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+          />
+        </div>
+      </NTabs>
+    </template>
     <NPanelGrids v-if="!started">
       <NButton n="primary" @click="fetchData">
         <NIcon icon="carbon:send" />
