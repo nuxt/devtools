@@ -67,6 +67,11 @@ const openInEditor = useOpenInEditor()
 const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/g))
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 
+const inputTabs = ['inputs', 'json']
+const activeInputTab = ref(inputTabs[0])
+// TODO: add better support for file, color, etc
+const inputTypes = ['text', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
+
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<RouteParam>({})
 const routeInputs = reactive<RouteInputs>({
@@ -83,12 +88,6 @@ const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toU
 const parsedQuery = computed(() => parseInputs(routeInputs.query))
 const parsedHeader = computed(() => parseInputs(routeInputs.headers))
 const parsedBody = computed(() => hasBody.value ? parseInputs(routeInputs.body) : undefined)
-
-const inputTabs = ['inputs', 'json']
-const activeInputTab = ref(inputTabs[0])
-
-// TODO: add better support for file, color, etc
-const inputTypes = ['text', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
 
 function onFileInputChange(index: number, event: Event) {
   const target = event.target as HTMLInputElement
@@ -267,6 +266,14 @@ watchEffect(() => {
   if (activeInputTab.value === 'json') {
     if (typeof routeInputs[activeTab.value] === 'string')
       routeInputs[activeTab.value] = JSON.parse(routeInputs[activeTab.value])
+    routeInputs[activeTab.value]?.forEach((input) => {
+      delete input.type
+    })
+  }
+  if (activeInputTab.value === 'inputs') {
+    routeInputs[activeTab.value]?.forEach((input) => {
+      input.type = 'text'
+    })
   }
 })
 </script>
