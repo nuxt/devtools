@@ -53,7 +53,6 @@ export function setupCustomTabRPC({ nuxt, options, refresh }: NuxtDevtoolsServer
         .finally(() => {
           nuxt.callHook('devtools:customTabs:refresh')
         })
-      nuxt.callHook('devtools:customTabs:refresh')
       return true
     },
   } satisfies Partial<ServerFunctions>
