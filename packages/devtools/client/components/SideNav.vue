@@ -2,7 +2,7 @@
 const client = useClient()
 const categories = useCategorizedTabs()
 
-const show = ref(true)
+const show = ref(false)
 const panel = ref()
 
 onClickOutside(panel, () => {
