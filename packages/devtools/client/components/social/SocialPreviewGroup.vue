@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import type { NormalizedHeadTag, SocialPreviewResolved } from '../../src/types'
+import type { NormalizedHeadTag, SocialPreviewResolved } from '../../../src/types'
 
-const props = defineProps({
-  tags: {
-    type: Array as PropType<NormalizedHeadTag[]>,
-    required: true,
-  },
-})
+const props = defineProps<{
+  tags: NormalizedHeadTag[]
+}>()
 
 const types = [
   'twitter',
