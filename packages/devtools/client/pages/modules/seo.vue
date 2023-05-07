@@ -76,12 +76,72 @@ const codeSnippet = computed(() => {
     name: 'useHead',
   }
 })
+
+function refresh() {
+  counter.value += 1
+}
+
+const router = useClientRouter()
+const route = useClientRoute()
+const routeInput = ref('')
+
+async function navigate() {
+  if (routeInput.value !== route.value.path)
+    router.value.push(routeInput.value || '/')
+}
+
+const routeInputMatched = computed(() => {
+  if (routeInput.value === route.value.path)
+    return []
+  return router.value.resolve(routeInput.value || '/').matched
+})
+
+until(route).toBeTruthy().then((v) => {
+  routeInput.value = v.path
+})
+
+until(router).toBeTruthy().then((v) => {
+  v.afterEach(() => {
+    nextTick(() => {
+      routeInput.value = route.value.path
+    })
+  })
+})
 </script>
 
 <template>
   <div flex="~" h-full w-full of-hidden>
-    <div h-full flex-auto of-auto p4>
-      <div flex="~ col gap-4">
+    <div h-full flex-auto of-auto>
+      <Navbar>
+        <template #search>
+          <NTextInput
+            v-model="routeInput"
+            placeholder="Route"
+            icon="carbon-direction-right-01 scale-y--100"
+            n="primary" flex-auto font-mono
+            class="px-5 py-2"
+            :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
+            @keydown.enter="navigate"
+          />
+        </template>
+        <template #actions>
+          <div flex-none flex="~ gap4">
+            <button
+              title="Refresh Data"
+              @click="refresh"
+            >
+              <NIcon icon="carbon:reset" />
+            </button>
+            <button
+              title="Toggle Preview"
+              @click="showPreview = !showPreview"
+            >
+              <NIcon :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'" />
+            </button>
+          </div>
+        </template>
+      </Navbar>
+      <div flex="~ col gap-4" p4>
         <!-- TODO: show current route -->
         <NCard grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
           <template v-for="item, index of headTags" :key="index">
