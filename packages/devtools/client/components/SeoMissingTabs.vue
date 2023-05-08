@@ -61,7 +61,7 @@ const routeMatchedFilePath = computed(() => {
       header-class="text-orange op100! [[open]_&]:text-inherit"
       :padding="false"
     >
-      <div flex="~ wrap" w-full flex-none>
+      <div flex="~ wrap" mt--2 w-full flex-none>
         <template v-for="name, idx of tabs" :key="idx">
           <button
             px4 py2 border="r t base"
@@ -81,22 +81,19 @@ const routeMatchedFilePath = computed(() => {
         <template v-for="item, index of missingTags" :key="index">
           <div v-if="index" x-divider />
           <div v-if="index" x-divider />
-          <div mr2 px4 py2 text-orange op75>
-            <div i-carbon-warning />
-            {{ item.name }}
+          <div flex="~ gap-1 items-center" px4 py2>
+            <div i-carbon-warning text-orange />
+            <NTextExternalLink
+              op50
+              :link="item.docs"
+              n="orange"
+            >
+              {{ item.name }}
+            </NTextExternalLink>
           </div>
           <!-- TODO: use icons instead, show link to documentation -->
-          <div w-full p2>
+          <div w-full p2 op75>
             {{ item.description }}
-            <NLink
-              v-if="item.docs"
-              :href="item.docs"
-              n="primary" cursor-pointer
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Docs
-            </NLink>
           </div>
         </template>
       </NCard>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
+import { seoTags } from '~/data/seo'
 
 definePageMeta({
   icon: 'icon-park-outline:seo',
@@ -62,6 +63,10 @@ const routeInputMatched = computed(() => {
   return router.value.resolve(routeInput.value || '/').matched
 })
 
+function getDocs(item: NormalizedHeadTag) {
+  return seoTags.find(i => i.name === item.name)?.docs
+}
+
 until(route).toBeTruthy().then((v) => {
   routeInput.value = v.path
 })
@@ -117,8 +122,14 @@ until(router).toBeTruthy().then((v) => {
             <template v-for="item, index of headTags" :key="index">
               <div v-if="index" x-divider />
               <div v-if="index" x-divider />
-              <div mr2 px4 py2 op50>
-                {{ item.name }}
+              <div mr2 px4 py2>
+                <NTextExternalLink
+                  op50
+                  :link="getDocs(item)"
+                  n="primary"
+                >
+                  {{ item.name }}
+                </NTextExternalLink>
               </div>
               <div w-full p2 font-mono>
                 {{ item.value }}
