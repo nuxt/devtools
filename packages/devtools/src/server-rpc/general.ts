@@ -8,12 +8,13 @@ import { logger } from '@nuxt/kit'
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 
-export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
   let importDirs: string[] = []
   const serverPages: NuxtPage[] = []
+  let serverApp: NuxtApp | undefined
 
   const serverHooks: Record<string, HookInfo> = setupHooksDebug(nuxt.hooks)
 
@@ -47,6 +48,9 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
 
     refresh('getServerPages')
   })
+  nuxt.hook('app:resolve', (app) => {
+    serverApp = app
+  })
   nuxt.hook('imports:sources', async (v) => {
     const result = (await resolveBuiltinPresets(v)).flat()
     importPresets.length = 0
@@ -66,6 +70,9 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   return {
     getServerConfig() {
       return nuxt.options
+    },
+    getServerApp() {
+      return serverApp
     },
     getComponents() {
       return components
@@ -111,12 +118,25 @@ export function setupGeneralRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
         `${input}.mjs`,
         `${input}.ts`,
       ].find(i => existsSync(i))
-      if (path) {
+
+      if (!path) {
+        console.error('File not found:', input)
+        return false
+      }
+
+      try {
+        for (const hook of openInEditorHooks) {
+          const result = await hook(path)
+          if (result)
+            return true
+        }
         // @ts-expect-error missin types
         await import('launch-editor').then(r => (r.default || r)(path + suffix))
+        return true
       }
-      else {
-        console.error('File not found:', input)
+      catch (e) {
+        console.error(e)
+        return false
       }
     },
     restartNuxt(hard = true) {

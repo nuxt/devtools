@@ -108,5 +108,7 @@ const filtered = computed(() => {
     </NSectionBlock>
   </div>
 
-  <HelpFab path="/imports" />
+  <HelpFab>
+    <DocsImports />
+  </HelpFab>
 </template>

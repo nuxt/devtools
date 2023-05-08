@@ -36,6 +36,7 @@ function toggleView() {
       :components="components"
     >
       <div flex-none flex="~ gap4">
+        <!-- TODO: Use NIconButton -->
         <button
           title="Toggle view"
           @click="toggleView"
@@ -54,5 +55,7 @@ function toggleView() {
     </component>
   </div>
 
-  <HelpFab path="/components" />
+  <HelpFab>
+    <DocsComponents />
+  </HelpFab>
 </template>

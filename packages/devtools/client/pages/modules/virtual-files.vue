@@ -93,7 +93,9 @@ const filteredFiles = computed(() => {
     </template>
   </PanelLeftRight>
 
-  <HelpFab path="/virtual-files" />
+  <HelpFab>
+    <DocsVirtualFiles />
+  </HelpFab>
 </template>
 
 <style>

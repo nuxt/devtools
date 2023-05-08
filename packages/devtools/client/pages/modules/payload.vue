@@ -66,5 +66,7 @@ async function refreshData(keys?: string[]) {
     </NSectionBlock>
   </div>
 
-  <HelpFab path="/payload" />
+  <HelpFab>
+    <DocsPayload />
+  </HelpFab>
 </template>

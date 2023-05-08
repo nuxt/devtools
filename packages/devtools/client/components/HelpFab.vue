@@ -1,9 +1,4 @@
 <script setup lang="ts">
-const props = defineProps<{
-  path: string
-}>()
-
-const { data } = useAsyncData(props.path, () => queryContent(props.path).findOne())
 const open = ref(false)
 const {
   showHelpButtons,
@@ -36,7 +31,7 @@ const {
         v-if="open" border="l base"
         class="prose" pos="fixed bottom-0 right-0 top-0" z-200 w-150 px8 py4 bg-base
       >
-        <ContentRenderer v-if="data" :value="data" />
+        <slot />
         <NIconButton
           icon="carbon-close"
           pos="absolute top-3 right-3"

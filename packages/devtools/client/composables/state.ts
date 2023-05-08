@@ -71,6 +71,10 @@ export function useServerConfig() {
   return useAsyncState('getServerConfig', () => rpc.getServerConfig())
 }
 
+export function useServerApp() {
+  return useAsyncState('getServerApp', () => rpc.getServerApp())
+}
+
 export function useCustomTabs() {
   return useAsyncState('getCustomTabs', () => rpc.getCustomTabs())
 }
@@ -197,4 +201,20 @@ export function useVirtualFiles() {
     responseType: 'json',
   })
   return data
+}
+
+export function useMergedRouteList() {
+  const serverPages = useServerPages()
+  const router = useClientRouter()
+
+  return computed((): RouteInfo[] => {
+    return (router.value?.getRoutes() || [])
+      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map((i) => {
+        return {
+          ...serverPages.value?.find(j => j.name && j.name === i.name),
+          ...i,
+        }
+      })
+  })
 }

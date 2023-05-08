@@ -1,5 +1,4 @@
 import { resolve } from 'node:path'
-
 import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
 
@@ -10,8 +9,9 @@ function r(p: string) {
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
-    '@nuxt/content',
+    // '@nuxt/content',
     '~/modules/custom-tabs',
+    '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
   ],

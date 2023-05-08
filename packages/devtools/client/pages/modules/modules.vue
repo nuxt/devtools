@@ -95,5 +95,7 @@ watchEffect(() => {
     </Transition>
   </div>
 
-  <HelpFab path="/modules" />
+  <HelpFab>
+    <DocsModules />
+  </HelpFab>
 </template>

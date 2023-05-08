@@ -1,3 +1,59 @@
+## [0.4.6](https://github.com/nuxt/devtools-poc/compare/v0.4.5...v0.4.6) (2023-05-08)
+
+
+### Bug Fixes
+
+* default state of DockingPanel ([a009866](https://github.com/nuxt/devtools-poc/commit/a0098669a2ea85f7917816b251f4cbd5e7b712c6))
+* DockingPanel clickoutside on iframe ([#211](https://github.com/nuxt/devtools-poc/issues/211)) ([afdaa5b](https://github.com/nuxt/devtools-poc/commit/afdaa5bca5eaa4ff2e85f9313414b9409122cab5))
+* fix shortcut to togglePanel ([#212](https://github.com/nuxt/devtools-poc/issues/212)) ([e64dbcd](https://github.com/nuxt/devtools-poc/commit/e64dbcd31ea1aa50d72bac9cec958e0159da6226))
+* nitro storage link ([#220](https://github.com/nuxt/devtools-poc/issues/220)) ([ddd2e41](https://github.com/nuxt/devtools-poc/commit/ddd2e41d7c0e40b222725fb69a1499293e57baa2))
+
+
+### Features
+
+* add open graph tab ([#209](https://github.com/nuxt/devtools-poc/issues/209)) ([b94de30](https://github.com/nuxt/devtools-poc/commit/b94de302a123d5ccc6b7ef319a25b154ba22953a))
+* allow iframe permissions ([#215](https://github.com/nuxt/devtools-poc/issues/215)) ([44fce14](https://github.com/nuxt/devtools-poc/commit/44fce1450374f5ddfe68cb22258105b808b743c9))
+
+
+
+## [0.4.5](https://github.com/nuxt/devtools-poc/compare/v0.4.4...v0.4.5) (2023-04-30)
+
+
+### Bug Fixes
+
+* correctly read plugins list ([76bc71d](https://github.com/nuxt/devtools-poc/commit/76bc71d87a3bd7f195ec362ea46c28aaf7da2421))
+* use compile time markdown ([f9979b9](https://github.com/nuxt/devtools-poc/commit/f9979b9cb9eb36044954a5c4a5bd02dab113671c))
+
+
+
+## [0.4.4](https://github.com/nuxt/devtools-poc/compare/v0.4.3...v0.4.4) (2023-04-30)
+
+
+### Features
+
+* open in file in embeded vscode ([#207](https://github.com/nuxt/devtools-poc/issues/207)) ([9f17662](https://github.com/nuxt/devtools-poc/commit/9f176624fcf0c2e2192fcd77104cd33401761604))
+
+
+
+## [0.4.3](https://github.com/nuxt/devtools-poc/compare/v0.4.2...v0.4.3) (2023-04-29)
+
+
+### Bug Fixes
+
+* disconnect indicator zindex, close [#202](https://github.com/nuxt/devtools-poc/issues/202) ([e9ab49f](https://github.com/nuxt/devtools-poc/commit/e9ab49fce40524d66fea2a068408748eb0cb4d40))
+* server-routes watcher ([#205](https://github.com/nuxt/devtools-poc/issues/205)) ([19fda12](https://github.com/nuxt/devtools-poc/commit/19fda12c19b983043894763900f9233c92b31e33))
+* **wizard:** update disable logic ([95353b6](https://github.com/nuxt/devtools-poc/commit/95353b6c9976923b31e8580e75785cd3edabbb0c))
+* **wizard:** use object options instead, close [#206](https://github.com/nuxt/devtools-poc/issues/206) ([d63cf58](https://github.com/nuxt/devtools-poc/commit/d63cf5882f0fd08af691148d218e65023e1b5f64))
+
+
+### Features
+
+* improve settings ui ([c0b4bd6](https://github.com/nuxt/devtools-poc/commit/c0b4bd664588332242cd978dc75f6da4c3781596))
+* support middleware, close [#184](https://github.com/nuxt/devtools-poc/issues/184) ([73ef44c](https://github.com/nuxt/devtools-poc/commit/73ef44ca5a7e87928a1366be50edf3124bc0f1ee))
+* support navigating to virtual file ([ff27b92](https://github.com/nuxt/devtools-poc/commit/ff27b9249f55e8c53f04c8bafffc3fe099f82813))
+
+
+
 ## [0.4.2](https://github.com/nuxt/devtools-poc/compare/v0.4.1...v0.4.2) (2023-04-24)
 
 

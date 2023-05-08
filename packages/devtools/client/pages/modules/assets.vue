@@ -57,6 +57,7 @@ function refreshAssets() {}
   <div h-full of-auto>
     <Navbar ref="navbar" v-model:search="search" pb2>
       <template #actions>
+        <!-- TODO: Use NIconButton -->
         <div flex-none flex="~ gap4">
           <button
             title="Toggle view"

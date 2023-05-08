@@ -63,6 +63,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     rpc,
     refresh,
     extendServerRpc,
+    openInEditorHooks: [],
   }
 
   // @ts-expect-error untyped

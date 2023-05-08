@@ -10,6 +10,8 @@ on:
 
 jobs:
   ci:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,4 +30,5 @@ jobs:
           !contains(github.event.head_commit.message, '[skip-release]')
         run: ./scripts/release-edge.sh
         env:
+          NPM_CONFIG_PROVENANCE: true
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
