@@ -6,6 +6,7 @@ import { seoTags } from '../data/seo'
 
 const props = defineProps<{
   tags: NormalizedHeadTag[]
+  matchedRouteFilepath?: string
 }>()
 
 const missingTags = computed(() => {
@@ -43,13 +44,6 @@ const tabs = [
   'Code Snippet',
 ]
 const selectedTab = ref(tabs[0])
-
-const route = useClientRoute()
-const routes = useMergedRouteList()
-const routeMatchedFilePath = computed(() => {
-  const matched = routes.value.find(i => i.path === route.value?.matched?.[0]?.path)
-  return matched?.file || matched?.meta?.file as string
-})
 </script>
 
 <template>
@@ -100,20 +94,16 @@ const routeMatchedFilePath = computed(() => {
       <div v-else m4 flex="~ col gap-2">
         <p flex="~ gap-1 wrap items-center">
           <NButton
-            icon="carbon-copy"
-            n="xs"
-            px-2
+            icon="carbon-copy" n="xs" px-2
             @click="copy(codeSnippet)"
           >
             Copy
           </NButton>
           the following code snippet and paste it into your
           <NButton
-            v-if="routeMatchedFilePath"
-            icon="carbon-launch"
-            n="xs"
-            px-2
-            @click="openInEditor(routeMatchedFilePath)"
+            v-if="matchedRouteFilepath"
+            icon="carbon-launch" n="xs" px-2
+            @click="openInEditor(matchedRouteFilepath)"
           >
             page component
           </NButton>

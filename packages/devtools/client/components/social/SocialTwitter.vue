@@ -36,7 +36,7 @@ const type = computed(() => {
     />
     <div
       v-else
-      class="h-[122px] w-[122px] border-r border-base bg-cover bg-center bg-no-repeat"
+      class="h-[122px] w-[122px] flex-none border-r border-base bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: `url(${JSON.stringify(card.image)})` }"
     />
     <div class="break-words border-base p-[0.75em] antialiased" flex="~ col justify-center gap-1">

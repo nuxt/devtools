@@ -51,6 +51,8 @@ function refresh() {
 const router = useClientRouter()
 const route = useClientRoute()
 const routeInput = ref('')
+const routes = useMergedRouteList()
+const openInEditor = useOpenInEditor()
 
 async function navigate() {
   if (routeInput.value !== route.value.path)
@@ -61,6 +63,11 @@ const routeInputMatched = computed(() => {
   if (routeInput.value === route.value.path)
     return []
   return router.value.resolve(routeInput.value || '/').matched
+})
+
+const routeMatchedFilePath = computed(() => {
+  const matched = routes.value.find(i => i.path === route.value?.matched?.[0]?.path)
+  return matched?.file || matched?.meta?.file as string
 })
 
 function getDocs(item: NormalizedHeadTag) {
@@ -97,6 +104,13 @@ until(router).toBeTruthy().then((v) => {
         </template>
         <template #actions>
           <div flex-none flex="~ gap4">
+            <button
+              v-if="routeMatchedFilePath"
+              title="Open file in editor"
+              @click="openInEditor(routeMatchedFilePath)"
+            >
+              <NIcon icon="carbon:launch" />
+            </button>
             <button
               title="Refresh Data"
               @click="refresh"
@@ -141,7 +155,7 @@ until(router).toBeTruthy().then((v) => {
             </template>
           </NCard>
         </NSectionBlock>
-        <SeoMissingTabs :tags="headTags" />
+        <SeoMissingTabs :tags="headTags" :matched-route-filepath="routeMatchedFilePath" />
       </div>
     </div>
     <SocialPreviewGroup v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />
