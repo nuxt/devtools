@@ -114,6 +114,7 @@ export interface ModuleBuiltinTab {
   category?: TabCategory
   show?: () => any
   badge?: () => number | string | undefined
+  onClick?: () => void
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab
