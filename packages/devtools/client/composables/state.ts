@@ -101,7 +101,7 @@ export function useAllTabs() {
           ...i.meta,
         }
       }),
-    {
+    <ModuleBuiltinTab>{
       name: 'builtin-inspector',
       title: 'Inspect Vue components',
       icon: 'i-carbon-select-window',
@@ -146,7 +146,7 @@ export function useCategorizedTabs(enabledOnly = true) {
     }
 
     for (const tab of tabs.value) {
-      const category = tab.category || 'app'
+      const category = (tab.category || 'app')
       if (enabledOnly && settings.hiddenTabCategories.value.includes(category))
         continue
       if (!categories[category])
