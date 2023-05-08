@@ -2,7 +2,7 @@
 import { defu } from 'defu'
 import type { ReactiveHead } from '@unhead/vue'
 import type { NormalizedHeadTag } from '../../src/types'
-import { seoTags } from '../data/seo'
+import { ogTags } from '../data/open-graph'
 
 const props = defineProps<{
   tags: NormalizedHeadTag[]
@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const missingTags = computed(() => {
-  return seoTags.filter(define => !props.tags?.some(tag => tag.name === define.name))
+  return ogTags.filter(define => !props.tags?.some(tag => tag.name === define.name))
 })
 
 const missingRequiredTags = computed(() => {

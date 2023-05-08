@@ -1,6 +1,6 @@
 import type { ReactiveHead } from '@unhead/vue'
 
-export interface SeoTagDefine {
+export interface OpenGraphTagDefine {
   name: string
   suggestion: 'required' | 'recommended' | 'optional'
   default: Partial<ReactiveHead>
@@ -8,7 +8,7 @@ export interface SeoTagDefine {
   description?: string
 }
 
-export const seoTags: SeoTagDefine[] = [
+export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'title',
     suggestion: 'required',

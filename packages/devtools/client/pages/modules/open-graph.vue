@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
-import { seoTags } from '~/data/seo'
+import { ogTags } from '~/data/open-graph'
 
 definePageMeta({
-  icon: 'icon-park-outline:seo',
-  title: 'SEO',
+  icon: 'carbon:image-search',
+  title: 'Open Graph',
   layout: 'full',
   category: 'analyze',
-  experimental: true,
   show: () => !!useClient().value,
 })
 
@@ -71,7 +70,7 @@ const routeMatchedFilePath = computed(() => {
 })
 
 function getDocs(item: NormalizedHeadTag) {
-  return seoTags.find(i => i.name === item.name)?.docs
+  return ogTags.find(i => i.name === item.name)?.docs
 }
 
 until(route).toBeTruthy().then((v) => {
@@ -155,13 +154,13 @@ until(router).toBeTruthy().then((v) => {
             </template>
           </NCard>
         </NSectionBlock>
-        <SeoMissingTabs :tags="headTags" :matched-route-filepath="routeMatchedFilePath" />
+        <OpenGraphMissingTabs :tags="headTags" :matched-route-filepath="routeMatchedFilePath" />
       </div>
     </div>
     <SocialPreviewGroup v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />
   </div>
 
   <HelpFab>
-    <DocsSeo />
+    <DocsOpenGraph />
   </HelpFab>
 </template>
