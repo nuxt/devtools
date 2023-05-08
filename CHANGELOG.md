@@ -1,3 +1,21 @@
+## [0.4.6](https://github.com/nuxt/devtools-poc/compare/v0.4.5...v0.4.6) (2023-05-08)
+
+
+### Bug Fixes
+
+* default state of DockingPanel ([a009866](https://github.com/nuxt/devtools-poc/commit/a0098669a2ea85f7917816b251f4cbd5e7b712c6))
+* DockingPanel clickoutside on iframe ([#211](https://github.com/nuxt/devtools-poc/issues/211)) ([afdaa5b](https://github.com/nuxt/devtools-poc/commit/afdaa5bca5eaa4ff2e85f9313414b9409122cab5))
+* fix shortcut to togglePanel ([#212](https://github.com/nuxt/devtools-poc/issues/212)) ([e64dbcd](https://github.com/nuxt/devtools-poc/commit/e64dbcd31ea1aa50d72bac9cec958e0159da6226))
+* nitro storage link ([#220](https://github.com/nuxt/devtools-poc/issues/220)) ([ddd2e41](https://github.com/nuxt/devtools-poc/commit/ddd2e41d7c0e40b222725fb69a1499293e57baa2))
+
+
+### Features
+
+* add open graph tab ([#209](https://github.com/nuxt/devtools-poc/issues/209)) ([b94de30](https://github.com/nuxt/devtools-poc/commit/b94de302a123d5ccc6b7ef319a25b154ba22953a))
+* allow iframe permissions ([#215](https://github.com/nuxt/devtools-poc/issues/215)) ([44fce14](https://github.com/nuxt/devtools-poc/commit/44fce1450374f5ddfe68cb22258105b808b743c9))
+
+
+
 ## [0.4.5](https://github.com/nuxt/devtools-poc/compare/v0.4.4...v0.4.5) (2023-04-30)
 
 
