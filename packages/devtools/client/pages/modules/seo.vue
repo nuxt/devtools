@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { defu } from 'defu'
-import type { ReactiveHead } from '@unhead/vue'
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
-import { seoTags } from '~/data/seo'
 
 definePageMeta({
   icon: 'icon-park-outline:seo',
@@ -44,38 +41,7 @@ const headTags = computedAsync(async () => {
   })
 }, [])
 
-const missingTags = computed(() => {
-  return seoTags.filter(define => !headTags.value?.some(tag => tag.name === define.name))
-})
-
-const missingRequiredTags = computed(() => {
-  return missingTags.value.filter(i => i.suggestion === 'required')
-})
-const missingRecommendedTags = computed(() => {
-  return missingTags.value.filter(i => i.suggestion === 'recommended')
-})
-
 const showPreview = ref(true)
-
-const mergedMissingTags = computed(() => {
-  let data: Partial<ReactiveHead> = {}
-  missingTags.value
-    .forEach((tag) => {
-      data = defu(data, tag.default)
-    })
-  return data
-})
-
-const codeSnippet = computed(() => {
-  const body = JSON.stringify(mergedMissingTags.value, null, 2)
-    .replace(/"([^"]+)":/g, '$1:')
-    .replace(/"/g, '\'')
-  return {
-    code: `useHead(${body})`,
-    lang: 'ts',
-    name: 'useHead',
-  }
-})
 
 function refresh() {
   counter.value += 1
@@ -141,51 +107,27 @@ until(router).toBeTruthy().then((v) => {
           </div>
         </template>
       </Navbar>
-      <div flex="~ col gap-4" p4>
-        <!-- TODO: show current route -->
-        <NCard grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
-          <template v-for="item, index of headTags" :key="index">
-            <div v-if="index" x-divider />
-            <div v-if="index" x-divider />
-            <div mr2 px4 py2 op50>
-              {{ item.name }}
-            </div>
-            <div w-full p2 font-mono>
-              {{ item.value }}
-              <!-- TODO: make link clickable -->
-            </div>
-          </template>
-        </NCard>
-
-        <template v-if="missingTags.length">
-          <div>{{ missingRequiredTags.length }} required, {{ missingRecommendedTags.length }} recommended</div>
+      <div flex="~ col">
+        <NSectionBlock
+          text="Tags"
+          icon="carbon:tag-group"
+        >
+          <!-- TODO: show current route -->
           <NCard grid="~ cols-[max-content_1fr]" items-center justify-between of-hidden>
-            <template v-for="item, index of missingTags" :key="index">
+            <template v-for="item, index of headTags" :key="index">
               <div v-if="index" x-divider />
               <div v-if="index" x-divider />
-              <div mr2 px4 py2 text-orange op75>
-                <div i-carbon-warning />
+              <div mr2 px4 py2 op50>
                 {{ item.name }}
               </div>
-              <!-- TODO: use icons instead, show link to documentation -->
-              <div w-full p2>
-                {{ item.description }}
-                <NLink
-                  v-if="item.docs"
-                  :to="item.docs"
-                  n="primary" cursor-pointer
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Docs
-                </NLink>
+              <div w-full p2 font-mono>
+                {{ item.value }}
+              <!-- TODO: make link clickable -->
               </div>
             </template>
           </NCard>
-          <NCard n-code-block>
-            <CodeSnippet :snippet="codeSnippet" />
-          </NCard>
-        </template>
+        </NSectionBlock>
+        <SeoMissingTabs :tags="headTags" />
       </div>
     </div>
     <SocialPreviewGroup v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />

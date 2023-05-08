@@ -7,6 +7,7 @@ export interface SeoTagDefine {
   docs?: string
   description?: string
 }
+
 export const seoTags: SeoTagDefine[] = [
   {
     name: 'title',
