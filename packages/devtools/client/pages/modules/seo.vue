@@ -131,10 +131,13 @@ until(router).toBeTruthy().then((v) => {
                   {{ item.name }}
                 </NTextExternalLink>
               </div>
-              <div w-full p2 font-mono>
+              <NTextExternalLink
+                :link=" item.value.match(/^https?:\/\//) ? item.value : undefined"
+                w-full p2 font-mono
+                n="primary"
+              >
                 {{ item.value }}
-              <!-- TODO: make link clickable -->
-              </div>
+              </NTextExternalLink>
             </template>
           </NCard>
         </NSectionBlock>
