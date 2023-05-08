@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { CodeSnippet } from '~~/../src/types'
+import type { CodeSnippet } from '~~/../src/types'
 
 const props = defineProps<{
   codeSnippets: CodeSnippet[]
 }>()
 
 const selected = shallowRef<CodeSnippet | undefined>(props.codeSnippets[0])
+const copy = useCopy()
 
 watchEffect(() => {
   if (!props.codeSnippets.includes(selected.value!))
@@ -32,7 +33,26 @@ watchEffect(() => {
     </div>
 
     <template v-if="selected">
-      <CodeSnippet :snippet="selected" />
+      <NCodeBlock
+        :code="selected.code"
+        :lang="selected.lang"
+        :lines="false"
+        w-full of-auto p3
+      />
+      <div flex="~ gap-2" px3 pb3 n="sm primary">
+        <NButton
+          icon="carbon-copy"
+          @click="copy(selected!.code)"
+        >
+          Copy
+        </NButton>
+        <NButton
+          v-if="selected?.docs" :to="selected.docs" target="_blank"
+          icon="carbon-catalog"
+        >
+          Docs
+        </NButton>
+      </div>
     </template>
   </div>
 </template>
