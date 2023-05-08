@@ -19,12 +19,6 @@ interface RouteInput {
   type?: string
 }
 
-interface RouteInputs {
-  body: RouteInput[]
-  query: RouteInput[]
-  headers: RouteInput[]
-}
-
 interface RouteParam {
   [key: string]: string | boolean | number
 }
@@ -74,10 +68,10 @@ const inputTypes = ['text', 'number', 'boolean', 'file', 'date', 'time', 'dateti
 
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<RouteParam>({})
-const routeInputs = reactive<RouteInputs>({
-  query: [{ key: '', value: '' }],
-  body: [{ key: '', value: '' }],
-  headers: [{ key: 'Content-Type', value: 'application/json' }],
+const routeInputs = reactive({
+  query: [{ key: '', value: '' }] as RouteInput[],
+  body: [{ key: '', value: '' }] as RouteInput[],
+  headers: [{ key: 'Content-Type', value: 'application/json' }] as RouteInput[],
 })
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
@@ -255,23 +249,25 @@ const tabs = computed(() => {
 
 const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
 
-// TODO: fix routeInputs[activeTab.value] type error
+// TODO: fix routeInputs[activeTab.value] type
+type RouteInputs = keyof typeof routeInputs
 const currentParams = computed<RouteInput[]>({
-  get: () => routeInputs[activeTab.value],
+  get: () => routeInputs[activeTab.value as RouteInputs],
   set: (value) => {
-    routeInputs[activeTab.value] = value
+    routeInputs[activeTab.value as RouteInputs] = value
   },
 })
 watchEffect(() => {
+  const tab = activeTab.value as RouteInputs
   if (activeInputTab.value === 'json') {
-    if (typeof routeInputs[activeTab.value] === 'string')
-      routeInputs[activeTab.value] = JSON.parse(routeInputs[activeTab.value])
-    routeInputs[activeTab.value]?.forEach((input) => {
+    if (typeof routeInputs[tab] === 'string')
+      routeInputs[tab] = JSON.parse(routeInputs[tab] as any)
+    routeInputs[tab]?.forEach((input) => {
       delete input.type
     })
   }
   if (activeInputTab.value === 'inputs') {
-    routeInputs[activeTab.value]?.forEach((input) => {
+    routeInputs[tab]?.forEach((input) => {
       input.type = 'text'
     })
   }

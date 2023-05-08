@@ -4,7 +4,7 @@
 import { NuxtLink } from '#components'
 
 defineProps<{
-  to?: string | object
+  to?: string
   icon?: string
 }>()
 </script>
