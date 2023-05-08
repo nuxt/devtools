@@ -87,6 +87,7 @@ export function useAllTabs() {
   const customTabs = useCustomTabs()
   const settings = useDevToolsSettings()
   const router = useRouter()
+  const client = useClient()
 
   const builtin = computed(() => [
     ...router.getRoutes()
@@ -100,6 +101,21 @@ export function useAllTabs() {
           ...i.meta,
         }
       }),
+    {
+      name: 'builtin-inspector',
+      title: 'Inspect Vue components',
+      icon: 'i-carbon-select-window',
+      category: 'app',
+      show() {
+        return !!client.value?.inspector?.instance
+      },
+      onClick() {
+        if (!client.value?.inspector?.instance)
+          return
+        client.value.inspector.enable()
+        router.push('/__inspecting')
+      },
+    },
     ...(customTabs.value || []).filter(i => i.name.startsWith('builtin-')),
   ])
 
