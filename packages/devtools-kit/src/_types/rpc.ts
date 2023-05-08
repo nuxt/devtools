@@ -48,6 +48,7 @@ export interface ServerFunctions {
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
+  installNuxtModule(name: string, dry?: boolean): Promise<{ original: string; generated: string }>
 }
 
 export interface ClientFunctions {

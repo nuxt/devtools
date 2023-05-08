@@ -9,7 +9,6 @@ function r(p: string) {
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
-    // '@nuxt/content',
     '~/modules/custom-tabs',
     '~/modules/markdown',
     DevToolsUiKit,
