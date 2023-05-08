@@ -21,3 +21,18 @@ export interface DevToolsUISettings {
   hiddenTabs: string[]
   hiddenTabCategories: string[]
 }
+
+export interface SocialPreviewResolved {
+  url?: string
+  title?: string
+  description?: string
+  favicon?: string
+  image?: string
+  imageAlt?: string
+}
+
+export interface NormalizedHeadTag {
+  tag: string
+  name: string
+  value: string
+}

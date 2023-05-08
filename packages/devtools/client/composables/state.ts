@@ -202,3 +202,19 @@ export function useVirtualFiles() {
   })
   return data
 }
+
+export function useMergedRouteList() {
+  const serverPages = useServerPages()
+  const router = useClientRouter()
+
+  return computed((): RouteInfo[] => {
+    return (router.value?.getRoutes() || [])
+      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map((i) => {
+        return {
+          ...serverPages.value?.find(j => j.name && j.name === i.name),
+          ...i,
+        }
+      })
+  })
+}

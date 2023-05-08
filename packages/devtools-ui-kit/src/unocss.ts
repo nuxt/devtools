@@ -98,7 +98,7 @@ export function unocssPreset(): Preset {
 
       // link
       'n-link-base': 'underline underline-offset-2 underline-black/20 dark:underline-white/40',
-      'n-link-hover': 'decoration-dotted text-context underline-context',
+      'n-link-hover': 'decoration-dotted text-context underline-context! op100!',
 
       // card
       'n-card-base': 'border n-border-base rounded n-bg-base shadow-sm',
