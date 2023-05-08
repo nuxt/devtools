@@ -1,9 +1,7 @@
 <script setup lang="ts">
+// @ts-expect-error missing types
+import { RecycleScroller } from 'vue-virtual-scroller'
 import Fuse from 'fuse.js'
-
-const props = defineProps<{
-  modelValue?: boolean
-}>()
 
 const collection = await useModulesInfo()
 const nuxt3only = collection.filter(i => i.compatibility.nuxt.includes('^3'))
@@ -41,8 +39,20 @@ const items = computed(() => {
       mx6 px-5 py-2
     />
 
-    <div flex-auto of-auto>
-      {{ items }}
+    <div flex-auto of-auto flex="~ col gap-2" pl6 pr4>
+      <RecycleScroller
+        v-slot="{ item }"
+        class="scroller"
+        :items="items"
+        :item-size="160"
+        key-field="name"
+      >
+        <ModuleItemBase
+          :mod="{}"
+          :info="item" mb2 h-full
+          :compact="true"
+        />
+      </RecycleScroller>
     </div>
   </div>
 </template>

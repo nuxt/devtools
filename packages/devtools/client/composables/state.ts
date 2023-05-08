@@ -2,9 +2,9 @@ import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleMetric, RouteInfo, TabCategory } from '../../src/types'
+import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
-let modules: Promise<ModuleMetric[]> | undefined
+let modules: Promise<ModuleStaticInfo[]> | undefined
 
 export async function useModulesInfo() {
   if (modules)

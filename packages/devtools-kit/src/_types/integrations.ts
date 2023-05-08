@@ -81,7 +81,7 @@ export interface BasicModuleInfo {
   }
 }
 
-export interface ModuleMetric {
+export interface ModuleStaticInfo {
   name: string
   description: string
   repo: string
