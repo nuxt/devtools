@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 
 // @ts-expect-error auto imported from @nuxtjs/color-mode
 import { useColorMode } from '#imports'
@@ -35,8 +35,9 @@ function toggle(event?: MouseEvent) {
     Math.max(y, innerHeight - y),
   )
   // @ts-expect-error: Transition API
-  const transition = document.startViewTransition(() => {
+  const transition = document.startViewTransition(async () => {
     isDark.value = !isDark.value
+    await nextTick()
   })
 
   transition.ready.then(() => {

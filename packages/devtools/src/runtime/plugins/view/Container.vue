@@ -76,7 +76,7 @@ function getToggleButtonPosition() {
   background: #0C0C0C;
   border: 1px solid rgba(125,125,125,0.2);
   box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
-  z-index: 2147483647;
+  z-index: 2147483645;
   cursor: pointer;
   opacity: 0.8;
   padding: 0;
