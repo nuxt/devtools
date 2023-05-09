@@ -30,3 +30,10 @@ export interface NuxtDevtoolsInfo {
   packagePath: string
   isGlobalInstall: boolean
 }
+
+export interface InstallModuleReturn {
+  configOriginal: string
+  configGenerated: string
+  commands: string[]
+  processId: string
+}

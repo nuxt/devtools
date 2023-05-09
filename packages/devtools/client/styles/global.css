@@ -132,6 +132,10 @@ textarea {
   height: 6px;
 }
 
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-track {
   background: var(--c-border);
   border-radius: 1px;

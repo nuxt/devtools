@@ -9,6 +9,7 @@ const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, command: 
 const collection = await useModulesInfo()
 const nuxt3only = collection.filter(i => i.compatibility.nuxt.includes('^3'))
 
+const router = useRouter()
 const search = ref('')
 const fuse = computed(() => new Fuse(nuxt3only, {
   keys: [
@@ -45,13 +46,22 @@ function printDiff(from: string, to: string) {
 }
 
 async function install(item: ModuleStaticInfo) {
-  const command = await rpc.getNpmCommand('update', item.npm, { dev: true })
-  if (!command)
+  const {
+    commands,
+    configOriginal,
+    configGenerated,
+    processId,
+  } = await rpc.installNuxtModule(item.npm, true)
+
+  if (!commands)
     return
 
-  const config = await rpc.installNuxtModule(item.npm, true)
+  const result = await Dialog.start(item, commands.join(' '), printDiff(configOriginal, configGenerated))
+  if (!result)
+    return
 
-  await Dialog.start(item, command.join(' '), printDiff(config.original, config.generated))
+  router.push(`/modules/terminals?id=${encodeURIComponent(processId)}`)
+  await rpc.installNuxtModule(item.npm, false)
 }
 </script>
 
@@ -93,14 +103,14 @@ async function install(item: ModuleStaticInfo) {
 
   <Dialog v-slot="{ resolve, args }">
     <NDialog :model-value="true" @close="resolve(false)">
-      <div flex="~ col gap-2" w-150 p4>
+      <ModuleItemBase :mod="{}" :info="args[0]" border="none" n-panel-grids />
+      <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl>
-          Installing module <span capitalize>{{ args[0].name }}</span>?
+          Installing <span capitalize text-primary>{{ args[0].name }}</span> module?
         </h2>
-        <ModuleItemBase :mod="{}" :info="args[0]" />
 
         <p op50>
-          The following command will be executed in your terminal:
+          Following command will be executed in your terminal:
         </p>
         <NCodeBlock :code="args[1]" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
 
@@ -108,14 +118,18 @@ async function install(item: ModuleStaticInfo) {
           Then your Nuxt config will be updated as:
         </p>
 
-        <NCodeBlock :code="args[2]" lang="diff" max-h-100 of-auto px4 py2 border="~ base rounded" />
+        <NCodeBlock :code="args[2]" lang="diff" max-h-80 of-auto px4 py2 border="~ base rounded" />
+
+        <p>
+          <span op50>After module installed, Nuxt will </span><span text-orange>restart automatically</span>.
+        </p>
 
         <div flex="~ gap-3" mt2 justify-end>
           <NButton @click="resolve(false)">
             Cancel
           </NButton>
           <NButton n="solid primary" @click="resolve(true)">
-            Yes
+            Install
           </NButton>
         </div>
       </div>
