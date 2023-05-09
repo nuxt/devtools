@@ -44,16 +44,25 @@ watchEffect(() => {
       :padding="false"
       :description="`Total modules: ${packageModules.length}`"
     >
-      <template #footer>
-        <NButton icon="carbon-add" mx4 n="primary" @click="installModuleOpen = true">
-          Install New Module
-        </NButton>
-      </template>
       <ModuleItem
         v-for="m of packageModules"
         :key="m.meta?.name || m.entryPath"
         :mod="m"
       />
+      <NCard
+        border="1.5 dashed"
+        min-h-30 p4 transition
+        hover="border-primary"
+        flex="~ col gap-2 items-center justify-center"
+        role="button"
+        class="group"
+        @click="installModuleOpen = true"
+      >
+        <div i-carbon-new-tab text-4xl op40 group-hover="op75 text-primary" transition />
+        <div text-lg op40 group-hover="op75 text-primary" transition>
+          Install New Module
+        </div>
+      </NCard>
     </NSectionBlock>
     <NSectionBlock
       v-if="userModules.length"
