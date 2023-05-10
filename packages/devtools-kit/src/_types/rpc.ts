@@ -5,6 +5,7 @@ import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
+import type { InstallModuleReturn } from './server-ctx'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
@@ -48,6 +49,7 @@ export interface ServerFunctions {
   runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
+  installNuxtModule(name: string, dry?: boolean): Promise<InstallModuleReturn>
 }
 
 export interface ClientFunctions {

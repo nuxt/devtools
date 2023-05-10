@@ -9,7 +9,7 @@ function r(p: string) {
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
-    // '@nuxt/content',
+    '@vue-macros/nuxt',
     '~/modules/custom-tabs',
     '~/modules/markdown',
     DevToolsUiKit,

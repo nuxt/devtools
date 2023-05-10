@@ -58,11 +58,6 @@ html.dark {
   --uno: border-solid border-1 border-b border-base h-1px w-full block my-2 op50;
 }
 
-/* Shiki */
-pre code .line {
-  display: initial;
-}
-
 /* Splitpanes */
 .splitpanes__splitter {
   position: relative;
@@ -130,6 +125,10 @@ textarea {
 
 ::-webkit-scrollbar:horizontal {
   height: 6px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {

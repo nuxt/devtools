@@ -1,6 +1,9 @@
+import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import isInstalledGlobally from 'is-installed-globally'
 import { detectPackageManager } from 'nypm'
+import { parseModule } from 'magicast'
+import { addNuxtModule } from 'magicast/helpers'
 import { checkForUpdateOf } from '../npm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageManagerName, PackageUpdateInfo, ServerFunctions } from '../types'
 
@@ -57,5 +60,44 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
     getPackageManager,
     getNpmCommand,
     runNpmCommand,
+    async installNuxtModule(name: string, dry = true) {
+      const commands = (await getNpmCommand('install', name, { dev: true }))!
+
+      const filepath = nuxt.options._nuxtConfigFile
+      const source = await fs.readFile(filepath, 'utf-8')
+      const mod = await parseModule(source, { sourceFileName: filepath })
+
+      addNuxtModule(mod, name)
+
+      const generated = mod.generate().code
+
+      const processId = `nuxt:add-module:${name}`
+
+      if (!dry) {
+        const process = startSubprocess({
+          command: commands[0],
+          args: commands.slice(1),
+        }, {
+          id: processId,
+          name: `Install ${name}`,
+          icon: 'carbon:new-tab',
+          restartable: false,
+        })
+
+        await process.getProcess()
+
+        if (process.getProcess().exitCode !== 0)
+          throw new Error('Failed to install module')
+
+        await fs.writeFile(filepath, generated, 'utf-8')
+      }
+
+      return {
+        configOriginal: source,
+        configGenerated: generated,
+        commands,
+        processId,
+      }
+    },
   } satisfies Partial<ServerFunctions>
 }
