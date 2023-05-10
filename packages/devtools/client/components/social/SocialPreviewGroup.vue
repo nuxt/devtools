@@ -26,7 +26,7 @@ const card = computed((): SocialPreviewResolved => {
 </script>
 
 <template>
-  <div h-full w-max flex="~ col">
+  <div h-full w-520 flex="~ col">
     <div flex="~ wrap" w-full flex-none>
       <template v-for="name, idx of types" :key="idx">
         <button
@@ -42,7 +42,7 @@ const card = computed((): SocialPreviewResolved => {
       </template>
       <div border="b base" flex-auto />
     </div>
-    <div flex="~ items-center justify-center" flex-auto p4>
+    <div flex="~ items-center justify-center" flex-auto p4 n-panel-grids>
       <div v-if="selected === 'facebook'">
         <SocialFacebook :card="card" />
       </div>
