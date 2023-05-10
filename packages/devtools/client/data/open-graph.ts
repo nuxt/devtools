@@ -1,9 +1,11 @@
 import type { ReactiveHead } from '@unhead/vue'
+import type { MetaFlatInput } from '@unhead/schema'
 
 export interface OpenGraphTagDefine {
   name: string
   suggestion: 'required' | 'recommended' | 'optional'
-  default: Partial<ReactiveHead>
+  head: Partial<ReactiveHead>
+  seoMeta?: Partial<MetaFlatInput> & { title?: string }
   docs?: string
   description?: string
 }
@@ -12,7 +14,10 @@ export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'title',
     suggestion: 'required',
-    default: {
+    head: {
+      title: '[title]',
+    },
+    seoMeta: {
       title: '[title]',
     },
     docs: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title',
@@ -21,7 +26,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'description',
     suggestion: 'required',
-    default: {
+    head: {
       meta: [
         {
           name: 'description',
@@ -29,12 +34,15 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      description: '[description]',
+    },
     description: 'A one to two sentence summary for search engines that includes relevant keywords to improve visibility in search results.',
   },
   {
     name: 'icon',
     suggestion: 'recommended',
-    default: {
+    head: {
       link: [
         {
           rel: 'icon',
@@ -48,7 +56,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'lang',
     suggestion: 'recommended',
-    default: {
+    head: {
       htmlAttrs: {
         lang: 'en',
       },
@@ -58,7 +66,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'og:title',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           property: 'og:title',
@@ -66,13 +74,16 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      ogTitle: '[og:title]',
+    },
     docs: 'https://ogp.me/#metadata',
     description: 'A title for the link preview used by social media platforms.',
   },
   {
     name: 'og:description',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           property: 'og:description',
@@ -80,13 +91,16 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      ogDescription: '[og:description]',
+    },
     docs: 'https://ogp.me/#metadata',
     description: 'A description for the link preview used by social media platforms.',
   },
   {
     name: 'og:image',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           property: 'og:image',
@@ -94,13 +108,16 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      ogImage: '[og:image]',
+    },
     docs: 'https://ogp.me/#metadata',
     description: 'An image for the link preview used by social media platforms.',
   },
   {
     name: 'og:url',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           property: 'og:url',
@@ -108,13 +125,16 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      ogUrl: '[og:url]',
+    },
     docs: 'https://ogp.me/#metadata',
     description: 'A canonical URL for the link preview used to specify the preferred URL to display in search engine results and social media previews when multiple URLs may point to the same page.',
   },
   {
     name: 'twitter:title',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           name: 'twitter:title',
@@ -122,18 +142,24 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      twitterTitle: '[twitter:title]',
+    },
     docs: 'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
     description: 'A title for the Twitter card used to provide a preview of the content shared on the page.',
   },
   {
     name: 'twitter:description',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [{
         name: 'twitter:description',
         content: '[twitter:description]',
       },
       ],
+    },
+    seoMeta: {
+      twitterDescription: '[twitter:description]',
     },
     docs: 'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
     description: 'A description for the Twitter card used to provide a preview of the content shared on the page.',
@@ -141,7 +167,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   {
     name: 'twitter:image',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           name: 'twitter:image',
@@ -149,19 +175,25 @@ export const ogTags: OpenGraphTagDefine[] = [
         },
       ],
     },
+    seoMeta: {
+      twitterImage: '[twitter:image]',
+    },
     docs: 'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
     description: 'An image for the Twitter card used to provide a preview of the content shared on the page.',
   },
   {
     name: 'twitter:card',
     suggestion: 'recommended',
-    default: {
+    head: {
       meta: [
         {
           name: 'twitter:card',
           content: 'summary',
         },
       ],
+    },
+    seoMeta: {
+      twitterCard: 'summary',
     },
     docs: 'https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards',
     description: 'The type of Twitter card to use, which determines the type of card to display in link previews on Twitter.',
