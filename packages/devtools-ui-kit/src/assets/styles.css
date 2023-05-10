@@ -24,34 +24,34 @@ html.dark {
 }
 
 .shiki.diff .line > span {
-  opacity: 0.8;
-  filter: saturate(0.8);
+  opacity: 0.75;
+  filter: saturate(0.75);
 }
 
-.shiki .line-added,
-.shiki .line-removed {
+.shiki.diff .line-added,
+.shiki.diff .line-removed {
   scroll-margin: 5em;
 }
 
-.shiki .line-added > span,
-.shiki .line-removed > span {
+.shiki.diff .line-added > span,
+.shiki.diff .line-removed > span {
   opacity: 1 !important;
   z-index: 100;
   position: inherit;
   scroll-margin: 20px;
 }
 
-.shiki .line-added > span {
+.shiki.diff .line-added > span {
   color: #218c3b !important;
 }
 
-.shiki .line-removed > span {
+.shiki.diff .line-removed > span {
   color: #8c2c21 !important;
 }
 
 .shiki .line-added:after {
   content: "";
-  background-color: #c5e6cd50;
+  background-color: #43885440;
   display: block;
   position: absolute;
   left: 0;
@@ -62,7 +62,7 @@ html.dark {
 
 .shiki .line-removed:after {
   content: "";
-  background-color: #e6ccc550;
+  background-color: #8f4b3950;
   display: block;
   position: absolute;
   left: 0;

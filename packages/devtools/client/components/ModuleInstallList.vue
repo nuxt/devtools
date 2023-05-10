@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
-import type { InstallModuleReturn, ModuleStaticInfo } from '../../src/types'
+import type { InstallModuleReturn, ModuleStaticInfo } from '@nuxt/devtools-kit/types'
 import Fuse from 'fuse.js'
 
 const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn]>()
 const collection = await useModulesInfo()
 const nuxt3only = collection.filter(i => i.compatibility.nuxt.includes('^3'))
 
+const config = useServerConfig()
 const router = useRouter()
 const search = ref('')
 const fuse = computed(() => new Fuse(nuxt3only, {
@@ -37,6 +38,8 @@ async function install(item: ModuleStaticInfo) {
   router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
   await rpc.installNuxtModule(item.npm, false)
 }
+
+const openInEditor = useOpenInEditor()
 </script>
 
 <template>
@@ -89,13 +92,13 @@ async function install(item: ModuleStaticInfo) {
         <NCodeBlock :code="args[1].commands.join(' ')" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
 
         <p op50>
-          Then your Nuxt config will be updated as:
+          Then your <NLink role="button" n="primary" @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
         </p>
 
         <CodeDiff
           :from="args[1].configOriginal"
           :to="args[1].configGenerated"
-          max-h-80 of-auto px4 py2 border="~ base rounded"
+          max-h-80 of-auto py2 border="~ base rounded"
           lang="ts"
         />
 
@@ -104,6 +107,10 @@ async function install(item: ModuleStaticInfo) {
         </p>
 
         <div flex="~ gap-3" mt2 justify-end>
+          <NTip n="sm purple" flex-auto icon="carbon-chemistry">
+            Experimental. Make sure to backup your project.
+          </NTip>
+
           <NButton @click="resolve(false)">
             Cancel
           </NButton>
