@@ -1,11 +1,10 @@
 <script setup lang="ts">
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
-import { diffLines } from 'diff'
-import type { ModuleStaticInfo } from '../../src/types'
+import type { InstallModuleReturn, ModuleStaticInfo } from '../../src/types'
 import Fuse from 'fuse.js'
 
-const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, command: string, modifiedConfig: string]>()
+const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn]>()
 const collection = await useModulesInfo()
 const nuxt3only = collection.filter(i => i.compatibility.nuxt.includes('^3'))
 
@@ -26,41 +25,16 @@ const items = computed(() => {
   return fuse.value.search(search.value).map(r => r.item)
 })
 
-function printDiff(from: string, to: string) {
-  const diffs = diffLines(from.trim(), to.trim())
-  let output = ''
-
-  // TODO: frame only the diff parts
-  for (const diff of diffs) {
-    const lines = diff.value.trimEnd().split('\n')
-    for (const line of lines) {
-      if (diff.added)
-        output += `+ ${line}\n`
-      else if (diff.removed)
-        output += `- ${line}\n`
-      else
-        output += `  ${line}\n`
-    }
-  }
-  return output
-}
-
 async function install(item: ModuleStaticInfo) {
-  const {
-    commands,
-    configOriginal,
-    configGenerated,
-    processId,
-  } = await rpc.installNuxtModule(item.npm, true)
+  const result = await rpc.installNuxtModule(item.npm, true)
 
-  if (!commands)
+  if (!result.commands)
     return
 
-  const result = await Dialog.start(item, commands.join(' '), printDiff(configOriginal, configGenerated))
-  if (!result)
+  if (!await Dialog.start(item, result))
     return
 
-  router.push(`/modules/terminals?id=${encodeURIComponent(processId)}`)
+  router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
   await rpc.installNuxtModule(item.npm, false)
 }
 </script>
@@ -103,7 +77,7 @@ async function install(item: ModuleStaticInfo) {
 
   <Dialog v-slot="{ resolve, args }">
     <NDialog :model-value="true" @close="resolve(false)">
-      <ModuleItemBase :mod="{}" :info="args[0]" border="none" n-panel-grids />
+      <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
       <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl>
           Installing <span capitalize text-primary>{{ args[0].name }}</span> module?
@@ -112,13 +86,18 @@ async function install(item: ModuleStaticInfo) {
         <p op50>
           Following command will be executed in your terminal:
         </p>
-        <NCodeBlock :code="args[1]" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
+        <NCodeBlock :code="args[1].commands.join(' ')" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
 
         <p op50>
           Then your Nuxt config will be updated as:
         </p>
 
-        <NCodeBlock :code="args[2]" lang="diff" max-h-80 of-auto px4 py2 border="~ base rounded" />
+        <CodeDiff
+          :from="args[1].configOriginal"
+          :to="args[1].configGenerated"
+          max-h-80 of-auto px4 py2 border="~ base rounded"
+          lang="ts"
+        />
 
         <p>
           <span op50>After module installed, Nuxt will </span><span text-orange>restart automatically</span>.

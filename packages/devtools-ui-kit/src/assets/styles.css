@@ -15,3 +15,58 @@ html.dark {
 ::selection {
   background: #8884;
 }
+
+/* Shiki */
+.shiki .line {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.shiki.diff .line > span {
+  opacity: 0.8;
+  filter: saturate(0.8);
+}
+
+.shiki .line-added,
+.shiki .line-removed {
+  scroll-margin: 5em;
+}
+
+.shiki .line-added > span,
+.shiki .line-removed > span {
+  opacity: 1 !important;
+  z-index: 100;
+  position: inherit;
+  scroll-margin: 20px;
+}
+
+.shiki .line-added > span {
+  color: #218c3b !important;
+}
+
+.shiki .line-removed > span {
+  color: #8c2c21 !important;
+}
+
+.shiki .line-added:after {
+  content: "";
+  background-color: #c5e6cd50;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.shiki .line-removed:after {
+  content: "";
+  background-color: #e6ccc550;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}

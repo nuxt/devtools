@@ -59,7 +59,7 @@ export default {
         ]"
         @click="close()"
       />
-      <NCard v-bind="$attrs" ref="card">
+      <NCard v-bind="$attrs" ref="card" class="max-h-screen of-auto">
         <slot />
       </NCard>
     </div>
