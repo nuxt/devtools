@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defu } from 'defu'
 import type { ReactiveHead } from '@unhead/vue'
+import type { MetaFlatInput } from '@uhead/schema'
 import type { NormalizedHeadTag } from '../../src/types'
 import { ogTags } from '../data/open-graph'
 
@@ -13,27 +14,36 @@ const missingTags = computed(() => {
   return ogTags.filter(define => !props.tags?.some(tag => tag.name === define.name))
 })
 
-const missingRequiredTags = computed(() => {
-  return missingTags.value.filter(i => i.suggestion === 'required')
-})
-const missingRecommendedTags = computed(() => {
-  return missingTags.value.filter(i => i.suggestion === 'recommended')
-})
-
-const mergedMissingTags = computed(() => {
-  let data: Partial<ReactiveHead> = {}
+const codeSnippet = computed(() => {
+  let mergedHeadOptions: Partial<ReactiveHead> = {}
+  const mergedSeoMetaOptions: Partial<MetaFlatInput> = {}
   missingTags.value
     .forEach((tag) => {
-      data = defu(data, tag.default)
+      if (tag.seoMeta)
+        Object.assign(mergedSeoMetaOptions, tag.seoMeta)
+      else
+        mergedHeadOptions = defu(mergedHeadOptions, tag.head)
     })
-  return data
-})
 
-const codeSnippet = computed(() => {
-  const body = JSON.stringify(mergedMissingTags.value, null, 2)
-    .replace(/"([^"]+)":/g, '$1:')
-    .replace(/"/g, '\'')
-  return `useHead(${body})`
+  const lines = []
+
+  if (Object.keys(mergedSeoMetaOptions).length) {
+    const body = JSON.stringify(mergedSeoMetaOptions, null, 2)
+      .replace(/"([^"]+)":/g, '$1:')
+      .replace(/"/g, '\'')
+
+    lines.push(`useSeoMeta(${body})`)
+  }
+
+  if (Object.keys(mergedHeadOptions).length) {
+    const body = JSON.stringify(mergedHeadOptions, null, 2)
+      .replace(/"([^"]+)":/g, '$1:')
+      .replace(/"/g, '\'')
+
+    lines.push(`useHead(${body})`)
+  }
+
+  return lines.join('\n\n')
 })
 
 const copy = useCopy()
@@ -50,7 +60,7 @@ const selectedTab = ref(tabs[0])
   <template v-if="missingTags.length">
     <NSectionBlock
       text="Missing Tags"
-      :description="`${missingTags.length} missing tags (${missingRequiredTags.length} required, ${missingRecommendedTags.length} recommended)`"
+      :description="`${missingTags.length} missing tags`"
       icon="carbon:warning-other"
       header-class="text-orange op100! [[open]_&]:text-inherit"
       :padding="false"
