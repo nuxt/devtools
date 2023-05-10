@@ -48,7 +48,7 @@ function refreshPage() {
     </div>
     <div px3 py2 border="b base" flex="~ gap-2">
       <NDarkToggle v-slot="{ toggle, isDark }">
-        <NButton n="sm primary" @click="toggle()">
+        <NButton n="sm primary" @click="toggle">
           <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
         </NButton>
       </NDarkToggle>

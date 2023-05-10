@@ -255,7 +255,7 @@ declare global {
 <style scoped>
 .nuxt-devtools-frame {
   position: fixed;
-  z-index: 2147483646;
+  z-index: 2147483645;
 }
 
 .nuxt-devtools-frame iframe {

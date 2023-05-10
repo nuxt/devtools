@@ -88,7 +88,7 @@ function toggleTabCategory(name: string, v: boolean) {
           </h3>
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
-              <NButton n="primary" @click="toggle()">
+              <NButton n="primary" @click="toggle">
                 <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
               </NButton>
             </NDarkToggle>
