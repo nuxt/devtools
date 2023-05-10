@@ -5,12 +5,48 @@ import { objectPick } from '@antfu/utils'
 import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
 let modules: Promise<ModuleStaticInfo[]> | undefined
+const ignores = [
+  'pages',
+  'meta',
+  'components',
+  'imports',
+  'nuxt-config-schema',
+  '@nuxt/devtools',
+  '@nuxt/telemetry',
+]
 
 export async function useModulesInfo() {
   if (modules)
     return modules
-  modules = $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
+  modules = $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json').then((res) => {
+    return res.filter((m: any) => !ignores.includes(m.npm))
+  })
   return modules
+}
+
+export function useModules() {
+  const config = useServerConfig()
+  const modules = computed(() => config.value?._installedModules || [])
+  const packageModules = ref<any[]>([])
+  const userModules = ref<any[]>([])
+
+  watchEffect(() => {
+    packageModules.value.length = 0
+    userModules.value.length = 0
+    for (const m of modules.value) {
+      if (ignores.includes(m.meta?.name))
+        continue
+      if (m.entryPath && isNodeModulePath(m.entryPath))
+        packageModules.value.push(m)
+      else
+        userModules.value.push(m)
+    }
+  })
+
+  return {
+    packageModules,
+    userModules,
+  }
 }
 
 export function useComponents() {

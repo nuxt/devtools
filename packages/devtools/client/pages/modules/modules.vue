@@ -5,35 +5,9 @@ definePageMeta({
   order: 4,
 })
 
-const ignores = [
-  'pages',
-  'meta',
-  'components',
-  'imports',
-  'nuxt-config-schema',
-  '@nuxt/devtools',
-  '@nuxt/telemetry',
-]
-
-const config = useServerConfig()
-const modules = computed(() => config.value?._installedModules || [])
-const packageModules = ref<any[]>([])
-const userModules = ref<any[]>([])
 const installModuleOpen = ref(false)
 const { showExperimentalFeatures } = useDevToolsSettings()
-
-watchEffect(() => {
-  packageModules.value.length = 0
-  userModules.value.length = 0
-  for (const m of modules.value) {
-    if (ignores.includes(m.meta?.name))
-      continue
-    if (m.entryPath && isNodeModulePath(m.entryPath))
-      packageModules.value.push(m)
-    else
-      userModules.value.push(m)
-  }
-})
+const { packageModules, userModules } = useModules()
 </script>
 
 <template>

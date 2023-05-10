@@ -4,9 +4,16 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 import type { InstallModuleReturn, ModuleStaticInfo } from '@nuxt/devtools-kit/types'
 import Fuse from 'fuse.js'
 
-const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn]>()
+const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: 'install' | 'uninstall']>()
 const collection = await useModulesInfo()
-const nuxt3only = collection.filter(i => i.compatibility.nuxt.includes('^3'))
+const { packageModules } = useModules()
+const nuxt3only = collection.map((module) => {
+  const installed = packageModules.value.find(m => m.entryPath.includes(module.name))
+  return {
+    ...module,
+    installed,
+  }
+})
 
 const config = useServerConfig()
 const router = useRouter()
@@ -26,17 +33,18 @@ const items = computed(() => {
   return fuse.value.search(search.value).map(r => r.item)
 })
 
-async function install(item: ModuleStaticInfo) {
-  const result = await rpc.installNuxtModule(item.npm, true)
+async function action(item: ModuleStaticInfo, type: 'install' | 'uninstall') {
+  const method = type === 'install' ? rpc.installNuxtModule : rpc.unInstallNuxtModule
+  const result = await method(item.npm, true)
 
   if (!result.commands)
     return
 
-  if (!await Dialog.start(item, result))
+  if (!await Dialog.start(item, result, type))
     return
 
   router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
-  await rpc.installNuxtModule(item.npm, false)
+  await method(item.npm, false)
 }
 
 const openInEditor = useOpenInEditor()
@@ -71,8 +79,11 @@ const openInEditor = useOpenInEditor()
           role="button"
           :info="item"
           mb2 h-full class="hover:bg-active!"
+          :class="{
+            'text-green border-green': item.installed,
+          }"
           :compact="true"
-          @click="install(item)"
+          @click="action(item, item.installed ? 'uninstall' : 'install')"
         />
       </RecycleScroller>
     </div>
@@ -83,7 +94,7 @@ const openInEditor = useOpenInEditor()
       <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
       <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl>
-          Installing <span capitalize text-primary>{{ args[0].name }}</span> module?
+          {{ args[2] }} <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[0].name }}</span> module?
         </h2>
 
         <p op50>
@@ -114,8 +125,8 @@ const openInEditor = useOpenInEditor()
           <NButton @click="resolve(false)">
             Cancel
           </NButton>
-          <NButton n="solid primary" @click="resolve(true)">
-            Install
+          <NButton n="solid primary" capitalize @click="resolve(true)">
+            {{ args[2] }}
           </NButton>
         </div>
       </div>
