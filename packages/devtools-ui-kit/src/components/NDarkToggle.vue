@@ -14,8 +14,9 @@ const isDark = computed<boolean>({
   },
 })
 
-// @ts-expect-error: Transition API
-const isAppearanceTransition = document.startViewTransition
+const isAppearanceTransition = typeof document !== 'undefined'
+  // @ts-expect-error: Transition API
+  && document.startViewTransition
   && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**

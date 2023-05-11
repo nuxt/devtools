@@ -113,19 +113,22 @@ export function unocssPreset(): Preset {
       'n-button-icon': '-ml-0.2em mr-0.2em text-1.1em',
 
       // checkbox
-      'n-checkbox': 'inline-flex gap-1 items-center',
+      'n-checkbox': 'inline-flex gap-1 items-center rounded',
+      'n-checkbox-hover': 'op100 n-bg-hover cursor-pointer',
       'n-checkbox-box': 'border n-border-base w-1.1em h-1.1em mr-1 text-white flex flex-none items-center rounded-sm overflow-visible',
       'n-checkbox-box-checked': 'bg-context border-context',
       'n-checkbox-icon': 'carbon-checkmark w-1em h-1em m-auto',
 
       // radio
-      'n-radio-box': 'border n-border-base w-1.2em h-1.2em mr-1 text-white flex flex-none rounded-full overflow-visible',
+      'n-radio-box': 'border rounded n-border-base w-1.2em h-1.2em mr-1 text-white flex flex-none rounded-full overflow-visible',
+      'n-radio-hover': 'op100 n-bg-hover cursor-pointer',
       'n-radio-box-checked': 'border-context',
       'n-radio-inner': 'bg-context rounded-1/2 w-0 h-0 m-auto',
       'n-radio-inner-checked': 'w-0.8em h-0.8em',
 
       // switch
-      'n-switch-base': 'inline-flex items-center select-none',
+      'n-switch-base': 'inline-flex items-center select-none rounded-full pe-2',
+      'n-switch-hover': 'op100 n-bg-hover cursor-pointer',
       'n-switch-slider': 'mr-1 rounded-full border n-border-base relative p-2px',
       'n-switch-slider-checked': 'border-context/20 bg-context/10',
       'n-switch-thumb': 'h-1em w-1em rounded-1/2 border n-border-base ml-0 mr-0.8em',
