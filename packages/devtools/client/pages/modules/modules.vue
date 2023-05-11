@@ -7,7 +7,10 @@ definePageMeta({
 
 const installModuleOpen = ref(false)
 const { showExperimentalFeatures } = useDevToolsOptions()
-const { packageModules, userModules } = useModules()
+const installedModules = useInstalledModules()
+
+const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
+const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
 </script>
 
 <template>

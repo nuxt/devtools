@@ -3,12 +3,10 @@
 import { RecycleScroller } from 'vue-virtual-scroller'
 import Fuse from 'fuse.js'
 
-const collection = await useModulesInfo()
-const { packageModules } = useModules()
-const nuxt3only = collection.filter(module => module.compatibility.nuxt.includes('^3') && !packageModules.value.find(i => i.entryPath.includes(module.npm)))
+const collection = useModulesList()
 
 const search = ref('')
-const fuse = computed(() => new Fuse(nuxt3only, {
+const fuse = computed(() => new Fuse(collection.value || [], {
   keys: [
     'name',
     'description',
@@ -19,7 +17,7 @@ const fuse = computed(() => new Fuse(nuxt3only, {
 
 const items = computed(() => {
   if (!search.value)
-    return nuxt3only
+    return collection.value
   return fuse.value.search(search.value).map(r => r.item)
 })
 </script>
@@ -48,14 +46,7 @@ const items = computed(() => {
         :item-size="160"
         key-field="name"
       >
-        <ModuleItemBase
-          :mod="{}"
-          role="button"
-          :info="item"
-          mb2 h-full class="hover:bg-active!"
-          :compact="true"
-          @click="useModuleAction(item, 'install')"
-        />
+        <ModuleItemInstall :item="item" />
       </RecycleScroller>
     </div>
   </div>

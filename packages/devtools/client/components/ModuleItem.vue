@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { BasicModuleInfo } from '../../src/types'
+import type { InstalledModuleInfo } from '../../src/types'
 
 const props = defineProps<{
-  mod: BasicModuleInfo
+  mod: InstalledModuleInfo
 }>()
 
 const config = useServerConfig()
@@ -19,23 +19,12 @@ const name = computed(() => {
   }
   return ''
 })
-const collection = await useModulesInfo()
-const staticInfo = computed(() => (collection || []).find?.(i => i.npm === name.value || i.name === name.value))
+const staticInfo = computed(() => props.mod.info)
 const data = computed(() => ({
   name,
   ...props.mod?.meta,
   ...staticInfo.value,
 }))
-
-const showDropdown = ref(false)
-
-const uninstallable = computed(() => {
-  if (staticInfo.value && (props.mod.entryPath ? isPackageName(props.mod.entryPath) : false)) {
-    // TODO: detect if module is from layer
-    return true
-  }
-  return false
-})
 </script>
 
 <template>
@@ -86,19 +75,6 @@ const uninstallable = computed(() => {
           </div>
         </template>
       </NpmVersionCheck>
-    </template>
-    <template v-if="uninstallable" #actions>
-      <NDropdown v-model="showDropdown" n="sm green">
-        <template #trigger>
-          <NButton icon="carbon-chevron-down" @click="showDropdown = !showDropdown">
-            Installed
-          </NButton>
-        </template>
-        <NButton icon="carbon-trash-can" n="red" @click="useModuleAction(staticInfo!, 'uninstall')">
-          Uninstall
-        </NButton>
-        <!-- TODO: maybe add disable module ? -->
-      </NDropdown>
     </template>
   </ModuleItemBase>
 </template>

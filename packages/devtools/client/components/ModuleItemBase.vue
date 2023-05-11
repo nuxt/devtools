@@ -38,9 +38,7 @@ const openInEditor = useOpenInEditor()
 <template>
   <NCard p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
-      <div
-        flex items-center of-hidden text-ellipsis ws-nowrap text-lg
-      >
+      <div gap-1t flex items-center text-ellipsis ws-nowrap text-lg>
         <NuxtLink
           v-if="isPackageModule"
           :to="npmBase + (data.npm || data.name)"
@@ -60,6 +58,7 @@ const openInEditor = useOpenInEditor()
         <span v-else>
           {{ data.name }}
         </span>
+        <slot name="badge" />
       </div>
 
       <div

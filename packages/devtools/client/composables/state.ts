@@ -2,10 +2,9 @@ import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, InstallModuleReturn, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
+import type { HookInfo, InstallModuleReturn, InstalledModuleInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
-let modules: Promise<ModuleStaticInfo[]> | undefined
-const ignores = [
+const ignoredModules = [
   'pages',
   'meta',
   'components',
@@ -15,38 +14,44 @@ const ignores = [
   '@nuxt/telemetry',
 ]
 
-export async function useModulesInfo() {
-  if (modules)
+export function useModulesList() {
+  return useAsyncData('modules-list', async () => {
+    const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
     return modules
-  modules = $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json').then((res) => {
-    return res.filter((m: any) => !ignores.includes(m.npm))
-  })
-  return modules
+      .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
+  }).data
 }
 
-export function useModules() {
-  const config = useServerConfig()
-  const modules = computed(() => config.value?._installedModules || [])
-  const packageModules = ref<any[]>([])
-  const userModules = ref<any[]>([])
+export function useInstalledModules() {
+  return useState('installed-modules', () => {
+    const config = useServerConfig()
+    const modules = useModulesList()
 
-  watchEffect(() => {
-    packageModules.value.length = 0
-    userModules.value.length = 0
-    for (const m of modules.value) {
-      if (ignores.includes(m.meta?.name))
-        continue
-      if (m.entryPath && isNodeModulePath(m.entryPath))
-        packageModules.value.push(m)
-      else
-        userModules.value.push(m)
-    }
+    return computed(() => (config.value?._installedModules || [])
+      .map((mod): InstalledModuleInfo => {
+        const isPackageModule = mod.entryPath && isNodeModulePath(mod.entryPath)
+        const name = mod.meta?.name
+          ? mod.meta?.name
+          : mod.entryPath
+            ? isPackageModule
+              ? getModuleNameFromPath(mod.entryPath)
+              : config.value?.rootDir
+                ? parseReadablePath(mod.entryPath, config.value?.rootDir).path
+                : undefined
+            : undefined
+
+        const info = modules.value?.find(m => m.npm === name)
+
+        return {
+          name,
+          isPackageModule,
+          info,
+          ...mod,
+        }
+      })
+      .filter(i => !i.name || !ignoredModules.includes(i.name)),
+    )
   })
-
-  return {
-    packageModules,
-    userModules,
-  }
 }
 
 type ModuleActionType = 'install' | 'uninstall'

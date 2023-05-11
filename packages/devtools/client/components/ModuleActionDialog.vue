@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ModuleDialog } from '../composables/state'
 
+const config = useServerConfig()
 const openInEditor = useOpenInEditor()
 </script>
 
@@ -10,7 +11,7 @@ const openInEditor = useOpenInEditor()
       <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
       <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl>
-          {{ args[2] }} <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[0].name }}</span> module?
+          <span capitalize>{{ args[2] }}</span> <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[0].name }}</span> module?
         </h2>
 
         <p op50>
@@ -30,7 +31,7 @@ const openInEditor = useOpenInEditor()
         />
 
         <p>
-          <span op50>After module installed, Nuxt will </span><span text-orange>restart automatically</span>.
+          <span op50>After that, Nuxt will </span><span text-orange>restart automatically</span>.
         </p>
 
         <div flex="~ gap-3" mt2 justify-end>
