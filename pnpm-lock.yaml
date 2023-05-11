@@ -19,9 +19,6 @@ importers:
       '@nuxt/module-builder':
         specifier: ^0.3.1
         version: 0.3.1
-      '@types/fs-extra':
-        specifier: ^11.0.1
-        version: 11.0.1
       '@types/markdown-it':
         specifier: ^12.2.3
         version: 12.2.3
@@ -2250,13 +2247,6 @@ packages:
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
 
-  /@types/fs-extra@11.0.1:
-    resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
-    dependencies:
-      '@types/jsonfile': 6.1.1
-      '@types/node': 18.16.5
-    dev: true
-
   /@types/hammerjs@2.0.41:
     resolution: {integrity: sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==}
     dev: true
@@ -2272,12 +2262,6 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
-    dev: true
-
-  /@types/jsonfile@6.1.1:
-    resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
-    dependencies:
-      '@types/node': 18.16.5
     dev: true
 
   /@types/linkify-it@3.0.2:

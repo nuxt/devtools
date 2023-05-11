@@ -12,7 +12,7 @@ const devToolsOptionsRefs = toRefs(devToolsOptions)
 
 watch(devToolsOptions, async (options) => {
   rpc.updateUIOptions(options)
-}, { deep: true })
+}, { deep: true, flush: 'post' })
 
 // sync devtools options with frame state
 watchEffect(() => {
