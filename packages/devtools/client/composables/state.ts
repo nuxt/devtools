@@ -140,7 +140,7 @@ export function useTerminals() {
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
-  const settings = useDevToolsSettings()
+  const settings = useDevToolsOptions()
   const router = useRouter()
   const client = useClient()
 
@@ -188,7 +188,7 @@ export function useCategorizedTabs(enabledOnly = true) {
     ? useEnabledTabs()
     : useAllTabs()
 
-  const settings = useDevToolsSettings()
+  const settings = useDevToolsOptions()
 
   return computed(() => {
     const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
@@ -216,7 +216,7 @@ export function useCategorizedTabs(enabledOnly = true) {
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
-  const settings = useDevToolsSettings()
+  const settings = useDevToolsOptions()
 
   return computed(() => tabs.value.filter((tab) => {
     const _tab = tab as ModuleBuiltinTab

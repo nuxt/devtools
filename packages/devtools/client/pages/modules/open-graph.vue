@@ -102,26 +102,28 @@ until(router).toBeTruthy().then((v) => {
           />
         </template>
         <template #actions>
-          <div flex-none flex="~ gap4">
-            <button
+          <div flex-none flex="~ gap2 items-center">
+            <NIconButton
               v-if="routeMatchedFilePath"
+              text-lg
+              icon="carbon:launch"
               title="Open file in editor"
               @click="openInEditor(routeMatchedFilePath)"
-            >
-              <NIcon icon="carbon:launch" />
-            </button>
-            <button
+            />
+
+            <NIconButton
+              text-lg
+              icon="carbon:reset"
               title="Refresh Data"
               @click="refresh"
-            >
-              <NIcon icon="carbon:reset" />
-            </button>
-            <button
+            />
+
+            <NIconButton
+              text-lg
+              :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'"
               title="Toggle Preview"
               @click="showPreview = !showPreview"
-            >
-              <NIcon :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'" />
-            </button>
+            />
           </div>
         </template>
       </Navbar>

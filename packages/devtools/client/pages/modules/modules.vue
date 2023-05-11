@@ -6,7 +6,7 @@ definePageMeta({
 })
 
 const installModuleOpen = ref(false)
-const { showExperimentalFeatures } = useDevToolsSettings()
+const { showExperimentalFeatures } = useDevToolsOptions()
 const { packageModules, userModules } = useModules()
 </script>
 

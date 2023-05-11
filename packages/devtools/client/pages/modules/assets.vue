@@ -57,15 +57,13 @@ function refreshAssets() {}
   <div h-full of-auto>
     <Navbar ref="navbar" v-model:search="search" pb2>
       <template #actions>
-        <!-- TODO: Use NIconButton -->
-        <div flex-none flex="~ gap4">
-          <button
+        <div flex-none flex="~ gap2 items-center">
+          <NIconButton
+            text-lg
+            :icon="view === 'grid' ? 'i-carbon-list' : 'i-carbon-grid'"
             title="Toggle view"
             @click="toggleView"
-          >
-            <NIcon v-if="view === 'grid'" icon="i-carbon-list" />
-            <NIcon v-else icon="i-carbon-grid" />
-          </button>
+          />
         </div>
       </template>
       <div op50>

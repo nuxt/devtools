@@ -10,7 +10,7 @@ const {
   scale,
   hiddenTabs,
   hiddenTabCategories,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -67,7 +67,7 @@ function toggleTabCategory(name: string, v: boolean) {
             <div flex="~ col gap-1" border="~ base rounded" py3 pl4 pr2>
               <template v-for="tab of tabs" :key="tab.name">
                 <NSwitch
-                  flex="~ row-reverse" py1 n-primary
+                  flex="~ row-reverse" py1 pl2 pr1 n-primary
                   :model-value="!hiddenTabs.includes(tab.name)"
                   @update:model-value="v => toggleTab(tab.name, v)"
                 >

@@ -15,7 +15,7 @@ const components = useComponents()
 
 const {
   componentsView: view,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)
@@ -35,22 +35,20 @@ function toggleView() {
       :is="view === 'list' ? ComponentsList : ComponentsGraph"
       :components="components"
     >
-      <div flex-none flex="~ gap4">
-        <!-- TODO: Use NIconButton -->
-        <button
+      <div flex-none flex="~ gap3">
+        <NIconButton
+          text-lg
+          :icon="view === 'graph' ? 'i-carbon-list' : 'i-carbon-network-4'"
           title="Toggle view"
           @click="toggleView"
-        >
-          <NIcon v-if="view === 'graph'" icon="i-carbon-list" />
-          <NIcon v-else icon="i-carbon-network-4" />
-        </button>
-        <button
+        />
+        <NIconButton
           v-if="client?.inspector?.instance"
+          text-lg
+          icon="i-carbon-select-window"
           title="Inspect Vue components"
           @click="openComponentInspector"
-        >
-          <NIcon icon="i-carbon-select-window" />
-        </button>
+        />
       </div>
     </component>
   </div>

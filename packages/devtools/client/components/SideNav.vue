@@ -4,12 +4,21 @@ const categories = useCategorizedTabs()
 
 const show = ref(false)
 const panel = ref()
+const button = ref<HTMLButtonElement>()
 
-onClickOutside(panel, () => {
-  show.value = false
-}, {
-  detectIframe: true,
-})
+function toggle() {
+  show.value = !show.value
+}
+
+onClickOutside(
+  panel,
+  (e) => {
+    if (e.target === button.value)
+      return
+    show.value = false
+  },
+  { detectIframe: true },
+)
 </script>
 
 <template>
@@ -20,13 +29,14 @@ onClickOutside(panel, () => {
         :distance="20"
         :triggers="[]"
         :shown="show"
-        :auto-hide="false"
+        :auto-hide="true"
       >
         <button
-          i-logos-nuxt-icon my3 h-6 w-6 pb-2 text-lg
+          ref="button"
+          i-logos-nuxt-icon my3 h-6 w-6 pb-2 text-lg outline-none
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
-          @click="show = !show"
+          @click="toggle"
         />
         <template #popper>
           <DockingPanel ref="panel" />
