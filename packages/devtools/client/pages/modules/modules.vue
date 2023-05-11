@@ -80,6 +80,7 @@ const { packageModules, userModules } = useModules()
         </div>
       </Transition>
     </template>
+    <ModuleActionDialog />
   </div>
 
   <HelpFab>

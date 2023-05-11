@@ -1,22 +1,12 @@
 <script setup lang="ts">
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
-import type { InstallModuleReturn, ModuleStaticInfo } from '@nuxt/devtools-kit/types'
 import Fuse from 'fuse.js'
 
-const Dialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: 'install' | 'uninstall']>()
 const collection = await useModulesInfo()
 const { packageModules } = useModules()
-const nuxt3only = collection.map((module) => {
-  const installed = packageModules.value.find(m => m.entryPath.includes(module.name))
-  return {
-    ...module,
-    installed,
-  }
-})
+const nuxt3only = collection.filter(module => module.compatibility.nuxt.includes('^3') && !packageModules.value.find(i => i.entryPath.includes(module.npm)))
 
-const config = useServerConfig()
-const router = useRouter()
 const search = ref('')
 const fuse = computed(() => new Fuse(nuxt3only, {
   keys: [
@@ -32,22 +22,6 @@ const items = computed(() => {
     return nuxt3only
   return fuse.value.search(search.value).map(r => r.item)
 })
-
-async function action(item: ModuleStaticInfo, type: 'install' | 'uninstall') {
-  const method = type === 'install' ? rpc.installNuxtModule : rpc.unInstallNuxtModule
-  const result = await method(item.npm, true)
-
-  if (!result.commands)
-    return
-
-  if (!await Dialog.start(item, result, type))
-    return
-
-  router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
-  await method(item.npm, false)
-}
-
-const openInEditor = useOpenInEditor()
 </script>
 
 <template>
@@ -79,57 +53,10 @@ const openInEditor = useOpenInEditor()
           role="button"
           :info="item"
           mb2 h-full class="hover:bg-active!"
-          :class="{
-            'text-green border-green': item.installed,
-          }"
           :compact="true"
-          @click="action(item, item.installed ? 'uninstall' : 'install')"
+          @click="useModuleAction(item, 'install')"
         />
       </RecycleScroller>
     </div>
   </div>
-
-  <Dialog v-slot="{ resolve, args }">
-    <NDialog :model-value="true" @close="resolve(false)">
-      <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
-      <div flex="~ col gap-2" w-150 p4 border="t base">
-        <h2 text-xl>
-          {{ args[2] }} <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[0].name }}</span> module?
-        </h2>
-
-        <p op50>
-          Following command will be executed in your terminal:
-        </p>
-        <NCodeBlock :code="args[1].commands.join(' ')" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
-
-        <p op50>
-          Then your <NLink role="button" n="primary" @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
-        </p>
-
-        <CodeDiff
-          :from="args[1].configOriginal"
-          :to="args[1].configGenerated"
-          max-h-80 of-auto py2 border="~ base rounded"
-          lang="ts"
-        />
-
-        <p>
-          <span op50>After module installed, Nuxt will </span><span text-orange>restart automatically</span>.
-        </p>
-
-        <div flex="~ gap-3" mt2 justify-end>
-          <NTip n="sm purple" flex-auto icon="carbon-chemistry">
-            Experimental. Make sure to backup your project.
-          </NTip>
-
-          <NButton @click="resolve(false)">
-            Cancel
-          </NButton>
-          <NButton n="solid primary" capitalize @click="resolve(true)">
-            {{ args[2] }}
-          </NButton>
-        </div>
-      </div>
-    </NDialog>
-  </Dialog>
 </template>

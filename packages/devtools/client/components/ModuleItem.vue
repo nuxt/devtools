@@ -26,6 +26,16 @@ const data = computed(() => ({
   ...props.mod?.meta,
   ...staticInfo.value,
 }))
+
+const showDropdown = ref(false)
+
+const uninstallable = computed(() => {
+  if (staticInfo.value && (props.mod.entryPath ? isPackageName(props.mod.entryPath) : false)) {
+    // TODO: detect if module is from layer
+    return true
+  }
+  return false
+})
 </script>
 
 <template>
@@ -76,6 +86,19 @@ const data = computed(() => ({
           </div>
         </template>
       </NpmVersionCheck>
+    </template>
+    <template v-if="uninstallable" #actions>
+      <NDropdown v-model="showDropdown" n="sm green">
+        <template #trigger>
+          <NButton icon="carbon-chevron-down" @click="showDropdown = !showDropdown">
+            Installed
+          </NButton>
+        </template>
+        <NButton icon="carbon-trash-can" n="red" @click="useModuleAction(staticInfo!, 'uninstall')">
+          Uninstall
+        </NButton>
+        <!-- TODO: maybe add disable module ? -->
+      </NDropdown>
     </template>
   </ModuleItemBase>
 </template>

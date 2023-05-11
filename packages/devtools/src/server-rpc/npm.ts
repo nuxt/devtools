@@ -102,7 +102,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         processId,
       }
     },
-    async unInstallNuxtModule(name: string, dry = true) {
+    async uninstallNuxtModule(name: string, dry = true) {
       const commands = (await getNpmCommand('uninstall', name))!
 
       const filepath = nuxt.options._nuxtConfigFile

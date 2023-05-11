@@ -2,7 +2,7 @@ import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
+import type { HookInfo, InstallModuleReturn, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
 let modules: Promise<ModuleStaticInfo[]> | undefined
 const ignores = [
@@ -47,6 +47,25 @@ export function useModules() {
     packageModules,
     userModules,
   }
+}
+
+type ModuleActionType = 'install' | 'uninstall'
+
+export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
+
+export async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
+  const router = useRouter()
+  const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
+  const result = await method(item.npm, true)
+
+  if (!result.commands)
+    return
+
+  if (!await ModuleDialog.start(item, result, type))
+    return
+
+  router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
+  await method(item.npm, false)
 }
 
 export function useComponents() {
