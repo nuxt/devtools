@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { DevToolsFrameState, DevToolsUISettings } from '../../../types'
+import type { DevToolsFrameState } from '../../../types'
 import { useObjectStorage } from './utils'
 
 export const PANEL_PADDING = 10
@@ -18,9 +18,8 @@ export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-s
   open: false,
   route: '/',
   position: 'bottom',
+  closeOnOutsideClick: false,
 })
-
-export const settings = useObjectStorage<DevToolsUISettings>('nuxt-devtools-settings', {} as any, true)
 
 export function togglePanel() {
   if (state.value.open)

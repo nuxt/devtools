@@ -10,7 +10,7 @@ const {
   scale,
   hiddenTabs,
   hiddenTabCategories,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],

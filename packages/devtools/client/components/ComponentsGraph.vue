@@ -30,7 +30,7 @@ const {
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
   componentsGraphShowWorkspace: showWorkspace,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 const selectedFilter = ref<ComponentRelationship>()
 

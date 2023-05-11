@@ -42,7 +42,7 @@ addEventListener('keydown', (e) => {
 
 const {
   scale,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 onMounted(() => {
   const injectClient = useInjectionClient()

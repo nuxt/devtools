@@ -15,7 +15,7 @@ const components = useComponents()
 
 const {
   componentsView: view,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)
