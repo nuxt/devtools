@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defu } from 'defu'
 import type { ReactiveHead } from '@unhead/vue'
-import type { MetaFlatInput } from '@uhead/schema'
+import type { MetaFlatInput } from '@unhead/schema'
 import type { NormalizedHeadTag } from '../../src/types'
 import { ogTags } from '../data/open-graph'
 
