@@ -6,20 +6,7 @@ export interface DevToolsFrameState {
   open: boolean
   route: string
   position: 'left' | 'right' | 'bottom' | 'top'
-}
-
-export interface DevToolsUISettings {
-  componentsView: 'list' | 'graph'
-  componentsGraphShowNodeModules: boolean
-  componentsGraphShowPages: boolean
-  componentsGraphShowLayouts: boolean
-  componentsGraphShowWorkspace: boolean
-  interactionCloseOnOutsideClick: boolean
-  showExperimentalFeatures: boolean
-  showHelpButtons: boolean
-  scale: number
-  hiddenTabs: string[]
-  hiddenTabCategories: string[]
+  closeOnOutsideClick: boolean
 }
 
 export interface SocialPreviewResolved {

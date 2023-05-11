@@ -20,7 +20,7 @@ const modules = computed(() => config.value?._installedModules || [])
 const packageModules = ref<any[]>([])
 const userModules = ref<any[]>([])
 const installModuleOpen = ref(false)
-const { showExperimentalFeatures } = useDevToolsSettings()
+const { showExperimentalFeatures } = useDevToolsOptions()
 
 watchEffect(() => {
   packageModules.value.length = 0

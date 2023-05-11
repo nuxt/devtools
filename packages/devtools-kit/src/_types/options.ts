@@ -87,3 +87,17 @@ export interface VSCodeTunnelOptions {
    */
   name?: string
 }
+
+export interface NuxtDevToolsUIOptions {
+  componentsView: 'list' | 'graph'
+  componentsGraphShowNodeModules: boolean
+  componentsGraphShowPages: boolean
+  componentsGraphShowLayouts: boolean
+  componentsGraphShowWorkspace: boolean
+  interactionCloseOnOutsideClick: boolean
+  showExperimentalFeatures: boolean
+  showHelpButtons: boolean
+  scale: number
+  hiddenTabs: string[]
+  hiddenTabCategories: string[]
+}

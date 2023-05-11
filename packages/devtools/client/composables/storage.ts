@@ -1,30 +1,26 @@
 import { toRefs } from '@vueuse/core'
-import type { DevToolsFrameState, DevToolsUISettings } from '~~/../src/types'
+import type { DevToolsFrameState, NuxtDevToolsUIOptions } from '~~/../src/types'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
-
-const devToolsSettings = useLocalStorage<DevToolsUISettings>('nuxt-devtools-settings', {
-  componentsView: 'list',
-  componentsGraphShowNodeModules: false,
-  componentsGraphShowPages: false,
-  componentsGraphShowLayouts: false,
-  componentsGraphShowWorkspace: true,
-  interactionCloseOnOutsideClick: false,
-  showExperimentalFeatures: false,
-  showHelpButtons: true,
-  scale: 1,
-  hiddenTabs: [],
-  hiddenTabCategories: [],
-}, { mergeDefaults: true })
-
-const devToolsSettingsRefs = toRefs(devToolsSettings)
 
 const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
 
 const devToolsPanelsState = useLocalStorage<Record<string, number>>('nuxt-devtools-panels-state', {} as any, { listenToStorageChanges: false })
 
-export function useDevToolsSettings() {
-  return devToolsSettingsRefs
+const devToolsOptions = ref<NuxtDevToolsUIOptions>(await rpc.getUIOptions())
+const devToolsOptionsRefs = toRefs(devToolsOptions)
+
+watch(devToolsOptions, async (options) => {
+  rpc.updateUIOptions(options)
+}, { deep: true })
+
+// sync devtools options with frame state
+watchEffect(() => {
+  devToolsFrameState.value.closeOnOutsideClick = devToolsOptions.value.interactionCloseOnOutsideClick
+})
+
+export function useDevToolsOptions() {
+  return devToolsOptionsRefs
 }
 
 export function useDevToolsFrameState() {
