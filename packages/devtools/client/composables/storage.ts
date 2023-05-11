@@ -19,6 +19,12 @@ watchEffect(() => {
   devToolsFrameState.value.closeOnOutsideClick = devToolsOptions.value.interactionCloseOnOutsideClick
 })
 
+// Migrate settings from localStorage to devtools options. TODO: remove in next major release
+if (localStorage.getItem('nuxt-devtools-settings')) {
+  Object.assign(devToolsOptions.value, JSON.parse(localStorage.getItem('nuxt-devtools-settings')!))
+  localStorage.removeItem('nuxt-devtools-settings')
+}
+
 export function useDevToolsOptions() {
   return devToolsOptionsRefs
 }
