@@ -95,7 +95,6 @@ const selectedTab = ref(tabs[0])
               {{ item.name }}
             </NTextExternalLink>
           </div>
-          <!-- TODO: use icons instead, show link to documentation -->
           <div w-full p2 op75>
             {{ item.description }}
           </div>
