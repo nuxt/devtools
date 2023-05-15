@@ -83,7 +83,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         }, {
           id: processId,
           name: `Install ${name}`,
-          icon: 'carbon:new-tab',
+          icon: 'carbon:intent-request-create',
           restartable: false,
         })
 
@@ -131,7 +131,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         }, {
           id: processId,
           name: `Uninstall ${name}`,
-          icon: 'carbon:new-tab',
+          icon: 'carbon:intent-request-uninstall',
           restartable: false,
         })
 

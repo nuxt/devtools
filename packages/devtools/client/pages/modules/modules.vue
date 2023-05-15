@@ -37,7 +37,7 @@ const userModules = computed(() => installedModules.value.filter(i => !i.isPacka
         class="group"
         @click="installModuleOpen = true"
       >
-        <div i-carbon-new-tab text-4xl op40 group-hover="op75 text-primary" transition />
+        <div i-carbon-intent-request-create text-4xl op40 group-hover="op75 text-primary" transition />
         <div text-lg op40 group-hover="op75 text-primary" transition>
           Install New Module
         </div>

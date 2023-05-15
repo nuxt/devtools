@@ -27,7 +27,7 @@ const items = computed(() => {
     <NIconTitle
       mx6 mt6
       text-xl op75
-      icon="i-carbon-3d-mpr-toggle"
+      icon="i-carbon-intent-request-create"
       text="Install Module"
     />
 
