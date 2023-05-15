@@ -55,6 +55,7 @@ export interface ServerFunctions {
   openInEditor(filepath: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
   installNuxtModule(name: string, dry?: boolean): Promise<InstallModuleReturn>
+  uninstallNuxtModule(name: string, dry?: boolean): Promise<InstallModuleReturn>
 }
 
 export interface ClientFunctions {

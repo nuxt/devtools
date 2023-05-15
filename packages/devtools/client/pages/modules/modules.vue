@@ -5,35 +5,12 @@ definePageMeta({
   order: 4,
 })
 
-const ignores = [
-  'pages',
-  'meta',
-  'components',
-  'imports',
-  'nuxt-config-schema',
-  '@nuxt/devtools',
-  '@nuxt/telemetry',
-]
-
-const config = useServerConfig()
-const modules = computed(() => config.value?._installedModules || [])
-const packageModules = ref<any[]>([])
-const userModules = ref<any[]>([])
 const installModuleOpen = ref(false)
 const { showExperimentalFeatures } = useDevToolsOptions()
+const installedModules = useInstalledModules()
 
-watchEffect(() => {
-  packageModules.value.length = 0
-  userModules.value.length = 0
-  for (const m of modules.value) {
-    if (ignores.includes(m.meta?.name))
-      continue
-    if (m.entryPath && isNodeModulePath(m.entryPath))
-      packageModules.value.push(m)
-    else
-      userModules.value.push(m)
-  }
-})
+const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
+const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
 </script>
 
 <template>
@@ -60,7 +37,7 @@ watchEffect(() => {
         class="group"
         @click="installModuleOpen = true"
       >
-        <div i-carbon-new-tab text-4xl op40 group-hover="op75 text-primary" transition />
+        <div i-carbon-intent-request-create text-4xl op40 group-hover="op75 text-primary" transition />
         <div text-lg op40 group-hover="op75 text-primary" transition>
           Install New Module
         </div>
@@ -105,6 +82,7 @@ watchEffect(() => {
           <ModuleInstallList />
         </div>
       </Transition>
+      <ModuleActionDialog />
     </template>
   </div>
 

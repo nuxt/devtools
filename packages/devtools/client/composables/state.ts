@@ -2,15 +2,77 @@ import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
+import type { HookInfo, InstallModuleReturn, InstalledModuleInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
-let modules: Promise<ModuleStaticInfo[]> | undefined
+const ignoredModules = [
+  'pages',
+  'meta',
+  'components',
+  'imports',
+  'nuxt-config-schema',
+  '@nuxt/devtools',
+  '@nuxt/telemetry',
+]
 
-export async function useModulesInfo() {
-  if (modules)
+export function useModulesList() {
+  return useAsyncData('modules-list', async () => {
+    const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
     return modules
-  modules = $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
-  return modules
+      .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
+  }).data
+}
+
+export function useInstalledModules() {
+  return useState('installed-modules', () => {
+    const config = useServerConfig()
+    const modules = useModulesList()
+
+    return computed(() => (config.value?._installedModules || [])
+      .map((mod): InstalledModuleInfo => {
+        const isPackageModule = mod.entryPath && isNodeModulePath(mod.entryPath)
+        const name = mod.meta?.name
+          ? mod.meta?.name
+          : mod.entryPath
+            ? isPackageModule
+              ? getModuleNameFromPath(mod.entryPath)
+              : config.value?.rootDir
+                ? parseReadablePath(mod.entryPath, config.value?.rootDir).path
+                : undefined
+            : undefined
+
+        const isUninstallable = config.value?.modules?.includes(name)
+        const info = modules.value?.find(m => m.npm === name)
+
+        return {
+          name,
+          isPackageModule,
+          isUninstallable,
+          info,
+          ...mod,
+        }
+      })
+      .filter(i => !i.name || !ignoredModules.includes(i.name)),
+    )
+  })
+}
+
+type ModuleActionType = 'install' | 'uninstall'
+
+export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
+
+export async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
+  const router = useRouter()
+  const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
+  const result = await method(item.npm, true)
+
+  if (!result.commands)
+    return
+
+  if (!await ModuleDialog.start(item, result, type))
+    return
+
+  router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
+  await method(item.npm, false)
 }
 
 export function useComponents() {

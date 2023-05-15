@@ -15,7 +15,7 @@ onClickOutside(el, () => {
 
 <template>
   <div ref="el" class="relative">
-    <slot name="trigger" :enabled="enabled" @click="enabled = !enabled">
+    <slot name="trigger" :enabled="enabled" :click="() => enabled = !enabled">
       <NButton @click="enabled = !enabled">
         Dropdown
       </NButton>

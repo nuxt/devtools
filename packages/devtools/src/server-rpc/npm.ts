@@ -3,7 +3,7 @@ import { startSubprocess } from '@nuxt/devtools-kit'
 import isInstalledGlobally from 'is-installed-globally'
 import { detectPackageManager } from 'nypm'
 import { parseModule } from 'magicast'
-import { addNuxtModule } from 'magicast/helpers'
+import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { checkForUpdateOf } from '../npm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageManagerName, PackageUpdateInfo, ServerFunctions } from '../types'
 
@@ -26,6 +26,9 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
     // TODO: smartly detect dev/global installs as default
     if (command === 'install' || command === 'update')
       return [agent, agent === 'npm' ? 'install' : 'add', `${packageName}@latest`, dev ? '-D' : '', global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
+
+    if (command === 'uninstall')
+      return [agent, agent === 'npm' ? 'uninstall' : 'remove', packageName, global ? '-g' : ''].filter(Boolean)
   }
 
   async function runNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {
@@ -80,7 +83,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         }, {
           id: processId,
           name: `Install ${name}`,
-          icon: 'carbon:new-tab',
+          icon: 'carbon:intent-request-create',
           restartable: false,
         })
 
@@ -88,6 +91,54 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
         if (process.getProcess().exitCode !== 0)
           throw new Error('Failed to install module')
+
+        await fs.writeFile(filepath, generated, 'utf-8')
+      }
+
+      return {
+        configOriginal: source,
+        configGenerated: generated,
+        commands,
+        processId,
+      }
+    },
+    async uninstallNuxtModule(name: string, dry = true) {
+      const commands = (await getNpmCommand('uninstall', name))!
+
+      const filepath = nuxt.options._nuxtConfigFile
+      const source = await fs.readFile(filepath, 'utf-8')
+      const mod = parseModule(source, { sourceFileName: filepath })
+
+      // TODO: remove module from config
+      // removeNuxtModule(mod, name)
+      const config = getDefaultExportOptions(mod)
+      config.modules ||= []
+      if (config.modules.includes(name)) {
+        Object.values(config.modules).forEach((value, index) => {
+          if (value === name)
+            config.modules.splice(index - 1, 1)
+        })
+      }
+
+      const generated = mod.generate().code
+
+      const processId = `nuxt:remove-module:${name}`
+
+      if (!dry) {
+        const process = startSubprocess({
+          command: commands[0],
+          args: commands.slice(1),
+        }, {
+          id: processId,
+          name: `Uninstall ${name}`,
+          icon: 'carbon:intent-request-uninstall',
+          restartable: false,
+        })
+
+        await process.getProcess()
+
+        if (process.getProcess().exitCode !== 0)
+          throw new Error('Failed to uninstall module')
 
         await fs.writeFile(filepath, generated, 'utf-8')
       }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { BasicModuleInfo } from '../../src/types'
+import type { InstalledModuleInfo } from '../../src/types'
 
 const props = defineProps<{
-  mod: BasicModuleInfo
+  mod: InstalledModuleInfo
 }>()
 
 const config = useServerConfig()
@@ -19,8 +19,7 @@ const name = computed(() => {
   }
   return ''
 })
-const collection = await useModulesInfo()
-const staticInfo = computed(() => (collection || []).find?.(i => i.npm === name.value || i.name === name.value))
+const staticInfo = computed(() => props.mod.info)
 const data = computed(() => ({
   name,
   ...props.mod?.meta,

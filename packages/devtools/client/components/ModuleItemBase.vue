@@ -38,9 +38,7 @@ const openInEditor = useOpenInEditor()
 <template>
   <NCard p4 flex="~ gap2">
     <div flex="~ col gap2" flex-auto of-hidden px1>
-      <div
-        of-hidden text-ellipsis ws-nowrap text-lg
-      >
+      <div gap-1t flex items-center text-ellipsis ws-nowrap text-lg>
         <NuxtLink
           v-if="isPackageModule"
           :to="npmBase + (data.npm || data.name)"
@@ -60,6 +58,7 @@ const openInEditor = useOpenInEditor()
         <span v-else>
           {{ data.name }}
         </span>
+        <slot name="badge" />
       </div>
 
       <div
@@ -97,7 +96,7 @@ const openInEditor = useOpenInEditor()
 
       <slot name="items" />
     </div>
-    <div flex="~ col">
+    <div flex="~ col" items-end>
       <div
         v-if="data.icon || isPackageModule"
 
@@ -117,6 +116,12 @@ const openInEditor = useOpenInEditor()
           <img :src="avatarBase + m.github" h-6 w-6 rounded-full>
         </NuxtLink>
       </div>
+      <template v-if="$slots.actions">
+        <div flex-auto />
+        <div flex justify-end>
+          <slot name="actions" />
+        </div>
+      </template>
     </div>
   </NCard>
 </template>
