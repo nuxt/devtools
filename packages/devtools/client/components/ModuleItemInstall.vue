@@ -6,7 +6,9 @@ const props = defineProps<{
 }>()
 
 const installedModules = useInstalledModules()
-const isInstalled = computed(() => !!(installedModules.value.find(i => i.isPackageModule && i.name === props.item.npm)))
+const installedInfo = computed(() => installedModules.value.find(i => i.name === props.item.npm))
+const isInstalled = computed(() => installedInfo.value && installedInfo.value.isPackageModule)
+const isUninstallable = computed(() => installedInfo.value && installedInfo.value.isPackageModule && installedInfo.value.isUninstallable)
 </script>
 
 <template>
@@ -15,7 +17,7 @@ const isInstalled = computed(() => !!(installedModules.value.find(i => i.isPacka
     :role="isInstalled ? '' : 'button'"
     :info="item"
     mb2 h-full
-    :class="isInstalled ? 'op50' : 'hover:bg-active!'"
+    :class="isInstalled ? 'border-dashed op75' : 'hover:bg-active!'"
     :compact="true"
     @click="isInstalled ? null : useModuleAction(item, 'install')"
   >
@@ -23,7 +25,7 @@ const isInstalled = computed(() => !!(installedModules.value.find(i => i.isPacka
       <Badge bg-green-400:10 text-green-400>
         Installed
       </Badge>
-      <NDropdown n="sm green">
+      <NDropdown v-if="isUninstallable" n="sm green">
         <template #trigger="{ click }">
           <NIconButton icon="carbon-overflow-menu-vertical" @click="click()" />
         </template>

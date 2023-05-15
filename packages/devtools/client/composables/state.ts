@@ -40,11 +40,13 @@ export function useInstalledModules() {
                 : undefined
             : undefined
 
+        const isUninstallable = config.value?.modules?.includes(name)
         const info = modules.value?.find(m => m.npm === name)
 
         return {
           name,
           isPackageModule,
+          isUninstallable,
           info,
           ...mod,
         }

@@ -82,8 +82,8 @@ const userModules = computed(() => installedModules.value.filter(i => !i.isPacka
           <ModuleInstallList />
         </div>
       </Transition>
+      <ModuleActionDialog />
     </template>
-    <ModuleActionDialog />
   </div>
 
   <HelpFab>

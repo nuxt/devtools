@@ -84,6 +84,7 @@ export interface BasicModuleInfo {
 export interface InstalledModuleInfo {
   name?: string
   isPackageModule: boolean
+  isUninstallable: boolean
   info?: ModuleStaticInfo
   entryPath?: string
   meta?: {

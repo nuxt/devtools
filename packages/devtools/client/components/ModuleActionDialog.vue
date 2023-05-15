@@ -11,7 +11,7 @@ const openInEditor = useOpenInEditor()
       <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
       <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl>
-          <span capitalize>{{ args[2] }}</span> <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[0].name }}</span> module?
+          <span capitalize :class="args[2] === 'install' ? 'text-primary' : 'text-red'">{{ args[2] }}</span> <code>{{ args[0].name }}</code>?
         </h2>
 
         <p op50>
@@ -36,13 +36,13 @@ const openInEditor = useOpenInEditor()
 
         <div flex="~ gap-3" mt2 justify-end>
           <NTip n="sm purple" flex-auto icon="carbon-chemistry">
-            Experimental. Make sure to backup your project.
+            Experimental. Backup your project first.
           </NTip>
 
           <NButton @click="resolve(false)">
             Cancel
           </NButton>
-          <NButton n="solid primary" capitalize @click="resolve(true)">
+          <NButton n="solid" capitalize :class="args[2] === 'install' ? 'n-primary' : 'n-red'" @click="resolve(true)">
             {{ args[2] }}
           </NButton>
         </div>
