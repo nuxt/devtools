@@ -4,6 +4,6 @@ import { extendUnocssOptions } from './src/unocss'
 export default {
   ...extendUnocssOptions(),
   configDeps: [
-    './src/unocss/index.ts',
+    './src/unocss.ts',
   ],
 }
