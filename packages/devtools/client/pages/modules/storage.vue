@@ -193,7 +193,7 @@ async function renameCurrentItem() {
       </div>
       <NPanelGrids v-else>
         <NCard px6 py4>
-          Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/introduction/storage" n="orange" target="_blank">
+          Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
             Nitro storage
           </NLink>
         </NCard>

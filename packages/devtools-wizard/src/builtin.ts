@@ -42,10 +42,11 @@ async function toggleConfig(cwd: string, value?: boolean) {
       ? mod.exports.default.$args[0]
       : mod.exports.default
 
-    if (config.devtools == null || typeof config.devtools === 'boolean')
-      config.devtools = true
-    else if (typeof config.devtools === 'object')
-      config.devtools.enabled = true
+    if (config.devtools || value) {
+      config.devtools ||= {}
+      if (typeof config.devtools === 'object')
+        config.devtools.enabled = value
+    }
 
     const generated = mod.generate().code
 

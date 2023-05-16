@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { BasicModuleInfo } from '../../src/types'
+import type { InstalledModuleInfo } from '../../src/types'
 
 const props = defineProps<{
-  mod: BasicModuleInfo
+  mod: InstalledModuleInfo
 }>()
 
 const config = useServerConfig()
@@ -19,76 +19,17 @@ const name = computed(() => {
   }
   return ''
 })
-const collection = await useModulesInfo()
+const staticInfo = computed(() => props.mod.info)
 const data = computed(() => ({
   name,
   ...props.mod?.meta,
-  ...(collection || []).find?.(i => i.npm === name.value || i.name === name.value),
+  ...staticInfo.value,
 }))
-
-const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'
-const avatarBase = 'https://api.nuxtjs.org/api/ipx/s_44,f_webp/gh_avatar/'
-const githubBase = 'https://github.com/'
-const npmBase = 'https://www.npmjs.com/package/'
-
-const openInEditor = useOpenInEditor()
 </script>
 
 <template>
-  <NCard p4 flex="~ gap2">
-    <div flex="~ col gap2" flex-auto of-hidden px1>
-      <div
-        of-hidden text-ellipsis ws-nowrap text-lg
-      >
-        <NuxtLink
-          v-if="isPackageModule"
-          :to="npmBase + (data.npm || data.name)"
-          target="_blank"
-          hover="underline text-primary"
-        >
-          {{ data.name }}
-        </NuxtLink>
-        <button
-          v-else-if="mod.entryPath"
-          role="button"
-          hover="underline text-primary"
-          @click="openInEditor(mod.entryPath!)"
-        >
-          {{ data.name }}
-        </button>
-        <span v-else>
-          {{ data.name }}
-        </span>
-      </div>
-
-      <div v-if="data.description " line-clamp-2 mt--1 text-sm op50>
-        {{ data.description }}
-      </div>
-
-      <div flex-auto />
-
-      <div v-if="data.website" flex="~ gap-2" title="Documentation">
-        <span i-carbon-link text-lg op50 />
-        <NuxtLink
-          :to="data.website"
-          target="_blank"
-          text-sm op50
-          hover="op100 underline text-primary"
-        >
-          {{ data.website.replace(/^https?:\/\//, '') }}
-        </NuxtLink>
-      </div>
-      <div v-if="data.github" flex="~ gap-2">
-        <span i-carbon-logo-github text-lg op50 />
-        <NuxtLink
-          :to="data.github"
-          target="_blank"
-          text-sm op50
-          hover="op100 underline text-primary"
-        >
-          {{ data.github.replace(/^https?:\/\/github.com\//, '') }}
-        </NuxtLink>
-      </div>
+  <ModuleItemBase :mod="mod" :info="staticInfo">
+    <template #items>
       <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
         <span i-carbon-folder-move-to text-lg op50 />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
@@ -134,27 +75,6 @@ const openInEditor = useOpenInEditor()
           </div>
         </template>
       </NpmVersionCheck>
-    </div>
-    <div flex="~ col">
-      <div
-        v-if="data.icon || isPackageModule"
-
-        h-20 w-20 flex flex-none rounded bg-gray:3 p4
-      >
-        <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
-        <div i-carbon-circle-dash ma text-4xl op50 />
-      </div>
-      <div v-if="data.maintainers?.length" flex="~" mt2 flex-auto items-end justify-end>
-        <NuxtLink
-          v-for="m of data.maintainers"
-          :key="m.name"
-          target="_blank"
-          :to="githubBase + m.github"
-          :title="m.name"
-        >
-          <img :src="avatarBase + m.github" h-6 w-6 rounded-full>
-        </NuxtLink>
-      </div>
-    </div>
-  </NCard>
+    </template>
+  </ModuleItemBase>
 </template>

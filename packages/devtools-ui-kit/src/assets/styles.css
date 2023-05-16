@@ -11,3 +11,81 @@ html.dark {
   background-color: #151515;
   color: white;
 }
+
+::selection {
+  background: #8884;
+}
+
+/* Shiki */
+.shiki .line {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.shiki.diff .line > span {
+  opacity: 0.75;
+  filter: saturate(0.75);
+}
+
+.shiki.diff .line-added,
+.shiki.diff .line-removed {
+  scroll-margin: 5em;
+}
+
+.shiki.diff .line-added > span,
+.shiki.diff .line-removed > span {
+  opacity: 1 !important;
+  z-index: 100;
+  position: inherit;
+  scroll-margin: 20px;
+}
+
+.shiki.diff .line-added > span {
+  color: #218c3b !important;
+}
+
+.shiki.diff .line-removed > span {
+  color: #8c2c21 !important;
+}
+
+.shiki .line-added:after {
+  content: "";
+  background-color: #43885440;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.shiki .line-removed:after {
+  content: "";
+  background-color: #8f4b3950;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+/* Color Mode transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+.dark::view-transition-old(root) {
+  z-index: 2147483646;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}

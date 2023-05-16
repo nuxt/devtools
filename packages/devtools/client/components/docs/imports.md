@@ -6,11 +6,11 @@ Nuxt auto-imports helper functions, composables and Vue APIs to use across your 
 
 According to your config, exports of files under the following folders will be registed as auto-imports entry:
 
-:help-imports-dirs
+<HelpImportsDirs />
 
 Meanwhile, modules could also provide auto-imports for their own components. You have auto-imports from the following modules as well:
 
-:help-imports-modules
+<HelpImportsModules />
 
 <hr>
 

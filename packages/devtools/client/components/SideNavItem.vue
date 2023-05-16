@@ -21,6 +21,7 @@ const isActive = computed(() => route.path.startsWith(tabPath.value))
       hover="bg-active" relative
       h-10 w-10 select-none items-center justify-center rounded-xl p1 text-secondary
       exact-active-class="!text-primary bg-active"
+      @click="'onClick' in tab && tab.onClick?.()"
     >
       <TabIcon
         text-xl

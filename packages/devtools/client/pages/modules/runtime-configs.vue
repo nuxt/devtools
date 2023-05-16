@@ -50,5 +50,7 @@ const privateConfig = computed(() => {
     </NSectionBlock>
   </div>
 
-  <HelpFab path="/runtime-configs" />
+  <HelpFab>
+    <DocsRuntimeConfigs />
+  </HelpFab>
 </template>

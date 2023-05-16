@@ -1,4 +1,7 @@
 import { hostname } from 'node:os'
+import { resolve } from 'node:path'
+import fs from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import { checkPort, getPort } from 'get-port-please'
@@ -8,7 +11,7 @@ import { startSubprocess } from '@nuxt/devtools-kit'
 import { LOG_PREFIX } from '../logger'
 import type { NuxtDevtoolsServerContext } from '../types'
 
-export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
+export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {
   const installed = !!await which('code-server').catch(() => null)
 
   const vsOptions = options?.vscode || {}
@@ -19,19 +22,52 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   let promise: Promise<void> | null = null
   const mode = vsOptions?.mode || 'local-serve'
   const computerHostName = vsOptions.tunnel?.name || hostname().split('.').join('')
+  const root = nuxt.options.rootDir
+  const vscodeServerControllerFile = resolve(root, '.vscode', '.server-controller-port.log')
+
+  openInEditorHooks.push(async (file) => {
+    if (!existsSync(vscodeServerControllerFile))
+      return false
+
+    // With vscode-server-controller,
+    // we can open files in VS Code Server
+    try {
+      const { port } = JSON.parse(await fs.readFile(vscodeServerControllerFile, 'utf-8')) as any
+      const url = `http://localhost:${port}/open?path=${encodeURIComponent(file)}`
+      await fetch(url)
+      rpc.broadcast.navigateTo('/modules/custom-builtin-vscode')
+      return true
+    }
+    catch (e) {
+      console.error(e)
+      return false
+    }
+  })
 
   async function startCodeServer() {
+    if (existsSync(vscodeServerControllerFile))
+      await fs.rm(vscodeServerControllerFile, { force: true })
+
     if (vsOptions?.reuseExistingServer && !(await checkPort(port))) {
       loaded = true
-      url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+      url = `http://localhost:${port}/?folder=${encodeURIComponent(root)}`
       logger.info(LOG_PREFIX, `Existing VS Code Server found at port ${port}...`)
       return
     }
 
     port = await getPort({ port })
-    url = `http://localhost:${port}/?folder=${encodeURIComponent(nuxt.options.rootDir)}`
+    url = `http://localhost:${port}/?folder=${encodeURIComponent(root)}`
 
     logger.info(LOG_PREFIX, `Starting VS Code Server at ${url} ...`)
+
+    // Install VS Code Server Controller
+    // https://github.com/antfu/vscode-server-controller
+    execa('code-server', [
+      'serve-local',
+      '--accept-server-license-terms',
+      '--install-extension',
+      'antfu.vscode-server-controller',
+    ], { stderr: 'inherit', stdout: 'ignore', reject: false })
 
     startSubprocess(
       {

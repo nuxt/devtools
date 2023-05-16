@@ -23,6 +23,7 @@ export function renderCodeHighlight(code: string, lang: Lang) {
         'vue',
         'vue-html',
         'bash',
+        'diff',
       ],
     }).then((i) => {
       shiki.value = i

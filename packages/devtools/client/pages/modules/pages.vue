@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { objectPick } from '@antfu/utils'
 import { nextTick } from 'vue'
-import type { RouteInfo } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -13,19 +11,14 @@ definePageMeta({
 const router = useClientRouter()
 const route = useClientRoute()
 const config = useServerConfig()
+const serverApp = useServerApp()
 
-const serverPages = useServerPages()
 const layouts = useLayouts()
 
-const routes = computed((): RouteInfo[] => {
-  return (router.value?.getRoutes() || [])
-    .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
-    .map((i) => {
-      return {
-        ...serverPages.value?.find(j => j.name && j.name === i.name),
-        ...i,
-      }
-    })
+const routes = useMergedRouteList()
+
+const middleware = computed(() => {
+  return serverApp.value?.middleware || []
 })
 
 const routeInput = ref('')
@@ -116,6 +109,40 @@ function navigateToRoute(path: string) {
         @navigate="navigateToRoute"
       />
     </NSectionBlock>
+    <NSectionBlock
+      v-if="middleware.length"
+      icon="carbon:ibm-watson-studio"
+      text="Middleware"
+      :description="`${middleware.length} middleware registered in your application`"
+      padding="px13"
+    >
+      <table w-full>
+        <thead border="b base" h-7>
+          <tr>
+            <th text-left>
+              Name
+            </th>
+            <th text-left>
+              Path
+            </th>
+          </tr>
+        </thead>
+        <tr v-for="m of middleware" :key="m.path" h-7>
+          <td>
+            <span mr1>{{ m.name }}</span>
+            <Badge
+              v-if="m.global"
+              bg-green-400:10 text-green-400
+              title="Registered at runtime as a global component"
+              v-text="'global'"
+            />
+          </td>
+          <td>
+            <FilepathItem :filepath="m.path" />
+          </td>
+        </tr>
+      </table>
+    </NSectionBlock>
   </div>
   <LaunchPage
     v-else
@@ -139,5 +166,7 @@ function navigateToRoute(path: string) {
     ]"
   />
 
-  <HelpFab path="/pages" />
+  <HelpFab>
+    <DocsPages />
+  </HelpFab>
 </template>

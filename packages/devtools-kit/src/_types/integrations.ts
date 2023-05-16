@@ -81,7 +81,18 @@ export interface BasicModuleInfo {
   }
 }
 
-export interface ModuleMetric {
+export interface InstalledModuleInfo {
+  name?: string
+  isPackageModule: boolean
+  isUninstallable: boolean
+  info?: ModuleStaticInfo
+  entryPath?: string
+  meta?: {
+    name?: string
+  }
+}
+
+export interface ModuleStaticInfo {
   name: string
   description: string
   repo: string

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { devToolsClient } from '../runtime/client'
 
 const props = withDefaults(
@@ -8,11 +8,22 @@ const props = withDefaults(
     code: string
     lang?: string
     lines?: boolean
+    transformRendered?: (code: string) => string
   }>(), {
     lines: true,
   },
 )
-const rendered = computed(() => devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string) || { code: props.code, supported: false })
+
+const emit = defineEmits(['loaded'])
+
+const rendered = computed(() => {
+  const result = devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string) || { code: props.code, supported: false }
+  if (result.supported && props.transformRendered)
+    result.code = props.transformRendered(result.code)
+  if (result.supported)
+    nextTick(() => emit('loaded'))
+  return result
+})
 </script>
 
 <template>

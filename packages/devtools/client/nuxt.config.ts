@@ -1,5 +1,4 @@
 import { resolve } from 'node:path'
-
 import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
 
@@ -10,8 +9,9 @@ function r(p: string) {
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
-    '@nuxt/content',
+    '@vue-macros/nuxt',
     '~/modules/custom-tabs',
+    '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
   ],
@@ -32,6 +32,11 @@ export default defineNuxtConfig({
     '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/iframe-client'),
     '@nuxt/devtools-kit/types': r('../../devtools-kit/src/types'),
     '@nuxt/devtools-kit': r('../../devtools-kit/src/index'),
+  },
+  devtools: {
+    componentInspector: {
+      toggleComboKey: 'meta-shift-x',
+    },
   },
   appConfig: {
     fixture2: 'from nuxt.config.ts',

@@ -2,6 +2,7 @@
 import 'floating-vue/dist/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'splitpanes/dist/splitpanes.css'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 import { setupClientRPC } from './setup/client-rpc'
 
@@ -32,7 +33,7 @@ const route = useRoute()
 const isUtilityView = computed(() => route.path.startsWith('/__'))
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
-addEventListener('keypress', (e) => {
+addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
     client.value?.closeDevTools()
     e.preventDefault()
@@ -41,7 +42,7 @@ addEventListener('keypress', (e) => {
 
 const {
   scale,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 onMounted(() => {
   const injectClient = useInjectionClient()

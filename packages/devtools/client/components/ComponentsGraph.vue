@@ -30,7 +30,7 @@ const {
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
   componentsGraphShowWorkspace: showWorkspace,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 const selectedFilter = ref<ComponentRelationship>()
 
@@ -206,6 +206,32 @@ function setFilter() {
 
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
+    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm glass-effect>
+      <div grid="~ cols-[20px_1fr] items-center gap-y-1">
+        <div h-3 w-3 rounded-full bg-hex-42b883 />
+        <div op50>
+          Component
+        </div>
+        <div h-3 w-3 bg-hex-42b2b8 />
+        <div op50>
+          Page
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 726 628" ml--1px h-3>
+          <path fill="#4256b8" stroke-width="4" d="M723 314 543 625.8H183L3 314 183 2.2h360L723 314z" />
+        </svg>
+        <div op50>
+          Layout
+        </div>
+        <div h-3 w-3 rounded-full bg-hex-b4b842 />
+        <div op50>
+          Library Component
+        </div>
+        <div h-3 w-3 rounded-full bg-hex-b86542 />
+        <div op50>
+          Unknown
+        </div>
+      </div>
+    </NCard>
     <DrawerRight
       :model-value="!!(selected && selected.component)"
       :navbar="navbar"

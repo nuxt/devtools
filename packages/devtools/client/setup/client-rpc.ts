@@ -21,7 +21,8 @@ export function setupClientRPC() {
       nuxt.hooks.callHookParallel('devtools:terminal:exit', data)
     },
     async navigateTo(path: string) {
-      router.push(path)
+      if (router.currentRoute.value.path !== path)
+        router.push(path)
     },
   } satisfies ClientFunctions)
 }
