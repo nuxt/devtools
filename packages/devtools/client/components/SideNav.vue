@@ -5,12 +5,12 @@ const allTabs = useEnabledTabs()
 const showDocking = ref(false)
 const showMoreTabs = ref(false)
 const panel = ref()
-const button = ref<HTMLButtonElement>()
+const buttonDocking = ref<HTMLButtonElement>()
+const buttonMoreTabs = ref<HTMLButtonElement>()
 
 function toggleDocking() {
   showDocking.value = !showDocking.value
 }
-
 function toggleMoreTabs() {
   showMoreTabs.value = !showMoreTabs.value
 }
@@ -32,7 +32,9 @@ const categorizedOverflowTabs = getCategorizedTabs(overflowTabs)
 onClickOutside(
   panel,
   (e) => {
-    if (e.target === button.value)
+    if (buttonDocking.value && e.composedPath().includes(buttonDocking.value))
+      return
+    if (buttonMoreTabs.value && e.composedPath().includes(buttonMoreTabs.value))
       return
     showDocking.value = false
     showMoreTabs.value = false
@@ -53,10 +55,11 @@ onClickOutside(
         :auto-hide="true"
       >
         <button
-          ref="button"
+          ref="buttonDocking"
           flex="~"
           hover="bg-active"
-          relative my1 h-10 w-10 select-none items-center justify-center rounded-xl p1 text-secondary
+          relative my1 h-10 w-10 select-none items-center justify-center rounded-xl p1
+          text-secondary
           exact-active-class="!text-primary bg-active"
           :class="client ? '' : 'saturate-0'"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
@@ -96,6 +99,7 @@ onClickOutside(
         :auto-hide="true"
       >
         <button
+          ref="buttonMoreTabs"
           flex="~"
           hover="bg-active" relative
           h-10 w-10 select-none items-center justify-center rounded-xl p1 text-secondary
