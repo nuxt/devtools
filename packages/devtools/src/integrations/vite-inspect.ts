@@ -27,7 +27,13 @@ export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
 
   async function getComponentsRelationships() {
     const modules = (await api?.rpc.list())?.modules || []
-    const vueModules = modules.filter(i => i.id.match(/\.vue($|\?v=)/))
+    const components = await rpc.functions.getComponents() || []
+    const vueModules = modules.filter((m) => {
+      const plainId = m.id.replace(/\?v=[\w\d]+$/, '')
+      if (components.some(c => c.filePath === plainId))
+        return true
+      return m.id.match(/\.vue($|\?v=)/)
+    })
 
     const graph = vueModules.map((i) => {
       function searchForVueDeps(id: string, seen = new Set<string>()): string[] {
