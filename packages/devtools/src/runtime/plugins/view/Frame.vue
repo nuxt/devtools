@@ -186,8 +186,10 @@ useEventListener(window, 'mouseleave', () => {
 })
 
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
-  if (viewMode.value === 'component-inspector' && e.key === 'Escape')
+  if (e.key === 'Escape' && (viewMode.value === 'component-inspector' || window.__VUE_INSPECTOR__?.enabled)) {
+    disableComponentInspector()
     closePanel()
+  }
 })
 
 // Close panel on outside click (when enabled)

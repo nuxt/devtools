@@ -1,3 +1,4 @@
+import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { ModuleCustomTab } from './custom-tabs'
 
 export interface ModuleOptions {
@@ -25,7 +26,7 @@ export interface ModuleOptions {
    *
    * @default true
    */
-  componentInspector?: boolean
+  componentInspector?: boolean | VitePluginInspectorOptions
 
   /**
    * Enable vite-plugin-inspect
