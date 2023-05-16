@@ -16,7 +16,7 @@ const checked = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <label
-    class="hover:n-checkbox-hover n-checkbox select-none items-center n-disabled:n-disabled"
+    class="n-checkbox hover:n-checkbox-hover select-none items-center n-disabled:n-disabled"
     :checked="checked || null"
     :disabled="disabled || null"
   >

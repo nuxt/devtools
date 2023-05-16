@@ -21,6 +21,7 @@ export default defineBuildConfig({
     'nuxt/dist/app/nuxt',
     'birpc',
     'hookable',
+    'vite-plugin-vue-inspector',
   ],
   declaration: true,
   rollup: {
