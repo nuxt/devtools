@@ -1,6 +1,8 @@
 import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
+import { unref } from 'vue'
 import type { Ref } from 'vue'
+import type { MaybeRef } from '@vueuse/core'
 import { objectPick } from '@antfu/utils'
 import type { HookInfo, InstallModuleReturn, InstalledModuleInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
@@ -190,49 +192,63 @@ export function useAllTabs() {
   ])
 }
 
-export function useCategorizedTabs(enabledOnly = true) {
-  const tabs = enabledOnly
-    ? useEnabledTabs()
-    : useAllTabs()
+function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
+  return {
+    app: [],
+    server: [],
+    analyze: [],
+    modules: [],
+    documentation: [],
+    advanced: [],
+  }
+}
 
-  const settings = useDevToolsOptions()
-
+export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>) {
   return computed(() => {
-    const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
-      app: [],
-      server: [],
-      analyze: [],
-      modules: [],
-      documentation: [],
-      advanced: [],
-    }
-
-    for (const tab of tabs.value) {
+    const categories = getCategorizedRecord()
+    for (const tab of unref(tabs)) {
       const category = (tab.category || 'app')
-      if (enabledOnly && settings.hiddenTabCategories.value.includes(category))
-        continue
       if (!categories[category])
         console.warn(`Unknown tab category: ${category}`)
       else
         categories[category].push(tab)
     }
 
+    for (const key of Object.keys(categories)) {
+      if (categories[key as TabCategory].length === 0)
+        delete categories[key as TabCategory]
+    }
+
     return Object.entries(categories)
   })
+}
+
+export function useCategorizedTabs(enabledOnly = true) {
+  const tabs = enabledOnly
+    ? useEnabledTabs()
+    : useAllTabs()
+
+  return getCategorizedTabs(tabs)
 }
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
   const settings = useDevToolsOptions()
+  const categoryOrder = Object.keys(getCategorizedRecord())
 
-  return computed(() => tabs.value.filter((tab) => {
-    const _tab = tab as ModuleBuiltinTab
-    if (_tab.show && !_tab.show())
-      return false
-    if (settings.hiddenTabs.value.includes(_tab.name))
-      return false
-    return true
-  }))
+  return computed(() => tabs.value
+    .filter((tab) => {
+      const _tab = tab as ModuleBuiltinTab
+      if (_tab.show && !_tab.show())
+        return false
+      if (settings.hiddenTabs.value.includes(_tab.name))
+        return false
+      if (settings.hiddenTabCategories.value.includes(tab.category || 'app'))
+        return false
+      return true
+    })
+    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')),
+  )
 }
 
 export function useAllRoutes() {
