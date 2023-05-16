@@ -139,6 +139,9 @@ function enableComponentInspector() {
 }
 
 function disableComponentInspector() {
+  if (!window.__VUE_INSPECTOR__?.enabled)
+    return
+
   window.__VUE_INSPECTOR__?.disable()
   props.client?.hooks.callHook('host:inspector:close')
   if (viewMode.value === 'component-inspector')
