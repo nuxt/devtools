@@ -38,6 +38,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       onError(error, name) {
         console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
       },
+      timeout: 120_000,
     },
   )
 

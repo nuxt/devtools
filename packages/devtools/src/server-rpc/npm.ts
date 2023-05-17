@@ -88,13 +88,13 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         })
 
         const execa = process.getProcess()
-        await execa
+        const result = await execa
 
         await Promise.resolve()
 
-        const code = execa.exitCode || 0
+        const code = result.exitCode
         if (code !== 0) {
-          console.error(String(execa.stderr))
+          console.error(result.stderr)
           throw new Error(`Failed to install module, process exited with ${code}`)
         }
 
@@ -140,11 +140,16 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
           icon: 'carbon:intent-request-uninstall',
           restartable: false,
         })
+        const execa = process.getProcess()
+        const result = await execa
 
-        await process.getProcess()
+        await Promise.resolve()
 
-        if (process.getProcess().exitCode !== 0)
-          throw new Error('Failed to uninstall module')
+        const code = result.exitCode
+        if (code !== 0) {
+          console.error(result.stderr)
+          throw new Error(`Failed to uninstall module', process exited with ${code}`)
+        }
 
         await fs.writeFile(filepath, generated, 'utf-8')
       }

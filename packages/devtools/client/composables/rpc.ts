@@ -35,6 +35,7 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   onError(error, name) {
     console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
   },
+  timeout: 120_000,
 })
 
 async function connectWS() {
