@@ -33,11 +33,6 @@ export default defineNuxtConfig({
     '@nuxt/devtools-kit/types': r('../../devtools-kit/src/types'),
     '@nuxt/devtools-kit': r('../../devtools-kit/src/index'),
   },
-  devtools: {
-    componentInspector: {
-      toggleComboKey: 'meta-shift-x',
-    },
-  },
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },

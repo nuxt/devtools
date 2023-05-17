@@ -89,7 +89,6 @@ onClickOutside(
     </div>
 
     <div flex="~ none col items-center gap-1" pb1>
-      <div h-1px w-8 border="b base" />
       <VDropdown
         v-if="overflowTabs.length"
         placement="left-end"

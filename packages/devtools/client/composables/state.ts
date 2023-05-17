@@ -199,8 +199,8 @@ export function useAllTabs() {
 function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
   return {
     app: [],
-    server: [],
     analyze: [],
+    server: [],
     modules: [],
     documentation: [],
     advanced: [],
