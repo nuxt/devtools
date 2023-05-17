@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { formatTimeAgo } from '@vueuse/core'
 import type { AnalyzeBuildMeta } from '~/../src/types'
+import { satisfyNuxtVersion } from '~/composables/npm'
 
 definePageMeta({
   icon: 'carbon-edge-node',
   title: 'Build Analyze',
   layout: 'full',
   category: 'analyze',
+  experimental: true,
+  show() {
+    return satisfyNuxtVersion('^3.5.0')
+  },
 })
 
 const PromiseConfirm = createTemplatePromise<boolean>()
