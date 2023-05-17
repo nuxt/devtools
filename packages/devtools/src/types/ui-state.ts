@@ -18,6 +18,20 @@ export interface SocialPreviewResolved {
   imageAlt?: string
 }
 
+export interface SocialPreviewCard {
+  url?: SocialPreviewCardItem[]
+  title?: SocialPreviewCardItem[]
+  description?: SocialPreviewCardItem[]
+  favicon?: SocialPreviewCardItem[]
+  image?: SocialPreviewCardItem[]
+  imageAlt?: SocialPreviewCardItem[]
+}
+
+interface SocialPreviewCardItem {
+  tag: string
+  name?: string
+}
+
 export interface NormalizedHeadTag {
   tag: string
   name: string
