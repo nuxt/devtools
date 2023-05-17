@@ -6,6 +6,7 @@ import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
+import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { InstallModuleReturn } from './server-ctx'
 
 export interface ServerFunctions {
@@ -43,6 +44,12 @@ export interface ServerFunctions {
   getStorageItem(key: string): Promise<StorageValue>
   setStorageItem(key: string, value: StorageValue): Promise<void>
   removeStorageItem(key: string): Promise<void>
+
+  // Analyze
+  getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>
+  generateAnalyzeBuildName(): Promise<string>
+  startAnalyzeBuild(name: string): Promise<string>
+  clearAnalyzeBuilds(names?: string[]): Promise<void>
 
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>

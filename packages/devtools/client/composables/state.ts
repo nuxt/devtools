@@ -147,6 +147,10 @@ export function useTerminals() {
   return useAsyncState('getTerminals', () => rpc.getTerminals())
 }
 
+export function useAnalyzeBuildInfo() {
+  return useAsyncState('getAnalyzeBuildInfo', () => rpc.getAnalyzeBuildInfo())
+}
+
 export function useAllTabs() {
   const customTabs = useCustomTabs()
   const settings = useDevToolsOptions()

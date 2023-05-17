@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module'
-import { useNuxt } from '@nuxt/kit'
+import { logger, useNuxt } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
 import { getPackageInfo } from 'local-pkg'
@@ -10,24 +10,30 @@ export async function getMainPackageJSON(nuxt = useNuxt()) {
 }
 
 export async function checkForUpdateOf(name: string, current?: string, nuxt = useNuxt()): Promise<PackageUpdateInfo | undefined> {
-  if (!current) {
-    const require = createRequire(nuxt.options.rootDir)
-    const info = await getPackageInfo(name, { paths: require.resolve.paths(name) || undefined })
-    if (!info)
-      return
-    current = info.packageJson.version
+  try {
+    if (!current) {
+      const require = createRequire(nuxt.options.rootDir)
+      const info = await getPackageInfo(name, { paths: require.resolve.paths(name) || undefined })
+      if (!info)
+        return
+      current = info.packageJson.version
+    }
+
+    const packument = await import('pacote').then(r => r.default?.packument || r.packument)
+    const manifest = await packument(name)
+
+    const latest = manifest['dist-tags'].latest
+    const needsUpdate = latest !== current && semver.lt(current, latest)
+
+    return {
+      name,
+      current,
+      latest,
+      needsUpdate,
+    }
   }
-
-  const packument = await import('pacote').then(r => r.default?.packument || r.packument)
-  const manifest = await packument(name)
-
-  const latest = manifest['dist-tags'].latest
-  const needsUpdate = latest !== current && semver.lt(current, latest)
-
-  return {
-    name,
-    current,
-    latest,
-    needsUpdate,
+  catch (e) {
+    logger.warn(`Failed to check for update of ${name}:`)
+    logger.warn(e)
   }
 }

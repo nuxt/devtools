@@ -15,6 +15,7 @@ import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
 import { setupTerminalRPC } from './terminals'
 import { setupServerRoutesRPC } from './server-routes'
+import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupUIOptionsRPC } from './ui-options'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
@@ -79,6 +80,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupWizardRPC(ctx),
     ...setupTerminalRPC(ctx),
     ...setupServerRoutesRPC(ctx),
+    ...setupAnalyzeBuildRPC(ctx),
     ...setupUIOptionsRPC(ctx),
   } satisfies ServerFunctions)
 

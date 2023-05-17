@@ -39,11 +39,14 @@ export function startSubprocess(
       execaOptions.command,
       execaOptions.args,
       {
+        reject: false,
         ...execaOptions,
         env: {
           COLORS: 'true',
           FORCE_COLOR: 'true',
           ...execaOptions.env,
+          // Force disable Nuxi CLI override
+          __CLI_ARGV__: undefined,
         },
       },
     )

@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import fs from 'node:fs/promises'
+import fsp from 'node:fs/promises'
 import { relative } from 'node:path'
 import { consola } from 'consola'
 import c from 'picocolors'
@@ -36,7 +36,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
   }
 
   try {
-    const source = await fs.readFile(nuxtConfig, 'utf-8')
+    const source = await fsp.readFile(nuxtConfig, 'utf-8')
     const mod = await parseModule(source, { sourceFileName: nuxtConfig })
     const config = mod.exports.default.$type === 'function-call'
       ? mod.exports.default.$args[0]
@@ -71,7 +71,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
       if (!confirm)
         return false
 
-      await fs.writeFile(nuxtConfig, `${generated.trimEnd()}\n`, 'utf-8')
+      await fsp.writeFile(nuxtConfig, `${generated.trimEnd()}\n`, 'utf-8')
     }
   }
   catch (err) {
