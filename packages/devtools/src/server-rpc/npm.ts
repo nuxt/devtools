@@ -87,10 +87,14 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
           restartable: false,
         })
 
-        await process.getProcess()
+        const execa = process.getProcess()
+        await execa
 
-        if (process.getProcess().exitCode !== 0)
-          throw new Error('Failed to install module')
+        const code = execa.exitCode
+        if (code !== 0) {
+          console.error(execa.stderr)
+          throw new Error(`Failed to install module, process exited with ${code}`)
+        }
 
         await fs.writeFile(filepath, generated, 'utf-8')
       }
