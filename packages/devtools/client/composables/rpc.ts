@@ -4,8 +4,9 @@ import type { ClientFunctions, ServerFunctions } from '../../src/types'
 
 const RECONNECT_INTERVAL = 2000
 
-export const wsConnecting = ref(true)
+export const wsConnecting = ref(false)
 export const wsError = ref<any>()
+export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
 
 let connectPromise = connectWS()
 let onMessage: Function = () => {}

@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      v-if="wsError || wsConnecting"
+      v-if="wsConnectingDebounced"
       flex="~ col justify-center items-center gap-2"
       fixed bottom-0 left-0 right-0 top-0 z-2147483646 p5 text-lg backdrop-blur-5 glass-effect
     >
