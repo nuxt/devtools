@@ -24,7 +24,7 @@ const userModules = computed(() => installedModules.value.filter(i => !i.isPacka
     >
       <ModuleItem
         v-for="m of packageModules"
-        :key="m.meta?.name || m.entryPath"
+        :key="m.name"
         :mod="m"
       />
       <NCard

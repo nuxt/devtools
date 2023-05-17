@@ -1,29 +1,15 @@
 <script setup lang="ts">
-import type { BasicModuleInfo, ModuleStaticInfo } from '../../src/types'
+import type { InstalledModuleInfo, ModuleStaticInfo } from '../../src/types'
 
 const props = defineProps<{
-  mod: BasicModuleInfo
+  mod: InstalledModuleInfo
   info?: ModuleStaticInfo
   compact?: boolean
 }>()
 
-const config = useServerConfig()
-const isPackageModule = computed(() => props.mod.entryPath && isNodeModulePath(props.mod.entryPath))
-const name = computed(() => {
-  if (props.mod.meta?.name)
-    return props.mod.meta.name
-  if (props.mod.entryPath) {
-    return isPackageModule.value
-      ? getModuleNameFromPath(props.mod.entryPath)
-      : config.value?.rootDir
-        ? parseReadablePath(props.mod.entryPath, config.value?.rootDir).path
-        : ''
-  }
-  return ''
-})
 const data = computed(() => ({
-  name,
   ...props.mod?.meta,
+  ...props.mod,
   ...props.info,
 }))
 
@@ -40,7 +26,7 @@ const openInEditor = useOpenInEditor()
     <div flex="~ col gap2" flex-auto of-hidden px1>
       <div gap-1t flex items-center text-ellipsis ws-nowrap text-lg>
         <NuxtLink
-          v-if="isPackageModule"
+          v-if="mod.isPackageModule"
           :to="npmBase + (data.npm || data.name)"
           target="_blank"
           hover="underline text-primary"
@@ -98,11 +84,11 @@ const openInEditor = useOpenInEditor()
     </div>
     <div flex="~ col" items-end>
       <div
-        v-if="data.icon || isPackageModule"
+        v-if="data.icon || mod.isPackageModule"
 
         h-20 w-20 flex flex-none rounded bg-gray:3 p4
       >
-        <img v-if="data.icon" :src="iconBase + data.icon" :alt="name" ma>
+        <img v-if="data.icon" :src="iconBase + data.icon" :alt="mod.name" ma>
         <div i-carbon-circle-dash ma text-4xl op50 />
       </div>
       <div v-if="data.maintainers?.length" flex="~" mt2 flex-auto items-end justify-end>

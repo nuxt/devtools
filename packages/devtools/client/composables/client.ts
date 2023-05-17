@@ -14,7 +14,7 @@ export function useClientRoute() {
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$route)
 }
 
-export function useClientRouter() {
+export function useClientRouter(): ComputedRef<ReturnType<typeof useRouter>> {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$router)
 }

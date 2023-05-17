@@ -5,24 +5,10 @@ const props = defineProps<{
   mod: InstalledModuleInfo
 }>()
 
-const config = useServerConfig()
-const isPackageModule = computed(() => props.mod.entryPath && isNodeModulePath(props.mod.entryPath))
-const name = computed(() => {
-  if (props.mod.meta?.name)
-    return props.mod.meta.name
-  if (props.mod.entryPath) {
-    return isPackageModule.value
-      ? getModuleNameFromPath(props.mod.entryPath)
-      : config.value?.rootDir
-        ? parseReadablePath(props.mod.entryPath, config.value?.rootDir).path
-        : ''
-  }
-  return ''
-})
 const staticInfo = computed(() => props.mod.info)
 const data = computed(() => ({
-  name,
   ...props.mod?.meta,
+  ...props.mod,
   ...staticInfo.value,
 }))
 </script>
