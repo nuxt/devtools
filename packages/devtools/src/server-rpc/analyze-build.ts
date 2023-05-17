@@ -35,6 +35,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
       .then(() => readBuildInfo())
       .finally(() => {
         promise = undefined
+        initalized = undefined
         refresh('getAnalyzeBuildInfo')
       })
 

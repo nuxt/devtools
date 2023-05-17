@@ -24,7 +24,6 @@ const tabs = computed(() => {
 })
 
 const selectedTab = ref(tabs.value[0])
-const openInEditor = useOpenInEditor()
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024)
@@ -103,10 +102,14 @@ function formatDuration(build: AnalyzeBuildMeta) {
           </div>
           <div>{{ formatTimeAgo(new Date(current.endTime)) }}</div>
         </div>
+        <div i-carbon:folder-parent text-xl />
+        <div>
+          <div text-sm op50>
+            Report Path
+          </div>
+          <FilepathItem :filepath="current.analyzeDir" />
+        </div>
       </div>
-      <NButton n="primary" icon="carbon-launch" @click="openInEditor(current.analyzeDir)">
-        Open in Editor
-      </NButton>
       <div flex-auto />
       <NButton n="rose" icon="carbon-delete" @click="rpc.clearAnalyzeBuilds([current.name])">
         Delete this report
