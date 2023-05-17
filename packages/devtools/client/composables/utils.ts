@@ -1,6 +1,7 @@
 import { relative } from 'pathe'
 import type { Ref } from 'vue'
 import type { AsyncDataOptions } from '#app'
+import type { NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -96,4 +97,26 @@ const requestMethodClass: Record<string, string> = {
 
 export function getRequestMethodClass(method: string) {
   return requestMethodClass[method.toLowerCase()] || requestMethodClass.default
+}
+
+export function getSocialPreviewCard(
+  rawTags: NormalizedHeadTag[],
+  tags: SocialPreviewCard,
+): SocialPreviewResolved {
+  const resolvedTags: { [key: string]: string | undefined } = {}
+
+  for (const [key, value] of Object.entries(tags)) {
+    for (const tag of value) {
+      const tagValue = rawTags.find(item => item.tag === tag.tag && (tag.name ? item.name === tag.name : true))?.value
+      if (tagValue) {
+        resolvedTags[key] = tagValue
+        break
+      }
+    }
+  }
+
+  return {
+    url: window.location.host,
+    ...resolvedTags,
+  }
 }

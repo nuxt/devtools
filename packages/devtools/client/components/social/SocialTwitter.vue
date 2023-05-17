@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import type { NormalizedHeadTag, SocialPreviewResolved } from '~/../src/types'
+import type { NormalizedHeadTag } from '~/../src/types'
 
 const props = defineProps<{
   tags: NormalizedHeadTag[]
 }>()
 
-const card = computed((): SocialPreviewResolved => {
-  return {
-    url: window.location.host,
-    title: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'twitter:title')?.value || props.tags.find(tag => tag.tag === 'title')?.value,
-    image: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'twitter:image')?.value,
-    imageAlt: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'twitter:image:alt')?.value,
-    description: props.tags.find(tag => tag.tag === 'meta' && tag.name === 'twitter:description')?.value || props.tags.find(tag => tag.tag === 'meta' && tag.name === 'description')?.value,
-    favicon: props.tags.find(tag => tag.tag === 'link' && tag.name === 'icon')?.value,
-  }
-})
+const card = computed(() => getSocialPreviewCard(props.tags, {
+  title: [{ tag: 'title' }],
+  image: [{ tag: 'meta', name: 'twitter:image' }, { tag: 'meta', name: 'og:image' }],
+  imageAlt: [{ tag: 'meta', name: 'twitter:image:alt' }],
+  description: [{ tag: 'meta', name: 'twitter:description' }, { tag: 'meta', name: 'description' }],
+  favicon: [{ tag: 'link', name: 'icon' }],
+}))
 
 const type = computed(() => {
   if (!card.value.image)
