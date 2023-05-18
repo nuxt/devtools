@@ -1,4 +1,3 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
 import Fuse from 'fuse.js'
 
@@ -35,6 +34,7 @@ const filtered = computed(() => {
   return result
 })
 
+const items = ref()
 const selected = ref(filtered.value.find(i => i.path === route.path) || filtered.value[0])
 
 watch(search, () => {
@@ -56,8 +56,13 @@ useEventListener('keydown', (e) => {
       if (selected.value) {
         const index = filtered.value.findIndex(i => i.path === selected.value.path)
         if (index < filtered.value.length - 1) {
-          // TODO: scroll to selected
           selected.value = filtered.value[index + 1]
+          const item = items.value[index + 1].$el
+          item.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          })
         }
       }
     }
@@ -65,8 +70,15 @@ useEventListener('keydown', (e) => {
       e.preventDefault()
       if (selected.value) {
         const index = filtered.value.findIndex(i => i.path === selected.value.path)
-        if (index > 0)
+        if (index > 0) {
           selected.value = filtered.value[index - 1]
+          const item = items.value[index - 1].$el
+          item.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          })
+        }
       }
     }
   }
@@ -89,8 +101,8 @@ useEventListener('keydown', (e) => {
     <header p4 border="b base">
       <NTextInput ref="input" v-model="search" icon="carbon-search" :placeholder="placeholder" class="py3" n="lg green" />
     </header>
-    <div h-full of-auto px4 pb32 pt2>
-      <NuxtLink v-for="item of filtered" :key="item.path" :to="item.path" @click="model = false" @mouseover="selected = item">
+    <div h-xs of-auto p4>
+      <NuxtLink v-for="item of filtered" ref="items" :key="item.path" :to="item.path" @click="model = false" @mouseover="selected = item">
         <div flex="~ items-center justify-between" border="~ base" my2 rounded bg-active p4 :class="{ 'op100 bg-primary/10 text-primary saturate-100': selected.path === item.path }">
           <span flex items-center gap2>
             <NIcon v-if="item.icon" :icon="item.icon" />
