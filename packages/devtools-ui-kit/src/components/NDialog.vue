@@ -21,7 +21,7 @@ const emit = defineEmits<{
 const show = useVModel(props, 'modelValue', emit, { passive: true })
 const card = ref(null)
 
-const { activate, deactivate } = useFocusTrap(card, { immediate: false })
+const { activate, deactivate } = useFocusTrap(card.value, { immediate: false })
 
 onMounted(() => {
   watch(show, (v) => {

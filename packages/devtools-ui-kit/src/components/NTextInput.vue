@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 
 const props = withDefaults(
@@ -16,6 +17,9 @@ const props = withDefaults(
 )
 const emit = defineEmits<{ (...args: any): void }>()
 const input = useVModel(props, 'modelValue', emit, { passive: true })
+
+const element = ref<HTMLInputElement>()
+defineExpose({ element })
 </script>
 
 <template>
@@ -24,6 +28,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
       <NIcon v-if="icon" :icon="icon" class="ml-0.3em mr-0.1em text-1.1em op50" />
     </slot>
     <input
+      ref="element"
       v-model="input"
       v-bind="$props as any"
       class="ml-0.4em w-full flex-auto n-bg-base !outline-none"

@@ -54,6 +54,17 @@ onMounted(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
 })
+
+const showCommandPanel = ref(false)
+const tabs = computed(() => {
+  const all = useEnabledTabs().value
+  const result = all.map((i: any) => ({
+    title: i.title,
+    path: i.path ?? `/modules/custom-${i.name}`,
+    icon: i.icon,
+  }))
+  return result
+})
 </script>
 
 <template>
@@ -71,6 +82,7 @@ onMounted(() => {
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
+      <CommandPanel v-model="showCommandPanel" :items="tabs" placeholder="Search between tabs..." />
     </div>
     <DisconnectIndicator />
     <RestartDialogs />
