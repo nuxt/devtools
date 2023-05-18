@@ -99,6 +99,15 @@ useEventListener('keydown', (e) => {
           <NIcon v-if="selected.path === item.path" icon="tabler-arrow-back" />
         </div>
       </NuxtLink>
+      <div v-if="!filtered.length" h-full flex items-center justify-center gap-2 text-xl>
+        <NIcon icon="carbon-search" />
+        <div>
+          No results for
+          <strong text-primary>
+            "{{ search }}"
+          </strong>
+        </div>
+      </div>
     </div>
     <footer border="t base" absolute bottom-0 left-0 right-0 flex="~ justify-between items-center gap-4" px4 py2 bg-base>
       <div text-xs>
