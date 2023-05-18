@@ -17,7 +17,6 @@ const route = useRoute()
 const router = useRouter()
 
 const search = ref('')
-const input = ref<{ element: HTMLInputElement }>()
 
 const fuse = computed(() => new Fuse(props.items || [], props.fuse || {
   keys: [
@@ -46,37 +45,21 @@ useEventListener('keydown', (e) => {
   if (isCtrlKey && e.key === 'k') {
     e.preventDefault()
     model.value = !model.value
-    if (model.value)
-      nextTick(() => input.value?.element.focus())
   }
 
   if (model.value) {
-    if (e.key === 'ArrowDown') {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault()
       if (selected.value) {
         const index = filtered.value.findIndex(i => i.path === selected.value.path)
-        if (index < filtered.value.length - 1) {
-          selected.value = filtered.value[index + 1]
-          const item = items.value[index + 1].$el
+        const offset = e.key === 'ArrowDown' ? 1 : -1
+        const newIndex = index + offset
+
+        if (newIndex >= 0 && newIndex < filtered.value.length) {
+          selected.value = filtered.value[newIndex]
+          const item = items.value[newIndex].$el
           item.scrollIntoView({
-            behavior: 'smooth',
             block: 'nearest',
-            inline: 'start',
-          })
-        }
-      }
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (selected.value) {
-        const index = filtered.value.findIndex(i => i.path === selected.value.path)
-        if (index > 0) {
-          selected.value = filtered.value[index - 1]
-          const item = items.value[index - 1].$el
-          item.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'start',
           })
         }
       }
@@ -99,7 +82,7 @@ useEventListener('keydown', (e) => {
 <template>
   <NDialog v-model="model" relative h-md w-xl of-hidden>
     <header p4 border="b base">
-      <NTextInput ref="input" v-model="search" icon="carbon-search" :placeholder="placeholder" class="py3" n="lg green" />
+      <NTextInput v-model="search" icon="carbon-search" :placeholder="placeholder" class="py3" n="lg green" />
     </header>
     <div h-xs of-auto p4>
       <NuxtLink v-for="item of filtered" ref="items" :key="item.path" :to="item.path" @click="model = false" @mouseover="selected = item">

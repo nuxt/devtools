@@ -21,7 +21,7 @@ const emit = defineEmits<{
 const show = useVModel(props, 'modelValue', emit, { passive: true })
 const card = ref(null)
 
-const { activate, deactivate } = useFocusTrap(card.value, { immediate: false })
+const { activate, deactivate } = useFocusTrap(card, { immediate: false })
 
 onMounted(() => {
   watch(show, (v) => {
@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <Teleport v-if="show" to="body">
+  <Teleport v-lazy-show="show" to="body">
     <div
       class="n-dialog fixed inset-0 z-100 flex items-center justify-center n-transition"
       :class="[
