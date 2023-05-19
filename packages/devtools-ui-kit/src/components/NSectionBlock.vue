@@ -4,7 +4,7 @@ import { useVModel } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
     icon?: string
-    text: string
+    text?: string
     description?: string
     containerClass?: string
     headerClass?: string
