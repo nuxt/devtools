@@ -26,10 +26,10 @@ globalThis.${PAYLOAD_KEY} = []
 function ${WRAPPER_KEY} (plugin, src) {
   if (!plugin)
     return plugin
-  
-  return defineNuxtPlugin(async (...args) => {
+
+  return defineNuxtPlugin(async function (...args) {
     const start = performance.now()
-    const result = await plugin(...args)
+    const result = await plugin.apply(this, args)
     const end = performance.now()
     globalThis.${PAYLOAD_KEY}.push({
       src,
@@ -38,7 +38,7 @@ function ${WRAPPER_KEY} (plugin, src) {
       duration: end - start,
     })
     return result
-  })
+  }, plugin.meta)
 }
 `
 
