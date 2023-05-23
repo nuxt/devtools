@@ -4,7 +4,7 @@ export default defineBuildConfig({
   entries: [
     'src/index',
     'src/types',
-    'src/iframe-client',
+    { input: 'src/runtime/', outDir: 'dist/runtime', format: 'esm' },
   ],
   externals: [
     '@nuxt/kit',

@@ -5,7 +5,7 @@ definePageMeta({
 
 const {
   interactionCloseOnOutsideClick,
-  showExperimentalFeatures,
+  // showExperimentalFeatures,
   showHelpButtons,
   scale,
   hiddenTabs,

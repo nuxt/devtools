@@ -1,0 +1,39 @@
+{
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "require": "./dist/module.cjs",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "scripts": {
+    "prepack": "nuxt-module-build && npm run client:build",
+    "client:build": "nuxi generate client",
+    "client:dev": "nuxi dev client --port 3300",
+    "dev": "npm run play:dev",
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare client",
+    "play:dev": "nuxi dev playground",
+    "play:prod": "npm run prepack && nuxi dev playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "dependencies": {
+    "@nuxt/devtools-kit": "workspace:*",
+    "@nuxt/kit": "^3.5.1",
+    "sirv": "^2.0.3"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.1.16",
+    "@nuxt/devtools": "workspace:*",
+    "@nuxt/devtools-ui-kit": "workspace:*",
+    "@nuxt/module-builder": "^0.3.1",
+    "@nuxt/schema": "^3.5.1",
+    "@nuxt/test-utils": "^3.5.1",
+    "eslint": "^8.41.0",
+    "nuxt": "^3.5.1",
+    "vitest": "^0.31.1"
+  }
+}
