@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { ModuleStaticInfo } from '../../src/types'
-import type { ModuleActionType } from '~/composables/state'
+import type { ModuleActionType, ModuleStaticInfo } from '../../src/types'
 
 const props = defineProps<{
   item: ModuleStaticInfo
@@ -23,7 +22,7 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
   if (!await ModuleDialog.start(item, result, type))
     return
 
-  installingModules.value.push({
+  processInstallingModules.value.push({
     name: item.npm,
     info: item,
     processId: result.processId,

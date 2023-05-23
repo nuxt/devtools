@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useComponents } from '~/composables/state'
 import ComponentsGraph from '~/components/ComponentsGraph.vue'
 import ComponentsList from '~/components/ComponentsList.vue'
 

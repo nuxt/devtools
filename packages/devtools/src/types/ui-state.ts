@@ -1,3 +1,5 @@
+import type { ModuleStaticInfo } from '@nuxt/devtools-kit/types'
+
 export interface DevToolsFrameState {
   width: number
   height: number
@@ -37,3 +39,16 @@ export interface NormalizedHeadTag {
   name: string
   value: string
 }
+
+export interface InstallingModulestate {
+  name: string
+  info: ModuleStaticInfo
+  processId: string
+}
+
+export interface AnalyzeBuildingState {
+  name: string
+  processId: string
+}
+
+export type ModuleActionType = 'install' | 'uninstall'

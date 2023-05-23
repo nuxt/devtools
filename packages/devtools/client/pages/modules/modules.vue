@@ -29,7 +29,7 @@ const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/mai
         :mod="m"
       />
       <NuxtLink
-        v-for="m of installingModules"
+        v-for="m of processInstallingModules"
         :key="m.processId" block min-h-30
         :to="`/modules/terminals?id=${encodeURIComponent(m.processId)}`"
       >
