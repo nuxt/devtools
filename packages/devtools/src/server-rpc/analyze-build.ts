@@ -32,7 +32,10 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     refresh('getAnalyzeBuildInfo')
 
     promise = result.getProcess()
-      .then(() => readBuildInfo())
+      .then(() => {
+        refresh('getAnalyzeBuildInfo')
+        return readBuildInfo()
+      })
       .finally(() => {
         promise = undefined
         initalized = undefined
