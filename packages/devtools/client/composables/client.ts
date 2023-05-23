@@ -1,5 +1,6 @@
 import type { Lang } from 'shiki-es'
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '@nuxt/devtools-kit/types'
+import type { Unhead } from '@unhead/schema'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
 import { extendedRpcMap, rpc } from './rpc'
@@ -13,9 +14,14 @@ export function useClientRoute() {
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$route)
 }
 
-export function useClientRouter() {
+export function useClientRouter(): ComputedRef<ReturnType<typeof useRouter>> {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$router)
+}
+
+export function useClientHead() {
+  const client = useClient()
+  return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$head as Unhead)
 }
 
 export function useComponentInspectorData() {

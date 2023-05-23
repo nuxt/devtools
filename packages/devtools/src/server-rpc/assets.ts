@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises'
+import fsp from 'node:fs/promises'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import fg from 'fast-glob'
@@ -32,7 +32,7 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
       return await Promise.all(files.map(async (path) => {
         const filePath = resolve(dir, path)
-        const stat = await fs.lstat(filePath)
+        const stat = await fsp.lstat(filePath)
         return {
           path,
           publicPath: join(baseURL, path),
@@ -47,7 +47,7 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
       if (_imageMetaCache.has(filepath))
         return _imageMetaCache.get(filepath)
       try {
-        const meta = imageMeta(await fs.readFile(filepath)) as ImageMeta
+        const meta = imageMeta(await fsp.readFile(filepath)) as ImageMeta
         _imageMetaCache.set(filepath, meta)
         return meta
       }
@@ -59,7 +59,7 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
     },
     async getTextAssetContent(filepath: string, limit = 300) {
       try {
-        const content = await fs.readFile(filepath, 'utf-8')
+        const content = await fsp.readFile(filepath, 'utf-8')
         return content.slice(0, limit)
       }
       catch (e) {
@@ -74,18 +74,18 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
         files.map(async ({ name, data }) => {
           let dir = resolve(baseDir, name)
           try {
-            await fs.stat(dir)
+            await fsp.stat(dir)
             const ext = dir.split('.').pop() as string
             const base = dir.slice(0, dir.length - ext.length - 1)
             let i = 1
-            while (await fs.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
+            while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
               i++
             dir = `${base}-${i}.${ext}`
           }
           catch (err) {
             // Ignore error if file doesn't exist
           }
-          await fs.writeFile(dir, data, 'base64')
+          await fsp.writeFile(dir, data, 'base64')
           return dir
         }),
       )

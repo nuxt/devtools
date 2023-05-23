@@ -19,6 +19,11 @@ export function setupClientRPC() {
     async onTerminalExit(data) {
       // @ts-expect-error fail to extend hooks
       nuxt.hooks.callHookParallel('devtools:terminal:exit', data)
+
+      // remove installing modules entry
+      const index = installingModules.value.findIndex(i => i.processId === data.id)
+      if (index !== -1)
+        installingModules.value.splice(index, 1)
     },
     async navigateTo(path: string) {
       if (router.currentRoute.value.path !== path)

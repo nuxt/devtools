@@ -5,10 +5,10 @@ definePageMeta({
   icon: 'carbon-cloud',
   title: 'Server Routes',
   layout: 'full',
-  experimental: true,
   category: 'server',
   show() {
-    return useServerRoutes().value?.length
+    const routes = useServerRoutes()
+    return () => routes.value?.length
   },
 })
 

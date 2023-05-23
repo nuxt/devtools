@@ -15,6 +15,8 @@ import { setupGeneralRPC } from './general'
 import { setupWizardRPC } from './wizard'
 import { setupTerminalRPC } from './terminals'
 import { setupServerRoutesRPC } from './server-routes'
+import { setupAnalyzeBuildRPC } from './analyze-build'
+import { setupUIOptionsRPC } from './ui-options'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -36,6 +38,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       onError(error, name) {
         console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
       },
+      timeout: 120_000,
     },
   )
 
@@ -78,6 +81,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupWizardRPC(ctx),
     ...setupTerminalRPC(ctx),
     ...setupServerRoutesRPC(ctx),
+    ...setupAnalyzeBuildRPC(ctx),
+    ...setupUIOptionsRPC(ctx),
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()

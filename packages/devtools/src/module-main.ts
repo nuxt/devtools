@@ -1,5 +1,5 @@
-import { join } from 'node:path'
 import { existsSync } from 'node:fs'
+import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addPlugin, logger } from '@nuxt/kit'
 import { tinyws } from 'tinyws'
@@ -11,19 +11,21 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
+import { ROUTE_ANALYZE, ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
   if (process.env.TEST || process.env.NODE_ENV === 'test')
     return
 
-  // TODO: Support devtools in production
-  if (!nuxt.options.dev)
-    return
-
   if (nuxt.options.builder !== '@nuxt/vite-builder') {
     logger.warn('Nuxt Devtools only supports Vite mode, module is disabled.')
+    return
+  }
+
+  if (!nuxt.options.dev) {
+    if (nuxt.options.build.analyze)
+      await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
   }
 
@@ -42,6 +44,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   } = setupRPC(nuxt, options)
 
   const clientDirExists = existsSync(clientDir)
+  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   nuxt.hook('vite:extendConfig', (config) => {
     config.server ||= {}
@@ -50,12 +53,19 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       searchForWorkspaceRoot(process.cwd()),
     ]
     config.server.fs.allow.push(packageDir)
+
+    config.server.watch ||= {}
+    config.server.watch.ignored ||= []
+    if (!Array.isArray(config.server.watch.ignored))
+      config.server.watch.ignored = [config.server.watch.ignored]
+    config.server.watch.ignored.push('**/.nuxt/analyze/**')
   })
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
     server.middlewares.use(ROUTE_ENTRY, tinyws() as any)
     server.middlewares.use(ROUTE_ENTRY, rpcMiddleware as any)
+    server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
     // serve the front end in production
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))

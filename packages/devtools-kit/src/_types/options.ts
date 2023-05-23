@@ -1,3 +1,4 @@
+import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { ModuleCustomTab } from './custom-tabs'
 
 export interface ModuleOptions {
@@ -25,7 +26,7 @@ export interface ModuleOptions {
    *
    * @default true
    */
-  componentInspector?: boolean
+  componentInspector?: boolean | VitePluginInspectorOptions
 
   /**
    * Enable vite-plugin-inspect
@@ -86,4 +87,18 @@ export interface VSCodeTunnelOptions {
    * default: device hostname
    */
   name?: string
+}
+
+export interface NuxtDevToolsUIOptions {
+  componentsView: 'list' | 'graph'
+  componentsGraphShowNodeModules: boolean
+  componentsGraphShowPages: boolean
+  componentsGraphShowLayouts: boolean
+  componentsGraphShowWorkspace: boolean
+  interactionCloseOnOutsideClick: boolean
+  showExperimentalFeatures: boolean
+  showHelpButtons: boolean
+  scale: number
+  hiddenTabs: string[]
+  hiddenTabCategories: string[]
 }

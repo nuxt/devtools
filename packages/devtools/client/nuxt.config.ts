@@ -9,8 +9,7 @@ function r(p: string) {
 export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
-    // '@nuxt/content',
-    '~/modules/custom-tabs',
+    '@vue-macros/nuxt',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
@@ -29,7 +28,7 @@ export default defineNuxtConfig({
     },
   },
   alias: {
-    '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/iframe-client'),
+    '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/runtime/iframe-client'),
     '@nuxt/devtools-kit/types': r('../../devtools-kit/src/types'),
     '@nuxt/devtools-kit': r('../../devtools-kit/src/index'),
   },
@@ -44,6 +43,9 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: '/__nuxt_devtools__/client',
+  },
+  experimental: {
+    watcher: 'parcel',
   },
   vite: {
     define: {

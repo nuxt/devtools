@@ -3,7 +3,7 @@ import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { PropType } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, settings, state, viewMode } from './state'
+import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, closePanel, state, viewMode } from './state'
 import { useEventListener } from './utils'
 
 // Can't use reactivity transform here because this file is shipped as-is,
@@ -139,6 +139,9 @@ function enableComponentInspector() {
 }
 
 function disableComponentInspector() {
+  if (!window.__VUE_INSPECTOR__?.enabled)
+    return
+
   window.__VUE_INSPECTOR__?.disable()
   props.client?.hooks.callHook('host:inspector:close')
   if (viewMode.value === 'component-inspector')
@@ -183,13 +186,15 @@ useEventListener(window, 'mouseleave', () => {
 })
 
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
-  if (viewMode.value === 'component-inspector' && e.key === 'Escape')
+  if (e.key === 'Escape' && (viewMode.value === 'component-inspector' || window.__VUE_INSPECTOR__?.enabled)) {
+    disableComponentInspector()
     closePanel()
+  }
 })
 
 // Close panel on outside click (when enabled)
 useEventListener(window, 'mousedown', (e: MouseEvent) => {
-  if (!settings.value.interactionCloseOnOutsideClick)
+  if (!state.value.closeOnOutsideClick)
     return
   if (!state.value.open || isDragging.value || viewMode.value !== 'default')
     return
@@ -255,7 +260,7 @@ declare global {
 <style scoped>
 .nuxt-devtools-frame {
   position: fixed;
-  z-index: 2147483646;
+  z-index: 2147483645;
 }
 
 .nuxt-devtools-frame iframe {

@@ -2,7 +2,7 @@
 const open = ref(false)
 const {
   showHelpButtons,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 </script>
 
 <template>

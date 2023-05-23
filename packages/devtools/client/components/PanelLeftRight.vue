@@ -6,6 +6,8 @@ const props = defineProps<{
    * The key to use for storing the pane sizes in localStorage.
    */
   storageKey?: string
+
+  leftSize?: number
 }>()
 
 const DEFAULT = 30
@@ -14,10 +16,10 @@ const state = useDevToolsPanelsState()
 const key = props.storageKey
 const size = key
   ? computed({
-    get: () => state.value[key] || DEFAULT,
+    get: () => state.value[key] || props.leftSize || DEFAULT,
     set: (v) => { state.value[key] = v },
   })
-  : ref(DEFAULT)
+  : ref(props.leftSize || DEFAULT)
 </script>
 
 <template>

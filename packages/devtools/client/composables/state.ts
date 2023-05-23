@@ -1,17 +1,77 @@
 import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
 import type { Ref } from 'vue'
+import type { MaybeRef } from '@vueuse/core'
 import { objectPick } from '@antfu/utils'
-import type { HookInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleMetric, RouteInfo, TabCategory } from '../../src/types'
+import type { HookInfo, InstallModuleReturn, InstalledModuleInfo, ModuleBuiltinTab, ModuleCustomTab, ModuleStaticInfo, RouteInfo, TabCategory } from '../../src/types'
 
-let modules: ModuleMetric[] | undefined
+const ignoredModules = [
+  'pages',
+  'meta',
+  'components',
+  'imports',
+  'nuxt-config-schema',
+  '@nuxt/devtools',
+  '@nuxt/telemetry',
+]
 
-export async function useModulesInfo() {
-  if (modules)
-    return modules
-  modules = await $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
-  return modules
+export interface InstallingModuleState {
+  name: string
+  info: ModuleStaticInfo
+  processId: string
 }
+
+export function useModulesList() {
+  return useAsyncData('modules-list', async () => {
+    const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
+    return modules
+      .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
+  }).data
+}
+
+export const installingModules = ref<InstallingModuleState[]>([])
+
+export function useInstalledModules() {
+  return useState('installed-modules', () => {
+    const config = useServerConfig()
+    const modules = useModulesList()
+
+    return computed(() => (config.value?._installedModules || [])
+      .map((mod): InstalledModuleInfo => {
+        // hide inline modules
+        if (!mod.entryPath)
+          return undefined!
+
+        const isPackageModule = mod.entryPath && isNodeModulePath(mod.entryPath)
+        const name = mod.meta?.name
+          ? mod.meta?.name
+          : mod.entryPath
+            ? isPackageModule
+              ? getModuleNameFromPath(mod.entryPath)
+              : config.value?.rootDir
+                ? parseReadablePath(mod.entryPath, config.value?.rootDir).path
+                : undefined
+            : undefined
+
+        const isUninstallable = config.value?.modules?.includes(name)
+        const info = modules.value?.find(m => m.npm === name) || modules.value?.find(m => m.name === name)
+
+        return {
+          name,
+          isPackageModule,
+          isUninstallable,
+          info,
+          ...mod,
+        }
+      })
+      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))),
+    )
+  })
+}
+
+export type ModuleActionType = 'install' | 'uninstall'
+
+export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
 
 export function useComponents() {
   const client = useClient()
@@ -50,9 +110,7 @@ export function useComponentsRelationships() {
 }
 
 export function useServerHooks() {
-  return useAsyncState('getServerHooks', () => rpc.getServerHooks(), {
-    default: () => [],
-  }) as Ref<HookInfo[]>
+  return useAsyncState('getServerHooks', () => rpc.getServerHooks()) as Ref<HookInfo[] | undefined>
 }
 
 export function useLayouts() {
@@ -83,10 +141,15 @@ export function useTerminals() {
   return useAsyncState('getTerminals', () => rpc.getTerminals())
 }
 
+export function useAnalyzeBuildInfo() {
+  return useAsyncState('getAnalyzeBuildInfo', () => rpc.getAnalyzeBuildInfo())
+}
+
 export function useAllTabs() {
   const customTabs = useCustomTabs()
-  const settings = useDevToolsSettings()
+  const settings = useDevToolsOptions()
   const router = useRouter()
+  const client = useClient()
 
   const builtin = computed(() => [
     ...router.getRoutes()
@@ -100,6 +163,21 @@ export function useAllTabs() {
           ...i.meta,
         }
       }),
+    <ModuleBuiltinTab>{
+      name: 'builtin-inspector',
+      title: 'Inspect Vue components',
+      icon: 'i-carbon-select-window',
+      category: 'app',
+      show() {
+        return () => !!client.value?.inspector?.instance
+      },
+      onClick() {
+        if (!client.value?.inspector?.instance)
+          return
+        client.value.inspector.enable()
+        router.push('/__inspecting')
+      },
+    },
     ...(customTabs.value || []).filter(i => i.name.startsWith('builtin-')),
   ])
 
@@ -112,31 +190,31 @@ export function useAllTabs() {
   ])
 }
 
-export function useCategorizedTabs(enabledOnly = true) {
-  const tabs = enabledOnly
-    ? useEnabledTabs()
-    : useAllTabs()
+function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
+  return {
+    app: [],
+    analyze: [],
+    server: [],
+    modules: [],
+    documentation: [],
+    advanced: [],
+  }
+}
 
-  const settings = useDevToolsSettings()
-
+export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>) {
   return computed(() => {
-    const categories: Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> = {
-      app: [],
-      server: [],
-      analyze: [],
-      modules: [],
-      documentation: [],
-      advanced: [],
-    }
-
-    for (const tab of tabs.value) {
-      const category = tab.category || 'app'
-      if (enabledOnly && settings.hiddenTabCategories.value.includes(category))
-        continue
+    const categories = getCategorizedRecord()
+    for (const tab of unref(tabs)) {
+      const category = (tab.category || 'app')
       if (!categories[category])
         console.warn(`Unknown tab category: ${category}`)
       else
         categories[category].push(tab)
+    }
+
+    for (const key of Object.keys(categories)) {
+      if (categories[key as TabCategory].length === 0)
+        delete categories[key as TabCategory]
     }
 
     return Object.entries(categories)
@@ -145,16 +223,23 @@ export function useCategorizedTabs(enabledOnly = true) {
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
-  const settings = useDevToolsSettings()
+  const settings = useDevToolsOptions()
+  const categoryOrder = Object.keys(getCategorizedRecord())
+  const tabShows = tabs.value.map(tab => (tab as ModuleBuiltinTab)?.show?.())
 
-  return computed(() => tabs.value.filter((tab) => {
-    const _tab = tab as ModuleBuiltinTab
-    if (_tab.show && !_tab.show())
-      return false
-    if (settings.hiddenTabs.value.includes(_tab.name))
-      return false
-    return true
-  }))
+  return computed(() => tabs.value
+    .filter((tab, idx) => {
+      const _tab = tab as ModuleBuiltinTab
+      if (tabShows[idx] && !toValue(tabShows[idx]))
+        return false
+      if (settings.hiddenTabs.value.includes(_tab.name))
+        return false
+      if (settings.hiddenTabCategories.value.includes(tab.category || 'app'))
+        return false
+      return true
+    })
+    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')),
+  )
 }
 
 export function useAllRoutes() {
@@ -201,4 +286,20 @@ export function useVirtualFiles() {
     responseType: 'json',
   })
   return data
+}
+
+export function useMergedRouteList() {
+  const serverPages = useServerPages()
+  const router = useClientRouter()
+
+  return computed((): RouteInfo[] => {
+    return (router.value?.getRoutes() || [])
+      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map((i) => {
+        return {
+          ...serverPages.value?.find(j => j.name && j.name === i.name),
+          ...i,
+        }
+      })
+  })
 }

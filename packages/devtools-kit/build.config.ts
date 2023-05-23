@@ -4,7 +4,7 @@ export default defineBuildConfig({
   entries: [
     'src/index',
     'src/types',
-    'src/iframe-client',
+    { input: 'src/runtime/', outDir: 'dist/runtime', format: 'esm' },
   ],
   externals: [
     '@nuxt/kit',
@@ -21,6 +21,7 @@ export default defineBuildConfig({
     'nuxt/dist/app/nuxt',
     'birpc',
     'hookable',
+    'vite-plugin-vue-inspector',
   ],
   declaration: true,
   rollup: {

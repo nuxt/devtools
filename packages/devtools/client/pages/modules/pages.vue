@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { objectPick } from '@antfu/utils'
 import { nextTick } from 'vue'
-import type { RouteInfo } from '~~/../src/types'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -15,19 +13,9 @@ const route = useClientRoute()
 const config = useServerConfig()
 const serverApp = useServerApp()
 
-const serverPages = useServerPages()
 const layouts = useLayouts()
 
-const routes = computed((): RouteInfo[] => {
-  return (router.value?.getRoutes() || [])
-    .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
-    .map((i) => {
-      return {
-        ...serverPages.value?.find(j => j.name && j.name === i.name),
-        ...i,
-      }
-    })
-})
+const routes = useMergedRouteList()
 
 const middleware = computed(() => {
   return serverApp.value?.middleware || []

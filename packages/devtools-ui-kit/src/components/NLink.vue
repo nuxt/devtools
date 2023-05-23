@@ -14,7 +14,7 @@ defineProps<{
   <Component
     :is="(href || target) ? 'a' : NuxtLink"
     v-bind="$props"
-    class="n-link hover:n-link-hover n-transition n-link-base"
+    class="n-link n-transition hover:n-link-hover n-link-base"
   >
     <slot />
   </Component>

@@ -1,7 +1,7 @@
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt } from 'nuxt/schema'
 import type { ClientFunctions, ServerFunctions } from './rpc'
-import type { ModuleOptions } from './module-options'
+import type { ModuleOptions } from './options'
 
 /**
  * @internal
@@ -29,4 +29,11 @@ export interface NuxtDevtoolsInfo {
   version: string
   packagePath: string
   isGlobalInstall: boolean
+}
+
+export interface InstallModuleReturn {
+  configOriginal: string
+  configGenerated: string
+  commands: string[]
+  processId: string
 }

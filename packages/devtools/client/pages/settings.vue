@@ -5,12 +5,12 @@ definePageMeta({
 
 const {
   interactionCloseOnOutsideClick,
-  showExperimentalFeatures,
+  // showExperimentalFeatures,
   showHelpButtons,
   scale,
   hiddenTabs,
   hiddenTabCategories,
-} = useDevToolsSettings()
+} = useDevToolsOptions()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -20,7 +20,7 @@ const scaleOptions = [
   ['Huge', 18 / 15],
 ]
 
-const categories = useCategorizedTabs(false)
+const categories = getCategorizedTabs(useAllTabs())
 
 function toggleTab(name: string, v: boolean) {
   if (v)
@@ -67,7 +67,7 @@ function toggleTabCategory(name: string, v: boolean) {
             <div flex="~ col gap-1" border="~ base rounded" py3 pl4 pr2>
               <template v-for="tab of tabs" :key="tab.name">
                 <NSwitch
-                  flex="~ row-reverse" py1 n-primary
+                  flex="~ row-reverse" py1 pl2 pr1 n-primary
                   :model-value="!hiddenTabs.includes(tab.name)"
                   @update:model-value="v => toggleTab(tab.name, v)"
                 >
@@ -88,7 +88,7 @@ function toggleTabCategory(name: string, v: boolean) {
           </h3>
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
-              <NButton n="primary" @click="toggle()">
+              <NButton n="primary" @click="toggle">
                 <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
               </NButton>
             </NDarkToggle>
@@ -111,9 +111,9 @@ function toggleTabCategory(name: string, v: boolean) {
           <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
             <span>Close DevTools when clicking outside</span>
           </NCheckbox>
-          <NCheckbox v-model="showExperimentalFeatures" n-primary>
+          <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>
             <span>Show experimental features</span>
-          </NCheckbox>
+          </NCheckbox> -->
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
           </NCheckbox>

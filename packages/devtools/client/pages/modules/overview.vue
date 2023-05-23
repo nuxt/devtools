@@ -19,6 +19,8 @@ function goIntro() {
   isFirstVisit.value = true
   router.push('/')
 }
+
+const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
 </script>
 
 <template>
@@ -58,6 +60,10 @@ function goIntro() {
         <div p4 theme-card-green flex="~ col auto">
           <div logos-nuxt-icon text-3xl />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
+        </div>
+        <div v-if="vueVersion" p4 theme-card-green flex="~ col auto">
+          <div logos-vue text-3xl />
+          <code>v{{ vueVersion }}</code>
         </div>
         <template v-if="config">
           <NuxtLink v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/pages">

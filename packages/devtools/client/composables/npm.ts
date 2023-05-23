@@ -1,3 +1,4 @@
+import semver from 'semver'
 import type { NpmCommandOptions } from '../../src/types'
 
 export type PackageUpdateState = 'idle' | 'running' | 'updated'
@@ -9,6 +10,17 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
   if (!map.has(key))
     map.set(key, getPackageUpdate(name, options))
   return map.get(key)
+}
+
+export function useNuxtVersion() {
+  return useAsyncData('npm:check:nuxt', () => rpc.checkForUpdateFor('nuxt')).data
+}
+
+export function satisfyNuxtVersion(range: string) {
+  const nuxt = useNuxtVersion()
+  if (!nuxt?.value?.current)
+    return false
+  return semver.satisfies(nuxt.value.current, range)
 }
 
 function getPackageUpdate(name: string, options?: NpmCommandOptions) {

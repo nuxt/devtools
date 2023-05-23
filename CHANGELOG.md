@@ -1,3 +1,88 @@
+## [0.5.3](https://github.com/nuxt/devtools-poc/compare/v0.5.2...v0.5.3) (2023-05-23)
+
+
+
+## [0.5.2](https://github.com/nuxt/devtools-poc/compare/v0.5.1...v0.5.2) (2023-05-23)
+
+
+### Bug Fixes
+
+* improve module installing experience ([ab8083b](https://github.com/nuxt/devtools-poc/commit/ab8083b0980b11d233a5914d2e06b088c06e6fca))
+* reactivity life cycle ([486db15](https://github.com/nuxt/devtools-poc/commit/486db15f7f45a06e66de0f60cafc96ac2e219dae))
+
+
+
+## [0.5.1](https://github.com/nuxt/devtools-poc/compare/v0.5.0...v0.5.1) (2023-05-23)
+
+
+### Bug Fixes
+
+* **analyze-build:** state update ([0e32bde](https://github.com/nuxt/devtools-poc/commit/0e32bdee427fdd73e449aa1cdd42955275636e21))
+* **plugin-metrics:** forward plugin meta ([facef7a](https://github.com/nuxt/devtools-poc/commit/facef7a35babd4009d1bcc488f8299b97ced3716))
+* **ui-kit:** set text prop as optional in NSectionBlock ([#241](https://github.com/nuxt/devtools-poc/issues/241)) ([16f726c](https://github.com/nuxt/devtools-poc/commit/16f726ca60697362172f8e6290dbe59bc6e6a4a1))
+
+
+### Features
+
+* opt-out all experimental flag ([ff850b1](https://github.com/nuxt/devtools-poc/commit/ff850b18a223c225a022294621e2293397faf648))
+
+
+
+# [0.5.0](https://github.com/nuxt/devtools-poc/compare/v0.4.6...v0.5.0) (2023-05-18)
+
+
+### Bug Fixes
+
+* **build-analyze:** improve ui ([bd263ee](https://github.com/nuxt/devtools-poc/commit/bd263ee2fd0c3bd12cc74647fee8e5175313b1b7))
+* **components:** improve graph relationship filtering, close [#192](https://github.com/nuxt/devtools-poc/issues/192) ([c27f80b](https://github.com/nuxt/devtools-poc/commit/c27f80b771ef6f05be502f620a3779b72a2126d6))
+* debounce disconnect indicator ([895e6e3](https://github.com/nuxt/devtools-poc/commit/895e6e30a3d3715985fde43a40078322015d9ac6))
+* **devtools-ui-kit:** update unocss config path ([#238](https://github.com/nuxt/devtools-poc/issues/238)) ([5162bdd](https://github.com/nuxt/devtools-poc/commit/5162bddb0c2908521237cf2186754aa04079f4b5))
+* double disable vue-inspector ([9dc0694](https://github.com/nuxt/devtools-poc/commit/9dc0694fccd388c947314386fabc3ed4484dee88))
+* improve module meta resolution ([7dc3d93](https://github.com/nuxt/devtools-poc/commit/7dc3d9302d2a79f45b1d470ce4e797ae37e82e99))
+* **install-module:** process exit code ([8c8097e](https://github.com/nuxt/devtools-poc/commit/8c8097e9d350990a675f689403177c03902493f9))
+* **open-graph:** avoid layout shift ([4b1eb2c](https://github.com/nuxt/devtools-poc/commit/4b1eb2ce246662687d39ddf72e58de98c5223ce0))
+* **open-graph:** use `description` for facebook ([#239](https://github.com/nuxt/devtools-poc/issues/239)) ([31c92f5](https://github.com/nuxt/devtools-poc/commit/31c92f5fe64cdb6094b5702b00086e3da4ab5552))
+* print error on process failing ([37f690b](https://github.com/nuxt/devtools-poc/commit/37f690b09a3bffb13186c79bb55ef85bf49cbc2b))
+* **style:** switch, radio, checkbox hover style ([#230](https://github.com/nuxt/devtools-poc/issues/230)) ([97f5b1a](https://github.com/nuxt/devtools-poc/commit/97f5b1a33a4c1e0601f48aaf56bdcf819040695f))
+* uninstall modules ([#229](https://github.com/nuxt/devtools-poc/issues/229)) ([f7db6a2](https://github.com/nuxt/devtools-poc/commit/f7db6a2f703020f9e694a6c508dccd0a0661a3b1))
+
+
+### Features
+
+* add component inspect button to the sidebar ([512d852](https://github.com/nuxt/devtools-poc/commit/512d852e0a8eda5350e960a1edd2af9b47bb9312))
+* add dark/light mode switch transition ([#224](https://github.com/nuxt/devtools-poc/issues/224)) ([782e0da](https://github.com/nuxt/devtools-poc/commit/782e0da516a8a3c84142452689d59dbaff492be2))
+* allow override vue-inspector options, close [#234](https://github.com/nuxt/devtools-poc/issues/234) ([3311f11](https://github.com/nuxt/devtools-poc/commit/3311f11b7e1393cdab8a01cf647c86a6a79c584b))
+* **components:** add legend for graph ([de6a97d](https://github.com/nuxt/devtools-poc/commit/de6a97db587921eee346974c6d2275c540033e4a))
+* display vue version, close [#236](https://github.com/nuxt/devtools-poc/issues/236) ([83b775a](https://github.com/nuxt/devtools-poc/commit/83b775aa80eb4cfc335c7fe69587494be9fee7c8))
+* experimental add module from DevTools ([#222](https://github.com/nuxt/devtools-poc/issues/222)) ([501682b](https://github.com/nuxt/devtools-poc/commit/501682bd888c224095812572a7a60b972d1707b9))
+* experimental build analyze ([#190](https://github.com/nuxt/devtools-poc/issues/190)) ([2344afd](https://github.com/nuxt/devtools-poc/commit/2344afd236634bff6ef6e784ab1d71f7ec25787a))
+* isolate ui options per-project ([#232](https://github.com/nuxt/devtools-poc/issues/232)) ([3b99477](https://github.com/nuxt/devtools-poc/commit/3b994779aed3556523ab36cc8b6d062ea36995a5))
+* **open-graph:** use `useSeoMeta` over `useHead` ([f7d11ee](https://github.com/nuxt/devtools-poc/commit/f7d11ee39f97baa9f6a3793aa8e7c329d0f19e94))
+* refactor components, close [#227](https://github.com/nuxt/devtools-poc/issues/227) ([0caa4de](https://github.com/nuxt/devtools-poc/commit/0caa4deefc41cd5bb9b79500644f7972cce7fb5d))
+* **server-routes:** rolling out of experiment state ([ed87dfd](https://github.com/nuxt/devtools-poc/commit/ed87dfd86c5fb1b3ff959d5a462e2b70ce6b43ff))
+* sidenav overflow as popup ([da6c29f](https://github.com/nuxt/devtools-poc/commit/da6c29f37e3850f923b0b87291840f9b77be6bd3))
+* **ui:** fullscreen disconnect indicator ([a158b1b](https://github.com/nuxt/devtools-poc/commit/a158b1bcdbdc216644d4a25463cb3e434986c071))
+
+
+
+## [0.4.6](https://github.com/nuxt/devtools-poc/compare/v0.4.5...v0.4.6) (2023-05-08)
+
+
+### Bug Fixes
+
+* default state of DockingPanel ([a009866](https://github.com/nuxt/devtools-poc/commit/a0098669a2ea85f7917816b251f4cbd5e7b712c6))
+* DockingPanel clickoutside on iframe ([#211](https://github.com/nuxt/devtools-poc/issues/211)) ([afdaa5b](https://github.com/nuxt/devtools-poc/commit/afdaa5bca5eaa4ff2e85f9313414b9409122cab5))
+* fix shortcut to togglePanel ([#212](https://github.com/nuxt/devtools-poc/issues/212)) ([e64dbcd](https://github.com/nuxt/devtools-poc/commit/e64dbcd31ea1aa50d72bac9cec958e0159da6226))
+* nitro storage link ([#220](https://github.com/nuxt/devtools-poc/issues/220)) ([ddd2e41](https://github.com/nuxt/devtools-poc/commit/ddd2e41d7c0e40b222725fb69a1499293e57baa2))
+
+
+### Features
+
+* add open graph tab ([#209](https://github.com/nuxt/devtools-poc/issues/209)) ([b94de30](https://github.com/nuxt/devtools-poc/commit/b94de302a123d5ccc6b7ef319a25b154ba22953a))
+* allow iframe permissions ([#215](https://github.com/nuxt/devtools-poc/issues/215)) ([44fce14](https://github.com/nuxt/devtools-poc/commit/44fce1450374f5ddfe68cb22258105b808b743c9))
+
+
+
 ## [0.4.5](https://github.com/nuxt/devtools-poc/compare/v0.4.4...v0.4.5) (2023-04-30)
 
 

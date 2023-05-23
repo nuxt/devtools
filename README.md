@@ -1,4 +1,4 @@
-<img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg">
+<a href="https://devtools.nuxtjs.org"><img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg"></a>
 <br>
 <h1>
 Nuxt DevTools <sup>Preview</sup>
@@ -104,7 +104,7 @@ export default defineNuxtConfig({
 })
 ```
 
-For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/packages/devtools-kit/src/_types/module-options.ts).
+For all options available, please refer to TSDocs in your IDE, or the [type definition file](https://github.com/nuxt/devtools/blob/main/packages/devtools-kit/src/_types/options.ts).
 
 ## Features
 
