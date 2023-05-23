@@ -1,3 +1,19 @@
+## [0.5.1](https://github.com/nuxt/devtools-poc/compare/v0.5.0...v0.5.1) (2023-05-23)
+
+
+### Bug Fixes
+
+* **analyze-build:** state update ([0e32bde](https://github.com/nuxt/devtools-poc/commit/0e32bdee427fdd73e449aa1cdd42955275636e21))
+* **plugin-metrics:** forward plugin meta ([facef7a](https://github.com/nuxt/devtools-poc/commit/facef7a35babd4009d1bcc488f8299b97ced3716))
+* **ui-kit:** set text prop as optional in NSectionBlock ([#241](https://github.com/nuxt/devtools-poc/issues/241)) ([16f726c](https://github.com/nuxt/devtools-poc/commit/16f726ca60697362172f8e6290dbe59bc6e6a4a1))
+
+
+### Features
+
+* opt-out all experimental flag ([ff850b1](https://github.com/nuxt/devtools-poc/commit/ff850b18a223c225a022294621e2293397faf648))
+
+
+
 # [0.5.0](https://github.com/nuxt/devtools-poc/compare/v0.4.6...v0.5.0) (2023-05-18)
 
 
