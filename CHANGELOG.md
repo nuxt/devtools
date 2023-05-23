@@ -1,3 +1,13 @@
+## [0.5.2](https://github.com/nuxt/devtools-poc/compare/v0.5.1...v0.5.2) (2023-05-23)
+
+
+### Bug Fixes
+
+* improve module installing experience ([ab8083b](https://github.com/nuxt/devtools-poc/commit/ab8083b0980b11d233a5914d2e06b088c06e6fca))
+* reactivity life cycle ([486db15](https://github.com/nuxt/devtools-poc/commit/486db15f7f45a06e66de0f60cafc96ac2e219dae))
+
+
+
 ## [0.5.1](https://github.com/nuxt/devtools-poc/compare/v0.5.0...v0.5.1) (2023-05-23)
 
 
