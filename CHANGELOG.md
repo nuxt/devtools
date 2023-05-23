@@ -1,3 +1,7 @@
+## [0.5.3](https://github.com/nuxt/devtools-poc/compare/v0.5.2...v0.5.3) (2023-05-23)
+
+
+
 ## [0.5.2](https://github.com/nuxt/devtools-poc/compare/v0.5.1...v0.5.2) (2023-05-23)
 
 
