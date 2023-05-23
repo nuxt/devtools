@@ -20,7 +20,7 @@ const scaleOptions = [
   ['Huge', 18 / 15],
 ]
 
-const categories = useCategorizedTabs(false)
+const categories = getCategorizedTabs(useAllTabs())
 
 function toggleTab(name: string, v: boolean) {
   if (v)

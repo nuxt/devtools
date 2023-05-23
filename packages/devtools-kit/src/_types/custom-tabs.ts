@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { MaybeRefOrGetter, VNode } from 'vue'
 import type { TabCategory } from './common'
 
 export interface ModuleCustomTab {
@@ -112,7 +112,7 @@ export interface ModuleBuiltinTab {
   title?: string
   path?: string
   category?: TabCategory
-  show?: () => any
+  show?: () => MaybeRefOrGetter<any>
   badge?: () => number | string | undefined
   onClick?: () => void
 }

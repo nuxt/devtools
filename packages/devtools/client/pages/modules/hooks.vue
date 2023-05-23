@@ -22,9 +22,10 @@ const clientHooks = computed(() => client.value?.getClientHooksMetrics())
       <HooksTable :hooks="clientHooks" />
     </NSectionBlock>
     <NSectionBlock
+      v-if="serverHooks?.length"
       icon="carbon-ibm-cloud-direct-link-2-dedicated"
       text="Server Hooks"
-      :description="`Total hooks: ${serverHooks.length}`"
+      :description="`Total hooks: ${serverHooks?.length}`"
       padding="pl4 pr6"
     >
       <HooksTable :hooks="serverHooks" />

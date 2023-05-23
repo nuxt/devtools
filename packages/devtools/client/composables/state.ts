@@ -1,6 +1,5 @@
 import type { Component } from 'nuxt/schema'
 import { $fetch } from 'ofetch'
-import { unref } from 'vue'
 import type { Ref } from 'vue'
 import type { MaybeRef } from '@vueuse/core'
 import { objectPick } from '@antfu/utils'
@@ -31,6 +30,10 @@ export function useInstalledModules() {
 
     return computed(() => (config.value?._installedModules || [])
       .map((mod): InstalledModuleInfo => {
+        // hide inline modules
+        if (!mod.entryPath)
+          return undefined!
+
         const isPackageModule = mod.entryPath && isNodeModulePath(mod.entryPath)
         const name = mod.meta?.name
           ? mod.meta?.name
@@ -53,7 +56,7 @@ export function useInstalledModules() {
           ...mod,
         }
       })
-      .filter(i => !i.name || !ignoredModules.includes(i.name)),
+      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))),
     )
   })
 }
@@ -114,9 +117,7 @@ export function useComponentsRelationships() {
 }
 
 export function useServerHooks() {
-  return useAsyncState('getServerHooks', () => rpc.getServerHooks(), {
-    default: () => [],
-  }) as Ref<HookInfo[]>
+  return useAsyncState('getServerHooks', () => rpc.getServerHooks()) as Ref<HookInfo[] | undefined>
 }
 
 export function useLayouts() {
@@ -175,7 +176,7 @@ export function useAllTabs() {
       icon: 'i-carbon-select-window',
       category: 'app',
       show() {
-        return !!client.value?.inspector?.instance
+        return () => !!client.value?.inspector?.instance
       },
       onClick() {
         if (!client.value?.inspector?.instance)
@@ -227,23 +228,16 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
   })
 }
 
-export function useCategorizedTabs(enabledOnly = true) {
-  const tabs = enabledOnly
-    ? useEnabledTabs()
-    : useAllTabs()
-
-  return getCategorizedTabs(tabs)
-}
-
 export function useEnabledTabs() {
   const tabs = useAllTabs()
   const settings = useDevToolsOptions()
   const categoryOrder = Object.keys(getCategorizedRecord())
+  const tabShows = tabs.value.map(tab => (tab as ModuleBuiltinTab)?.show?.())
 
   return computed(() => tabs.value
-    .filter((tab) => {
+    .filter((tab, idx) => {
       const _tab = tab as ModuleBuiltinTab
-      if (_tab.show && !_tab.show())
+      if (tabShows[idx] && !toValue(tabShows[idx]))
         return false
       if (settings.hiddenTabs.value.includes(_tab.name))
         return false

@@ -7,7 +7,8 @@ definePageMeta({
   layout: 'full',
   category: 'server',
   show() {
-    return useServerRoutes().value?.length
+    const routes = useServerRoutes()
+    return () => routes.value?.length
   },
 })
 
