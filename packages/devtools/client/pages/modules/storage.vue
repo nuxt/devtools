@@ -4,7 +4,6 @@ import JsonEditorVue from 'json-editor-vue'
 definePageMeta({
   icon: 'carbon-data-base',
   title: 'Storage',
-  experimental: true,
   layout: 'full',
   category: 'server',
 })

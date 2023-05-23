@@ -8,7 +8,6 @@ definePageMeta({
   title: 'Build Analyze',
   layout: 'full',
   category: 'analyze',
-  experimental: true,
   show() {
     return satisfyNuxtVersion('^3.5.0')
   },
