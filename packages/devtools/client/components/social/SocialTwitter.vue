@@ -21,7 +21,7 @@ const type = computed(() => {
 </script>
 
 <template>
-  <div class="max-w-[438px] min-w-[438px] border border-base rounded-[0.85714em] bg-base -outline-offset-1">
+  <div class="max-w-[438px] min-w-[438px] of-hidden border border-base rounded-[0.85714em] bg-base -outline-offset-1">
     <div
       class="cursor-pointer overflow-hidden leading-[1.3em]"
       :class="type === 'summary_large_image' ? '' : 'flex'"
@@ -44,7 +44,7 @@ const type = computed(() => {
         <div class="m-0 truncate text-[14px] font-semibold leading-[19px]">
           {{ card.title }}
         </div>
-        <div class="line-clamp-2 block select-none overflow-hidden break-words text-left text-[14px] leading-[18px] op50">
+        <div class="line-clamp-3 select-none overflow-hidden break-words text-left text-[14px] leading-[18px] op50">
           {{ card.description }}
         </div>
       </div>
