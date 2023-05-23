@@ -3,6 +3,8 @@
 import { RecycleScroller } from 'vue-virtual-scroller'
 import Fuse from 'fuse.js'
 
+const emit = defineEmits(['close'])
+
 const collection = useModulesList()
 
 const search = ref('')
@@ -46,7 +48,7 @@ const items = computed(() => {
         :item-size="160"
         key-field="name"
       >
-        <ModuleItemInstall :item="item" />
+        <ModuleItemInstall :item="item" @start="emit('close')" />
       </RecycleScroller>
     </div>
   </div>

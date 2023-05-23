@@ -10,6 +10,8 @@ const installedModules = useInstalledModules()
 
 const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
+
+const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'
 </script>
 
 <template>
@@ -26,6 +28,29 @@ const userModules = computed(() => installedModules.value.filter(i => !i.isPacka
         :key="m.name"
         :mod="m"
       />
+      <NuxtLink
+        v-for="m of installingModules"
+        :key="m.processId" block min-h-30
+        :to="`/modules/terminals?id=${encodeURIComponent(m.processId)}`"
+      >
+        <NCard
+          border="1.5 dashed"
+          h-full animate-pulse p4 transition
+          hover="border-primary"
+          flex="~ col gap-1 items-center justify-center"
+          role="button"
+          class="group"
+        >
+          <div relative h-20 w-20 flex flex-none rounded bg-gray:3 p3>
+            <img :src="iconBase + m.info.icon" :alt="m.info.name" ma>
+            <div i-carbon-cube ma text-4xl op30 />
+          </div>
+          <div text-lg group-hover="text-primary" transition flex="~ gap-2 items-center">
+            <div i-carbon-circle-dash animate-spin text-xl op75 />
+            <span op75>Installing {{ m.name }}...</span>
+          </div>
+        </NCard>
+      </NuxtLink>
       <NCard
         border="1.5 dashed"
         min-h-30 p4 transition
@@ -76,7 +101,7 @@ const userModules = computed(() => installedModules.value.filter(i => !i.isPacka
           @click="installModuleOpen = false"
         />
 
-        <ModuleInstallList />
+        <ModuleInstallList @close="installModuleOpen = false" />
       </div>
     </Transition>
     <ModuleActionDialog />

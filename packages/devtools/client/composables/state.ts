@@ -15,6 +15,12 @@ const ignoredModules = [
   '@nuxt/telemetry',
 ]
 
+export interface InstallingModuleState {
+  name: string
+  info: ModuleStaticInfo
+  processId: string
+}
+
 export function useModulesList() {
   return useAsyncData('modules-list', async () => {
     const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
@@ -22,6 +28,8 @@ export function useModulesList() {
       .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
   }).data
 }
+
+export const installingModules = ref<InstallingModuleState[]>([])
 
 export function useInstalledModules() {
   return useState('installed-modules', () => {
@@ -61,24 +69,9 @@ export function useInstalledModules() {
   })
 }
 
-type ModuleActionType = 'install' | 'uninstall'
+export type ModuleActionType = 'install' | 'uninstall'
 
 export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
-
-export async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
-  const router = useRouter()
-  const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
-  const result = await method(item.npm, true)
-
-  if (!result.commands)
-    return
-
-  if (!await ModuleDialog.start(item, result, type))
-    return
-
-  router.push(`/modules/terminals?id=${encodeURIComponent(result.processId)}`)
-  await method(item.npm, false)
-}
 
 export function useComponents() {
   const client = useClient()

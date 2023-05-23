@@ -3,12 +3,14 @@ import { ModuleDialog } from '../composables/state'
 
 const config = useServerConfig()
 const openInEditor = useOpenInEditor()
+
+const anyObj = {} as any
 </script>
 
 <template>
   <ModuleDialog v-slot="{ resolve, args }">
     <NDialog :model-value="true" @close="resolve(false)">
-      <ModuleItemBase :mod="{}" :info="args[0]" border="none" w-150 n-panel-grids />
+      <ModuleItemBase :mod="anyObj" :info="args[0]" border="none" w-150 n-panel-grids />
       <div flex="~ col gap-2" w-150 p4 border="t base">
         <h2 text-xl :class="args[2] === 'install' ? 'text-primary' : 'text-red'">
           <span capitalize>{{ args[2] }}</span> <code>{{ args[0].name }}</code>?
