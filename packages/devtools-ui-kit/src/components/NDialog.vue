@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 
@@ -13,6 +13,7 @@ const props = withDefaults(
     dim: true,
   },
 )
+
 const emit = defineEmits<{
   (event: 'close'): void
   (event: 'update:modelValue', value: boolean): void
@@ -20,17 +21,21 @@ const emit = defineEmits<{
 
 const show = useVModel(props, 'modelValue', emit, { passive: true })
 const card = ref(null)
+const shown = ref(false)
 
-const { activate, deactivate } = useFocusTrap(card, { immediate: false })
+const { activate, deactivate } = useFocusTrap(computed(() => card.value || document.body), { immediate: false })
 
-onMounted(() => {
-  watch(show, (v) => {
-    if (v)
-      activate()
+watchEffect(
+  () => {
+    if (!shown.value && show.value)
+      shown.value = true
+
+    if (show.value && card.value)
+      nextTick(activate)
     else
       deactivate()
-  }, { immediate: true })
-})
+  },
+)
 
 function close() {
   show.value = false
@@ -45,8 +50,9 @@ export default {
 </script>
 
 <template>
-  <Teleport v-lazy-show="show" to="body">
+  <Teleport v-if="shown" to="body">
     <div
+      v-show="show"
       class="n-dialog fixed inset-0 z-100 flex items-center justify-center n-transition"
       :class="[
         show ? '' : 'op0 pointer-events-none visibility-none',

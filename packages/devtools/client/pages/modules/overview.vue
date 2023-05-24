@@ -127,7 +127,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
           </NButton>
           <span>+</span>
           <NButton n="xs" class="px2">
-            D
+            K
           </NButton>
         </template>
         <template v-else>
@@ -139,7 +139,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
             K
           </NButton>
         </template>
-        to open Command Panel
+        to open Command Palette
       </div>
       <div flex="~ gap-1" items-center justify-center text-sm op40>
         Press
