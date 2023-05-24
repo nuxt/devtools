@@ -128,4 +128,8 @@ function formatDuration(build: AnalyzeBuildMeta) {
       </div>
     </NDialog>
   </PromiseConfirm>
+
+  <HelpFab>
+    <DocsAnalyzeBuild />
+  </HelpFab>
 </template>
