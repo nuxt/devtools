@@ -17,6 +17,11 @@ const defaults: NuxtDevToolsUIOptions = {
   scale: 1,
   hiddenTabs: [],
   hiddenTabCategories: [],
+  tabs: {
+    serverRoutes: {
+      cacheLimit: 5,
+    },
+  },
 }
 
 export function setupUIOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {

@@ -101,4 +101,9 @@ export interface NuxtDevToolsUIOptions {
   scale: number
   hiddenTabs: string[]
   hiddenTabCategories: string[]
+  tabs: {
+    serverRoutes: {
+      cacheLimit: number
+    }
+  }
 }

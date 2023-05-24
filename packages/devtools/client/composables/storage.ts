@@ -29,10 +29,43 @@ export function useDevToolsOptions() {
   return devToolsOptionsRefs
 }
 
+export function useDevToolsTabsOptions() {
+  return devToolsOptions.value.tabs
+}
+
 export function useDevToolsFrameState() {
   return devToolsFrameState
 }
 
 export function useDevToolsPanelsState() {
   return devToolsPanelsState
+}
+
+interface ServerRouteResponseState {
+  route: string
+  responses: {
+    route: string
+    contentType: string
+    data: any | undefined
+    statusCode: number
+    error: Error | undefined
+    updatedAt: number
+    fetchTime: number
+  }[]
+  inputs: {
+    tab: 'params' | 'query' | 'body' | 'headers'
+    key: string
+    value: any
+    type: string
+  }[]
+}
+
+const serverRouteResponseState = useLocalStorage<ServerRouteResponseState>('nuxt-devtools-server-route-selected-state', {
+  route: '',
+  responses: [],
+  inputs: [],
+}, { listenToStorageChanges: false })
+
+export function useDevToolsServerRouteSelectedState() {
+  return serverRouteResponseState
 }

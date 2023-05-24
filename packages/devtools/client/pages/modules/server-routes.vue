@@ -7,13 +7,17 @@ definePageMeta({
   layout: 'full',
   category: 'server',
   show() {
-    const routes = useServerRoutes()
-    return () => routes.value?.length
+    return useServerRoutes().value?.length
   },
 })
 
 const vueRoute = useRoute()
+const vueRouter = useRouter()
 
+const globalSettings = ref(false)
+
+const state = useDevToolsServerRouteSelectedState()
+const { serverRoutes: options } = useDevToolsTabsOptions()
 const serverRoutes = useServerRoutes()
 const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   keys: [
@@ -23,7 +27,14 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
+const selected = computed(() => {
+  const route = serverRoutes.value?.find(i => i.path === vueRoute.query?.path)
+  if (route)
+    state.value.route = route.path
+  if (state.value.route)
+    vueRouter.push({ query: { path: state.value.route } })
+  return route
+})
 const search = ref('')
 
 const filtered = computed(() => {
@@ -33,6 +44,10 @@ const filtered = computed(() => {
     return serverRoutes.value
   return fuse.value.search(search.value).map(i => i.item)
 })
+
+function clearResponseCache() {
+  state.value.responses = []
+}
 </script>
 
 <template>
@@ -78,4 +93,60 @@ const filtered = computed(() => {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
+  <button
+    pos="absolute bottom-5 right-5"
+    border="~ orange rounded-full "
+    flex="~ items-center justify-center"
+    bg="bg-base op50!" z-110 h-11 w-11 text-orange backdrop-blur-8 light:shadow
+    hover="bg-active"
+    title="Settings"
+    @click="globalSettings = !globalSettings"
+  >
+    <div carbon-settings />
+  </button>
+  <DrawerRight
+    v-model="globalSettings"
+    auto-close
+    @close="globalSettings = false"
+  >
+    <div mr8 p3>
+      <div flex gap-4>
+        <div flex items-center gap-2>
+          <div>
+            <span>Cache Limit</span>
+            <span op50> (per route)</span>
+          </div>
+          <NSelect v-model="options.cacheLimit">
+            <option v-for="item of [5, 10, 15, 20]" :key="item" :value="item">
+              {{ item }}
+            </option>
+          </NSelect>
+        </div>
+        <div flex-auto />
+        <NButton n="red" icon="carbon-erase" @click="clearResponseCache">
+          Clear All Cache
+        </NButton>
+      </div>
+      <div mt4 x-divider />
+      <div flex="~ col gap-2" mt4>
+        <span>
+          Global Params <span op50>(will be used for every route)</span>
+        </span>
+        <ServerRouteInputs
+          v-model="state.inputs"
+          :keys="['tab', 'type', 'key', 'value']"
+          :exclude="['tab']"
+          :defaults="{ tab: 'query', type: 'text' }"
+        >
+          <template #input="{ item }">
+            <NSelect v-model="item.tab">
+              <option v-for="i of ['params', 'query', 'body', 'headers']" :key="i" :value="i">
+                {{ i }}
+              </option>
+            </NSelect>
+          </template>
+        </ServerRouteInputs>
+      </div>
+    </div>
+  </DrawerRight>
 </template>

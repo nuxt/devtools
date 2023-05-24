@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTimeAgo } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 
 import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
@@ -19,40 +20,32 @@ interface RouteInput {
   type?: string
 }
 
-interface RouteParam {
-  [key: string]: string | boolean | number
-}
-
 const config = useServerConfig()
+const { serverRoutes: options } = useDevToolsTabsOptions()
 
-const response = reactive({
-  contentType: 'text/plain',
-  data: '' as any,
-  statusCode: 200,
-  error: undefined as Error | undefined,
-})
+const states = useDevToolsServerRouteSelectedState()
+const responseState = computed(() => states.value.responses.find(i => i.route === props.route.path))
 
 const responseLang = computed(() => {
-  if (response.contentType.includes('application/json'))
+  if (responseState.value?.contentType.includes('application/json'))
     return 'json'
-  if (response.contentType.includes('text/html'))
+  if (responseState.value?.contentType.includes('text/html'))
     return 'html'
-  if (response.contentType.includes('text/css'))
+  if (responseState.value?.contentType.includes('text/css'))
     return 'css'
-  if (response.contentType.includes('text/javascript'))
+  if (responseState.value?.contentType.includes('text/javascript'))
     return 'javascript'
-  if (response.contentType.includes('text/xml') || response.contentType.includes('application/xml'))
+  if (responseState.value?.contentType.includes('text/xml') || responseState.value?.contentType.includes('application/xml'))
     return 'xml'
   return 'text'
 })
 
 const responseContent = computed(() => {
   if (responseLang.value === 'json')
-    return JSON.stringify(response.data, null, 2)
-  return response.data
+    return JSON.stringify(responseState.value?.data, null, 2)
+  return responseState.value?.data
 })
 
-const fetchTime = ref(0)
 const fetching = ref(false)
 const started = ref(false)
 
@@ -63,11 +56,9 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 
 const inputTabs = ['inputs', 'json']
 const activeInputTab = ref(inputTabs[0])
-// TODO: add better support for file, color, etc
-const inputTypes = ['text', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
 
 const routeMethod = ref(props.route.method || 'GET')
-const routeParams = ref<RouteParam>({})
+const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
   query: [{ key: '', value: '' }] as RouteInput[],
   body: [{ key: '', value: '' }] as RouteInput[],
@@ -79,21 +70,38 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const parsedQuery = computed(() => parseInputs(routeInputs.query))
-const parsedHeader = computed(() => parseInputs(routeInputs.headers))
-const parsedBody = computed(() => hasBody.value ? parseInputs(routeInputs.body) : undefined)
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
 
-function onFileInputChange(index: number, event: Event) {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
-    const file = target.files[0]
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      routeInputs.body[index].value = reader.result as any
-    }
+const globalInputs = computed(() => {
+  const tabs = ['params', 'query', 'headers', 'body']
+  return Object.fromEntries(
+    tabs.map((tab) => {
+      const tabInputs = states.value.inputs.filter(i => i.tab === tab)
+      return [tab, tabInputs]
+    }),
+  )
+})
+
+const parsedQuery = computed(() => {
+  return {
+    ...parseInputs(routeInputs.query),
+    ...parseInputs(globalInputs.value.query),
   }
-}
+})
+const parsedHeader = computed(() => {
+  return {
+    ...parseInputs(routeInputs.headers),
+    ...parseInputs(globalInputs.value.headers),
+  }
+})
+const parsedBody = computed(() => {
+  return hasBody.value
+    ? {
+        ...parseInputs(routeInputs.body),
+        ...parseInputs(globalInputs.value.body),
+      }
+    : undefined
+})
 
 const domain = computed(() => {
   let url = config.value?.devServer.url || 'http://localhost'
@@ -110,7 +118,7 @@ const finalPath = computed(() => {
     query = `?${query}`
   const path = (parsedRoute.value?.map((i) => {
     if (i.startsWith(':') || i.startsWith('**:'))
-      return routeParams.value[i] || i
+      return routeParams.value[i] || globalInputs.value.params.find(p => p.key === i.replace(':', ''))?.value || i
     return i
   }).join('') || '') + query
 
@@ -123,7 +131,7 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
-function parseInputs(inputs: RouteParam[]) {
+function parseInputs(inputs: any[]) {
   const formatted = Object.fromEntries(
     inputs.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value]),
   )
@@ -133,13 +141,12 @@ function parseInputs(inputs: RouteParam[]) {
 async function fetchData() {
   started.value = true
   fetching.value = true
-  Object.assign(response, {
-    lang: 'text',
-    contentType: '',
-    data: '',
-    content: '',
-    error: undefined,
-  })
+  const response = {
+    contentType: 'text/plain',
+    data: '' as any,
+    statusCode: 200,
+    error: undefined as Error | undefined,
+  }
 
   const start = Date.now()
   try {
@@ -161,8 +168,25 @@ async function fetchData() {
   catch (err: any) {
 
   }
+  const currentState = {
+    route: props.route.path,
+    contentType: response.contentType,
+    statusCode: response.statusCode,
+    data: response.data,
+    error: response.error,
+    fetchTime: Date.now() - start,
+    updatedAt: Date.now(),
+  }
+
+  if (!responseState.value) {
+    if (states.value.responses.length >= options.cacheLimit)
+      states.value.responses.splice(0, states.value.responses.length - options.cacheLimit + 1)
+    states.value.responses.push(currentState)
+  }
+  else {
+    Object.assign(responseState.value, currentState)
+  }
   fetching.value = false
-  fetchTime.value = Date.now() - start
 }
 
 const codeSnippets = computed(() => {
@@ -247,8 +271,6 @@ const tabs = computed(() => {
   return tabs
 })
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
-
 // TODO: fix routeInputs[activeTab.value] type
 type RouteInputs = keyof typeof routeInputs
 const currentParams = computed<RouteInput[]>({
@@ -272,6 +294,8 @@ watchEffect(() => {
     })
   }
 })
+
+const copy = useCopy()
 </script>
 
 <template>
@@ -286,12 +310,17 @@ watchEffect(() => {
             {{ method.toUpperCase() }}
           </option>
         </NSelect>
-        <NTextInput
-          :model-value="finalPath"
-          disabled flex-auto font-mono
-          p="x5 y2"
-          n="primary xs"
-        />
+        <div relative flex-auto font-mono>
+          <NTextInput
+            :model-value="finalPath"
+            disabled
+            p="x5 y2"
+            n="primary xs"
+          />
+          <NButton title="Copy full URL" absolute right-1 top-1 n="sm primary" @click="copy(finalURL)">
+            <NIcon icon="carbon:copy" />
+          </NButton>
+        </div>
         <NButton n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
         </NButton>
@@ -302,12 +331,14 @@ watchEffect(() => {
       <NButton
         v-for="tab of tabs"
         :key="tab.label"
-        :to="{ query: { ...$route.query, tab: tab.name } }"
         :class="activeTab === tab.name ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
         @click="activeTab = tab.name"
       >
         <NIcon :icon="tab.icon" />
         {{ tab.label }} {{ tab?.length ? `(${tab.length})` : '' }}
+        <span v-if="globalInputs[tab.name]?.length" text-orange>
+          ({{ globalInputs[tab.name].length }})
+        </span>
       </NButton>
       <div flex-auto />
       <NButton
@@ -342,35 +373,11 @@ watchEffect(() => {
     </div>
     <template v-else-if="currentParams">
       <NTabs v-model="activeInputTab" :tabs="inputTabs">
-        <template v-if="activeInputTab === 'inputs'">
-          <div v-for="(item, index) in currentParams" :key="index" flex="~ gap-2" justify-around>
-            <NTextInput v-model="item.key" placeholder="Key" flex-1 font-mono n="sm" />
-            <template v-if="item.type">
-              <NTextInput v-if="item.type === 'file'" type="file" @change="onFileInputChange(index, $event)" />
-              <div v-else-if="item.type === 'boolean'" ml2 flex>
-                <NCheckbox v-model="item.value" placeholder="Value" n="green lg" />
-              </div>
-              <NTextInput v-else v-model="item.value" :type="item.type" placeholder="Value" flex-1 font-mono n="sm" />
-            </template>
-            <NTextInput v-else v-model="item.value" placeholder="Value" flex-1 font-mono n="sm" />
-            <NSelect v-if="item?.type" v-model="item.type" n="sm">
-              <option v-for="inType of inputTypes" :key="inType" :value="inType">
-                {{ inType }}
-              </option>
-            </NSelect>
-            <NButton n="red" @click="currentParams!.splice(index, 1)">
-              <NIcon icon="carbon:delete" />
-            </NButton>
-          </div>
-          <div>
-            <NButton
-              icon="carbon-add" n="sm primary"
-              my1 px-3 @click="currentParams!.push({ key: '', value: '' })"
-            >
-              Add
-            </NButton>
-          </div>
-        </template>
+        <ServerRouteInputs
+          v-if="activeInputTab === 'inputs'"
+          v-model="currentParams"
+          :keys="['key', 'value', 'type']"
+        />
         <div v-else-if="activeInputTab === 'json'">
           <JsonEditorVue
             v-model="currentParams"
@@ -381,7 +388,7 @@ watchEffect(() => {
         </div>
       </NTabs>
     </template>
-    <NPanelGrids v-if="!started">
+    <NPanelGrids v-if="!started && !responseState">
       <NButton n="primary" @click="fetchData">
         <NIcon icon="carbon:send" />
         Send request
@@ -394,28 +401,36 @@ watchEffect(() => {
       <div border="b base" flex="~ gap2" items-center px4 py2>
         <div>Response</div>
         <Badge
-          v-if="response.error"
+          v-if="responseState?.error"
           bg-red-400:10 text-red-400
         >
           Error
         </Badge>
         <Badge
           :class="{
-            'bg-orange-400:10 text-orange-400': response.error,
-            'bg-green-400:10 text-green-400': !response.error,
+            'bg-orange-400:10 text-orange-400': responseState?.error,
+            'bg-green-400:10 text-green-400': !responseState?.error,
           }"
         >
-          {{ response.statusCode }}
+          {{ responseState?.statusCode }}
         </Badge>
-        <code v-if="response.contentType" text-xs op50>
-          {{ response.contentType }}
+        <code v-if="responseState?.contentType" text-xs op50>
+          {{ responseState.contentType }}
         </code>
         <div flex-auto />
+        <template v-if="responseState?.updatedAt">
+          <div op50>
+            Last update at
+          </div>
+          <Badge bg-green-400:10 text-green-400>
+            {{ useTimeAgo(new Date(responseState.updatedAt)) }}
+          </Badge>
+        </template>
         <div op50>
           Request finished in
         </div>
         <Badge bg-green-400:10 text-green-400>
-          {{ fetchTime }} ms
+          {{ responseState?.fetchTime }} ms
         </Badge>
       </div>
       <!-- Rich response data -->
