@@ -1,3 +1,17 @@
+## [0.5.4](https://github.com/nuxt/devtools-poc/compare/v0.5.3...v0.5.4) (2023-05-24)
+
+
+### Bug Fixes
+
+* **open-graph:** improve ui ([7d03f5d](https://github.com/nuxt/devtools-poc/commit/7d03f5dae38f37ac4222059384dbf60fe85b7569))
+
+
+### Features
+
+* command panel for tabs ([#240](https://github.com/nuxt/devtools-poc/issues/240)) ([0760252](https://github.com/nuxt/devtools-poc/commit/076025270d46ec4ce61d932e40722dd2be395deb))
+
+
+
 ## [0.5.3](https://github.com/nuxt/devtools-poc/compare/v0.5.2...v0.5.3) (2023-05-23)
 
 
