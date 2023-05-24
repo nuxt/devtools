@@ -50,6 +50,15 @@ function gotoTerminal() {
 function formatDuration(build: AnalyzeBuildMeta) {
   return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
+
+registerCommands(() => [
+  {
+    id: 'analyze-build: start',
+    title: 'Start a new analyze build',
+    icon: 'i-carbon-edge-node',
+    action: start,
+  },
+])
 </script>
 
 <template>

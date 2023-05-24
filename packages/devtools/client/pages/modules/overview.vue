@@ -123,6 +123,28 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
         Press
         <template v-if="isMacOS">
           <NButton n="xs" class="px2">
+            ⌘ Cmd
+          </NButton>
+          <span>+</span>
+          <NButton n="xs" class="px2">
+            K
+          </NButton>
+        </template>
+        <template v-else>
+          <NButton n="xs" class="px2">
+            Ctrl
+          </NButton>
+          <span>+</span>
+          <NButton n="xs" class="px2">
+            K
+          </NButton>
+        </template>
+        to open Command Palette
+      </div>
+      <div flex="~ gap-1" items-center justify-center text-sm op40>
+        Press
+        <template v-if="isMacOS">
+          <NButton n="xs" class="px2">
             ⇧ Shift
           </NButton>
           <span>+</span>
