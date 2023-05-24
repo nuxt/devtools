@@ -71,6 +71,7 @@ onMounted(() => {
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
+      <CommandPalette />
     </div>
     <DisconnectIndicator />
     <RestartDialogs />

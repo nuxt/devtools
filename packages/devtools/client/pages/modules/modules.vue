@@ -12,6 +12,17 @@ const packageModules = computed(() => installedModules.value.filter(i => i.isPac
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
 
 const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'
+
+registerCommands(() => [
+  {
+    id: 'modules:install',
+    title: 'Install a new module',
+    icon: 'i-carbon-intent-request-create ',
+    action: () => {
+      installModuleOpen.value = true
+    },
+  },
+])
 </script>
 
 <template>
