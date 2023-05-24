@@ -1,14 +1,14 @@
 import { createBirpc } from 'birpc'
 import { parse, stringify } from 'flatted'
+import { createHotContext } from 'vite-hot-client'
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
-
-const RECONNECT_INTERVAL = 2000
+import { WS_EVENT_NAME } from '../../src/constant'
 
 export const wsConnecting = ref(false)
 export const wsError = ref<any>()
 export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
 
-let connectPromise = connectWS()
+const connectPromise = connectVite()
 let onMessage: Function = () => {}
 
 export const clientFunctions = {
@@ -19,9 +19,11 @@ export const extendedRpcMap = new Map<string, any>()
 
 export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   post: async (d) => {
-    (await connectPromise).send(d)
+    (await connectPromise).send(WS_EVENT_NAME, d)
   },
-  on: (fn) => { onMessage = fn },
+  on: (fn) => {
+    onMessage = fn
+  },
   serialize: stringify,
   deserialize: parse,
   resolver(name, fn) {
@@ -38,33 +40,19 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
   timeout: 120_000,
 })
 
-async function connectWS() {
-  const wsUrl = new URL('ws://host/__nuxt_devtools__/entry')
-  wsUrl.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-  wsUrl.host = location.host
+async function connectVite() {
+  const hot = await createHotContext()
 
-  const ws = new WebSocket(wsUrl.toString())
-  ws.addEventListener('message', e => onMessage(String(e.data)))
-  ws.addEventListener('error', (e) => {
-    console.error(e)
-    wsError.value = e
+  if (!hot)
+    throw new Error('Unable to connect to devtools')
+
+  hot.on(WS_EVENT_NAME, (data) => {
+    onMessage(data)
   })
-  ws.addEventListener('close', () => {
-    // eslint-disable-next-line no-console
-    console.log('[nuxt-devtools] WebSocket closed, reconnecting...')
-    wsConnecting.value = true
-    setTimeout(async () => {
-      connectPromise = connectWS()
-    }, RECONNECT_INTERVAL)
-  })
-  wsConnecting.value = true
-  if (ws.readyState !== WebSocket.OPEN)
-    await new Promise(resolve => ws.addEventListener('open', resolve))
 
-  // eslint-disable-next-line no-console
-  console.log('[nuxt-devtools] WebSocket connected.')
-  wsConnecting.value = false
-  wsError.value = null
+  // TODO:
+  // hot.on('vite:connect', (data) => {})
+  // hot.on('vite:disconnect', (data) => {})
 
-  return ws
+  return hot
 }

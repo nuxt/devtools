@@ -8,7 +8,6 @@ definePageMeta({
   title: 'Build Analyze',
   layout: 'full',
   category: 'analyze',
-  experimental: true,
   show() {
     return satisfyNuxtVersion('^3.5.0')
   },
@@ -19,7 +18,6 @@ const PromiseConfirm = createTemplatePromise<boolean>()
 const info = useAnalyzeBuildInfo()
 const router = useRouter()
 const route = useRoute()
-const processId = ref<string>()
 
 const selected = computed(() => {
   const slug = route.query.slug as string
@@ -36,14 +34,17 @@ async function start() {
   if (!await PromiseConfirm.start())
     return
 
-  processId.value = await rpc.startAnalyzeBuild(buildNameInput.value)
+  processAnalyzeBuildInfo.value = {
+    name: buildNameInput.value,
+    processId: await rpc.startAnalyzeBuild(buildNameInput.value),
+  }
   if (shouldGotoTerminal.value)
     gotoTerminal()
 }
 
 function gotoTerminal() {
-  if (processId.value)
-    router.push(`/modules/terminals?id=${encodeURIComponent(processId.value)}`)
+  if (processAnalyzeBuildInfo.value?.processId)
+    router.push(`/modules/terminals?id=${encodeURIComponent(processAnalyzeBuildInfo.value.processId)}`)
 }
 
 function formatDuration(build: AnalyzeBuildMeta) {
@@ -72,7 +73,7 @@ function formatDuration(build: AnalyzeBuildMeta) {
           <div x-divider />
         </template>
         <div flex="~ items-center justify-center" p4>
-          <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
+          <NButton v-if="!processAnalyzeBuildInfo" n="primary" icon="carbon-edge-node" @click="start()">
             Start a new build
           </NButton>
           <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
@@ -127,4 +128,8 @@ function formatDuration(build: AnalyzeBuildMeta) {
       </div>
     </NDialog>
   </PromiseConfirm>
+
+  <HelpFab>
+    <DocsAnalyzeBuild />
+  </HelpFab>
 </template>

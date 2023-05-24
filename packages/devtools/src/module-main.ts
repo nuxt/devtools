@@ -1,8 +1,7 @@
 import { existsSync } from 'node:fs'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
-import { addPlugin, logger } from '@nuxt/kit'
-import { tinyws } from 'tinyws'
+import { addPlugin, addVitePlugin, logger } from '@nuxt/kit'
 import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
@@ -11,7 +10,7 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_CLIENT, ROUTE_ENTRY } from './constant'
+import { ROUTE_ANALYZE, ROUTE_CLIENT } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -39,9 +38,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   })
 
   const {
-    middleware: rpcMiddleware,
+    vitePlugin,
     ...ctx
   } = setupRPC(nuxt, options)
+
+  addVitePlugin(vitePlugin)
 
   const clientDirExists = existsSync(clientDir)
   const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
@@ -63,8 +64,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
-    server.middlewares.use(ROUTE_ENTRY, tinyws() as any)
-    server.middlewares.use(ROUTE_ENTRY, rpcMiddleware as any)
     server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
     // serve the front end in production
     if (clientDirExists)

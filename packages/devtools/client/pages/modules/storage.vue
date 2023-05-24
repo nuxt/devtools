@@ -4,7 +4,6 @@ import JsonEditorVue from 'json-editor-vue'
 definePageMeta({
   icon: 'carbon-data-base',
   title: 'Storage',
-  experimental: true,
   layout: 'full',
   category: 'server',
 })
@@ -14,10 +13,10 @@ const router = useRouter()
 const searchString = ref('')
 const newKey = ref('')
 const currentStorage = computed({
-  get(): string | undefined {
+  get(): string | number | undefined {
     return useRoute().query?.storage as string | undefined
   },
-  set(storage: string | undefined): void {
+  set(storage: string | number | undefined): void {
     router.replace({ query: { storage } })
   },
 })

@@ -5,7 +5,7 @@ definePageMeta({
 
 const {
   interactionCloseOnOutsideClick,
-  showExperimentalFeatures,
+  // showExperimentalFeatures,
   showHelpButtons,
   scale,
   hiddenTabs,
@@ -20,7 +20,7 @@ const scaleOptions = [
   ['Huge', 18 / 15],
 ]
 
-const categories = useCategorizedTabs(false)
+const categories = getCategorizedTabs(useAllTabs())
 
 function toggleTab(name: string, v: boolean) {
   if (v)
@@ -111,9 +111,9 @@ function toggleTabCategory(name: string, v: boolean) {
           <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
             <span>Close DevTools when clicking outside</span>
           </NCheckbox>
-          <NCheckbox v-model="showExperimentalFeatures" n-primary>
+          <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>
             <span>Show experimental features</span>
-          </NCheckbox>
+          </NCheckbox> -->
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
           </NCheckbox>

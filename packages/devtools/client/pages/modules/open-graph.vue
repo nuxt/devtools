@@ -81,6 +81,9 @@ until(router).toBeTruthy().then((v) => {
   v.afterEach(() => {
     nextTick(() => {
       routeInput.value = route.value.path
+      // try refresh after route change, to get async updates
+      setTimeout(refresh, 200)
+      setTimeout(refresh, 800)
     })
   })
 })

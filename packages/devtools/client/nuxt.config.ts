@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-vitest',
     '@vue-macros/nuxt',
-    '~/modules/custom-tabs',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
@@ -29,7 +28,7 @@ export default defineNuxtConfig({
     },
   },
   alias: {
-    '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/iframe-client'),
+    '@nuxt/devtools-kit/iframe-client': r('../../devtools-kit/src/runtime/iframe-client'),
     '@nuxt/devtools-kit/types': r('../../devtools-kit/src/types'),
     '@nuxt/devtools-kit': r('../../devtools-kit/src/index'),
   },

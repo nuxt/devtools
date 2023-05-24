@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-kit",
   "type": "module",
-  "version": "0.4.6",
+  "version": "0.5.3",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
@@ -17,8 +17,7 @@
     },
     "./iframe-client": {
       "types": "./iframe-client.d.ts",
-      "require": "./dist/iframe-client.cjs",
-      "import": "./dist/iframe-client.mjs"
+      "import": "./iframe-client.mjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -40,16 +39,16 @@
     "vite": "*"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.5.0",
-    "@nuxt/schema": "^3.5.0",
+    "@nuxt/kit": "^3.5.1",
+    "@nuxt/schema": "^3.5.1",
     "execa": "^7.1.1"
   },
   "devDependencies": {
     "birpc": "^0.2.11",
     "hookable": "^5.5.3",
     "unbuild": "^1.2.1",
-    "unimport": "^3.0.6",
+    "unimport": "^3.0.7",
     "vite-plugin-vue-inspector": "^3.4.2",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.1"
   }
 }
