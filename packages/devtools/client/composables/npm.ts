@@ -13,19 +13,21 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
 }
 
 export function useNuxtVersion() {
-  return useAsyncData('npm:check:nuxt', () => rpc.checkForUpdateFor('nuxt')).data
+  return useAsyncState('npm:check:nuxt', () => rpc.checkForUpdateFor('nuxt'))
 }
 
 export function satisfyNuxtVersion(range: string) {
   const nuxt = useNuxtVersion()
-  if (!nuxt?.value?.current)
-    return false
-  return semver.satisfies(nuxt.value.current, range)
+  return computed(() => {
+    if (!nuxt?.value?.current)
+      return false
+    return semver.satisfies(nuxt.value.current, range)
+  })
 }
 
 function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   const nuxt = useNuxtApp()
-  const info = useAsyncData(`npm:check:${name}`, () => rpc.checkForUpdateFor(name)).data
+  const info = useAsyncState(`npm:check:${name}`, () => rpc.checkForUpdateFor(name))
 
   const state = ref<PackageUpdateState>('idle')
 

@@ -9,7 +9,7 @@ definePageMeta({
   layout: 'full',
   category: 'analyze',
   show() {
-    return () => satisfyNuxtVersion('^3.5.0')
+    return satisfyNuxtVersion('^3.5.0')
   },
 })
 

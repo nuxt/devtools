@@ -1,12 +1,12 @@
-import type { TinyWSRequest } from 'tinyws'
-import type { NodeIncomingMessage, NodeServerResponse } from 'h3'
 import type { WebSocket } from 'ws'
 import { createBirpcGroup } from 'birpc'
 import type { ChannelOptions } from 'birpc'
 
 import { parse, stringify } from 'flatted'
 import type { Nuxt } from 'nuxt/schema'
+import type { Plugin } from 'vite'
 import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { WS_EVENT_NAME } from '../constant'
 import { setupStorageRPC } from './storage'
 import { setupAssetsRPC } from './assets'
 import { setupNpmRPC } from './npm'
@@ -86,36 +86,50 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()
-  const middleware = async (req: NodeIncomingMessage & TinyWSRequest, _res: NodeServerResponse, next: Function) => {
-    // Handle WebSocket
-    if (req.ws) {
-      const ws = await req.ws()
-      wsClients.add(ws)
-      const channel: ChannelOptions = {
-        post: d => ws.send(d),
-        on: fn => ws.on('message', fn),
-        serialize: stringify,
-        deserialize: parse,
-      }
-      rpc.updateChannels((c) => {
-        c.push(channel)
-      })
-      ws.on('close', () => {
-        wsClients.delete(ws)
+
+  const vitePlugin: Plugin = {
+    name: 'nuxt:devtools:rpc',
+    configureServer(server) {
+      server.ws.on('connection', (ws) => {
+        wsClients.add(ws)
+        const channel: ChannelOptions = {
+          post: d => ws.send(JSON.stringify({
+            type: 'custom',
+            event: WS_EVENT_NAME,
+            data: d,
+          })),
+          on: (fn) => {
+            ws.on('message', (e) => {
+              try {
+                const data = JSON.parse(String(e)) || {}
+                if (data.type === 'custom' && data.event === WS_EVENT_NAME) {
+                  // console.log(data.data)
+                  fn(data.data)
+                }
+              }
+              catch {}
+            })
+          },
+          serialize: stringify,
+          deserialize: parse,
+        }
         rpc.updateChannels((c) => {
-          const index = c.indexOf(channel)
-          if (index >= 0)
-            c.splice(index, 1)
+          c.push(channel)
+        })
+        ws.on('close', () => {
+          wsClients.delete(ws)
+          rpc.updateChannels((c) => {
+            const index = c.indexOf(channel)
+            if (index >= 0)
+              c.splice(index, 1)
+          })
         })
       })
-    }
-    else {
-      next()
-    }
+    },
   }
 
   return {
-    middleware,
+    vitePlugin,
     ...ctx,
   }
 }
