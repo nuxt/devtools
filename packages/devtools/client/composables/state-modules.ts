@@ -11,11 +11,11 @@ const ignoredModules = [
 ]
 
 export function useModulesList() {
-  return useAsyncData('modules-list', async () => {
+  return useAsyncState('getModulesList', async () => {
     const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
     return modules
       .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
-  }).data
+  })
 }
 
 export function useInstalledModules() {

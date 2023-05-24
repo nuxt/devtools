@@ -76,6 +76,9 @@ importers:
       unocss:
         specifier: ^0.52.3
         version: 0.52.3(@unocss/webpack@0.52.3)(postcss@8.4.23)(rollup@3.23.0)(vite@4.3.8)
+      vite-hot-client:
+        specifier: ^0.2.1
+        version: 0.2.1(vite@4.3.8)
       vue-tsc:
         specifier: ^1.6.5
         version: 1.6.5(typescript@5.0.4)
@@ -172,9 +175,6 @@ importers:
       sirv:
         specifier: ^2.0.3
         version: 2.0.3
-      tinyws:
-        specifier: ^0.1.0
-        version: 0.1.0(ws@8.13.0)
       unimport:
         specifier: ^3.0.7
         version: 3.0.7(rollup@3.23.0)
@@ -11026,15 +11026,6 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
-  /tinyws@0.1.0(ws@8.13.0):
-    resolution: {integrity: sha512-6WQ2FlFM7qm6lAXxeKnzsAEfmnBHz5W5EwonNs52V0++YfK1IoCCAWM429afcChFE9BFrDgOFnq7ligaWMsa/A==}
-    engines: {node: '>=12.4'}
-    peerDependencies:
-      ws: '>=8'
-    dependencies:
-      ws: 8.13.0
-    dev: false
-
   /titleize@3.0.0:
     resolution: {integrity: sha512-KxVu8EYHDPBdUYdKZdKtU2aj2XfEx9AfjXxE/Aj0vT06w2icA09Vus1rh6eSu1y01akYg6BjIK/hxyLJINoMLQ==}
     engines: {node: '>=12'}
@@ -11768,6 +11759,14 @@ packages:
     dependencies:
       '@egjs/hammerjs': 2.0.17
       component-emitter: 1.3.0
+    dev: true
+
+  /vite-hot-client@0.2.1(vite@4.3.8):
+    resolution: {integrity: sha512-UqsQdw5PODnSrTDT85nr09RlhV0gkm2Xat74U2l8JZ5R8M/wTCggWSyPjxbLk5fbbVnWfr0JwW+vVoosjQnYrA==}
+    peerDependencies:
+      vite: ^2.6.0 || ^3.0.0 || ^4.0.0
+    dependencies:
+      vite: 4.3.8(@types/node@20.2.3)
     dev: true
 
   /vite-node@0.30.1(@types/node@20.2.3):
