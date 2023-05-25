@@ -12,6 +12,7 @@ const registeredCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem
 
 export function useCommands() {
   const tabs = useEnabledTabs()
+  const docs = useNuxtDocs()
   const router = useRouter()
 
   const fixedCommands: CommandItem[] = [
@@ -45,6 +46,7 @@ export function useCommands() {
       ...tabCommands.value,
       ...Array.from(registeredCommands.values())
         .flatMap(i => toValue(i)),
+      ...docs.value ?? [],
     ]
   })
 }
@@ -56,5 +58,19 @@ export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
 
   onUnmounted(() => {
     registeredCommands.delete(id)
+  })
+}
+
+export function useNuxtDocs() {
+  return useAsyncState<CommandItem[]>('getNuxtDocs', async () => {
+    // TODO: change url when possible
+    const list = await $fetch<any[]>('https://cdn.jsdelivr.net/gh/arashsheyda/nuxt@docs-list/docs-list.json')
+    return list.map(i => ({
+      ...i,
+      icon: 'carbon-document',
+      action: () => {
+        window.open(i.path, '_blank')
+      },
+    }))
   })
 }

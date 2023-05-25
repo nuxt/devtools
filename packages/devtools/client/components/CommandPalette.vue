@@ -6,32 +6,40 @@ const search = ref('')
 
 const items = useCommands()
 
-const fuse = computed(() => new Fuse(items.value, {
+const groups = computed(() => ['all', ...new Set(items.value.map(i => i.id.split(':')[0]))])
+const currentGroup = ref(groups.value[0])
+const groupItems = computed(() => items.value.filter(i => i.id.startsWith(currentGroup.value) || currentGroup.value === 'all'))
+
+const fuse = computed(() => new Fuse(groupItems.value, {
   keys: [
+    'id',
     'title',
   ],
-  threshold: 0.3,
+  distance: 50,
 }))
 
 const filtered = computed(() => {
   const result = search.value
     ? fuse.value.search(search.value).map(i => i.item)
-    : (items.value || [])
+    : (groupItems.value || [])
   return result
 })
 
-const elements = ref<any[]>([])
 const selectedIndex = ref(0)
 
 watch(search, () => {
   selectedIndex.value = 0
+  scrollToITem()
 })
 
 function moveSelected(delta: number) {
   selectedIndex.value = ((selectedIndex.value + delta) + filtered.value.length) % filtered.value.length
+  scrollToITem()
+}
 
-  const item = elements.value[selectedIndex.value]
-  item.scrollIntoView({
+function scrollToITem() {
+  const item = document.getElementById(filtered.value[selectedIndex.value]?.id)
+  item?.scrollIntoView({
     block: 'center',
   })
 }
@@ -68,17 +76,27 @@ useEventListener('keydown', (e) => {
   <NDialog v-model="show" relative h-md w-xl of-hidden>
     <div h-full flex="~ col">
       <header border="b base" flex-none>
-        <NTextInput
-          v-model="search"
-          placeholder="Type to search..."
-          class="rounded-none py3 px2! ring-0!" n="lg green borderless"
-        />
+        <div relative>
+          <NTextInput
+            v-model="search"
+            placeholder="Type to search..."
+            class="rounded-none py3 px2! ring-0!" n="lg green borderless"
+          />
+          <NSelect
+            v-model="currentGroup"
+            absolute bottom-0 right-0 top-0
+            class="rounded-none border-none op-50 ring-0!"
+          >
+            <option v-for="group of groups" :key="group" :value="group">
+              {{ group }}
+            </option>
+          </NSelect>
+        </div>
       </header>
       <div flex-auto of-auto p2 flex="~ col">
         <button
           v-for="item, idx of filtered"
           :id="item.id"
-          ref="elements"
           :key="item.id"
           @click="item.action(), show = false"
           @mouseover="selectedIndex = idx"
@@ -87,11 +105,13 @@ useEventListener('keydown', (e) => {
             flex="~ items-center justify-between" rounded px3 py2
             :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op50'"
           >
-            <span flex items-center gap2>
+            <span flex items-center gap2 capitalize>
               <TabIcon text-xl :icon="item.icon" :title="item.title" />
               {{ item.title }}
             </span>
-            <NIcon v-if="selectedIndex === idx" icon="tabler-arrow-back" />
+            <span text-xs>
+              {{ item.id.replace(/:[^:]+$/, '').split(':').reverse().join(' . ').replace(/-/g, ' ') }}
+            </span>
           </div>
         </button>
         <div v-if="!filtered.length" h-full flex items-center justify-center gap-2 text-xl>

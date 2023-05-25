@@ -53,7 +53,7 @@ function formatDuration(build: AnalyzeBuildMeta) {
 
 registerCommands(() => [
   {
-    id: 'analyze-build: start',
+    id: 'action:analyze-build: start',
     title: 'Start a new analyze build',
     icon: 'i-carbon-edge-node',
     action: start,
