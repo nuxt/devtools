@@ -12,7 +12,10 @@ const openInEditor = useOpenInEditor()
 
 const name = computed(() => props.item.as || props.item.name)
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
-const modules = computed(() => props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
+const modules = computed(() =>
+  (props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
+    .filter(i => !i.endsWith('?macro=true')),
+)
 
 const docsUrl = computed(() => {
   if (props.item.meta?.docsUrl)
