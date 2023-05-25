@@ -1,3 +1,14 @@
+## [0.5.5](https://github.com/nuxt/devtools-poc/compare/v0.5.4...v0.5.5) (2023-05-25)
+
+
+### Bug Fixes
+
+* **command-palette:** avoid key conflicts ([c86697e](https://github.com/nuxt/devtools-poc/commit/c86697ee29324b8809f4b041891c628829f001c7))
+* **CommandPalette:** fix item scroll ([#246](https://github.com/nuxt/devtools-poc/issues/246)) ([9aa13f6](https://github.com/nuxt/devtools-poc/commit/9aa13f6966b1b6b2b260cc87b5065e60c41762a7))
+* **pages:** route parsing ([d525412](https://github.com/nuxt/devtools-poc/commit/d525412b81f3f3b08a28a1c94b37fd080e02eb39))
+
+
+
 ## [0.5.4](https://github.com/nuxt/devtools-poc/compare/v0.5.3...v0.5.4) (2023-05-24)
 
 
