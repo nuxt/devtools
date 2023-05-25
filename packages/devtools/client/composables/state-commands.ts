@@ -8,7 +8,7 @@ export interface CommandItem {
   action: () => void
 }
 
-const registedCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem[]>>())
+const registeredCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem[]>>())
 
 export function useCommands() {
   const tabs = useEnabledTabs()
@@ -43,7 +43,7 @@ export function useCommands() {
     return [
       ...fixedCommands,
       ...tabCommands.value,
-      ...Array.from(registedCommands.values())
+      ...Array.from(registeredCommands.values())
         .flatMap(i => toValue(i)),
     ]
   })
@@ -52,9 +52,9 @@ export function useCommands() {
 export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
   const id = randomStr()
 
-  registedCommands.set(id, getter)
+  registeredCommands.set(id, getter)
 
   onUnmounted(() => {
-    registedCommands.delete(id)
+    registeredCommands.delete(id)
   })
 }

@@ -30,9 +30,9 @@ watch(search, () => {
 function moveSelected(delta: number) {
   selectedIndex.value = ((selectedIndex.value + delta) + filtered.value.length) % filtered.value.length
 
-  const item = elements.value[selectedIndex.value].$el
+  const item = elements.value[selectedIndex.value]
   item.scrollIntoView({
-    block: 'nearest',
+    block: 'center',
   })
 }
 
