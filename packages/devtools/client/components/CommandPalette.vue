@@ -40,6 +40,7 @@ useEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault()
     show.value = !show.value
+    return
   }
 
   if (show.value) {
@@ -47,19 +48,19 @@ useEventListener('keydown', (e) => {
       e.preventDefault()
       moveSelected(e.key === 'ArrowDown' ? 1 : -1)
     }
-  }
 
-  if (e.key === 'Enter') {
-    const item = filtered.value[selectedIndex.value]
-    if (item) {
-      e.preventDefault()
-      item.action()
-      show.value = false
+    if (e.key === 'Enter') {
+      const item = filtered.value[selectedIndex.value]
+      if (item) {
+        e.preventDefault()
+        item.action()
+        show.value = false
+      }
     }
-  }
 
-  if (e.key === 'Escape')
-    show.value = false
+    if (e.key === 'Escape')
+      show.value = false
+  }
 })
 </script>
 
