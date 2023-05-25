@@ -6,9 +6,17 @@ const search = ref('')
 
 const items = useCommands()
 
-const groups = computed(() => ['all', ...new Set(items.value.map(i => i.id.split(':')[0]))])
-const currentGroup = ref(groups.value[0])
-const groupItems = computed(() => items.value.filter(i => i.id.startsWith(currentGroup.value) || currentGroup.value === 'all'))
+const groups = ['all', 'fixed', 'tab', 'action', 'doc', 'other']
+const currentGroup = ref(groups[0])
+const groupItems = computed(() => {
+  if (currentGroup.value === 'all')
+    return items.value
+
+  if (currentGroup.value === 'other')
+    return items.value.filter(i => !groups.includes(i.id.split(':')[0]))
+
+  return items.value.filter(i => i.id.startsWith(currentGroup.value))
+})
 
 const fuse = computed(() => new Fuse(groupItems.value, {
   keys: [
@@ -19,10 +27,9 @@ const fuse = computed(() => new Fuse(groupItems.value, {
 }))
 
 const filtered = computed(() => {
-  const result = search.value
-    ? fuse.value.search(search.value).map(i => i.item)
-    : (groupItems.value || [])
-  return result
+  if (search.value)
+    return fuse.value.search(search.value).map(i => i.item)
+  return groupItems.value || []
 })
 
 const selectedIndex = ref(0)
@@ -70,6 +77,13 @@ useEventListener('keydown', (e) => {
       show.value = false
   }
 })
+
+function idToGroup(str: string) {
+  const [firstGroup, ...rest] = str.split(':')
+  const groupName = groups.includes(firstGroup) ? firstGroup : 'other'
+  const items = [groupName, ...rest.slice(0, -1)].reverse().map(item => item.replace(/-/g, ' '))
+  return items.join(' . ')
+}
 </script>
 
 <template>
@@ -110,7 +124,7 @@ useEventListener('keydown', (e) => {
               {{ item.title }}
             </span>
             <span text-xs>
-              {{ item.id.replace(/:[^:]+$/, '').split(':').reverse().join(' . ').replace(/-/g, ' ') }}
+              {{ idToGroup(item.id) }}
             </span>
           </div>
         </button>
