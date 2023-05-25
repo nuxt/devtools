@@ -65,10 +65,6 @@ export function parseReadablePath(path: string, root: string) {
   }
 }
 
-export function parseExpressRoute(route: string) {
-  return route.split(/(:\w+[\?\*]?)/).filter(Boolean)
-}
-
 export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: AsyncDataOptions<T>) {
   const nuxt = useNuxtApp()
   if (!nuxt.payload.unique)

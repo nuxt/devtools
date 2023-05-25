@@ -16,7 +16,27 @@ const parts = computed(() => {
   return _
 })
 
-const path = computed(() => parts.value.map((i, idx) => i[0] === ':' ? partsInput.value[idx] : i).join('').replace(/\/+/g, '/'))
+function parseExpressRoute(route: string) {
+  return route
+    .split(/(:\w+[\?\*]?(?:\(\))?)/)
+    .filter(Boolean)
+    .map(i =>
+      i[0] === ':'
+        ? i.replace(/\(\)$/, '?')
+        : i,
+    )
+}
+
+const path = computed(() => parts.value
+  .map(
+    (i, idx) =>
+      i[0] === ':'
+        ? partsInput.value[idx]
+        : i,
+  )
+  .join('')
+  .replace(/\/+/g, '/'),
+)
 const hasWildcard = computed(() => props.route.path.includes(':'))
 
 function navigate() {
