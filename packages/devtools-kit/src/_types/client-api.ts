@@ -8,7 +8,7 @@ import type { HookInfo, PluginMetric, VueInspectorClient, VueInspectorData } fro
 
 export interface NuxtDevtoolsClientHooks {
   /**
-   * When the devtools navigates, used for persisting the current tab
+   * When the Devtools navigates, used for persisting the current tab
    */
   'devtools:navigate': (path: string) => void
   /**
