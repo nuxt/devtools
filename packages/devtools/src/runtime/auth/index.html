@@ -1,0 +1,24 @@
+<div id="message">Authing...</div>
+
+<script>
+const query = new URLSearchParams(location.search)
+const token = query.get('token')
+const el = document.getElementById('message')
+
+if (!token) {
+  el.innerHTML = 'No token found, please double check your URL.'
+}
+else {
+  // TODO: verify token
+  localStorage.setItem('__nuxt_dev_token__', token)
+
+  const bc = new BroadcastChannel('__nuxt_dev_token__')
+  bc.postMessage({
+    event: 'new-token',
+    data: token,
+  })
+
+  el.innerHTML = 'Authed, please close this tab.'
+  window.close()
+}
+</script>

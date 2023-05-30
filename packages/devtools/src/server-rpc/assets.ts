@@ -4,7 +4,7 @@ import { imageMeta } from 'image-meta'
 import fg from 'fast-glob'
 import type { AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupAssetsRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
 
   return {
@@ -67,7 +67,9 @@ export function setupAssetsRPC({ nuxt }: NuxtDevtoolsServerContext) {
         return undefined
       }
     },
-    async writeStaticAssets(files: { name: string; data: string }[], path: string) {
+    async writeStaticAssets(token: string, files: { name: string; data: string }[], path: string) {
+      await ensureDevAuthToken(token)
+
       const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + path)
 
       return await Promise.all(

@@ -3,10 +3,14 @@ import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
+import boxen from 'boxen'
+import c from 'picocolors'
 import { logger } from '@nuxt/kit'
 
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
+import { getDevAuthToken } from '../dev-auth'
+import { ROUTE_AUTH } from '../constant'
 
 export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
@@ -142,6 +146,28 @@ export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoo
     restartNuxt(hard = true) {
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
+    },
+    async requestForAuth(info: string) {
+      const token = await getDevAuthToken()
+
+      const message = [
+        `A browser is requesting permissions of ${c.bold(c.yellow('writing files and running commands'))} from the DevTools UI.`,
+        c.bold(info),
+        '',
+        'Please open the following URL in the browser:',
+        c.bold(c.green(`http://localhost:${nuxt.options.devServer.port}${ROUTE_AUTH}?token=${token}`)),
+      ]
+
+      // eslint-disable-next-line no-console
+      console.log(`\n${boxen(message.join('\n'), {
+        padding: 1,
+        borderColor: 'yellow',
+        borderStyle: 'round',
+        title: 'Permission Request',
+      })}\n`)
+    },
+    async verifyAuthToken(token: string) {
+      return token === await getDevAuthToken()
     },
   } satisfies Partial<ServerFunctions>
 }

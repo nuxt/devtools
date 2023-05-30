@@ -22,6 +22,11 @@ export interface NuxtDevtoolsServerContext {
    */
   refresh: (event: keyof ServerFunctions) => void
 
+  /**
+   * Ensure dev auth token is valid, throw if not
+   */
+  ensureDevAuthToken: (token: string) => Promise<void>
+
   extendServerRpc: <ClientFunctions = {}, ServerFunctions = {}>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
 

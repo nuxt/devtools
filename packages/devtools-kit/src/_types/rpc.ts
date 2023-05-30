@@ -31,11 +31,11 @@ export interface ServerFunctions {
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
   getPackageManager(): Promise<PackageManagerName>
   getNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<string[] | undefined>
-  runNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<{ processId: string } | undefined>
+  runNpmCommand(token: string, command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<{ processId: string } | undefined>
 
   // Terminal
   getTerminals(): TerminalInfo[]
-  getTerminalDetail(id: string): TerminalInfo | undefined
+  getTerminalDetail(token: string, id: string): TerminalInfo | undefined
   runTerminalAction(id: string, action: TerminalAction): Promise<boolean>
 
   // Storage
@@ -48,21 +48,23 @@ export interface ServerFunctions {
   // Analyze
   getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>
   generateAnalyzeBuildName(): Promise<string>
-  startAnalyzeBuild(name: string): Promise<string>
-  clearAnalyzeBuilds(names?: string[]): Promise<void>
+  startAnalyzeBuild(token: string, name: string): Promise<string>
+  clearAnalyzeBuilds(token: string, names?: string[]): Promise<void>
 
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
-  writeStaticAssets(file: { name: string; data: string }[], path: string): Promise<string[]>
+  writeStaticAssets(token: string, file: { name: string; data: string }[], path: string): Promise<string[]>
 
   // Actions
   customTabAction(name: string, action: number): Promise<boolean>
-  runWizard<T extends WizardActions>(name: T, ...args: GetWizardArgs<T>): Promise<void>
+  runWizard<T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>
+  requestForAuth(info?: string): Promise<void>
+  verifyAuthToken(token: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
-  installNuxtModule(name: string, dry?: boolean): Promise<InstallModuleReturn>
-  uninstallNuxtModule(name: string, dry?: boolean): Promise<InstallModuleReturn>
+  installNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
+  uninstallNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
 }
 
 export interface ClientFunctions {

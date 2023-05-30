@@ -10,7 +10,7 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_CLIENT } from './constant'
+import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_CLIENT } from './constant'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -68,6 +68,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     // serve the front end in production
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
+    server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
   })
 
   const integrations = [

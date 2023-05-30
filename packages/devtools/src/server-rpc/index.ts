@@ -7,6 +7,7 @@ import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
 import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { WS_EVENT_NAME } from '../constant'
+import { getDevAuthToken } from '../dev-auth'
 import { setupStorageRPC } from './storage'
 import { setupAssetsRPC } from './assets'
 import { setupNpmRPC } from './npm'
@@ -67,6 +68,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
+    async ensureDevAuthToken(token: string) {
+      if (token !== await getDevAuthToken())
+        throw new Error('Invalid dev auth token.')
+    },
   }
 
   // @ts-expect-error untyped
