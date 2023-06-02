@@ -20,7 +20,7 @@ export interface ServerFunctions {
   getServerHooks(): HookInfo[]
   getServerLayouts(): NuxtLayout[]
   getStaticAssets(): Promise<AssetInfo[]>
-  getServerRoutes(): Promise<ServerRouteInfo[]>
+  getServerRoutes(): ServerRouteInfo[]
   getServerApp(): NuxtApp | undefined
 
   // Options

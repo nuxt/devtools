@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { ServerRouteInfo } from '~/../src/types'
 
 definePageMeta({
   icon: 'carbon-cloud',
@@ -23,7 +24,7 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
+const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path))
 const search = ref('')
 
 const filtered = computed(() => {
@@ -32,6 +33,22 @@ const filtered = computed(() => {
   if (!search.value)
     return serverRoutes.value
   return fuse.value.search(search.value).map(i => i.item)
+})
+
+const filterByGroup = computed(() => {
+  const routes = filtered.value || []
+  const groups = routes.reduce((acc, route) => {
+    const group = route.type || 'other'
+    if (!acc[group])
+      acc[group] = []
+    acc[group].push(route)
+    return acc
+  }, {} as Record<string, ServerRouteInfo[]>)
+
+  return Object.entries(groups).map(([group, routes]) => ({
+    group,
+    routes,
+  }))
 })
 </script>
 
@@ -45,29 +62,39 @@ const filtered = computed(() => {
         </div>
       </Navbar>
 
-      <template v-for="item of filtered" :key="item.id">
-        <NuxtLink
-          flex="~ gap-2" items-center hover-bg-active px2 py1
-          :class="[{ 'bg-active': selected?.path === item.path }]"
-          :to="{ query: { path: item.path } }"
+      <template v-if="filterByGroup.length > 1">
+        <NSectionBlock
+          v-for="group, i of filterByGroup"
+          :key="group.group"
+          :text="group.group"
+          :open="i === 0"
         >
-          <div w-12 flex-none text-right>
-            <Badge
-              :class="getRequestMethodClass(item.method || '*')"
-              title="updates available"
-              v-text="(item.method || '*').toUpperCase()"
+          <NCard>
+            <ServerRouteListItem
+              v-for="item, index of group.routes"
+              :key="item.filepath"
+              :item="item"
+              :selected="selected"
+              :divider="index !== group.routes.length - 1"
             />
-          </div>
-          <span font-mono text-sm>{{ item.route }}</span>
-        </NuxtLink>
-        <div x-divider />
+          </NCard>
+        </NSectionBlock>
+      </template>
+
+      <template v-else>
+        <ServerRouteListItem
+          v-for="item of filtered"
+          :key="item.filepath"
+          :item="item"
+          :selected="selected"
+        />
       </template>
     </template>
     <template #right>
       <KeepAlive :max="10">
         <ServerRouteDetails
           v-if="selected"
-          :key="selected.path"
+          :key="selected.filepath"
           :route="selected"
         />
       </KeepAlive>
