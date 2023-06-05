@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { CommandItem } from '~/composables/state-commands'
 
 const show = ref(false)
 const search = ref('')
 
-const items = useCommands()
+const rootItems = useCommands()
+const overrideItems = ref<CommandItem[] | undefined>()
+const items = computed(() => overrideItems.value || rootItems.value)
 
-const groups = ['all', 'fixed', 'tab', 'action', 'doc', 'other']
-const currentGroup = ref(groups[0])
-const groupItems = computed(() => {
-  if (currentGroup.value === 'all')
-    return items.value
-
-  if (currentGroup.value === 'other')
-    return items.value.filter(i => !groups.includes(i.id.split(':')[0]))
-
-  return items.value.filter(i => i.id.startsWith(currentGroup.value))
-})
-
-const fuse = computed(() => new Fuse(groupItems.value, {
+const fuse = computed(() => new Fuse(items.value, {
   keys: [
     'id',
     'title',
@@ -26,11 +17,10 @@ const fuse = computed(() => new Fuse(groupItems.value, {
   distance: 50,
 }))
 
-const filtered = computed(() => {
-  if (search.value)
-    return fuse.value.search(search.value).map(i => i.item)
-  return groupItems.value || []
-})
+const filtered = computed(() => search.value
+  ? fuse.value.search(search.value).map(i => i.item)
+  : (items.value || []),
+)
 
 const selectedIndex = ref(0)
 
@@ -51,38 +41,62 @@ function scrollToITem() {
   })
 }
 
-useEventListener('keydown', (e) => {
+useEventListener('keydown', async (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault()
+    overrideItems.value = undefined
+    search.value = ''
     show.value = !show.value
     return
   }
 
-  if (show.value) {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+  if (!show.value)
+    return
+
+  switch (e.key) {
+    case 'ArrowDown':
+    case 'ArrowUp':
       e.preventDefault()
       moveSelected(e.key === 'ArrowDown' ? 1 : -1)
-    }
+      break
 
-    if (e.key === 'Enter') {
+    case 'Enter': {
       const item = filtered.value[selectedIndex.value]
       if (item) {
         e.preventDefault()
-        item.action()
-        show.value = false
+        const result = await item.action()
+        if (!result) {
+          overrideItems.value = undefined
+          search.value = ''
+          show.value = false
+        }
+        else {
+          overrideItems.value = result
+        }
       }
+      break
     }
 
-    if (e.key === 'Escape')
-      show.value = false
+    case 'Escape': {
+      e.preventDefault()
+      if (overrideItems.value) {
+        overrideItems.value = undefined
+        search.value = ''
+      }
+      else {
+        show.value = false
+      }
+      break
+    }
   }
 })
 
-function idToGroup(str: string) {
-  const [firstGroup, ...rest] = str.split(':')
-  const groupName = groups.includes(firstGroup) ? firstGroup : 'other'
-  const items = [groupName, ...rest.slice(0, -1)].reverse().map(item => item.replace(/-/g, ' '))
-  return items.join(' . ')
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Backspace' && !search.value && overrideItems.value) {
+    e.preventDefault()
+    overrideItems.value = undefined
+    search.value = ''
+  }
 }
 </script>
 
@@ -90,22 +104,13 @@ function idToGroup(str: string) {
   <NDialog v-model="show" relative h-md w-xl of-hidden>
     <div h-full flex="~ col">
       <header border="b base" flex-none>
-        <div relative>
-          <NTextInput
-            v-model="search"
-            placeholder="Type to search..."
-            class="rounded-none py3 px2! ring-0!" n="lg green borderless"
-          />
-          <NSelect
-            v-model="currentGroup"
-            absolute bottom-0 right-0 top-0
-            class="rounded-none border-none op-50 ring-0!"
-          >
-            <option v-for="group of groups" :key="group" :value="group">
-              {{ group }}
-            </option>
-          </NSelect>
-        </div>
+        <NTextInput
+          v-model="search"
+          placeholder="Type to search..."
+          class="rounded-none py3 px2! ring-0!"
+          n="green borderless"
+          @keydown="onKeyDown"
+        />
       </header>
       <div flex-auto of-auto p2 flex="~ col">
         <button
@@ -119,13 +124,11 @@ function idToGroup(str: string) {
             flex="~ items-center justify-between" rounded px3 py2
             :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op50'"
           >
-            <span flex items-center gap2 capitalize>
+            <span flex items-center gap2>
               <TabIcon text-xl :icon="item.icon" :title="item.title" />
               {{ item.title }}
             </span>
-            <span text-xs>
-              {{ idToGroup(item.id) }}
-            </span>
+            <NIcon v-if="selectedIndex === idx" icon="i-carbon-text-new-line scale-x--100" />
           </div>
         </button>
         <div v-if="!filtered.length" h-full flex items-center justify-center gap-2 text-xl>
@@ -141,12 +144,6 @@ function idToGroup(str: string) {
       <footer border="t base" flex="~ none justify-between items-center gap-4" pointer-events-none px4 py2>
         <div text-xs flex="~ items-center gap2">
           <NButton n="xs" px1>
-            <NIcon icon="tabler-arrow-back" />
-          </NButton>
-          <span op75>to select</span>
-        </div>
-        <div text-xs flex="~ items-center gap2">
-          <NButton n="xs" px1>
             <NIcon icon="carbon-arrow-down" />
           </NButton>
           <NButton n="xs" px1>
@@ -158,7 +155,13 @@ function idToGroup(str: string) {
           <NButton n="xs" px1>
             Esc
           </NButton>
-          <span op75>to close</span>
+          <span op75>to {{ overrideItems ? 'go back' : 'close' }}</span>
+        </div>
+        <div text-xs flex="~ items-center gap2">
+          <NButton n="xs" px1>
+            <NIcon icon="i-carbon-text-new-line scale-x--100" />
+          </NButton>
+          <span op75>to select</span>
         </div>
       </footer>
     </div>

@@ -1,18 +1,17 @@
-import { randomStr } from '@antfu/utils'
+import { capitalize, randomStr } from '@antfu/utils'
 import type { MaybeRefOrGetter } from 'vue'
 
 export interface CommandItem {
   id: string
   title: string
   icon?: string
-  action: () => void
+  action: () => void | CommandItem[] | Promise<CommandItem[]>
 }
 
 const registeredCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem[]>>())
 
 export function useCommands() {
   const tabs = useEnabledTabs()
-  const docs = useNuxtDocs()
   const router = useRouter()
 
   const fixedCommands: CommandItem[] = [
@@ -20,7 +19,17 @@ export function useCommands() {
       id: 'fixed:settings',
       title: 'Settings',
       icon: 'carbon-settings-adjust',
-      action: () => router.push('/settings'),
+      action: () => {
+        router.push('/settings')
+      },
+    },
+    {
+      id: 'fixed:docs',
+      title: 'Nuxt Documentations',
+      icon: 'logos-nuxt-icon',
+      action: () => {
+        return getNuxtDocsCommands()
+      },
     },
   ]
 
@@ -46,7 +55,6 @@ export function useCommands() {
       ...tabCommands.value,
       ...Array.from(registeredCommands.values())
         .flatMap(i => toValue(i)),
-      ...docs.value ?? [],
     ]
   })
 }
@@ -61,16 +69,19 @@ export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
   })
 }
 
-export function useNuxtDocs() {
-  return useAsyncState<CommandItem[]>('getNuxtDocs', async () => {
-    // TODO: change url when possible
+let _nuxtDocsCommands: CommandItem[] | undefined
+
+export async function getNuxtDocsCommands() {
+  if (!_nuxtDocsCommands) {
     const list = await $fetch<any[]>('https://cdn.jsdelivr.net/gh/arashsheyda/nuxt@docs-list/docs-list.json')
-    return list.map(i => ({
-      ...i,
+    _nuxtDocsCommands = list.map(i => ({
+      id: i.id,
+      title: capitalize(i.title),
       icon: 'carbon-document',
       action: () => {
         window.open(i.path, '_blank')
       },
     }))
-  })
+  }
+  return _nuxtDocsCommands
 }
