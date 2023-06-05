@@ -3,7 +3,7 @@ import { UAParser } from 'ua-parser-js'
 
 export const devAuthToken = ref<string | null>(localStorage.getItem('__nuxt_dev_token__'))
 
-const isAuthed = ref(false)
+export const isDevAuthed = ref(false)
 
 const bc = new BroadcastChannel('__nuxt_dev_token__')
 
@@ -13,13 +13,13 @@ bc.addEventListener('message', (e) => {
     rpc.verifyAuthToken(token)
       .then((result) => {
         devAuthToken.value = result ? token : null
-        isAuthed.value = result
+        isDevAuthed.value = result
       })
   }
 })
 
 export async function ensureDevAuthToken() {
-  if (isAuthed.value)
+  if (isDevAuthed.value)
     return devAuthToken.value!
 
   if (!devAuthToken.value) {
@@ -50,8 +50,8 @@ export async function ensureDevAuthToken() {
     }
   }
 
-  isAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
-  if (!isAuthed.value) {
+  isDevAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
+  if (!isDevAuthed.value) {
     devAuthToken.value = null
     showNotification({
       message: 'Invalid auth token, action canceled',

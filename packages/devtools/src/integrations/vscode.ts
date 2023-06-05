@@ -140,6 +140,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       title: 'VS Code',
       icon: 'bxl-visual-studio',
       category: 'modules',
+      requireAuth: true,
       view: !installed
         ? {
             type: 'launch',
