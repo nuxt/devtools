@@ -1,9 +1,10 @@
-import { capitalize, randomStr } from '@antfu/utils'
+import { randomStr } from '@antfu/utils'
 import type { MaybeRefOrGetter } from 'vue'
 
 export interface CommandItem {
   id: string
   title: string
+  description?: string
   icon?: string
   action: () => void | CommandItem[] | Promise<CommandItem[]>
 }
@@ -71,15 +72,24 @@ export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
 
 let _nuxtDocsCommands: CommandItem[] | undefined
 
+const docsIcons = [
+  [':components:', 'i-carbon-assembly-cluster'],
+  [':modules:', 'i-carbon-cube'],
+  [':commands:', 'i-carbon-terminal'],
+  [':directory-structure:', 'i-carbon-folder'],
+  [':composables:', 'i-carbon-function'],
+  [':getting-started:', 'i-carbon-idea'],
+  [':api:', 'carbon-api-1'],
+]
+
 export async function getNuxtDocsCommands() {
   if (!_nuxtDocsCommands) {
-    const list = await $fetch<any[]>('https://cdn.jsdelivr.net/gh/arashsheyda/nuxt@docs-list/docs-list.json')
+    const list = await import('../data/nuxt-docs.json').then(i => i.default)
     _nuxtDocsCommands = list.map(i => ({
-      id: i.id,
-      title: capitalize(i.title),
-      icon: 'carbon-document',
+      ...i,
+      icon: docsIcons.find(([k]) => i.id.includes(k))?.[1] || 'i-carbon-document-multiple-01',
       action: () => {
-        window.open(i.path, '_blank')
+        window.open(i.url, '_blank')
       },
     }))
   }

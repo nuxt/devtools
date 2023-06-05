@@ -41,7 +41,20 @@ function scrollToITem() {
   })
 }
 
-useEventListener('keydown', async (e) => {
+async function enterItem(item: CommandItem) {
+  const result = await item.action()
+  if (!result) {
+    overrideItems.value = undefined
+    search.value = ''
+    show.value = false
+  }
+  else {
+    overrideItems.value = result
+    search.value = ''
+  }
+}
+
+useEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault()
     overrideItems.value = undefined
@@ -64,15 +77,7 @@ useEventListener('keydown', async (e) => {
       const item = filtered.value[selectedIndex.value]
       if (item) {
         e.preventDefault()
-        const result = await item.action()
-        if (!result) {
-          overrideItems.value = undefined
-          search.value = ''
-          show.value = false
-        }
-        else {
-          overrideItems.value = result
-        }
+        enterItem(item)
       }
       break
     }
@@ -117,18 +122,19 @@ function onKeyDown(e: KeyboardEvent) {
           v-for="item, idx of filtered"
           :id="item.id"
           :key="item.id"
-          @click="item.action(), show = false"
+          @click="enterItem(item)"
           @mouseover="selectedIndex = idx"
         >
           <div
-            flex="~ items-center justify-between" rounded px3 py2
-            :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op50'"
+            flex="~ gap-2 items-center justify-between" rounded px3 py2
+            :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op80'"
           >
-            <span flex items-center gap2>
-              <TabIcon text-xl :icon="item.icon" :title="item.title" />
-              {{ item.title }}
+            <TabIcon :icon="item.icon" :title="item.title" flex-none text-xl />
+            <span flex flex-auto items-center gap2 of-hidden>
+              <span ws-nowrap>{{ item.title }}</span>
+              <span of-hidden truncate ws-nowrap text-sm op50>{{ item.description }}</span>
             </span>
-            <NIcon v-if="selectedIndex === idx" icon="i-carbon-text-new-line scale-x--100" />
+            <NIcon v-if="selectedIndex === idx" icon="i-carbon-text-new-line scale-x--100" flex-none />
           </div>
         </button>
         <div v-if="!filtered.length" h-full flex items-center justify-center gap-2 text-xl>
