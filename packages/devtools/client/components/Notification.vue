@@ -2,29 +2,30 @@
 const show = ref(false)
 const icon = ref<string | undefined>()
 const text = ref<string | undefined>()
+const classes = ref<string | undefined>()
 
-provideNotification((_text, _icon, duration = 1500) => {
-  text.value = _text
-  icon.value = _icon
+provideNotificationFn((data) => {
+  text.value = data.message
+  icon.value = data.icon
+  classes.value = data.classes ?? 'text-primary'
   show.value = true
   setTimeout(() => {
     show.value = false
-  }, duration)
+  }, data.duration ?? 1500)
 })
 </script>
 
 <template>
   <div
-
     fixed left-0 right-0 top-0 z-50 text-center
     :class="show ? '' : 'pointer-events-none overflow-hidden'"
   >
     <div
       border="~ base"
       flex="~ inline gap2"
-      m-3 inline-block items-center rounded px-4 py-1 text-primary transition-all duration-300 bg-base
+      m-3 inline-block items-center rounded px-4 py-1 transition-all duration-300 bg-base
       :style="show ? {} : { transform: 'translateY(-300%)' }"
-      :class="show ? 'shadow' : 'shadow-none'"
+      :class="[show ? 'shadow' : 'shadow-none', classes]"
     >
       <div v-if="icon" :class="icon" />
       <div>{{ text }}</div>

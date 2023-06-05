@@ -1,67 +1,108 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import type { CommandItem } from '~/composables/state-commands'
 
 const show = ref(false)
 const search = ref('')
 
-const items = useCommands()
+const rootItems = useCommands()
+const overrideItems = ref<CommandItem[] | undefined>()
+const items = computed(() => overrideItems.value || rootItems.value)
 
 const fuse = computed(() => new Fuse(items.value, {
   keys: [
+    'id',
     'title',
   ],
-  threshold: 0.3,
+  distance: 50,
 }))
 
-const filtered = computed(() => {
-  const result = search.value
-    ? fuse.value.search(search.value).map(i => i.item)
-    : (items.value || [])
-  return result
-})
+const filtered = computed(() => search.value
+  ? fuse.value.search(search.value).map(i => i.item)
+  : (items.value || []),
+)
 
-const elements = ref<any[]>([])
 const selectedIndex = ref(0)
 
 watch(search, () => {
   selectedIndex.value = 0
+  scrollToITem()
 })
 
 function moveSelected(delta: number) {
   selectedIndex.value = ((selectedIndex.value + delta) + filtered.value.length) % filtered.value.length
+  scrollToITem()
+}
 
-  const item = elements.value[selectedIndex.value]
-  item.scrollIntoView({
+function scrollToITem() {
+  const item = document.getElementById(filtered.value[selectedIndex.value]?.id)
+  item?.scrollIntoView({
     block: 'center',
   })
+}
+
+async function enterItem(item: CommandItem) {
+  const result = await item.action()
+  if (!result) {
+    overrideItems.value = undefined
+    search.value = ''
+    show.value = false
+  }
+  else {
+    overrideItems.value = result
+    search.value = ''
+  }
 }
 
 useEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault()
+    overrideItems.value = undefined
+    search.value = ''
     show.value = !show.value
     return
   }
 
-  if (show.value) {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+  if (!show.value)
+    return
+
+  switch (e.key) {
+    case 'ArrowDown':
+    case 'ArrowUp':
       e.preventDefault()
       moveSelected(e.key === 'ArrowDown' ? 1 : -1)
-    }
+      break
 
-    if (e.key === 'Enter') {
+    case 'Enter': {
       const item = filtered.value[selectedIndex.value]
       if (item) {
         e.preventDefault()
-        item.action()
-        show.value = false
+        enterItem(item)
       }
+      break
     }
 
-    if (e.key === 'Escape')
-      show.value = false
+    case 'Escape': {
+      e.preventDefault()
+      if (overrideItems.value) {
+        overrideItems.value = undefined
+        search.value = ''
+      }
+      else {
+        show.value = false
+      }
+      break
+    }
   }
 })
+
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Backspace' && !search.value && overrideItems.value) {
+    e.preventDefault()
+    overrideItems.value = undefined
+    search.value = ''
+  }
+}
 </script>
 
 <template>
@@ -71,27 +112,29 @@ useEventListener('keydown', (e) => {
         <NTextInput
           v-model="search"
           placeholder="Type to search..."
-          class="rounded-none py3 px2! ring-0!" n="lg green borderless"
+          class="rounded-none py3 px2! ring-0!"
+          n="green borderless"
+          @keydown="onKeyDown"
         />
       </header>
       <div flex-auto of-auto p2 flex="~ col">
         <button
           v-for="item, idx of filtered"
           :id="item.id"
-          ref="elements"
           :key="item.id"
-          @click="item.action(), show = false"
+          @click="enterItem(item)"
           @mouseover="selectedIndex = idx"
         >
           <div
-            flex="~ items-center justify-between" rounded px3 py2
-            :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op50'"
+            flex="~ gap-2 items-center justify-between" rounded px3 py2
+            :class="selectedIndex === idx ? 'op100 bg-primary/10 text-primary saturate-100 bg-active' : 'op80'"
           >
-            <span flex items-center gap2>
-              <TabIcon text-xl :icon="item.icon" :title="item.title" />
-              {{ item.title }}
+            <TabIcon :icon="item.icon" :title="item.title" flex-none text-xl />
+            <span flex flex-auto items-center gap2 of-hidden>
+              <span ws-nowrap>{{ item.title }}</span>
+              <span of-hidden truncate ws-nowrap text-sm op50>{{ item.description }}</span>
             </span>
-            <NIcon v-if="selectedIndex === idx" icon="tabler-arrow-back" />
+            <NIcon v-if="selectedIndex === idx" icon="i-carbon-text-new-line scale-x--100" flex-none />
           </div>
         </button>
         <div v-if="!filtered.length" h-full flex items-center justify-center gap-2 text-xl>
@@ -107,12 +150,6 @@ useEventListener('keydown', (e) => {
       <footer border="t base" flex="~ none justify-between items-center gap-4" pointer-events-none px4 py2>
         <div text-xs flex="~ items-center gap2">
           <NButton n="xs" px1>
-            <NIcon icon="tabler-arrow-back" />
-          </NButton>
-          <span op75>to select</span>
-        </div>
-        <div text-xs flex="~ items-center gap2">
-          <NButton n="xs" px1>
             <NIcon icon="carbon-arrow-down" />
           </NButton>
           <NButton n="xs" px1>
@@ -124,7 +161,13 @@ useEventListener('keydown', (e) => {
           <NButton n="xs" px1>
             Esc
           </NButton>
-          <span op75>to close</span>
+          <span op75>to {{ overrideItems ? 'go back' : 'close' }}</span>
+        </div>
+        <div text-xs flex="~ items-center gap2">
+          <NButton n="xs" px1>
+            <NIcon icon="i-carbon-text-new-line scale-x--100" />
+          </NButton>
+          <span op75>to select</span>
         </div>
       </footer>
     </div>

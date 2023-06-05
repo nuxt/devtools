@@ -72,6 +72,7 @@ onMounted(() => {
         <NuxtPage />
       </NuxtLayout>
       <CommandPalette />
+      <AuthConfirmDialog />
     </div>
     <DisconnectIndicator />
     <RestartDialogs />

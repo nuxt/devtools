@@ -7,7 +7,7 @@ import Git from 'simple-git'
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
+export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
   let initalized: Promise<any> | undefined
@@ -83,7 +83,9 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
         builds,
       }
     },
-    async clearAnalyzeBuilds(names?: string[]) {
+    async clearAnalyzeBuilds(token: string, names?: string[]) {
+      await ensureDevAuthToken(token)
+
       if (!names) {
         await fsp.rm(analyzeDir, { recursive: true, force: true })
       }
@@ -95,6 +97,9 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
       refresh('getAnalyzeBuildInfo')
     },
     generateAnalyzeBuildName,
-    startAnalyzeBuild,
+    async startAnalyzeBuild(token: string, ...args) {
+      await ensureDevAuthToken(token)
+      return startAnalyzeBuild(...args)
+    },
   } satisfies Partial<ServerFunctions>
 }

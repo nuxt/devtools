@@ -4,8 +4,9 @@ import type { MaybeRefOrGetter } from 'vue'
 export interface CommandItem {
   id: string
   title: string
+  description?: string
   icon?: string
-  action: () => void
+  action: () => void | CommandItem[] | Promise<CommandItem[] | void>
 }
 
 const registeredCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem[]>>())
@@ -19,7 +20,17 @@ export function useCommands() {
       id: 'fixed:settings',
       title: 'Settings',
       icon: 'carbon-settings-adjust',
-      action: () => router.push('/settings'),
+      action: () => {
+        router.push('/settings')
+      },
+    },
+    {
+      id: 'fixed:docs',
+      title: 'Nuxt Documentations',
+      icon: 'logos-nuxt-icon',
+      action: () => {
+        return getNuxtDocsCommands()
+      },
     },
   ]
 
@@ -57,4 +68,30 @@ export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
   onUnmounted(() => {
     registeredCommands.delete(id)
   })
+}
+
+let _nuxtDocsCommands: CommandItem[] | undefined
+
+const docsIcons = [
+  [':components:', 'i-carbon-assembly-cluster'],
+  [':modules:', 'i-carbon-cube'],
+  [':commands:', 'i-carbon-terminal'],
+  [':directory-structure:', 'i-carbon-folder'],
+  [':composables:', 'i-carbon-function'],
+  [':getting-started:', 'i-carbon-idea'],
+  [':api:', 'carbon-api-1'],
+]
+
+export async function getNuxtDocsCommands() {
+  if (!_nuxtDocsCommands) {
+    const list = await import('../data/nuxt-docs.json').then(i => i.default)
+    _nuxtDocsCommands = list.map(i => ({
+      ...i,
+      icon: docsIcons.find(([k]) => i.id.includes(k))?.[1] || 'i-carbon-document-multiple-01',
+      action: () => {
+        window.open(i.url, '_blank')
+      },
+    }))
+  }
+  return _nuxtDocsCommands
 }

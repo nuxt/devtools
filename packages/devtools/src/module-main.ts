@@ -10,7 +10,8 @@ import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_CLIENT } from './constant'
+import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT } from './constant'
+import { getDevAuthToken } from './dev-auth'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -68,6 +69,28 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     // serve the front end in production
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
+    server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
+    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res, next) => {
+      const search = req.url?.split('?')[1]
+      if (!search) {
+        res.statusCode = 400
+        res.end('No token provided')
+      }
+      const query = new URLSearchParams(search)
+      const token = query.get('token')
+      if (!token) {
+        res.statusCode = 400
+        res.end('No token provided')
+      }
+      if (token === await getDevAuthToken()) {
+        res.statusCode = 200
+        res.end('Valid token')
+      }
+      else {
+        res.statusCode = 403
+        res.end('Invalid token')
+      }
+    })
   })
 
   const integrations = [

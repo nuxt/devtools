@@ -29,6 +29,14 @@ export interface ModuleCustomTab {
    * Advanced options. You don't usually need this.
    */
   extraTabVNode?: VNode
+
+  /**
+   * Require local authentication to access the tab
+   * It's highly recommended to enable this if the tab have sensitive information or have access to the OS
+   *
+   * @default false
+   */
+  requireAuth?: boolean
 }
 
 export interface ModuleLaunchView {

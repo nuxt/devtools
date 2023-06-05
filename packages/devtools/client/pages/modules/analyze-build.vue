@@ -36,7 +36,7 @@ async function start() {
 
   processAnalyzeBuildInfo.value = {
     name: buildNameInput.value,
-    processId: await rpc.startAnalyzeBuild(buildNameInput.value),
+    processId: await rpc.startAnalyzeBuild(await ensureDevAuthToken(), buildNameInput.value),
   }
   if (shouldGotoTerminal.value)
     gotoTerminal()
@@ -53,7 +53,7 @@ function formatDuration(build: AnalyzeBuildMeta) {
 
 registerCommands(() => [
   {
-    id: 'analyze-build: start',
+    id: 'action:analyze-build: start',
     title: 'Start a new analyze build',
     icon: 'i-carbon-edge-node',
     action: start,

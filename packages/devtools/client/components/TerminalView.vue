@@ -28,7 +28,7 @@ onMounted(async () => {
     fitAddon.fit()
   })
 
-  info.value = await rpc.getTerminalDetail(props.id)
+  info.value = await rpc.getTerminalDetail(await ensureDevAuthToken(), props.id)
   if (info.value?.buffer)
     term.write(info.value.buffer)
 

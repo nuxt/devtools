@@ -38,6 +38,10 @@ function formatFileSize(bytes: number) {
 function formatDuration(build: AnalyzeBuildMeta) {
   return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
+
+async function clear(name: string) {
+  return rpc.clearAnalyzeBuilds(await ensureDevAuthToken(), [name])
+}
 </script>
 
 <template>
@@ -111,7 +115,7 @@ function formatDuration(build: AnalyzeBuildMeta) {
         </div>
       </div>
       <div flex-auto />
-      <NButton n="rose" icon="carbon-delete" @click="rpc.clearAnalyzeBuilds([current.name])">
+      <NButton n="rose" icon="carbon-delete" @click="clear(current.name)">
         Delete this report
       </NButton>
     </div>
