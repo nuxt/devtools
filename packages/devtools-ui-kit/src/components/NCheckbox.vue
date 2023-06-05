@@ -27,7 +27,7 @@ const checked = useVModel(props, 'modelValue', emit, { passive: true })
       :disabled="disabled"
       @keypress.enter="checked = !checked"
     >
-    <span class="n-checkbox-box n-checked:n-checkbox-box-checked peer-active:n-active-base peer-focus-visible:n-focus-base n-transition">
+    <span class="peer-focus-visible:n-focus-base n-checkbox-box n-checked:n-checkbox-box-checked peer-active:n-active-base n-transition">
       <NIcon class="n-checkbox-icon scale-0 transform op0 n-transition n-checked:scale-100 n-checked:op100" />
     </span>
     <span :class="checked ? '' : 'op50'" class="n-transition"><slot /></span>
