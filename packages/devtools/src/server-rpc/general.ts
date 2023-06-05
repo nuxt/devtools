@@ -8,7 +8,7 @@ import { logger } from '@nuxt/kit'
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 
-export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext): Partial<ServerFunctions> {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []

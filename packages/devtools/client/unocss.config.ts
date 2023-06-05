@@ -46,7 +46,7 @@ export default defineConfig({
   transformers: [
     transformerDirectives(),
   ],
-  extraContent: {
+  content: {
     filesystem: [
       'content/*.md',
     ],
