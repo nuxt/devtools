@@ -48,7 +48,7 @@ export interface ServerRouteInfo {
   route: string
   filepath: string
   method?: string
-  type: 'api' | 'route' | 'external'
+  type: 'api' | 'route' | 'runtime'
 }
 
 export interface Payload {

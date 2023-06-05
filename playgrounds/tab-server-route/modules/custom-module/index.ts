@@ -1,7 +1,7 @@
 import { addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-  async setup(_, nuxt) {
+  async setup(_) {
     const { resolve } = createResolver(import.meta.url)
 
     const runtime = './runtime'

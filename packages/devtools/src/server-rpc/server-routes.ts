@@ -45,7 +45,7 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
             route: item.route,
             filepath: item.handler,
             method: item.method,
-            type: 'external',
+            type: 'runtime',
           })),
       ] as ServerRouteInfo[]
     })()

@@ -20,11 +20,18 @@ withDefaults(defineProps<{
       <div w-12 flex-none text-left>
         <Badge
           :class="getRequestMethodClass(item.method || '*')"
-          title="updates available"
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>
-      <span font-mono text-sm>{{ item.route }}</span>
+      <span flex-auto font-mono text-sm>{{ item.route }}</span>
+      <Badge
+        v-if="item.type === 'runtime'"
+        flex-none
+        class="bg-indigo-400:10 text-indigo-400"
+        title="added at runtime"
+      >
+        runtime
+      </Badge>
     </NuxtLink>
     <div v-if="divider" x-divider />
   </div>

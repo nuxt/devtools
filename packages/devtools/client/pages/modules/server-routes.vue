@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import type { ServerRouteInfo } from '~/../src/types'
 
 definePageMeta({
   icon: 'carbon-cloud',
@@ -24,31 +23,20 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
+const showRuntime = ref(false)
+
 const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path))
 const search = ref('')
 
 const filtered = computed(() => {
-  if (!serverRoutes.value)
-    return []
-  if (!search.value)
-    return serverRoutes.value
-  return fuse.value.search(search.value).map(i => i.item)
-})
-
-const filterByGroup = computed(() => {
-  const routes = filtered.value || []
-  const groups = routes.reduce((acc, route) => {
-    const group = route.type || 'other'
-    if (!acc[group])
-      acc[group] = []
-    acc[group].push(route)
-    return acc
-  }, {} as Record<string, ServerRouteInfo[]>)
-
-  return Object.entries(groups).map(([group, routes]) => ({
-    group,
-    routes,
-  }))
+  const result = !serverRoutes.value
+    ? []
+    : !search.value
+        ? serverRoutes.value
+        : fuse.value.search(search.value).map(i => i.item)
+  if (!showRuntime.value)
+    return result.filter(i => i.type !== 'runtime')
+  return result
 })
 </script>
 
@@ -56,39 +44,22 @@ const filterByGroup = computed(() => {
   <PanelLeftRight>
     <template #left>
       <Navbar v-model:search="search" pb2>
-        <div flex="~ gap1" text-sm op50>
-          <span v-if="search">{{ filtered.length }} matched · </span>
-          <span>{{ serverRoutes?.length }} routes in total</span>
+        <div flex="~ gap1" text-sm>
+          <span v-if="search" op50>{{ filtered.length }} matched · </span>
+          <span op50>{{ serverRoutes?.length }} routes in total</span>
+          <div flex-auto />
+          <NCheckbox v-model="showRuntime" n="primary sm">
+            <span op75>Runtime routes</span>
+          </NCheckbox>
         </div>
       </Navbar>
 
-      <template v-if="filterByGroup.length > 1">
-        <NSectionBlock
-          v-for="group, i of filterByGroup"
-          :key="group.group"
-          :text="group.group"
-          :open="i === 0"
-        >
-          <NCard>
-            <ServerRouteListItem
-              v-for="item, index of group.routes"
-              :key="item.filepath"
-              :item="item"
-              :selected="selected"
-              :divider="index !== group.routes.length - 1"
-            />
-          </NCard>
-        </NSectionBlock>
-      </template>
-
-      <template v-else>
-        <ServerRouteListItem
-          v-for="item of filtered"
-          :key="item.filepath"
-          :item="item"
-          :selected="selected"
-        />
-      </template>
+      <ServerRouteListItem
+        v-for="item of filtered"
+        :key="item.filepath"
+        :item="item"
+        :selected="selected"
+      />
     </template>
     <template #right>
       <KeepAlive :max="10">
