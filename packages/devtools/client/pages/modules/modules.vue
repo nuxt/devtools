@@ -15,7 +15,7 @@ const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/mai
 
 registerCommands(() => [
   {
-    id: 'modules:install',
+    id: 'action:modules:install',
     title: 'Install a new module',
     icon: 'i-carbon-intent-request-create ',
     action: () => {
