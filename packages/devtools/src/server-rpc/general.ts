@@ -12,7 +12,7 @@ import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
 import { ROUTE_AUTH } from '../constant'
 
-export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -74,6 +74,9 @@ export function setupGeneralRPC({ nuxt, refresh, openInEditorHooks }: NuxtDevtoo
   return {
     getServerConfig() {
       return nuxt.options
+    },
+    getModuleOptions() {
+      return options
     },
     getServerApp() {
       return serverApp

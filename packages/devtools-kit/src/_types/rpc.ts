@@ -1,7 +1,7 @@
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
-import type { NuxtDevToolsUIOptions } from './options'
+import type { ModuleOptions, NuxtDevToolsUIOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
@@ -12,6 +12,7 @@ import type { InstallModuleReturn } from './server-ctx'
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig(): NuxtOptions
+  getModuleOptions(): ModuleOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>
   getAutoImports(): AutoImportsWithMetadata

@@ -69,6 +69,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     extendServerRpc,
     openInEditorHooks: [],
     async ensureDevAuthToken(token: string) {
+      if (options.disableAuthorization)
+        return
       if (token !== await getDevAuthToken())
         throw new Error('Invalid dev auth token.')
     },
