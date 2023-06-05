@@ -7,7 +7,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['uploaded'])
-const showNotification = useNotification()
 
 const visible = ref(false)
 const lastTarget = ref()
@@ -51,12 +50,23 @@ function setFiles(data: FileList | null) {
         existingFileNames.push(newFilename)
       }
       else {
-        if (file.type === '')
-          showNotification('Folders are not supported yet', 'carbon:face-dissatisfied')
-        else if (uploadTypes.some(type => file.type.includes(type)))
+        if (file.type === '') {
+          showNotification({
+            message: 'Folders are not supported yet',
+            icon: 'carbon:face-dissatisfied',
+            classes: 'text-orange',
+          })
+        }
+        else if (uploadTypes.some(type => file.type.includes(type))) {
           newFiles.push(file)
-        else
-          showNotification(`"${file.type}" file type is not allowed`, 'carbon:face-dizzy')
+        }
+        else {
+          showNotification({
+            message: `"${file.type}" file type is not allowed`,
+            icon: 'carbon:face-dissatisfied',
+            classes: 'text-orange',
+          })
+        }
       }
     }
     files.value = [...files.value, ...newFiles]
@@ -81,14 +91,21 @@ async function uploadFiles() {
       data,
     })
   }
-  await rpc.writeStaticAssets([...readyFiles], props.folder).then(() => {
+  await rpc.writeStaticAssets(await ensureDevAuthToken(), [...readyFiles], props.folder).then(() => {
     emit('uploaded')
     close()
-    showNotification('Files uploaded successfully!', 'carbon:face-cool')
+    showNotification({
+      message: 'Files uploaded successfully!',
+      icon: 'i-carbon:checkmark',
+    })
   }).catch((error) => {
     console.error(error)
     close()
-    showNotification('Upload failed!', 'carbon:face-dizzy')
+    showNotification({
+      message: `Error uploading files: ${error}`,
+      icon: 'i-carbon-warning',
+      classes: 'text-red',
+    })
   })
   visible.value = false
 }

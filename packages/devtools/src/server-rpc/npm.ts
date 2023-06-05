@@ -7,7 +7,7 @@ import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { checkForUpdateOf } from '../npm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageManagerName, PackageUpdateInfo, ServerFunctions } from '../types'
 
-export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   let detectPromise: Promise<PackageManagerName> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
@@ -62,8 +62,13 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
     },
     getPackageManager,
     getNpmCommand,
-    runNpmCommand,
-    async installNuxtModule(name: string, dry = true) {
+    async runNpmCommand(token, ...args) {
+      await ensureDevAuthToken(token)
+      return runNpmCommand(...args)
+    },
+    async installNuxtModule(token: string, name: string, dry = true) {
+      await ensureDevAuthToken(token)
+
       const commands = (await getNpmCommand('install', name, { dev: true }))!
 
       const filepath = nuxt.options._nuxtConfigFile
@@ -108,7 +113,9 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         processId,
       }
     },
-    async uninstallNuxtModule(name: string, dry = true) {
+    async uninstallNuxtModule(token: string, name: string, dry = true) {
+      await ensureDevAuthToken(token)
+
       const commands = (await getNpmCommand('uninstall', name))!
 
       const filepath = nuxt.options._nuxtConfigFile

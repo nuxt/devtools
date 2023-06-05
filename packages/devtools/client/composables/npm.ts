@@ -53,7 +53,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
     state.value = 'running'
 
-    processId.value = (await rpc.runNpmCommand('update', name, options))?.processId
+    processId.value = (await rpc.runNpmCommand(await ensureDevAuthToken(), 'update', name, options))?.processId
 
     return processId.value
   }

@@ -33,4 +33,12 @@ export function setupClientRPC() {
         router.push(path)
     },
   } satisfies ClientFunctions)
+
+  rpc.getModuleOptions()
+    .then((options) => {
+      if (options.disableAuthorization) {
+        isDevAuthed.value = true
+        devAuthToken.value ||= 'disabled'
+      }
+    })
 }

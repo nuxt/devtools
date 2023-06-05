@@ -6,7 +6,7 @@ export interface CommandItem {
   title: string
   description?: string
   icon?: string
-  action: () => void | CommandItem[] | Promise<CommandItem[]>
+  action: () => void | CommandItem[] | Promise<CommandItem[] | void>
 }
 
 const registeredCommands = reactive(new Map<string, MaybeRefOrGetter<CommandItem[]>>())

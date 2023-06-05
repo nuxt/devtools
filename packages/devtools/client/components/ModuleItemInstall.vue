@@ -14,7 +14,7 @@ const isUninstallable = computed(() => installedInfo.value && installedInfo.valu
 
 async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
   const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
-  const result = await method(item.npm, true)
+  const result = await method(await ensureDevAuthToken(), item.npm, true)
 
   if (!result.commands)
     return
@@ -30,7 +30,7 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
 
   emit('start')
 
-  await method(item.npm, false)
+  await method(await ensureDevAuthToken(), item.npm, false)
 }
 
 const anyObj = {} as any

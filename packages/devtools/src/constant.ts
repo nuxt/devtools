@@ -3,6 +3,8 @@ import type { ModuleOptions } from './types'
 export const ROUTE_PATH = '/__nuxt_devtools__'
 export const ROUTE_ENTRY = `${ROUTE_PATH}/entry`
 export const ROUTE_CLIENT = `${ROUTE_PATH}/client`
+export const ROUTE_AUTH = `${ROUTE_PATH}/auth`
+export const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`
 export const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
 export const WS_EVENT_NAME = 'nuxt:devtools:rpc'
 

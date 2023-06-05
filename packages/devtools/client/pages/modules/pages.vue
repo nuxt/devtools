@@ -159,8 +159,8 @@ function navigateToRoute(path: string) {
       },
       {
         label: 'Enable Routing',
-        handle() {
-          return rpc.runWizard('enablePages')
+        async handle() {
+          return rpc.runWizard(await ensureDevAuthToken(), 'enablePages')
         },
       },
     ]"
