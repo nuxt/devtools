@@ -11,9 +11,10 @@ const draggingOffset = ref({ x: 0, y: 0 })
 
 function onPointerDown(e: PointerEvent) {
   isDragging.value = true
+  const { left, top } = el.value!.getBoundingClientRect()
   draggingOffset.value = {
-    x: e.clientX - el.value!.offsetLeft,
-    y: e.clientY - el.value!.offsetTop,
+    x: e.clientX - left,
+    y: e.clientY - top,
   }
 }
 
@@ -95,7 +96,7 @@ const style = computed(() => {
 
   switch (area.value) {
     case 'T':
-      left = Math.cos(deg) * midX * 1.5 + midX
+      left = Math.cos(deg) * midX * 1.1 + midX
       left = Math.max(MARGIN + halfWidth, Math.min(left, windowSize.value.width - MARGIN - halfWidth))
       top = MARGIN + halfHeight
       break
@@ -111,7 +112,7 @@ const style = computed(() => {
       break
     case 'B':
     default:
-      left = Math.cos(deg) * midX * 1.5 + midX
+      left = Math.cos(deg) * midX * 1.1 + midX
       left = Math.max(MARGIN + halfWidth, Math.min(left, windowSize.value.width - MARGIN - halfWidth))
       top = windowSize.value.height - MARGIN - halfHeight
   }
@@ -125,14 +126,12 @@ const style = computed(() => {
 
 <template>
   <div
-    ref="el"
     class="nuxt-devtools-floating"
     :style="style"
     :class="{ vertical: isVertical }"
-    @pointerdown="onPointerDown"
   >
     <div class="glowing" :style="isDragging ? 'opacity: 0 !important' : ''" />
-    <button class="panel">
+    <button ref="el" class="panel" @pointerdown="onPointerDown">
       <button class="icon-button nuxt-button" @click="togglePanel">
         <svg viewBox="0 0 324 324" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top:-1px; height: 1.2em; width: 1.2em;">
           <path d="M181.767 270H302.211C306.037 270 309.795 269.003 313.108 267.107C316.421 265.211 319.172 262.484 321.084 259.2C322.996 255.915 324.002 252.19 324 248.399C323.998 244.607 322.989 240.883 321.074 237.601L240.187 98.7439C238.275 95.4607 235.525 92.7342 232.213 90.8385C228.901 88.9429 225.143 87.9449 221.318 87.9449C217.494 87.9449 213.736 88.9429 210.424 90.8385C207.112 92.7342 204.361 95.4607 202.449 98.7439L181.767 134.272L141.329 64.7975C139.416 61.5145 136.664 58.7884 133.351 56.8931C130.038 54.9978 126.28 54 122.454 54C118.629 54 114.871 54.9978 111.558 56.8931C108.245 58.7884 105.493 61.5145 103.58 64.7975L2.92554 237.601C1.01067 240.883 0.00166657 244.607 2.06272e-06 248.399C-0.00166244 252.19 1.00407 255.915 2.91605 259.2C4.82803 262.484 7.57884 265.211 10.8918 267.107C14.2047 269.003 17.963 270 21.7886 270H97.3936C127.349 270 149.44 256.959 164.641 231.517L201.546 168.172L221.313 134.272L280.637 236.1H201.546L181.767 270ZM96.1611 236.065L43.3984 236.054L122.49 100.291L161.953 168.172L135.531 213.543C125.436 230.051 113.968 236.065 96.1611 236.065Z" fill="#00DC82" />
@@ -154,6 +153,8 @@ const style = computed(() => {
 
 <style scoped>
 .nuxt-devtools-floating {
+  width: 0;
+  left: 0;
   z-index: 2147483645;
   position: fixed;
   transform-origin: center center;
@@ -170,9 +171,6 @@ const style = computed(() => {
   line-height: 0.6em;
   opacity: 0.5;
 }
-.nuxt-devtools-floating.vertical {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
 
 .nuxt-devtools-floating.vertical .nuxt-button,
 .nuxt-devtools-floating.vertical .label,
@@ -181,6 +179,10 @@ const style = computed(() => {
 }
 
 .nuxt-devtools-floating .panel {
+  position: absolute;
+  left:0;
+  top:0;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,10 +194,11 @@ const style = computed(() => {
   backdrop-filter: blur(10px);
   color: var(--nuxt-devtools-widget-fg);
   box-shadow: 2px 2px 8px var(--nuxt-devtools-widget-shadow);
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .nuxt-devtools-floating.vertical .panel {
+  transform: translate(-50%, -50%) rotate(90deg);
   box-shadow: 2px -2px 8px var(--nuxt-devtools-widget-shadow);
 }
 
@@ -219,8 +222,8 @@ const style = computed(() => {
 
 .nuxt-devtools-floating .glowing {
   position: absolute;
-  left: 50%;
-  top: 30px;
+  left: 0;
+  top: 0;
   transform: translate(-50%, -50%);
   width: 160px;
   height: 160px;
