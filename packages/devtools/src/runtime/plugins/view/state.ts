@@ -19,6 +19,7 @@ export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-s
   route: '/',
   position: 'bottom',
   closeOnOutsideClick: false,
+  floatingPanelDegPosition: 0.9,
 })
 
 export function togglePanel() {

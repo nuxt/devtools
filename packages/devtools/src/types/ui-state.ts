@@ -9,6 +9,7 @@ export interface DevToolsFrameState {
   route: string
   position: 'left' | 'right' | 'bottom' | 'top'
   closeOnOutsideClick: boolean
+  floatingPanelDegPosition: number
 }
 
 export interface SocialPreviewResolved {

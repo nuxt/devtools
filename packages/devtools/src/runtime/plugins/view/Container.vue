@@ -27,7 +27,7 @@ const vars = computed(() => {
     '--nuxt-devtools-widget-bg': dark ? '#0C0C0C' : '#ffffff',
     '--nuxt-devtools-widget-fg': dark ? '#F5F5F5' : '#0C0C0C',
     '--nuxt-devtools-widget-border': dark ? '#0C0C0C' : '#efefef',
-    '--nuxt-devtools-widget-shadow': dark ? '2px 2px 8px rgba(0,0,0,0.3)' : '2px 2px 8px rgba(128,128,128,0.3)',
+    '--nuxt-devtools-widget-shadow': dark ? 'rgba(0,0,0,0.3)' : 'rgba(128,128,128,0.1)',
   }
 })
 </script>
@@ -36,5 +36,6 @@ const vars = computed(() => {
   <div :style="vars">
     <Frame v-if="initialized" :client="client" />
     <Floating />
+    <!-- <ToggleButton /> -->
   </div>
 </template>
