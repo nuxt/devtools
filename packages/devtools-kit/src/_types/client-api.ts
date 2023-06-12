@@ -41,6 +41,7 @@ export interface NuxtDevtoolsHostClient {
     instance?: VueInspectorClient
     enable: () => void
     disable: () => void
+    toggle: () => void
   }
 
   getClientHooksMetrics(): HookInfo[]
@@ -48,6 +49,11 @@ export interface NuxtDevtoolsHostClient {
 
   reloadPage(): void
   closeDevTools(): void
+
+  /**
+   * Refreshes the client
+   */
+  refreshState(): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {

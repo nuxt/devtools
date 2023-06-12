@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { DevToolsFrameState } from '../../../types'
 import { useObjectStorage } from './utils'
 
@@ -13,14 +13,21 @@ export const viewMode = ref<ViewMode>('default')
 export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {
   width: 80,
   height: 60,
-  bottom: 0,
+  top: 0,
   left: 0,
   open: false,
   route: '/',
   position: 'bottom',
   closeOnOutsideClick: false,
-  floatingPanelDegPosition: 0.9,
 })
+
+export const isInitialized = ref(state.value.open)
+if (!isInitialized.value) {
+  watch(() => state.value.open, (open) => {
+    if (open)
+      isInitialized.value = open
+  })
+}
 
 export function togglePanel() {
   if (state.value.open)

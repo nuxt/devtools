@@ -1,8 +1,9 @@
-import { createApp, h, markRaw } from 'vue'
+import { createApp, h, markRaw, shallowReactive } from 'vue'
 
 import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
-import type { NuxtDevtoolsHostClient } from '../../types'
+import type { NuxtDevtoolsHostClient, VueInspectorClient } from '../../types'
+import { viewMode } from './view/state'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
@@ -31,22 +32,73 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
   async function init() {
     const { closePanel, togglePanel } = await import('./view/state')
     const { createHooks } = await import('hookable')
-    const { default: Container } = await import('./view/Container.vue')
+    const { default: Main } = await import('./view/Main.vue')
 
-    const client: NuxtDevtoolsHostClient = markRaw({
+    const client: NuxtDevtoolsHostClient = shallowReactive({
       nuxt: markRaw(nuxt as any),
       appConfig: useAppConfig() as any,
       hooks: createHooks(),
       getClientHooksMetrics: () => Object.values(clientHooks),
       getClientPluginMetrics: () => {
-      // @ts-expect-error injected
+        // @ts-expect-error injected
         return globalThis.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
       },
+
       reloadPage() {
         location.reload()
       },
       closeDevTools: closePanel,
+      inspector: getInspectorInstance(),
+
+      refreshState(): NuxtDevtoolsHostClient {
+        if (!client.inspector)
+          client.inspector = getInspectorInstance()
+        return client
+      },
     })
+
+    function enableComponentInspector() {
+      window.__VUE_INSPECTOR__?.enable()
+      viewMode.value = 'component-inspector'
+    }
+
+    function disableComponentInspector() {
+      if (!window.__VUE_INSPECTOR__?.enabled)
+        return
+
+      window.__VUE_INSPECTOR__?.disable()
+      client?.hooks.callHook('host:inspector:close')
+      if (viewMode.value === 'component-inspector')
+        viewMode.value = 'default'
+    }
+
+    function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
+      const componentInspector = window.__VUE_INSPECTOR__ as VueInspectorClient
+
+      if (componentInspector) {
+        componentInspector.openInEditor = async (baseUrl, file, line, column) => {
+          disableComponentInspector()
+          await client.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
+        }
+        componentInspector.onUpdated = () => {
+          client.hooks.callHook('host:inspector:update', {
+            ...componentInspector.linkParams,
+            ...componentInspector.position,
+          })
+        }
+      }
+      return {
+        enable: enableComponentInspector,
+        disable: disableComponentInspector,
+        toggle: () => {
+          if (window.__VUE_INSPECTOR__?.enabled)
+            disableComponentInspector()
+          else
+            enableComponentInspector()
+        },
+        instance: componentInspector,
+      }
+    }
 
     const holder = document.createElement('div')
     holder.id = 'nuxt-devtools-container'
@@ -60,7 +112,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     })
 
     const app = createApp({
-      render: () => h(Container, { client }),
+      render: () => h(Main, { client }),
       devtools: {
         hide: true,
       },

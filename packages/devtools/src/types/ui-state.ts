@@ -3,13 +3,12 @@ import type { ModuleStaticInfo } from '@nuxt/devtools-kit/types'
 export interface DevToolsFrameState {
   width: number
   height: number
-  bottom: number
+  top: number
   left: number
   open: boolean
   route: string
   position: 'left' | 'right' | 'bottom' | 'top'
   closeOnOutsideClick: boolean
-  floatingPanelDegPosition: number
 }
 
 export interface SocialPreviewResolved {
