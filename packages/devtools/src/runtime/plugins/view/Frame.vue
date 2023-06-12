@@ -87,7 +87,7 @@ watch(viewMode, (mode) => {
   if (mode === 'component-inspector')
     props.client.inspector?.enable()
   else
-    props.client.inspector?.enable()
+    props.client.inspector?.disable()
 }, { immediate: true })
 
 watchEffect(() => {

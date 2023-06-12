@@ -18,12 +18,6 @@ export default defineNuxtPlugin(() => {
         if (client.value)
           client.value = { ...client.value }
       })
-      _client.hooks.hook('host:inspector:close', () => {
-        if (router.currentRoute.value.path === '/modules/custom-builtin-vscode')
-          return
-        if (router.currentRoute.value.path === '/__inspecting')
-          router.go(-1)
-      })
       _client.hooks.hook('host:inspector:update', (data) => {
         inspectorData.value = data
       })

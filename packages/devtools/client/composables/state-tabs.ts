@@ -32,7 +32,6 @@ export function useAllTabs() {
         if (!client.value?.inspector?.instance)
           return
         client.value.inspector.enable()
-        router.push('/__inspecting')
       },
     },
     ...(customTabs.value || []).filter(i => i.name.startsWith('builtin-')),

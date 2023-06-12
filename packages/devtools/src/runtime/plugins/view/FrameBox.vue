@@ -33,6 +33,7 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
   if (!isDragging.value)
     return
 
+  // REWORK THIS
   const alignSide = state.value.position === 'left' || state.value.position === 'right'
 
   if (isDragging.value === 'horizontal' || isDragging.value === 'both') {

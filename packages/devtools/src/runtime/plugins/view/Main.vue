@@ -18,7 +18,7 @@ const vars = computed(() => {
   return {
     '--nuxt-devtools-widget-bg': dark ? '#0C0C0C' : '#ffffff',
     '--nuxt-devtools-widget-fg': dark ? '#F5F5F5' : '#0C0C0C',
-    '--nuxt-devtools-widget-border': dark ? '#0C0C0C' : '#efefef',
+    '--nuxt-devtools-widget-border': dark ? '#3338' : '#efefef',
     '--nuxt-devtools-widget-shadow': dark ? 'rgba(0,0,0,0.3)' : 'rgba(128,128,128,0.1)',
   }
 })
@@ -90,7 +90,7 @@ onMounted(() => {
 const isVertical = computed(() => state.value.position === 'left' || state.value.position === 'right')
 
 const PANEL_MARGIN = 10
-const FRAME_MARGIN = 25
+const FRAME_MARGIN = 26
 
 const anchorPos = computed(() => {
   const halfWidth = (panelEl.value?.clientWidth || 0) / 2
@@ -207,7 +207,7 @@ const iframeStyle = computed(() => {
       </div>
       <template v-if="client.inspector">
         <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-        <button class="icon-button" @click="client.inspector?.toggle()">
+        <button class="icon-button" @click="client.inspector.toggle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style="height: 1.2em; width: 1.2em; opacity:0.5;"
@@ -231,7 +231,7 @@ const iframeStyle = computed(() => {
 }
 
 #nuxt-devtools-anchor .label {
-  padding: 0 8px;
+  padding: 0 7px 0 8px;
   font-size: 0.8em;
   line-height: 1em;
   display: flex;
@@ -241,7 +241,7 @@ const iframeStyle = computed(() => {
 }
 
 #nuxt-devtools-anchor .label .label-secondary {
-  font-size: 0.7em;
+  font-size: 0.8em;
   line-height: 0.6em;
   opacity: 0.5;
 }
@@ -254,7 +254,7 @@ const iframeStyle = computed(() => {
   transform: rotate(-90deg);
   flex-direction: column;
   gap: 2px;
-  padding: 0 9px;
+  padding: 0 12px;
 }
 
 #nuxt-devtools-anchor .panel {

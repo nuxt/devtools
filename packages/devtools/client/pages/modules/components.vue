@@ -9,7 +9,6 @@ definePageMeta({
 })
 
 const client = useClient()
-const router = useRouter()
 const components = useComponents()
 
 const {
@@ -20,7 +19,6 @@ function openComponentInspector() {
   if (!client.value?.inspector?.instance)
     return
   client.value.inspector.enable()
-  router.push('/__inspecting')
 }
 
 function toggleView() {
