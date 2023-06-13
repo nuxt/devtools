@@ -89,7 +89,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
     server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
-    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res, next) => {
+    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res) => {
       const search = req.url?.split('?')[1]
       if (!search) {
         res.statusCode = 400
