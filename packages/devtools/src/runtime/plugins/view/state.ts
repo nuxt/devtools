@@ -14,7 +14,7 @@ export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-s
   width: 80,
   height: 60,
   top: 0,
-  left: 0,
+  left: 50,
   open: false,
   route: '/',
   position: 'bottom',

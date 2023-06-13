@@ -11,6 +11,10 @@ defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
+const PANEL_MARGIN = 10
+const FRAME_MARGIN = 26
+const SNAP_THRESHOLD = 2
+
 const clientColorMode = useClientColorMode()
 
 const vars = computed(() => {
@@ -77,8 +81,8 @@ onMounted(() => {
           ? 'bottom'
           : 'left'
 
-    state.value.left = x / windowSize.width * 100
-    state.value.top = y / windowSize.height * 100
+    state.value.left = snapToPoints(x / windowSize.width * 100)
+    state.value.top = snapToPoints(y / windowSize.height * 100)
   })
   useEventListener(window, 'pointerup', () => {
     isDragging.value = false
@@ -87,10 +91,18 @@ onMounted(() => {
     isDragging.value = false
   })
 })
-const isVertical = computed(() => state.value.position === 'left' || state.value.position === 'right')
 
-const PANEL_MARGIN = 10
-const FRAME_MARGIN = 26
+function snapToPoints(value: number) {
+  if (value < 5)
+    return 0
+  if (value > 95)
+    return 100
+  if (Math.abs(value - 50) < SNAP_THRESHOLD)
+    return 50
+  return value
+}
+
+const isVertical = computed(() => state.value.position === 'left' || state.value.position === 'right')
 
 const anchorPos = computed(() => {
   const halfWidth = (panelEl.value?.clientWidth || 0) / 2
