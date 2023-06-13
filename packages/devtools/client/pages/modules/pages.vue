@@ -4,7 +4,10 @@ import { nextTick } from 'vue'
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Pages',
-  show: () => !!useClient().value,
+  show: () => {
+    const client = useClient()
+    return () => !!client.value
+  },
   order: 1,
 })
 
