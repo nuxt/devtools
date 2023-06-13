@@ -137,12 +137,13 @@ textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8885;
+  background: #8881;
+  transition: background 0.2s ease;
   border-radius: 1px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8886;
+  background: #8885;
 }
 
 .no-scrollbar::-webkit-scrollbar {

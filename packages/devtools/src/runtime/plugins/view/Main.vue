@@ -343,7 +343,7 @@ const iframeStyle = computed(() => {
   pointer-events: none;
   z-index: -1;
   border-radius: 9999px;
-  background-image: linear-gradient(-45deg,#00dc82,#36e4da,#0047e1);
+  background-image: linear-gradient(45deg,#00dc82,#36e4da,#0047e1);
   filter: blur(60px);
 }
 </style>
