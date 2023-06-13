@@ -4,6 +4,8 @@ import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient, VueInspectorClient } from '../../types'
 
+import { useClientColorMode } from './view/client'
+
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
 import { defineNuxtPlugin } from '#app'
@@ -34,6 +36,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     const { default: Main } = await import('./view/Main.vue')
 
     const isInspecting = ref(false)
+    const colorMode = useClientColorMode()
     const client: NuxtDevtoolsHostClient = shallowReactive({
       nuxt: markRaw(nuxt as any),
       appConfig: useAppConfig() as any,
@@ -49,6 +52,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
       },
       closeDevTools: closePanel,
       inspector: getInspectorInstance(),
+      colorMode,
 
       refreshState(): NuxtDevtoolsHostClient {
         if (!client.inspector)

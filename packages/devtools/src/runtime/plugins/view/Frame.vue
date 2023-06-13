@@ -50,6 +50,10 @@ function setupClient() {
     refreshReactivity()
   }, { deep: true })
 
+  watch(() => client.value.colorMode.value, () => {
+    refreshReactivity()
+  })
+
   // trigger update for route change
   client.value?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
     refreshReactivity()

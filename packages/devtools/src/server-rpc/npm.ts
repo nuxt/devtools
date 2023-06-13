@@ -45,7 +45,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
     }, {
       id: processId,
       name: `${command} ${packageName}`,
-      icon: 'i-mdi-npm-variant-outline text-rose',
+      icon: 'i-logos-npm-icon',
       restartable: false,
     })
 

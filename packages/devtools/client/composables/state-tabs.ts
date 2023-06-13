@@ -6,7 +6,6 @@ export function useAllTabs() {
   const customTabs = useCustomTabs()
   const settings = useDevToolsOptions()
   const router = useRouter()
-  const client = useClient()
 
   const builtin = computed(() => [
     ...router.getRoutes()
@@ -20,20 +19,20 @@ export function useAllTabs() {
           ...i.meta,
         }
       }),
-    <ModuleBuiltinTab>{
-      name: 'builtin-inspector',
-      title: 'Inspect Vue components',
-      icon: 'i-carbon-select-window',
-      category: 'app',
-      show() {
-        return () => !!client.value?.inspector?.instance
-      },
-      onClick() {
-        if (!client.value?.inspector?.instance)
-          return
-        client.value.inspector.enable()
-      },
-    },
+    // <ModuleBuiltinTab>{
+    //   name: 'builtin-inspector',
+    //   title: 'Inspect Vue components',
+    //   icon: 'i-tabler-focus-2',
+    //   category: 'app',
+    //   show() {
+    //     return () => !!client.value?.inspector?.instance
+    //   },
+    //   onClick() {
+    //     if (!client.value?.inspector?.instance)
+    //       return
+    //     client.value.inspector.enable()
+    //   },
+    // },
     ...(customTabs.value || []).filter(i => i.name.startsWith('builtin-')),
   ])
 

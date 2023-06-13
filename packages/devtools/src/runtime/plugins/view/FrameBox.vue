@@ -99,12 +99,14 @@ declare global {
 .nuxt-devtools-frame {
   position: fixed;
   z-index: 2147483645;
+  background: var(--nuxt-devtools-widget-bg);
 }
 
-.nuxt-devtools-frame iframe {
+.nuxt-devtools-frame :deep(iframe) {
   width: 100%;
   height: 100%;
   outline: none;
+  background: var(--nuxt-devtools-widget-bg);
   border: 1px solid rgba(125,125,125,0.2);
   border-radius: 10px;
 }

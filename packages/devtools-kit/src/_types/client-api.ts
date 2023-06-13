@@ -38,6 +38,8 @@ export interface NuxtDevtoolsHostClient {
   appConfig: AppConfig
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
+  colorMode: Ref<'dark' | 'light'>
+
   inspector?: {
     instance?: VueInspectorClient
     enable: () => void

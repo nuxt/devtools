@@ -42,7 +42,7 @@ function toggleView() {
         <NIconButton
           v-if="client?.inspector?.instance"
           text-lg
-          icon="i-carbon-select-window"
+          icon="i-tabler-focus-2"
           title="Inspect Vue components"
           @click="openComponentInspector"
         />

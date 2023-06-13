@@ -13,10 +13,7 @@ export default defineNuxtPlugin(() => {
       client.value = _client
 
       _client.hooks.hook('host:update:reactivity', () => {
-        // TODO: use triggerRef after: https://github.com/vuejs/core/pull/7507
-        // triggerRef(client)
-        if (client.value)
-          client.value = { ...client.value }
+        triggerRef(client)
       })
       _client.hooks.hook('host:inspector:update', (data) => {
         inspectorData.value = data

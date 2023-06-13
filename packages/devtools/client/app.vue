@@ -30,8 +30,18 @@ setupClientRPC()
 
 const client = useClient()
 const route = useRoute()
+const colorMode = useColorMode()
 const isUtilityView = computed(() => route.path.startsWith('/__'))
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
+
+watch(
+  () => client.value?.colorMode.value,
+  (mode) => {
+    if (mode)
+      colorMode.value = mode
+  },
+  { immediate: true },
+)
 
 addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
