@@ -7,8 +7,8 @@ import { defineNuxtPlugin } from '#app'
 import { useState } from '#imports'
 
 export default defineNuxtPlugin(() => {
-  // TODO: retrieve this in client
-  const state = useState('__nuxt_devtools__', () => {})
+  // record ssr start time
+  const state = useState('__nuxt_devtools__', () => ({}))
   state.value = {
     timeSsrStart: Date.now(),
   }

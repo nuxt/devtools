@@ -46,13 +46,13 @@ function refreshReactivity() {
 function setupClient() {
   const client = computed(() => props.client)
 
-  watch(() => client.value?.nuxt.payload, () => {
+  watch(() => [
+    client.value?.nuxt.payload,
+    client.value.colorMode.value,
+    client.value.loadingTimeMetrics,
+  ], () => {
     refreshReactivity()
   }, { deep: true })
-
-  watch(() => client.value.colorMode.value, () => {
-    refreshReactivity()
-  })
 
   // trigger update for route change
   client.value?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {

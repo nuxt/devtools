@@ -1,4 +1,4 @@
-import { createApp, h, markRaw, ref, shallowReactive } from 'vue'
+import { createApp, h, markRaw, ref, shallowReactive, watchEffect } from 'vue'
 
 import { setupHooksDebug } from '../shared/hooks'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
@@ -7,11 +7,7 @@ import { useClientColorMode } from './view/client'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
-import { defineNuxtPlugin } from '#app'
-
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore tsconfig
-import { useAppConfig } from '#imports'
+import { defineNuxtPlugin, useAppConfig, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
   // TODO: Stackblitz support?
@@ -31,10 +27,24 @@ export default defineNuxtPlugin((nuxt: any) => {
   timeMetric.pluginInit = Date.now()
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
+  const router = useRouter()
 
-  nuxt.hook('app:mounted', () => timeMetric.appLoad = Date.now())
-  nuxt.hook('page:start', () => timeMetric.pageStart = Date.now())
-  nuxt.hook('page:finish', () => timeMetric.pageEnd = Date.now())
+  nuxt.hook('app:mounted', () => {
+    timeMetric.appLoad = Date.now()
+  })
+  router.beforeEach(() => {
+    timeMetric.pageStart = Date.now()
+  })
+  nuxt.hook('page:finish', () => {
+    timeMetric.pageEnd = Date.now()
+  })
+
+  const ssrState = useState('__nuxt_devtools__', () => ({}))
+
+  watchEffect(() => {
+    if (ssrState.value.timeSsrStart)
+      timeMetric.ssrStart = ssrState.value.timeSsrStart
+  })
 
   async function init() {
     const { closePanel, togglePanel } = await import('./view/state')

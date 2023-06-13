@@ -197,15 +197,20 @@ const iframeStyle = computed(() => {
 })
 
 const time = computed(() => {
+  let type = ''
   const metric = props.client.loadingTimeMetrics
   let time = -1
-  if (metric.pageEnd && metric.pageStart)
+  if (metric.pageEnd && metric.pageStart) {
     time = metric.pageEnd - metric.pageStart
-  else if (metric.appLoad && metric.appInit)
+    type = 'Page'
+  }
+  else if (metric.appLoad && metric.appInit) {
     time = metric.appLoad - metric.appInit
+    type = 'App'
+  }
   if (time < 0)
-    return ['', '-']
-  return millisecondToHumanreadable(time)
+    return [type, '', '-']
+  return [type, ...millisecondToHumanreadable(time)]
 })
 </script>
 
@@ -227,12 +232,12 @@ const time = computed(() => {
         </svg>
       </button>
       <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-      <div class="label">
+      <div class="label" :title="`${time[0]} load time`">
         <div class="label-main">
-          {{ time[0] }}
+          {{ time[1] }}
         </div>
         <span class="label-secondary">
-          {{ time[1] }}
+          {{ time[2] }}
         </span>
       </div>
       <template v-if="client.inspector">
@@ -272,6 +277,10 @@ const time = computed(() => {
   align-items: center;
 }
 
+#nuxt-devtools-anchor .label .label-main {
+  opacity: 0.8;
+}
+
 #nuxt-devtools-anchor .label .label-secondary {
   font-size: 0.8em;
   line-height: 0.6em;
@@ -282,23 +291,11 @@ const time = computed(() => {
   transform: rotate(-90deg);
 }
 
-#nuxt-devtools-anchor .nuxt-button {
-  transition: filter 0.2s ease, opacity 0.2s ease;
-  filter: saturate(0);
-  opacity: 0.6;
-}
-
-#nuxt-devtools-anchor.active .nuxt-button,
-#nuxt-devtools-anchor .nuxt-button:hover {
-  filter: saturate(1);
-  opacity: 1;
-}
-
 #nuxt-devtools-anchor.vertical .label {
   transform: rotate(-90deg);
   flex-direction: column;
   gap: 2px;
-  padding: 0 12px;
+  padding: 0 10px;
 }
 
 #nuxt-devtools-anchor .panel {
@@ -311,7 +308,7 @@ const time = computed(() => {
   align-items: center;
   gap: 2px;
   height: 30px;
-  padding: 2px 4px;
+  padding: 2px 2px 2px 4px;
   border: 1px solid var(--nuxt-devtools-widget-border);
   border-radius: 100px;
   background-color: var(--nuxt-devtools-widget-bg);
