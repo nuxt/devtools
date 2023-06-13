@@ -39,6 +39,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       return true
     }
     catch (e) {
+      console.error(`Failed to open file "${file}" in VS Code Server`)
       console.error(e)
       return false
     }
