@@ -38,6 +38,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'client',
   })
 
+  addPlugin({
+    src: join(runtimeDir, 'plugins/devtools.server'),
+    mode: 'server',
+  })
+
+  // Inject inline script
+  nuxt.hook('nitro:config', (config) => {
+    config.externals = config.externals || {}
+    config.externals.inline = config.externals.inline || []
+    config.externals.inline.push(join(runtimeDir, 'nitro'))
+    config.virtual = config.virtual || {}
+    config.virtual['#nuxt-devtools-inline'] = `export const script = \`
+window.__NUXT_DEVTOOLS_TIME_METRIC__ = window.__NUXT_DEVTOOLS_TIME_METRIC__ || {}
+window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
+\``
+    config.plugins = config.plugins || []
+    config.plugins.push(join(runtimeDir, 'nitro/inline'))
+  })
+
   const {
     vitePlugin,
     ...ctx

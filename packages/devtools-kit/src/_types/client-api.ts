@@ -5,7 +5,7 @@ import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { ServerFunctions } from './rpc'
-import type { HookInfo, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
+import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 
 export interface NuxtDevtoolsClientHooks {
   /**
@@ -48,6 +48,7 @@ export interface NuxtDevtoolsHostClient {
     isEnabled: Ref<boolean>
   }
 
+  loadingTimeMetrics: LoadingTimeMetric
   getClientHooksMetrics(): HookInfo[]
   getClientPluginMetrics(): PluginMetric[]
 

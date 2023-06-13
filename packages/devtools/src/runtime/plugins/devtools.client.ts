@@ -1,8 +1,7 @@
 import { createApp, h, markRaw, ref, shallowReactive } from 'vue'
 
-import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
-import type { NuxtDevtoolsHostClient, VueInspectorClient } from '../../types'
+import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
 
 import { useClientColorMode } from './view/client'
 
@@ -14,7 +13,7 @@ import { defineNuxtPlugin } from '#app'
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
 
-export default defineNuxtPlugin((nuxt: Nuxt) => {
+export default defineNuxtPlugin((nuxt: any) => {
   // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
@@ -28,7 +27,14 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     }
   }
 
+  const timeMetric = window.__NUXT_DEVTOOLS_TIME_METRIC__ = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
+  timeMetric.pluginInit = Date.now()
+
   const clientHooks = setupHooksDebug(nuxt.hooks)
+
+  nuxt.hook('app:mounted', () => timeMetric.appLoad = Date.now())
+  nuxt.hook('page:start', () => timeMetric.pageStart = Date.now())
+  nuxt.hook('page:finish', () => timeMetric.pageEnd = Date.now())
 
   async function init() {
     const { closePanel, togglePanel } = await import('./view/state')
@@ -43,17 +49,15 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
       hooks: createHooks(),
       getClientHooksMetrics: () => Object.values(clientHooks),
       getClientPluginMetrics: () => {
-        // @ts-expect-error injected
-        return globalThis.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
+        return window.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
       },
-
+      loadingTimeMetrics: timeMetric,
       reloadPage() {
         location.reload()
       },
       closeDevTools: closePanel,
       inspector: getInspectorInstance(),
       colorMode,
-
       refreshState(): NuxtDevtoolsHostClient {
         if (!client.inspector)
           client.inspector = getInspectorInstance()
@@ -126,3 +130,11 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
   setTimeout(init, 1)
 })
+
+declare global {
+  interface Window {
+    __NUXT_DEVTOOLS_PLUGINS_METRIC__?: PluginMetric[]
+    __NUXT_DEVTOOLS_TIME_METRIC__?: LoadingTimeMetric
+    __VUE_INSPECTOR__?: VueInspectorClient
+  }
+}

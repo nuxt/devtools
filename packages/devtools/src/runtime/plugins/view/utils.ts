@@ -48,3 +48,13 @@ export function useEventListener(target: EventTarget, type: string, listener: an
   target.addEventListener(type, listener, options)
   getCurrentScope() && onScopeDispose(() => target.removeEventListener(type, listener, options))
 }
+
+export function millisecondToHumanreadable(ms: number): [number, string] {
+  if (ms < 1000)
+    return [+ms.toFixed(0), 'ms']
+  if (ms < 1000 * 60)
+    return [+(ms / 1000).toFixed(1), 's']
+  if (ms < 1000 * 60 * 60)
+    return [+(ms / 1000 / 60).toFixed(1), 'min']
+  return [+(ms / 1000 / 60 / 60).toFixed(1), 'hour']
+}

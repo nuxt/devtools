@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { state, togglePanel } from './state'
-import { useEventListener } from './utils'
+import { millisecondToHumanreadable, useEventListener } from './utils'
 import FrameBox from './FrameBox.vue'
 
 const props = defineProps<{
@@ -11,7 +11,7 @@ const props = defineProps<{
 }>()
 
 const PANEL_MARGIN = 10
-const FRAME_MARGIN = 26
+const FRAME_MARGIN = 24
 const SNAP_THRESHOLD = 2
 
 const vars = computed(() => {
@@ -195,6 +195,18 @@ const iframeStyle = computed(() => {
 
   return style
 })
+
+const time = computed(() => {
+  const metric = props.client.loadingTimeMetrics
+  let time = -1
+  if (metric.pageEnd && metric.pageStart)
+    time = metric.pageEnd - metric.pageStart
+  else if (metric.appLoad && metric.appInit)
+    time = metric.appLoad - metric.appInit
+  if (time < 0)
+    return ['', '-']
+  return millisecondToHumanreadable(time)
+})
 </script>
 
 <template>
@@ -217,9 +229,11 @@ const iframeStyle = computed(() => {
       <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
       <div class="label">
         <div class="label-main">
-          42
+          {{ time[0] }}
         </div>
-        <span class="label-secondary">ms</span>
+        <span class="label-secondary">
+          {{ time[1] }}
+        </span>
       </div>
       <template v-if="client.inspector">
         <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
@@ -296,7 +310,7 @@ const iframeStyle = computed(() => {
   justify-content: center;
   align-items: center;
   gap: 2px;
-  height: 35px;
+  height: 30px;
   padding: 2px 4px;
   border: 1px solid var(--nuxt-devtools-widget-border);
   border-radius: 100px;
