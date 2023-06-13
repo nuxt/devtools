@@ -1,9 +1,8 @@
-import { createApp, h, markRaw, shallowReactive } from 'vue'
+import { createApp, h, markRaw, ref, shallowReactive } from 'vue'
 
 import type { Nuxt } from 'nuxt/schema'
 import { setupHooksDebug } from '../shared/hooks'
 import type { NuxtDevtoolsHostClient, VueInspectorClient } from '../../types'
-import { viewMode } from './view/state'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
@@ -34,6 +33,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
     const { createHooks } = await import('hookable')
     const { default: Main } = await import('./view/Main.vue')
 
+    const isInspecting = ref(false)
     const client: NuxtDevtoolsHostClient = shallowReactive({
       nuxt: markRaw(nuxt as any),
       appConfig: useAppConfig() as any,
@@ -59,7 +59,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
     function enableComponentInspector() {
       window.__VUE_INSPECTOR__?.enable()
-      viewMode.value = 'component-inspector'
+      isInspecting.value = true
     }
 
     function disableComponentInspector() {
@@ -68,8 +68,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
 
       window.__VUE_INSPECTOR__?.disable()
       client?.hooks.callHook('host:inspector:close')
-      if (viewMode.value === 'component-inspector')
-        viewMode.value = 'default'
+      isInspecting.value = false
     }
 
     function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
@@ -87,7 +86,8 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
           })
         }
       }
-      return {
+      return markRaw({
+        isEnabled: isInspecting,
         enable: enableComponentInspector,
         disable: disableComponentInspector,
         toggle: () => {
@@ -97,7 +97,7 @@ export default defineNuxtPlugin((nuxt: Nuxt) => {
             enableComponentInspector()
         },
         instance: componentInspector,
-      }
+      })
     }
 
     const holder = document.createElement('div')

@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
-import { state, togglePanel, viewMode } from './state'
+import { state, togglePanel } from './state'
 import { useEventListener } from './utils'
 import FrameBox from './FrameBox.vue'
 import { useClientColorMode } from './client'
@@ -223,7 +223,7 @@ const iframeStyle = computed(() => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style="height: 1.2em; width: 1.2em; opacity:0.5;"
-            :style="viewMode === 'component-inspector' ? 'opacity:1;color:#00dc82' : ''"
+            :style="client.inspector.isEnabled.value ? 'opacity:1;color:#00dc82' : ''"
             viewBox="0 0 24 24"
           ><path fill="currentColor" d="m13 1l.001 3.062A8.004 8.004 0 0 1 19.938 11H23v2l-3.062.001a8.004 8.004 0 0 1-6.937 6.937L13 23h-2v-3.062a8.004 8.004 0 0 1-6.938-6.937L1 13v-2h3.062A8.004 8.004 0 0 1 11 4.062V1h2Zm-1 5a6 6 0 1 0 0 12a6 6 0 0 0 0-12Zm0 4a2 2 0 1 1 0 4a2 2 0 0 1 0-4Z" /></svg>
         </button>

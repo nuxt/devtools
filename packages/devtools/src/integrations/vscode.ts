@@ -39,8 +39,10 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       return true
     }
     catch (e) {
-      console.error(`Failed to open file "${file}" in VS Code Server`)
-      console.error(e)
+      // eslint-disable-next-line no-console
+      console.debug(`Failed to open file "${file}" in VS Code Server`)
+      // eslint-disable-next-line no-console
+      console.debug(e)
       return false
     }
   })

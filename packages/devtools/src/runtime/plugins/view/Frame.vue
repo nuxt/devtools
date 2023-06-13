@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
-import { closePanel, state, viewMode } from './state'
+import { closePanel, state } from './state'
 import { useEventListener } from './utils'
 
 const props = defineProps<{
@@ -77,18 +77,12 @@ function updateClient() {
 }
 
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && (viewMode.value === 'component-inspector' || window.__VUE_INSPECTOR__?.enabled)) {
+  if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {
+    e.preventDefault()
     props.client.inspector?.disable()
     closePanel()
   }
 })
-
-watch(viewMode, (mode) => {
-  if (mode === 'component-inspector')
-    props.client.inspector?.enable()
-  else
-    props.client.inspector?.disable()
-}, { immediate: true })
 
 watchEffect(() => {
   if (!state.value.open)

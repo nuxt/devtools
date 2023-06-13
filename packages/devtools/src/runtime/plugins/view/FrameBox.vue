@@ -2,11 +2,11 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { ref } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, isInitialized, state, viewMode } from './state'
+import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, isInitialized, state } from './state'
 import { useEventListener } from './utils'
 import Frame from './Frame.vue'
 
-defineProps<{
+const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
@@ -16,7 +16,7 @@ const isDragging = ref<false | 'vertical' | 'horizontal' | 'both'>(false)
 useEventListener(window, 'mousedown', (e: MouseEvent) => {
   if (!state.value.closeOnOutsideClick)
     return
-  if (!state.value.open || isDragging.value || viewMode.value !== 'default')
+  if (!state.value.open || isDragging.value || props.client.inspector?.isEnabled.value)
     return
 
   const matched = e.composedPath().find((_el) => {
@@ -79,21 +79,19 @@ declare global {
 </script>
 
 <template>
-  <div v-show="state.open && viewMode !== 'component-inspector'" class="nuxt-devtools-frame">
+  <div v-show="state.open && !client.inspector?.isEnabled.value" class="nuxt-devtools-frame">
     <Frame
       v-if="isInitialized"
       :client="client"
     />
-    <template v-if="viewMode === 'default'">
-      <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-      <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-      <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-      <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-      <div v-if="state.position !== 'top' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-      <div v-if="state.position !== 'top' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-      <div v-if="state.position !== 'bottom' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-      <div v-if="state.position !== 'bottom' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-    </template>
+    <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
+    <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
+    <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+    <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
+    <div v-if="state.position !== 'top' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+    <div v-if="state.position !== 'top' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+    <div v-if="state.position !== 'bottom' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+    <div v-if="state.position !== 'bottom' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
   </div>
 </template>
 

@@ -1,4 +1,5 @@
 import type {} from '@nuxt/schema'
+import type { Ref } from 'vue'
 import type { AppConfig } from 'nuxt/schema'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { Hookable } from 'hookable'
@@ -42,6 +43,7 @@ export interface NuxtDevtoolsHostClient {
     enable: () => void
     disable: () => void
     toggle: () => void
+    isEnabled: Ref<boolean>
   }
 
   getClientHooksMetrics(): HookInfo[]
