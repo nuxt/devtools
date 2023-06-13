@@ -138,16 +138,20 @@ const anchorStyle = computed(() => ({ left: `${anchorPos.value.left}px`, top: `$
 const iframeStyle = computed(() => {
   // eslint-disable-next-line no-unused-expressions, no-sequences
   mousePosition.x, mousePosition.y
+
+  const maxWidth = windowSize.width - FRAME_MARGIN * 2
+  const maxHeight = windowSize.height - FRAME_MARGIN * 2
+
   const style: CSSProperties = {
     zIndex: -1,
     pointerEvents: isDragging.value ? 'none' : 'auto',
-    width: `${state.value.width}vw`,
-    height: `${state.value.height}vh`,
+    width: `min(${state.value.width}vw, calc(100vw - ${FRAME_MARGIN * 2}px))`,
+    height: `min(${state.value.height}vh, calc(100vh - ${FRAME_MARGIN * 2}px))`,
   }
 
   const anchor = anchorPos.value
-  const width = state.value.width * windowSize.width / 100
-  const height = state.value.height * windowSize.height / 100
+  const width = Math.min(maxWidth, state.value.width * windowSize.width / 100)
+  const height = Math.min(maxHeight, state.value.height * windowSize.height / 100)
 
   const anchorX = anchor?.left || 0
   const anchorY = anchor?.top || 0

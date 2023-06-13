@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, PANEL_PADDING, isInitialized, state } from './state'
+import { PANEL_MAX, PANEL_MIN, isInitialized, state } from './state'
 import { useEventListener } from './utils'
 import Frame from './Frame.vue'
 
@@ -10,7 +10,9 @@ const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
-const isDragging = ref<false | 'vertical' | 'horizontal' | 'both'>(false)
+const frame = ref<InstanceType<typeof Frame>>()
+const frameEl = computed(() => frame.value?.$el as HTMLElement | undefined)
+const isDragging = ref<false | { top?: boolean; left?: boolean; right?: boolean; bottom?: boolean }>(false)
 
 // Close panel on outside click (when enabled)
 useEventListener(window, 'mousedown', (e: MouseEvent) => {
@@ -33,29 +35,28 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
   if (!isDragging.value)
     return
 
-  // REWORK THIS
-  const alignSide = state.value.position === 'left' || state.value.position === 'right'
+  const box = frameEl.value?.getBoundingClientRect()
 
-  if (isDragging.value === 'horizontal' || isDragging.value === 'both') {
-    const y = state.value.position === 'top'
-      ? window.innerHeight - e.clientY
-      : e.clientY
-    const boxHeight = window.innerHeight - PANEL_PADDING * 2
-    const value = alignSide
-      ? (Math.abs(y - (window.innerHeight / 2)) - PANEL_PADDING) / boxHeight * 100 * 2
-      : (window.innerHeight - y - PANEL_PADDING) / boxHeight * 100
-    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
+  if (isDragging.value.right) {
+    const widthPx = Math.abs(e.clientX - (box?.left || 0))
+    const width = widthPx / window.innerWidth * 100
+    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
+  }
+  else if (isDragging.value.left) {
+    const widthPx = Math.abs((box?.right || 0) - e.clientX)
+    const width = widthPx / window.innerWidth * 100
+    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
   }
 
-  if (isDragging.value === 'vertical' || isDragging.value === 'both') {
-    const x = state.value.position === 'left'
-      ? window.innerWidth - e.clientX
-      : e.clientX
-    const boxWidth = window.innerWidth - PANEL_PADDING * 2
-    const value = alignSide
-      ? (window.innerWidth - x - PANEL_PADDING) / boxWidth * 100
-      : (Math.abs(x - (window.innerWidth / 2)) - PANEL_PADDING) / boxWidth * 100 * 2
-    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, value))
+  if (isDragging.value.top) {
+    const heightPx = Math.abs((box?.bottom || 0) - e.clientY)
+    const height = heightPx / window.innerHeight * 100
+    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
+  }
+  else if (isDragging.value.bottom) {
+    const heightPx = Math.abs(e.clientY - (box?.top || 0))
+    const height = heightPx / window.innerHeight * 100
+    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
   }
 })
 
@@ -82,16 +83,41 @@ declare global {
   <div v-show="state.open && !client.inspector?.isEnabled.value" class="nuxt-devtools-frame">
     <Frame
       v-if="isInitialized"
+      ref="frame"
       :client="client"
+      :style="{
+        pointerEvents: isDragging ? 'none' : undefined,
+      }"
     />
-    <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-    <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = 'horizontal'" />
-    <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-    <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = 'vertical'" />
-    <div v-if="state.position !== 'top' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, left: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-    <div v-if="state.position !== 'top' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ top: 0, right: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-    <div v-if="state.position !== 'bottom' && state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
-    <div v-if="state.position !== 'bottom' && state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner" :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }" @mousedown.prevent="() => isDragging = 'both'" />
+    <!-- Handlers -->
+    <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = { top: true }" />
+    <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = { bottom: true }" />
+    <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = { left: true }" />
+    <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = { right: true }" />
+    <div
+      v-if="state.position !== 'top' && state.position !== 'left'"
+      class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
+      :style="{ top: 0, left: 0, cursor: 'nwse-resize' }"
+      @mousedown.prevent="() => isDragging = { top: true, left: true }"
+    />
+    <div
+      v-if="state.position !== 'top' && state.position !== 'right'"
+      class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
+      :style="{ top: 0, right: 0, cursor: 'nesw-resize' }"
+      @mousedown.prevent="() => isDragging = { top: true, right: true }"
+    />
+    <div
+      v-if="state.position !== 'bottom' && state.position !== 'left'"
+      class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
+      :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }"
+      @mousedown.prevent="() => isDragging = { bottom: true, left: true }"
+    />
+    <div
+      v-if="state.position !== 'bottom' && state.position !== 'right'"
+      class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
+      :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }"
+      @mousedown.prevent="() => isDragging = { bottom: true, right: true }"
+    />
   </div>
 </template>
 
@@ -99,7 +125,6 @@ declare global {
 .nuxt-devtools-frame {
   position: fixed;
   z-index: 2147483645;
-  background: var(--nuxt-devtools-widget-bg);
 }
 
 .nuxt-devtools-frame :deep(iframe) {
