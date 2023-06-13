@@ -28,13 +28,13 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
     <div v-if="!config">
       Loading...
     </div>
-    <div v-else flex="~ col gap2" ma h-full max-w-300 w-full p8 px20>
+    <div v-else flex="~ col gap2" ma h-full max-w-300 w-full p5 px5 md:px20>
       <div flex-auto />
 
       <!-- Banner -->
-      <div flex="~ col" mt-20 items-center>
+      <div flex="~ col" mt-5 items-center md:mt-20>
         <div flex="~" mt--10 items-center justify-center>
-          <NuxtLogo h-18 />
+          <NuxtLogo h-14 md:h-18 />
           <button mr--16 mt--6 @click="goIntro">
             <Badge
               bg-green-400:10 text-green-400
@@ -43,7 +43,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
             />
           </button>
         </div>
-        <div mb6 mt--1 text-center text-sm flex="~ gap-1">
+        <div mb6 mt--1 text-center text-sm flex="~ gap-1 wrap">
           <span op40>
             Nuxt DevTools
           </span>
@@ -86,6 +86,39 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
             <div carbon-plug text-3xl />
             <div>{{ config.plugins.length }} plugins</div>
           </NuxtLink>
+          <div v-if="client?.loadingTimeMetrics" pointer-events-none min-w-40 p4 theme-card-lime flex="~ auto gap-6">
+            <div i-carbon-time-plot flex-none text-3xl />
+            <div grid="~ cols-[auto_auto] gap-x-5 items-center">
+              <template v-if="client.loadingTimeMetrics.ssrStart">
+                <div text-sm>
+                  SSR to full load
+                </div>
+                <div text-right>
+                  {{ formatDuration(client.loadingTimeMetrics.appLoad! - client.loadingTimeMetrics.ssrStart!) }}
+                </div>
+              </template>
+              <div text-sm>
+                Page load
+              </div>
+              <div text-right>
+                {{ formatDuration(client.loadingTimeMetrics.appLoad! - client.loadingTimeMetrics.appInit!) }}
+              </div>
+              <div text-sm>
+                Navigation
+              </div>
+              <div text-right>
+                {{ formatDuration(client.loadingTimeMetrics.pageEnd! - client.loadingTimeMetrics.pageStart!) }}
+              </div>
+              <template v-if="client.loadingTimeMetrics.hmrStart">
+                <div text-sm>
+                  HMR
+                </div>
+                <div text-right>
+                  {{ formatDuration(client.loadingTimeMetrics.hmrEnd! - client.loadingTimeMetrics.hmrStart!) }}
+                </div>
+              </template>
+            </div>
+          </div>
         </template>
       </div>
       <div flex="~ col gap2">
@@ -119,57 +152,59 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
         </NuxtLink>
       </div>
       <div flex-auto />
-      <div flex="~ gap-1" items-center justify-center text-sm op40>
-        Press
-        <template v-if="isMacOS">
-          <NButton n="xs" class="px2">
-            ⌘ Cmd
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            K
-          </NButton>
-        </template>
-        <template v-else>
-          <NButton n="xs" class="px2">
-            Ctrl
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            K
-          </NButton>
-        </template>
-        to open Command Palette
-      </div>
-      <div flex="~ gap-1" items-center justify-center text-sm op40>
-        Press
-        <template v-if="isMacOS">
-          <NButton n="xs" class="px2">
-            ⇧ Shift
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            ⌥ Option
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            D
-          </NButton>
-        </template>
-        <template v-else>
-          <NButton n="xs" class="px2">
-            Shift
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            Alt
-          </NButton>
-          <span>+</span>
-          <NButton n="xs" class="px2">
-            D
-          </NButton>
-        </template>
-        to toggle DevTools
+      <div flex="col gap-2" mxa hidden w-100 text-sm op50 md:flex>
+        <div flex="~ gap-1" items-center>
+          <template v-if="isMacOS">
+            <NButton n="xs" class="px2">
+              ⌘ Cmd
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              K
+            </NButton>
+          </template>
+          <template v-else>
+            <NButton n="xs" class="px2">
+              Ctrl
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              K
+            </NButton>
+          </template>
+          <div flex-auto />
+          Open Command Palette
+        </div>
+        <div flex="~ gap-1" items-center>
+          <template v-if="isMacOS">
+            <NButton n="xs" class="px2">
+              ⇧ Shift
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              ⌥ Option
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              D
+            </NButton>
+          </template>
+          <template v-else>
+            <NButton n="xs" class="px2">
+              Shift
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              Alt
+            </NButton>
+            <span>+</span>
+            <NButton n="xs" class="px2">
+              D
+            </NButton>
+          </template>
+          <div flex-auto />
+          <div>Toggle DevTools</div>
+        </div>
       </div>
     </div>
   </NPanelGrids>

@@ -7,7 +7,10 @@ definePageMeta({
   title: 'Open Graph',
   layout: 'full',
   category: 'analyze',
-  show: () => !!useClient().value,
+  show: () => {
+    const client = useClient()
+    return () => !!client.value
+  },
 })
 
 const counter = ref(0)
@@ -100,7 +103,7 @@ until(router).toBeTruthy().then((v) => {
             icon="carbon-direction-right-01 scale-y--100"
             n="primary" flex-auto font-mono
             class="px-5 py-2"
-            :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
+            :class="route?.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
             @keydown.enter="navigate"
           />
         </template>

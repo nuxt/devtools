@@ -116,3 +116,15 @@ export function getSocialPreviewCard(
     ...resolvedTags,
   }
 }
+
+export function formatDuration(ms: number) {
+  if (Number.isNaN(ms) || ms < 0)
+    return '-'
+  if (ms < 1)
+    return '<1ms'
+  if (ms < 1000)
+    return `${ms}ms`
+  if (ms < 1000 * 60)
+    return `${(ms / 1000).toFixed(2)}s`
+  return `${(ms / 1000 / 60).toFixed(2)}min`
+}

@@ -62,6 +62,7 @@ function toggle(event?: MouseEvent) {
     )
   })
 }
+
 const context = {
   mode,
   isDark,

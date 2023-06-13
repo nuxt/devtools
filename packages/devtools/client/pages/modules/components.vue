@@ -9,7 +9,6 @@ definePageMeta({
 })
 
 const client = useClient()
-const router = useRouter()
 const components = useComponents()
 
 const {
@@ -20,7 +19,6 @@ function openComponentInspector() {
   if (!client.value?.inspector?.instance)
     return
   client.value.inspector.enable()
-  router.push('/__inspecting')
 }
 
 function toggleView() {
@@ -44,7 +42,7 @@ function toggleView() {
         <NIconButton
           v-if="client?.inspector?.instance"
           text-lg
-          icon="i-carbon-select-window"
+          icon="i-tabler-focus-2"
           title="Inspect Vue components"
           @click="openComponentInspector"
         />
