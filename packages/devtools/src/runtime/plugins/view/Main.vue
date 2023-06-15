@@ -219,11 +219,11 @@ const time = computed(() => {
     id="nuxt-devtools-anchor"
     ref="anchorEl"
     :style="[anchorStyle, vars]"
-    :class="{ vertical: isVertical, active: state.open }"
+    :class="{ 'nuxt-devtools-vertical': isVertical }"
   >
-    <div class="glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
-    <div ref="panelEl" class="panel" @pointerdown="onPointerDown">
-      <button class="icon-button nuxt-button" title="Toggle Nuxt DevTools" @click="togglePanel">
+    <div class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
+    <div ref="panelEl" class="nuxt-devtools-panel" @pointerdown="onPointerDown">
+      <button class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button" title="Toggle Nuxt DevTools" @click="togglePanel">
         <svg
           viewBox="0 0 324 324" fill="none" xmlns="http://www.w3.org/2000/svg"
           style="margin-top:-1px; height: 1.2em; width: 1.2em;"
@@ -232,17 +232,17 @@ const time = computed(() => {
         </svg>
       </button>
       <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-      <div class="label" :title="`${time[0]} load time`">
-        <div class="label-main">
+      <div class="nuxt-devtools-label" :title="`${time[0]} load time`">
+        <div class="nuxt-devtools-label-main">
           {{ time[1] }}
         </div>
-        <span class="label-secondary">
+        <span class="nuxt-devtools-label-secondary">
           {{ time[2] }}
         </span>
       </div>
       <template v-if="client.inspector">
         <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-        <button class="icon-button" title="Toggle Component Inspector" @click="client.inspector.toggle">
+        <button class="nuxt-devtools-icon-button" title="Toggle Component Inspector" @click="client.inspector.toggle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style="height: 1.2em; width: 1.2em; opacity:0.5;"
@@ -267,7 +267,7 @@ const time = computed(() => {
   transform: translate(-50%, -50%) rotate(0);
 }
 
-#nuxt-devtools-anchor .label {
+#nuxt-devtools-anchor .nuxt-devtools-label {
   padding: 0 7px 0 8px;
   font-size: 0.8em;
   line-height: 1em;
@@ -277,28 +277,28 @@ const time = computed(() => {
   align-items: center;
 }
 
-#nuxt-devtools-anchor .label .label-main {
+#nuxt-devtools-anchor .nuxt-devtools-label .nuxt-devtools-label-main {
   opacity: 0.8;
 }
 
-#nuxt-devtools-anchor .label .label-secondary {
+#nuxt-devtools-anchor .nuxt-devtools-label .nuxt-devtools-label-secondary {
   font-size: 0.8em;
   line-height: 0.6em;
   opacity: 0.5;
 }
 
-#nuxt-devtools-anchor.vertical .nuxt-button {
+#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-nuxt-button {
   transform: rotate(-90deg);
 }
 
-#nuxt-devtools-anchor.vertical .label {
+#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-label {
   transform: rotate(-90deg);
   flex-direction: column;
   gap: 2px;
   padding: 0 10px;
 }
 
-#nuxt-devtools-anchor .panel {
+#nuxt-devtools-anchor .nuxt-devtools-panel {
   position: absolute;
   left: 0;
   top: 0;
@@ -319,12 +319,12 @@ const time = computed(() => {
   user-select: none;
 }
 
-#nuxt-devtools-anchor.vertical .panel {
+#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-panel {
   transform: translate(-50%, -50%) rotate(90deg);
   box-shadow: 2px -2px 8px var(--nuxt-devtools-widget-shadow);
 }
 
-#nuxt-devtools-anchor .icon-button {
+#nuxt-devtools-anchor .nuxt-devtools-icon-button {
   border-radius: 100%;
   width: 30px;
   height: 30px;
@@ -334,15 +334,15 @@ const time = computed(() => {
   opacity: 0.8;
   transition: opacity 0.2s ease-in-out;
 }
-#nuxt-devtools-anchor .icon-button:hover {
+#nuxt-devtools-anchor .nuxt-devtools-icon-button:hover {
   opacity: 1;
 }
 
-#nuxt-devtools-anchor:hover .glowing {
+#nuxt-devtools-anchor:hover .nuxt-devtools-glowing {
   opacity: 0.6;
 }
 
-#nuxt-devtools-anchor .glowing {
+#nuxt-devtools-anchor .nuxt-devtools-glowing {
   position: absolute;
   left: 0;
   top: 0;
