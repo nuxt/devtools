@@ -308,7 +308,7 @@ const time = computed(() => {
   align-items: center;
   gap: 2px;
   height: 30px;
-  padding: 2px 2px 2px 4px;
+  padding: 2px 2px 2px 2.5px;
   border: 1px solid var(--nuxt-devtools-widget-border);
   border-radius: 100px;
   background-color: var(--nuxt-devtools-widget-bg);
