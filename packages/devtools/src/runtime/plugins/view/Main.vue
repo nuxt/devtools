@@ -326,6 +326,7 @@ const time = computed(() => {
 
 #nuxt-devtools-anchor .nuxt-devtools-icon-button {
   border-radius: 100%;
+  border-width: 0;
   width: 30px;
   height: 30px;
   display: flex;
