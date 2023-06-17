@@ -19,7 +19,7 @@ export function useObjectStorage<T>(key: string, initial: T, readonly = false): 
         return
       wrote = JSON.stringify(value)
       localStorage.setItem(key, wrote)
-    }, { deep: true, flush: 'sync' })
+    }, { deep: true, flush: 'post' })
   }
 
   useEventListener(window, 'storage', (e: StorageEvent) => {
