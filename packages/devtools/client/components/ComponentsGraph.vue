@@ -25,6 +25,9 @@ const config = useServerConfig()
 const layouts = useLayouts()
 const relationships = useComponentsRelationships()
 
+// TODO: waiting for https://github.com/nuxt/devtools/pull/256 so it can be moved to component tab option
+const showGlobalComponents = ref(true)
+
 const {
   componentsGraphShowNodeModules: showNodeModules,
   componentsGraphShowPages: showPages,
@@ -63,7 +66,9 @@ const data = computed<Data>(() => {
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
-        ? 'user'
+        ? component.global
+          ? 'global'
+          : 'user'
         : layout
           ? 'layout'
           : page
@@ -77,6 +82,8 @@ const data = computed<Data>(() => {
     if (!showLayouts.value && group === 'layout')
       return null
     if (!showWorkspace.value && group === 'user' && config.value && !rel.id.startsWith(config.value.rootDir))
+      return null
+    if (!showGlobalComponents.value && group === 'global')
       return null
 
     const shape = group === 'layout'
@@ -184,6 +191,7 @@ function setFilter() {
 <template>
   <Navbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
+      <TestGC />
       <NCheckbox v-model="showPages" n="primary sm">
         <span op75>Show pages</span>
       </NCheckbox>
@@ -196,6 +204,9 @@ function setFilter() {
       <NCheckbox v-model="showNodeModules" n="primary sm">
         <span op75>Show node_modules</span>
       </NCheckbox>
+      <NCheckbox v-model="showGlobalComponents" n="primary sm">
+        <span op75>Show global components</span>
+      </NCheckbox>
       <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
@@ -204,6 +215,8 @@ function setFilter() {
     </template>
   </Navbar>
 
+  <!-- {{ data }} -->
+
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
     <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm glass-effect>
@@ -211,6 +224,10 @@ function setFilter() {
         <div h-3 w-3 rounded-full bg-hex-42b883 />
         <div op50>
           Component
+        </div>
+        <div h-3 w-3 rounded-full bg-hex-97c2fc />
+        <div op50>
+          Global Component
         </div>
         <div h-3 w-3 bg-hex-42b2b8 />
         <div op50>
