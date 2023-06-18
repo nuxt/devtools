@@ -66,9 +66,7 @@ const data = computed<Data>(() => {
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
-        ? component.global
-          ? 'global'
-          : 'user'
+        ? 'user'
         : layout
           ? 'layout'
           : page
@@ -191,7 +189,6 @@ function setFilter() {
 <template>
   <Navbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
-      <TestGC />
       <NCheckbox v-model="showPages" n="primary sm">
         <span op75>Show pages</span>
       </NCheckbox>
@@ -214,8 +211,6 @@ function setFilter() {
       <slot />
     </template>
   </Navbar>
-
-  <!-- {{ data }} -->
 
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
