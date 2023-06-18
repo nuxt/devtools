@@ -16,6 +16,6 @@ definePageMeta({
 
 <template>
   <AuthRequiredPanel>
-    <TerminalsPage />
+    <TerminalPage />
   </AuthRequiredPanel>
 </template>
