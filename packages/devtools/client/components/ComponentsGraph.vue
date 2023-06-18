@@ -66,7 +66,9 @@ const data = computed<Data>(() => {
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
-        ? 'user'
+        ? component.global
+          ? 'global'
+          : 'user'
         : layout
           ? 'layout'
           : page
