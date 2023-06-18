@@ -121,7 +121,7 @@ export interface ModuleBuiltinTab {
   path?: string
   category?: TabCategory
   show?: () => MaybeRefOrGetter<any>
-  badge?: () => number | string | undefined
+  badge?: () => MaybeRefOrGetter<number | string | undefined>
   onClick?: () => void
 }
 

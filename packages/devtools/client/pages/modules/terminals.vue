@@ -9,7 +9,7 @@ definePageMeta({
   },
   badge() {
     const terminals = useTerminals()
-    return terminals.value?.filter(i => !i.isTerminated).length
+    return () => terminals.value?.filter(i => !i.isTerminated).length
   },
 })
 </script>

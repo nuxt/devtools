@@ -31,7 +31,7 @@ const isActive = computed(() => route.path.startsWith(tabPath.value))
         v-if="badge" absolute bottom-0 right-0 h-4 w-4 rounded-full text-9px text-white flex="~ items-center justify-center"
         :class="isActive ? 'bg-primary' : 'bg-gray'"
       >
-        <span translate-y-0.5px>{{ badge }}</span>
+        <span translate-y-0.5px>{{ toValue(badge) }}</span>
       </div>
     </NuxtLink>
     <template #popper>
