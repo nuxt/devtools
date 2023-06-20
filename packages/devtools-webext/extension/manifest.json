@@ -1,0 +1,15 @@
+{
+  "name": "Nuxt DevTools",
+  "description": "Unleash Nuxt Developer Experience.",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "devtools_page": "devtools.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' http://localhost:3000; object-src 'self'"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

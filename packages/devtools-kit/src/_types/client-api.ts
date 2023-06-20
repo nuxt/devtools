@@ -74,6 +74,8 @@ export interface NuxtDevtoolsClient {
 }
 
 export interface NuxtDevtoolsIframeClient {
+  url: string
+  version: string
   host: NuxtDevtoolsHostClient
   devtools: NuxtDevtoolsClient
 }

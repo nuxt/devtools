@@ -1,0 +1,17 @@
+{
+  "name": "@nuxt/devtools-webext",
+  "private": true,
+  "type": "module",
+  "version": "0.6.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.10.0",
+    "tsup": "^7.0.0",
+    "webext-bridge": "^6.0.1",
+    "webextension-polyfill": "^0.10.0"
+  }
+}

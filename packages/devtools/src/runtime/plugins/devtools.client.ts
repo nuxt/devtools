@@ -20,6 +20,8 @@ export default defineNuxtPlugin((nuxt: any) => {
         return
     }
     catch (e) {
+      // Cross-origin
+      return
     }
   }
 
