@@ -9,6 +9,8 @@ const bc = new BroadcastChannel('__nuxt_dev_token__')
 
 bc.addEventListener('message', (e) => {
   if (e.data.event === 'new-token') {
+    if (e.data.data === devAuthToken.value)
+      return
     const token = e.data.data
     rpc.verifyAuthToken(token)
       .then((result) => {
@@ -17,6 +19,13 @@ bc.addEventListener('message', (e) => {
       })
   }
 })
+
+export function updateDevAuthToken(token: string) {
+  devAuthToken.value = token
+  isDevAuthed.value = true
+  localStorage.setItem('__nuxt_dev_token__', token)
+  bc.postMessage({ event: 'new-token', data: token })
+}
 
 export async function ensureDevAuthToken() {
   if (isDevAuthed.value)

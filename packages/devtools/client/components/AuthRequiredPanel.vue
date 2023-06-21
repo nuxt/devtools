@@ -10,6 +10,24 @@ onMounted(async () => {
   if (!isDevAuthed.value)
     rpc.requestForAuth()
 })
+
+const authInput = ref('')
+const isFailed = ref(false)
+
+async function input() {
+  const token = authInput.value.trim()
+  isFailed.value = false
+  await rpc.verifyAuthToken(token)
+    .then((result) => {
+      if (result) {
+        isDevAuthed.value = true
+        updateDevAuthToken(token)
+      }
+      else {
+        isFailed.value = true
+      }
+    })
+}
 </script>
 
 <template>
@@ -30,6 +48,15 @@ onMounted(async () => {
           Waiting for authorization...
         </NButton>
       </div>
+      <p>Or you can manually paste the token here:</p>
+      <form flex="~ inline gap-2 items-center" @submit.prevent="input">
+        <NTextInput
+          v-model="authInput" placeholder="Enter token here"
+          :n="isFailed ? 'red' : undefined"
+          @keydown.enter="input"
+        />
+        <NIconButton icon="i-carbon-arrow-right" @click="input" />
+      </form>
     </NCard>
   </NPanelGrids>
   <template v-else>
