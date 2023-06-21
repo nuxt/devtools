@@ -11,7 +11,7 @@ const id = computed(() => `devtools-assets-${hash(props.asset)}`)
 useStyleTag(computed(() => `
   @font-face {
     font-family: '${id.value}';
-    src: url('${props.asset.publicPath}');
+    src: url('${resolveAssetPath(props.asset.publicPath)}');
   }
 `))
 </script>

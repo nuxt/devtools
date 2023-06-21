@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
+import '../shared/client.d'
 import { computed, ref } from 'vue'
-import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
+import type { NuxtDevtoolsHostClient } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, isInitialized, state } from './state'
 import { useEventListener } from './utils'
 import Frame from './Frame.vue'
@@ -70,13 +70,7 @@ useEventListener(window, 'mouseleave', () => {
 </script>
 
 <script lang="ts">
-declare global {
-  interface Window {
-    __NUXT_DEVTOOLS_VIEW__?: NuxtDevtoolsViewGlobal
-    __NUXT_DEVTOOLS__?: NuxtDevtoolsIframeClient
-    __VUE_INSPECTOR__?: VueInspectorClient
-  }
-}
+
 </script>
 
 <template>

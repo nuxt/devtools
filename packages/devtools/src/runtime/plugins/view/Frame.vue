@@ -3,12 +3,11 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
 import { closePanel, state } from './state'
 import { useEventListener } from './utils'
+import { CLIENT_PATH } from './constants'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
-
-const CLIENT_PATH = '/__nuxt_devtools__/client'
 
 const initialUrl = CLIENT_PATH + state.value.route
 const iframe = ref<HTMLIFrameElement>()

@@ -7,6 +7,7 @@ import { useClientColorMode } from './view/client'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
+import { CLIENT_PATH } from './view/constants'
 import { defineNuxtPlugin, useAppConfig, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
@@ -24,6 +25,8 @@ export default defineNuxtPlugin((nuxt: any) => {
       return
     }
   }
+
+  window.__NUXT_DEVTOOLS_URL__ = window.location.origin + CLIENT_PATH
 
   const timeMetric = window.__NUXT_DEVTOOLS_TIME_METRIC__ = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
   timeMetric.pluginInit = Date.now()

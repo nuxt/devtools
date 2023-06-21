@@ -2,6 +2,7 @@ import { relative } from 'pathe'
 import type { Ref } from 'vue'
 import type { AsyncDataOptions } from '#app'
 import type { NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
+import '../../src/runtime/shared/client.d'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -115,6 +116,12 @@ export function getSocialPreviewCard(
     url: window.location.host,
     ...resolvedTags,
   }
+}
+
+export function resolveAssetPath(path: string) {
+  if (window.__NUXT_DEVTOOLS_SERVER_ORIGIN__ && path.startsWith('/'))
+    return `${window.__NUXT_DEVTOOLS_SERVER_ORIGIN__}${path}`
+  return path
 }
 
 export function formatDuration(ms: number) {

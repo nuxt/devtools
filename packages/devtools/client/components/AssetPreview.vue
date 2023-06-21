@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <div flex items-center justify-center of-hidden bg-active object-cover p1>
     <template v-if="asset.type === 'image'">
-      <img :src="asset.publicPath">
+      <img :src="resolveAssetPath(asset.publicPath)">
     </template>
     <AssetFontPreview
       v-else-if="asset.type === 'font'"

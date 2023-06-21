@@ -16,7 +16,7 @@ withDefaults(defineProps<{
       height: '1em',
     }"
     v-bind="$attrs"
-    :src="icon"
+    :src="resolveAssetPath(icon)"
     :alt="title"
   >
   <div
