@@ -1,4 +1,4 @@
-import { createApp, h, markRaw, ref, shallowReactive, watchEffect } from 'vue'
+import { createApp, h, markRaw, ref, shallowReactive, watch, watchEffect } from 'vue'
 
 import { setupHooksDebug } from '../shared/hooks'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
@@ -68,9 +68,16 @@ export default defineNuxtPlugin((nuxt: any) => {
       closeDevTools: closePanel,
       inspector: getInspectorInstance(),
       colorMode,
-      refreshState(): NuxtDevtoolsHostClient {
+      updateClient(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient {
         if (!client.inspector)
           client.inspector = getInspectorInstance()
+
+        try {
+          iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
+        }
+        catch (e) {
+          // cross-origin
+        }
         return client
       },
     })
@@ -117,6 +124,29 @@ export default defineNuxtPlugin((nuxt: any) => {
         instance: componentInspector,
       })
     }
+
+    function refreshReactivity() {
+      client.hooks.callHook('host:update:reactivity')
+    }
+
+    // trigger update for reactivity
+    watch(() => [
+      client.nuxt.payload,
+      client.colorMode.value,
+      client.loadingTimeMetrics,
+    ], () => {
+      refreshReactivity()
+    }, { deep: true })
+    // trigger update for route change
+    client.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
+      refreshReactivity()
+    })
+    // trigger update for app mounted
+    client.nuxt.hook('app:mounted', () => {
+      refreshReactivity()
+    })
+
+    client.updateClient()
 
     const holder = document.createElement('div')
     holder.id = 'nuxt-devtools-container'

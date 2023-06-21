@@ -56,9 +56,9 @@ export interface NuxtDevtoolsHostClient {
   closeDevTools(): void
 
   /**
-   * Refreshes the client
+   * Update client, send to iframe if provided
    */
-  refreshState(): NuxtDevtoolsHostClient
+  updateClient(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {
