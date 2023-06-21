@@ -67,11 +67,12 @@ export interface NuxtDevtoolsHostClient {
   popup?(): any
 
   /**
-   * Update client, send to iframe if provided
-   *
+   * Update client
    * @internal
    */
-  updateClient(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient
+  updateClient(): NuxtDevtoolsHostClient
+
+  getIframe(): HTMLIFrameElement
 }
 
 export interface NuxtDevtoolsClient {

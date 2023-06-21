@@ -1,18 +1,39 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, isInitialized, state } from './state'
+import { PANEL_MAX, PANEL_MIN, closePanel, popupWindow, state } from './state'
 import { useEventListener } from './utils'
-import Frame from './Frame.vue'
 import '../../../types/global'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
-const frame = ref<InstanceType<typeof Frame>>()
-const frameEl = computed(() => frame.value?.$el as HTMLElement | undefined)
+const container = ref<HTMLElement>()
 const isDragging = ref<false | { top?: boolean; left?: boolean; right?: boolean; bottom?: boolean }>(false)
+
+watchEffect(() => {
+  if (!container.value)
+    return
+
+  if (state.value.open) {
+    const iframe = props.client.getIframe()
+    iframe.style.pointerEvents = isDragging.value ? 'none' : 'auto'
+
+    if (!popupWindow.value) {
+      if (Array.from(container.value.children).every(el => el !== iframe))
+        container.value.appendChild(iframe)
+    }
+  }
+})
+
+useEventListener(window, 'keydown', (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {
+    e.preventDefault()
+    props.client.inspector?.disable()
+    closePanel()
+  }
+})
 
 // Close panel on outside click (when enabled)
 useEventListener(window, 'mousedown', (e: MouseEvent) => {
@@ -35,7 +56,11 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
   if (!isDragging.value)
     return
 
-  const box = frameEl.value?.getBoundingClientRect()
+  if (!state.value.open)
+    return
+
+  const iframe = props.client.getIframe()
+  const box = iframe.getBoundingClientRect()
 
   if (isDragging.value.right) {
     const widthPx = Math.abs(e.clientX - (box?.left || 0))
@@ -70,40 +95,32 @@ useEventListener(window, 'mouseleave', () => {
 </script>
 
 <template>
-  <div v-show="state.open && !client.inspector?.isEnabled.value" class="nuxt-devtools-frame">
-    <Frame
-      v-if="isInitialized"
-      ref="frame"
-      :client="client"
-      :style="{
-        pointerEvents: isDragging ? 'none' : undefined,
-      }"
-    />
+  <div v-show="state.open && !client.inspector?.isEnabled.value && !popupWindow" ref="container" class="nuxt-devtools-frame">
     <!-- Handlers -->
-    <div v-if="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = { top: true }" />
-    <div v-if="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = { bottom: true }" />
-    <div v-if="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = { left: true }" />
-    <div v-if="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = { right: true }" />
+    <div v-show="state.position !== 'top'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ top: 0 }" @mousedown.prevent="() => isDragging = { top: true }" />
+    <div v-show="state.position !== 'bottom'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal" :style="{ bottom: 0 }" @mousedown.prevent="() => isDragging = { bottom: true }" />
+    <div v-show="state.position !== 'left'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ left: 0 }" @mousedown.prevent="() => isDragging = { left: true }" />
+    <div v-show="state.position !== 'right'" class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical" :style="{ right: 0 }" @mousedown.prevent="() => isDragging = { right: true }" />
     <div
-      v-if="state.position !== 'top' && state.position !== 'left'"
+      v-show="state.position !== 'top' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, left: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isDragging = { top: true, left: true }"
     />
     <div
-      v-if="state.position !== 'top' && state.position !== 'right'"
+      v-show="state.position !== 'top' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, right: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isDragging = { top: true, right: true }"
     />
     <div
-      v-if="state.position !== 'bottom' && state.position !== 'left'"
+      v-show="state.position !== 'bottom' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isDragging = { bottom: true, left: true }"
     />
     <div
-      v-if="state.position !== 'bottom' && state.position !== 'right'"
+      v-show="state.position !== 'bottom' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isDragging = { bottom: true, right: true }"

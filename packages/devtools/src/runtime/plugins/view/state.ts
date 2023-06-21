@@ -1,10 +1,12 @@
-import { ref, watch } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 import type { DevToolsFrameState } from '../../../types'
 import { useObjectStorage } from './utils'
 
 export const PANEL_PADDING = 10
 export const PANEL_MIN = 20
 export const PANEL_MAX = 100
+
+export const popupWindow = shallowRef<Window | null>(null)
 
 export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {
   width: 80,
@@ -34,6 +36,10 @@ export function togglePanel() {
 
 export function closePanel() {
   state.value.open = false
+  if (popupWindow.value) {
+    popupWindow.value.close()
+    popupWindow.value = null
+  }
 }
 
 export function openPanel() {

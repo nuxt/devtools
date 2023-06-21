@@ -1,11 +1,9 @@
-import type { NuxtDevtoolsGlobal } from '../../src/types'
-
 export default defineNuxtPlugin(() => {
   const client = useClient()
   const inspectorData = useComponentInspectorData()
   const router = useRouter()
 
-  window.__NUXT_DEVTOOLS_VIEW__ = <NuxtDevtoolsGlobal>{
+  window.__NUXT_DEVTOOLS_VIEW__ = {
     setClient(_client) {
       if (client.value === _client)
         return
