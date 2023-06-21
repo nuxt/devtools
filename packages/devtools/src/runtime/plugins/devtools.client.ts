@@ -1,7 +1,8 @@
-import { createApp, h, markRaw, ref, shallowReactive, watchEffect } from 'vue'
+import { createApp, h, markRaw, ref, shallowReactive, toRaw, watch, watchEffect } from 'vue'
 
 import { setupHooksDebug } from '../shared/hooks'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
+import '../shared/client.d'
 
 import { useClientColorMode } from './view/client'
 
@@ -60,8 +61,8 @@ export default defineNuxtPlugin((nuxt: any) => {
     const colorMode = useClientColorMode()
     const client: NuxtDevtoolsHostClient = shallowReactive({
       nuxt: markRaw(nuxt as any),
-      appConfig: useAppConfig() as any,
       hooks: createHooks(),
+      appConfig: useAppConfig() as any,
       getClientHooksMetrics: () => Object.values(clientHooks),
       getClientPluginMetrics: () => {
         return window.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
@@ -73,12 +74,41 @@ export default defineNuxtPlugin((nuxt: any) => {
       closeDevTools: closePanel,
       inspector: getInspectorInstance(),
       colorMode,
-      refreshState(): NuxtDevtoolsHostClient {
+      refreshState(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient {
         if (!client.inspector)
           client.inspector = getInspectorInstance()
+
+        window.__NUXT_DEVTOOLS_HOST_CLIENT__ = toRaw(client)
+        try {
+          iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
+        }
+        catch (e) {}
+
         return client
       },
     })
+
+    function refreshReactivity() {
+      client.hooks.callHook('host:update:reactivity')
+    }
+
+    watch(() => [
+      client.nuxt.payload,
+      client.colorMode.value,
+      client.loadingTimeMetrics,
+    ], () => {
+      refreshReactivity()
+    }, { deep: true })
+    // trigger update for route change
+    client.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
+      refreshReactivity()
+    })
+    // trigger update for app mounted
+    client.nuxt.hook('app:mounted', () => {
+      refreshReactivity()
+    })
+
+    client.refreshState()
 
     function enableComponentInspector() {
       window.__VUE_INSPECTOR__?.enable()
@@ -109,6 +139,7 @@ export default defineNuxtPlugin((nuxt: any) => {
           })
         }
       }
+
       return markRaw({
         isEnabled: isInspecting,
         enable: enableComponentInspector,

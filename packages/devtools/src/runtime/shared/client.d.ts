@@ -9,6 +9,10 @@ declare global {
      */
     __NUXT_DEVTOOLS_VIEW__?: NuxtDevtoolsViewGlobal
     /**
+     * Self-exposed client, used for Chrome DevTools
+     */
+    __NUXT_DEVTOOLS_HOST_CLIENT__?: NuxtDevtoolsHostClient
+    /**
      * Url to the DevTools UI, used to open display UI in Chrome DevTools
      */
     __NUXT_DEVTOOLS_URL__?: string
@@ -26,3 +30,5 @@ declare global {
     __VUE_INSPECTOR__?: VueInspectorClient
   }
 }
+
+export {}

@@ -58,7 +58,7 @@ export interface NuxtDevtoolsHostClient {
   /**
    * Refreshes the client
    */
-  refreshState(): NuxtDevtoolsHostClient
+  refreshState(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {

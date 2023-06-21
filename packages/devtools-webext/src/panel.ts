@@ -46,11 +46,13 @@ async function run() {
   window.__NUXT__ ||= {}
   window.__NUXT__.config = { public: { }, app: { baseURL: '/__nuxt_devtools__/client', buildAssetsDir: '/_nuxt/', cdnURL: '' } }
 
+  window.history.replaceState('', '', window.__NUXT__.config.app.baseURL)
+
   for (const element of elements) {
     if (element.tagName === 'SCRIPT') {
       if ('src' in element && element.src) {
         const url = new URL(element.src as string)
-        import(origin + url.pathname)
+        await import(origin + url.pathname)
       }
       else {
         // Manifest V3 does not support eval, we might need to workaround this later
@@ -63,8 +65,6 @@ async function run() {
       div.appendChild(element)
     }
   }
-
-  window.history.replaceState('', '', window.__NUXT__.config.app.baseURL)
 }
 
 function noDevTools() {

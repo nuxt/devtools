@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
-import type { NuxtDevtoolsHostClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
+import { onMounted, ref, watchEffect } from 'vue'
+import type { NuxtDevtoolsHostClient } from '../../../types'
 import { closePanel, state } from './state'
 import { useEventListener } from './utils'
 import { CLIENT_PATH } from './constants'
@@ -14,7 +14,7 @@ const iframe = ref<HTMLIFrameElement>()
 
 async function onLoad() {
   await waitForClientInjection()
-  setupClient()
+  props.client.refreshState(iframe.value)
 }
 
 function waitForClientInjection(retry = 10, timeout = 200) {
@@ -38,46 +38,12 @@ function waitForClientInjection(retry = 10, timeout = 200) {
   })
 }
 
-function refreshReactivity() {
-  props.client?.hooks.callHook('host:update:reactivity')
-}
-
-function setupClient() {
-  const client = computed(() => props.client)
-
-  watch(() => [
-    client.value?.nuxt.payload,
-    client.value.colorMode.value,
-    client.value.loadingTimeMetrics,
-  ], () => {
-    refreshReactivity()
-  }, { deep: true })
-
-  // trigger update for route change
-  client.value?.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
-    refreshReactivity()
-  })
-
-  // trigger update for app mounted
-  client.value?.nuxt.hook('app:mounted', () => {
-    refreshReactivity()
-  })
-
-  updateClient()
-}
-
 onMounted(() => {
-  props.client.refreshState()
+  props.client.refreshState(iframe.value)
   props.client.hooks.hook('devtools:navigate', (path) => {
     state.value.route = path
   })
 })
-
-function updateClient() {
-  const injection = iframe.value?.contentWindow?.__NUXT_DEVTOOLS_VIEW__ as NuxtDevtoolsViewGlobal
-  props.client.refreshState()
-  injection?.setClient(props.client)
-}
 
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
   if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {

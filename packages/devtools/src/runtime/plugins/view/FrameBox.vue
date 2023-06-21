@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import '../shared/client.d'
 import { computed, ref } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, isInitialized, state } from './state'
