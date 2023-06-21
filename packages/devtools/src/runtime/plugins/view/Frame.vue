@@ -40,6 +40,39 @@ function waitForClientInjection(retry = 10, timeout = 200) {
 }
 
 onMounted(() => {
+  const documentPictureInPicture = window.documentPictureInPicture
+  if (documentPictureInPicture?.requestWindow) {
+    let pipWindow: Window | null = null
+    // eslint-disable-next-line vue/no-mutating-props
+    props.client.popup = async () => {
+      if (pipWindow) {
+        document.exitPictureInPicture()
+      }
+      else {
+        pipWindow = await documentPictureInPicture.requestWindow({
+          width: iframe.value!.clientWidth,
+          height: iframe.value!.clientHeight,
+        }) as Window
+        const style = pipWindow.document.createElement('style')
+        style.innerHTML = `
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            outline: none;
+          }
+        `
+        pipWindow.__NUXT_DEVTOOLS_DISABLE__ = true
+        pipWindow.document.head.appendChild(style)
+        pipWindow.document.body.appendChild(iframe.value!)
+      }
+    }
+  }
+
   props.client.updateClient(iframe.value)
   props.client.hooks.hook('devtools:navigate', (path) => {
     state.value.route = path

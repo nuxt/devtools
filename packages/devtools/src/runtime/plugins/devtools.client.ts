@@ -2,7 +2,6 @@ import { createApp, h, markRaw, ref, shallowReactive, watch, watchEffect } from 
 
 import { setupHooksDebug } from '../shared/hooks'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
-
 import { useClientColorMode } from './view/client'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
@@ -10,6 +9,9 @@ import { useClientColorMode } from './view/client'
 import { defineNuxtPlugin, useAppConfig, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
+  if (window.__NUXT_DEVTOOLS_DISABLE__ || window.parent?.__NUXT_DEVTOOLS_DISABLE__)
+    return
+
   // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return

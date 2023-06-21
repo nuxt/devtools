@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import { computed, ref } from 'vue'
-import type { NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal } from '../../../types'
+import type { NuxtDevtoolsHostClient } from '../../../types'
 import { PANEL_MAX, PANEL_MIN, isInitialized, state } from './state'
 import { useEventListener } from './utils'
 import Frame from './Frame.vue'
+import '../../../types/global'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
@@ -67,16 +67,6 @@ useEventListener(window, 'mouseup', () => {
 useEventListener(window, 'mouseleave', () => {
   isDragging.value = false
 })
-</script>
-
-<script lang="ts">
-declare global {
-  interface Window {
-    __NUXT_DEVTOOLS_VIEW__?: NuxtDevtoolsViewGlobal
-    __NUXT_DEVTOOLS__?: NuxtDevtoolsIframeClient
-    __VUE_INSPECTOR__?: VueInspectorClient
-  }
-}
 </script>
 
 <template>
