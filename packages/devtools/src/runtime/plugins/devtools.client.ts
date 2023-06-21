@@ -1,7 +1,7 @@
 import { createApp, h, markRaw, ref, shallowReactive, watch, watchEffect } from 'vue'
 
 import { setupHooksDebug } from '../shared/hooks'
-import type { LoadingTimeMetric, NuxtDevtoolsHostClient, PluginMetric, VueInspectorClient } from '../../types'
+import type { NuxtDevtoolsHostClient, VueInspectorClient } from '../../types'
 import { useClientColorMode } from './view/client'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
@@ -175,8 +175,6 @@ export default defineNuxtPlugin((nuxt: any) => {
 
 declare global {
   interface Window {
-    __NUXT_DEVTOOLS_PLUGINS_METRIC__?: PluginMetric[]
-    __NUXT_DEVTOOLS_TIME_METRIC__?: LoadingTimeMetric
-    __VUE_INSPECTOR__?: VueInspectorClient
+
   }
 }
