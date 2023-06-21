@@ -1,5 +1,12 @@
 <script setup lang="ts">
-onMounted(() => {
+onMounted(async () => {
+  if (!isDevAuthed.value) {
+    if (devAuthToken.value) {
+      const result = await rpc.verifyAuthToken(devAuthToken.value)
+      if (result)
+        isDevAuthed.value = true
+    }
+  }
   if (!isDevAuthed.value)
     rpc.requestForAuth()
 })
