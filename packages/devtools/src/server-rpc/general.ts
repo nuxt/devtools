@@ -159,6 +159,9 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
         '',
         'Please open the following URL in the browser:',
         c.bold(c.green(`http://localhost:${nuxt.options.devServer.port}${ROUTE_AUTH}?token=${token}`)),
+        '',
+        'Or manually copy and paste the following token:',
+        c.bold(c.cyan(token)),
       ]
 
       // eslint-disable-next-line no-console
