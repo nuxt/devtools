@@ -19,7 +19,7 @@ const open = ref(false)
       :is="item.routes ? 'button' : NuxtLink"
       flex="~ gap-2" w-full items-center hover-bg-active px2 py1
       :class="[{ 'bg-active': $route.query.path === item.route }]"
-      :style="{ paddingLeft: `calc(0.5rem + ${index * 2}em)` }"
+      :style="{ paddingLeft: `calc(0.5rem + ${index * 1.5}em)` }"
       :to="{ query: { path: item.route } }"
       @click="open = !open"
     >
