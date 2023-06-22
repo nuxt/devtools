@@ -27,21 +27,25 @@ if (!isInitialized.value) {
   })
 }
 
-export function togglePanel() {
+export function toggleDevTools() {
   if (state.value.open)
-    closePanel()
+    closeDevTools()
   else
-    openPanel()
+    openDevTools()
 }
 
-export function closePanel() {
+export function closeDevTools() {
   state.value.open = false
   if (popupWindow.value) {
-    popupWindow.value.close()
+    try {
+      popupWindow.value.close()
+    }
+    catch (e) {
+    }
     popupWindow.value = null
   }
 }
 
-export function openPanel() {
+export function openDevTools() {
   state.value.open = true
 }

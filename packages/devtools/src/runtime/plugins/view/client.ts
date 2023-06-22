@@ -3,7 +3,7 @@ import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watc
 import { createHooks } from 'hookable'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import Main from './Main.vue'
-import { closePanel, popupWindow, state, togglePanel } from './state'
+import { closeDevTools, popupWindow, state, toggleDevTools } from './state'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
@@ -39,7 +39,7 @@ export async function setupDevToolsClient({
     reloadPage() {
       location.reload()
     },
-    closeDevTools: closePanel,
+    closeDevTools,
     inspector: getInspectorInstance(),
     colorMode,
     getIframe,
@@ -175,8 +175,8 @@ export async function setupDevToolsClient({
     client.popup = async () => {
       const iframe = getIframe()
       const pip = popupWindow.value = await documentPictureInPicture.requestWindow({
-        width: iframe!.clientWidth || 500,
-        height: iframe!.clientHeight || 500,
+        width: Math.round(window.innerWidth * state.value.width / 100),
+        height: Math.round(window.innerHeight * state.value.height / 100),
       }) as Window
       const style = pip.document.createElement('style')
       style.innerHTML = `
@@ -194,6 +194,16 @@ export async function setupDevToolsClient({
       pip.__NUXT_DEVTOOLS_DISABLE__ = true
       pip.document.head.appendChild(style)
       pip.document.body.appendChild(iframe)
+      pip.addEventListener('resize', () => {
+        state.value.width = Math.round(pip.innerWidth / window.innerWidth * 100)
+        state.value.height = Math.round(pip.innerHeight / window.innerHeight * 100)
+      })
+      pip.addEventListener('pagehide', () => {
+        closeDevTools()
+      })
+      pip.addEventListener('close', () => {
+        closeDevTools()
+      })
     }
   }
 
@@ -207,7 +217,7 @@ export async function setupDevToolsClient({
   // Shortcut to toggle devtools
   addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      togglePanel()
+      toggleDevTools()
   })
 
   const app = createApp({
