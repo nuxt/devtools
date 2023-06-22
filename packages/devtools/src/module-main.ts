@@ -38,6 +38,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'client',
   })
 
+  addPlugin({
+    src: join(runtimeDir, 'plugins/devtools.server'),
+    mode: 'server',
+  })
+
+  // Inject inline script
+  nuxt.hook('nitro:config', (config) => {
+    config.externals = config.externals || {}
+    config.externals.inline = config.externals.inline || []
+    config.externals.inline.push(join(runtimeDir, 'nitro'))
+    config.virtual = config.virtual || {}
+    config.virtual['#nuxt-devtools-inline'] = `export const script = \`
+window.__NUXT_DEVTOOLS_TIME_METRIC__ = window.__NUXT_DEVTOOLS_TIME_METRIC__ || {}
+window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
+\``
+    config.plugins = config.plugins || []
+    config.plugins.push(join(runtimeDir, 'nitro/inline'))
+  })
+
   const {
     vitePlugin,
     ...ctx
@@ -70,7 +89,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     if (clientDirExists)
       server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
     server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
-    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res, next) => {
+    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res) => {
       const search = req.url?.split('?')[1]
       if (!search) {
         res.statusCode = 400

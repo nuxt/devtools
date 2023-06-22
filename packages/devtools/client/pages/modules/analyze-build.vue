@@ -62,7 +62,7 @@ registerCommands(() => [
 </script>
 
 <template>
-  <PanelLeftRight :left-size="20">
+  <PanelLeftRight :left-size="30">
     <template #left>
       <div flex="~ col">
         <template v-for="build of info?.builds" :key="build.slug">
@@ -72,7 +72,7 @@ registerCommands(() => [
             :to="`?slug=${encodeURIComponent(build.slug)}`"
           >
             <code>{{ build.name }}</code>
-            <div flex="~ gap-1 items-center" text-sm op60>
+            <div flex="~ gap-1 items-center wrap" text-sm op60>
               <div i-carbon-time />
               <span>{{ formatDuration(build) }}</span>
               <div flex-auto />
@@ -81,7 +81,7 @@ registerCommands(() => [
           </NuxtLink>
           <div x-divider />
         </template>
-        <div flex="~ items-center justify-center" p4>
+        <div flex="~ items-center justify-center wrap" p4>
           <NButton v-if="!processAnalyzeBuildInfo" n="primary" icon="carbon-edge-node" @click="start()">
             Start a new build
           </NButton>

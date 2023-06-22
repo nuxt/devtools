@@ -32,7 +32,7 @@ const model = useVModel(props, 'modelValue', emit, { passive: true })
       :value="value"
       @keypress.enter="model = value!"
     >
-    <span class="peer-focus-visible:n-focus-base n-radio-box n-checked:n-radio-box-checked peer-active:n-active-base n-transition">
+    <span class="n-radio-box n-checked:n-radio-box-checked peer-active:n-active-base peer-focus-visible:n-focus-base n-transition">
       <div class="n-radio-inner n-checked:n-radio-inner-checked n-transition" />
     </span>
     <span><slot /></span>

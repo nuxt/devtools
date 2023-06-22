@@ -19,7 +19,7 @@ export function useObjectStorage<T>(key: string, initial: T, readonly = false): 
         return
       wrote = JSON.stringify(value)
       localStorage.setItem(key, wrote)
-    }, { deep: true, flush: 'sync' })
+    }, { deep: true, flush: 'post' })
   }
 
   useEventListener(window, 'storage', (e: StorageEvent) => {
@@ -47,4 +47,14 @@ export function useTransform<F, T>(data: Ref<F>, to: (data: F) => T, from: (data
 export function useEventListener(target: EventTarget, type: string, listener: any, options?: boolean | AddEventListenerOptions) {
   target.addEventListener(type, listener, options)
   getCurrentScope() && onScopeDispose(() => target.removeEventListener(type, listener, options))
+}
+
+export function millisecondToHumanreadable(ms: number): [number, string] {
+  if (ms < 1000)
+    return [+ms.toFixed(0), 'ms']
+  if (ms < 1000 * 60)
+    return [+(ms / 1000).toFixed(1), 's']
+  if (ms < 1000 * 60 * 60)
+    return [+(ms / 1000 / 60).toFixed(1), 'min']
+  return [+(ms / 1000 / 60 / 60).toFixed(1), 'hour']
 }

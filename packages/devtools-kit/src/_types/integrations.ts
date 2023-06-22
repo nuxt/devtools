@@ -73,6 +73,17 @@ export interface PluginMetric {
   duration: number
 }
 
+export interface LoadingTimeMetric {
+  ssrStart?: number
+  appInit?: number
+  appLoad?: number
+  pageStart?: number
+  pageEnd?: number
+  pluginInit?: number
+  hmrStart?: number
+  hmrEnd?: number
+}
+
 export interface BasicModuleInfo {
   entryPath?: string
   meta?: {

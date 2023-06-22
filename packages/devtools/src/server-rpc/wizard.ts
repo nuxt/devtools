@@ -4,9 +4,10 @@ import type { NuxtDevtoolsServerContext, ServerFunctions, WizardActions } from '
 import { wizard } from '../wizard'
 import { LOG_PREFIX } from '../logger'
 
-export function setupWizardRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupWizardRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   return {
-    runWizard(name: WizardActions, ...args: any[]) {
+    async runWizard(token, name: WizardActions, ...args: any[]) {
+      await ensureDevAuthToken(token)
       logger.info(LOG_PREFIX, `Running wizard ${c.green(name)}...`)
       return (wizard[name] as any)(nuxt, ...args as [])
     },

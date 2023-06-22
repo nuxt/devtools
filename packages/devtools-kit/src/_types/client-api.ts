@@ -1,10 +1,11 @@
 import type {} from '@nuxt/schema'
+import type { Ref } from 'vue'
 import type { AppConfig } from 'nuxt/schema'
 import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { ServerFunctions } from './rpc'
-import type { HookInfo, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
+import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 
 export interface NuxtDevtoolsClientHooks {
   /**
@@ -37,17 +38,27 @@ export interface NuxtDevtoolsHostClient {
   appConfig: AppConfig
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
+  colorMode: Ref<'dark' | 'light'>
+
   inspector?: {
     instance?: VueInspectorClient
     enable: () => void
     disable: () => void
+    toggle: () => void
+    isEnabled: Ref<boolean>
   }
 
+  loadingTimeMetrics: LoadingTimeMetric
   getClientHooksMetrics(): HookInfo[]
   getClientPluginMetrics(): PluginMetric[]
 
   reloadPage(): void
   closeDevTools(): void
+
+  /**
+   * Update client, send to iframe if provided
+   */
+  updateClient(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {

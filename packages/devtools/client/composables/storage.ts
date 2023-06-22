@@ -3,7 +3,7 @@ import type { DevToolsFrameState, NuxtDevToolsUIOptions } from '~~/../src/types'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 
-const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: false })
+const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: true })
 
 const devToolsPanelsState = useLocalStorage<Record<string, number>>('nuxt-devtools-panels-state', {} as any, { listenToStorageChanges: false })
 
@@ -15,8 +15,9 @@ watch(devToolsOptions, async (options) => {
 }, { deep: true, flush: 'post' })
 
 // sync devtools options with frame state
-watchEffect(() => {
-  devToolsFrameState.value.closeOnOutsideClick = devToolsOptions.value.interactionCloseOnOutsideClick
+watch(() => devToolsOptions.value.interactionCloseOnOutsideClick, (state) => {
+  if (state !== devToolsFrameState.value.closeOnOutsideClick)
+    devToolsFrameState.value.closeOnOutsideClick = state
 })
 
 // Migrate settings from localStorage to devtools options. TODO: remove in next major release

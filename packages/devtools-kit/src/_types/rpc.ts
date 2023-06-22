@@ -42,9 +42,9 @@ export interface ServerFunctions {
   // Storage
   getStorageMounts(): Promise<StorageMounts>
   getStorageKeys(base?: string): Promise<string[]>
-  getStorageItem(key: string): Promise<StorageValue>
-  setStorageItem(key: string, value: StorageValue): Promise<void>
-  removeStorageItem(key: string): Promise<void>
+  getStorageItem(token: string, key: string): Promise<StorageValue>
+  setStorageItem(token: string, key: string, value: StorageValue): Promise<void>
+  removeStorageItem(token: string, key: string): Promise<void>
 
   // Analyze
   getAnalyzeBuildInfo(): Promise<AnalyzeBuildsInfo>

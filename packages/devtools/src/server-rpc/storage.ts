@@ -10,6 +10,7 @@ function shouldIgnoreStorageKey(key: string) {
 export function setupStorageRPC({
   nuxt,
   rpc,
+  ensureDevAuthToken,
 }: NuxtDevtoolsServerContext) {
   const storageMounts: StorageMounts = {}
 
@@ -32,6 +33,7 @@ export function setupStorageRPC({
       ...nitro.options.storage,
       ...nitro.options.devStorage,
     }
+
     for (const name of Object.keys(mounts)) {
       if (shouldIgnoreStorageKey(name))
         continue
@@ -56,17 +58,20 @@ export function setupStorageRPC({
         return []
       }
     },
-    async getStorageItem(key: string) {
+    async getStorageItem(token: string, key: string) {
+      await ensureDevAuthToken(token)
       if (!storage)
         return null
       return await storage.getItem(key)
     },
-    async setStorageItem(key: string, value: StorageValue) {
+    async setStorageItem(token: string, key: string, value: StorageValue) {
+      await ensureDevAuthToken(token)
       if (!storage)
         return
       return await storage.setItem(key, value)
     },
-    async removeStorageItem(key: string) {
+    async removeStorageItem(token: string, key: string) {
+      await ensureDevAuthToken(token)
       if (!storage)
         return
       return await storage.removeItem(key)
