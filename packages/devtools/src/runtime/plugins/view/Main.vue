@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
-import { state, toggleDevTools } from './state'
+import { state } from './state'
 import { millisecondToHumanreadable, useEventListener } from './utils'
 import FrameBox from './FrameBox.vue'
 
@@ -223,7 +223,12 @@ const time = computed(() => {
   >
     <div class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
     <div ref="panelEl" class="nuxt-devtools-panel" @pointerdown="onPointerDown">
-      <button class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button" title="Toggle Nuxt DevTools" @click="toggleDevTools">
+      <button
+        class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button"
+        title="Toggle Nuxt DevTools"
+        :style="state.open ? '' : 'filter:saturate(0)'"
+        @click="client.toggle()"
+      >
         <svg
           viewBox="0 0 324 324" fill="none" xmlns="http://www.w3.org/2000/svg"
           style="margin-top:-1px; height: 1.2em; width: 1.2em;"

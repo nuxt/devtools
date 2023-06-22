@@ -45,7 +45,7 @@ onDevtoolsClientConnected((client) => {
         <NButton
           n="green"
           class="mt-4"
-          @click="client!.host.closeDevTools()"
+          @click="client!.host.close()"
         >
           Close DevTools
         </NButton>

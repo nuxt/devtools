@@ -1,9 +1,9 @@
 import type { Ref } from 'vue'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import Main from './Main.vue'
-import { closeDevTools, popupWindow, state, toggleDevTools } from './state'
+import { popupWindow, state } from './state'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
 // @ts-ignore tsconfig
@@ -39,7 +39,33 @@ export async function setupDevToolsClient({
     reloadPage() {
       location.reload()
     },
-    closeDevTools,
+    toggle() {
+      if (state.value.open)
+        client.close()
+      else
+        client.open()
+    },
+    close() {
+      if (!state.value.open)
+        return
+      state.value.open = false
+      if (popupWindow.value) {
+        try {
+          popupWindow.value.close()
+        }
+        catch (e) {
+        }
+        popupWindow.value = null
+      }
+    },
+    open() {
+      if (state.value.open)
+        return
+      state.value.open = true
+      nextTick(() => {
+        client.updateClient()
+      })
+    },
     inspector: getInspectorInstance(),
     colorMode,
     getIframe,
@@ -69,10 +95,10 @@ export async function setupDevToolsClient({
       iframe.id = 'nuxt-devtools-iframe'
       iframe.src = initialUrl
       iframe.setAttribute('data-v-inspector-ignore', 'true')
-      iframe.addEventListener('load', async () => {
+      iframe.onload = async () => {
         await waitForClientInjection()
         client.updateClient()
-      })
+      }
     }
 
     return iframe
@@ -180,18 +206,20 @@ export async function setupDevToolsClient({
       }) as Window
       const style = pip.document.createElement('style')
       style.innerHTML = `
-          body {
-            margin: 0;
-            padding: 0;
-          }
-          iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-            outline: none;
-          }
-        `
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        iframe {
+          width: 100vw;
+          height: 100vh;
+          border: none;
+          outline: none;
+        }
+      `
       pip.__NUXT_DEVTOOLS_DISABLE__ = true
+      pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
+      pip.document.title = 'Nuxt DevTools'
       pip.document.head.appendChild(style)
       pip.document.body.appendChild(iframe)
       pip.addEventListener('resize', () => {
@@ -199,10 +227,8 @@ export async function setupDevToolsClient({
         state.value.height = Math.round(pip.innerHeight / window.innerHeight * 100)
       })
       pip.addEventListener('pagehide', () => {
-        closeDevTools()
-      })
-      pip.addEventListener('close', () => {
-        closeDevTools()
+        popupWindow.value = null
+        pip.close()
       })
     }
   }
@@ -217,7 +243,7 @@ export async function setupDevToolsClient({
   // Shortcut to toggle devtools
   addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      toggleDevTools()
+      client.close()
   })
 
   const app = createApp({

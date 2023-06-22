@@ -53,7 +53,10 @@ export interface NuxtDevtoolsHostClient {
   getClientPluginMetrics(): PluginMetric[]
 
   reloadPage(): void
-  closeDevTools(): void
+
+  close(): void
+  open(): void
+  toggle(): void
 
   /**
    * Popup the DevTools frame into Picture-in-Picture mode

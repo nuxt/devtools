@@ -45,7 +45,7 @@ watch(
 
 addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
-    client.value?.closeDevTools()
+    client.value?.close()
     e.preventDefault()
   }
 })

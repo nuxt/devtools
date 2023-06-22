@@ -38,6 +38,13 @@ declare global {
     __NUXT_DEVTOOLS_DISABLE__?: boolean
 
     /**
+     * Is popup mode
+     *
+     * @internal
+     */
+    __NUXT_DEVTOOLS_IS_POPUP__?: boolean
+
+    /**
      * Vue Inspector client
      */
     __VUE_INSPECTOR__?: VueInspectorClient

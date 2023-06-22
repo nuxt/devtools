@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
-import { PANEL_MAX, PANEL_MIN, closeDevTools, popupWindow, state } from './state'
+import { PANEL_MAX, PANEL_MIN, popupWindow, state } from './state'
 import { useEventListener } from './utils'
-import '../../../types/global'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
@@ -31,7 +30,7 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
   if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {
     e.preventDefault()
     props.client.inspector?.disable()
-    closeDevTools()
+    props.client.close()
   }
 })
 
