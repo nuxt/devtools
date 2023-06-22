@@ -102,6 +102,7 @@ export interface VSCodeTunnelOptions {
 export interface NuxtDevToolsUIOptions {
   componentsView: 'list' | 'graph'
   componentsGraphShowNodeModules: boolean
+  componentsGraphShowGlobalComponents: boolean
   componentsGraphShowPages: boolean
   componentsGraphShowLayouts: boolean
   componentsGraphShowWorkspace: boolean

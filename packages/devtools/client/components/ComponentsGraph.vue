@@ -25,11 +25,9 @@ const config = useServerConfig()
 const layouts = useLayouts()
 const relationships = useComponentsRelationships()
 
-// TODO: waiting for https://github.com/nuxt/devtools/pull/256 so it can be moved to component tab option
-const showGlobalComponents = ref(true)
-
 const {
   componentsGraphShowNodeModules: showNodeModules,
+  componentsGraphShowGlobalComponents: showGlobalComponents,
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
   componentsGraphShowWorkspace: showWorkspace,
