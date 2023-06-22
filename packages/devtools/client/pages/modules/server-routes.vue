@@ -23,15 +23,20 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.path === vueRoute.query?.path))
+const showRuntime = ref(false)
+
+const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path))
 const search = ref('')
 
 const filtered = computed(() => {
-  if (!serverRoutes.value)
-    return []
-  if (!search.value)
-    return serverRoutes.value
-  return fuse.value.search(search.value).map(i => i.item)
+  const result = !serverRoutes.value
+    ? []
+    : !search.value
+        ? serverRoutes.value
+        : fuse.value.search(search.value).map(i => i.item)
+  if (!showRuntime.value)
+    return result.filter(i => i.type !== 'runtime')
+  return result
 })
 </script>
 
@@ -39,35 +44,28 @@ const filtered = computed(() => {
   <PanelLeftRight>
     <template #left>
       <Navbar v-model:search="search" pb2>
-        <div flex="~ gap1" text-sm op50>
-          <span v-if="search">{{ filtered.length }} matched · </span>
-          <span>{{ serverRoutes?.length }} routes in total</span>
+        <div flex="~ gap1" text-sm>
+          <span v-if="search" op50>{{ filtered.length }} matched · </span>
+          <span op50>{{ serverRoutes?.length }} routes in total</span>
+          <div flex-auto />
+          <NCheckbox v-model="showRuntime" n="primary sm">
+            <span op75>Runtime routes</span>
+          </NCheckbox>
         </div>
       </Navbar>
 
-      <template v-for="item of filtered" :key="item.id">
-        <NuxtLink
-          flex="~ gap-2" items-center hover-bg-active px2 py1
-          :class="[{ 'bg-active': selected?.path === item.path }]"
-          :to="{ query: { path: item.path } }"
-        >
-          <div w-12 flex-none text-right>
-            <Badge
-              :class="getRequestMethodClass(item.method || '*')"
-              title="updates available"
-              v-text="(item.method || '*').toUpperCase()"
-            />
-          </div>
-          <span font-mono text-sm>{{ item.route }}</span>
-        </NuxtLink>
-        <div x-divider />
-      </template>
+      <ServerRouteListItem
+        v-for="item of filtered"
+        :key="item.filepath"
+        :item="item"
+        :selected="selected"
+      />
     </template>
     <template #right>
       <KeepAlive :max="10">
         <ServerRouteDetails
           v-if="selected"
-          :key="selected.path"
+          :key="selected.filepath"
           :route="selected"
         />
       </KeepAlive>
