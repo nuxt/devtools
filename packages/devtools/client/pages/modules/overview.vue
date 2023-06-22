@@ -11,6 +11,7 @@ const client = useClient()
 const config = useServerConfig()
 const components = useComponents()
 const autoImports = useAutoImports()
+const installedModules = useInstalledModules()
 const routes = useAllRoutes()
 const isMacOS = getIsMacOS()
 
@@ -80,7 +81,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-purple flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
-            <div>{{ config._installedModules.length }} modules</div>
+            <div>{{ installedModules.length }} modules</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-teal flex="~ col auto" to="/modules/plugins">
             <div carbon-plug text-3xl />
