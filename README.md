@@ -31,7 +31,7 @@ Unleash Nuxt Developer Experience.
 
 > Nuxt DevTools requires **Nuxt v3.1.0 or higher**.
 
-You can opt-in Nuxt DevTools per-project by going to the project root and run:
+You can opt-in Nuxt DevTools per project by going to the project root and run:
 
 ```bash
 npx nuxi@latest devtools enable
@@ -41,9 +41,7 @@ Restart your Nuxt server and open your app in browser. Click the Nuxt icon on th
 
 > **Note**: If you using `nvm` or other Node version managers, we suggest to run the enable command again after switching Node version.
 
-When you run `nuxi devtools enable`, Nuxt DevTools will be installed as a global module and only activated for the projects you enabled. The configuration will be saved in your local `~/.nuxtrc` file, so it doesn't affect your team unless they also opt-in.
-
-Similarly, you can disable it per-project by running:
+Similarly, you can disable it per project by running:
 
 ```bash
 npx nuxi@latest devtools disable
