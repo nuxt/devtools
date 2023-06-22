@@ -265,6 +265,18 @@ const time = computed(() => {
   position: fixed;
   transform-origin: center center;
   transform: translate(-50%, -50%) rotate(0);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px !important;
+}
+
+#nuxt-devtools-anchor button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  color: inherit;
 }
 
 #nuxt-devtools-anchor .nuxt-devtools-label {
