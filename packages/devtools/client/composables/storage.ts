@@ -1,5 +1,5 @@
 import { toRefs } from '@vueuse/core'
-import type { DevToolsFrameState, NuxtDevToolsUIOptions } from '~~/../src/types'
+import type { DevToolsFrameState } from '~~/../src/types'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 
@@ -7,27 +7,26 @@ const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-fr
 
 const devToolsPanelsState = useLocalStorage<Record<string, number>>('nuxt-devtools-panels-state', {} as any, { listenToStorageChanges: false })
 
-const devToolsOptions = ref<NuxtDevToolsUIOptions>(await rpc.getUIOptions())
-const devToolsOptionsRefs = toRefs(devToolsOptions)
+const uiOptions = ref(await rpc.getOptions('ui'))
+const uiOptionsRefs = toRefs(uiOptions)
 
-watch(devToolsOptions, async (options) => {
-  rpc.updateUIOptions(options)
+watch(uiOptions, async (options) => {
+  rpc.updateOptions('ui', options)
 }, { deep: true, flush: 'post' })
 
 // sync devtools options with frame state
-watch(() => devToolsOptions.value.interactionCloseOnOutsideClick, (state) => {
-  if (state !== devToolsFrameState.value.closeOnOutsideClick)
-    devToolsFrameState.value.closeOnOutsideClick = state
+watchEffect(() => {
+  devToolsFrameState.value.closeOnOutsideClick = uiOptions.value.interactionCloseOnOutsideClick
 })
 
 // Migrate settings from localStorage to devtools options. TODO: remove in next major release
 if (localStorage.getItem('nuxt-devtools-settings')) {
-  Object.assign(devToolsOptions.value, JSON.parse(localStorage.getItem('nuxt-devtools-settings')!))
+  Object.assign(uiOptions.value, JSON.parse(localStorage.getItem('nuxt-devtools-settings')!))
   localStorage.removeItem('nuxt-devtools-settings')
 }
 
-export function useDevToolsOptions() {
-  return devToolsOptionsRefs
+export function useDevToolsUIOptions() {
+  return uiOptionsRefs
 }
 
 export function useDevToolsFrameState() {

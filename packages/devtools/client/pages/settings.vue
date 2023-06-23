@@ -10,7 +10,7 @@ const {
   scale,
   hiddenTabs,
   hiddenTabCategories,
-} = useDevToolsOptions()
+} = useDevToolsUIOptions()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -89,7 +89,7 @@ function toggleTabCategory(name: string, v: boolean) {
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
               <NButton n="primary" @click="toggle">
-                <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
+                <div carbon-sun translate-y--1px dark:carbon-moon /> {{ isDark.value ? 'Dark' : 'Light' }}
               </NButton>
             </NDarkToggle>
           </div>

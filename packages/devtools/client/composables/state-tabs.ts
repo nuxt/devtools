@@ -4,7 +4,7 @@ import type { ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
-  const settings = useDevToolsOptions()
+  const settings = useDevToolsUIOptions()
   const router = useRouter()
 
   const builtin = computed(() => [
@@ -78,7 +78,7 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
-  const settings = useDevToolsOptions()
+  const settings = useDevToolsUIOptions()
   const categoryOrder = Object.keys(getCategorizedRecord())
   const tabShows = tabs.value.map(tab => (tab as ModuleBuiltinTab)?.show?.())
 

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const open = ref(false)
-const {
-  showHelpButtons,
-} = useDevToolsOptions()
+const { showHelpButtons } = useDevToolsUIOptions()
 </script>
 
 <template>
