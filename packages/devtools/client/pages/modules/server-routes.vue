@@ -17,8 +17,6 @@ const vueRoute = useRoute()
 
 const serverRoutes = useServerRoutes()
 
-const showRuntime = ref(false)
-
 const filterByCollection = computed(() => {
   const collections: ServerRouteInfo[] = []
 
@@ -27,9 +25,7 @@ const filterByCollection = computed(() => {
     collection.routes.push(route)
   }
 
-  const routes = showRuntime.value
-    ? serverRoutes.value
-    : serverRoutes.value?.filter(r => r.type !== 'runtime')
+  const routes = serverRoutes.value
 
   routes?.forEach((item) => {
     const filepathParts = item.filepath.split('/')
@@ -109,8 +105,6 @@ const filtered = computed(() => {
     : !search.value
         ? serverRoutes.value
         : fuse.value.search(search.value).map(i => i.item)
-  if (!showRuntime.value)
-    return result.filter(i => i.type !== 'runtime')
   return result
 })
 </script>
@@ -122,10 +116,6 @@ const filtered = computed(() => {
         <div flex="~ gap1" text-sm>
           <span v-if="search" op50>{{ filtered.length }} matched · </span>
           <span op50>{{ serverRoutes?.length }} routes in total</span>
-          <div flex-auto />
-          <NCheckbox v-model="showRuntime" n="indigo sm">
-            <span op75>Runtime routes</span>
-          </NCheckbox>
         </div>
       </Navbar>
 

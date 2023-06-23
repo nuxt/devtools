@@ -9,8 +9,7 @@ withDefaults(defineProps<{
   index: 0,
 })
 
-const open = ref(false)
-// const dropdown = ref(false)
+const open = ref(true)
 </script>
 
 <template>
@@ -41,14 +40,6 @@ const open = ref(false)
           <NIconButton icon="carbon-overflow-menu-vertical" @click.stop.prevent="click()" />
         </template>
       </NDropdown> -->
-      <Badge
-        v-if="item.type === 'runtime'"
-        flex-none
-        class="bg-indigo-400:10 text-indigo-400"
-        title="added at runtime"
-      >
-        runtime
-      </Badge>
     </component>
     <div x-divider />
     <slot v-if="open">
