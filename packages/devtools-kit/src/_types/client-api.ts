@@ -53,12 +53,29 @@ export interface NuxtDevtoolsHostClient {
   getClientPluginMetrics(): PluginMetric[]
 
   reloadPage(): void
-  closeDevTools(): void
+
+  close(): void
+  open(): void
+  toggle(): void
 
   /**
-   * Update client, send to iframe if provided
+   * Popup the DevTools frame into Picture-in-Picture mode
+   *
+   * Requires Chrome 111 with experimental flag enabled.
+   *
+   * Function is undefined when not supported.
+   *
+   * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
    */
-  updateClient(iframe?: HTMLIFrameElement): NuxtDevtoolsHostClient
+  popup?(): any
+
+  /**
+   * Update client
+   * @internal
+   */
+  updateClient(): NuxtDevtoolsHostClient
+
+  getIframe(): HTMLIFrameElement
 }
 
 export interface NuxtDevtoolsClient {

@@ -20,15 +20,13 @@ function refreshPage() {
           <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
         </NButton>
       </NDarkToggle>
-      <NButton n="sm primary" to="/settings">
-        <div carbon-settings-adjust translate-y--1px /> Settings
-      </NButton>
+      <PictureInPictureButton />
     </div>
     <div px3 py2 flex="~ gap2">
-      <NButton n="solid primary xs" @click="refreshData">
+      <NButton n="primary sm" @click="refreshData">
         Refetch Data
       </NButton>
-      <NButton n="solid primary xs" @click="refreshPage">
+      <NButton n="primary sm" @click="refreshPage">
         Refresh Page
       </NButton>
     </div>
