@@ -1,38 +1,54 @@
 <script setup lang="ts">
+import { NuxtLink } from '#components'
 import type { ServerRouteInfo } from '~/../src/types'
 
 withDefaults(defineProps<{
   item: ServerRouteInfo
-  selected: any
-  divider?: boolean
+  index: number
 }>(), {
-  divider: true,
+  index: 0,
 })
+
+const open = ref(true)
 </script>
 
 <template>
   <div>
-    <NuxtLink
-      flex="~ gap-2" items-center hover-bg-active px2 py1
-      :class="[{ 'bg-active': selected?.route === item.route }]"
+    <component
+      :is="item.routes ? 'button' : NuxtLink"
+      flex="~ gap-2" w-full items-center hover-bg-active px2 py1
+      :class="[{ 'bg-active': $route.query.path === item.route }]"
+      :style="{ paddingLeft: `calc(0.5rem + ${index * 1.5}em)` }"
       :to="{ query: { path: item.route } }"
+      @click="open = !open"
     >
-      <div w-12 flex-none text-left>
+      <div :class="{ 'w-12': !item.routes }" flex-none text-left>
+        <NIcon v-if="item.type === 'collection'" icon="carbon:chevron-right" mb0.5 :transform-rotate="open ? 90 : 0" transition />
         <Badge
+          v-else
           :class="getRequestMethodClass(item.method || '*')"
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>
-      <span flex-auto font-mono text-sm>{{ item.route }}</span>
-      <Badge
-        v-if="item.type === 'runtime'"
-        flex-none
-        class="bg-indigo-400:10 text-indigo-400"
-        title="added at runtime"
-      >
-        runtime
-      </Badge>
-    </NuxtLink>
-    <div v-if="divider" x-divider />
+      <span :class="{ 'flex items-center': item.routes }" flex-auto font-mono text-sm>
+        <NIcon v-if="item.type === 'collection'" :title="`${item.routes?.length} routes`" icon="carbon:folder" mr1 />
+        {{ item.route }}
+      </span>
+      <!-- TODO: maybe add options to create/delete/copy ... -->
+      <!-- <NDropdown v-model="dropdown" position="right" n="sm">
+        <template #trigger="{ click }">
+          <NIconButton icon="carbon-overflow-menu-vertical" @click.stop.prevent="click()" />
+        </template>
+      </NDropdown> -->
+    </component>
+    <div x-divider />
+    <slot v-if="open">
+      <ServerRouteListItem
+        v-for="subItem in item.routes"
+        :key="subItem.filepath"
+        :item="subItem"
+        :index="index + 1"
+      />
+    </slot>
   </div>
 </template>
