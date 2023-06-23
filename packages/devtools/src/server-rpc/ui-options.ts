@@ -8,6 +8,7 @@ import type { NuxtDevToolsUIOptions, NuxtDevtoolsServerContext, ServerFunctions 
 const defaults: NuxtDevToolsUIOptions = {
   componentsView: 'list',
   componentsGraphShowNodeModules: false,
+  componentsGraphShowGlobalComponents: true,
   componentsGraphShowPages: false,
   componentsGraphShowLayouts: false,
   componentsGraphShowWorkspace: true,

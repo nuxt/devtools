@@ -27,6 +27,7 @@ const relationships = useComponentsRelationships()
 
 const {
   componentsGraphShowNodeModules: showNodeModules,
+  componentsGraphShowGlobalComponents: showGlobalComponents,
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
   componentsGraphShowWorkspace: showWorkspace,
@@ -63,7 +64,9 @@ const data = computed<Data>(() => {
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
-        ? 'user'
+        ? component.global
+          ? 'global'
+          : 'user'
         : layout
           ? 'layout'
           : page
@@ -77,6 +80,8 @@ const data = computed<Data>(() => {
     if (!showLayouts.value && group === 'layout')
       return null
     if (!showWorkspace.value && group === 'user' && config.value && !rel.id.startsWith(config.value.rootDir))
+      return null
+    if (!showGlobalComponents.value && group === 'global')
       return null
 
     const shape = group === 'layout'
@@ -196,6 +201,9 @@ function setFilter() {
       <NCheckbox v-model="showNodeModules" n="primary sm">
         <span op75>Show node_modules</span>
       </NCheckbox>
+      <NCheckbox v-model="showGlobalComponents" n="primary sm">
+        <span op75>Show global components</span>
+      </NCheckbox>
       <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
@@ -211,6 +219,10 @@ function setFilter() {
         <div h-3 w-3 rounded-full bg-hex-42b883 />
         <div op50>
           Component
+        </div>
+        <div h-3 w-3 rounded-full bg-hex-97c2fc />
+        <div op50>
+          Global Component
         </div>
         <div h-3 w-3 bg-hex-42b2b8 />
         <div op50>
