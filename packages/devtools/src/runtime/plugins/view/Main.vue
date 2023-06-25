@@ -79,6 +79,8 @@ onMounted(() => {
           : 'left'
 
     state.value.left = snapToPoints(x / windowSize.width * 100)
+    if (y / windowSize.height * 100 < 10 || y / windowSize.height * 100 > 90)
+      return
     state.value.top = snapToPoints(y / windowSize.height * 100)
   })
   useEventListener(window, 'pointerup', () => {
