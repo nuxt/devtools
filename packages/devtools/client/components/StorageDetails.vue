@@ -135,7 +135,7 @@ async function renameCurrentItem() {
       />
       <template v-for="key of filteredKeys" :key="key">
         <NuxtLink
-          block truncate px2 py1 font-mono text-sm
+          block truncate px2 py1 text-sm font-mono
           :to="{ query: { key, storage: currentStorage } }"
           :class="key === currentItem?.key ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >
@@ -180,7 +180,7 @@ async function renameCurrentItem() {
         <textarea
           v-else v-model="currentItem.updatedContent"
           placeholder="Item value..."
-          class="h-full of-auto p-4 font-mono text-sm outline-none"
+          class="h-full of-auto p-4 text-sm font-mono outline-none"
           @keyup.ctrl.enter="saveCurrentItem"
         />
       </div>

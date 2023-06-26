@@ -30,7 +30,7 @@ const open = ref(true)
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>
-      <span :class="{ 'flex items-center': item.routes }" flex-auto font-mono text-sm>
+      <span :class="{ 'flex items-center': item.routes }" flex-auto text-sm font-mono>
         <NIcon v-if="item.type === 'collection'" :title="`${item.routes?.length} routes`" icon="carbon:folder" mr1 />
         {{ item.route }}
       </span>

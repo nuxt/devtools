@@ -11,5 +11,5 @@ const name = computed(() => props.component.pascalName || pascalCase(props.compo
 </script>
 
 <template>
-  <code font-mono text-sm><span mr1 op20>&lt;</span>{{ name }}<span ml1 op20>/&gt;</span></code>
+  <code text-sm font-mono><span mr1 op20>&lt;</span>{{ name }}<span ml1 op20>/&gt;</span></code>
 </template>
