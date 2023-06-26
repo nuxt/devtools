@@ -10,8 +10,13 @@ const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
-const PANEL_MARGIN = 10
-const FRAME_MARGIN = 24
+const panelMargins = {
+  left: 10,
+  top: 10,
+  right: 10,
+  bottom: 10,
+}
+
 const SNAP_THRESHOLD = 2
 
 const vars = computed(() => {
@@ -115,24 +120,24 @@ const anchorPos = computed(() => {
   switch (state.value.position) {
     case 'top':
       return {
-        left: clamp(left, halfWidth + PANEL_MARGIN, windowSize.width - halfWidth - PANEL_MARGIN),
-        top: PANEL_MARGIN + halfHeight,
+        left: clamp(left, halfWidth + panelMargins.left, windowSize.width - halfWidth - panelMargins.right),
+        top: panelMargins.top + halfHeight,
       }
     case 'right':
       return {
-        left: windowSize.width - PANEL_MARGIN - halfHeight,
-        top: clamp(top, halfWidth + PANEL_MARGIN, windowSize.height - halfWidth - PANEL_MARGIN),
+        left: windowSize.width - panelMargins.right - halfHeight,
+        top: clamp(top, halfWidth + panelMargins.top, windowSize.height - halfWidth - panelMargins.bottom),
       }
     case 'left':
       return {
-        left: PANEL_MARGIN + halfHeight,
-        top: clamp(top, halfWidth + PANEL_MARGIN, windowSize.height - halfWidth - PANEL_MARGIN),
+        left: panelMargins.left + halfHeight,
+        top: clamp(top, halfWidth + panelMargins.top, windowSize.height - halfWidth - panelMargins.bottom),
       }
     case 'bottom':
     default:
       return {
-        left: clamp(left, halfWidth + PANEL_MARGIN, windowSize.width - halfWidth - PANEL_MARGIN),
-        top: windowSize.height - PANEL_MARGIN - halfHeight,
+        left: clamp(left, halfWidth + panelMargins.left, windowSize.width - halfWidth - panelMargins.right),
+        top: windowSize.height - panelMargins.bottom - halfHeight,
       }
   }
 })
@@ -143,14 +148,26 @@ const iframeStyle = computed(() => {
   // eslint-disable-next-line no-unused-expressions, no-sequences
   mousePosition.x, mousePosition.y
 
-  const maxWidth = windowSize.width - FRAME_MARGIN * 2
-  const maxHeight = windowSize.height - FRAME_MARGIN * 2
+  const halfHeight = (panelEl.value?.clientHeight || 0) / 2
+
+  const frameMargin = {
+    left: panelMargins.left + halfHeight,
+    top: panelMargins.top + halfHeight,
+    right: panelMargins.right + halfHeight,
+    bottom: panelMargins.bottom + halfHeight,
+  }
+
+  const marginHorizontal = frameMargin.left + frameMargin.right
+  const marginVertical = frameMargin.top + frameMargin.bottom
+
+  const maxWidth = windowSize.width - marginHorizontal
+  const maxHeight = windowSize.height - marginVertical
 
   const style: CSSProperties = {
     zIndex: -1,
     pointerEvents: isDragging.value ? 'none' : 'auto',
-    width: `min(${state.value.width}vw, calc(100vw - ${FRAME_MARGIN * 2}px))`,
-    height: `min(${state.value.height}vh, calc(100vh - ${FRAME_MARGIN * 2}px))`,
+    width: `min(${state.value.width}vw, calc(100vw - ${marginHorizontal}px))`,
+    height: `min(${state.value.height}vh, calc(100vh - ${marginVertical}px))`,
   }
 
   const anchor = anchorPos.value
@@ -165,19 +182,19 @@ const iframeStyle = computed(() => {
     case 'bottom':
       style.left = 0
       style.transform = 'translate(-50%, 0)'
-      if ((anchorX - FRAME_MARGIN) < width / 2)
-        style.left = `${width / 2 - anchorX + FRAME_MARGIN}px`
-      else if ((windowSize.width - anchorX - FRAME_MARGIN) < width / 2)
-        style.left = `${windowSize.width - anchorX - width / 2 - FRAME_MARGIN}px`
+      if ((anchorX - frameMargin.left) < width / 2)
+        style.left = `${width / 2 - anchorX + frameMargin.left}px`
+      else if ((windowSize.width - anchorX - frameMargin.right) < width / 2)
+        style.left = `${windowSize.width - anchorX - width / 2 - frameMargin.right}px`
       break
     case 'right':
     case 'left':
       style.top = 0
       style.transform = 'translate(0, -50%)'
-      if ((anchorY - FRAME_MARGIN) < height / 2)
-        style.top = `${height / 2 - anchorY + FRAME_MARGIN}px`
-      else if ((windowSize.height - anchorY - FRAME_MARGIN) < height / 2)
-        style.top = `${windowSize.height - anchorY - height / 2 - FRAME_MARGIN}px`
+      if ((anchorY - frameMargin.top) < height / 2)
+        style.top = `${height / 2 - anchorY + frameMargin.top}px`
+      else if ((windowSize.height - anchorY - frameMargin.bottom) < height / 2)
+        style.top = `${windowSize.height - anchorY - height / 2 - frameMargin.bottom}px`
       break
   }
 
