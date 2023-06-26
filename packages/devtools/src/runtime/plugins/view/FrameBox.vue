@@ -6,10 +6,11 @@ import { useEventListener } from './utils'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
+  isDragging: boolean
 }>()
 
 const container = ref<HTMLElement>()
-const isDragging = ref<false | { top?: boolean; left?: boolean; right?: boolean; bottom?: boolean }>(false)
+const isResizing = ref<false | { top?: boolean; left?: boolean; right?: boolean; bottom?: boolean }>(false)
 
 watchEffect(() => {
   if (!container.value)
@@ -17,7 +18,7 @@ watchEffect(() => {
 
   if (state.value.open) {
     const iframe = props.client.getIframe()
-    iframe.style.pointerEvents = isDragging.value ? 'none' : 'auto'
+    iframe.style.pointerEvents = isResizing.value || props.isDragging ? 'none' : 'auto'
 
     if (!popupWindow.value) {
       if (Array.from(container.value.children).every(el => el !== iframe))
@@ -40,7 +41,7 @@ useEventListener(window, 'mousedown', (e: MouseEvent) => {
     return
   if (popupWindow.value)
     return
-  if (!state.value.open || isDragging.value || props.client.inspector?.isEnabled.value)
+  if (!state.value.open || isResizing.value || props.client.inspector?.isEnabled.value)
     return
 
   const matched = e.composedPath().find((_el) => {
@@ -54,7 +55,7 @@ useEventListener(window, 'mousedown', (e: MouseEvent) => {
 })
 
 useEventListener(window, 'mousemove', (e: MouseEvent) => {
-  if (!isDragging.value)
+  if (!isResizing.value)
     return
   if (!state.value.open)
     return
@@ -62,23 +63,23 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
   const iframe = props.client.getIframe()
   const box = iframe.getBoundingClientRect()
 
-  if (isDragging.value.right) {
+  if (isResizing.value.right) {
     const widthPx = Math.abs(e.clientX - (box?.left || 0))
     const width = widthPx / window.innerWidth * 100
     state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
   }
-  else if (isDragging.value.left) {
+  else if (isResizing.value.left) {
     const widthPx = Math.abs((box?.right || 0) - e.clientX)
     const width = widthPx / window.innerWidth * 100
     state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
   }
 
-  if (isDragging.value.top) {
+  if (isResizing.value.top) {
     const heightPx = Math.abs((box?.bottom || 0) - e.clientY)
     const height = heightPx / window.innerHeight * 100
     state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
   }
-  else if (isDragging.value.bottom) {
+  else if (isResizing.value.bottom) {
     const heightPx = Math.abs(e.clientY - (box?.top || 0))
     const height = heightPx / window.innerHeight * 100
     state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
@@ -86,11 +87,11 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
 })
 
 useEventListener(window, 'mouseup', () => {
-  isDragging.value = false
+  isResizing.value = false
 })
 
 useEventListener(window, 'mouseleave', () => {
-  isDragging.value = false
+  isResizing.value = false
 })
 </script>
 
@@ -105,49 +106,49 @@ useEventListener(window, 'mouseleave', () => {
       v-show="state.position !== 'top'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ top: 0 }"
-      @mousedown.prevent="() => isDragging = { top: true }"
+      @mousedown.prevent="() => isResizing = { top: true }"
     />
     <div
       v-show="state.position !== 'bottom'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ bottom: 0 }"
-      @mousedown.prevent="() => isDragging = { bottom: true }"
+      @mousedown.prevent="() => isResizing = { bottom: true }"
     />
     <div
       v-show="state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ left: 0 }"
-      @mousedown.prevent="() => isDragging = { left: true }"
+      @mousedown.prevent="() => isResizing = { left: true }"
     />
     <div
       v-show="state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ right: 0 }"
-      @mousedown.prevent="() => isDragging = { right: true }"
+      @mousedown.prevent="() => isResizing = { right: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, left: 0, cursor: 'nwse-resize' }"
-      @mousedown.prevent="() => isDragging = { top: true, left: true }"
+      @mousedown.prevent="() => isResizing = { top: true, left: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, right: 0, cursor: 'nesw-resize' }"
-      @mousedown.prevent="() => isDragging = { top: true, right: true }"
+      @mousedown.prevent="() => isResizing = { top: true, right: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }"
-      @mousedown.prevent="() => isDragging = { bottom: true, left: true }"
+      @mousedown.prevent="() => isResizing = { bottom: true, left: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }"
-      @mousedown.prevent="() => isDragging = { bottom: true, right: true }"
+      @mousedown.prevent="() => isResizing = { bottom: true, right: true }"
     />
   </div>
 </template>

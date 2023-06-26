@@ -280,7 +280,12 @@ const time = computed(() => {
         </button>
       </template>
     </div>
-    <FrameBox ref="frameBox" :client="client" :style="iframeStyle" />
+    <FrameBox
+      ref="frameBox"
+      :client="client"
+      :style="iframeStyle"
+      :is-dragging="isDragging"
+    />
   </div>
 </template>
 
