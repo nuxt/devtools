@@ -79,8 +79,6 @@ onMounted(() => {
           : 'left'
 
     state.value.left = snapToPoints(x / windowSize.width * 100)
-    if (y / windowSize.height * 100 < 10 || y / windowSize.height * 100 > 90)
-      return
     state.value.top = snapToPoints(y / windowSize.height * 100)
   })
   useEventListener(window, 'pointerup', () => {
@@ -101,6 +99,10 @@ function snapToPoints(value: number) {
   return value
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
+
 const isVertical = computed(() => state.value.position === 'left' || state.value.position === 'right')
 
 const anchorPos = computed(() => {
@@ -113,23 +115,23 @@ const anchorPos = computed(() => {
   switch (state.value.position) {
     case 'top':
       return {
-        left: Math.min(Math.max(left, halfWidth + PANEL_MARGIN), windowSize.width - halfWidth - PANEL_MARGIN),
+        left: clamp(left, halfWidth + PANEL_MARGIN, windowSize.width - halfWidth - PANEL_MARGIN),
         top: PANEL_MARGIN + halfHeight,
       }
     case 'right':
       return {
         left: windowSize.width - PANEL_MARGIN - halfHeight,
-        top,
+        top: clamp(top, halfWidth + PANEL_MARGIN, windowSize.height - halfWidth - PANEL_MARGIN),
       }
     case 'left':
       return {
         left: PANEL_MARGIN + halfHeight,
-        top,
+        top: clamp(top, halfWidth + PANEL_MARGIN, windowSize.height - halfWidth - PANEL_MARGIN),
       }
     case 'bottom':
     default:
       return {
-        left: Math.min(Math.max(left, halfWidth + PANEL_MARGIN), windowSize.width - halfWidth - PANEL_MARGIN),
+        left: clamp(left, halfWidth + PANEL_MARGIN, windowSize.width - halfWidth - PANEL_MARGIN),
         top: windowSize.height - PANEL_MARGIN - halfHeight,
       }
   }
