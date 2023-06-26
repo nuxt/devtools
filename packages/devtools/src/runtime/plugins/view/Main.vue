@@ -1,21 +1,32 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { state } from './state'
-import { millisecondToHumanreadable, useEventListener } from './utils'
+import { millisecondToHumanreadable, useEventListener, useScreenSafeArea } from './utils'
 import FrameBox from './FrameBox.vue'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
 }>()
 
-const panelMargins = {
+const panelMargins = reactive({
   left: 10,
   top: 10,
   right: 10,
   bottom: 10,
-}
+})
+
+const safeArea = useScreenSafeArea()
+
+const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
+
+watchEffect(() => {
+  panelMargins.left = safeArea.left.value + 10
+  panelMargins.top = safeArea.top.value + 10
+  panelMargins.right = safeArea.right.value + 10
+  panelMargins.bottom = safeArea.bottom.value + 10
+})
 
 const SNAP_THRESHOLD = 2
 
@@ -242,7 +253,7 @@ const time = computed(() => {
     :style="[anchorStyle, vars]"
     :class="{ 'nuxt-devtools-vertical': isVertical }"
   >
-    <div class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
+    <div v-if="!isSafari" class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
     <div ref="panelEl" class="nuxt-devtools-panel" @pointerdown="onPointerDown">
       <button
         class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button"
