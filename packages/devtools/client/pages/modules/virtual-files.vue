@@ -68,7 +68,7 @@ const filteredFiles = computed(() => {
         v-for="f of filteredFiles" :key="f.id"
       >
         <NuxtLink
-          block select-none truncate px2 py1 font-mono text-sm
+          block select-none truncate px2 py1 text-sm font-mono
           :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
           :class="f.id === current?.id ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
         >

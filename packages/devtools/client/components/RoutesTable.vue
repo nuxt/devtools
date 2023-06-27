@@ -90,16 +90,16 @@ function getMiddlewarePath(name: any) {
               </div>
             </div>
           </td>
-          <td w-0 ws-nowrap pr-1 text-left font-mono text-sm op50>
+          <td w-0 ws-nowrap pr-1 text-left text-sm font-mono op50>
             {{ item.name }}
           </td>
-          <td w-0 ws-nowrap pr-1 text-center font-mono text-sm op50>
+          <td w-0 ws-nowrap pr-1 text-center text-sm font-mono op50>
             <FilepathItem
               :filepath="getMiddlewarePath(item.meta.middleware)"
               :override="`${item.meta.middleware || '-'}`"
             />
           </td>
-          <td w-0 ws-nowrap text-center font-mono text-sm>
+          <td w-0 ws-nowrap text-center text-sm font-mono>
             <span v-if="item.meta.layout === false">-</span>
             <button v-else-if="item.meta.layout" @click="openLayout(item.meta.layout as string)">
               {{ item.meta.layout }}

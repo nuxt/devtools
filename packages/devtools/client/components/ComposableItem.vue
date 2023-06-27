@@ -31,7 +31,7 @@ const docsUrl = computed(() => {
   <VDropdown :disabled="!props.metadata">
     <button hover:text-primary>
       <code
-        rounded bg-gray:5 px2 py1 font-mono text-sm
+        rounded bg-gray:5 px2 py1 text-sm font-mono
         :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
       >
         {{ name }}

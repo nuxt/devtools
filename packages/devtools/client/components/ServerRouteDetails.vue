@@ -30,6 +30,8 @@ const responseLang = computed(() => {
     return 'css'
   if (response.contentType.includes('text/javascript'))
     return 'javascript'
+  if (response.contentType.includes('image') || response.contentType.includes('video'))
+    return 'media'
   if (response.contentType.includes('text/xml') || response.contentType.includes('application/xml'))
     return 'xml'
   return 'text'
@@ -38,6 +40,10 @@ const responseLang = computed(() => {
 const responseContent = computed(() => {
   if (responseLang.value === 'json')
     return JSON.stringify(response.data, null, 2)
+  if (responseLang.value === 'media') {
+    const blob = new Blob([response.data], { type: response.contentType })
+    return URL.createObjectURL(blob)
+  }
   return response.data
 })
 
@@ -333,10 +339,19 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
       </div>
       <!-- Rich response data -->
       <NCodeBlock
+        v-if="responseLang !== 'media'"
         flex-auto overflow-auto py-2
         :code="responseContent"
         :lang="responseLang"
       />
+      <div v-else flex-auto overflow-auto p4>
+        <div border="~ base" rounded>
+          <img v-if="response.contentType.includes('image')" rounded :src="responseContent">
+          <video v-else controls rounded>
+            <source :src="responseContent" type="video/mp4">
+          </video>
+        </div>
+      </div>
     </template>
   </div>
 </template>

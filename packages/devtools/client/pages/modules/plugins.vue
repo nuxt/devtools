@@ -46,7 +46,7 @@ const totalTime = computed(() => {
         ml--4 border-base py2 :class="idx ? 'border-t' : ''"
       />
 
-      <div class="text-sm" flex="~ gap-1 items-center justify-end" mt-3>
+      <div class="text-sm" flex="~ gap-1 items-center justify-start" mt-3>
         <div i-carbon-timer text-lg op75 />
         <span op50>Total execution time:</span>
         <DurationDisplay :duration="totalTime" :factor="10" />

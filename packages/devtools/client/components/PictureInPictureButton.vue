@@ -4,6 +4,7 @@ const client = useClient()
 const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__
 
 const showInfo = ref(false)
+const copy = useCopy()
 </script>
 
 <template>
@@ -29,7 +30,12 @@ const showInfo = ref(false)
           As June 2023, the API is only available in Chrome 111 and above, under a flag <code>#document-picture-in-picture-api</code>.
         </p>
         <p>
-          You currently browser seems not supporting the API or the flag is not enabled yet.
+          Your current browser does not seem to support the API, or the flag is not enabled yet.
+          You can try enabling the flag by visiting
+          <NButton n="xs primary" title="Click to Copy" @click="copy('chrome://flags/#document-picture-in-picture-api')">
+            chrome://flags/#document-picture-in-picture-api
+          </NButton>
+          and restart the browser.
         </p>
         <div>
           <NButton @click="showInfo = false">
