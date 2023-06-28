@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
 
-interface RouteParam {
-  [key: string]: string
-}
+const props = defineProps<{
+  route: ServerRouteInfo
+}>()
 
-const props = defineProps({
-  route: {
-    type: Object as PropType<ServerRouteInfo>,
-    required: true,
-  },
-})
-
+const currentRoute = useRoute()
 const config = useServerConfig()
 
+// TODO: use storage options to cache responses
 const response = reactive({
   contentType: 'text/plain',
   data: '' as any,
@@ -57,21 +52,47 @@ const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 
 const routeMethod = ref(props.route.method || 'GET')
-const routeParams = ref<RouteParam>({})
-const routeBodies = ref<RouteParam[]>([{ key: '', value: '' }])
-const routeQueries = ref<RouteParam[]>([{ key: '', value: '' }])
-const routeHeaders = ref<RouteParam[]>([{ key: 'Content-Type', value: 'application/json' }])
+const routeParams = ref<{ [key: string]: string }>({})
+// TODO: add type to switch between json and input
+const routeInputs = reactive({
+  query: [{ key: '', value: '' }],
+  body: [{ key: '', value: '' }],
+  headers: [{ key: 'Content-Type', value: 'application/json' }],
+})
 
-const queriesCount = computed(() => routeQueries.value.filter(({ key }) => key).length)
-const headersCount = computed(() => routeHeaders.value.filter(({ key }) => key).length)
+const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
+// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
+const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
+const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const formattedBody = computed(() => {
-  const obj: RouteParam = {}
-  for (let i = 0; i < routeBodies.value.length; i++) {
-    const { key, value } = routeBodies.value[i]
-    obj[key] = value
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+
+// TODO: fix routeInputs[activeTab.value] type
+type RouteInputs = keyof typeof routeInputs
+const currentParams = computed({
+  get: () => routeInputs[activeTab.value as RouteInputs],
+  set: (value) => {
+    routeInputs[activeTab.value as RouteInputs] = value
+  },
+})
+
+// TODO: add global inputs
+const parsedQuery = computed(() => {
+  return {
+    ...parseInputs(routeInputs.query),
   }
-  return Object.keys(obj)[0] ? obj : null
+})
+const parsedHeader = computed(() => {
+  return {
+    ...parseInputs(routeInputs.headers),
+  }
+})
+const parsedBody = computed(() => {
+  return hasBody.value
+    ? {
+        ...parseInputs(routeInputs.body),
+      }
+    : undefined
 })
 
 const domain = computed(() => {
@@ -84,7 +105,7 @@ const domain = computed(() => {
 })
 
 const finalPath = computed(() => {
-  let query = new URLSearchParams(Object.fromEntries(routeQueries.value.filter(({ key }) => key).map(({ key, value }) => [key, value]))).toString()
+  let query = new URLSearchParams(parsedQuery.value).toString()
   if (query)
     query = `?${query}`
   const path = (parsedRoute.value?.map((i) => {
@@ -102,6 +123,13 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
+function parseInputs(inputs: any[]) {
+  const formatted = Object.fromEntries(
+    inputs.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value]),
+  )
+  return Object.entries(formatted).length ? formatted : undefined
+}
+
 async function fetchData() {
   started.value = true
   fetching.value = true
@@ -109,7 +137,6 @@ async function fetchData() {
     lang: 'text',
     contentType: '',
     data: '',
-    content: '',
     error: undefined,
   })
 
@@ -117,9 +144,9 @@ async function fetchData() {
   try {
     response.data = await $fetch(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
-      headers: Object.fromEntries(routeHeaders.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
-      query: Object.fromEntries(routeQueries.value.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value])),
-      body: formattedBody.value,
+      headers: parsedHeader.value,
+      query: parsedQuery.value,
+      body: parsedBody.value,
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
         response.statusCode = res.status
@@ -141,7 +168,7 @@ const codeSnippets = computed(() => {
   const snippets: CodeSnippet[] = []
 
   const items: string[] = []
-  const headers = routeHeaders.value
+  const headers = routeInputs.headers
     .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
     .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
 
@@ -149,8 +176,8 @@ const codeSnippets = computed(() => {
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
   if (headers)
     items.push(`headers: {\n${headers}\n}`)
-  if (formattedBody.value)
-    items.push(`body: ${JSON.stringify(formattedBody.value, null, 2)}`)
+  if (parsedBody.value)
+    items.push(`body: ${JSON.stringify(parsedBody.value, null, 2)}`)
 
   const options = items.length
     ? `, {
@@ -175,18 +202,43 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
   return snippets
 })
 
-const activeTab = ref(paramNames.value.length ? 'params' : 'query')
-
-const currentParams = computed(() => {
-  if (activeTab.value === 'query')
-    return routeQueries.value
-  if (activeTab.value === 'body')
-    return routeBodies.value
-  if (activeTab.value === 'headers')
-    return routeHeaders.value
+const tabs = computed(() => {
+  const items = []
+  if (paramNames.value.length) {
+    items.push({
+      name: 'Params',
+      slug: 'params',
+      icon: 'carbon-text-selection',
+      length: paramNames.value.length,
+    })
+  }
+  items.push({
+    name: 'Query',
+    slug: 'query',
+    icon: 'carbon-help',
+    length: routeInputs.query.length,
+  })
+  if (hasBody.value) {
+    items.push({
+      name: 'Body',
+      slug: 'body',
+      icon: 'carbon-document',
+      length: routeInputs.body.length,
+    })
+  }
+  items.push({
+    name: 'Headers',
+    slug: 'headers',
+    icon: 'carbon-html-reference',
+    length: routeInputs.headers.length,
+  })
+  items.push({
+    name: 'Snippets',
+    slug: 'snippet',
+    icon: 'carbon-code',
+  })
+  return items
 })
-
-const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 </script>
 
 <template>
@@ -215,41 +267,13 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 
     <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
-        v-if="paramNames.length"
-        :class="activeTab === 'params' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'params'"
+        v-for="tab of tabs"
+        :key="tab.slug"
+        :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
+        @click="activeTab = tab.slug"
       >
-        <NIcon icon="i-carbon-text-selection" />
-        Params ({{ paramNames.length }})
-      </NButton>
-      <NButton
-        :class="activeTab === 'query' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'query'"
-      >
-        <NIcon icon="i-carbon-help" />
-        Query {{ queriesCount ? `(${queriesCount})` : '' }}
-      </NButton>
-      <NButton
-        v-if="routeMethod !== 'GET'"
-        :class="activeTab === 'body' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'body'"
-      >
-        <NIcon icon="i-carbon-document" />
-        Body
-      </NButton>
-      <NButton
-        :class="activeTab === 'headers' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'headers'"
-      >
-        <NIcon icon="i-carbon-html-reference" />
-        Headers {{ headersCount ? `(${headersCount})` : '' }}
-      </NButton>
-      <NButton
-        :class="activeTab === 'snippet' ? 'text-primary n-primary' : 'border-transparent! shadow-none!'"
-        @click="activeTab = 'snippet'"
-      >
-        <NIcon icon="carbon:code" />
-        Snippets
+        <NIcon :icon="tab.icon" />
+        {{ tab.name }} {{ tab?.length ? `(${tab.length})` : '' }}
       </NButton>
       <div flex-auto />
       <NButton
