@@ -56,7 +56,7 @@ const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
   query: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ key: 'input', value: 'work', type: 'string' }] as ServerRouteInput[],
+  body: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
