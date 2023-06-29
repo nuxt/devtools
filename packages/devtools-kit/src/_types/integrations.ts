@@ -52,6 +52,13 @@ export interface ServerRouteInfo {
   routes?: ServerRouteInfo[]
 }
 
+export type ServerRouteInputType = 'string' | 'number' | 'boolean' | 'file' | 'date' | 'time' | 'datetime-local'
+export interface ServerRouteInput {
+  key: string
+  value: any
+  type?: ServerRouteInputType
+}
+
 export interface Payload {
   url: string
   time: number

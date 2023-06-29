@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { CodeSnippet, ServerRouteInfo } from '~/../src/types'
+import JsonEditorVue from 'json-editor-vue'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
 
 const props = defineProps<{
   route: ServerRouteInfo
@@ -53,11 +54,10 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
-// TODO: add type to switch between json and input
 const routeInputs = reactive({
-  query: [{ key: '', value: '' }],
-  body: [{ key: '', value: '' }],
-  headers: [{ key: 'Content-Type', value: 'application/json' }],
+  query: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  body: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
@@ -239,6 +239,61 @@ const tabs = computed(() => {
   })
   return items
 })
+
+const tabInputs = ['input', 'json']
+const selectedTabInput = ref(tabInputs[0])
+
+watchEffect(() => {
+  if (selectedTabInput.value === 'json') {
+    if (typeof currentParams.value === 'string')
+      currentParams.value = JSON.parse(currentParams.value)
+  }
+})
+
+const types: ServerRouteInputType[] = []
+watch([selectedTabInput, activeTab], () => {
+  if (selectedTabInput.value === 'json') {
+    currentParams.value?.forEach((input, index) => {
+      types[index] = input.type ?? 'string'
+      delete input.type
+    })
+  }
+  else if (selectedTabInput.value === 'input') {
+    currentParams.value?.forEach((input, index) => {
+      if (types.length) {
+        // eslint-disable-next-line valid-typeof
+        if (typeof input.value !== types[index])
+          input.type = typeof input.value as ServerRouteInputType
+        else
+          input.type = types[index]
+      }
+    })
+  }
+})
+
+watch(currentParams.value, () => {
+  currentParams.value?.forEach((input, index) => {
+    if (types.length) {
+      if (types[index] !== input.type && input.type !== undefined) {
+        types[index] = input.type
+        if (input.type !== 'string') {
+          if (input.type === 'boolean' && typeof input.value !== 'boolean')
+            input.value = true
+          else if (input.type === 'number' && typeof input.value !== 'number')
+            input.value = 0
+          else
+            input.value = ''
+        }
+        else if (input.type === 'string') {
+          input.value = input.value.toString()
+        }
+      }
+    }
+    else {
+      types[index] = input.type ?? 'string'
+    }
+  })
+}, { immediate: true })
 </script>
 
 <template>
@@ -306,22 +361,31 @@ const tabs = computed(() => {
         :code-snippets="codeSnippets"
       />
     </div>
-    <div v-else-if="currentParams" px4 py2 flex="~ col gap-2" border="b base">
-      <div v-for="(item, index) in currentParams" :key="index" flex="~ gap-2" justify-around>
-        <NTextInput v-model="item.key" placeholder="Key" flex-1 font-mono n="sm" />
-        <NTextInput v-model="item.value" placeholder="Value" flex-1 font-mono n="sm" />
-        <NButton n="red" @click="currentParams!.splice(index, 1)">
-          <NIcon icon="carbon:delete" />
-        </NButton>
+    <div v-else-if="currentParams" relative n-code-block border="b base">
+      <div flex="~ wrap" w-full>
+        <template v-for="item of tabInputs" :key="item">
+          <button
+            px4 py2 border="r base"
+            hover="bg-active"
+            :class="{ 'border-b': item !== selectedTabInput }"
+            @click="selectedTabInput = item"
+          >
+            <div :class="{ op30: item !== selectedTabInput } " font-mono>
+              {{ item }}
+            </div>
+          </button>
+        </template>
+        <div border="b base" flex-auto />
       </div>
-      <div>
-        <NButton
-          icon="carbon-add" n="sm primary"
-          my1 px-3 @click="currentParams!.push({ key: '', value: '' })"
-        >
-          Add
-        </NButton>
-      </div>
+
+      <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
+      <JsonEditorVue
+        v-else-if="selectedTabInput === 'json'"
+        v-model="currentParams"
+        :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+        class="json-editor-vue of-auto text-sm outline-none"
+        v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+      />
     </div>
 
     <NPanelGrids v-if="!started">
