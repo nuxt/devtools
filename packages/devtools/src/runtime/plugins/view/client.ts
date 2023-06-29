@@ -144,6 +144,8 @@ export async function setupDevToolsClient({
     if (componentInspector) {
       componentInspector.openInEditor = async (baseUrl, file, line, column) => {
         disableComponentInspector()
+        if (!state.value.open)
+          client.open()
         await client.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
       }
       componentInspector.onUpdated = () => {
