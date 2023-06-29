@@ -364,17 +364,17 @@ const tabs = computed(() => {
         </Badge>
       </div>
       <!-- Rich response data -->
-      <NCodeBlock
-        v-if="responseLang !== 'media' && responseLang !== 'pdf'"
-        flex-auto overflow-auto py-2
-        :code="responseContent"
-        :lang="responseLang"
-      />
-      <div v-else-if="responseLang === 'pdf'" flex-auto overflow-auto p4>
+      <div v-if="responseLang === 'pdf'" flex-auto overflow-auto p4>
         <div border="~ base" h-full w-full rounded>
           <object :data="responseContent" type="application/pdf" flex-auto width="100%" height="100%" rounded />
         </div>
       </div>
+      <NCodeBlock
+        v-else-if="responseLang !== 'media'"
+        flex-auto overflow-auto py-2
+        :code="responseContent"
+        :lang="responseLang"
+      />
       <div v-else flex-auto overflow-auto p4>
         <div border="~ base" rounded>
           <img v-if="response.contentType.includes('image')" rounded :src="responseContent">
