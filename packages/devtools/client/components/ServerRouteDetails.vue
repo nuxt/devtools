@@ -56,22 +56,26 @@ const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
   query: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  body: [{ key: 'input', value: 'work', type: 'string' }] as ServerRouteInput[],
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
+const routeInputBodyJSON = ref({})
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 // https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'body')
+
+const tabInputs = ['input', 'json']
+const selectedTabInput = ref(tabInputs[0])
 
 // TODO: fix routeInputs[activeTab.value] type
 type RouteInputs = keyof typeof routeInputs
 const currentParams = computed({
   get: () => routeInputs[activeTab.value as RouteInputs],
-  set: (value) => {
+  set: (value: any) => {
     routeInputs[activeTab.value as RouteInputs] = value
   },
 })
@@ -89,9 +93,11 @@ const parsedHeader = computed(() => {
 })
 const parsedBody = computed(() => {
   return hasBody.value
-    ? {
-        ...parseInputs(routeInputs.body),
-      }
+    ? selectedTabInput.value === 'json'
+      ? routeInputBodyJSON.value
+      : {
+          ...parseInputs(routeInputs.body),
+        }
     : undefined
 })
 
@@ -240,37 +246,14 @@ const tabs = computed(() => {
   return items
 })
 
-const tabInputs = ['input', 'json']
-const selectedTabInput = ref(tabInputs[0])
-
 watchEffect(() => {
   if (selectedTabInput.value === 'json') {
-    if (typeof currentParams.value === 'string')
-      currentParams.value = JSON.parse(currentParams.value)
+    if (typeof routeInputBodyJSON.value === 'string')
+      routeInputBodyJSON.value = JSON.parse(routeInputBodyJSON.value)
   }
 })
 
 const types: ServerRouteInputType[] = []
-watch([selectedTabInput, activeTab], () => {
-  if (selectedTabInput.value === 'json') {
-    currentParams.value?.forEach((input, index) => {
-      types[index] = input.type ?? 'string'
-      delete input.type
-    })
-  }
-  else if (selectedTabInput.value === 'input') {
-    currentParams.value?.forEach((input, index) => {
-      if (types.length) {
-        // eslint-disable-next-line valid-typeof
-        if (typeof input.value !== types[index])
-          input.type = typeof input.value as ServerRouteInputType
-        else
-          input.type = types[index]
-      }
-    })
-  }
-})
-
 watch(currentParams.value, () => {
   currentParams.value?.forEach((input, index) => {
     if (types.length) {
@@ -381,7 +364,7 @@ watch(currentParams.value, () => {
       <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
       <JsonEditorVue
         v-else-if="selectedTabInput === 'json'"
-        v-model="currentParams"
+        v-model="routeInputBodyJSON"
         :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
         class="json-editor-vue of-auto text-sm outline-none"
         v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
