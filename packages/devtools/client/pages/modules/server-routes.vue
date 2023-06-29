@@ -96,7 +96,7 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path))
+const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method))
 const search = ref('')
 
 const filtered = computed(() => {
