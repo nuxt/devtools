@@ -66,7 +66,7 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'body')
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -345,30 +345,33 @@ watch(currentParams.value, () => {
       />
     </div>
     <div v-else-if="currentParams" relative n-code-block border="b base">
-      <div flex="~ wrap" w-full>
-        <template v-for="item of tabInputs" :key="item">
-          <button
-            px4 py2 border="r base"
-            hover="bg-active"
-            :class="{ 'border-b': item !== selectedTabInput }"
-            @click="selectedTabInput = item"
-          >
-            <div :class="{ op30: item !== selectedTabInput } " font-mono>
-              {{ item }}
-            </div>
-          </button>
-        </template>
-        <div border="b base" flex-auto />
-      </div>
+      <template v-if="activeTab === 'body'">
+        <div flex="~ wrap" w-full>
+          <template v-for="item of tabInputs" :key="item">
+            <button
+              px4 py2 border="r base"
+              hover="bg-active"
+              :class="{ 'border-b': item !== selectedTabInput }"
+              @click="selectedTabInput = item"
+            >
+              <div :class="{ op30: item !== selectedTabInput } " font-mono>
+                {{ item }}
+              </div>
+            </button>
+          </template>
+          <div border="b base" flex-auto />
+        </div>
 
-      <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
-      <JsonEditorVue
-        v-else-if="selectedTabInput === 'json'"
-        v-model="routeInputBodyJSON"
-        :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
-        class="json-editor-vue of-auto text-sm outline-none"
-        v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
-      />
+        <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
+        <JsonEditorVue
+          v-else-if="selectedTabInput === 'json'"
+          v-model="routeInputBodyJSON"
+          :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+          class="json-editor-vue of-auto text-sm outline-none"
+          v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+        />
+      </template>
+      <ServerRouteInputs v-else v-model="currentParams" :default="{ type: 'string' }" />
     </div>
 
     <NPanelGrids v-if="!started">
