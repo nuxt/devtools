@@ -29,13 +29,15 @@ const responseLang = computed(() => {
     return 'media'
   if (response.contentType.includes('text/xml') || response.contentType.includes('application/xml'))
     return 'xml'
+  if (response.contentType.includes('application/pdf'))
+    return 'pdf'
   return 'text'
 })
 
 const responseContent = computed(() => {
   if (responseLang.value === 'json')
     return JSON.stringify(response.data, null, 2)
-  if (responseLang.value === 'media') {
+  if (responseLang.value === 'media' || responseLang.value === 'pdf') {
     const blob = new Blob([response.data], { type: response.contentType })
     return URL.createObjectURL(blob)
   }
@@ -363,11 +365,16 @@ const tabs = computed(() => {
       </div>
       <!-- Rich response data -->
       <NCodeBlock
-        v-if="responseLang !== 'media'"
+        v-if="responseLang !== 'media' && responseLang !== 'pdf'"
         flex-auto overflow-auto py-2
         :code="responseContent"
         :lang="responseLang"
       />
+      <div v-else-if="responseLang === 'pdf'" flex-auto overflow-auto p4>
+        <div border="~ base" h-full w-full rounded>
+          <object :data="responseContent" type="application/pdf" flex-auto width="100%" height="100%" rounded />
+        </div>
+      </div>
       <div v-else flex-auto overflow-auto p4>
         <div border="~ base" rounded>
           <img v-if="response.contentType.includes('image')" rounded :src="responseContent">
