@@ -363,12 +363,12 @@ const tabs = computed(() => {
           {{ fetchTime }} ms
         </Badge>
       </div>
-      <!-- Rich response data -->
       <div v-if="responseLang === 'pdf'" flex-auto overflow-auto p4>
         <div border="~ base" h-full w-full rounded>
           <object :data="responseContent" type="application/pdf" flex-auto width="100%" height="100%" rounded />
         </div>
       </div>
+      <!-- Rich response data -->
       <NCodeBlock
         v-else-if="responseLang !== 'media'"
         flex-auto overflow-auto py-2
