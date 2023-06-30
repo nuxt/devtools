@@ -2,6 +2,7 @@ import type { ClientFunctions } from '../../src/types'
 
 export function setupClientRPC() {
   const nuxt = useNuxtApp()
+  const client = useClient()
   const router = useRouter()
 
   Object.assign(clientFunctions, {
@@ -29,6 +30,7 @@ export function setupClientRPC() {
         processAnalyzeBuildInfo.value = undefined
     },
     async navigateTo(path: string) {
+      client.value.open()
       if (router.currentRoute.value.path !== path)
         router.push(path)
     },
