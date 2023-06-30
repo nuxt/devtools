@@ -18,6 +18,9 @@ watchEffect(() => {
 
   if (state.value.open) {
     const iframe = props.client.getIframe()
+    if (!iframe)
+      return
+
     iframe.style.pointerEvents = isResizing.value || props.isDragging ? 'none' : 'auto'
 
     if (!popupWindow.value) {
@@ -61,6 +64,9 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
     return
 
   const iframe = props.client.getIframe()
+  if (!iframe)
+    return
+
   const box = iframe.getBoundingClientRect()
 
   if (isResizing.value.right) {

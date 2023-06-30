@@ -212,6 +212,8 @@ export async function setupDevToolsClient({
   if (documentPictureInPicture?.requestWindow) {
     client.popup = async () => {
       const iframe = getIframe()
+      if (!iframe)
+        return
       const pip = popupWindow.value = await documentPictureInPicture.requestWindow({
         width: Math.round(window.innerWidth * state.value.width / 100),
         height: Math.round(window.innerHeight * state.value.height / 100),

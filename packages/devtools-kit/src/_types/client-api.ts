@@ -75,7 +75,7 @@ export interface NuxtDevtoolsHostClient {
    */
   updateClient(): NuxtDevtoolsHostClient
 
-  getIframe(): HTMLIFrameElement
+  getIframe(): HTMLIFrameElement | undefined
 }
 
 export interface NuxtDevtoolsClient {
