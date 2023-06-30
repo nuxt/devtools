@@ -91,13 +91,17 @@ export async function setupDevToolsClient({
     if (!iframe) {
       const CLIENT_PATH = '/__nuxt_devtools__/client'
       const initialUrl = CLIENT_PATH + state.value.route
-      iframe = document.createElement('iframe')
-      iframe.id = 'nuxt-devtools-iframe'
-      iframe.src = initialUrl
-      iframe.setAttribute('data-v-inspector-ignore', 'true')
-      iframe.onload = async () => {
-        await waitForClientInjection()
-        client.updateClient()
+      try {
+        iframe = document.createElement('iframe')
+        iframe.id = 'nuxt-devtools-iframe'
+        iframe.src = initialUrl
+        iframe.onload = async () => {
+          await waitForClientInjection()
+          client.updateClient()
+        }
+      }
+      catch (e) {
+        console.error(e)
       }
     }
 
@@ -105,7 +109,15 @@ export async function setupDevToolsClient({
   }
 
   function waitForClientInjection(retry = 10, timeout = 200) {
-    const test = () => !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
+    const test = () => {
+      try {
+        return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
+      }
+      catch (e) {
+
+      }
+      return false
+    }
 
     if (test())
       return
