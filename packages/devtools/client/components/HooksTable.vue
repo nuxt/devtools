@@ -11,7 +11,7 @@ const sortby = ref<SortBy>('duration')
 const direction = ref<'asc' | 'desc'>('asc')
 
 const sortFunctions = {
-  duration: (a: HookInfo, b: HookInfo) => (b.duration ?? Infinity) - (a.duration ?? Infinity),
+  duration: (a: HookInfo, b: HookInfo) => (b.duration ?? Number.POSITIVE_INFINITY) - (a.duration ?? Number.POSITIVE_INFINITY),
   name: (a: HookInfo, b: HookInfo) => a.name.localeCompare(b.name),
   listener: (a: HookInfo, b: HookInfo) => b.listeners - a.listeners,
   start: (a: HookInfo, b: HookInfo) => b.start - a.start,
