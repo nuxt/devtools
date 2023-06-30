@@ -7,20 +7,21 @@ import { setupHooksDebug } from '../shared/hooks'
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
-  if (window.__NUXT_DEVTOOLS_DISABLE__ || window.parent?.__NUXT_DEVTOOLS_DISABLE__)
-    return
-
-  // TODO: Stackblitz support?
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
 
-  if (window.parent && window.self !== window.parent) {
-    try {
-      if (window.parent.__NUXT_DEVTOOLS_VIEW__ || window.parent.document.querySelector('#nuxt-devtools-container'))
+  try {
+    if (window.__NUXT_DEVTOOLS_DISABLE__ || window.parent?.__NUXT_DEVTOOLS_DISABLE__)
+      return
+
+    if (parent && window.self !== parent) {
+      if (parent.__NUXT_DEVTOOLS_VIEW__ || parent.document.querySelector('#nuxt-devtools-container'))
         return
     }
-    catch (e) {
-    }
+  }
+  catch (e) {
+    console.error('Nuxt DevTools: Failed to check parent window')
+    console.error(e)
   }
 
   const timeMetric = window.__NUXT_DEVTOOLS_TIME_METRIC__ = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
