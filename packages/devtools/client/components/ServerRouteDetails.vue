@@ -363,7 +363,7 @@ const tabs = computed(() => {
           {{ fetchTime }} ms
         </Badge>
       </div>
-      <div v-if="responseLang === 'pdf'" flex-auto overflow-auto p4>
+      <div v-if="responseLang === 'pdf'" flex-auto overflow-auto>
         <div border="~ base" h-full w-full rounded>
           <object :data="responseContent" type="application/pdf" flex-auto width="100%" height="100%" rounded />
         </div>
