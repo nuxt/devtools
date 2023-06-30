@@ -99,10 +99,21 @@ textarea {
   background: #8881
 }
 
-.json-editor-vue {
-  --jse-theme-color: #8886 !important;
-  --jse-theme-color-highlight: #8889 !important;
-  --jse-background-color: #8888880A !important;
+:root {
+  --jse-theme-color: #fff !important;
+  --jse-text-color-inverse: #777 !important;
+  --jse-theme-color-highlight: #eee !important;
+  --jse-panel-background: #fff !important;
+  --jse-background-color: var(--jse-panel-background) !important;
+  --jse-error-color: #ee534150 !important;
+  --jse-main-border: none !important;
+}
+
+.dark, .jse-theme-dark {
+  --jse-panel-background: #111 !important;
+  --jse-theme-color: #111 !important;
+  --jse-text-color-inverse: #fff !important;
+  --jse-main-border: none !important;
 }
 
 .json-editor-vue .no-main-menu {
