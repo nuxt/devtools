@@ -133,7 +133,7 @@ const finalURL = computed(() => domain.value + finalPath.value)
 
 function parseInputs(inputs: any[]) {
   const formatted = Object.fromEntries(
-    inputs.filter(({ key, value }) => key && value).map(({ key, value }) => [key, value]),
+    inputs.filter(({ key, value }) => key !== undefined && value !== undefined).map(({ key, value }) => [key, value]),
   )
   return Object.entries(formatted).length ? formatted : undefined
 }
@@ -256,8 +256,11 @@ watchEffect(() => {
 })
 
 const types: ServerRouteInputType[] = []
-watch(currentParams.value, () => {
-  currentParams.value?.forEach((input, index) => {
+watch(currentParams, (value) => {
+  if (!value)
+    return
+
+  value.forEach((input, index) => {
     if (types.length) {
       if (types[index] !== input.type && input.type !== undefined) {
         types[index] = input.type
@@ -278,7 +281,7 @@ watch(currentParams.value, () => {
       types[index] = input.type ?? 'string'
     }
   })
-}, { immediate: true })
+}, { immediate: true, deep: true })
 </script>
 
 <template>
