@@ -44,6 +44,16 @@ export interface ModuleOptions {
    * @default false
    */
   disableAuthorization?: boolean
+
+  /**
+   * Experimental features
+   */
+  experimental?: {
+    /**
+     * Wrap auto-imported functions to collect metrics
+     */
+    functionMetrics?: boolean
+  }
 }
 
 export interface ModuleGlobalOptions {

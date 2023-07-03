@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
+import { debounce } from 'perfect-debounce'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
@@ -32,9 +33,8 @@ export async function setupDevToolsClient({
     appConfig: useAppConfig() as any,
     hooks: createHooks(),
     getClientHooksMetrics: () => Object.values(clientHooks),
-    getClientPluginMetrics: () => {
-      return window.__NUXT_DEVTOOLS_PLUGINS_METRIC__ || []
-    },
+    clientPluginMetrics: window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
+    clientFunctionMetrics: window.__NUXT_DEVTOOLS_FN_METRICS__,
     loadingTimeMetrics: timeMetric,
     reloadPage() {
       location.reload()
@@ -77,6 +77,9 @@ export async function setupDevToolsClient({
   function updateClient() {
     if (!client.inspector)
       client.inspector = getInspectorInstance()
+
+    client.clientFunctionMetrics = window.__NUXT_DEVTOOLS_FN_METRICS__
+    client.clientPluginMetrics = window.__NUXT_DEVTOOLS_PLUGINS_METRIC__
 
     try {
       iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
@@ -179,15 +182,16 @@ export async function setupDevToolsClient({
     })
   }
 
-  function refreshReactivity() {
+  const refreshReactivity = debounce(() => {
     client.hooks.callHook('host:update:reactivity')
-  }
+  }, 100, { trailing: true })
 
   // trigger update for reactivity
   watch(() => [
     client.nuxt.payload,
     client.colorMode.value,
     client.loadingTimeMetrics,
+    window.__NUXT_DEVTOOLS_FN_METRICS__?.records,
   ], () => {
     refreshReactivity()
   }, { deep: true })

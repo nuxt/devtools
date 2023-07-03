@@ -6,6 +6,7 @@ import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
+import type { FunctionMetrics } from './function-metrics'
 
 export interface NuxtDevtoolsClientHooks {
   /**
@@ -50,7 +51,9 @@ export interface NuxtDevtoolsHostClient {
 
   loadingTimeMetrics: LoadingTimeMetric
   getClientHooksMetrics(): HookInfo[]
-  getClientPluginMetrics(): PluginMetric[]
+
+  clientPluginMetrics: PluginMetric[] | undefined
+  clientFunctionMetrics: FunctionMetrics | undefined
 
   reloadPage(): void
 

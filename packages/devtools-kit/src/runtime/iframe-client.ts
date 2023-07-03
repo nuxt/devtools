@@ -46,13 +46,14 @@ export function useDevtoolsClient() {
     onDevtoolsClientConnected(setup)
   }
 
+  function onUpdateReactivity() {
+    triggerRef(clientRef!)
+  }
+
   function setup(client: NuxtDevtoolsIframeClient) {
     clientRef!.value = client
-    if (client.host) {
-      client.host.hooks.hook('host:update:reactivity', () => {
-        triggerRef(clientRef!)
-      })
-    }
+    if (client.host)
+      client.host.hooks.hook('host:update:reactivity', onUpdateReactivity)
   }
 
   return clientRef

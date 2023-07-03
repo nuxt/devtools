@@ -3,6 +3,19 @@ export default defineNuxtPlugin(() => {
   const inspectorData = useComponentInspectorData()
   const router = useRouter()
 
+  function onUpdateReactivity() {
+    triggerRef(client)
+  }
+
+  function onInspectorUpdate(data: any) {
+    inspectorData.value = data
+  }
+
+  function onInspectorClick(_: any, file: string, line: number, column: number) {
+    const url = `./${file}:${line}:${column}`
+    rpc.openInEditor(url)
+  }
+
   window.__NUXT_DEVTOOLS_VIEW__ = {
     setClient(_client) {
       if (client.value === _client)
@@ -10,16 +23,9 @@ export default defineNuxtPlugin(() => {
 
       client.value = _client
 
-      _client.hooks.hook('host:update:reactivity', () => {
-        triggerRef(client)
-      })
-      _client.hooks.hook('host:inspector:update', (data) => {
-        inspectorData.value = data
-      })
-      _client.hooks.hook('host:inspector:click', async (_, file, line, column) => {
-        const url = `./${file}:${line}:${column}`
-        await rpc.openInEditor(url)
-      })
+      _client.hooks.hook('host:update:reactivity', onUpdateReactivity)
+      _client.hooks.hook('host:inspector:update', onInspectorUpdate)
+      _client.hooks.hook('host:inspector:click', onInspectorClick)
 
       // eslint-disable-next-line no-console
       console.log('[nuxt-devtools] Client connected', _client)

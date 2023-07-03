@@ -42,14 +42,6 @@ function getNameRest(name: string) {
   return parts.slice(1).join(':')
 }
 
-function getHashColorFromString(name: string) {
-  let hash = 0
-  for (let i = 0; i < name.length; i++)
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  const h = hash % 360
-  return `hsl(${h}, 65%, 50%)`
-}
-
 function toggleSortedBy(by: SortBy) {
   if (sortby.value === by)
     direction.value = direction.value === 'asc' ? 'desc' : 'asc'

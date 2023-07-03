@@ -2,7 +2,7 @@
   "type": "module",
   "version": "0.6.6",
   "private": false,
-  "packageManager": "pnpm@8.6.5",
+  "packageManager": "pnpm@8.6.6",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
     "stub": "pnpm -r run stub",
@@ -24,7 +24,7 @@
     "@nuxt/module-builder": "^0.4.0",
     "@nuxt/schema": "^3.6.1",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^20.3.2",
+    "@types/node": "^20.3.3",
     "@types/pacote": "^11.1.5",
     "@types/wait-on": "^5.3.1",
     "@types/which": "^3.0.0",
@@ -47,6 +47,9 @@
     "unocss": "^0.53.4",
     "vite-hot-client": "^0.2.1",
     "vue-tsc": "^1.8.3"
+  },
+  "resolutions": {
+    "unimport": "3.0.12"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
