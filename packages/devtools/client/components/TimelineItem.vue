@@ -3,24 +3,31 @@ import type { FunctionMetricCallRecord } from '../../types'
 
 const props = defineProps<{
   item: FunctionMetricCallRecord
+  width: number
 }>()
 
-const colorRaw = computed(() => getHashColorFromString(props.item.name, 50, 50, '_op_'))
+const colorRaw = computed(() => getHashColorFromString(props.item.name, 50, 60, '_op_'))
 const color = computed(() => colorRaw.value.replace(/_op_/, '1'))
-const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.15'))
+const textColor = computed(() => getHashColorFromString(props.item.name, 50, 40))
+const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
 </script>
 
 <template>
-  <div
-    :style="{
-      backgroundColor: colorBackground,
-      borderLeft: `2px solid ${color}`,
-      borderBottom: `1px solid ${color}`,
-      color,
-    }"
-    px1 text-sm
-    hover:z-1000
-  >
-    {{ item.name }}
-  </div>
+  <button relative hover:z-1000 bg-base class="group">
+    <div
+      :style="{
+        backgroundColor: colorBackground,
+        borderLeft: `2px solid ${color}`,
+        width: `${props.width}px`,
+      }"
+      absolute bottom-0 left--1px top-0 px1 text-sm
+    />
+    <div
+      :style="{
+        color: textColor,
+      }" px1
+    >
+      {{ item.name }}
+    </div>
+  </button>
 </template>
