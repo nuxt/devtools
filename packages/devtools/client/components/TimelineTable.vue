@@ -5,6 +5,10 @@ const props = defineProps<{
   records: FunctionMetricCallRecord[]
 }>()
 
+const emit = defineEmits<{
+  (event: 'select', record: FunctionMetricCallRecord): void
+}>()
+
 const scroller = ref<HTMLElement>()
 const minimap = ref<HTMLElement>()
 const minimapScroller = ref<HTMLElement>()
@@ -102,6 +106,7 @@ useEventListener(minimapScroller, 'scroll', () => {
           top: `${3 + i.layer * 1.6}em`,
           left: `${offsetX + i.left * pixelPerMs}px`,
         }"
+        @click="emit('select', i.item)"
       />
       <template v-for="i in Math.floor(fullTimeSpan / ruleInterval)" :key="i">
         <div
