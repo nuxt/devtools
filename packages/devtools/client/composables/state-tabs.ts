@@ -47,6 +47,7 @@ export function useAllTabs() {
 
 function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
   return {
+    pinned: [],
     app: [],
     analyze: [],
     server: [],
@@ -57,10 +58,15 @@ function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBu
 }
 
 export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>) {
+  const {
+    pinnedTabs,
+  } = useDevToolsUIOptions()
   return computed(() => {
     const categories = getCategorizedRecord()
     for (const tab of unref(tabs)) {
-      const category = (tab.category || 'app')
+      let category = (tab.category || 'app')
+      if (pinnedTabs.value.includes(tab.name))
+        category = 'pinned'
       if (!categories[category])
         console.warn(`Unknown tab category: ${category}`)
       else
@@ -71,6 +77,9 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
       if (categories[key as TabCategory].length === 0)
         delete categories[key as TabCategory]
     }
+
+    if (categories.pinned.length > 0)
+      categories.pinned.sort((a, b) => pinnedTabs.value.indexOf(a.name) - pinnedTabs.value.indexOf(b.name))
 
     return Object.entries(categories)
   })

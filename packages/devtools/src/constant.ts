@@ -33,6 +33,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     showHelpButtons: true,
     scale: 1,
     hiddenTabs: [],
+    pinnedTabs: [],
     hiddenTabCategories: [],
   },
   serverRoutes: {

@@ -113,6 +113,7 @@ export interface NuxtDevToolsOptions {
     scale: number
     hiddenTabs: string[]
     hiddenTabCategories: string[]
+    pinnedTabs: string[]
   }
   serverRoutes: {
     // TODO: https://github.com/nuxt/devtools/pull/218

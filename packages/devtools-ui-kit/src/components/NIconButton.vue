@@ -6,6 +6,7 @@ import { NuxtLink } from '#components'
 const props = defineProps<{
   to?: string
   icon: string
+  disabled?: boolean
 }>()
 </script>
 
@@ -15,6 +16,9 @@ const props = defineProps<{
     :to="to"
     v-bind="$attrs"
     class="n-transition n-icon-button"
+    :class="{
+      'n-disabled op10!': props.disabled,
+    }"
   >
     <NIcon :icon="props.icon" />
   </Component>
