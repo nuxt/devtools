@@ -18,24 +18,32 @@ export function __initFunctionMetrics(): TimlineMetrics {
   if (process.server)
     return undefined!
 
-  const metrics = window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ = reactive(
+  if (window.__NUXT_DEVTOOLS_TIMELINE_METRICS__)
+    return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__
+
+  return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ = reactive(
     window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
       functions: [],
       routes: [],
       nonLiteralSymbol,
     },
   )
-
-  return metrics
 }
+
+const wrapperFunctions = new WeakMap<Function, Function>()
 
 export function __wrapFunction(name: string, fn: Function) {
   if (process.server)
     return fn
+  if (typeof fn !== 'function')
+    return fn
+
+  if (wrapperFunctions.has(fn))
+    return wrapperFunctions.get(fn)!
 
   const metrics = __initFunctionMetrics()
 
-  return function (this: any, ...args: any[]) {
+  const wrappred = function (this: any, ...args: any[]) {
     const record: TimelineFunctionRecord = {
       name,
       start: Date.now(),
@@ -56,4 +64,9 @@ export function __wrapFunction(name: string, fn: Function) {
     record.end = Date.now()
     return result
   }
+
+  Object.defineProperty(wrappred, 'length', { value: fn.name || name })
+  wrapperFunctions.set(fn, wrappred)
+
+  return wrappred
 }

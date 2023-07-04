@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     '../../packages/devtools-ui-kit/src/module',
     '../../local',
   ],
+  ssr: false,
   vite: {
     clearScreen: false,
   },
