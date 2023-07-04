@@ -11,9 +11,7 @@ definePageMeta({
 const client = useClient()
 const components = useComponents()
 
-const {
-  componentsView: view,
-} = useDevToolsOptions()
+const { componentsView: view } = useDevToolsUIOptions()
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)

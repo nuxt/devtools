@@ -9,8 +9,9 @@ const {
   showHelpButtons,
   scale,
   hiddenTabs,
+  pinnedTabs,
   hiddenTabCategories,
-} = useDevToolsOptions()
+} = useDevToolsUIOptions()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -34,6 +35,28 @@ function toggleTabCategory(name: string, v: boolean) {
     hiddenTabCategories.value = hiddenTabCategories.value.filter(i => i !== name)
   else
     hiddenTabCategories.value.push(name)
+}
+
+function togglePinTab(name: string) {
+  if (pinnedTabs.value.includes(name))
+    pinnedTabs.value = pinnedTabs.value.filter(i => i !== name)
+  else
+    pinnedTabs.value.push(name)
+}
+
+function pinMove(name: string, delta: number) {
+  const index = pinnedTabs.value.indexOf(name)
+  if (index === -1)
+    return
+
+  const newIndex = index + delta
+  if (newIndex < 0 || newIndex >= pinnedTabs.value.length)
+    return
+
+  const newPinnedTabs = [...pinnedTabs.value]
+  newPinnedTabs.splice(index, 1)
+  newPinnedTabs.splice(newIndex, 0, name)
+  pinnedTabs.value = newPinnedTabs
 }
 </script>
 
@@ -71,9 +94,26 @@ function toggleTabCategory(name: string, v: boolean) {
                   :model-value="!hiddenTabs.includes(tab.name)"
                   @update:model-value="v => toggleTab(tab.name, v)"
                 >
-                  <div flex="~ gap-2" flex-auto items-center justify-start :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                  <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
                     <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
                     <span>{{ tab.title }}</span>
+                    <div flex-auto />
+                    <template v-if="pinnedTabs.includes(tab.name)">
+                      <NIconButton
+                        icon="i-carbon-caret-up"
+                        :disabled="pinnedTabs.indexOf(tab.name) === 0"
+                        @click="pinMove(tab.name, -1)"
+                      />
+                      <NIconButton
+                        icon="i-carbon-caret-down"
+                        :disabled="pinnedTabs.indexOf(tab.name) === pinnedTabs.length - 1"
+                        @click="pinMove(tab.name, 1)"
+                      />
+                    </template>
+                    <NIconButton
+                      :icon="pinnedTabs.includes(tab.name) ? ' i-carbon-pin-filled rotate--45' : ' i-carbon-pin op50'"
+                      @click="togglePinTab(tab.name)"
+                    />
                   </div>
                 </NSwitch>
               </template>

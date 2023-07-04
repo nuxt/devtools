@@ -1,7 +1,7 @@
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
-import type { ModuleOptions, NuxtDevToolsUIOptions } from './options'
+import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
@@ -25,8 +25,8 @@ export interface ServerFunctions {
   getServerApp(): NuxtApp | undefined
 
   // Options
-  getUIOptions(): Promise<NuxtDevToolsUIOptions>
-  updateUIOptions(settings: Partial<NuxtDevToolsUIOptions>): Promise<void>
+  getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]>
+  updateOptions<T extends keyof NuxtDevToolsOptions>(tab: T, settings: Partial<NuxtDevToolsOptions[T]>): Promise<void>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>

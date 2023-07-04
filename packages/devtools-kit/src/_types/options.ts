@@ -109,17 +109,23 @@ export interface VSCodeTunnelOptions {
   name?: string
 }
 
-export interface NuxtDevToolsUIOptions {
-  componentsView: 'list' | 'graph'
-  componentsGraphShowNodeModules: boolean
-  componentsGraphShowGlobalComponents: boolean
-  componentsGraphShowPages: boolean
-  componentsGraphShowLayouts: boolean
-  componentsGraphShowWorkspace: boolean
-  interactionCloseOnOutsideClick: boolean
-  showExperimentalFeatures: boolean
-  showHelpButtons: boolean
-  scale: number
-  hiddenTabs: string[]
-  hiddenTabCategories: string[]
+export interface NuxtDevToolsOptions {
+  ui: {
+    componentsView: 'list' | 'graph'
+    componentsGraphShowNodeModules: boolean
+    componentsGraphShowGlobalComponents: boolean
+    componentsGraphShowPages: boolean
+    componentsGraphShowLayouts: boolean
+    componentsGraphShowWorkspace: boolean
+    interactionCloseOnOutsideClick: boolean
+    showExperimentalFeatures: boolean
+    showHelpButtons: boolean
+    scale: number
+    hiddenTabs: string[]
+    hiddenTabCategories: string[]
+    pinnedTabs: string[]
+  }
+  serverRoutes: {
+    // TODO: https://github.com/nuxt/devtools/pull/218
+  }
 }
