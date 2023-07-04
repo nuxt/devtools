@@ -31,6 +31,12 @@ export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
 
   let lastCount = 0
 
+  const importForms = [
+    '#app',
+    '@unhead/vue',
+    '@vueuse/core',
+  ]
+
   nuxt.hook('imports:context', (unimport) => {
     const ctx = unimport.getInternalContext()
     ctx.addons.push(
@@ -42,7 +48,7 @@ export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
               return i
 
             // TODO: alllow custom filter
-            if (i.from !== '#app')
+            if (!importForms.includes(i.from))
               return i
 
             registedImports.push(i)

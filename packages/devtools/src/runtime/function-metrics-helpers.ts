@@ -1,10 +1,17 @@
+// @unimport-disable
 import { markRaw, reactive } from 'vue'
+import ErrorStackParser from 'error-stack-parser'
 import type { FunctionMetricCallRecord } from '../types'
 
 const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 
 function isLiteral(value: any) {
   return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
+}
+
+function getStacktrace() {
+  // eslint-disable-next-line unicorn/error-message
+  return ErrorStackParser.parse(new Error())
 }
 
 export function __wrapFunction(name: string, fn: Function) {
@@ -14,6 +21,7 @@ export function __wrapFunction(name: string, fn: Function) {
   const metrics = window.__NUXT_DEVTOOLS_FN_METRICS__ = reactive(
     window.__NUXT_DEVTOOLS_FN_METRICS__ || {
       records: [],
+      routes: [],
       nonLiteralSymbol,
     },
   )
@@ -23,15 +31,18 @@ export function __wrapFunction(name: string, fn: Function) {
       name,
       start: Date.now(),
       args: markRaw(args.map(i => isLiteral(i) ? i : nonLiteralSymbol)), // TODO: replace non-literal args to avoid memory leak
+      stacktrace: getStacktrace().slice(2),
     }
     metrics.records.push(record)
     const result = fn.apply(this, args)
     // handle promises
-    if ('finally' in result && typeof result.finally === 'function') {
-      return result.finally(() => {
-        record.end = Date.now()
-        return result
-      })
+    if ('then' in result && typeof result.then === 'function') {
+      return result
+        .then((i: any) => i)
+        .finally(() => {
+          record.end = Date.now()
+          return result
+        })
     }
     record.end = Date.now()
     return result

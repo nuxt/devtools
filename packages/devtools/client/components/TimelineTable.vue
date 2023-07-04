@@ -17,7 +17,7 @@ const MIN_WIDTH = 40_000
 
 const startTime = computed(() => props.records[0]?.start || Date.now())
 const endTime = computed(() => Math.max(...props.records.map(i => i.end || i.start)))
-const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH))
+const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH) + 10_000)
 
 const ruleInterval = 5_000
 const viewFinderWidth = ref(MIN_WIDTH)

@@ -20,7 +20,7 @@ const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
         borderLeft: `2px solid ${color}`,
         width: `${props.width}px`,
       }"
-      absolute bottom-0 left--1px top-0 px1 text-sm
+      absolute bottom-0 left--1px top-0 text-sm
     />
     <div
       :style="{
