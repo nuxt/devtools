@@ -13,14 +13,21 @@ const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
 </script>
 
 <template>
-  <button relative hover:z-1000 bg-base class="group">
+  <button
+    class="group"
+    :style="{
+      color,
+      borderLeft: `2px solid ${color}`,
+    }"
+    relative border-2 border-transparent transition hover:z-1000 hover:border-current bg-base
+  >
     <div
       :style="{
         backgroundColor: colorBackground,
-        borderLeft: `2px solid ${color}`,
         width: `${props.width}px`,
       }"
-      absolute bottom-0 left--1px top-0 text-sm
+      absolute bottom-0 left--1px top-0 text-sm transition-all duration-300
+      class="group-hover-w-full!"
     />
     <div
       :style="{

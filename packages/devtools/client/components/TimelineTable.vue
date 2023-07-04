@@ -22,7 +22,7 @@ const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MI
 const ruleInterval = 5_000
 const viewFinderWidth = ref(MIN_WIDTH)
 const rect = reactive(useElementBounding(scroller))
-const now = useTimestamp({ interval: 500, immediate: true })
+const now = useTimestamp({ interval: 100, immediate: true })
 const pixelPerMs = computed(() => rect.width / viewFinderWidth.value)
 
 const offsetX = 10
@@ -63,8 +63,9 @@ useEventListener(minimapScroller, 'scroll', () => {
 
 <template>
   <div h-screen w-full flex flex-col>
+    <slot />
     <div relative>
-      <div ref="minimap" relative h-50px border border-base>
+      <div ref="minimap" relative h-50px border="t b base" border-base>
         <div
           v-for="item of graphItems"
           :key="item.key"
@@ -93,7 +94,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         :style="{ width: `${fullTimeSpan * pixelPerMs}px` }"
       />
       <div
-        absolute top-0 z-100 h-full w-px border-l border-blue transition-all duration-500 ease-linear
+        absolute top-0 z-100 h-full w-px border-l border-blue transition-all duration-100 ease-linear
         :style="{ left: `${(now - startTime + 1000) * pixelPerMs}px` }"
       />
       <TimelineItem
@@ -149,6 +150,7 @@ useEventListener(minimapScroller, 'scroll', () => {
 <style scoped>
 .timeline-scroller::-webkit-scrollbar {
   height: 100px;
+  width: 0.1px;;
 }
 
 .timeline-scroller::-webkit-scrollbar-track {
