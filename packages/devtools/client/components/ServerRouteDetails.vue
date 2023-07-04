@@ -133,7 +133,7 @@ const finalURL = computed(() => domain.value + finalPath.value)
 
 function parseInputs(inputs: any[]) {
   const formatted = Object.fromEntries(
-    inputs.filter(({ key, value }) => key !== undefined && value !== undefined).map(({ key, value }) => [key, value]),
+    inputs.filter(({ key, value }) => key && value !== undefined).map(({ key, value }) => [key, value]),
   )
   return Object.entries(formatted).length ? formatted : undefined
 }
