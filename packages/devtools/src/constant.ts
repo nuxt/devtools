@@ -1,4 +1,4 @@
-import type { ModuleOptions } from './types'
+import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 
 export const ROUTE_PATH = '/__nuxt_devtools__'
 export const ROUTE_ENTRY = `${ROUTE_PATH}/entry`
@@ -17,5 +17,25 @@ export const defaultOptions: ModuleOptions = {
     startOnBoot: false,
     port: 3080,
     reuseExistingServer: true,
+  },
+}
+
+export const defaultTabOptions: NuxtDevToolsOptions = {
+  ui: {
+    componentsView: 'list',
+    componentsGraphShowNodeModules: false,
+    componentsGraphShowGlobalComponents: true,
+    componentsGraphShowPages: false,
+    componentsGraphShowLayouts: false,
+    componentsGraphShowWorkspace: true,
+    interactionCloseOnOutsideClick: false,
+    showExperimentalFeatures: false,
+    showHelpButtons: true,
+    scale: 1,
+    hiddenTabs: [],
+    hiddenTabCategories: [],
+  },
+  serverRoutes: {
+    // TODO: https://github.com/nuxt/devtools/pull/218
   },
 }
