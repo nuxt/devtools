@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import type { FunctionMetricCallRecord } from '../../../types'
+import type { TimelineFunctionRecord } from '../../../types'
 
 definePageMeta({
   icon: 'i-carbon-roadmap',
-  title: 'Function Metrics',
+  title: 'Timeline',
   category: 'analyze',
   show() {
     const client = useClient()
-    return () => client.value?.clientFunctionMetrics
+    return () => client.value?.clientTimelineMetrics
   },
 })
 
 const client = useClient()
-const metrics = computed(() => [...client.value?.clientFunctionMetrics?.records || []])
 
-const selected = ref<FunctionMetricCallRecord | undefined>()
+const selected = ref<TimelineFunctionRecord | undefined>()
 </script>
 
 <template>
   <div h-screen of-hidden>
-    <TimelineTable :records="metrics" @select="s => selected = s" />
+    <TimelineTable :data="{ ...client?.clientTimelineMetrics }" @select="s => selected = s" />
     <DrawerBottom
       :model-value="!!selected"
       auto-close

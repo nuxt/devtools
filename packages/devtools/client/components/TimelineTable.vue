@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import type { FunctionMetricCallRecord } from '../../types'
+import type { TimelineFunctionRecord, TimlineMetrics } from '../../types'
 
 const props = defineProps<{
-  records: FunctionMetricCallRecord[]
+  data: TimlineMetrics
 }>()
 
 const emit = defineEmits<{
-  (event: 'select', record: FunctionMetricCallRecord): void
+  (event: 'select', record: TimelineFunctionRecord): void
 }>()
 
 const scroller = ref<HTMLElement>()
 const minimap = ref<HTMLElement>()
 const minimapScroller = ref<HTMLElement>()
 
-const MIN_WIDTH = 40_000
+const MIN_WIDTH = 20_000
 
-const startTime = computed(() => props.records[0]?.start || Date.now())
-const endTime = computed(() => Math.max(...props.records.map(i => i.end || i.start)))
+const startTime = computed(() => props.data.functions[0]?.start || Date.now())
+const endTime = computed(() => Math.max(...props.data.functions.map(i => i.end || i.start)))
 const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH) + 10_000)
 
 const ruleInterval = 5_000
@@ -29,7 +29,7 @@ const offsetX = 10
 const graphItems = computed(() => {
   const layers: number[] = [0]
 
-  const result = props.records.map((item) => {
+  const result = props.data.functions.map((item) => {
     let hIndex = layers.findIndex(layer => layer <= item.start)
     const width = (item.end || item.start) - item.start + 1_000
     const end = item.start + width
@@ -93,7 +93,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         :style="{ width: `${fullTimeSpan * pixelPerMs}px` }"
       />
       <div
-        absolute top-0 h-full w-px border-l border-green transition-all duration-500 ease-linear
+        absolute top-0 z-100 h-full w-px border-l border-blue transition-all duration-500 ease-linear
         :style="{ left: `${(now - startTime + 1000) * pixelPerMs}px` }"
       />
       <TimelineItem
@@ -103,7 +103,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         :width="i.width * pixelPerMs"
         :style="{
           position: 'absolute',
-          top: `${3 + i.layer * 1.6}em`,
+          top: `${4 + i.layer * 1.6}em`,
           left: `${offsetX + i.left * pixelPerMs}px`,
         }"
         @click="emit('select', i.item)"
@@ -116,12 +116,30 @@ useEventListener(minimapScroller, 'scroll', () => {
           }"
         />
         <div
-          absolute p2 text-xs op50
+          absolute p2 text-xs op30
           :style="{
             left: `${offsetX + i * ruleInterval * pixelPerMs}px`,
           }"
         >
           {{ i * ruleInterval / 1000 }}s
+        </div>
+      </template>
+      <template v-for="i in data.routes" :key="i">
+        <div
+          absolute top-0 h-full w-px border-l border-green6 border-dashed op50
+          :style="{
+            left: `${offsetX + (i.start - startTime) * pixelPerMs}px`,
+          }"
+        />
+        <div
+          absolute mt8 text-xs font-mono text-green6 bg-base border="l green6"
+          :style="{
+            left: `${offsetX + (i.start - startTime) * pixelPerMs}px`,
+          }"
+        >
+          <div bg-green6:10 px1 py0.5>
+            {{ i.to }}
+          </div>
         </div>
       </template>
     </div>

@@ -1,7 +1,7 @@
 // @unimport-disable
 import { markRaw, reactive } from 'vue'
 import ErrorStackParser from 'error-stack-parser'
-import type { FunctionMetricCallRecord } from '../types'
+import type { TimelineFunctionRecord, TimlineMetrics } from '../types'
 
 const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 
@@ -14,26 +14,35 @@ function getStacktrace() {
   return ErrorStackParser.parse(new Error())
 }
 
-export function __wrapFunction(name: string, fn: Function) {
+export function __initFunctionMetrics(): TimlineMetrics {
   if (process.server)
-    return fn
+    return undefined!
 
-  const metrics = window.__NUXT_DEVTOOLS_FN_METRICS__ = reactive(
-    window.__NUXT_DEVTOOLS_FN_METRICS__ || {
-      records: [],
+  const metrics = window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ = reactive(
+    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
+      functions: [],
       routes: [],
       nonLiteralSymbol,
     },
   )
 
+  return metrics
+}
+
+export function __wrapFunction(name: string, fn: Function) {
+  if (process.server)
+    return fn
+
+  const metrics = __initFunctionMetrics()
+
   return function (this: any, ...args: any[]) {
-    const record: FunctionMetricCallRecord = {
+    const record: TimelineFunctionRecord = {
       name,
       start: Date.now(),
       args: markRaw(args.map(i => isLiteral(i) ? i : nonLiteralSymbol)), // TODO: replace non-literal args to avoid memory leak
       stacktrace: getStacktrace().slice(2),
     }
-    metrics.records.push(record)
+    metrics.functions.push(record)
     const result = fn.apply(this, args)
     // handle promises
     if ('then' in result && typeof result.then === 'function') {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { FunctionMetricCallRecord } from '../../types'
+import type { TimelineFunctionRecord } from '../../types'
 
 const props = defineProps<{
-  item: FunctionMetricCallRecord
+  item: TimelineFunctionRecord
   width: number
 }>()
 

@@ -3,6 +3,7 @@ import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallo
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { NuxtDevtoolsHostClient } from '../../../types'
+import { __initFunctionMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
 
@@ -28,13 +29,15 @@ export async function setupDevToolsClient({
   const isInspecting = ref(false)
   const colorMode = useClientColorMode()
 
+  const timeline = __initFunctionMetrics()
+
   const client: NuxtDevtoolsHostClient = shallowReactive({
     nuxt: markRaw(nuxt as any),
     appConfig: useAppConfig() as any,
     hooks: createHooks(),
     getClientHooksMetrics: () => Object.values(clientHooks),
     clientPluginMetrics: window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
-    clientFunctionMetrics: window.__NUXT_DEVTOOLS_FN_METRICS__,
+    clientTimelineMetrics: timeline,
     loadingTimeMetrics: timeMetric,
     reloadPage() {
       location.reload()
@@ -78,7 +81,6 @@ export async function setupDevToolsClient({
     if (!client.inspector)
       client.inspector = getInspectorInstance()
 
-    client.clientFunctionMetrics = window.__NUXT_DEVTOOLS_FN_METRICS__
     client.clientPluginMetrics = window.__NUXT_DEVTOOLS_PLUGINS_METRIC__
 
     try {
@@ -182,6 +184,8 @@ export async function setupDevToolsClient({
     })
   }
 
+  const router = client.nuxt.vueApp.config.globalProperties?.$router
+
   const refreshReactivity = debounce(() => {
     client.hooks.callHook('host:update:reactivity')
   }, 100, { trailing: true })
@@ -191,13 +195,23 @@ export async function setupDevToolsClient({
     client.nuxt.payload,
     client.colorMode.value,
     client.loadingTimeMetrics,
-    window.__NUXT_DEVTOOLS_FN_METRICS__?.records,
+    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__?.functions,
   ], () => {
     refreshReactivity()
   }, { deep: true })
   // trigger update for route change
-  client.nuxt.vueApp.config.globalProperties?.$router?.afterEach(() => {
+  router?.afterEach(() => {
     refreshReactivity()
+    const last = timeline.routes.at(-1)
+    if (last && !last?.end)
+      last.end = Date.now()
+  })
+  router?.beforeEach((to, from) => {
+    timeline.routes.push({
+      from: from.path,
+      to: to.path,
+      start: Date.now(),
+    })
   })
   // trigger update for app mounted
   client.nuxt.hook('app:mounted', () => {
