@@ -78,7 +78,7 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
         delete categories[key as TabCategory]
     }
 
-    if (categories.pinned.length > 0)
+    if (categories.pinned?.length)
       categories.pinned.sort((a, b) => pinnedTabs.value.indexOf(a.name) - pinnedTabs.value.indexOf(b.name))
 
     return Object.entries(categories)
