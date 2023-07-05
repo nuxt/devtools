@@ -17,6 +17,34 @@ const vueRoute = useRoute()
 const vueRouter = useRouter()
 
 const serverRoutes = useServerRoutes()
+const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
+
+const selected = computed(() => {
+  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
+  if (route)
+    selectedRoute.value = route
+  if (selectedRoute.value)
+    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
+  return route
+})
+
+const search = ref('')
+const fuse = computed(() => new Fuse(serverRoutes.value || [], {
+  keys: [
+    'method',
+    'route',
+  ],
+  shouldSort: true,
+}))
+
+const filtered = computed(() => {
+  const result = !serverRoutes.value
+    ? []
+    : !search.value
+        ? serverRoutes.value
+        : fuse.value.search(search.value).map(i => i.item)
+  return result
+})
 
 const filterByCollection = computed(() => {
   const collections: ServerRouteInfo[] = []
@@ -26,11 +54,15 @@ const filterByCollection = computed(() => {
     collection.routes.push(route)
   }
 
-  const routes = serverRoutes.value
-
-  routes?.forEach((item) => {
+  filtered.value.forEach((item) => {
     const filepathParts = item.filepath.split('/')
-    const collectionNames = filepathParts.slice(0, -1).slice(filepathParts.indexOf('server') + 1)
+    const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
+
+    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
+      collectionNames[collectionNames.length - 1] = collectionNames[collectionNames.length - 1].split('.')[0]
+
+    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1] === 'index')
+      collectionNames.pop()
 
     let parentCollection: ServerRouteInfo | null = null
     collectionNames.forEach((collectionName) => {
@@ -86,42 +118,26 @@ const filterByCollection = computed(() => {
     }
   })
 
-  return collections.length === 1 ? collections[0].routes ?? [] : collections
+  return collections
 })
 
-const fuse = computed(() => new Fuse(serverRoutes.value || [], {
-  keys: [
-    'method',
-    'route',
-  ],
-  shouldSort: true,
-}))
-
-const { selectedRoute } = useDevToolsOptions('serverRoutes')
-const selected = computed(() => {
-  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
-  if (route)
-    selectedRoute.value = route
-  if (selectedRoute.value)
-    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
-  return route
-})
-const search = ref('')
-
-const filtered = computed(() => {
-  const result = !serverRoutes.value
-    ? []
-    : !search.value
-        ? serverRoutes.value
-        : fuse.value.search(search.value).map(i => i.item)
-  return result
-})
+function toggleView() {
+  view.value = view.value === 'tree' ? 'list' : 'tree'
+}
 </script>
 
 <template>
   <PanelLeftRight storage-key="tab-server-routes">
     <template #left>
       <Navbar v-model:search="search" pb2>
+        <template #actions>
+          <NIconButton
+            text-lg
+            :icon="view === 'list' ? 'carbon:list' : 'carbon:decision-tree'"
+            title="Toggle view"
+            @click="toggleView"
+          />
+        </template>
         <div flex="~ gap1" text-sm>
           <span v-if="search" op50>{{ filtered.length }} matched · </span>
           <span op50>{{ serverRoutes?.length }} routes in total</span>
@@ -129,7 +145,7 @@ const filtered = computed(() => {
       </Navbar>
 
       <ServerRouteListItem
-        v-for="item in filterByCollection"
+        v-for="item in view === 'tree' ? filterByCollection : filtered"
         :key="item.filepath"
         :item="item"
       />

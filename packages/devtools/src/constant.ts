@@ -38,5 +38,6 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
   },
   serverRoutes: {
     selectedRoute: null,
+    view: 'tree',
   },
 }
