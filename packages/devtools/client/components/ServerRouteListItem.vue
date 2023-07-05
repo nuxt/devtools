@@ -4,7 +4,7 @@ import type { ServerRouteInfo } from '~/../src/types'
 
 withDefaults(defineProps<{
   item: ServerRouteInfo
-  index: number
+  index?: number
 }>(), {
   index: 0,
 })
