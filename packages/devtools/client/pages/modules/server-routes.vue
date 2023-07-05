@@ -14,6 +14,7 @@ definePageMeta({
 })
 
 const vueRoute = useRoute()
+const vueRouter = useRouter()
 
 const serverRoutes = useServerRoutes()
 
@@ -96,7 +97,15 @@ const fuse = computed(() => new Fuse(serverRoutes.value || [], {
   shouldSort: true,
 }))
 
-const selected = computed(() => serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method))
+const { selectedRoute } = useDevToolsOptions('serverRoutes')
+const selected = computed(() => {
+  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
+  if (route)
+    selectedRoute.value = route
+  if (selectedRoute.value)
+    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
+  return route
+})
 const search = ref('')
 
 const filtered = computed(() => {
@@ -110,7 +119,7 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <PanelLeftRight>
+  <PanelLeftRight storage-key="tab-server-routes">
     <template #left>
       <Navbar v-model:search="search" pb2>
         <div flex="~ gap1" text-sm>

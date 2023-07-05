@@ -37,6 +37,10 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     hiddenTabCategories: [],
   },
   serverRoutes: {
-    // TODO: https://github.com/nuxt/devtools/pull/218
+    selectedRoute: null,
+    responses: [],
+    cache: {
+      limit: 10,
+    },
   },
 }

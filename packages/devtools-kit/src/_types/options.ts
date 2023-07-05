@@ -1,5 +1,6 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { ModuleCustomTab } from './custom-tabs'
+import type { ServerRouteInfo } from './integrations'
 
 export interface ModuleOptions {
   /**
@@ -116,6 +117,18 @@ export interface NuxtDevToolsOptions {
     pinnedTabs: string[]
   }
   serverRoutes: {
-    // TODO: https://github.com/nuxt/devtools/pull/218
+    selectedRoute: ServerRouteInfo | null
+    responses: {
+      route: string
+      contentType: string
+      data: any | undefined
+      statusCode: number
+      error: Error | undefined
+      fetchTime: number
+      updatedAt: number
+    }[]
+    cache: {
+      limit: number
+    }
   }
 }

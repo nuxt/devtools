@@ -6,7 +6,7 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   let options: NuxtDevToolsOptions | undefined
 
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
-    if (!options) {
+    if (!options || options[tab]) {
       options = defaultTabOptions
       await read(tab)
     }
