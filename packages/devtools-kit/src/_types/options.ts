@@ -118,17 +118,6 @@ export interface NuxtDevToolsOptions {
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null
-    responses: {
-      route: string
-      contentType: string
-      data: any | undefined
-      statusCode: number
-      error: Error | undefined
-      fetchTime: number
-      updatedAt: number
-    }[]
-    cache: {
-      limit: number
-    }
+    // TODO: add global inputs
   }
 }

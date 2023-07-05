@@ -38,9 +38,5 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
   },
   serverRoutes: {
     selectedRoute: null,
-    responses: [],
-    cache: {
-      limit: 10,
-    },
   },
 }

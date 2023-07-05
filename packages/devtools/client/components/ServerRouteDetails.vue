@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import { useTimeAgo } from '@vueuse/core'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
 
 const props = defineProps<{
@@ -10,38 +9,44 @@ const props = defineProps<{
 const currentRoute = useRoute()
 const config = useServerConfig()
 
-const { cache, responses } = useDevToolsOptions('serverRoutes')
-const routeResponse = computed(() => responses.value.find(i => i.route === props.route.filepath))
+const response = reactive({
+  contentType: 'text/plain',
+  data: '' as any,
+  statusCode: 200,
+  error: undefined as Error | undefined,
+  fetchTime: 0,
+})
 
 const responseLang = computed(() => {
-  if (routeResponse.value?.contentType.includes('application/json'))
+  if (response.contentType.includes('application/json'))
     return 'json'
-  if (routeResponse.value?.contentType.includes('text/html'))
+  if (response.contentType.includes('text/html'))
     return 'html'
-  if (routeResponse.value?.contentType.includes('text/css'))
+  if (response.contentType.includes('text/css'))
     return 'css'
-  if (routeResponse.value?.contentType.includes('text/javascript'))
+  if (response.contentType.includes('text/javascript'))
     return 'javascript'
-  if (routeResponse.value?.contentType.includes('image') || routeResponse.value?.contentType.includes('video'))
+  if (response.contentType.includes('image') || response.contentType.includes('video'))
     return 'media'
-  if (routeResponse.value?.contentType.includes('text/xml') || routeResponse.value?.contentType.includes('application/xml'))
+  if (response.contentType.includes('text/xml') || response.contentType.includes('application/xml'))
     return 'xml'
-  if (routeResponse.value?.contentType.includes('application/pdf'))
+  if (response.contentType.includes('application/pdf'))
     return 'pdf'
   return 'text'
 })
 
 const responseContent = computed(() => {
   if (responseLang.value === 'json')
-    return JSON.stringify(routeResponse.value?.data, null, 2)
+    return JSON.stringify(response.data, null, 2)
   if (responseLang.value === 'media' || responseLang.value === 'pdf') {
-    const blob = new Blob([routeResponse.value?.data], { type: routeResponse.value?.contentType })
+    const blob = new Blob([response.data], { type: response.contentType })
     return URL.createObjectURL(blob)
   }
-  return routeResponse.value?.data
+  return response.data
 })
 
 const fetching = ref(false)
+const started = ref(false)
 
 const openInEditor = useOpenInEditor()
 
@@ -133,14 +138,8 @@ function parseInputs(inputs: any[]) {
 }
 
 async function fetchData() {
+  started.value = true
   fetching.value = true
-
-  const response = {
-    contentType: 'text/plain',
-    data: '',
-    statusCode: 200,
-    error: undefined,
-  }
 
   const start = Date.now()
 
@@ -164,26 +163,8 @@ async function fetchData() {
 
   }
 
-  const currentState = {
-    route: props.route.filepath,
-    contentType: response.contentType,
-    statusCode: response.statusCode,
-    data: response.data,
-    error: response.error,
-    fetchTime: Date.now() - start,
-    updatedAt: Date.now(),
-  }
-
-  if (!routeResponse.value) {
-    if (responses.value.length >= cache.value.limit)
-      responses.value.splice(0, responses.value.length - cache.value.limit + 1)
-    responses.value.push(currentState)
-  }
-  else {
-    Object.assign(routeResponse.value, currentState)
-  }
-
   fetching.value = false
+  response.fetchTime = Date.now() - start
 }
 
 const codeSnippets = computed(() => {
@@ -393,7 +374,7 @@ watch(currentParams, (value) => {
       <ServerRouteInputs v-else v-model="currentParams" :default="{ type: 'string' }" />
     </div>
 
-    <NPanelGrids v-if="!routeResponse">
+    <NPanelGrids v-if="!started">
       <NButton n="primary" @click="fetchData">
         <NIcon icon="carbon:send" />
         Send request
@@ -406,36 +387,28 @@ watch(currentParams, (value) => {
       <div border="b base" flex="~ gap2" items-center px4 py2>
         <div>Response</div>
         <Badge
-          v-if="routeResponse?.error"
+          v-if="response.error"
           bg-red-400:10 text-red-400
         >
           Error
         </Badge>
         <Badge
           :class="{
-            'bg-orange-400:10 text-orange-400': routeResponse?.error,
-            'bg-green-400:10 text-green-400': !routeResponse?.error,
+            'bg-orange-400:10 text-orange-400': response.error,
+            'bg-green-400:10 text-green-400': !response.error,
           }"
         >
-          {{ routeResponse?.statusCode }}
+          {{ response.statusCode }}
         </Badge>
-        <code v-if="routeResponse?.contentType" text-xs op50>
-          {{ routeResponse?.contentType }}
+        <code v-if="response.contentType" text-xs op50>
+          {{ response.contentType }}
         </code>
         <div flex-auto />
-        <template v-if="routeResponse?.updatedAt">
-          <div op50>
-            Last update at
-          </div>
-          <Badge bg-green-400:10 text-green-400>
-            {{ useTimeAgo(new Date(routeResponse.updatedAt)) }}
-          </Badge>
-        </template>
         <div op50>
           Request finished in
         </div>
         <Badge bg-green-400:10 text-green-400>
-          {{ routeResponse?.fetchTime }} ms
+          {{ response.fetchTime }} ms
         </Badge>
       </div>
       <div v-if="responseLang === 'pdf'" flex-auto overflow-auto>
@@ -452,7 +425,7 @@ watch(currentParams, (value) => {
       />
       <div v-else flex-auto overflow-auto p4>
         <div border="~ base" rounded>
-          <img v-if="routeResponse?.contentType.includes('image')" rounded :src="responseContent">
+          <img v-if="response.contentType.includes('image')" rounded :src="responseContent">
           <video v-else controls rounded>
             <source :src="responseContent" type="video/mp4">
           </video>
