@@ -17,14 +17,14 @@
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.39.6",
+    "@antfu/eslint-config": "^0.39.7",
     "@antfu/ni": "^0.21.4",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "^0.4.0",
-    "@nuxt/schema": "^3.6.1",
+    "@nuxt/schema": "^3.6.2",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^20.3.3",
+    "@types/node": "^20.4.0",
     "@types/pacote": "^11.1.5",
     "@types/wait-on": "^5.3.1",
     "@types/which": "^3.0.0",
@@ -37,7 +37,7 @@
     "execa": "^7.1.1",
     "gray-matter": "^4.0.3",
     "lint-staged": "^13.2.3",
-    "nuxt": "^3.6.1",
+    "nuxt": "^3.6.2",
     "pathe": "^1.1.1",
     "simple-git-hooks": "^2.8.1",
     "taze": "^0.11.2",
@@ -46,7 +46,7 @@
     "ua-parser-js": "^1.0.35",
     "unocss": "^0.53.4",
     "vite-hot-client": "^0.2.1",
-    "vue-tsc": "^1.8.3"
+    "vue-tsc": "^1.8.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
