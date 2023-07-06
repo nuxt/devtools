@@ -133,7 +133,7 @@ function toggleView() {
         <template #actions>
           <NIconButton
             text-lg
-            :icon="view === 'list' ? 'carbon:list' : 'carbon:decision-tree'"
+            :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
             title="Toggle view"
             @click="toggleView"
           />
