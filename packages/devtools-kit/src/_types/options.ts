@@ -118,6 +118,7 @@ export interface NuxtDevToolsOptions {
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null
+    view: 'tree' | 'list'
     // TODO: add global inputs
   }
 }
