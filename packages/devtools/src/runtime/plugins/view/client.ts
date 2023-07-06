@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
-import type { NuxtDevtoolsHostClient } from '../../../types'
+import type { NuxtDevtoolsHostClient, TimelineEventRoute } from '../../../types'
 import { __initFunctionMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
@@ -195,23 +195,26 @@ export async function setupDevToolsClient({
     client.nuxt.payload,
     client.colorMode.value,
     client.loadingTimeMetrics,
-    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__?.functions,
+    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__?.events,
   ], () => {
     refreshReactivity()
   }, { deep: true })
+
+  let lastRouteEvent: TimelineEventRoute | undefined
   // trigger update for route change
   router?.afterEach(() => {
     refreshReactivity()
-    const last = timeline.routes.at(-1)
-    if (last && !last?.end)
-      last.end = Date.now()
+    if (lastRouteEvent && !lastRouteEvent?.end)
+      lastRouteEvent.end = Date.now()
   })
   router?.beforeEach((to, from) => {
-    timeline.routes.push({
+    lastRouteEvent = {
+      type: 'route',
       from: from.path,
       to: to.path,
       start: Date.now(),
-    })
+    }
+    timeline.events.push(lastRouteEvent)
   })
   // trigger update for app mounted
   client.nuxt.hook('app:mounted', () => {

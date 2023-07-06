@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { TimelineFunctionRecord, TimlineMetrics } from '../../types'
+import type { TimelineEventFunction, TimelineEventRoute, TimlineMetrics } from '../../types'
 
 const props = defineProps<{
   data: TimlineMetrics
 }>()
 
 const emit = defineEmits<{
-  (event: 'select', record: TimelineFunctionRecord): void
+  (event: 'select', record: TimelineEventFunction): void
 }>()
 
 const scroller = ref<HTMLElement>()
@@ -15,8 +15,8 @@ const minimapScroller = ref<HTMLElement>()
 
 const MIN_WIDTH = 20_000
 
-const startTime = computed(() => props.data.functions[0]?.start || Date.now())
-const endTime = computed(() => Math.max(...props.data.functions.map(i => i.end || i.start)))
+const startTime = computed(() => props.data.events[0]?.start || Date.now())
+const endTime = computed(() => Math.max(...props.data.events.map(i => i.end || i.start)))
 const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH) + 10_000)
 
 const ruleInterval = 5_000
@@ -29,29 +29,33 @@ const offsetX = 10
 const graphItems = computed(() => {
   const layers: number[] = [0]
 
-  const result = props.data.functions.map((item) => {
-    let hIndex = layers.findIndex(layer => layer <= item.start)
-    const width = (item.end || item.start) - item.start + 1_000
-    const end = item.start + width
+  const result = props.data.events
+    .filter((i): i is TimelineEventFunction => i.type === 'function')
+    .map((item) => {
+      let hIndex = layers.findIndex(layer => layer <= item.start)
+      const width = (item.end || item.start) - item.start + 1_000
+      const end = item.start + width
 
-    if (hIndex === -1) {
-      hIndex = layers.length
-      layers.push(end)
-    }
-    else {
-      layers[hIndex] = end
-    }
+      if (hIndex === -1) {
+        hIndex = layers.length
+        layers.push(end)
+      }
+      else {
+        layers[hIndex] = end
+      }
 
-    return {
-      key: item.name + item.start,
-      layer: hIndex,
-      item,
-      width: item.end ? (item.end - item.start) : 20000,
-      left: (item.start - startTime.value),
-    }
-  })
+      return {
+        key: item.name + item.start,
+        layer: hIndex,
+        item,
+        width: item.end ? (item.end - item.start) : 20000,
+        left: (item.start - startTime.value),
+      }
+    })
   return result
 })
+
+const routeEvents = computed(() => props.data.events.filter((i): i is TimelineEventRoute => i.type === 'route'))
 
 useEventListener(scroller, 'scroll', () => {
   minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
@@ -125,7 +129,7 @@ useEventListener(minimapScroller, 'scroll', () => {
           {{ i * ruleInterval / 1000 }}s
         </div>
       </template>
-      <template v-for="i in data.routes" :key="i">
+      <template v-for="i in routeEvents" :key="i">
         <div
           absolute top-0 h-full w-px border-l border-green6 border-dashed op50
           :style="{

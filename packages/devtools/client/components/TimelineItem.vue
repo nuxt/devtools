@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { TimelineFunctionRecord } from '../../types'
+import type { TimelineEventFunction } from '../../types'
 
 const props = defineProps<{
-  item: TimelineFunctionRecord
+  item: TimelineEventFunction
   width: number
 }>()
 

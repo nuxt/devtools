@@ -1,23 +1,28 @@
 import type ErrorStackParser from 'error-stack-parser'
 
-export interface TimelineFunctionRecord {
-  name: string
+export interface TimelineEventFunction {
+  type: 'function'
   start: number
   end?: number
+
+  name: string
   args?: any[]
   result?: any
   stacktrace?: ErrorStackParser.StackFrame[]
 }
 
-export interface TimelineRouteRecord {
-  from: string
-  to: string
+export interface TimelineEventRoute {
+  type: 'route'
   start: number
   end?: number
+
+  from: string
+  to: string
 }
 
+export type TimelineEvent = TimelineEventFunction | TimelineEventRoute
+
 export interface TimlineMetrics {
-  functions: TimelineFunctionRecord[]
-  routes: TimelineRouteRecord[]
+  events: TimelineEvent[]
   nonLiteralSymbol: symbol
 }
