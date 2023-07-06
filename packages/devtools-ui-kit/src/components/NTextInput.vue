@@ -7,6 +7,7 @@ const props = withDefaults(
     icon?: string
     placeholder?: string
     disabled?: boolean
+    autofocus?: boolean
     type?: string
   }>(),
   {
