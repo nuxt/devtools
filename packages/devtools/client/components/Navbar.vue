@@ -21,7 +21,7 @@ function update(event: any) {
 
 <template>
   <div flex="~ col gap2" border="b base" flex-1 navbar-glass :class="[{ p4: !noPadding }]">
-    <div flex="~ gap4">
+    <div flex="~ gap4" items-center>
       <slot name="search">
         <NTextInput
           placeholder="Search..."

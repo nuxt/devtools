@@ -9,12 +9,12 @@ const props = defineProps<{
 const currentRoute = useRoute()
 const config = useServerConfig()
 
-// TODO: use storage options to cache responses
 const response = reactive({
   contentType: 'text/plain',
   data: '' as any,
   statusCode: 200,
   error: undefined as Error | undefined,
+  fetchTime: 0,
 })
 
 const responseLang = computed(() => {
@@ -45,7 +45,6 @@ const responseContent = computed(() => {
   return response.data
 })
 
-const fetchTime = ref(0)
 const fetching = ref(false)
 const started = ref(false)
 
@@ -133,7 +132,7 @@ const finalURL = computed(() => domain.value + finalPath.value)
 
 function parseInputs(inputs: any[]) {
   const formatted = Object.fromEntries(
-    inputs.filter(({ key, value }) => key !== undefined && value !== undefined).map(({ key, value }) => [key, value]),
+    inputs.filter(({ key, value }) => key && value !== undefined).map(({ key, value }) => [key, value]),
   )
   return Object.entries(formatted).length ? formatted : undefined
 }
@@ -141,14 +140,9 @@ function parseInputs(inputs: any[]) {
 async function fetchData() {
   started.value = true
   fetching.value = true
-  Object.assign(response, {
-    lang: 'text',
-    contentType: '',
-    data: '',
-    error: undefined,
-  })
 
   const start = Date.now()
+
   try {
     response.data = await $fetch(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
@@ -168,8 +162,9 @@ async function fetchData() {
   catch (err: any) {
 
   }
+
   fetching.value = false
-  fetchTime.value = Date.now() - start
+  response.fetchTime = Date.now() - start
 }
 
 const codeSnippets = computed(() => {
@@ -413,7 +408,7 @@ watch(currentParams, (value) => {
           Request finished in
         </div>
         <Badge bg-green-400:10 text-green-400>
-          {{ fetchTime }} ms
+          {{ response.fetchTime }} ms
         </Badge>
       </div>
       <div v-if="responseLang === 'pdf'" flex-auto overflow-auto>

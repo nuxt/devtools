@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-kit",
   "type": "module",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
@@ -35,20 +35,20 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "nuxt": "^3.5.1",
+    "nuxt": "^3.6.1",
     "vite": "*"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.6.1",
-    "@nuxt/schema": "^3.6.1",
+    "@nuxt/kit": "^3.6.2",
+    "@nuxt/schema": "^3.6.2",
     "execa": "^7.1.1"
   },
   "devDependencies": {
     "birpc": "^0.2.12",
     "hookable": "^5.5.3",
     "unbuild": "^1.2.1",
-    "unimport": "^3.0.12",
+    "unimport": "^3.0.14",
     "vite-plugin-vue-inspector": "^3.4.2",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.3"
   }
 }
