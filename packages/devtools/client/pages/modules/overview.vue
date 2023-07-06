@@ -148,7 +148,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
           Bug Reports
         </a>
         <NuxtLink to="/settings" flex="~ gap1" inline-block items-center op50 hover:op80>
-          <div i-carbon-settings />
+          <div i-carbon-settings-adjust />
           Settings
         </NuxtLink>
       </div>
