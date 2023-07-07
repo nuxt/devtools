@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { UseTimeAgoOptions } from '@vueuse/core'
 import type { TimelineEventFunction, TimelineEventsSegment } from '../../types'
 
 const props = defineProps<{
@@ -10,13 +11,27 @@ const emit = defineEmits<{
 }>()
 
 const timeAgo = useTimeAgo(() => props.segment.start, {
+  updateInterval: 1000,
   showSecond: true,
+  messages: {
+    justNow: '',
+    past: s => s,
+    future: s => s,
+    invalid: '-',
+    second: s => s ? `${s}s` : '',
+    minute: m => `${m}m`,
+    hour: h => `${h}h`,
+    week: w => `${w}w`,
+    day: d => `${d}d`,
+    month: m => `${m}mo`,
+    year: y => `${y}y`,
+  } as UseTimeAgoOptions<false>['messages'],
 })
 </script>
 
 <template>
   <div relative h-full>
-    <div absolute left-1 top-3 text-xs op50>
+    <div absolute left-2 top-2 text-xs op50>
       {{ timeAgo }}
     </div>
     <TimelineItemFunction

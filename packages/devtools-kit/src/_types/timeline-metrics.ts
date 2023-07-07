@@ -42,5 +42,5 @@ export interface TimelineEventsSegment {
   functions: TimelineEventNormalized<TimelineEventFunction>[]
   routes: TimelineEventNormalized<TimelineEventRoute>[]
   duration: number
-  previousDuration?: number
+  previousGap?: number
 }
