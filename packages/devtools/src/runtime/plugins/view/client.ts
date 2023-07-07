@@ -195,7 +195,7 @@ export async function setupDevToolsClient({
     client.nuxt.payload,
     client.colorMode.value,
     client.loadingTimeMetrics,
-    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__?.events,
+    timeMetric,
   ], () => {
     refreshReactivity()
   }, { deep: true })

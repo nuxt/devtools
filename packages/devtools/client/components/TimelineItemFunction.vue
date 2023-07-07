@@ -3,7 +3,6 @@ import type { TimelineEventFunction } from '../../types'
 
 const props = defineProps<{
   item: TimelineEventFunction
-  width: number
 }>()
 
 const colorRaw = computed(() => getHashColorFromString(props.item.name, 50, 60, '_op_'))
@@ -19,12 +18,11 @@ const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
       color,
       borderLeft: `2px solid ${color}`,
     }"
-    relative border-2 border-transparent transition hover:z-1000 hover:border-current bg-base
+    relative border-2 border-transparent text-sm transition hover:z-1000 hover:border-current bg-base
   >
     <div
       :style="{
         backgroundColor: colorBackground,
-        width: `${props.width}px`,
       }"
       absolute bottom-0 left--1px top-0 text-sm transition-all duration-300
       class="group-hover-w-full!"

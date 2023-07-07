@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import type { TimelineFunctionRecord } from '../../types'
+import type { TimelineEventFunction } from '../../types'
 
 const props = defineProps<{
-  record: TimelineFunctionRecord
+  record: TimelineEventFunction
 }>()
 
 const config = useServerConfig()
 const timeAgo = useTimeAgo(() => props.record.start)
 
 function urlToFilepath(url: string) {
-  const { pathname } = new URL(url)
-  if (pathname.startsWith('/_nuxt/@id/virtual:nuxt:'))
+  let pathname = new URL(url).pathname
+  if (pathname.startsWith('/_nuxt/'))
+    pathname = pathname.slice(6)
+  if (pathname.startsWith('/@id/virtual:nuxt:'))
     return `#build/${pathname.split('/.nuxt/')[1]}`.replace(/\.m?js$/, '')
   if (pathname.includes('/@fs/'))
     return `/${pathname.split('/@fs/')[1]}`
@@ -41,6 +43,7 @@ function urlToFilepath(url: string) {
         </div>
         <div ws-nowrap>
           <FilepathItem
+            v-if="item.fileName"
             :filepath="`${urlToFilepath(item.fileName)}:${item.lineNumber}:${item.columnNumber}`"
             subpath
           />

@@ -3,11 +3,17 @@ const props = withDefaults(
   defineProps<{
     duration: number | undefined
     factor?: number
+    color?: boolean
   }>(),
-  { factor: 1 },
+  {
+    factor: 1,
+    color: true,
+  },
 )
 
 function getLatencyColor(latency: number | undefined) {
+  if (!props.color)
+    return ''
   if (!latency)
     return 'text-gray-400'
   latency = latency * props.factor

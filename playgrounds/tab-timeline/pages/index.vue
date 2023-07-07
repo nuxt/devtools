@@ -16,6 +16,14 @@ useHead({
     },
   ],
 })
+
+onMounted(() => {
+  doSomething()
+
+  setInterval(() => {
+    doSomething()
+  }, 2000)
+})
 </script>
 
 <template>

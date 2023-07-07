@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TimelineEventFunction, TimelineEventRoute, TimlineMetrics } from '../../types'
+import type { TimelineEventFunction, TimlineMetrics } from '../../types'
+import { segmentTimelineEvents } from '~/composables/timeline'
 
 const props = defineProps<{
   data: TimlineMetrics
@@ -19,43 +20,11 @@ const startTime = computed(() => props.data.events[0]?.start || Date.now())
 const endTime = computed(() => Math.max(...props.data.events.map(i => i.end || i.start)))
 const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH) + 10_000)
 
-const ruleInterval = 5_000
 const viewFinderWidth = ref(MIN_WIDTH)
 const rect = reactive(useElementBounding(scroller))
-const now = useTimestamp({ interval: 100, immediate: true })
 const pixelPerMs = computed(() => rect.width / viewFinderWidth.value)
 
-const offsetX = 10
-const graphItems = computed(() => {
-  const layers: number[] = [0]
-
-  const result = props.data.events
-    .filter((i): i is TimelineEventFunction => i.type === 'function')
-    .map((item) => {
-      let hIndex = layers.findIndex(layer => layer <= item.start)
-      const width = (item.end || item.start) - item.start + 1_000
-      const end = item.start + width
-
-      if (hIndex === -1) {
-        hIndex = layers.length
-        layers.push(end)
-      }
-      else {
-        layers[hIndex] = end
-      }
-
-      return {
-        key: item.name + item.start,
-        layer: hIndex,
-        item,
-        width: item.end ? (item.end - item.start) : 20000,
-        left: (item.start - startTime.value),
-      }
-    })
-  return result
-})
-
-const routeEvents = computed(() => props.data.events.filter((i): i is TimelineEventRoute => i.type === 'route'))
+const segments = computed(() => segmentTimelineEvents(props.data.events))
 
 useEventListener(scroller, 'scroll', () => {
   minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
@@ -70,7 +39,7 @@ useEventListener(minimapScroller, 'scroll', () => {
     <slot />
     <div relative>
       <div ref="minimap" relative h-50px border="t b base" border-base>
-        <div
+        <!-- <div
           v-for="item of graphItems"
           :key="item.key"
           :item="item.item"
@@ -83,7 +52,7 @@ useEventListener(minimapScroller, 'scroll', () => {
             borderRadius: '2px',
             width: `${Math.max(item.width / fullTimeSpan * 100, 0.2)}%`,
           }"
-        />
+        /> -->
       </div>
       <div ref="minimapScroller" class="timeline-scroller" absolute inset-0 h-full w-full of-x-scroll>
         <div
@@ -92,28 +61,29 @@ useEventListener(minimapScroller, 'scroll', () => {
         />
       </div>
     </div>
-    <div ref="scroller" relative h-full w-full of-x-scroll>
+    <div ref="scroller" relative h-full w-full of-x-scroll ws-nowrap>
       <div
         absolute h-1px
         :style="{ width: `${fullTimeSpan * pixelPerMs}px` }"
       />
-      <div
-        absolute top-0 z-100 h-full w-px border-l border-blue transition-all duration-100 ease-linear
-        :style="{ left: `${(now - startTime + 1000) * pixelPerMs}px` }"
-      />
-      <TimelineItem
-        v-for="i of graphItems"
-        :key="i.key"
-        :item="i.item"
-        :width="i.width * pixelPerMs"
-        :style="{
-          position: 'absolute',
-          top: `${4 + i.layer * 1.6}em`,
-          left: `${offsetX + i.left * pixelPerMs}px`,
-        }"
-        @click="emit('select', i.item)"
-      />
-      <template v-for="i in Math.floor(fullTimeSpan / ruleInterval)" :key="i">
+
+      <template v-for="segment, idx of segments" :key="idx">
+        <div v-if="segment.previousDuration && segment.previousDuration > 50" flex-inline text-xs write-vertical-left op50>
+          <DurationDisplay
+            :duration="segment.previousDuration"
+          />
+        </div>
+        <TimelineSegment
+          flex-inline of-x-hidden hover:of-x-visible border="r base"
+          :segment="segment"
+          :style="{
+            width: `${Math.max(100, segment.duration)}px`,
+          }"
+          @select="emit('select', $event)"
+        />
+      </template>
+
+      <!-- <template v-for="i in Math.floor(fullTimeSpan / ruleInterval)" :key="i">
         <div
           absolute top-0 h-full w-px border-l border-base
           :style="{
@@ -128,25 +98,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         >
           {{ i * ruleInterval / 1000 }}s
         </div>
-      </template>
-      <template v-for="i in routeEvents" :key="i">
-        <div
-          absolute top-0 h-full w-px border-l border-green6 border-dashed op50
-          :style="{
-            left: `${offsetX + (i.start - startTime) * pixelPerMs}px`,
-          }"
-        />
-        <div
-          absolute mt8 text-xs font-mono text-green6 bg-base border="l green6"
-          :style="{
-            left: `${offsetX + (i.start - startTime) * pixelPerMs}px`,
-          }"
-        >
-          <div bg-green6:10 px1 py0.5>
-            {{ i.to }}
-          </div>
-        </div>
-      </template>
+      </template> -->
     </div>
   </div>
 </template>

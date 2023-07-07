@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimelineFunctionRecord } from '../../../types'
+import type { TimelineEventFunction } from '../../../types'
 
 definePageMeta({
   icon: 'i-carbon-roadmap',
@@ -13,20 +13,18 @@ definePageMeta({
 
 const client = useClient()
 
-const selected = ref<TimelineFunctionRecord | undefined>()
+const selected = ref<TimelineEventFunction | undefined>()
 
 function clear() {
   const metrics = client.value?.clientTimelineMetrics
-  if (metrics) {
-    metrics.functions = []
-    metrics.routes = []
-  }
+  if (metrics)
+    metrics.events = []
 }
 </script>
 
 <template>
-  <div h-screen of-hidden>
-    <TimelineTable :data="{ ...client?.clientTimelineMetrics }" @select="s => selected = s">
+  <div v-if="client?.clientTimelineMetrics" h-screen of-hidden>
+    <TimelineTable :data="{ ...client.clientTimelineMetrics }" @select="s => selected = s">
       <div h-10 flex="~ gap-2 items-center justify-end" p2>
         <NIconButton
           icon="i-carbon-trash-can"
@@ -41,7 +39,7 @@ function clear() {
       auto-close
       @close="selected = undefined"
     >
-      <FunctionMetricDetails v-if="selected" :record="selected" />
+      <TimelineDetailsFunction v-if="selected" :record="selected" />
     </DrawerBottom>
   </div>
 </template>
