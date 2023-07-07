@@ -16,7 +16,7 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
   }
 
   for (const event of events) {
-    const end = event.end || (event.start)
+    const end = event.end || event.start
     // Segment events by max duration or route change
     if (
       (event.start - current.end > MAX_SEGMENT_DURATION)

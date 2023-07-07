@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 
 const config = useServerConfig()
-const timeAgo = useTimeAgo(() => props.record.start)
+const timeAgo = useTimeAgo(() => props.record.start, { showSecond: true })
 
 function urlToFilepath(url: string) {
   let pathname = new URL(url).pathname
@@ -18,13 +18,33 @@ function urlToFilepath(url: string) {
     return `/${pathname.split('/@fs/')[1]}`
   return (config.value?.rootDir || '') + pathname
 }
+
+const autoImports = useAutoImports()
+const importsMetadata = computed(() => autoImports.value?.metadata)
+const importItem = computed(() => {
+  return autoImports.value?.imports.find(i => i.as === props.record.name)
+})
 </script>
 
 <template>
-  <div v-if="record" p-4>
-    <div font-mono>
-      <span>{{ record.name }}</span>
-      <span text-amber-5 dark:text-amber-2> ({{ record.args?.map(i => typeof i === 'symbol' ? '<obj>' : JSON.stringify(i)).join(', ') }})</span>
+  <div v-if="record" p-4 flex="~ col gap-2">
+    <div flex="~ gap-1" font-mono>
+      <ComposableItem
+        v-if="importItem"
+        :item="importItem"
+        :metadata="importsMetadata"
+        :counter="false"
+        mx--2
+      />
+      <span v-else>{{ record.name }}</span>
+      <span ml1 op30>(</span>
+      <template v-for="arg, idx in record.args" :key="idx">
+        <span v-if="idx" op30>, </span>
+        <span :class="typeof arg === 'symbol' ? 'text-amber-5 dark:text-amber-2' : 'text-teal-5 dark:text-teal-2'">
+          {{ typeof arg === 'symbol' ? '[obj]' : JSON.stringify(arg) }}
+        </span>
+      </template>
+      <span op30>)</span>
     </div>
 
     <DurationDisplay
@@ -36,7 +56,7 @@ function urlToFilepath(url: string) {
       {{ timeAgo }}
     </div>
 
-    <div class="text-xs text-gray-400" mt2 grid="~ cols-[max-content_1fr] gap-x-4" font-mono>
+    <div v-if="record.stacktrace" class="text-xs text-gray-400" mt2 grid="~ cols-[max-content_1fr] gap-x-4" font-mono>
       <template v-for="item, idx of record.stacktrace" :key="idx">
         <div text-right>
           {{ item.functionName || `(anonymous)` }}

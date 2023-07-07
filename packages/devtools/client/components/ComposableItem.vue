@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
 
-const props = defineProps<{
-  item: Import
-  metadata?: UnimportMeta
-  filepath?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    item: Import
+    metadata?: UnimportMeta
+    filepath?: string
+    counter?: boolean
+  }>(),
+  { counter: true },
+)
 
 const copy = useCopy()
 const openInEditor = useOpenInEditor()
@@ -35,7 +39,7 @@ const docsUrl = computed(() => {
         :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
       >
         {{ name }}
-        <sup v-if="usageCount" text-primary>x{{ usageCount }}</sup>
+        <sup v-if="usageCount && counter" text-primary>x{{ usageCount }}</sup>
       </code>
     </button>
     <template #popper>
@@ -64,7 +68,7 @@ const docsUrl = computed(() => {
             <div text-sm>
               <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
             </div>
-            <div flex="~ col gap-2" items-start pt3 text-sm>
+            <div flex="~ col gap-2" items-start pt3 text-sm op75>
               <FilepathItem
                 v-for="id of modules" :key="id"
                 :filepath="id"

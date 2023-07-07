@@ -13,23 +13,36 @@ const emit = defineEmits<{
 const scroller = ref<HTMLElement>()
 const minimap = ref<HTMLElement>()
 const minimapScroller = ref<HTMLElement>()
-
-const MIN_WIDTH = 20_000
-
-const startTime = computed(() => props.data.events[0]?.start || Date.now())
-const endTime = computed(() => Math.max(...props.data.events.map(i => i.end || i.start)))
-const fullTimeSpan = computed(() => Math.max(endTime.value - startTime.value, MIN_WIDTH) + 10_000)
-
-const viewFinderWidth = ref(MIN_WIDTH)
-const rect = reactive(useElementBounding(scroller))
-const pixelPerMs = computed(() => rect.width / viewFinderWidth.value)
+const minimapScrollerInner = ref<HTMLElement>()
 
 const segments = computed(() => segmentTimelineEvents(props.data.events))
 
+const scrollWidth = computed(() => {
+  // eslint-disable-next-line no-unused-expressions
+  props.data.events.length
+  return scroller.value?.scrollWidth || window.innerWidth
+})
+
+function syncSize() {
+  if (minimapScrollerInner.value)
+    minimapScrollerInner.value.style.width = `${scrollWidth.value}px`
+}
+
+watch(
+  () => props.data.events.length,
+  async () => {
+    await nextTick()
+    syncSize()
+  },
+  { flush: 'post' },
+)
+
 useEventListener(scroller, 'scroll', () => {
+  syncSize()
   minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
 })
 useEventListener(minimapScroller, 'scroll', () => {
+  syncSize()
   scroller.value!.scrollLeft = minimapScroller.value!.scrollLeft
 })
 </script>
@@ -38,13 +51,13 @@ useEventListener(minimapScroller, 'scroll', () => {
   <div h-screen w-full flex flex-col>
     <slot />
     <div relative>
-      <div ref="minimap" relative h-50px border="t b base" border-base>
+      <div ref="minimap" border="t b base" relative h-50px ws-nowrap border-base>
         <div
           v-for="segment, idx of segments"
           :key="idx"
           relative h-full flex-inline
           :style="{
-            width: `${Math.max(100, segment.duration / 10)}px`,
+            width: `${Math.max(100, segment.duration / 10) / (scrollWidth) * 100}%`,
           }"
         >
           <div
@@ -71,24 +84,20 @@ useEventListener(minimapScroller, 'scroll', () => {
       </div>
       <div ref="minimapScroller" class="timeline-scroller" absolute inset-0 h-full w-full of-x-scroll>
         <div
+          ref="minimapScrollerInner"
           h-1px
-          :style="{ width: `${fullTimeSpan * pixelPerMs}px` }"
         />
       </div>
     </div>
     <div ref="scroller" relative h-full w-full of-x-scroll ws-nowrap>
-      <div
-        absolute h-1px
-        :style="{ width: `${fullTimeSpan * pixelPerMs}px` }"
-      />
-
       <template v-for="segment, idx of segments" :key="idx">
         <div
-          v-if="segment.previousDuration && segment.previousDuration > 200"
+          v-if="segment.previousDuration && segment.previousDuration >= 200"
           border="x base"
-          h-full flex-inline bg-gray:10 py2 text-xs write-vertical-left op50
+          h-full flex-inline bg-gray:10 py4 text-xs write-vertical-left op50
         >
           <DurationDisplay
+            op50
             :duration="segment.previousDuration"
             :color="false"
           />
