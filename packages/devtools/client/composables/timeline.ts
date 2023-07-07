@@ -1,6 +1,6 @@
 import type { TimelineEvent, TimelineEventFunction, TimelineEventNormalized, TimelineEventRoute, TimelineEventsSegment } from '../../types'
 
-const MAX_SEGMENT_DURATION = 5_000
+const MAX_SEGMENT_DURATION = 3_000
 const SEGMENT_END_PADDING = 50
 
 export function segmentTimelineEvents(events: TimelineEvent[]) {
@@ -16,7 +16,7 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
   }
 
   for (const event of events) {
-    const end = event.end || (event.start + 1_000)
+    const end = event.end || (event.start)
     // Segment events by max duration or route change
     if (
       (event.start - current.end > MAX_SEGMENT_DURATION)
