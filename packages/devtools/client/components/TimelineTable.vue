@@ -92,13 +92,13 @@ useEventListener(minimapScroller, 'scroll', () => {
     <div ref="scroller" relative h-full w-full of-x-scroll ws-nowrap>
       <template v-for="segment, idx of segments" :key="idx">
         <div
-          v-if="segment.previousDuration && segment.previousDuration >= 200"
+          v-if="segment.previousGap && segment.previousGap >= 200"
           border="x base"
           h-full flex-inline bg-gray:10 py4 text-xs write-vertical-left op50
         >
           <DurationDisplay
             op50
-            :duration="segment.previousDuration"
+            :duration="segment.previousGap"
             :color="false"
           />
         </div>
