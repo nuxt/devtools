@@ -9,7 +9,7 @@ export const wsError = ref<any>()
 export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
 
 const connectPromise = connectVite()
-let onMessage: Function = () => {}
+let onMessage: any = () => {}
 
 export const clientFunctions = {
   // will be added in app.vue

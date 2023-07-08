@@ -90,7 +90,7 @@ export interface NuxtDevtoolsClient {
   renderMarkdown: (markdown: string) => string
   colorMode: string
 
-  extendClientRpc: <ServerFunctions = {}, ClientFunctions = {}>(name: string, functions: ClientFunctions) => BirpcReturn<ServerFunctions, ClientFunctions>
+  extendClientRpc: <ServerFunctions = Record<string, never>, ClientFunctions = Record<string, never>>(name: string, functions: ClientFunctions) => BirpcReturn<ServerFunctions, ClientFunctions>
 }
 
 export interface NuxtDevtoolsIframeClient {

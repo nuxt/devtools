@@ -10,7 +10,7 @@ async function loadPackage(dir: string) {
   const data = JSON.parse(await fsp.readFile(pkgPath, 'utf-8').catch(() => '{}'))
   const save = () => fsp.writeFile(pkgPath, `${JSON.stringify(data, null, 2)}\n`)
 
-  const updateDeps = (reviver: Function) => {
+  const updateDeps = (reviver: any) => {
     for (const type of ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies']) {
       if (!data[type])
         continue
