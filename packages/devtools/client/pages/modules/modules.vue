@@ -107,7 +107,7 @@ registerCommands(() => [
       >
         <NIconButton
           icon="carbon-close"
-          pos="absolute top-3 right-3"
+          pos="absolute top-3 right-3 z-10"
           rounded-full text-xl
           @click="installModuleOpen = false"
         />
