@@ -19,10 +19,10 @@ export async function checkForUpdateOf(name: string, current?: string, nuxt = us
       current = info.packageJson.version
     }
 
-    const packument = await import('pacote').then(r => r.default?.packument || r.packument)
-    const manifest = await packument(name)
+    const packumentFn = await import('pacote').then(r => r.default?.packument || r.packument)
+    const packument = await packumentFn(name)
 
-    const latest = manifest['dist-tags'].latest
+    const latest = packument['dist-tags'].latest
     const needsUpdate = latest !== current && semver.lt(current, latest)
 
     return {
