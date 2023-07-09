@@ -75,7 +75,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
     }
     catch (e) {
       // if the git is not available, fallback to iso string
-      return new Date().toISOString()
+      return new Date().toISOString().replace(/:/g, '-')
     }
   }
 
