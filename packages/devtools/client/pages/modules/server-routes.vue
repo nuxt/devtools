@@ -16,8 +16,10 @@ definePageMeta({
 const vueRoute = useRoute()
 const vueRouter = useRouter()
 
+const globalInputDrawer = ref(false)
+
 const serverRoutes = useServerRoutes()
-const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
+const { selectedRoute, view, globalInputs } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
   const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
@@ -137,6 +139,13 @@ function toggleView() {
             title="Toggle view"
             @click="toggleView"
           />
+          <NIconButton
+            text-lg
+            text-orange
+            icon="carbon-globe"
+            title="Global Inputs"
+            @click="globalInputDrawer = !globalInputDrawer"
+          />
         </template>
         <div flex="~ gap1" text-sm>
           <span v-if="search" op50>{{ filtered.length }} matched · </span>
@@ -165,4 +174,20 @@ function toggleView() {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
+  <DrawerRight v-model="globalInputDrawer" auto-close max-w-xl min-w-xl @close="globalInputDrawer = false">
+    <div>
+      <div p4 border="b base" text-orange>
+        Global Params <span text-white op50>(will be used for every route)</span>
+      </div>
+      <NSectionBlock
+        v-for="tab of Object.keys(globalInputs)"
+        :key="tab"
+        :text="`${tab} ${globalInputs[tab].length ? `(${globalInputs[tab].length})` : ''}`"
+        :padding="false"
+        :icon="ServerRouteTabIcons[tab]"
+      >
+        <ServerRouteInputs v-model="globalInputs[tab]" :default="{ type: 'string' }" />
+      </NSectionBlock>
+    </div>
+  </DrawerRight>
 </template>

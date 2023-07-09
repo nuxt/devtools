@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
+import { createReusableTemplate } from '@vueuse/core'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
 
 const props = defineProps<{
   route: ServerRouteInfo
 }>()
+
+const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
 
 const currentRoute = useRoute()
 const config = useServerConfig()
@@ -61,13 +64,14 @@ const routeInputs = reactive({
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
+const { globalInputs } = useDevToolsOptions('serverRoutes')
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 // https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab as string : paramNames.value.length ? 'params' : 'query')
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -81,23 +85,28 @@ const currentParams = computed({
   },
 })
 
-// TODO: add global inputs
 const parsedQuery = computed(() => {
   return {
     ...parseInputs(routeInputs.query),
+    ...parseInputs(globalInputs.value.query),
   }
 })
 const parsedHeader = computed(() => {
   return {
     ...parseInputs(routeInputs.headers),
+    ...parseInputs(globalInputs.value.headers),
   }
 })
 const parsedBody = computed(() => {
   return hasBody.value
     ? selectedTabInput.value === 'json'
-      ? routeInputBodyJSON.value
+      ? {
+          ...routeInputBodyJSON.value,
+          ...parseInputs(globalInputs.value.body),
+        }
       : {
           ...parseInputs(routeInputs.body),
+          ...parseInputs(globalInputs.value.body),
         }
     : undefined
 })
@@ -171,9 +180,9 @@ const codeSnippets = computed(() => {
   const snippets: CodeSnippet[] = []
 
   const items: string[] = []
-  const headers = routeInputs.headers
-    .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
-    .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
+  const headers = Object.entries(parsedHeader.value)
+    .filter(([key, value]) => key && value && !(key === 'Content-Type' && value === 'application/json'))
+    .map(([key, value]) => `  '${key}': '${value}'`).join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
@@ -211,34 +220,29 @@ const tabs = computed(() => {
     items.push({
       name: 'Params',
       slug: 'params',
-      icon: 'carbon-text-selection',
       length: paramNames.value.length,
     })
   }
   items.push({
     name: 'Query',
     slug: 'query',
-    icon: 'carbon-help',
     length: routeInputs.query.length,
   })
   if (hasBody.value) {
     items.push({
       name: 'Body',
       slug: 'body',
-      icon: 'carbon-document',
       length: routeInputs.body.length,
     })
   }
   items.push({
     name: 'Headers',
     slug: 'headers',
-    icon: 'carbon-html-reference',
     length: routeInputs.headers.length,
   })
   items.push({
     name: 'Snippets',
     slug: 'snippet',
-    icon: 'carbon-code',
   })
   return items
 })
@@ -310,8 +314,12 @@ watch(currentParams, (value) => {
         :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
         @click="activeTab = tab.slug"
       >
-        <NIcon :icon="tab.icon" />
-        {{ tab.name }} {{ tab?.length ? `(${tab.length})` : '' }}
+        <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
+        {{ tab.name }}
+        {{ tab?.length ? `(${tab.length})` : '' }}
+        <span text-orange>
+          {{ globalInputs[tab.slug]?.length ? `(${globalInputs[tab.slug].length})` : '' }}
+        </span>
       </NButton>
       <div flex-auto />
       <NButton
@@ -337,6 +345,23 @@ watch(currentParams, (value) => {
         />
       </template>
     </div>
+    <DefineTemplate>
+      <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>
+        <template v-if="globalInputs[activeTab]?.length">
+          <div flex="~ gap2" mb--2 items-center op50>
+            <div x-divider />
+            <div flex-none>
+              Global Inputs
+            </div>
+            <div x-divider />
+          </div>
+          <div v-for="item, index of globalInputs[activeTab]" :key="index" flex="~ gap-2">
+            <NTextInput v-model="item.key" disabled w-full text-gray op-50 title="Inherited from Global Inputs" />
+            <NTextInput v-model="item.value" disabled w-full text-gray op-50 title="Inherited from Global Inputs" />
+          </div>
+        </template>
+      </ServerRouteInputs>
+    </DefineTemplate>
     <div v-if="activeTab === 'snippet'" relative>
       <CodeSnippets
         v-if="codeSnippets.length"
@@ -344,7 +369,7 @@ watch(currentParams, (value) => {
         :code-snippets="codeSnippets"
       />
     </div>
-    <div v-else-if="currentParams" relative n-code-block border="b base">
+    <div v-else-if="currentParams" border="b base" relative n-code-block>
       <template v-if="activeTab === 'body'">
         <div flex="~ wrap" w-full>
           <template v-for="item of tabInputs" :key="item">
@@ -362,7 +387,7 @@ watch(currentParams, (value) => {
           <div border="b base" flex-auto />
         </div>
 
-        <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
+        <ReuseTemplate v-if="selectedTabInput === 'input'" />
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
@@ -371,7 +396,7 @@ watch(currentParams, (value) => {
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
       </template>
-      <ServerRouteInputs v-else v-model="currentParams" :default="{ type: 'string' }" />
+      <ReuseTemplate v-else />
     </div>
 
     <NPanelGrids v-if="!started">

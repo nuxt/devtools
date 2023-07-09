@@ -3,19 +3,16 @@ const props = withDefaults(defineProps<{
   modelValue: any
   keys?: string[]
   default?: any
-  exclude?: string[]
 }>(), {
   keys: () => [],
   default: () => ({}),
-  exclude: () => [],
 })
 
 const emit = defineEmits<{ (...args: any): void }>()
 const params = useVModel(props, 'modelValue', emit, { passive: true }) as any
 
 const filteredKeys = computed(() => {
-  const keys = [...props.keys, 'key', 'value', 'type']
-  return [...keys.filter(i => !props.exclude.includes(i))]
+  return [...props.keys, 'key', 'value', 'type']
 })
 
 const keysObject = computed(() => {
@@ -48,7 +45,7 @@ function onFileInputChange(index: number, event: Event) {
 
       <template v-for="key of filteredKeys" :key="key">
         <NTextInput v-if="item?.type !== null && key === 'key'" v-model="item[key]" :placeholder="key" flex-1 font-mono n="sm" />
-        <template v-else-if="key !== 'type'">
+        <template v-else-if="key === 'value'">
           <NTextInput v-if="item.type === 'file'" type="file" @change="onFileInputChange(index, $event)" />
           <div v-else-if="item.type === 'boolean'" ml2 flex>
             <NCheckbox v-model="item.value" placeholder="Value" n="green lg" />
@@ -86,5 +83,6 @@ function onFileInputChange(index: number, event: Event) {
         </NButton>
       </slot>
     </div>
+    <slot />
   </div>
 </template>
