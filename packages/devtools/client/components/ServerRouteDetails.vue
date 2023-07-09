@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
 import { createReusableTemplate } from '@vueuse/core'
-import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
 const props = defineProps<{
   route: ServerRouteInfo
@@ -253,34 +253,6 @@ watchEffect(() => {
       routeInputBodyJSON.value = JSON.parse(routeInputBodyJSON.value)
   }
 })
-
-const types: ServerRouteInputType[] = []
-watch(currentParams, (value) => {
-  if (!value)
-    return
-
-  value.forEach((input, index) => {
-    if (types.length) {
-      if (types[index] !== input.type && input.type !== undefined) {
-        types[index] = input.type
-        if (input.type !== 'string') {
-          if (input.type === 'boolean' && typeof input.value !== 'boolean')
-            input.value = true
-          else if (input.type === 'number' && typeof input.value !== 'number')
-            input.value = 0
-          else
-            input.value = ''
-        }
-        else if (input.type === 'string') {
-          input.value = input.value.toString()
-        }
-      }
-    }
-    else {
-      types[index] = input.type ?? 'string'
-    }
-  })
-}, { immediate: true, deep: true })
 </script>
 
 <template>
@@ -355,10 +327,7 @@ watch(currentParams, (value) => {
             </div>
             <div x-divider />
           </div>
-          <div v-for="item, index of globalInputs[activeTab]" :key="index" flex="~ gap-2">
-            <NTextInput v-model="item.key" disabled w-full text-gray op-50 title="Inherited from Global Inputs" />
-            <NTextInput v-model="item.value" disabled w-full text-gray op-50 title="Inherited from Global Inputs" />
-          </div>
+          <ServerRouteInputs v-model="globalInputs[activeTab]" disabled />
         </template>
       </ServerRouteInputs>
     </DefineTemplate>
