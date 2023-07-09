@@ -63,14 +63,20 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
   }
 
   async function generateAnalyzeBuildName() {
-    const git = Git(nuxt.options.rootDir)
-    const branch = await git.branch()
-    const branchName = branch.current || 'head'
-    const sha = await git.revparse(['--short', 'HEAD'])
-    const isWorkingTreeClean = (await git.status()).isClean()
-    if (isWorkingTreeClean)
-      return `${branchName}#${sha}`
-    return `${branchName}#${sha}-dirty`
+    try {
+      const git = Git(nuxt.options.rootDir)
+      const branch = await git.branch()
+      const branchName = branch.current || 'head'
+      const sha = await git.revparse(['--short', 'HEAD'])
+      const isWorkingTreeClean = (await git.status()).isClean()
+      if (isWorkingTreeClean)
+        return `${branchName}#${sha}`
+      return `${branchName}#${sha}-dirty`
+    }
+    catch (e) {
+      // if the git is not available, fallback to iso string
+      return new Date().toISOString()
+    }
   }
 
   return {
