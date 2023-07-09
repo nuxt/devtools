@@ -21,7 +21,10 @@ const type = computed(() => {
 </script>
 
 <template>
-  <div class="max-w-[438px] min-w-[438px] of-hidden border border-base rounded-[0.85714em] bg-base -outline-offset-1">
+  <div
+    class="max-w-[438px] min-w-[438px] of-hidden border border-base rounded-[16px] bg-base -outline-offset-1"
+    style="font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;"
+  >
     <div
       class="cursor-pointer overflow-hidden leading-[1.3em]"
       :class="type === 'summary_large_image' ? '' : 'flex'"
@@ -34,17 +37,17 @@ const type = computed(() => {
       />
       <div
         v-else
-        class="h-[122px] w-[122px] flex-none border-r border-base bg-cover bg-center bg-no-repeat"
+        class="h-[129px] w-[129px] flex-none border-r border-base bg-cover bg-center bg-no-repeat"
         :style="{ backgroundImage: `url(${JSON.stringify(card.image)})` }"
       />
-      <div class="break-words border-base p-[0.75em] antialiased" flex="~ col justify-center gap-1">
-        <div class="mt-[0.32333em] overflow-hidden truncate whitespace-nowrap text-[14px] leading-[18px] lowercase op50">
+      <div class="break-words border-base p-[0.75em] antialiased" flex="~ col justify-center gap-[2px]">
+        <div class="overflow-hidden truncate whitespace-nowrap text-[15px] leading-[20px] lowercase op50">
           {{ card.url }}
         </div>
-        <div class="m-0 truncate text-[14px] font-semibold leading-[19px]">
+        <div class="m-0 truncate text-[15px] font-semibold leading-[20px]">
           {{ card.title }}
         </div>
-        <div class="line-clamp-3 select-none overflow-hidden break-words text-left text-[14px] leading-[18px] op50">
+        <div class="line-clamp-2 select-none overflow-hidden break-words text-left text-[15px] leading-[20px] op50">
           {{ card.description }}
         </div>
       </div>
