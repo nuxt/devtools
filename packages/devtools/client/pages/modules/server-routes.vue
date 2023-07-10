@@ -16,10 +16,10 @@ definePageMeta({
 const vueRoute = useRoute()
 const vueRouter = useRouter()
 
-const globalInputDrawer = ref(false)
+const inputDefaultsDrawer = ref(false)
 
 const serverRoutes = useServerRoutes()
-const { selectedRoute, view, globalInputs } = useDevToolsOptions('serverRoutes')
+const { selectedRoute, view, inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
   const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
@@ -142,9 +142,9 @@ function toggleView() {
           <NIconButton
             text-lg
             text-orange
-            icon="carbon-globe"
-            title="Global Inputs"
-            @click="globalInputDrawer = !globalInputDrawer"
+            icon="i-carbon-carbon-for-ibm-dotcom"
+            title="Default Inputs"
+            @click="inputDefaultsDrawer = !inputDefaultsDrawer"
           />
         </template>
         <div flex="~ gap1" text-sm>
@@ -174,19 +174,19 @@ function toggleView() {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
-  <DrawerRight v-model="globalInputDrawer" auto-close max-w-xl min-w-xl @close="globalInputDrawer = false">
+  <DrawerRight v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     <div>
       <div p4 border="b base" text-orange>
-        Global Params <span text-white op50>(will be used for every route)</span>
+        Default Inputs <span text-white op50>(will be used for every route)</span>
       </div>
       <NSectionBlock
-        v-for="tab of Object.keys(globalInputs)"
+        v-for="tab of Object.keys(inputDefaults)"
         :key="tab"
-        :text="`${tab} ${globalInputs[tab].length ? `(${globalInputs[tab].length})` : ''}`"
+        :text="`${tab} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
         :padding="false"
         :icon="ServerRouteTabIcons[tab]"
       >
-        <ServerRouteInputs v-model="globalInputs[tab]" :default="{ type: 'string' }" />
+        <ServerRouteInputs v-model="inputDefaults[tab]" :default="{ type: 'string' }" />
       </NSectionBlock>
     </div>
   </DrawerRight>

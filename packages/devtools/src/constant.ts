@@ -39,7 +39,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
   serverRoutes: {
     selectedRoute: null,
     view: 'tree',
-    globalInputs: {
+    inputDefaults: {
       query: [],
       body: [],
       headers: [],

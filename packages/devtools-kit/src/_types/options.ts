@@ -119,6 +119,6 @@ export interface NuxtDevToolsOptions {
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null
     view: 'tree' | 'list'
-    globalInputs: Record<string, ServerRouteInput[]>
+    inputDefaults: Record<string, ServerRouteInput[]>
   }
 }

@@ -64,10 +64,10 @@ const routeInputs = reactive({
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
-const { globalInputs } = useDevToolsOptions('serverRoutes')
+const { inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
-// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
+// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L19
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
@@ -87,26 +87,26 @@ const currentParams = computed({
 
 const parsedQuery = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.query),
     ...parseInputs(routeInputs.query),
-    ...parseInputs(globalInputs.value.query),
   }
 })
 const parsedHeader = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.headers),
     ...parseInputs(routeInputs.headers),
-    ...parseInputs(globalInputs.value.headers),
   }
 })
 const parsedBody = computed(() => {
   return hasBody.value
     ? selectedTabInput.value === 'json'
       ? {
+          ...parseInputs(inputDefaults.value.body),
           ...routeInputBodyJSON.value,
-          ...parseInputs(globalInputs.value.body),
         }
       : {
+          ...parseInputs(inputDefaults.value.body),
           ...parseInputs(routeInputs.body),
-          ...parseInputs(globalInputs.value.body),
         }
     : undefined
 })
@@ -290,7 +290,7 @@ watchEffect(() => {
         {{ tab.name }}
         {{ tab?.length ? `(${tab.length})` : '' }}
         <span text-orange>
-          {{ globalInputs[tab.slug]?.length ? `(${globalInputs[tab.slug].length})` : '' }}
+          {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
         </span>
       </NButton>
       <div flex-auto />
@@ -319,22 +319,21 @@ watchEffect(() => {
     </div>
     <DefineTemplate>
       <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>
-        <template v-if="globalInputs[activeTab]?.length">
+        <template v-if="inputDefaults[activeTab]?.length">
           <div flex="~ gap2" mb--2 items-center op50>
             <div x-divider />
             <div flex-none>
-              Global Inputs
+              Default Inputs
             </div>
             <div x-divider />
           </div>
-          <ServerRouteInputs v-model="globalInputs[activeTab]" disabled />
+          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled />
         </template>
       </ServerRouteInputs>
     </DefineTemplate>
-    <div v-if="activeTab === 'snippet'" relative>
+    <div v-if="activeTab === 'snippet'">
       <CodeSnippets
         v-if="codeSnippets.length"
-        border="b base"
         :code-snippets="codeSnippets"
       />
     </div>

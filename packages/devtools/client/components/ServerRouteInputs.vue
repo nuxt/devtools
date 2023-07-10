@@ -40,8 +40,6 @@ function onFileInputChange(index: number, event: Event) {
 }
 
 watch(() => params, (items) => {
-  if (!items.value.length)
-    return
   items.value.forEach((item: any) => {
     if (item.type === 'number' && typeof item.value !== 'number') {
       const parsed = Number.parseFloat(item.value)
