@@ -29,16 +29,22 @@ function getLatencyColor(latency: number | undefined) {
 }
 
 function formatDuration(duration: number | undefined) {
-  if (!duration)
-    return '-'
-  if (duration < 1)
-    return '<1'
-  return duration.toFixed(2)
+
 }
+
+const units = computed(() => {
+  if (!props.duration || props.duration < 1)
+    return ['<1', 'ms']
+  if (props.duration < 1000)
+    return [props.duration.toFixed(0), 'ms']
+  if (props.duration < 1000 * 60)
+    return [(props.duration / 1000).toFixed(1), 's']
+  return [(props.duration / 1000 / 60).toFixed(1), 'min']
+})
 </script>
 
 <template>
   <div :class="getLatencyColor(duration)">
-    {{ formatDuration(duration) }}<span ml-1 text-xs op50>ms</span>
+    {{ units[0] }}<span ml-1 text-xs op50>{{ units[1] }}</span>
   </div>
 </template>

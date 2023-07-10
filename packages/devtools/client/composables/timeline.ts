@@ -11,7 +11,6 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
     end: 0,
     events: [],
     functions: [],
-    routes: [],
     duration: 0,
   }
 
@@ -27,7 +26,6 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
         end,
         events: [],
         functions: [],
-        routes: [],
         duration: 0,
       }
       segments.push(current)
@@ -71,7 +69,7 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
         if (event.type === 'function')
           segment.functions.push(normalized as TimelineEventNormalized<TimelineEventFunction>)
         else
-          segment.routes.push(normalized as TimelineEventNormalized<TimelineEventRoute>)
+          segment.route = normalized as TimelineEventNormalized<TimelineEventRoute>
       })
   })
 

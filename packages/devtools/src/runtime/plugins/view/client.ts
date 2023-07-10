@@ -184,7 +184,19 @@ export async function setupDevToolsClient({
     })
   }
 
-  const router = client.nuxt.vueApp.config.globalProperties?.$router
+  const router: import('vue-router').Router | undefined = client.nuxt.vueApp.config.globalProperties?.$router
+
+  // Add initial route event
+  if (router) {
+    const start = timeline.events[0].start || Date.now()
+    timeline.events.unshift({
+      type: 'route',
+      from: router.currentRoute.value.path,
+      to: router.currentRoute.value.path,
+      start,
+      end: start,
+    })
+  }
 
   const refreshReactivity = debounce(() => {
     client.hooks.callHook('host:update:reactivity')

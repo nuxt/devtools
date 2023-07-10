@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimelineEventFunction, TimlineMetrics } from '../../types'
+import type { TimelineEvent, TimelineEventNormalized, TimlineMetrics } from '../../types'
 import { segmentTimelineEvents } from '~/composables/timeline'
 
 const props = defineProps<{
@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'select', record: TimelineEventFunction): void
+  (event: 'select', record: TimelineEventNormalized<TimelineEvent>): void
 }>()
 
 const scroller = ref<HTMLElement>()
@@ -72,11 +72,11 @@ useEventListener(minimapScroller, 'scroll', () => {
               backgroundColor: getHashColorFromString(item.event.name, 50, 60),
             }"
           />
-          <template v-for="i in segment.routes" :key="i">
+          <template v-if="segment.route">
             <div
               absolute top-0 h-full w-px border-l border-green6 op10
               :style="{
-                left: `${i.relativeStart * 100}%`,
+                left: `${segment.route.relativeStart * 100}%`,
               }"
             />
           </template>

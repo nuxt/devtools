@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { UseTimeAgoOptions } from '@vueuse/core'
-import type { TimelineEventFunction, TimelineEventsSegment } from '../../types'
+import type { TimelineEvent, TimelineEventNormalized, TimelineEventsSegment } from '../../types'
 
 const props = defineProps<{
   segment: TimelineEventsSegment
 }>()
 
 const emit = defineEmits<{
-  (event: 'select', record: TimelineEventFunction): void
+  (event: 'select', record: TimelineEventNormalized<TimelineEvent>): void
 }>()
 
 const timeAgo = useTimeAgo(() => props.segment.start, {
@@ -31,8 +31,14 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
 
 <template>
   <div relative h-full>
-    <div absolute left-2 top-2 text-xs op50>
-      {{ timeAgo }}
+    <button
+      absolute left-0 right-0 top-0 bg-green:5 px2 py1 text-left text-xs font-mono text-green6
+      @click="segment.route ? emit('select', segment.route) : undefined"
+    >
+      {{ segment.route?.event.to }}
+    </button>
+    <div absolute left-2 top-2.3em text-xs op50>
+      {{ timeAgo }} ago
     </div>
     <TimelineItemFunction
       v-for="i, idx of segment.functions"
@@ -44,25 +50,7 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
         top: `${4 + i.layer * 1.6}em`,
         left: `${i.relativeStart * 100}%`,
       }"
-      @click="emit('select', i.event)"
+      @click="emit('select', i)"
     />
-    <template v-for="i in segment.routes" :key="i">
-      <div
-        absolute top-0 h-full w-px border-l border-green6 border-dashed op50
-        :style="{
-          left: `${i.relativeStart * 100}%`,
-        }"
-      />
-      <div
-        absolute mt8 text-xs font-mono text-green6 bg-base border="l green6"
-        :style="{
-          left: `${i.relativeStart * 100}%`,
-        }"
-      >
-        <div bg-green6:10 px1 py0.5>
-          {{ i.event.to }}
-        </div>
-      </div>
-    </template>
   </div>
 </template>

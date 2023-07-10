@@ -27,13 +27,19 @@ const importItem = computed(() => {
 </script>
 
 <template>
-  <div v-if="record" p-4 flex="~ col gap-2">
+  <div v-if="record" p-4 flex="~ col gap-2" text-base>
+    <div mx--1>
+      <Badge bg-yellow-400:10 text-yellow-400 op50>
+        Function call
+      </Badge>
+    </div>
     <div flex="~ gap-1" font-mono>
       <ComposableItem
         v-if="importItem"
         :item="importItem"
         :metadata="importsMetadata"
         :counter="false"
+        classes="px2 py1"
         mx--2
       />
       <span v-else>{{ record.name }}</span>
@@ -47,13 +53,15 @@ const importItem = computed(() => {
       <span op30>)</span>
     </div>
 
-    <DurationDisplay
-      v-if="record.end"
-      :duration="record.end - record.start"
-    />
-
-    <div class="text-xs text-gray-400">
-      {{ timeAgo }}
+    <div flex="~ gap-1" text-sm>
+      <DurationDisplay
+        v-if="record.end"
+        :duration="record.end - record.start"
+      />
+      <span mx1 op50>·</span>
+      <div class="text-sm text-gray-400">
+        {{ timeAgo }}
+      </div>
     </div>
 
     <div v-if="record.stacktrace" class="text-xs text-gray-400" mt2 grid="~ cols-[max-content_1fr] gap-x-4" font-mono>

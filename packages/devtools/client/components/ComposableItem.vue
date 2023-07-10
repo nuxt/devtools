@@ -7,8 +7,12 @@ const props = withDefaults(
     metadata?: UnimportMeta
     filepath?: string
     counter?: boolean
+    classes?: string
   }>(),
-  { counter: true },
+  {
+    counter: true,
+    classes: 'px2 py1 text-sm bg-gray:5 ',
+  },
 )
 
 const copy = useCopy()
@@ -35,8 +39,8 @@ const docsUrl = computed(() => {
   <VDropdown :disabled="!props.metadata">
     <button hover:text-primary>
       <code
-        rounded bg-gray:5 px2 py1 text-sm font-mono
-        :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
+        rounded font-mono
+        :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]"
       >
         {{ name }}
         <sup v-if="usageCount && counter" text-primary>x{{ usageCount }}</sup>

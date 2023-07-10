@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimelineEventFunction } from '../../../types'
+import type { TimelineEvent, TimelineEventNormalized } from '../../../types'
 
 definePageMeta({
   icon: 'i-carbon-roadmap',
@@ -13,7 +13,7 @@ definePageMeta({
 
 const client = useClient()
 
-const selected = ref<TimelineEventFunction | undefined>()
+const selected = ref<TimelineEventNormalized<TimelineEvent> | undefined>()
 
 function clear() {
   const metrics = client.value?.clientTimelineMetrics
@@ -39,7 +39,10 @@ function clear() {
       auto-close
       @close="selected = undefined"
     >
-      <TimelineDetailsFunction v-if="selected" :record="selected" />
+      <div min-h-50 px3 py2>
+        <TimelineDetailsFunction v-if="selected?.event.type === 'function'" :record="selected.event" />
+        <TimelineDetailsRoute v-else-if="selected?.event.type === 'route'" :record="selected.event" />
+      </div>
     </DrawerBottom>
   </div>
 </template>
