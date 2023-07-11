@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TimelineEvent, TimelineEventNormalized, TimlineMetrics } from '../../types'
+import type { TimelineEvent, TimelineEventNormalized, TimelineMetrics } from '../../types'
 import { segmentTimelineEvents } from '~/composables/timeline'
 
 const props = defineProps<{
-  data: TimlineMetrics
+  data: TimelineMetrics
 }>()
 
 const emit = defineEmits<{
@@ -89,7 +89,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         />
       </div>
     </div>
-    <div ref="scroller" relative h-full w-full of-x-scroll ws-nowrap>
+    <div ref="scroller" relative h-full w-full of-x-scroll of-y-hidden ws-nowrap n-panel-grids>
       <template v-for="segment, idx of segments" :key="idx">
         <div
           v-if="segment.previousGap && segment.previousGap >= 200"
@@ -103,7 +103,7 @@ useEventListener(minimapScroller, 'scroll', () => {
           />
         </div>
         <TimelineSegment
-          flex-inline of-x-hidden hover:of-x-visible
+          flex-inline of-x-hidden hover:of-x-visible bg-base
           :segment="segment"
           :style="{
             width: `${Math.max(100, segment.duration / 10)}px`,
@@ -111,23 +111,6 @@ useEventListener(minimapScroller, 'scroll', () => {
           @select="emit('select', $event)"
         />
       </template>
-
-      <!-- <template v-for="i in Math.floor(fullTimeSpan / ruleInterval)" :key="i">
-        <div
-          absolute top-0 h-full w-px border-l border-base
-          :style="{
-            left: `${offsetX + i * ruleInterval * pixelPerMs}px`,
-          }"
-        />
-        <div
-          absolute p2 text-xs op30
-          :style="{
-            left: `${offsetX + i * ruleInterval * pixelPerMs}px`,
-          }"
-        >
-          {{ i * ruleInterval / 1000 }}s
-        </div>
-      </template> -->
     </div>
   </div>
 </template>

@@ -1,20 +1,20 @@
 // @unimport-disable
 import { markRaw, reactive } from 'vue'
 import ErrorStackParser from 'error-stack-parser'
-import type { TimelineEventFunction, TimlineMetrics } from '../types'
+import type { TimelineEventFunction, TimelineMetrics } from '../types'
 
 const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 
-function isLiteral(value: any) {
-  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
-}
+// function isLiteral(value: any) {
+//   return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
+// }
 
 function getStacktrace() {
   // eslint-disable-next-line unicorn/error-message
   return ErrorStackParser.parse(new Error())
 }
 
-export function __initFunctionMetrics(): TimlineMetrics {
+export function initTimelineMetrics(): TimelineMetrics {
   if (process.server)
     return undefined!
 
@@ -25,6 +25,12 @@ export function __initFunctionMetrics(): TimlineMetrics {
     window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
       events: [],
       nonLiteralSymbol,
+      // TODO: sync with server config
+      options: {
+        enabled: true,
+        stacktrace: true,
+        arguments: true,
+      },
     },
   )
 }
@@ -37,18 +43,25 @@ export function __wrapFunction(name: string, fn: any) {
   if (typeof fn !== 'function')
     return fn
 
+  const metrics = initTimelineMetrics()
+
   if (wrapperFunctions.has(fn))
     return wrapperFunctions.get(fn)!
 
-  const metrics = __initFunctionMetrics()
-
   const wrappred = function (this: any, ...args: any[]) {
+    if (!metrics.options.enabled)
+      return fn.apply(this, args)
+
     const event: TimelineEventFunction = {
       type: 'function',
       name,
       start: Date.now(),
-      args: markRaw(args.map(i => isLiteral(i) ? i : nonLiteralSymbol)), // TODO: replace non-literal args to avoid memory leak
-      stacktrace: getStacktrace().slice(2),
+      args: metrics.options.arguments
+        ? markRaw(args)
+        : undefined,
+      stacktrace: metrics.options.stacktrace
+        ? getStacktrace().slice(2)
+        : undefined,
     }
     metrics.events.push(event)
     const result = fn.apply(this, args)

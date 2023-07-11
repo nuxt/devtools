@@ -15,17 +15,26 @@ const client = useClient()
 
 const selected = ref<TimelineEventNormalized<TimelineEvent> | undefined>()
 
+const metrics = computed(() => client.value?.clientTimelineMetrics)
+
 function clear() {
-  const metrics = client.value?.clientTimelineMetrics
-  if (metrics)
-    metrics.events = []
+  if (metrics.value)
+    metrics.value.events = []
 }
 </script>
 
 <template>
-  <div v-if="client?.clientTimelineMetrics" h-screen of-hidden>
-    <TimelineTable :data="{ ...client.clientTimelineMetrics }" @select="s => selected = s">
+  <div v-if="metrics" h-screen of-hidden>
+    <TimelineTable :data="{ ...metrics }" @select="s => selected = s">
       <div h-10 flex="~ gap-2 items-center justify-end" p2>
+        <NCheckbox
+          v-model="metrics.options.enabled"
+          label="Enabled"
+          class="text-sm"
+        >
+          Enable Tracking
+        </NCheckbox>
+        <div flex-auto />
         <NIconButton
           icon="i-carbon-trash-can"
           hover-text-red

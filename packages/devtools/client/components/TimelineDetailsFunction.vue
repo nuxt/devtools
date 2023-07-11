@@ -46,9 +46,7 @@ const importItem = computed(() => {
       <span ml1 op30>(</span>
       <template v-for="arg, idx in record.args" :key="idx">
         <span v-if="idx" op30>, </span>
-        <span :class="typeof arg === 'symbol' ? 'text-amber-5 dark:text-amber-2' : 'text-teal-5 dark:text-teal-2'">
-          {{ typeof arg === 'symbol' ? '[obj]' : JSON.stringify(arg) }}
-        </span>
+        <TimelineArgumentView :value="arg" />
       </template>
       <span op30>)</span>
     </div>

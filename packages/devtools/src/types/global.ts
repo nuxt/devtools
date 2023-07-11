@@ -1,5 +1,5 @@
 import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
-import type { LoadingTimeMetric, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimlineMetrics } from '.'
+import type { LoadingTimeMetric, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
 
 declare global {
   interface Window {
@@ -27,7 +27,7 @@ declare global {
      *
      * @internal
      */
-    __NUXT_DEVTOOLS_TIMELINE_METRICS__?: TimlineMetrics
+    __NUXT_DEVTOOLS_TIMELINE_METRICS__?: TimelineMetrics
 
     /**
      * Metrics for page / route loading time

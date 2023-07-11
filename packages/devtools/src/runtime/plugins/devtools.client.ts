@@ -1,5 +1,6 @@
 import { shallowReactive, watchEffect } from 'vue'
 
+import type { Router } from 'vue-router'
 import { setupHooksDebug } from '../shared/hooks'
 
 // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
@@ -28,7 +29,7 @@ export default defineNuxtPlugin((nuxt: any) => {
   timeMetric.pluginInit = Date.now()
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
-  const router = useRouter()
+  const router = useRouter() as Router
 
   nuxt.hook('app:mounted', () => {
     timeMetric.appLoad = Date.now()
@@ -53,6 +54,7 @@ export default defineNuxtPlugin((nuxt: any) => {
         nuxt,
         clientHooks,
         timeMetric,
+        router,
       })
     })
 })

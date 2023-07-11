@@ -20,11 +20,18 @@ export interface TimelineEventRoute {
   to: string
 }
 
+export interface TimelineOptions {
+  enabled: boolean
+  stacktrace: boolean
+  arguments: boolean
+}
+
 export type TimelineEvent = TimelineEventFunction | TimelineEventRoute
 
-export interface TimlineMetrics {
+export interface TimelineMetrics {
   events: TimelineEvent[]
   nonLiteralSymbol: symbol
+  options: TimelineOptions
 }
 
 export interface TimelineEventNormalized<T> {
