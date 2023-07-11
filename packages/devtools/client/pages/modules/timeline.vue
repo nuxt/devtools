@@ -70,4 +70,8 @@ function clear() {
       </div>
     </DrawerBottom>
   </div>
+
+  <HelpFab>
+    <DocsTimeline />
+  </HelpFab>
 </template>
