@@ -6,8 +6,12 @@ definePageMeta({
   title: 'Timeline',
   category: 'analyze',
   show() {
-    const client = useClient()
-    return () => client.value?.clientTimelineMetrics
+    const config = useServerConfig()
+    return () => {
+      if (typeof config.value?.devtools !== 'boolean')
+        return config.value?.devtools?.experiments.timeline
+      return false
+    }
   },
 })
 
