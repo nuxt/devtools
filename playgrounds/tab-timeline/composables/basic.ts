@@ -3,6 +3,6 @@ export function sleep(ms: number) {
 }
 
 export async function doSomething() {
-  await sleep(100)
+  await sleep(2000)
   return 'something'
 }

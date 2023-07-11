@@ -62,7 +62,7 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
           event,
           segment,
           relativeStart: (event.start - segment.start) / duration,
-          relativeWidth: (-event.start) / duration,
+          relativeWidth: (end - event.start) / duration,
           layer,
         }
 

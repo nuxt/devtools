@@ -49,7 +49,7 @@ const copy = useCopy()
     null
   </div>
   <template v-else>
-    <VMenu>
+    <VMenu placement="top">
       <span
         rounded-sm px1 py0.5 text-sm
         :class="[
@@ -78,7 +78,7 @@ const copy = useCopy()
             :indentation="2"
             :tab-size="2"
           />
-          <div p2 text-sm>
+          <div p2 text-sm border="t base">
             <NButton
               title="Copy to clipboard"
               icon="carbon-copy"

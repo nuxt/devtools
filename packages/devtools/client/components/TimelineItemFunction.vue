@@ -8,7 +8,7 @@ const props = defineProps<{
 const colorRaw = computed(() => getHashColorFromString(props.item.name, 50, 60, '_op_'))
 const color = computed(() => colorRaw.value.replace(/_op_/, '1'))
 const textColor = computed(() => getHashColorFromString(props.item.name, 50, 40))
-const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
+const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.2'))
 </script>
 
 <template>
@@ -18,19 +18,21 @@ const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.1'))
       color,
       borderLeft: `2px solid ${color}`,
     }"
-    relative border-2 border-transparent text-sm transition hover:z-1000 hover:border-current bg-base
+    relative text-sm transition hover:z-1000 bg-base
   >
     <div
       :style="{
         backgroundColor: colorBackground,
       }"
-      absolute bottom-0 left--1px top-0 text-sm transition-all duration-300
-      class="group-hover-w-full!"
+      absolute bottom-0 left--1px top-0 w-full text-sm transition-all duration-300
     />
     <div
       :style="{
-        color: textColor,
-      }" px1
+        'color': textColor,
+        '--c': color,
+      }"
+      border="r-2 t-2 y-2 transparent"
+      min-w-max px1 text-left group-hover="border-$c"
     >
       {{ item.name }}
     </div>

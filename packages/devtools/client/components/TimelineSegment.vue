@@ -40,17 +40,20 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
     <div absolute left-2 top-2.3em text-xs op50>
       {{ timeAgo }} ago
     </div>
-    <TimelineItemFunction
-      v-for="i, idx of segment.functions"
-      :key="idx"
-      :item="i.event"
-      :style="{
-        width: `${i.relativeWidth * 100}%`,
-        position: 'absolute',
-        top: `${4 + i.layer * 1.6}em`,
-        left: `${i.relativeStart * 100}%`,
-      }"
-      @click="emit('select', i)"
-    />
+    <div>
+      <TimelineItemFunction
+        v-for="i, idx of segment.functions"
+        :key="idx"
+        :item="i.event"
+        :style="{
+          position: 'absolute',
+          minWidth: `${i.relativeWidth * 100}%`,
+          maxWidth: `${i.relativeWidth * 100}%`,
+          top: `${4 + i.layer * 1.6}em`,
+          left: `${i.relativeStart * 100}%`,
+        }"
+        @click="emit('select', i)"
+      />
+    </div>
   </div>
 </template>

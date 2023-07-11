@@ -123,8 +123,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     options.vscode?.enabled
       ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
       : null,
-    options.experimental?.functionMetrics
-      ? import('./integrations/function-metrics').then(({ setup }) => setup(ctx))
+    options.experimental?.timeline
+      ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
       : null,
   ]
 

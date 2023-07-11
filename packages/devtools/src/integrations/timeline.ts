@@ -1,15 +1,34 @@
 import { resolve } from 'pathe'
+import type { Import } from 'unimport'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { runtimeDir } from '../dirs'
 
-export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
+export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const helperPath = resolve(runtimeDir, 'function-metrics-helpers')
 
-  const importForms = [
+  const includeFrom = options.timeline?.functions?.includeFrom || [
     '#app',
     '@unhead/vue',
-    '@vueuse/core',
   ]
+  const include = options.timeline?.functions?.include || [
+    i => includeFrom.includes(i.from),
+    i => i.from.includes('composables'),
+  ]
+
+  const exclude = options.timeline?.functions?.exclude || [
+    /^define[A-Z]/,
+  ]
+
+  function filter(item: Import) {
+    if (item.type)
+      return false
+    const name = item.as || item.name
+    if (!include.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name.includes(f) : f.test(name)))
+      return false
+    if (exclude.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name.includes(f) : f.test(name)))
+      return false
+    return true
+  }
 
   nuxt.hook('imports:context', (unimport) => {
     const ctx = unimport.getInternalContext()
@@ -17,16 +36,10 @@ export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
       {
         injectImportsResolved(imports) {
           return imports.map((i) => {
-            if (i.type)
-              return i
-
-            // TODO: alllow custom filter
-            if (!importForms.includes(i.from) && !i.from.includes('composables'))
+            if (!filter(i))
               return i
 
             const name = i.as || i.name
-            if (name.startsWith('define'))
-              return i
 
             return {
               ...i,

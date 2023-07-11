@@ -11,7 +11,16 @@ export default defineNuxtConfig({
   devtools: {
     enabled: false,
     experimental: {
-      functionMetrics: true,
+      timeline: true,
+    },
+    timeline: {
+      functions: {
+        includeFrom: [
+          '#app',
+          '@unhead/vue',
+          '@vueuse/core',
+        ],
+      },
     },
   },
 })

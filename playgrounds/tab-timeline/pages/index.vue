@@ -20,7 +20,7 @@ useHead({
 onMounted(() => {
   doSomething()
 
-  setInterval(() => {
+  setTimeout(() => {
     doSomething()
   }, 2000)
 })

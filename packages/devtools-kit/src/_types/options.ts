@@ -1,4 +1,5 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
+import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo } from './integrations'
 
@@ -51,9 +52,28 @@ export interface ModuleOptions {
    */
   experimental?: {
     /**
-     * Wrap auto-imported functions to collect metrics
+     * Timline tab
      */
-    functionMetrics?: boolean
+    timeline?: boolean
+  }
+
+  /**
+   * Options for the timeline tab
+   */
+  timeline?: {
+    /**
+     * Track on function calls
+     */
+    functions?: {
+      include?: (string | RegExp | ((item: Import) => boolean))[]
+      /**
+       * Include from specific modules
+       *
+       * @default ['#app', '@unhead/vue']
+       */
+      includeFrom?: string[]
+      exclude?: (string | RegExp | ((item: Import) => boolean))[]
+    }
   }
 }
 
