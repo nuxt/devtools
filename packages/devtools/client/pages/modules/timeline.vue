@@ -26,7 +26,7 @@ function clear() {
 <template>
   <div v-if="metrics" h-screen of-hidden>
     <TimelineTable :data="{ ...metrics }" @select="s => selected = s">
-      <div h-10 flex="~ gap-2 items-center justify-end" p2>
+      <div h-10 flex="~ gap-4 items-center justify-end" p2>
         <NCheckbox
           v-model="metrics.options.enabled"
           label="Enabled"
@@ -34,6 +34,22 @@ function clear() {
         >
           Enable Tracking
         </NCheckbox>
+        <template v-if="metrics.options.enabled">
+          <NCheckbox
+            v-model="metrics.options.stacktrace"
+            label="Enabled"
+            class="text-sm"
+          >
+            Record stacktrace
+          </NCheckbox>
+          <NCheckbox
+            v-model="metrics.options.arguments"
+            label="Enabled"
+            class="text-sm"
+          >
+            Record arguments
+          </NCheckbox>
+        </template>
         <div flex-auto />
         <NIconButton
           icon="i-carbon-trash-can"

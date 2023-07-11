@@ -2,6 +2,7 @@
 import { markRaw, reactive } from 'vue'
 import ErrorStackParser from 'error-stack-parser'
 import type { TimelineEventFunction, TimelineMetrics } from '../types'
+import { useObjectStorage } from './plugins/view/utils'
 
 const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 
@@ -26,11 +27,11 @@ export function initTimelineMetrics(): TimelineMetrics {
       events: [],
       nonLiteralSymbol,
       // TODO: sync with server config
-      options: {
-        enabled: true,
+      options: useObjectStorage('nuxt-devtools-timeline-metrics-options', {
+        enabled: false,
         stacktrace: true,
         arguments: true,
-      },
+      }),
     },
   )
 }

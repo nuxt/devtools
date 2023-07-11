@@ -42,6 +42,9 @@ const copy = useCopy()
   <div v-else-if="(typeof value === 'undefined')" text-gray>
     undefined
   </div>
+  <div v-else-if="(typeof value === 'function')" text-gray>
+    [Function{{ value.name ? `: ${value.name}` : '' }}]
+  </div>
   <div v-else-if="value === null" text-gray>
     null
   </div>

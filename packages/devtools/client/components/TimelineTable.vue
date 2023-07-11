@@ -94,7 +94,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         <div
           v-if="segment.previousGap && segment.previousGap >= 200"
           border="x base"
-          h-full flex-inline bg-gray:10 py4 text-xs write-vertical-left op50
+          h-full flex-inline bg-true-gray-1 py4 text-xs write-vertical-left dark:bg-true-gray-9
         >
           <DurationDisplay
             op50
@@ -104,6 +104,7 @@ useEventListener(minimapScroller, 'scroll', () => {
         </div>
         <TimelineSegment
           flex-inline of-x-hidden hover:of-x-visible bg-base
+          :class="idx === segments.length - 1 ? 'border-r border-base' : ''"
           :segment="segment"
           :style="{
             width: `${Math.max(100, segment.duration / 10)}px`,
