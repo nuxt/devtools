@@ -1,16 +1,4 @@
-export interface StackFrame {
-  args?: any[]
-  // evalOrigin?: StackFrame;
-  isConstructor?: boolean
-  isEval?: boolean
-  isNative?: boolean
-  isToplevel?: boolean
-  columnNumber?: number
-  lineNumber?: number
-  fileName?: string
-  functionName?: string
-  source?: string
-}
+import type { StackFrame } from 'error-stack-parser-es'
 
 export interface TimelineEventFunction {
   type: 'function'
