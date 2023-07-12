@@ -1,6 +1,6 @@
 // @unimport-disable
 import { markRaw, reactive } from 'vue'
-import ErrorStackParser from 'error-stack-parser'
+import { parse as parseStrackTrace } from 'error-stack-parser-es'
 import type { TimelineEventFunction, TimelineMetrics } from '../types'
 import { useObjectStorage } from './plugins/view/utils'
 
@@ -12,7 +12,7 @@ const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 
 function getStacktrace() {
   // eslint-disable-next-line unicorn/error-message
-  return ErrorStackParser.parse(new Error())
+  return parseStrackTrace(new Error())
 }
 
 export function initTimelineMetrics(): TimelineMetrics {
