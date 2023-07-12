@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  unimport: 3.0.14
-
 importers:
 
   .:
@@ -201,7 +198,7 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       unimport:
-        specifier: 3.0.14
+        specifier: ^3.0.14
         version: 3.0.14(rollup@3.26.1)
       vite:
         specifier: '*'
@@ -386,7 +383,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       unimport:
-        specifier: 3.0.14
+        specifier: ^3.0.14
         version: 3.0.14(rollup@3.26.1)
       vite-plugin-vue-inspector:
         specifier: ^3.4.2
