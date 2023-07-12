@@ -17,7 +17,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerC
       })
 
       function guessType(path: string): AssetType {
-        if (/\.(png|jpe?g|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(path))
+        if (/\.(png|jpe?g|jxl|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(path))
           return 'image'
         if (/\.(mp4|webm|ogv|mov|avi|flv|wmv|mpg|mpeg|mkv|3gp|3g2|ts|mts|m2ts|vob|ogm|ogx|rm|rmvb|asf|amv|divx|m4v|svi|viv|f4v|f4p|f4a|f4b)$/i.test(path))
           return 'video'

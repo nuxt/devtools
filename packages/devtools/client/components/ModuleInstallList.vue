@@ -35,6 +35,7 @@ const items = computed(() => {
 
     <NTextInput
       v-model="search"
+      :autofocus="true"
       placeholder="Search..."
       icon="carbon-search" n="primary"
       mx6 px-5 py-2
