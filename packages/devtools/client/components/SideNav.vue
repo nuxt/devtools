@@ -44,7 +44,7 @@ onClickOutside(
 </script>
 
 <template>
-  <div border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
+  <div id="nuxt-devtools-side-nav" border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
     <div flex="~ none col items-center">
       <VDropdown
         placement="left-start"

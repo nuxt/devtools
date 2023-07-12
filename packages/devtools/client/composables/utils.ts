@@ -67,13 +67,12 @@ export function parseReadablePath(path: string, root: string) {
 
 export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: AsyncDataOptions<T>) {
   const nuxt = useNuxtApp()
-  if (!nuxt.payload.unique)
-    nuxt.payload.unique = {}
 
-  if (!nuxt.payload.unique[key])
-    nuxt.payload.unique[key] = useAsyncData(key, fn, options)
+  const unique = nuxt.payload.unique = nuxt.payload.unique || {} as any
+  if (!unique[key])
+    unique[key] = useAsyncData(key, fn, options)
 
-  return nuxt.payload.unique[key].data as Ref<T | null>
+  return unique[key].data as Ref<T | null>
 }
 
 export function getIsMacOS() {
@@ -127,4 +126,12 @@ export function formatDuration(ms: number) {
   if (ms < 1000 * 60)
     return `${(ms / 1000).toFixed(2)}s`
   return `${(ms / 1000 / 60).toFixed(2)}min`
+}
+
+export function getHashColorFromString(name: string, saturation = 65, lightness = 50, opacity: number | string = 1) {
+  let hash = 0
+  for (let i = 0; i < name.length; i++)
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  const h = hash % 360
+  return `hsla(${h}, ${saturation}%, ${lightness}%, ${opacity})`
 }

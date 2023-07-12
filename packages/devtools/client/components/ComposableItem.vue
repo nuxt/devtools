@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
 
-const props = defineProps<{
-  item: Import
-  metadata?: UnimportMeta
-  filepath?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    item: Import
+    metadata?: UnimportMeta
+    filepath?: string
+    counter?: boolean
+    classes?: string
+  }>(),
+  {
+    counter: true,
+    classes: 'px2 py1 text-sm bg-gray:5 ',
+  },
+)
 
 const copy = useCopy()
 const openInEditor = useOpenInEditor()
@@ -31,11 +39,11 @@ const docsUrl = computed(() => {
   <VDropdown :disabled="!props.metadata">
     <button hover:text-primary>
       <code
-        rounded bg-gray:5 px2 py1 text-sm font-mono
-        :class="metadata && !usageCount ? 'op30 hover:op100' : ''"
+        rounded font-mono
+        :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]"
       >
         {{ name }}
-        <sup v-if="usageCount" text-primary>x{{ usageCount }}</sup>
+        <sup v-if="usageCount && counter" text-primary>x{{ usageCount }}</sup>
       </code>
     </button>
     <template #popper>
@@ -64,7 +72,7 @@ const docsUrl = computed(() => {
             <div text-sm>
               <span op50>It has been referenced </span><strong text-primary>{{ usageCount }}</strong><span op50> times by:</span>
             </div>
-            <div flex="~ col gap-2" items-start pt3 text-sm>
+            <div flex="~ col gap-2" items-start pt3 text-sm op75>
               <FilepathItem
                 v-for="id of modules" :key="id"
                 :filepath="id"

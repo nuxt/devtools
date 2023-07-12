@@ -123,6 +123,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     options.vscode?.enabled
       ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
       : null,
+    options.experimental?.timeline
+      ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
+      : null,
   ]
 
   await Promise.all(integrations)
