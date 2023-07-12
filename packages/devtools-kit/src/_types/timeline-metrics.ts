@@ -1,4 +1,16 @@
-import type ErrorStackParser from 'error-stack-parser'
+export interface StackFrame {
+  args?: any[]
+  // evalOrigin?: StackFrame;
+  isConstructor?: boolean
+  isEval?: boolean
+  isNative?: boolean
+  isToplevel?: boolean
+  columnNumber?: number
+  lineNumber?: number
+  fileName?: string
+  functionName?: string
+  source?: string
+}
 
 export interface TimelineEventFunction {
   type: 'function'
@@ -8,7 +20,7 @@ export interface TimelineEventFunction {
   name: string
   args?: any[]
   result?: any
-  stacktrace?: ErrorStackParser.StackFrame[]
+  stacktrace?: StackFrame[]
 }
 
 export interface TimelineEventRoute {
