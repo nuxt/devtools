@@ -14,6 +14,7 @@ const scroller = ref<HTMLElement>()
 const minimap = ref<HTMLElement>()
 const minimapScroller = ref<HTMLElement>()
 const minimapScrollerInner = ref<HTMLElement>()
+const followScroll = ref(true)
 
 const segments = computed(() => segmentTimelineEvents(props.data.events))
 
@@ -28,22 +29,47 @@ function syncSize() {
     minimapScrollerInner.value.style.width = `${scrollWidth.value}px`
 }
 
+function scrollToEnd() {
+  if (followScroll.value && scroller.value) {
+    // scroller.value.scrollLeft = scroller.value.scrollWidth
+    // minimapScroller.value!.scrollLeft = scroller.value.scrollWidth
+
+    scroller.value.scrollTo({
+      left: scroller.value.scrollWidth - scroller.value.clientWidth,
+      behavior: 'smooth',
+    })
+    minimapScroller.value!.scrollTo({
+      left: scroller.value.scrollWidth - scroller.value.clientWidth,
+      behavior: 'smooth',
+    })
+  }
+}
+
 watch(
   () => props.data.events.length,
   async () => {
     await nextTick()
     syncSize()
+    scrollToEnd()
   },
   { flush: 'post' },
 )
 
-useEventListener(scroller, 'scroll', () => {
-  syncSize()
-  minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
+useEventListener(scroller, 'scroll', (e) => {
+  if (minimapScroller.value!.scrollLeft !== scroller.value!.scrollLeft) {
+    syncSize()
+    minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
+    followScroll.value = scroller.value!.scrollLeft >= scroller.value!.scrollWidth - scroller.value!.clientWidth
+  }
 })
 useEventListener(minimapScroller, 'scroll', () => {
-  syncSize()
-  scroller.value!.scrollLeft = minimapScroller.value!.scrollLeft
+  if (minimapScroller.value!.scrollLeft !== scroller.value!.scrollLeft) {
+    syncSize()
+    scroller.value!.scrollLeft = minimapScroller.value!.scrollLeft
+  }
+})
+useEventListener(scroller, 'wheel', (e: WheelEvent) => {
+  scroller.value!.scrollLeft += e.deltaY
 })
 </script>
 

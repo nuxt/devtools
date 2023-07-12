@@ -9,7 +9,7 @@ definePageMeta({
     const config = useServerConfig()
     return () => {
       if (typeof config.value?.devtools !== 'boolean')
-        return config.value?.devtools?.experiments.timeline
+        return config.value?.devtools?.experimental.timeline
       return false
     }
   },
