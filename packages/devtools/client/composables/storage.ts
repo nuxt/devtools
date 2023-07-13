@@ -3,7 +3,8 @@ import type { DevToolsFrameState } from '~~/../src/types'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 
-export const splitScreen = useLocalStorage('nuxt-devtools-split-screen', false)
+export const splitScreenEnabled = useLocalStorage('nuxt-devtools-split-screen', false)
+export const splitScreenView = useLocalStorage('nuxt-devtools-split-screen-view', 'overview')
 
 const devToolsFrameState = useLocalStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {} as any, { listenToStorageChanges: true })
 

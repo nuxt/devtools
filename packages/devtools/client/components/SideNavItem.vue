@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { NuxtLink } from '#components'
 import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
 
-const props = defineProps<{
-  tab: ModuleCustomTab | ModuleBuiltinTab
-}>()
+const props = withDefaults(
+  defineProps<{
+    tab: ModuleCustomTab | ModuleBuiltinTab
+    target?: 'main' | 'side'
+  }>(),
+  {
+    target: 'main',
+  },
+)
 
 const route = useRoute()
 
@@ -11,17 +18,25 @@ const badge = computed(() => 'badge' in props.tab && props.tab.badge?.())
 
 const tabPath = computed(() => 'path' in props.tab ? props.tab.path! : `/modules/custom-${props.tab.name}`)
 const isActive = computed(() => route.path.startsWith(tabPath.value))
+
+function onClick() {
+  if ('onClick' in props.tab && props.tab.onClick)
+    props.tab.onClick()
+  else if (props.target === 'side')
+    splitScreenView.value = props.tab.name
+}
 </script>
 
 <template>
   <VTooltip placement="right">
-    <NuxtLink
+    <component
+      :is="target === 'main' ? NuxtLink : 'button'"
       :to="tabPath"
       flex="~"
       hover="bg-active" relative
       h-10 w-10 select-none items-center justify-center rounded-xl p1 text-secondary
       exact-active-class="!text-primary bg-active"
-      @click="'onClick' in tab && tab.onClick?.()"
+      @click="onClick"
     >
       <TabIcon
         text-xl
@@ -33,7 +48,7 @@ const isActive = computed(() => route.path.startsWith(tabPath.value))
       >
         <span translate-y-0.5px>{{ toValue(badge) }}</span>
       </div>
-    </NuxtLink>
+    </component>
     <template #popper>
       <div>
         {{ tab.title }}

@@ -81,7 +81,7 @@ onMounted(() => {
           <template #left>
             <NuxtPage />
           </template>
-          <template v-if="splitScreen" #right>
+          <template v-if="splitScreenEnabled" #right>
             <SplitScreenMode />
           </template>
         </PanelLeftRight>

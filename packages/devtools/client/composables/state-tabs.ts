@@ -1,6 +1,6 @@
 import { objectPick } from '@antfu/utils'
 import type { MaybeRef } from 'vue'
-import type { ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
@@ -57,10 +57,11 @@ function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBu
   }
 }
 
-export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>) {
+export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>): ComputedRef<CategorizedTabs> {
   const {
     pinnedTabs,
   } = useDevToolsUIOptions()
+
   return computed(() => {
     const categories = getCategorizedRecord()
     for (const tab of unref(tabs)) {
@@ -81,7 +82,7 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
     if (categories.pinned?.length)
       categories.pinned.sort((a, b) => pinnedTabs.value.indexOf(a.name) - pinnedTabs.value.indexOf(b.name))
 
-    return Object.entries(categories)
+    return Object.entries(categories) as CategorizedTabs
   })
 }
 
