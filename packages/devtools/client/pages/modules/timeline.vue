@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimelineEvent, TimelineEventNormalized } from '../../../types'
+import type { TimelineEvent } from '../../../types'
 
 definePageMeta({
   icon: 'i-carbon-roadmap',
@@ -17,7 +17,8 @@ definePageMeta({
 
 const client = useClient()
 
-const selected = ref<TimelineEventNormalized<TimelineEvent> | undefined>()
+const view = ref<'table' | 'list'>('table')
+const selected = ref<TimelineEvent | undefined>()
 
 const metrics = computed(() => client.value?.clientTimelineMetrics)
 
@@ -25,20 +26,47 @@ function clear() {
   if (metrics.value)
     metrics.value.events = []
 }
+
+function toggleView() {
+  view.value = view.value === 'table' ? 'list' : 'table'
+}
 </script>
 
 <template>
   <div v-if="metrics" h-screen of-hidden>
-    <TimelineTable :data="{ ...metrics }" @select="s => selected = s">
-      <div h-10 flex="~ gap-4 items-center justify-end" p2>
-        <NCheckbox
-          v-model="metrics.options.enabled"
-          label="Enabled"
-          class="text-sm"
+    <div h-screen w-full flex flex-col>
+      <div h-10 flex="~ gap-2 items-center justify-end" p2 px3>
+        <VTooltip flex>
+          <div
+            text-lg
+            :class="metrics.options.enabled ? 'i-carbon-radio-button-checked text-primary animate-pulse' : 'i-carbon-pause-outline op30'"
+          />
+          <template #popper>
+            <div text-sm>
+              {{ metrics.options.enabled ? 'Recording...' : 'Paused' }}
+            </div>
+          </template>
+        </VTooltip>
+
+        <NButton
+          v-if="!metrics.options.enabled"
+          size="small" ml1 text-sm
+          n="primary"
+          icon="i-carbon-play"
+          @click="metrics.options.enabled = true"
         >
-          Enable Tracking
-        </NCheckbox>
-        <template v-if="metrics.options.enabled">
+          Start Tracking
+        </NButton>
+        <NButton
+          v-else
+          size="small" ml1 text-sm
+          n="orange"
+          icon="i-carbon-stop"
+          @click="metrics.options.enabled = false"
+        >
+          Stop Tracking
+        </NButton>
+        <!-- <template v-if="metrics.options.enabled">
           <NCheckbox
             v-model="metrics.options.stacktrace"
             label="Enabled"
@@ -53,8 +81,14 @@ function clear() {
           >
             Record arguments
           </NCheckbox>
-        </template>
+        </template> -->
         <div flex-auto />
+        <NIconButton
+          :icon="view === 'table' ? 'i-carbon-roadmap' : 'i-carbon-list'"
+          class="ml-2"
+          title="Toggle View"
+          @click="toggleView"
+        />
         <NIconButton
           icon="i-carbon-trash-can"
           hover-text-red
@@ -62,15 +96,25 @@ function clear() {
           @click="clear"
         />
       </div>
-    </TimelineTable>
+      <TimelineTable
+        v-if="view === 'table'"
+        :data="{ ...metrics }"
+        @select="s => selected = s.event"
+      />
+      <TimelineList
+        v-else
+        :data="{ ...metrics }"
+        @select="s => selected = s"
+      />
+    </div>
     <DrawerBottom
       :model-value="!!selected"
       auto-close
       @close="selected = undefined"
     >
       <div min-h-50 px3 py2>
-        <TimelineDetailsFunction v-if="selected?.event.type === 'function'" :record="selected.event" />
-        <TimelineDetailsRoute v-else-if="selected?.event.type === 'route'" :record="selected.event" />
+        <TimelineDetailsFunction v-if="selected?.type === 'function'" :record="selected" />
+        <TimelineDetailsRoute v-else-if="selected?.type === 'route'" :record="selected" />
       </div>
     </DrawerBottom>
   </div>
