@@ -24,10 +24,10 @@ const size = key
 
 <template>
   <Splitpanes h-full of-hidden @resize="size = $event[0].size">
-    <Pane border="r base" h-full class="of-auto!" :size="size" min-size="10">
+    <Pane border="r base" h-full class="of-auto!" :size="size" :min-size="$slots.right ? 10 : 100">
       <slot name="left" />
     </Pane>
-    <Pane relative h-full class="of-auto!" min-size="10">
+    <Pane v-if="$slots.right" relative h-full class="of-auto!" min-size="10">
       <slot name="right" />
     </Pane>
   </Splitpanes>

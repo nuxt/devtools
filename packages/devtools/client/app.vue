@@ -77,7 +77,14 @@ onMounted(() => {
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NuxtPage />
+        <PanelLeftRight storage-key="devtools:split-screen-mode">
+          <template #left>
+            <NuxtPage />
+          </template>
+          <template v-if="splitScreen" #right>
+            <SplitScreenMode />
+          </template>
+        </PanelLeftRight>
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />
