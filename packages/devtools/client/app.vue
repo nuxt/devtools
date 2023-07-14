@@ -62,6 +62,17 @@ onMounted(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
 })
+
+registerCommands(() => [
+  {
+    id: 'action:split-screen',
+    title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
+    icon: 'i-carbon-split-screen',
+    action: () => {
+      splitScreenEnabled.value = !splitScreenEnabled.value
+    },
+  },
+])
 </script>
 
 <template>
