@@ -59,9 +59,6 @@ const filterByCollection = computed(() => {
     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
 
     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
-      collectionNames[collectionNames.length - 1] = collectionNames[collectionNames.length - 1].split('.')[0]
-
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1] === 'index')
       collectionNames.pop()
 
     let parentCollection: ServerRouteInfo | null = null
