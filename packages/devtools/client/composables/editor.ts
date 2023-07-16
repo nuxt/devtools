@@ -4,6 +4,7 @@ export function useOpenInEditor() {
   const config = useServerConfig()
   const virtualFiles = useVirtualFiles()
   const router = useRouter()
+  const virtualFileId = useVirtualFileState()
 
   return async (filepath: string) => {
     const buildDir = config.value?.buildDir
@@ -15,11 +16,14 @@ export function useOpenInEditor() {
 
     const vfs = virtualFiles.value?.entries.find(i => i.path === realpath || i.id === realpath)
     || virtualFiles.value?.entries.find(i => i.path === filepath || i.id === filepath)
-    if (vfs)
+    if (vfs) {
       // TODO: support line and col
-      router.push(`/modules/virtual-files?id=${encodeURIComponent(vfs.id)}`)
-    else
+      virtualFileId.value = vfs.id
+      router.push('/modules/virtual-files')
+    }
+    else {
       await rpc.openInEditor(filepath)
+    }
   }
 }
 

@@ -1,21 +1,15 @@
 <script setup lang="ts">
 const terminals = useTerminals()
-const route = useRoute()
-const router = useRouter()
-
-const selected = computed(() => {
-  const id = route.query.id as string
-  return terminals.value?.find(t => t.id === id)
-})
+const terminalId = useTerminalState()
+const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))
 
 function remove(id: string) {
   rpc.runTerminalAction(id, 'remove')
-  router.replace('/modules/terminals')
 }
 
 watchEffect(() => {
-  if (!route.query.id && terminals.value?.length)
-    router.replace(`/modules/terminals?id=${encodeURIComponent(terminals.value[0].id)}`)
+  if (!terminalId.value && terminals.value?.length)
+    terminalId.value = terminals.value[0].id
 })
 </script>
 
@@ -23,12 +17,12 @@ watchEffect(() => {
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
     <!-- TODO: Refactor to have general component -->
     <div flex="~" border="b base" flex-1 items-center navbar-glass>
-      <NuxtLink
+      <button
         v-for="t of terminals"
         :key="t.id" border="r base"
         flex="~ gap-2" items-center px3 py2
         :class="t.id === selected?.id ? 'bg-active' : ''"
-        :to="`/modules/terminals?id=${encodeURIComponent(t.id)}` "
+        @click="terminalId = t.id"
       >
         <NIcon v-if="t.icon " :icon="t.icon" />
         <span :class="t.id === selected?.id ? '' : 'op50'">
@@ -39,7 +33,7 @@ watchEffect(() => {
           icon="carbon-close" mx--2
           @click.stop="remove(t.id)"
         />
-      </NuxtLink>
+      </button>
     </div>
 
     <template v-if="selected">
@@ -47,7 +41,7 @@ watchEffect(() => {
     </template>
     <template v-else>
       <div p10>
-        Terminal <code>{{ route.query.id }}</code> not found
+        Terminal <code>{{ terminalId }}</code> not found
       </div>
     </template>
   </div>

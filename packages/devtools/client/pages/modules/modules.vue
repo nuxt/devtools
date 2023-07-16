@@ -23,6 +23,7 @@ registerCommands(() => [
     },
   },
 ])
+const terminalId = useTerminalState()
 </script>
 
 <template>
@@ -42,7 +43,8 @@ registerCommands(() => [
       <NuxtLink
         v-for="m of processInstallingModules"
         :key="m.processId" block min-h-30
-        :to="`/modules/terminals?id=${encodeURIComponent(m.processId)}`"
+        to="/modules/terminals"
+        @click="terminalId = m.processId"
       >
         <NCard
           border="1.5 dashed"

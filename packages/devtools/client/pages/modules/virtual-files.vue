@@ -13,8 +13,7 @@ const searchString = ref('')
 
 const data = useVirtualFiles()
 
-const fileId = computed(() => useRoute().query?.id as string | undefined)
-
+const fileId = useVirtualFileState()
 const current = ref<VfsFile>()
 
 watchEffect(() => {
@@ -67,13 +66,13 @@ const filteredFiles = computed(() => {
       <template
         v-for="f of filteredFiles" :key="f.id"
       >
-        <NuxtLink
-          block select-none truncate px2 py1 text-sm font-mono
-          :to="`/modules/virtual-files?id=${encodeURIComponent(f.id)}`"
+        <button
+          block w-full select-none truncate px2 py1 text-start text-sm font-mono
           :class="f.id === current?.id ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
+          @click="fileId = f.id"
         >
           {{ toShortPath(f.id) }}
-        </NuxtLink>
+        </button>
         <div x-divider />
       </template>
     </template>

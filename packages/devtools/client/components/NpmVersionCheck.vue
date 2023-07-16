@@ -26,6 +26,7 @@ const shouldRestartServer = ref(true)
 const restartDialogs = useRestartDialogs()
 
 const PromiseConfirm = createTemplatePromise<boolean, [string]>()
+const terminalId = useTerminalState()
 
 async function updateWithConfirm() {
   const processId = await update(async (command) => {
@@ -37,8 +38,10 @@ async function updateWithConfirm() {
       message: `${props.packageName} has been updated. Do you want to restart the Nuxt server now?`,
     })
   }
-  if (processId && shouldGotoTerminal.value)
-    router.push(`/modules/terminals?id=${encodeURIComponent(processId)}`)
+  if (processId && shouldGotoTerminal.value) {
+    terminalId.value = processId
+    router.push('/modules/terminals')
+  }
 }
 </script>
 
