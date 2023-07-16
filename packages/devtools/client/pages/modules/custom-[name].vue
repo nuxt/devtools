@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import type { ModuleCustomTab } from '~/../src/types'
 
+const props = defineProps<{
+  split?: string
+}>()
+
 definePageMeta({
   layout: 'full',
 })
 
 const route = useRoute()
 const router = useRouter()
-const name = computed(() => route.params.name)
+const name = computed(() => props.split ?? route.params.name)
 const tabs = useAllTabs()
 const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab)
 

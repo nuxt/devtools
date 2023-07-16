@@ -1,15 +1,12 @@
 <script setup lang="ts">
 const allTabs = useEnabledTabs()
-const tabs = computed(() => {
-  // TODO: support also custom tabs, as we need to pass props, and route in
-  return allTabs.value.filter(tab => 'path' in tab)
-})
 
 const PageComponent = shallowRef()
 
-const categories = getCategorizedTabs(tabs)
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
+const tabs = computed(() => allTabs.value.filter(tab => tab.name !== route.name))
+const categories = getCategorizedTabs(tabs)
 
 const currentTab = computed(() => tabs.value.find(tab => tab.name === splitScreenView.value))
 
@@ -20,9 +17,8 @@ watch(
       return
     const routes = router.getRoutes()
     const matched = tab && 'path' in tab
-      ? routes
-        .find(route => route.path === tab.path)
-      : routes.find(route => route.path === `/modules/custom-${tab.name}`)
+      ? routes.find(route => route.path === tab.path)
+      : routes.find(route => route.name === 'modules-custom-name')
     // if it's the same route as the main view, skip
     if (matched?.path === route.path) {
       PageComponent.value = undefined
@@ -40,13 +36,30 @@ watch(
 function closeSplitScreen() {
   splitScreenEnabled.value = false
 }
+
+const gridPanel = ref()
+const gridPanelButton = ref()
+const showGridPanel = ref(false)
+
+onClickOutside(gridPanel, (e) => {
+  if (gridPanelButton.value && e.composedPath().includes(gridPanelButton.value))
+    return
+  showGridPanel.value = false
+}, { detectIframe: true })
 </script>
 
 <template>
   <div h-full h-screen of-hidden>
     <div border="b base" flex="~ gap1" z-99 px4 py3 navbar-glass>
-      <VDropdown placement="bottom-start">
-        <div flex="~ gap-2 items-center" cursor-pointer select-none>
+      <VDropdown
+        placement="bottom-start"
+        :distance="12"
+        :skidding="5"
+        :triggers="[]"
+        :shown="showGridPanel"
+        :auto-hide="true"
+      >
+        <div ref="gridPanelButton" flex="~ gap-2 items-center" cursor-pointer select-none @click="showGridPanel = !showGridPanel">
           <div i-carbon-chevron-down text-sm op50 />
           <template v-if="currentTab">
             <TabIcon
@@ -60,7 +73,7 @@ function closeSplitScreen() {
           </template>
         </div>
         <template #popper>
-          <TabsGrid :categories="categories" target="side" />
+          <TabsGrid ref="gridPanel" :categories="categories" target="side" />
         </template>
       </VDropdown>
       <div flex-auto />
@@ -70,8 +83,9 @@ function closeSplitScreen() {
         @click="closeSplitScreen"
       />
     </div>
-    <template v-if="PageComponent">
-      <component :is="PageComponent" />
+    <template v-if="PageComponent && currentTab">
+      <component :is="PageComponent" v-if="'view' in currentTab" :split="currentTab.name" />
+      <component :is="PageComponent" v-else />
     </template>
     <NPanelGrids v-else>
       <span text-lg op50>
