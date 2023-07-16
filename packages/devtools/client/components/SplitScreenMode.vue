@@ -5,7 +5,7 @@ const PageComponent = shallowRef()
 
 const route = useRoute()
 const router = useRouter()
-const tabs = computed(() => allTabs.value.filter(tab => tab.name !== route.name))
+const tabs = computed(() => allTabs.value.filter(tab => tab.name !== route.name && tab.name !== route.params?.name))
 const categories = getCategorizedTabs(tabs)
 
 const currentTab = computed(() => tabs.value.find(tab => tab.name === splitScreenView.value))
@@ -20,7 +20,7 @@ watch(
       ? routes.find(route => route.path === tab.path)
       : routes.find(route => route.name === 'modules-custom-name')
     // if it's the same route as the main view, skip
-    if (matched?.path === route.path) {
+    if (matched?.path === route.path || route.params?.name === tab.name) {
       PageComponent.value = undefined
       return
     }
@@ -83,10 +83,10 @@ onClickOutside(gridPanel, (e) => {
         @click="closeSplitScreen"
       />
     </div>
-    <template v-if="PageComponent && currentTab">
+    <div v-if="PageComponent && currentTab" of-auto style="height: calc(100% - 50px)">
       <component :is="PageComponent" v-if="'view' in currentTab" :split="currentTab.name" />
       <component :is="PageComponent" v-else />
-    </template>
+    </div>
     <NPanelGrids v-else>
       <span text-lg op50>
         Select a tab to start
