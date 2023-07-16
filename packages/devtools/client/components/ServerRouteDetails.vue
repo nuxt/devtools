@@ -302,7 +302,7 @@ watch(currentParams, (value) => {
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
+    <div flex="~ gap2 wrap" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
         v-for="tab of tabs"
         :key="tab.slug"

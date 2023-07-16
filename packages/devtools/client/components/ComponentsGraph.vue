@@ -189,21 +189,23 @@ function setFilter() {
 <template>
   <Navbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
-      <NCheckbox v-model="showPages" n="primary sm">
-        <span op75>Show pages</span>
-      </NCheckbox>
-      <NCheckbox v-model="showLayouts" n="primary sm">
-        <span op75>Show layouts</span>
-      </NCheckbox>
-      <NCheckbox v-model="showWorkspace" n="primary sm">
-        <span op75>Show workspace</span>
-      </NCheckbox>
-      <NCheckbox v-model="showNodeModules" n="primary sm">
-        <span op75>Show node_modules</span>
-      </NCheckbox>
-      <NCheckbox v-model="showGlobalComponents" n="primary sm">
-        <span op75>Show global components</span>
-      </NCheckbox>
+      <div flex="~ gap-4 wrap" w-full>
+        <NCheckbox v-model="showPages" n="primary sm">
+          <span op75>Show pages</span>
+        </NCheckbox>
+        <NCheckbox v-model="showLayouts" n="primary sm">
+          <span op75>Show layouts</span>
+        </NCheckbox>
+        <NCheckbox v-model="showWorkspace" n="primary sm">
+          <span op75>Show workspace</span>
+        </NCheckbox>
+        <NCheckbox v-model="showNodeModules" n="primary sm">
+          <span op75>Show node_modules</span>
+        </NCheckbox>
+        <NCheckbox v-model="showGlobalComponents" n="primary sm">
+          <span op75>Show global components</span>
+        </NCheckbox>
+      </div>
       <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
