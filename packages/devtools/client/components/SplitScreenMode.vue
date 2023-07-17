@@ -84,8 +84,10 @@ onClickOutside(gridPanel, (e) => {
       />
     </div>
     <div v-if="PageComponent && currentTab" of-auto style="height: calc(100% - 50px)">
-      <component :is="PageComponent" v-if="'view' in currentTab" :split="currentTab.name" />
-      <component :is="PageComponent" v-else />
+      <!-- Custom Tabs -->
+      <component :is="PageComponent" v-if="'view' in currentTab" :key="currentTab.name" :name="currentTab.name" />
+      <!-- Tabs -->
+      <component :is="PageComponent" v-else :key="`tab-${currentTab.name}`" />
     </div>
     <NPanelGrids v-else>
       <span text-lg op50>

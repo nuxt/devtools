@@ -2,7 +2,7 @@
 import type { ModuleCustomTab } from '~/../src/types'
 
 const props = defineProps<{
-  split?: string
+  name?: string
 }>()
 
 definePageMeta({
@@ -11,7 +11,7 @@ definePageMeta({
 
 const route = useRoute()
 const router = useRouter()
-const name = computed(() => props.split ?? route.params.name)
+const name = computed(() => props.name ?? route.params.name)
 const tabs = useAllTabs()
 const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab)
 
