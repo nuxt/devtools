@@ -27,13 +27,15 @@ function toggleSplitScreen() {
       <NButton n="sm primary" to="/settings">
         <div i-carbon-settings-adjust /> Settings
       </NButton>
+    </div>
+    <div px3 py2 border="b base" flex="~ gap-2">
+      <NButton v-if="splitScreenAvailable" n="sm primary" @click="toggleSplitScreen">
+        <div i-carbon-split-screen />
+        {{ splitScreenEnabled ? 'Close Split Screen' : 'Split Screen' }}
+      </NButton>
       <PictureInPictureButton />
     </div>
     <div px3 py2 flex="~ gap2">
-      <NButton n="sm primary" @click="toggleSplitScreen">
-        <div i-carbon-split-screen />
-        {{ splitScreenEnabled ? 'Unsplit Screen' : 'Split Screen' }}
-      </NButton>
       <NButton n="primary sm" @click="refreshData">
         Refetch Data
       </NButton>
