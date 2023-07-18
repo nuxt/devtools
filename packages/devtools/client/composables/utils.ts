@@ -135,3 +135,9 @@ export function getHashColorFromString(name: string, saturation = 65, lightness 
   const h = hash % 360
   return `hsla(${h}, ${saturation}%, ${lightness}%, ${opacity})`
 }
+
+export function useSessionState<T>(name: string, initialValue: T) {
+  return useState(name, () => {
+    return useSessionStorage(name, initialValue, { listenToStorageChanges: false })
+  })
+}

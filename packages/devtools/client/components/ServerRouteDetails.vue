@@ -6,7 +6,6 @@ const props = defineProps<{
   route: ServerRouteInfo
 }>()
 
-const currentRoute = useRoute()
 const config = useServerConfig()
 
 const response = reactive({
@@ -67,7 +66,7 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+const activeTab = ref(paramNames.value.length ? 'params' : 'query')
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -303,7 +302,7 @@ watch(currentParams, (value) => {
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
+    <div flex="~ gap2 wrap" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
         v-for="tab of tabs"
         :key="tab.slug"

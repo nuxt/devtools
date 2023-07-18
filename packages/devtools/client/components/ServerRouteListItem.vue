@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { NuxtLink } from '#components'
 import type { ServerRouteInfo } from '~/../src/types'
 
 withDefaults(defineProps<{
@@ -10,17 +9,16 @@ withDefaults(defineProps<{
 })
 
 const open = ref(true)
+const currentServerRoute = useCurrentServeRoute()
 </script>
 
 <template>
   <div>
-    <component
-      :is="item.routes ? 'button' : NuxtLink"
-      flex="~ gap-2" w-full items-center hover-bg-active px2 py1
-      :class="[{ 'bg-active': $route.query.path === item.route && $route.query.method === item.method }]"
+    <button
+      flex="~ gap-2" w-full items-start items-center hover-bg-active px2 py1
+      :class="[{ 'bg-active': currentServerRoute === item.filepath }]"
       :style="{ paddingLeft: `calc(0.5rem + ${index * 1.5}em)` }"
-      :to="{ query: { path: item.route, method: item.method } }"
-      @click="open = !open"
+      @click="open = !open;currentServerRoute = item.filepath"
     >
       <div :class="{ 'w-12': !item.routes }" flex-none text-left>
         <NIcon v-if="item.type === 'collection'" icon="carbon:chevron-right" mb0.5 :transform-rotate="open ? 90 : 0" transition />
@@ -30,7 +28,7 @@ const open = ref(true)
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>
-      <span :class="{ 'flex items-center': item.routes }" flex-auto text-sm font-mono>
+      <span :class="{ 'flex items-center': item.routes }" text-sm font-mono>
         <NIcon v-if="item.type === 'collection'" :title="`${item.routes?.length} routes`" icon="carbon:folder" mr1 />
         {{ item.route }}
       </span>
@@ -40,7 +38,7 @@ const open = ref(true)
           <NIconButton icon="carbon-overflow-menu-vertical" @click.stop.prevent="click()" />
         </template>
       </NDropdown> -->
-    </component>
+    </button>
     <div x-divider />
     <slot v-if="open">
       <ServerRouteListItem

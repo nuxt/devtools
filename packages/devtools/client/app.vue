@@ -5,6 +5,7 @@ import 'splitpanes/dist/splitpanes.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 import { setupClientRPC } from './setup/client-rpc'
+import { splitScreenAvailable } from '~/composables/storage'
 
 if (process.client)
   import('./setup/unocss-runtime')
@@ -62,6 +63,21 @@ onMounted(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
 })
+
+registerCommands(() =>
+  splitScreenAvailable.value
+    ? [
+        {
+          id: 'action:split-screen',
+          title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
+          icon: 'i-carbon-split-screen',
+          action: () => {
+            splitScreenEnabled.value = !splitScreenEnabled.value
+          },
+        },
+      ]
+    : [],
+)
 </script>
 
 <template>
@@ -77,7 +93,14 @@ onMounted(() => {
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NuxtPage />
+        <PanelLeftRight storage-key="devtools:split-screen-mode" :min-size="20">
+          <template #left>
+            <NuxtPage />
+          </template>
+          <template v-if="splitScreenEnabled && splitScreenAvailable" #right>
+            <SplitScreen />
+          </template>
+        </PanelLeftRight>
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />

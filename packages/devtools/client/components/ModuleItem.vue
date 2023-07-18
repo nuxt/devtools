@@ -11,6 +11,7 @@ const data = computed(() => ({
   ...props.mod,
   ...staticInfo.value,
 }))
+const terminalId = useCurrentTerminalId()
 </script>
 
 <template>
@@ -27,7 +28,8 @@ const data = computed(() => ({
           <NuxtLink
             v-if="state === 'running'" flex="~ gap-2"
             animate-pulse items-center
-            :to="id ? `/modules/terminals?id=${encodeURIComponent(id)}` : undefined"
+            :to="id ? '/modules/terminals' : undefined"
+            @click="id ? terminalId = id : undefined"
           >
             <span i-carbon-circle-dash animate-spin text-lg op50 />
             <code text-sm op50>Upgrading...</code>

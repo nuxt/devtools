@@ -17,12 +17,9 @@ const PromiseConfirm = createTemplatePromise<boolean>()
 
 const info = useAnalyzeBuildInfo()
 const router = useRouter()
-const route = useRoute()
+const slug = useSessionState<string>('analyze-build:slug', '')
 
-const selected = computed(() => {
-  const slug = route.query.slug as string
-  return info.value?.builds.find(b => b.slug === slug) ?? info.value?.builds[0]
-})
+const selected = computed(() => info.value?.builds.find(b => b.slug === slug.value) ?? info.value?.builds[0])
 
 const shouldGotoTerminal = ref(false)
 
@@ -42,9 +39,13 @@ async function start() {
     gotoTerminal()
 }
 
+const terminalId = useCurrentTerminalId()
+
 function gotoTerminal() {
-  if (processAnalyzeBuildInfo.value?.processId)
-    router.push(`/modules/terminals?id=${encodeURIComponent(processAnalyzeBuildInfo.value.processId)}`)
+  if (processAnalyzeBuildInfo.value?.processId) {
+    terminalId.value = processAnalyzeBuildInfo.value.processId
+    router.push('/modules/terminals')
+  }
 }
 
 function formatDuration(build: AnalyzeBuildMeta) {
@@ -66,19 +67,19 @@ registerCommands(() => [
     <template #left>
       <div flex="~ col">
         <template v-for="build of info?.builds" :key="build.slug">
-          <NuxtLink
+          <button
             flex="~ col gap1" hover:bg-active p3
             :class="build.slug === selected?.slug ? 'text-primary bg-active' : ''"
-            :to="`?slug=${encodeURIComponent(build.slug)}`"
+            @click="slug = build.slug"
           >
             <code>{{ build.name }}</code>
-            <div flex="~ gap-1 items-center wrap" text-sm op60>
+            <div flex="~ gap-1 items-center wrap" w-full text-sm op60>
               <div i-carbon-time />
               <span>{{ formatDuration(build) }}</span>
               <div flex-auto />
               <span>{{ formatTimeAgo(new Date(build.endTime)) }}</span>
             </div>
-          </NuxtLink>
+          </button>
           <div x-divider />
         </template>
         <div flex="~ items-center justify-center wrap" p4>

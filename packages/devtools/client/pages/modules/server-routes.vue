@@ -13,18 +13,18 @@ definePageMeta({
   },
 })
 
-const vueRoute = useRoute()
-const vueRouter = useRouter()
-
 const serverRoutes = useServerRoutes()
+const currentServerRoute = useCurrentServeRoute()
 const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
-  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
-  if (route)
+  if (!currentServerRoute.value && selectedRoute.value)
+    currentServerRoute.value = selectedRoute.value.filepath
+
+  const route = serverRoutes.value?.find(i => i.filepath === currentServerRoute.value)
+
+  if (currentServerRoute.value !== selectedRoute.value?.filepath && route)
     selectedRoute.value = route
-  if (selectedRoute.value)
-    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
   return route
 })
 

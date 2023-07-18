@@ -5,16 +5,9 @@ const nuxtApp = useNuxtApp()
 const router = useRouter()
 const searchString = ref('')
 const newKey = ref('')
-const currentStorage = computed({
-  get(): string | undefined {
-    return useRoute().query?.storage as string | undefined
-  },
-  set(storage: string | undefined): void {
-    router.replace({ query: { storage } })
-  },
-})
+const currentStorage = useSessionState<string>('storage:current', '')
 const currentItem = ref()
-const fileKey = computed(() => useRoute().query?.key as string | undefined)
+const fileKey = useSessionState<string>('storage:file:state', '')
 
 const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.getStorageMounts())
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
@@ -36,7 +29,10 @@ const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: strin
 
 onUnmounted(closeWatcher)
 
-watch(currentStorage, refreshStorageKeys)
+watch(currentStorage, () => {
+  refreshStorageKeys()
+  fileKey.value = ''
+})
 
 watchEffect(async () => {
   if (!fileKey.value) {
@@ -134,13 +130,13 @@ async function renameCurrentItem() {
         class="w-full py2 ring-0!"
       />
       <template v-for="key of filteredKeys" :key="key">
-        <NuxtLink
-          block truncate px2 py1 text-sm font-mono
-          :to="{ query: { key, storage: currentStorage } }"
+        <button
+          block w-full truncate px2 py1 text-start text-sm font-mono
           :class="key === currentItem?.key ? 'text-primary n-bg-active' : 'text-secondary hover:n-bg-hover'"
+          @click="fileKey = key"
         >
           {{ keyName(key) }}
-        </NuxtLink>
+        </button>
         <div x-divider />
       </template>
       <NTextInput
