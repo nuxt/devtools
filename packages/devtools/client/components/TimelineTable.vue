@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { clamp } from '@antfu/utils'
 import type { TimelineEvent, TimelineEventNormalized, TimelineMetrics } from '../../types'
 import { segmentTimelineEvents } from '~/composables/timeline'
 
@@ -15,6 +16,7 @@ const minimap = ref<HTMLElement>()
 const minimapScroller = ref<HTMLElement>()
 const minimapScrollerInner = ref<HTMLElement>()
 const followScroll = ref(true)
+const scale = ref(1.5)
 
 const segments = computed(() => segmentTimelineEvents(props.data.events))
 
@@ -69,7 +71,13 @@ useEventListener(minimapScroller, 'scroll', () => {
   }
 })
 useEventListener(scroller, 'wheel', (e: WheelEvent) => {
-  scroller.value!.scrollLeft += e.deltaY
+  if (e.altKey) {
+    scale.value = clamp(scale.value + e.deltaY / 200, 0.5, 3)
+    syncSize()
+  }
+  else {
+    scroller.value!.scrollLeft += e.deltaY
+  }
 })
 </script>
 
@@ -81,7 +89,7 @@ useEventListener(scroller, 'wheel', (e: WheelEvent) => {
         :key="idx"
         relative h-full flex-inline
         :style="{
-          width: `${Math.max(100, segment.duration / 10) / (scrollWidth) * 100}%`,
+          width: `${Math.max(100, segment.duration / 10) / scrollWidth * 100}%`,
         }"
       >
         <div
@@ -131,7 +139,7 @@ useEventListener(scroller, 'wheel', (e: WheelEvent) => {
         :class="idx === segments.length - 1 ? 'border-r border-base' : ''"
         :segment="segment"
         :style="{
-          width: `${Math.max(100, segment.duration / 10)}px`,
+          width: `${Math.max(50, segment.duration / 10) * scale}px`,
         }"
         @select="emit('select', $event)"
       />
