@@ -54,6 +54,9 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
     }
   }
 
+  const installQueue: string[] = []
+  let latestGenerated: string | null = null
+
   return {
     checkForUpdateFor(name: string) {
       if (!updatesPromise.has(name))
@@ -72,16 +75,23 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       const commands = (await getNpmCommand('install', name, { dev: true }))!
 
       const filepath = nuxt.options._nuxtConfigFile
-      const source = await fs.readFile(filepath, 'utf-8')
-      const mod = await parseModule(source, { sourceFileName: filepath })
+
+      // use the latest generated config if available
+      let source = latestGenerated
+      if (source === null)
+        source = await fs.readFile(filepath, 'utf-8')
+      const mod = parseModule(source, { sourceFileName: filepath })
 
       addNuxtModule(mod, name)
 
       const generated = mod.generate().code
+      latestGenerated = generated // cache the latest generated config
 
       const processId = `nuxt:add-module:${name}`
 
       if (!dry) {
+        installQueue.push(name)
+
         const process = startSubprocess({
           command: commands[0],
           args: commands.slice(1),
@@ -97,13 +107,18 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
         await Promise.resolve()
 
+        // remove module from install queue
+        installQueue.splice(installQueue.indexOf(name), 1)
+
         const code = result.exitCode
         if (code !== 0) {
           console.error(result.stderr)
           throw new Error(`Failed to install module, process exited with ${code}`)
         }
 
-        await fs.writeFile(filepath, generated, 'utf-8')
+        // If all modules have been installed, write back to the config file, and auto restart.
+        if (installQueue.length === 0)
+          await fs.writeFile(filepath, generated, 'utf-8')
       }
 
       return {
