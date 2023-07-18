@@ -9,7 +9,7 @@ withDefaults(defineProps<{
 })
 
 const open = ref(true)
-const currentServerRoute = useServerRoutesState()
+const currentServerRoute = useCurrentServeRoute()
 </script>
 
 <template>

@@ -17,7 +17,7 @@ const PromiseConfirm = createTemplatePromise<boolean>()
 
 const info = useAnalyzeBuildInfo()
 const router = useRouter()
-const slug = useAnalyzeBuildState()
+const slug = useSessionState<string>('analyze-build:slug', '')
 
 const selected = computed(() => info.value?.builds.find(b => b.slug === slug.value) ?? info.value?.builds[0])
 
@@ -39,7 +39,7 @@ async function start() {
     gotoTerminal()
 }
 
-const terminalId = useTerminalState()
+const terminalId = useCurrentTerminalId()
 
 function gotoTerminal() {
   if (processAnalyzeBuildInfo.value?.processId) {

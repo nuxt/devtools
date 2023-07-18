@@ -4,7 +4,7 @@ export function useOpenInEditor() {
   const config = useServerConfig()
   const virtualFiles = useVirtualFiles()
   const router = useRouter()
-  const virtualFileId = useVirtualFileState()
+  const virtualFileId = useCurrentVirtualFile()
 
   return async (filepath: string) => {
     const buildDir = config.value?.buildDir

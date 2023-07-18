@@ -5,9 +5,9 @@ const nuxtApp = useNuxtApp()
 const router = useRouter()
 const searchString = ref('')
 const newKey = ref('')
-const currentStorage = useStorageState()
+const currentStorage = useSessionState<string>('storage:current', '')
 const currentItem = ref()
-const fileKey = useStorageFileState()
+const fileKey = useSessionState<string>('storage:file:state', '')
 
 const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.getStorageMounts())
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {

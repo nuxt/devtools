@@ -13,7 +13,7 @@ const searchString = ref('')
 
 const data = useVirtualFiles()
 
-const fileId = useVirtualFileState()
+const fileId = useCurrentVirtualFile()
 const current = ref<VfsFile>()
 
 watchEffect(() => {

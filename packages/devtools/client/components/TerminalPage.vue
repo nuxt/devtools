@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const terminals = useTerminals()
-const terminalId = useTerminalState()
+const terminalId = useCurrentTerminalId()
 const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))
 
 function remove(id: string) {

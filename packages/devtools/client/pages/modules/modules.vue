@@ -7,6 +7,7 @@ definePageMeta({
 
 const installModuleOpen = ref(false)
 const installedModules = useInstalledModules()
+const terminalId = useCurrentTerminalId()
 
 const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
@@ -23,7 +24,6 @@ registerCommands(() => [
     },
   },
 ])
-const terminalId = useTerminalState()
 </script>
 
 <template>

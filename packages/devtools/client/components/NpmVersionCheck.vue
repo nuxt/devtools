@@ -26,7 +26,7 @@ const shouldRestartServer = ref(true)
 const restartDialogs = useRestartDialogs()
 
 const PromiseConfirm = createTemplatePromise<boolean, [string]>()
-const terminalId = useTerminalState()
+const terminalId = useCurrentTerminalId()
 
 async function updateWithConfirm() {
   const processId = await update(async (command) => {

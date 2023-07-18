@@ -1,28 +1,14 @@
-// server-routes Tab
-export function useServerRoutesState() {
-  return useState<string>('server-routes:state')
-}
-
-// analyze-build Tab
-export function useAnalyzeBuildState() {
-  return useState<string>('analyze-build:state')
-}
-
 // virtual-files Tab
-export function useVirtualFileState() {
-  return useState<string>('virtual-files:state')
-}
-
-// storage Tab
-export function useStorageState() {
-  return useState<string>('storage:state')
-}
-
-export function useStorageFileState() {
-  return useState<string>('storage:file:state')
+export function useCurrentVirtualFile() {
+  return useSessionState<string>('virtual-files:current', '')
 }
 
 // terminals Tab
-export function useTerminalState() {
-  return useState<string>('terminals:state')
+export function useCurrentTerminalId() {
+  return useSessionState<string>('terminals:current', '')
+}
+
+// server-routes Tab
+export function useCurrentServeRoute() {
+  return useSessionState<string>('server-routes:current', '')
 }

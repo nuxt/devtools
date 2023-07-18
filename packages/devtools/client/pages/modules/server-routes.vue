@@ -14,7 +14,7 @@ definePageMeta({
 })
 
 const serverRoutes = useServerRoutes()
-const currentServerRoute = useServerRoutesState()
+const currentServerRoute = useCurrentServeRoute()
 const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {

@@ -11,7 +11,7 @@ const data = computed(() => ({
   ...props.mod,
   ...staticInfo.value,
 }))
-const terminalId = useTerminalState()
+const terminalId = useCurrentTerminalId()
 </script>
 
 <template>
