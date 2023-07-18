@@ -54,7 +54,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
     }
   }
 
-  const installQueue: string[] = []
+  const installSet: Set<string> = new Set()
   let latestGenerated: string | null = null
 
   return {
@@ -85,12 +85,11 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       addNuxtModule(mod, name)
 
       const generated = mod.generate().code
-      latestGenerated = generated // cache the latest generated config
-
       const processId = `nuxt:add-module:${name}`
 
       if (!dry) {
-        installQueue.push(name)
+        latestGenerated = generated // cache the latest generated config
+        installSet.add(name)
 
         const process = startSubprocess({
           command: commands[0],
@@ -108,7 +107,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         await Promise.resolve()
 
         // remove module from install queue
-        installQueue.splice(installQueue.indexOf(name), 1)
+        installSet.delete(name)
 
         const code = result.exitCode
         if (code !== 0) {
@@ -117,7 +116,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         }
 
         // If all modules have been installed, write back to the config file, and auto restart.
-        if (installQueue.length === 0)
+        if (installSet.size === 0)
           await fs.writeFile(filepath, generated, 'utf-8')
       }
 
