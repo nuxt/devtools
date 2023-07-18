@@ -106,7 +106,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
         await Promise.resolve()
 
-        // remove module from install queue
+        // remove module from install set
         installSet.delete(name)
 
         const code = result.exitCode
