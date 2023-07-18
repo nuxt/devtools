@@ -1,123 +1,78 @@
 <script setup lang="ts">
-import type { TimelineEvent } from '../../../types'
-
 definePageMeta({
   icon: 'i-carbon-roadmap',
   title: 'Timeline',
   category: 'analyze',
-  show() {
-    const config = useServerConfig()
-    return () => {
-      if (typeof config.value?.devtools !== 'boolean')
-        return config.value?.devtools?.experimental.timeline
-      return false
-    }
-  },
 })
 
-const client = useClient()
+const options = useModuleOptions()
+const config = useServerConfig()
 
-const view = ref<'table' | 'list'>('table')
-const selected = ref<TimelineEvent | undefined>()
+const Dialog = createTemplatePromise<boolean, [string, string]>()
 
-const metrics = computed(() => client.value?.clientTimelineMetrics)
+const openInEditor = useOpenInEditor()
 
-function clear() {
-  if (metrics.value)
-    metrics.value.events = []
-}
-
-function toggleView() {
-  view.value = view.value === 'table' ? 'list' : 'table'
+async function showPopup() {
+  const [source, modified] = await rpc.enableTimeline(true)
+  if (!await Dialog.start(source, modified))
+    return
+  await rpc.enableTimeline(false)
 }
 </script>
 
 <template>
-  <div v-if="metrics" h-screen of-hidden>
-    <div h-screen w-full flex flex-col>
-      <div h-10 flex="~ gap-2 items-center justify-end" p2 px3>
-        <VTooltip flex>
-          <div
-            text-lg
-            :class="metrics.options.enabled ? 'i-carbon-radio-button-checked text-primary animate-pulse' : 'i-carbon-pause-outline op30'"
-          />
-          <template #popper>
-            <div text-sm>
-              {{ metrics.options.enabled ? 'Recording...' : 'Paused' }}
-            </div>
-          </template>
-        </VTooltip>
+  <TimelineView v-if="options?.timeline?.enabled" />
+  <template v-else>
+    <NPanelGrids>
+      <LaunchPage
+        icon="i-carbon-roadmap"
+        title="Timeline"
+        description="Timeline enables the inspection of when composable being executed and the route changes."
+        :actions="[
+          {
+            label: 'Enable',
+          },
+        ]"
+        @action="showPopup"
+      />
+    </NPanelGrids>
+    <Dialog v-slot="{ resolve, args }">
+      <NDialog :model-value="true" @close="resolve(false)">
+        <div flex="~ col gap-2" w-150 p4 border="t base">
+          <h2 text-xl>
+            <span capitalize>Enable Timeline?</span>
+          </h2>
 
-        <NButton
-          v-if="!metrics.options.enabled"
-          size="small" ml1 text-sm
-          n="primary"
-          icon="i-carbon-play"
-          @click="metrics.options.enabled = true"
-        >
-          Start Tracking
-        </NButton>
-        <NButton
-          v-else
-          size="small" ml1 text-sm
-          n="orange"
-          icon="i-carbon-stop"
-          @click="metrics.options.enabled = false"
-        >
-          Stop Tracking
-        </NButton>
-        <!-- <template v-if="metrics.options.enabled">
-          <NCheckbox
-            v-model="metrics.options.stacktrace"
-            label="Enabled"
-            class="text-sm"
-          >
-            Record stacktrace
-          </NCheckbox>
-          <NCheckbox
-            v-model="metrics.options.arguments"
-            label="Enabled"
-            class="text-sm"
-          >
-            Record arguments
-          </NCheckbox>
-        </template> -->
-        <div flex-auto />
-        <NIconButton
-          :icon="view === 'table' ? 'i-carbon-roadmap' : 'i-carbon-list'"
-          class="ml-2"
-          title="Toggle View"
-          @click="toggleView"
-        />
-        <NIconButton
-          icon="i-carbon-trash-can"
-          hover-text-red
-          class="ml-2"
-          @click="clear"
-        />
-      </div>
-      <TimelineTable
-        v-if="view === 'table'"
-        :data="{ ...metrics }"
-        @select="s => selected = s.event"
-      />
-      <TimelineList
-        v-else
-        :data="{ ...metrics }"
-        @select="s => selected = s"
-      />
-    </div>
-    <DrawerBottom
-      :model-value="!!selected"
-      auto-close
-      @close="selected = undefined"
-    >
-      <div min-h-50 px3 py2>
-        <TimelineDetailsFunction v-if="selected?.type === 'function'" :record="selected" />
-        <TimelineDetailsRoute v-else-if="selected?.type === 'route'" :record="selected" />
-      </div>
-    </DrawerBottom>
-  </div>
+          <p op50>
+            Your <NLink
+              role="button" n="primary"
+              @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'"
+            /> will be updated as:
+          </p>
+
+          <CodeDiff
+            :from="args[0]"
+            :to="args[1]"
+            max-h-80 of-auto py2 border="~ base rounded"
+            lang="ts"
+          />
+
+          <p>
+            <span op50>Then Nuxt will </span><span text-orange>restart automatically</span>.
+          </p>
+
+          <div flex="~ gap-3" mt2 justify-end>
+            <NButton @click="resolve(false)">
+              Cancel
+            </NButton>
+            <NButton n="solid primary" capitalize @click="resolve(true)">
+              Enable
+            </NButton>
+          </div>
+        </div>
+      </NDialog>
+    </Dialog>
+  </template>
 
   <HelpFab>
     <DocsTimeline />

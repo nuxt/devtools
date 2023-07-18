@@ -66,6 +66,7 @@ export interface ServerFunctions {
   restartNuxt(hard?: boolean): Promise<void>
   installNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
   uninstallNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
+  enableTimeline(dry: boolean): Promise<[string, string]>
 }
 
 export interface ClientFunctions {

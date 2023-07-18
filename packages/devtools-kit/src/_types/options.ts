@@ -53,6 +53,7 @@ export interface ModuleOptions {
   experimental?: {
     /**
      * Timline tab
+     * @deprecated Use `timeline.enable` instead
      */
     timeline?: boolean
   }
@@ -61,6 +62,12 @@ export interface ModuleOptions {
    * Options for the timeline tab
    */
   timeline?: {
+    /**
+     * Enable timeline tab
+     *
+     * @default false
+     */
+    enabled?: boolean
     /**
      * Track on function calls
      */
