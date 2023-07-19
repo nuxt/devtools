@@ -36,6 +36,32 @@ const byFolders = computed(() => {
   return Object.entries(result).sort(([a], [b]) => a.localeCompare(b))
 })
 
+const byTree = computed(() => {
+  const root = { path: 'public', children: [] }
+
+  const addToTree = (node: any, pathParts: any, file: AssetInfo) => {
+    const [currentPart, ...remainingParts] = pathParts
+
+    let child = node.children.find((child: any) => child.path === currentPart)
+    if (!child) {
+      child = { ...file, path: currentPart, children: [] }
+      node.children.push(child)
+    }
+
+    if (remainingParts.length > 1)
+      addToTree(child, remainingParts, file)
+    else if (remainingParts.length === 1)
+      child.children.push({ ...file, path: remainingParts[0] })
+  }
+
+  filtered.value.forEach((file) => {
+    const pathParts = file.path.split('/').filter(part => part !== '')
+    addToTree(root, pathParts, file)
+  })
+
+  return root.children
+})
+
 const selected = ref<AssetInfo>()
 
 const view = ref<'list' | 'grid'>('grid')
@@ -95,7 +121,11 @@ function refreshAssets() {}
       </div>
     </template>
     <div v-else>
-      <AssetListItem v-for="a of filtered" :key="a.path" :asset="a" @click="selected = a" />
+      <AssetListItem
+        v-for="item, key of byTree" :key="key"
+        v-model="selected"
+        :item="item"
+      />
     </div>
     <DrawerRight
       :model-value="!!selected"
