@@ -75,8 +75,6 @@ onKeyDown('Escape', () => {
 })
 
 const navbar = ref<HTMLElement>()
-
-function refreshAssets() {}
 </script>
 
 <template>
@@ -98,8 +96,7 @@ function refreshAssets() {}
       </div>
     </Navbar>
 
-    <!-- TODO: fix this after PR 162  -->
-    <DropZone folder="/" @uploaded="refreshAssets" />
+    <DropZone folder="/" />
 
     <template v-if="view === 'grid'">
       <template v-if="byFolders.length > 1">

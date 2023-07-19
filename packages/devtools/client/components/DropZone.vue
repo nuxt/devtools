@@ -6,8 +6,6 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['uploaded'])
-
 const visible = ref(false)
 const lastTarget = ref()
 
@@ -92,7 +90,6 @@ async function uploadFiles() {
     })
   }
   await rpc.writeStaticAssets(await ensureDevAuthToken(), [...readyFiles], props.folder).then(() => {
-    emit('uploaded')
     close()
     showNotification({
       message: 'Files uploaded successfully!',
