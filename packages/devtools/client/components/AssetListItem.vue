@@ -40,6 +40,7 @@ const icon = computed(() => {
     <button
       flex="~ gap-2" w-full items-center hover="bg-active" px4 py1
       :style="{ paddingLeft: `calc(1rem + ${index * 1.5}em)` }"
+      :class="{ 'bg-active': !isCollection && model?.filePath === item?.filePath }"
       @click="isCollection ? open = !open : model = item"
     >
       <div :class="icon" />
