@@ -67,7 +67,7 @@ export function __nuxtTimelineWrap(name: string, fn: any) {
     metrics.events.push(event)
     const result = fn.apply(this, args)
     // handle promises
-    if ('then' in result && typeof result.then === 'function') {
+    if (result && 'then' in result && typeof result.then === 'function') {
       return result
         .then((i: any) => i)
         .finally(() => {
