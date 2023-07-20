@@ -78,7 +78,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
       // use the latest generated config if available
       let source = latestGenerated
-      if (source === null)
+      if (source == null)
         source = await fs.readFile(filepath, 'utf-8')
       const mod = parseModule(source, { sourceFileName: filepath })
 
@@ -116,8 +116,10 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         }
 
         // If all modules have been installed, write back to the config file, and auto restart.
-        if (installSet.size === 0)
+        if (installSet.size === 0) {
+          latestGenerated = null
           await fs.writeFile(filepath, generated, 'utf-8')
+        }
       }
 
       return {
