@@ -27,18 +27,21 @@ function ${WRAPPER_KEY} (plugin, src) {
   if (!plugin)
     return plugin
 
-  return defineNuxtPlugin(async function (...args) {
-    const start = performance.now()
-    const result = await plugin.apply(this, args)
-    const end = performance.now()
-    globalThis.${PAYLOAD_KEY}.push({
-      src,
-      start,
-      end,
-      duration: end - start,
-    })
-    return result
-  }, plugin.meta)
+  return defineNuxtPlugin({
+    ...plugin,
+    async setup (...args) {
+      const start = performance.now()
+      const result = await plugin.apply(this, args)
+      const end = performance.now()
+      globalThis.${PAYLOAD_KEY}.push({
+        src,
+        start,
+        end,
+        duration: end - start,
+      })
+      return result
+    }
+  })
 }
 `
 
