@@ -7,7 +7,11 @@ const props = defineProps<{
   route: ServerRouteInfo
 }>()
 
-const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
+const emit = defineEmits<{
+  (event: 'open-default-input'): void
+}>()
+
+const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
 const config = useServerConfig()
 
@@ -288,7 +292,7 @@ watchEffect(() => {
         <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
         {{ tab.name }}
         {{ tab?.length ? `(${tab.length})` : '' }}
-        <span text-orange>
+        <span>
           {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
         </span>
       </NButton>
@@ -316,20 +320,24 @@ watchEffect(() => {
         />
       </template>
     </div>
-    <DefineTemplate>
+    <DefineDefaultInputs>
       <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>
         <template v-if="inputDefaults[activeTab]?.length">
           <div flex="~ gap2" mb--2 items-center op50>
-            <div x-divider />
+            <div w-5 x-divider />
             <div flex-none>
               Default Inputs
             </div>
+            <NIconButton
+              icon="i-carbon-edit"
+              @click="emit('open-default-input')"
+            />
             <div x-divider />
           </div>
-          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled />
+          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled p0 />
         </template>
       </ServerRouteInputs>
-    </DefineTemplate>
+    </DefineDefaultInputs>
     <div v-if="activeTab === 'snippet'">
       <CodeSnippets
         v-if="codeSnippets.length"
@@ -354,7 +362,7 @@ watchEffect(() => {
           <div border="b base" flex-auto />
         </div>
 
-        <ReuseTemplate v-if="selectedTabInput === 'input'" />
+        <UseDefaultInputs v-if="selectedTabInput === 'input'" />
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
@@ -363,7 +371,7 @@ watchEffect(() => {
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
       </template>
-      <ReuseTemplate v-else />
+      <UseDefaultInputs v-else />
     </div>
 
     <NPanelGrids v-if="!started">

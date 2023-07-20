@@ -124,6 +124,10 @@ const filterByCollection = computed(() => {
 function toggleView() {
   view.value = view.value === 'tree' ? 'list' : 'tree'
 }
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
 </script>
 
 <template>
@@ -139,8 +143,7 @@ function toggleView() {
           />
           <NIconButton
             text-lg
-            text-orange
-            icon="i-carbon-carbon-for-ibm-dotcom"
+            icon="i-carbon-cics-sit-overrides"
             title="Default Inputs"
             @click="inputDefaultsDrawer = !inputDefaultsDrawer"
           />
@@ -163,6 +166,7 @@ function toggleView() {
           v-if="selected"
           :key="selected.filepath"
           :route="selected"
+          @open-default-input="inputDefaultsDrawer = true"
         />
       </KeepAlive>
       <NPanelGrids v-if="!selected">
@@ -174,17 +178,19 @@ function toggleView() {
   </PanelLeftRight>
   <DrawerRight v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     <div>
-      <div p4 border="b base" text-orange>
-        Default Inputs <span text-white op50>(will be used for every route)</span>
+      <div p4 border="b base">
+        <span text-lg>Default Inputs</span>
+        <br>
+        <span text-white op50>Merged as default for every request in DevTools</span>
       </div>
       <NSectionBlock
         v-for="tab of Object.keys(inputDefaults)"
         :key="tab"
-        :text="`${tab} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
+        :text="`${capitalize(tab)} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
         :padding="false"
         :icon="ServerRouteTabIcons[tab]"
       >
-        <ServerRouteInputs v-model="inputDefaults[tab]" :default="{ type: 'string' }" />
+        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ type: 'string' }" />
       </NSectionBlock>
     </div>
   </DrawerRight>

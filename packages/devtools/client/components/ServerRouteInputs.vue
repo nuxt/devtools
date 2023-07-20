@@ -74,15 +74,38 @@ watch(() => params, (items) => {
       <slot name="input" :item="item" />
 
       <template v-for="key of filteredKeys" :key="key">
-        <NTextInput v-if="item.type !== null && key === 'key'" v-model="item[key]" :placeholder="key" flex-1 font-mono n="sm primary" :disabled="disabled" />
+        <NTextInput
+          v-if="item.type !== null && key === 'key'"
+          v-model="item[key]"
+          :placeholder="key" flex-1 font-mono n="sm primary"
+          :disabled="disabled"
+          :class="disabled ? 'op50' : ''"
+        />
         <template v-else-if="key === 'value'">
-          <NTextInput v-if="item.type === 'file'" type="file" :disabled="disabled" @change="onFileInputChange(index, $event)" />
+          <NTextInput
+            v-if="item.type === 'file'" type="file"
+            :disabled="disabled"
+            :class="disabled ? 'op75' : ''"
+            @change="onFileInputChange(index, $event)"
+          />
           <div v-else-if="item.type === 'boolean'" ml2 flex>
             <NCheckbox v-model="item.value" placeholder="Value" n="green lg" :disabled="disabled" />
           </div>
-          <NTextInput v-else v-model="item.value" :type="item.type" placeholder="Value" flex-1 font-mono n="sm primary" :disabled="disabled" />
+          <NTextInput
+            v-else
+            v-model="item.value"
+            :type="item.type" placeholder="Value"
+            flex-1 font-mono n="sm primary"
+            :disabled="disabled"
+            :class="disabled ? 'op75' : ''"
+          />
         </template>
-        <NSelect v-else-if="key === 'type'" v-model="item.type" n="sm green" :disabled="disabled">
+        <NSelect
+          v-else-if="key === 'type'"
+          v-model="item.type" n="sm green"
+          :class="disabled ? 'op75' : ''"
+          :disabled="disabled"
+        >
           <option v-for="typeItem of inputTypes" :key="typeItem" :value="typeItem">
             {{ typeItem }}
           </option>
@@ -90,7 +113,7 @@ watch(() => params, (items) => {
       </template>
 
       <slot name="input-actions">
-        <NButton n="red" :disabled="disabled" @click="params.splice(index, 1)">
+        <NButton n="red" :disabled="disabled" :class="disabled ? 'op0!' : ''" @click="params.splice(index, 1)">
           <NIcon icon="carbon:delete" />
         </NButton>
       </slot>
