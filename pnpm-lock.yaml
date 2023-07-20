@@ -198,8 +198,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       unimport:
-        specifier: ^3.0.14
-        version: 3.0.14(rollup@3.26.2)
+        specifier: ^3.1.0
+        version: 3.1.0(rollup@3.26.2)
       vite:
         specifier: '*'
         version: 4.4.3(@types/node@20.4.1)
@@ -386,8 +386,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       unimport:
-        specifier: ^3.0.14
-        version: 3.0.14(rollup@3.26.2)
+        specifier: ^3.1.0
+        version: 3.1.0(rollup@3.26.2)
       vite-plugin-vue-inspector:
         specifier: ^3.4.2
         version: 3.4.2(vite@4.4.3)
@@ -1922,7 +1922,7 @@ packages:
       scule: 1.0.0
       semver: 7.5.4
       unctx: 2.3.1
-      unimport: 3.0.14(rollup@3.26.2)
+      unimport: 3.1.0(rollup@3.26.2)
       untyped: 1.3.2
     transitivePeerDependencies:
       - rollup
@@ -1958,7 +1958,7 @@ packages:
       postcss-import-resolver: 2.0.0
       std-env: 3.3.3
       ufo: 1.1.2
-      unimport: 3.0.14(rollup@3.26.2)
+      unimport: 3.1.0(rollup@3.26.2)
       untyped: 1.3.2
     transitivePeerDependencies:
       - rollup
@@ -8309,7 +8309,7 @@ packages:
       ufo: 1.1.2
       uncrypto: 0.1.3
       unenv: 1.5.2
-      unimport: 3.0.14(rollup@3.26.2)
+      unimport: 3.1.0(rollup@3.26.2)
       unstorage: 1.8.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -8674,7 +8674,7 @@ packages:
       uncrypto: 0.1.3
       unctx: 2.3.1
       unenv: 1.5.2
-      unimport: 3.0.14(rollup@3.26.2)
+      unimport: 3.1.0(rollup@3.26.2)
       unplugin: 1.3.2
       unplugin-vue-router: 0.6.4(rollup@3.26.2)(vue-router@4.2.4)(vue@3.3.4)
       untyped: 1.3.2
@@ -11019,8 +11019,8 @@ packages:
       vfile: 5.3.7
     dev: true
 
-  /unimport@3.0.14(rollup@3.26.2):
-    resolution: {integrity: sha512-67Rh/sGpEuVqdHWkXaZ6NOq+I7sKt86o+DUtKeGB6dh4Hk1A8AQrzyVGg2+LaVEYotStH7HwvV9YSaRjyT7Uqg==}
+  /unimport@3.1.0(rollup@3.26.2):
+    resolution: {integrity: sha512-ybK3NVWh30MdiqSyqakrrQOeiXyu5507tDA0tUf7VJHrsq4DM6S43gR7oAsZaFojM32hzX982Lqw02D3yf2aiA==}
     dependencies:
       '@rollup/pluginutils': 5.0.2(rollup@3.26.2)
       escape-string-regexp: 5.0.0
@@ -11032,7 +11032,7 @@ packages:
       pkg-types: 1.0.3
       scule: 1.0.0
       strip-literal: 1.0.1
-      unplugin: 1.3.2
+      unplugin: 1.4.0
     transitivePeerDependencies:
       - rollup
 
@@ -11165,6 +11165,14 @@ packages:
 
   /unplugin@1.3.2:
     resolution: {integrity: sha512-Lh7/2SryjXe/IyWqx9K7IKwuKhuOFZEhotiBquOODsv2IVyDkI9lv/XhgfjdXf/xdbv32txmnBNnC/JVTDJlsA==}
+    dependencies:
+      acorn: 8.10.0
+      chokidar: 3.5.3
+      webpack-sources: 3.2.3
+      webpack-virtual-modules: 0.5.0
+
+  /unplugin@1.4.0:
+    resolution: {integrity: sha512-5x4eIEL6WgbzqGtF9UV8VEC/ehKptPXDS6L2b0mv4FRMkJxRtjaJfOWDd6a8+kYbqsjklix7yWP0N3SUepjXcg==}
     dependencies:
       acorn: 8.10.0
       chokidar: 3.5.3

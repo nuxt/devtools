@@ -38,7 +38,7 @@ export function initTimelineMetrics(): TimelineMetrics {
 
 const wrapperFunctions = new WeakMap<any, any>()
 
-export function __wrapFunction(name: string, fn: any) {
+export function __nuxtTimelineWrap(name: string, fn: any) {
   if (process.server)
     return fn
   if (typeof fn !== 'function')

@@ -21,6 +21,8 @@ export default defineNuxtConfig({
           '@vueuse/core',
         ],
       },
+
+      enabled: true,
     },
   },
 })
