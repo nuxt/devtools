@@ -9,6 +9,7 @@ export interface TimelineEventFunction {
   args?: any[]
   result?: any
   stacktrace?: StackFrame[]
+  isPromise?: boolean
 }
 
 export interface TimelineEventRoute {

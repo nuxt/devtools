@@ -67,14 +67,18 @@ export function __nuxtTimelineWrap(name: string, fn: any) {
     metrics.events.push(event)
     const result = fn.apply(this, args)
     // handle promises
-    if (result && 'then' in result && typeof result.then === 'function') {
-      return result
-        .then((i: any) => i)
-        .finally(() => {
-          event.end = Date.now()
-          return result
-        })
+    try {
+      if (result && typeof result.then === 'function') {
+        event.isPromise = true
+        return result
+          .then((i: any) => i)
+          .finally(() => {
+            event.end = Date.now()
+            return result
+          })
+      }
     }
+    catch (e) {}
     event.end = Date.now()
     return result
   }
