@@ -1,3 +1,37 @@
+# [0.7.0](https://github.com/nuxt/devtools/compare/v0.6.7...v0.7.0) (2023-07-20)
+
+
+### Bug Fixes
+
+* analyze build without git ([#320](https://github.com/nuxt/devtools/issues/320)) ([76a566b](https://github.com/nuxt/devtools/commit/76a566ba1b2eb7b34130075d5334f1b734c8e809))
+* **client:** close button add zIndex ([#315](https://github.com/nuxt/devtools/issues/315)) ([37427ec](https://github.com/nuxt/devtools/commit/37427ec8281ba790827b0b77a08bfddeed90a785))
+* do not sync floating panel state across tabs ([41752b2](https://github.com/nuxt/devtools/commit/41752b2366f84b6827a55fbcac113e72dbe051e0))
+* **plugin-metrics:** properly forward all args, close [#337](https://github.com/nuxt/devtools/issues/337) ([ec1c821](https://github.com/nuxt/devtools/commit/ec1c82169a8459c4d70c757bed4cf4c48137b48c))
+* respect Nuxt's `devServer` config when creating request for auth URL ([#328](https://github.com/nuxt/devtools/issues/328)) ([7d766ac](https://github.com/nuxt/devtools/commit/7d766ac86bf1e8cfe380e9d865255592629066f1))
+* **server-routes:** filter only dir as collection ([#329](https://github.com/nuxt/devtools/issues/329)) ([4d2f842](https://github.com/nuxt/devtools/commit/4d2f842e3aca31a0e2fee9b5cb216261c11d4f62))
+* **timeline:** duplication injection ([f5e3766](https://github.com/nuxt/devtools/commit/f5e37662261c7d380e530d0bb66a4dac66a08723))
+* **timeline:** error tolerant promising checking ([762a669](https://github.com/nuxt/devtools/commit/762a669dcbee99fe2319d8f74014bd27f46e259b))
+* **timeline:** filter logic ([414ad1c](https://github.com/nuxt/devtools/commit/414ad1ce39ad15d85559ca3bf519ff10f418dab3))
+* **timeline:** result check ([72c877b](https://github.com/nuxt/devtools/commit/72c877b0b4009f73e93f4a5ebd304208b7d22e2e))
+* use `error-stack-parser-es` ([8c1974b](https://github.com/nuxt/devtools/commit/8c1974b12b99cce73443cfcf9cc1765f3d4ea7fd))
+
+
+### Features
+
+* **assets:** add watcher ([#336](https://github.com/nuxt/devtools/issues/336)) ([bde6a6a](https://github.com/nuxt/devtools/commit/bde6a6a5e298fa2bf4e8e6f952b364dfa6def42d))
+* **assets:** tree view for list mode ([#335](https://github.com/nuxt/devtools/issues/335)) ([57b9ca5](https://github.com/nuxt/devtools/commit/57b9ca5b1c65c1d9fb4f923835926b983d7289d6))
+* experimental timeline ([#323](https://github.com/nuxt/devtools/issues/323)) ([99073e4](https://github.com/nuxt/devtools/commit/99073e4788511f9681c77438fc9f77d959ece5c9))
+* install modules at once ([#333](https://github.com/nuxt/devtools/issues/333)) ([03f9a8c](https://github.com/nuxt/devtools/commit/03f9a8cb041926e96e81076211281fbcefd95457))
+* **server-routes:** add global default inputs ([#321](https://github.com/nuxt/devtools/issues/321)) ([80a284f](https://github.com/nuxt/devtools/commit/80a284ffa5710f21a206a799b5769844fba5a115))
+* **server-routes:** toggle view ([#310](https://github.com/nuxt/devtools/issues/310)) ([81b2816](https://github.com/nuxt/devtools/commit/81b2816716e278519f6c5b6a3817d4f152126a8c))
+* set module search field autofocus ([#313](https://github.com/nuxt/devtools/issues/313)) ([dd1a177](https://github.com/nuxt/devtools/commit/dd1a17774ce68af2ed2c7682eb25f7156bcc3224))
+* split screen support ([#327](https://github.com/nuxt/devtools/issues/327)) ([f2eee67](https://github.com/nuxt/devtools/commit/f2eee67dafc2b428de806356f8490c5468fa440c))
+* **timeline:** dialog to enable with one click ([92dfd21](https://github.com/nuxt/devtools/commit/92dfd21aece17323f1c12b005fd990f161e47382))
+* **timeline:** list view ([9601cb4](https://github.com/nuxt/devtools/commit/9601cb4463b451df58165f3df91672f1c8ad3961))
+* **timeline:** scale on Alt+wheel ([1050e05](https://github.com/nuxt/devtools/commit/1050e05e4aa2da9220e6ce6186b891c47a995fb0))
+
+
+
 ## [0.6.7](https://github.com/nuxt/devtools/compare/v0.6.6...v0.6.7) (2023-07-05)
 
 
