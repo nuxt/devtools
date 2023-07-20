@@ -2,7 +2,7 @@
   "name": "@nuxt-devtools/monorepo",
   "type": "module",
   "version": "0.7.0",
-  "private": false,
+  "private": true,
   "packageManager": "pnpm@8.6.6",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
