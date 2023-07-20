@@ -25,9 +25,9 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
     if (item.type)
       return false
     const name = item.as || item.name
-    if (!include.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name.includes(f) : f.test(name)))
+    if (!include.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name === f : f.test(name)))
       return false
-    if (exclude.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name.includes(f) : f.test(name)))
+    if (exclude.some(f => typeof f === 'function' ? f(item) : typeof f === 'string' ? name === f : f.test(name)))
       return false
     return true
   }
