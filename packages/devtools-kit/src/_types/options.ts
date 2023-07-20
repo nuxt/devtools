@@ -1,7 +1,7 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { ServerRouteInfo } from './integrations'
+import type { ServerRouteInfo, ServerRouteInput } from './integrations'
 
 export interface ModuleOptions {
   /**
@@ -156,6 +156,6 @@ export interface NuxtDevToolsOptions {
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null
     view: 'tree' | 'list'
-    // TODO: add global inputs
+    inputDefaults: Record<string, ServerRouteInput[]>
   }
 }

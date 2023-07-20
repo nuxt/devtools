@@ -52,3 +52,11 @@ export const ComposablesDocs = {
     nextTick: 'https://vuejs.org/api/general.html#nexttick',
   },
 }
+
+export const ServerRouteTabIcons: Record<string, string> = {
+  snippet: 'i-carbon-code',
+  headers: 'i-carbon-html-reference',
+  params: 'i-carbon-text-selection',
+  query: 'i-carbon-help',
+  body: 'i-carbon-document',
+}

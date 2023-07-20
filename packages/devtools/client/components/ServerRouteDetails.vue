@@ -1,10 +1,17 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
+import { createReusableTemplate } from '@vueuse/core'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
 const props = defineProps<{
   route: ServerRouteInfo
 }>()
+
+const emit = defineEmits<{
+  (event: 'open-default-input'): void
+}>()
+
+const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
 const config = useServerConfig()
 
@@ -60,9 +67,10 @@ const routeInputs = reactive({
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
+const { inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
-// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
+// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L19
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
@@ -80,22 +88,27 @@ const currentParams = computed({
   },
 })
 
-// TODO: add global inputs
 const parsedQuery = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.query),
     ...parseInputs(routeInputs.query),
   }
 })
 const parsedHeader = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.headers),
     ...parseInputs(routeInputs.headers),
   }
 })
 const parsedBody = computed(() => {
   return hasBody.value
     ? selectedTabInput.value === 'json'
-      ? routeInputBodyJSON.value
+      ? {
+          ...parseInputs(inputDefaults.value.body),
+          ...routeInputBodyJSON.value,
+        }
       : {
+          ...parseInputs(inputDefaults.value.body),
           ...parseInputs(routeInputs.body),
         }
     : undefined
@@ -170,9 +183,9 @@ const codeSnippets = computed(() => {
   const snippets: CodeSnippet[] = []
 
   const items: string[] = []
-  const headers = routeInputs.headers
-    .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
-    .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
+  const headers = Object.entries(parsedHeader.value)
+    .filter(([key, value]) => key && value && !(key === 'Content-Type' && value === 'application/json'))
+    .map(([key, value]) => `  '${key}': '${value}'`).join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
@@ -210,34 +223,29 @@ const tabs = computed(() => {
     items.push({
       name: 'Params',
       slug: 'params',
-      icon: 'carbon-text-selection',
       length: paramNames.value.length,
     })
   }
   items.push({
     name: 'Query',
     slug: 'query',
-    icon: 'carbon-help',
     length: routeInputs.query.length,
   })
   if (hasBody.value) {
     items.push({
       name: 'Body',
       slug: 'body',
-      icon: 'carbon-document',
       length: routeInputs.body.length,
     })
   }
   items.push({
     name: 'Headers',
     slug: 'headers',
-    icon: 'carbon-html-reference',
     length: routeInputs.headers.length,
   })
   items.push({
     name: 'Snippets',
     slug: 'snippet',
-    icon: 'carbon-code',
   })
   return items
 })
@@ -248,34 +256,6 @@ watchEffect(() => {
       routeInputBodyJSON.value = JSON.parse(routeInputBodyJSON.value)
   }
 })
-
-const types: ServerRouteInputType[] = []
-watch(currentParams, (value) => {
-  if (!value)
-    return
-
-  value.forEach((input, index) => {
-    if (types.length) {
-      if (types[index] !== input.type && input.type !== undefined) {
-        types[index] = input.type
-        if (input.type !== 'string') {
-          if (input.type === 'boolean' && typeof input.value !== 'boolean')
-            input.value = true
-          else if (input.type === 'number' && typeof input.value !== 'number')
-            input.value = 0
-          else
-            input.value = ''
-        }
-        else if (input.type === 'string') {
-          input.value = input.value.toString()
-        }
-      }
-    }
-    else {
-      types[index] = input.type ?? 'string'
-    }
-  })
-}, { immediate: true, deep: true })
 </script>
 
 <template>
@@ -309,8 +289,12 @@ watch(currentParams, (value) => {
         :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
         @click="activeTab = tab.slug"
       >
-        <NIcon :icon="tab.icon" />
-        {{ tab.name }} {{ tab?.length ? `(${tab.length})` : '' }}
+        <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
+        {{ tab.name }}
+        {{ tab?.length ? `(${tab.length})` : '' }}
+        <span>
+          {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+        </span>
       </NButton>
       <div flex-auto />
       <NButton
@@ -336,14 +320,31 @@ watch(currentParams, (value) => {
         />
       </template>
     </div>
-    <div v-if="activeTab === 'snippet'" relative>
+    <DefineDefaultInputs>
+      <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>
+        <template v-if="inputDefaults[activeTab]?.length">
+          <div flex="~ gap2" mb--2 items-center op50>
+            <div w-5 x-divider />
+            <div flex-none>
+              Default Inputs
+            </div>
+            <NIconButton
+              icon="i-carbon-edit"
+              @click="emit('open-default-input')"
+            />
+            <div x-divider />
+          </div>
+          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled p0 />
+        </template>
+      </ServerRouteInputs>
+    </DefineDefaultInputs>
+    <div v-if="activeTab === 'snippet'">
       <CodeSnippets
         v-if="codeSnippets.length"
-        border="b base"
         :code-snippets="codeSnippets"
       />
     </div>
-    <div v-else-if="currentParams" relative n-code-block border="b base">
+    <div v-else-if="currentParams" border="b base" relative n-code-block>
       <template v-if="activeTab === 'body'">
         <div flex="~ wrap" w-full>
           <template v-for="item of tabInputs" :key="item">
@@ -361,7 +362,7 @@ watch(currentParams, (value) => {
           <div border="b base" flex-auto />
         </div>
 
-        <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
+        <UseDefaultInputs v-if="selectedTabInput === 'input'" />
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
@@ -370,7 +371,7 @@ watch(currentParams, (value) => {
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
       </template>
-      <ServerRouteInputs v-else v-model="currentParams" :default="{ type: 'string' }" />
+      <UseDefaultInputs v-else />
     </div>
 
     <NPanelGrids v-if="!started">

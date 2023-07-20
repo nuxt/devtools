@@ -13,9 +13,12 @@ definePageMeta({
   },
 })
 
+const inputDefaultsDrawer = ref(false)
+
 const serverRoutes = useServerRoutes()
 const currentServerRoute = useCurrentServeRoute()
-const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
+
+const { selectedRoute, view, inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
   if (!currentServerRoute.value && selectedRoute.value)
@@ -121,6 +124,10 @@ const filterByCollection = computed(() => {
 function toggleView() {
   view.value = view.value === 'tree' ? 'list' : 'tree'
 }
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
 </script>
 
 <template>
@@ -133,6 +140,12 @@ function toggleView() {
             :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
             title="Toggle view"
             @click="toggleView"
+          />
+          <NIconButton
+            text-lg
+            icon="i-carbon-cics-sit-overrides"
+            title="Default Inputs"
+            @click="inputDefaultsDrawer = !inputDefaultsDrawer"
           />
         </template>
         <div flex="~ gap1" text-sm>
@@ -153,6 +166,7 @@ function toggleView() {
           v-if="selected"
           :key="selected.filepath"
           :route="selected"
+          @open-default-input="inputDefaultsDrawer = true"
         />
       </KeepAlive>
       <NPanelGrids v-if="!selected">
@@ -162,4 +176,22 @@ function toggleView() {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
+  <DrawerRight v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
+    <div>
+      <div p4 border="b base">
+        <span text-lg>Default Inputs</span>
+        <br>
+        <span text-white op50>Merged as default for every request in DevTools</span>
+      </div>
+      <NSectionBlock
+        v-for="tab of Object.keys(inputDefaults)"
+        :key="tab"
+        :text="`${capitalize(tab)} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
+        :padding="false"
+        :icon="ServerRouteTabIcons[tab]"
+      >
+        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ type: 'string' }" />
+      </NSectionBlock>
+    </div>
+  </DrawerRight>
 </template>
