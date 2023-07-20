@@ -119,7 +119,7 @@ export function startSubprocess(
   }
 }
 
-export function extendServerRpc<ClientFunctions = {}, ServerFunctions = {}>(
+export function extendServerRpc<ClientFunctions = Record<string, never>, ServerFunctions = Record<string, never>>(
   namespace: string,
   functions: ServerFunctions,
   nuxt = useNuxt(),

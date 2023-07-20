@@ -6,6 +6,7 @@ import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
+import type { TimelineMetrics } from './timeline-metrics'
 
 export interface NuxtDevtoolsClientHooks {
   /**
@@ -50,7 +51,9 @@ export interface NuxtDevtoolsHostClient {
 
   loadingTimeMetrics: LoadingTimeMetric
   getClientHooksMetrics(): HookInfo[]
-  getClientPluginMetrics(): PluginMetric[]
+
+  clientPluginMetrics: PluginMetric[] | undefined
+  clientTimelineMetrics: TimelineMetrics | undefined
 
   reloadPage(): void
 
@@ -87,7 +90,7 @@ export interface NuxtDevtoolsClient {
   renderMarkdown: (markdown: string) => string
   colorMode: string
 
-  extendClientRpc: <ServerFunctions = {}, ClientFunctions = {}>(name: string, functions: ClientFunctions) => BirpcReturn<ServerFunctions, ClientFunctions>
+  extendClientRpc: <ServerFunctions = Record<string, never>, ClientFunctions = Record<string, never>>(name: string, functions: ClientFunctions) => BirpcReturn<ServerFunctions, ClientFunctions>
 }
 
 export interface NuxtDevtoolsIframeClient {

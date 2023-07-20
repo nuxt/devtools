@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TabsGrid from './TabsGrid.vue'
+
 const client = useClient()
 const allTabs = useEnabledTabs()
 
@@ -44,7 +46,7 @@ onClickOutside(
 </script>
 
 <template>
-  <div border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
+  <div id="nuxt-devtools-side-nav" border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
     <div flex="~ none col items-center">
       <VDropdown
         placement="left-start"
@@ -118,20 +120,7 @@ onClickOutside(
           </div>
         </button>
         <template #popper>
-          <div flex="~ col gap-1" max-w-80 py1>
-            <template v-for="[name, tabs], idx of categorizedOverflowTabs" :key="name">
-              <template v-if="tabs.length">
-                <div v-if="idx" h-1px border="b base" />
-                <div flex="~ wrap" px1>
-                  <SideNavItem
-                    v-for="tab of tabs"
-                    :key="tab.name"
-                    :tab="tab"
-                  />
-                </div>
-              </template>
-            </template>
-          </div>
+          <TabsGrid :categories="categorizedOverflowTabs" max-w-80 target="main" />
         </template>
       </VDropdown>
       <NuxtLink

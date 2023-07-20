@@ -22,6 +22,7 @@ export default defineBuildConfig({
     'birpc',
     'hookable',
     'vite-plugin-vue-inspector',
+    'error-stack-parser-es',
   ],
   declaration: true,
   rollup: {

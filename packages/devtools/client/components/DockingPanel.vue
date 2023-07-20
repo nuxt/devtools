@@ -10,6 +10,10 @@ function refreshData() {
 function refreshPage() {
   location.reload()
 }
+
+function toggleSplitScreen() {
+  splitScreenEnabled.value = !splitScreenEnabled.value
+}
 </script>
 
 <template>
@@ -22,6 +26,12 @@ function refreshPage() {
       </NDarkToggle>
       <NButton n="sm primary" to="/settings">
         <div i-carbon-settings-adjust /> Settings
+      </NButton>
+    </div>
+    <div px3 py2 border="b base" flex="~ gap-2">
+      <NButton v-if="splitScreenAvailable" n="sm primary" @click="toggleSplitScreen">
+        <div i-carbon-split-screen />
+        {{ splitScreenEnabled ? 'Close Split Screen' : 'Split Screen' }}
       </NButton>
       <PictureInPictureButton />
     </div>

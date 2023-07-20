@@ -30,6 +30,10 @@ export function useServerConfig() {
   return useAsyncState('getServerConfig', () => rpc.getServerConfig())
 }
 
+export function useModuleOptions() {
+  return useAsyncState('getModuleOptions', () => rpc.getModuleOptions())
+}
+
 export function useServerApp() {
   return useAsyncState('getServerApp', () => rpc.getServerApp())
 }

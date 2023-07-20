@@ -1,4 +1,5 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
+import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo, ServerRouteInput } from './integrations'
 
@@ -45,6 +46,42 @@ export interface ModuleOptions {
    * @default false
    */
   disableAuthorization?: boolean
+
+  /**
+   * Experimental features
+   */
+  experimental?: {
+    /**
+     * Timline tab
+     * @deprecated Use `timeline.enable` instead
+     */
+    timeline?: boolean
+  }
+
+  /**
+   * Options for the timeline tab
+   */
+  timeline?: {
+    /**
+     * Enable timeline tab
+     *
+     * @default false
+     */
+    enabled?: boolean
+    /**
+     * Track on function calls
+     */
+    functions?: {
+      include?: (string | RegExp | ((item: Import) => boolean))[]
+      /**
+       * Include from specific modules
+       *
+       * @default ['#app', '@unhead/vue']
+       */
+      includeFrom?: string[]
+      exclude?: (string | RegExp | ((item: Import) => boolean))[]
+    }
+  }
 }
 
 export interface ModuleGlobalOptions {

@@ -1,32 +1,63 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
 
-const props = defineProps<{
-  asset: AssetInfo
-}>()
+const props = withDefaults(defineProps<{
+  item: any
+  index?: number
+  modelValue: AssetInfo | undefined
+}>(), {
+  index: 0,
+})
+
+const emit = defineEmits<{ (...args: any): void }>()
+const model = useVModel(props, 'modelValue', emit, { passive: true })
+
+const isCollection = computed(() => props.item?.children?.length)
+
+const open = ref(true)
 
 const icon = computed(() => {
-  if (props.asset.type === 'image')
+  if (isCollection.value)
+    return 'i-carbon-folder'
+  if (props.item.type === 'image')
     return 'i-carbon-image'
-  if (props.asset.type === 'video')
+  if (props.item.type === 'video')
     return 'i-carbon-video'
-  if (props.asset.type === 'audio')
+  if (props.item.type === 'audio')
     return 'i-carbon-volume-up'
-  if (props.asset.type === 'font')
+  if (props.item.type === 'font')
     return 'i-carbon-text-small-caps'
-  if (props.asset.type === 'text')
+  if (props.item.type === 'text')
     return 'i-carbon-document'
-  if (props.asset.type === 'json')
+  if (props.item.type === 'json')
     return 'i-carbon-json'
   return 'i-carbon-document-blank'
 })
 </script>
 
 <template>
-  <button flex="~ gap-1" w-full items-center hover="bg-active" rounded px4 py2>
-    <div :class="icon" />
-    <div of-hidden truncate ws-nowrap text-center>
-      {{ asset.path }}
-    </div>
-  </button>
+  <div>
+    <button
+      flex="~ gap-2" w-full items-center hover="bg-active" px4 py1
+      :style="{ paddingLeft: `calc(1rem + ${index * 1.5}em)` }"
+      :class="{ 'bg-active': !isCollection && model?.filePath === item?.filePath }"
+      @click="isCollection ? open = !open : model = item"
+    >
+      <div :class="icon" />
+      <span :class="{ 'flex items-center': isCollection }" flex-auto text-start text-sm font-mono>
+        {{ item.path }}
+      </span>
+      <NIcon v-if="isCollection" icon="carbon:chevron-right" :transform-rotate="open ? 90 : 0" transition />
+    </button>
+    <div x-divider />
+    <slot v-if="open">
+      <AssetListItem
+        v-for="subItem in item?.children"
+        :key="subItem.filepath"
+        v-model="model"
+        :item="subItem"
+        :index="index + 1"
+      />
+    </slot>
+  </div>
 </template>

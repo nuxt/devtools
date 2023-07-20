@@ -13,20 +13,21 @@ definePageMeta({
   },
 })
 
-const vueRoute = useRoute()
-const vueRouter = useRouter()
-
 const inputDefaultsDrawer = ref(false)
 
 const serverRoutes = useServerRoutes()
+const currentServerRoute = useCurrentServeRoute()
+
 const { selectedRoute, view, inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
-  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
-  if (route)
+  if (!currentServerRoute.value && selectedRoute.value)
+    currentServerRoute.value = selectedRoute.value.filepath
+
+  const route = serverRoutes.value?.find(i => i.filepath === currentServerRoute.value)
+
+  if (currentServerRoute.value !== selectedRoute.value?.filepath && route)
     selectedRoute.value = route
-  if (selectedRoute.value)
-    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
   return route
 })
 
@@ -61,9 +62,6 @@ const filterByCollection = computed(() => {
     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
 
     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
-      collectionNames[collectionNames.length - 1] = collectionNames[collectionNames.length - 1].split('.')[0]
-
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1] === 'index')
       collectionNames.pop()
 
     let parentCollection: ServerRouteInfo | null = null
