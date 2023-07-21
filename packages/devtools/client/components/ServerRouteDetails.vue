@@ -244,11 +244,43 @@ const tabs = computed(() => {
     length: routeInputs.headers.length,
   })
   items.push({
+    name: 'Cookies',
+    slug: 'cookies',
+  })
+  items.push({
     name: 'Snippets',
     slug: 'snippet',
   })
   return items
 })
+
+const cookies = ref(getCookies())
+
+function getCookies() {
+  return document.cookie.split('; ').map((i) => {
+    const [key, value] = i.split('=')
+    return { key, value }
+  })
+}
+
+const newCookie = reactive({ key: '', value: '' })
+
+function updateCookie(key: string, value: any) {
+  if (!key)
+    return
+  const exist = cookies.value.find(cookie => cookie.key === key)
+  const cookie = useCookie(key)
+  if (exist !== undefined) {
+    if (value === undefined)
+      cookies.value = cookies.value.filter(cookie => cookie.key !== key)
+  }
+  else {
+    cookies.value.push({ key, value })
+    newCookie.key = ''
+    newCookie.value = ''
+  }
+  cookie.value = value
+}
 
 watchEffect(() => {
   if (selectedTabInput.value === 'json') {
@@ -319,6 +351,42 @@ watchEffect(() => {
           flex-1
         />
       </template>
+    </div>
+    <div
+      v-if="activeTab === 'cookies'"
+      border="b base" p4 flex="~ col gap-4" font-mono
+    >
+      <div v-for="cookie in cookies" :key="cookie.key" flex="~ gap-4 items-center">
+        <NTextInput
+          placeholder="Key..."
+          :model-value="cookie.key"
+          disabled op-70
+        />
+        <NTextInput
+          placeholder="Value..."
+          :model-value="cookie.value"
+          flex-1 n="primary"
+          @input="updateCookie(cookie.key, $event.target?.value)"
+        />
+        <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
+          <NIcon icon="i-carbon-delete" />
+        </NButton>
+      </div>
+      <div flex="~ gap-4">
+        <NTextInput
+          v-model="newCookie.key"
+          placeholder="Key"
+          n="primary" flex-1
+        />
+        <NTextInput
+          v-model="newCookie.value"
+          placeholder="Value"
+          n="primary" flex-1
+        />
+        <NButton title="Add" n="primary" @click="updateCookie(newCookie.key, newCookie.value)">
+          <NIcon icon="i-carbon-save" />
+        </NButton>
+      </div>
     </div>
     <DefineDefaultInputs>
       <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>

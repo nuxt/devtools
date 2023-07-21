@@ -1,4 +1,3 @@
-<!-- eslint-disable no-console -->
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
   modelValue: any
@@ -53,7 +52,6 @@ watch(() => params, (items) => {
     }
     else if (item.type === 'date' && typeof item.value === 'string' && !item.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
       item.value = new Date().toISOString().slice(0, 10)
-      console.log('date', item.value)
     }
     else if (item.type === 'time' && typeof item.value === 'string' && !item.value.match(/^\d{2}:\d{2}$/)) {
       item.value = new Date().toISOString().slice(11, 16)

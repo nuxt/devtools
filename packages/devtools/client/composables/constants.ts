@@ -56,6 +56,7 @@ export const ComposablesDocs = {
 export const ServerRouteTabIcons: Record<string, string> = {
   snippet: 'i-carbon-code',
   headers: 'i-carbon-html-reference',
+  cookies: 'i-carbon-cookie',
   params: 'i-carbon-text-selection',
   query: 'i-carbon-help',
   body: 'i-carbon-document',
