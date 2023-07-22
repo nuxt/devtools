@@ -84,7 +84,7 @@ export interface NuxtDevtoolsHostClient {
 
 export interface NuxtDevtoolsClient {
   rpc: BirpcReturn<ServerFunctions>
-  renderCodeHighlight: (code: string, lang: Lang) => {
+  renderCodeHighlight: (code: string, lang?: Lang) => {
     code: string
     supported: boolean
   }
