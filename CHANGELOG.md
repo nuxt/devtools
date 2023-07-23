@@ -1,3 +1,18 @@
+## [0.7.1](https://github.com/nuxt/devtools/compare/v0.7.0...v0.7.1) (2023-07-23)
+
+
+### Bug Fixes
+
+* **kit:** broken types for `useDevtoolsClient()` ([#340](https://github.com/nuxt/devtools/issues/340)) ([934b1d4](https://github.com/nuxt/devtools/commit/934b1d42930c45cbaea70a66de8100d43821b386))
+* **kit:** types for `renderCodeHighlight` ([#341](https://github.com/nuxt/devtools/issues/341)) ([d4e1541](https://github.com/nuxt/devtools/commit/d4e1541a48e09f595cfd9320d8f30e243cec7d0e))
+
+
+### Features
+
+* **server-routes:** add cookies tab ([#338](https://github.com/nuxt/devtools/issues/338)) ([33e1417](https://github.com/nuxt/devtools/commit/33e1417ce85c90b146b2abf8b221edf30840b736))
+
+
+
 # [0.7.0](https://github.com/nuxt/devtools/compare/v0.6.7...v0.7.0) (2023-07-20)
 
 
