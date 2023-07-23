@@ -1,12 +1,13 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
 import { computed, nextTick } from 'vue'
+import type { Lang } from 'shiki-es'
 import { devToolsClient } from '../runtime/client'
 
 const props = withDefaults(
   defineProps<{
     code: string
-    lang?: string
+    lang?: Lang
     lines?: boolean
     transformRendered?: (code: string) => string
   }>(), {
@@ -17,7 +18,7 @@ const props = withDefaults(
 const emit = defineEmits(['loaded'])
 
 const rendered = computed(() => {
-  const result = devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang as string) || { code: props.code, supported: false }
+  const result = devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang) || { code: props.code, supported: false }
   if (result.supported && props.transformRendered)
     result.code = props.transformRendered(result.code)
   if (result.supported)

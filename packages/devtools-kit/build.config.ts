@@ -23,6 +23,7 @@ export default defineBuildConfig({
     'hookable',
     'vite-plugin-vue-inspector',
     'error-stack-parser-es',
+    'shiki-es',
   ],
   declaration: true,
   rollup: {

@@ -5,7 +5,7 @@ export const shiki = ref<Highlighter>()
 
 let promise: Promise<any> | null = null
 
-export function renderCodeHighlight(code: string, lang: Lang) {
+export function renderCodeHighlight(code: string, lang?: Lang) {
   const mode = useColorMode()
 
   if (!promise && !shiki.value) {
