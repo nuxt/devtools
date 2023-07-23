@@ -35,7 +35,7 @@ const emit = defineEmits<{
           <div op30>
             (
           </div>
-          <template v-for="a, idx in event.args " :key="idx">
+          <template v-for="a, index in event.args " :key="index">
             <div v-if="idx" mr2 op30>
               ,
             </div>

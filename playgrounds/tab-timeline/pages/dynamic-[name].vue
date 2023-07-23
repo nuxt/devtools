@@ -3,7 +3,7 @@ const route = useRoute()
 
 const name = computed(() => route.params.name as string)
 
-const data = useFetch('/api/data', {
+const _data = useFetch('/api/data', {
   body: {
     name: name.value,
   },

@@ -12,7 +12,7 @@ export function useOpenInEditor() {
       ? `#build${filepath.slice(buildDir.length)}`
       : filepath
 
-    const [realpath, line = 1, col = 0] = path.split(/:/g)
+    const [realpath, _line = 1, _col = 0] = path.split(/:/g)
 
     const vfs = virtualFiles.value?.entries.find(i => i.path === realpath || i.id === realpath)
     || virtualFiles.value?.entries.find(i => i.path === filepath || i.id === filepath)

@@ -57,7 +57,7 @@ watch(
   { flush: 'post' },
 )
 
-useEventListener(scroller, 'scroll', (e) => {
+useEventListener(scroller, 'scroll', () => {
   if (minimapScroller.value!.scrollLeft !== scroller.value!.scrollLeft) {
     syncSize()
     minimapScroller.value!.scrollLeft = scroller.value!.scrollLeft
