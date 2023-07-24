@@ -3,21 +3,24 @@ import { useTimeAgo } from '@vueuse/core'
 import type { AssetInfo, CodeSnippet } from '~/../src/types'
 
 const props = defineProps<{
-  asset: AssetInfo
+  modelValue: AssetInfo
 }>()
+
+const emit = defineEmits<{ (...args: any): void }>()
+const asset = useVModel(props, 'modelValue', emit, { passive: true })
 
 const openInEditor = useOpenInEditor()
 
 const imageMeta = computedAsync(() => {
-  if (props.asset.type !== 'image')
+  if (asset.value.type !== 'image')
     return undefined
-  return rpc.getImageMeta(props.asset.filePath)
+  return rpc.getImageMeta(asset.value.filePath)
 })
 
 const textContent = computedAsync(() => {
-  if (props.asset.type !== 'text')
+  if (asset.value.type !== 'text')
     return undefined
-  return rpc.getTextAssetContent(props.asset.filePath)
+  return rpc.getTextAssetContent(asset.value.filePath)
 })
 
 const config = useServerConfig()
@@ -28,32 +31,32 @@ const hasNuxtImage = computed(() => {
 
 const codeSnippets = computed(() => {
   const items: CodeSnippet[] = []
-  if (props.asset.type === 'image') {
+  if (asset.value.type === 'image') {
     const attrs = imageMeta.value?.width
       ? `\n  width="${imageMeta.value.width}"\n  height="${imageMeta.value.height}" `
       : ' '
     items.push(
-      { lang: 'vue-html', code: `<img${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Plain Image' },
+      { lang: 'vue-html', code: `<img${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Plain Image' },
     )
     hasNuxtImage.value && items.push(
-      { lang: 'vue-html', code: `<NuxtImage${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Image', docs: 'https://image.nuxtjs.org/components/nuxt-img' },
-      { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${props.asset.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxtjs.org/components/nuxt-picture' },
+      { lang: 'vue-html', code: `<NuxtImage${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Image', docs: 'https://image.nuxtjs.org/components/nuxt-img' },
+      { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxtjs.org/components/nuxt-picture' },
     )
     return items
   }
 
   items.push({
     lang: 'html',
-    code: `<a download href="${props.asset.publicPath}">\n  Download ${props.asset.path.split('/').slice(-1)[0]}\n</a>`,
+    code: `<a download href="${asset.value.publicPath}">\n  Download ${asset.value.path.split('/').slice(-1)[0]}\n</a>`,
     name: 'Download link',
   })
   return items
 })
 
 const copy = useCopy()
-const timeago = useTimeAgo(() => props.asset.mtime)
+const timeAgo = useTimeAgo(() => asset.value.mtime)
 const fileSize = computed(() => {
-  const size = props.asset.size
+  const size = asset.value.size
   if (size < 1024)
     return `${size} B`
   if (size < 1024 * 1024)
@@ -81,8 +84,55 @@ const supportsPreview = computed(() => {
     'text',
     'video',
     'font',
-  ].includes(props.asset.type)
+  ].includes(asset.value.type)
 })
+
+const deleteDialog = ref(false)
+async function deleteAsset() {
+  await rpc.deleteStaticAsset(asset.value.filePath)
+  asset.value = undefined as any
+  deleteDialog.value = false
+  showNotification({
+    message: 'Asset deleted',
+    icon: 'carbon:checkmark',
+    classes: 'text-green',
+  })
+}
+
+const renameDialog = ref(false)
+const newName = ref('')
+async function renameAsset() {
+  const parts = asset.value.filePath.split('/')
+  const oldName = parts.slice(-1)[0].split('.').slice(0, -1).join('.')
+
+  if (!newName.value || newName.value === oldName) {
+    return showNotification({
+      message: 'Please enter a new name',
+      icon: 'carbon:close',
+      classes: 'text-orange',
+    })
+  }
+
+  const extension = parts.slice(-1)[0].split('.').slice(-1)[0]
+  const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
+  try {
+    await rpc.renameStaticAsset(asset.value.filePath, fullPath)
+  }
+  catch (error) {
+    return showNotification({
+      message: 'Something went wrong!',
+      icon: 'carbon:close',
+      classes: 'text-red',
+    })
+  }
+  asset.value = undefined as any
+  renameDialog.value = false
+  showNotification({
+    message: 'Asset renamed',
+    icon: 'carbon:checkmark',
+    classes: 'text-green',
+  })
+}
 </script>
 
 <template>
@@ -188,7 +238,7 @@ const supportsPreview = computed(() => {
           <td w-30 ws-nowrap pr5 text-right op50>
             Last modified
           </td>
-          <td>{{ new Date(asset.mtime).toLocaleString() }} <span op70>({{ timeago }})</span></td>
+          <td>{{ new Date(asset.mtime).toLocaleString() }} <span op70>({{ timeAgo }})</span></td>
         </tr>
       </tbody>
     </table>
@@ -201,8 +251,14 @@ const supportsPreview = computed(() => {
       <div x-divider />
     </div>
     <div flex="~ gap2 wrap">
-      <NButton :to="asset.publicPath" download target="_blank" icon="carbon-download">
+      <NButton :to="asset.publicPath" download target="_blank" icon="carbon-download" n="green">
         Download
+      </NButton>
+      <NButton icon="carbon-text-annotation-toggle" n="blue" @click="renameDialog = !renameDialog">
+        Rename
+      </NButton>
+      <NButton icon="carbon-delete" n="red" @click="deleteDialog = !deleteDialog">
+        Delete
       </NButton>
       <NButton v-if="asset.type === 'image'" disabled icon="carbon-image-service">
         Optimize image (Coming soon)
@@ -218,4 +274,32 @@ const supportsPreview = computed(() => {
       :code-snippets="codeSnippets"
     />
   </div>
+  <NDialog v-model="deleteDialog" class="ignore-click-outside">
+    <div flex="~ col gap-4" min-h-full w-full of-hidden p8>
+      <span>
+        Are you sure you want to delete this asset?
+      </span>
+      <div flex="~ gap2 wrap justify-center">
+        <NButton icon="carbon-close" @click="deleteDialog = false">
+          Cancel
+        </NButton>
+        <NButton icon="carbon-delete" n="red" @click="deleteAsset">
+          Delete
+        </NButton>
+      </div>
+    </div>
+  </NDialog>
+  <NDialog v-model="renameDialog" class="ignore-click-outside">
+    <div flex="~ col gap-4" min-h-full w-full of-hidden p8>
+      <NTextInput v-model="newName" placeholder="New name" n="blue" />
+      <div flex="~ gap2 wrap justify-center">
+        <NButton icon="carbon-close" @click="renameDialog = false">
+          Cancel
+        </NButton>
+        <NButton icon="carbon-text-annotation-toggle" n="blue" @click="renameAsset">
+          Rename
+        </NButton>
+      </div>
+    </div>
+  </NDialog>
 </template>

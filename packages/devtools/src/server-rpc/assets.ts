@@ -114,5 +114,14 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
         }),
       )
     },
+    async deleteStaticAsset(path: string) {
+      return await fsp.unlink(path)
+    },
+    async renameStaticAsset(oldPath: string, newPath: string) {
+      const exist = cache?.find(asset => asset.filePath === newPath)
+      if (exist)
+        throw new Error(`File ${newPath} already exists`)
+      return await fsp.rename(oldPath, newPath)
+    },
   } satisfies Partial<ServerFunctions>
 }

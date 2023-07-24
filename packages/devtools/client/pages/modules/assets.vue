@@ -130,7 +130,7 @@ const navbar = ref<HTMLElement>()
       :navbar="navbar"
       @close="selected = undefined"
     >
-      <AssetDetails v-if="selected" :asset="selected" />
+      <AssetDetails v-if="selected" v-model="selected" />
     </DrawerRight>
   </div>
 </template>
