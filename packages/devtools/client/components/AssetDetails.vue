@@ -89,14 +89,23 @@ const supportsPreview = computed(() => {
 
 const deleteDialog = ref(false)
 async function deleteAsset() {
-  await rpc.deleteStaticAsset(asset.value.filePath)
-  asset.value = undefined as any
-  deleteDialog.value = false
-  showNotification({
-    message: 'Asset deleted',
-    icon: 'carbon:checkmark',
-    classes: 'text-green',
-  })
+  try {
+    await rpc.deleteStaticAsset(await ensureDevAuthToken(), asset.value.filePath)
+    asset.value = undefined as any
+    deleteDialog.value = false
+    showNotification({
+      message: 'Asset deleted',
+      icon: 'i-carbon-checkmark',
+      classes: 'text-green',
+    })
+  }
+  catch (error) {
+    showNotification({
+      message: 'Something went wrong!',
+      icon: 'i-carbon-warning',
+      classes: 'text-red',
+    })
+  }
 }
 
 const renameDialog = ref(false)
@@ -108,30 +117,30 @@ async function renameAsset() {
   if (!newName.value || newName.value === oldName) {
     return showNotification({
       message: 'Please enter a new name',
-      icon: 'carbon:close',
+      icon: 'i-carbon-warning',
       classes: 'text-orange',
     })
   }
 
-  const extension = parts.slice(-1)[0].split('.').slice(-1)[0]
-  const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
   try {
-    await rpc.renameStaticAsset(asset.value.filePath, fullPath)
+    const extension = parts.slice(-1)[0].split('.').slice(-1)[0]
+    const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
+    await rpc.renameStaticAsset(await ensureDevAuthToken(), asset.value.filePath, fullPath)
+    asset.value = undefined as any
+    renameDialog.value = false
+    showNotification({
+      message: 'Asset renamed',
+      icon: 'i-carbon-checkmark',
+      classes: 'text-green',
+    })
   }
   catch (error) {
-    return showNotification({
+    showNotification({
       message: 'Something went wrong!',
-      icon: 'carbon:close',
+      icon: 'i-carbon-warning',
       classes: 'text-red',
     })
   }
-  asset.value = undefined as any
-  renameDialog.value = false
-  showNotification({
-    message: 'Asset renamed',
-    icon: 'carbon:checkmark',
-    classes: 'text-green',
-  })
 }
 </script>
 
@@ -274,7 +283,7 @@ async function renameAsset() {
       :code-snippets="codeSnippets"
     />
   </div>
-  <NDialog v-model="deleteDialog" class="ignore-click-outside">
+  <NDialog v-model="deleteDialog">
     <div flex="~ col gap-4" min-h-full w-full of-hidden p8>
       <span>
         Are you sure you want to delete this asset?
@@ -289,7 +298,7 @@ async function renameAsset() {
       </div>
     </div>
   </NDialog>
-  <NDialog v-model="renameDialog" class="ignore-click-outside">
+  <NDialog v-model="renameDialog">
     <div flex="~ col gap-4" min-h-full w-full of-hidden p8>
       <NTextInput v-model="newName" placeholder="New name" n="blue" />
       <div flex="~ gap2 wrap justify-center">
