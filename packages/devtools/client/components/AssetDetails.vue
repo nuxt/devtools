@@ -98,6 +98,7 @@ const supportsPreview = computed(() => {
 
       <div flex="~" items-center justify-center>
         <AssetPreview
+          detail
           max-h-80 min-h-20 min-w-20 w-auto rounded border="~ base"
           :asset="asset"
           :text-content="textContent"
