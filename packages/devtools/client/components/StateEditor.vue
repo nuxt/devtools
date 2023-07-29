@@ -4,7 +4,7 @@ import JsonEditorVue from 'json-editor-vue'
 const props = defineProps<{
   name?: string
   open?: boolean
-  state?: Record<string, any> | string | number | null | undefined
+  state?: any
   readonly?: boolean
 }>()
 
@@ -77,7 +77,6 @@ async function refresh() {
     </div>
     <template v-if="isOpen || !name">
       <JsonEditorVue
-        v-if="state && Object.keys(state).length > 0 || typeof state === 'number' || typeof state === 'string'"
         v-model="proxy"
         v-bind="$attrs"
         class="json-editor-vue"
@@ -92,9 +91,6 @@ async function refresh() {
         :indentation="2"
         :tab-size="2"
       />
-      <div v-else bg-active p5 italic>
-        <span op50>No data</span>
-      </div>
     </template>
   </div>
 </template>
