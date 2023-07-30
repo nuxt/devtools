@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watchEffect } from 'vue'
-import { useVModel } from '@vueuse/core'
+import { onClickOutside, useVModel } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 
 const props = withDefaults(
   defineProps<{
     modelValue?: boolean
     dim?: boolean
+    autoClose?: boolean
   }>(),
   {
     modelValue: false,
     dim: true,
+    autoClose: true,
   },
 )
 
@@ -37,10 +39,14 @@ watchEffect(
   },
 )
 
-function close() {
-  show.value = false
-  emit('close')
-}
+onClickOutside(card, () => {
+  if (props.modelValue && props.autoClose) {
+    show.value = false
+    emit('close')
+  }
+}, {
+  ignore: ['a', 'button', 'summary'],
+})
 </script>
 
 <script lang="ts">
@@ -54,6 +60,8 @@ export default {
     <div
       v-show="show"
       class="n-dialog fixed inset-0 z-100 flex items-center justify-center n-transition"
+      role="dialog"
+      aria-modal="true"
       :class="[
         show ? '' : 'op0 pointer-events-none visibility-none',
       ]"
@@ -61,9 +69,8 @@ export default {
       <div
         class="absolute inset-0 -z-1"
         :class="[
-          dim ? 'bg-black/50' : '',
+          dim ? 'glass-effect' : '',
         ]"
-        @click="close()"
       />
       <NCard v-bind="$attrs" ref="card" class="max-h-screen of-auto">
         <slot />
