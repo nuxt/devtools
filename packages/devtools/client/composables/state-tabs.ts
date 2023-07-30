@@ -95,14 +95,14 @@ export function useEnabledTabs() {
   return computed(() => tabs.value
     .filter((tab, idx) => {
       const _tab = tab as ModuleBuiltinTab
-      if (settings.pinnedTabs.value.includes(_tab.name))
-        _tab.category = 'pinned'
-
+      const isPinned = settings.pinnedTabs.value.includes(_tab.name)
+      if (isPinned && settings.hiddenTabCategories.value.includes('pinned'))
+        return false
       if (tabShows[idx] && !toValue(tabShows[idx]))
         return false
       if (settings.hiddenTabs.value.includes(_tab.name))
         return false
-      if (settings.hiddenTabCategories.value.includes(tab.category || 'app'))
+      if (settings.hiddenTabCategories.value.includes(tab.category || 'app') && !isPinned)
         return false
       return true
     })
