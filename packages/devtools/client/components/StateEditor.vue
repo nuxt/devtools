@@ -4,7 +4,7 @@ import JsonEditorVue from 'json-editor-vue'
 const props = defineProps<{
   name?: string
   open?: boolean
-  state?: Record<string, any>
+  state?: any
   readonly?: boolean
 }>()
 
@@ -13,14 +13,21 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = useVModel(props, 'open', emit, { passive: true })
-
 const colorMode = useColorMode()
 const proxy = ref()
-proxy.value = JSON.parse(JSON.stringify(props.state))
+
+const state = useState(props.name)
+if (props.state)
+  proxy.value = JSON.parse(JSON.stringify(props.state))
+else if (typeof props.state === 'number' || typeof props.state !== 'string')
+  proxy.value = props.state
 
 const watcher = watchPausable(proxy,
   (value) => {
-    deepSync(value, props.state)
+    if (typeof value !== 'number' && typeof value !== 'string')
+      deepSync(value, props.state)
+    else
+      state.value = value
   },
   { deep: true },
 )
@@ -70,7 +77,6 @@ async function refresh() {
     </div>
     <template v-if="isOpen || !name">
       <JsonEditorVue
-        v-if="state && Object.keys(state).length > 0"
         v-model="proxy"
         v-bind="$attrs"
         class="json-editor-vue"
@@ -85,9 +91,6 @@ async function refresh() {
         :indentation="2"
         :tab-size="2"
       />
-      <div v-else bg-active p5 italic>
-        <span op50>No data</span>
-      </div>
     </template>
   </div>
 </template>

@@ -17,7 +17,7 @@ onClickOutside(el, () => {
   if (props.modelValue && props.autoClose)
     emit('close')
 }, {
-  ignore: ['a', 'button', 'summary', '.ignore-click-outside'],
+  ignore: ['a', 'button', 'summary', '[role="dialog"]'],
 })
 </script>
 
