@@ -72,7 +72,7 @@ function toggleDrawer() {
 
 <template>
   <div>
-    <slot name="button" :click="() => toggleDrawer">
+    <slot name="button" :click="toggleDrawer">
       <NIconButton title="Generate Types" icon="logos-typescript-icon" @click="toggleDrawer()" />
     </slot>
     <Teleport v-if="language" to="body">
