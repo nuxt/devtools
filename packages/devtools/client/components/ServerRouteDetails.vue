@@ -453,6 +453,7 @@ watchEffect(() => {
     </NLoading>
     <template v-else>
       <div border="b base" flex="~ gap2" items-center px4 py2>
+        <QuickType :input="responseContent" />
         <div>Response</div>
         <Badge
           v-if="response.error"
