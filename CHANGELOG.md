@@ -1,3 +1,12 @@
+## [0.7.4](https://github.com/nuxt/devtools/compare/v0.7.3...v0.7.4) (2023-08-01)
+
+
+### Bug Fixes
+
+* find vite client path automatically, close [#352](https://github.com/nuxt/devtools/issues/352) ([b78d04f](https://github.com/nuxt/devtools/commit/b78d04f43ac5929047b5eb9e7db922b870e57777))
+
+
+
 ## [0.7.3](https://github.com/nuxt/devtools/compare/v0.7.2...v0.7.3) (2023-08-01)
 
 
