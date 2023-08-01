@@ -371,6 +371,7 @@ const time = computed(() => {
   box-shadow: 2px 2px 8px var(--nuxt-devtools-widget-shadow);
   transition: background 0.2s ease;
   user-select: none;
+  touch-action: none;
 }
 
 #nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-panel {
