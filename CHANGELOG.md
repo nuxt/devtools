@@ -1,3 +1,13 @@
+## [0.7.3](https://github.com/nuxt/devtools/compare/v0.7.2...v0.7.3) (2023-08-01)
+
+
+### Bug Fixes
+
+* the panel is stuttering when dragging on the mobile end ([#350](https://github.com/nuxt/devtools/issues/350)) ([6677dd7](https://github.com/nuxt/devtools/commit/6677dd7918a9c2e1e854275b0f9ebacb1d468f0c))
+* upgrade `vite-plugin-inspect`, close [#324](https://github.com/nuxt/devtools/issues/324) ([ea41a5d](https://github.com/nuxt/devtools/commit/ea41a5d33f1b727b96ca32133c83058b9ece419e))
+
+
+
 ## [0.7.2](https://github.com/nuxt/devtools/compare/v0.7.1...v0.7.2) (2023-07-31)
 
 
