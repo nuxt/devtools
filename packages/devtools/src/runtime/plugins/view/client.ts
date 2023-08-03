@@ -242,7 +242,7 @@ export async function setupDevToolsClient({
   // Shortcut to toggle devtools
   addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      client.close()
+      client.toggle()
   })
 
   const app = createApp({
