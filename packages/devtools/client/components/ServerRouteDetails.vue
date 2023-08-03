@@ -331,10 +331,11 @@ watchEffect(() => {
       </NButton>
       <div flex-auto />
       <NButton
-        icon="carbon-launch"
+        v-tooltip="'Open in Editor'"
+        title="Open in Editor"
         @click="openInEditor(route.filepath)"
       >
-        Open in Editor
+        <NIcon icon="carbon-launch" />
       </NButton>
     </div>
     <div

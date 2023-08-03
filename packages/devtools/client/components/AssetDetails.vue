@@ -183,6 +183,7 @@ async function renameAsset() {
             <div flex="~ gap-1" w-full items-center>
               <FilepathItem :filepath="asset.filePath" text-left />
               <NIconButton
+                v-tooltip="'Open in Editor'"
                 flex-none
                 title="Open in Editor"
                 icon="carbon-launch"
@@ -201,12 +202,14 @@ async function renameAsset() {
                 {{ asset.publicPath }}
               </div>
               <NIconButton
+                v-tooltip="'Copy public path'"
                 flex-none
                 title="Copy public path"
                 icon="carbon-copy"
                 @click="copy(asset.publicPath)"
               />
               <NIconButton
+                v-tooltip="'Open in browser'"
                 flex-none
                 :to="asset.publicPath"
                 icon="carbon-launch"

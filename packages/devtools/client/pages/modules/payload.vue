@@ -49,6 +49,7 @@ async function refreshData(keys?: string[]) {
         <template #actions="{ isOpen, name }">
           <NIconButton
             v-if="isOpen && name"
+            v-tooltip.bottom="`Re-fetch '${name}'`"
             :title="`Re-fetch '${name}'`"
             icon="carbon-recycle"
             @click="refreshData([name])"
