@@ -111,23 +111,23 @@ until(router).toBeTruthy().then((v) => {
           <div flex-none flex="~ gap2 items-center">
             <NIconButton
               v-if="routeMatchedFilePath"
+              v-tooltip="'Open file in editor'"
               text-lg
               icon="carbon:launch"
-              title="Open file in editor"
               @click="openInEditor(routeMatchedFilePath)"
             />
 
             <NIconButton
+              v-tooltip="'Refresh Data'"
               text-lg
               icon="carbon:reset"
-              title="Refresh Data"
               @click="refresh"
             />
 
             <NIconButton
+              v-tooltip="'Toggle Preview'"
               text-lg
               :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'"
-              title="Toggle Preview"
               @click="showPreview = !showPreview"
             />
           </div>

@@ -136,15 +136,15 @@ function capitalize(str: string) {
       <Navbar v-model:search="search" pb2>
         <template #actions>
           <NIconButton
+            v-tooltip="'Toggle View'"
             text-lg
             :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
-            title="Toggle view"
             @click="toggleView"
           />
           <NIconButton
+            v-tooltip="'Default Inputs'"
             text-lg
             icon="i-carbon-cics-sit-overrides"
-            title="Default Inputs"
             @click="inputDefaultsDrawer = !inputDefaultsDrawer"
           />
         </template>
