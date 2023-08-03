@@ -86,6 +86,7 @@ const navbar = ref<HTMLElement>()
             v-tooltip.bottom-end="'Toggle View'"
             text-lg
             :icon="view === 'grid' ? 'i-carbon-list' : 'i-carbon-grid'"
+            title="Toggle view"
             @click="toggleView"
           />
         </div>

@@ -185,6 +185,7 @@ async function renameAsset() {
               <NIconButton
                 v-tooltip="'Open in Editor'"
                 flex-none
+                title="Open in Editor"
                 icon="carbon-launch"
                 @click="openInEditor(asset.filePath)"
               />
@@ -203,6 +204,7 @@ async function renameAsset() {
               <NIconButton
                 v-tooltip="'Copy public path'"
                 flex-none
+                title="Copy public path"
                 icon="carbon-copy"
                 @click="copy(asset.publicPath)"
               />
@@ -212,6 +214,7 @@ async function renameAsset() {
                 :to="asset.publicPath"
                 icon="carbon-launch"
                 target="_blank"
+                title="Open in browser"
               />
             </div>
           </td>

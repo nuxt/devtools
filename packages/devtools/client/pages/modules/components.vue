@@ -35,6 +35,7 @@ function toggleView() {
           v-tooltip.bottom-end="'Toggle View'"
           text-lg
           :icon="view === 'graph' ? 'i-carbon-list' : 'i-carbon-network-4'"
+          title="Toggle view"
           @click="toggleView"
         />
         <NIconButton
@@ -42,6 +43,7 @@ function toggleView() {
           v-tooltip.bottom-end="'Inspect Vue components'"
           text-lg
           icon="i-tabler-focus-2"
+          title="Inspect Vue components"
           @click="openComponentInspector"
         />
       </div>

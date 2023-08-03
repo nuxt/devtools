@@ -114,6 +114,7 @@ until(router).toBeTruthy().then((v) => {
               v-tooltip="'Open file in editor'"
               text-lg
               icon="carbon:launch"
+              title="Open file in editor"
               @click="openInEditor(routeMatchedFilePath)"
             />
 
@@ -121,6 +122,7 @@ until(router).toBeTruthy().then((v) => {
               v-tooltip="'Refresh Data'"
               text-lg
               icon="carbon:reset"
+              title="Refresh Data"
               @click="refresh"
             />
 
@@ -128,6 +130,7 @@ until(router).toBeTruthy().then((v) => {
               v-tooltip="'Toggle Preview'"
               text-lg
               :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'"
+              title="Toggle Preview"
               @click="showPreview = !showPreview"
             />
           </div>
