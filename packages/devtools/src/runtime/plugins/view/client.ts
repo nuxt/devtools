@@ -75,6 +75,7 @@ export async function setupDevToolsClient({
     colorMode,
     getIframe,
     updateClient,
+    frameState: state,
   })
 
   let iframe: HTMLIFrameElement | undefined

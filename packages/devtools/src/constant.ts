@@ -32,6 +32,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     showExperimentalFeatures: false,
     showHelpButtons: true,
     scale: 1,
+    minimizePanelInactive: 5000,
     hiddenTabs: [],
     pinnedTabs: [],
     hiddenTabCategories: [],

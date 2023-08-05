@@ -154,21 +154,30 @@ const anchorPos = computed(() => {
   }
 })
 
-const HIDE_TIMEOUT = 5_000
 let _timer: ReturnType<typeof setTimeout> | null = null
 function bringUp() {
   isHovering.value = true
+  if (state.value.minimizePanelInactive < 0)
+    return
   if (_timer)
     clearTimeout(_timer)
   _timer = setTimeout(() => {
     isHovering.value = false
-  }, HIDE_TIMEOUT)
+  }, +state.value.minimizePanelInactive || 0)
 }
 
 const isHidden = computed(() => {
+  if (state.value.minimizePanelInactive < 0)
+    return false
+  if (state.value.minimizePanelInactive === 0)
+    return true
   // @ts-expect-error compatibility
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
-  return !isDragging.value && !state.value.open && !isHovering.value && !isTouchDevice
+  return !isDragging.value
+    && !state.value.open
+    && !isHovering.value
+    && !isTouchDevice
+    && state.value.minimizePanelInactive
 })
 
 const anchorStyle = computed(() => ({
@@ -460,7 +469,7 @@ onMounted(() => {
 }
 
 #nuxt-devtools-anchor .nuxt-devtools-panel-content {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.4s ease;
 }
 
 #nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel-content {
