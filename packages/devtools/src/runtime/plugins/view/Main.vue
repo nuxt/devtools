@@ -119,6 +119,7 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
+const isHovering = ref(false)
 const isVertical = computed(() => state.value.position === 'left' || state.value.position === 'right')
 
 const anchorPos = computed(() => {
@@ -153,7 +154,61 @@ const anchorPos = computed(() => {
   }
 })
 
-const anchorStyle = computed(() => ({ left: `${anchorPos.value.left}px`, top: `${anchorPos.value.top}px` }))
+let _timer: ReturnType<typeof setTimeout> | null = null
+function bringUp() {
+  isHovering.value = true
+  if (state.value.minimizePanelInactive < 0)
+    return
+  if (_timer)
+    clearTimeout(_timer)
+  _timer = setTimeout(() => {
+    isHovering.value = false
+  }, +state.value.minimizePanelInactive || 0)
+}
+
+const isHidden = computed(() => {
+  if (state.value.minimizePanelInactive < 0)
+    return false
+  if (state.value.minimizePanelInactive === 0)
+    return true
+  // @ts-expect-error compatibility
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
+  return !isDragging.value
+    && !state.value.open
+    && !isHovering.value
+    && !isTouchDevice
+    && state.value.minimizePanelInactive
+})
+
+const anchorStyle = computed(() => ({
+  left: `${anchorPos.value.left}px`,
+  top: `${anchorPos.value.top}px`,
+}))
+
+const panelStyle = computed(() => {
+  const style: any = {
+    transform: isVertical.value
+      ? `translate(${isHidden.value ? `calc(-50% ${state.value.position === 'right' ? '+' : '-'} 15px)` : '-50%'}, -50%) rotate(90deg)`
+      : `translate(-50%, ${isHidden.value ? `calc(-50% ${state.value.position === 'top' ? '-' : '+'} 15px)` : '-50%'})`,
+  }
+  if (isHidden.value) {
+    switch (state.value.position) {
+      case 'top':
+      case 'right':
+        style.borderTopLeftRadius = '0'
+        style.borderTopRightRadius = '0'
+        break
+      case 'bottom':
+      case 'left':
+        style.borderBottomLeftRadius = '0'
+        style.borderBottomRightRadius = '0'
+        break
+    }
+  }
+  if (isDragging.value)
+    style.transition = 'none !important'
+  return style
+})
 
 const iframeStyle = computed(() => {
   // eslint-disable-next-line no-unused-expressions, no-sequences
@@ -240,9 +295,14 @@ const time = computed(() => {
     time = metric.appLoad - metric.appInit
     type = 'App'
   }
+  bringUp()
   if (time < 0)
     return [type, '', '-']
   return [type, ...millisecondToHumanreadable(time)]
+})
+
+onMounted(() => {
+  bringUp()
 })
 </script>
 
@@ -251,10 +311,19 @@ const time = computed(() => {
     id="nuxt-devtools-anchor"
     ref="anchorEl"
     :style="[anchorStyle, vars]"
-    :class="{ 'nuxt-devtools-vertical': isVertical }"
+    :class="{
+      'nuxt-devtools-vertical': isVertical,
+      'nuxt-devtools-hide': isHidden,
+    }"
+    @mousemove="bringUp"
   >
     <div v-if="!isSafari" class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
-    <div ref="panelEl" class="nuxt-devtools-panel" @pointerdown="onPointerDown">
+    <div
+      ref="panelEl"
+      class="nuxt-devtools-panel"
+      :style="panelStyle"
+      @pointerdown="onPointerDown"
+    >
       <button
         class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button"
         title="Toggle Nuxt DevTools"
@@ -268,8 +337,14 @@ const time = computed(() => {
           <path d="M181.767 270H302.211C306.037 270 309.795 269.003 313.108 267.107C316.421 265.211 319.172 262.484 321.084 259.2C322.996 255.915 324.002 252.19 324 248.399C323.998 244.607 322.989 240.883 321.074 237.601L240.187 98.7439C238.275 95.4607 235.525 92.7342 232.213 90.8385C228.901 88.9429 225.143 87.9449 221.318 87.9449C217.494 87.9449 213.736 88.9429 210.424 90.8385C207.112 92.7342 204.361 95.4607 202.449 98.7439L181.767 134.272L141.329 64.7975C139.416 61.5145 136.664 58.7884 133.351 56.8931C130.038 54.9978 126.28 54 122.454 54C118.629 54 114.871 54.9978 111.558 56.8931C108.245 58.7884 105.493 61.5145 103.58 64.7975L2.92554 237.601C1.01067 240.883 0.00166657 244.607 2.06272e-06 248.399C-0.00166244 252.19 1.00407 255.915 2.91605 259.2C4.82803 262.484 7.57884 265.211 10.8918 267.107C14.2047 269.003 17.963 270 21.7886 270H97.3936C127.349 270 149.44 256.959 164.641 231.517L201.546 168.172L221.313 134.272L280.637 236.1H201.546L181.767 270ZM96.1611 236.065L43.3984 236.054L122.49 100.291L161.953 168.172L135.531 213.543C125.436 230.051 113.968 236.065 96.1611 236.065Z" fill="#00DC82" />
         </svg>
       </button>
-      <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-      <div class="nuxt-devtools-label" :title="`${time[0]} load time`">
+      <div
+        style="border-left: 1px solid #8883;width:1px;height:10px;"
+        class="nuxt-devtools-panel-content"
+      />
+      <div
+        class="nuxt-devtools-panel-content nuxt-devtools-label"
+        :title="`${time[0]} load time`"
+      >
         <div class="nuxt-devtools-label-main">
           {{ time[1] }}
         </div>
@@ -278,8 +353,11 @@ const time = computed(() => {
         </span>
       </div>
       <template v-if="client.inspector">
-        <div style="border-left: 1px solid #8883;width:1px;height:10px;" />
-        <button class="nuxt-devtools-icon-button" title="Toggle Component Inspector" @click="client.inspector.toggle">
+        <div
+          style="border-left: 1px solid #8883;width:1px;height:10px;"
+          class="nuxt-devtools-panel-content"
+        />
+        <button class="nuxt-devtools-icon-button nuxt-devtools-panel-content" title="Toggle Component Inspector" @click="client.inspector.toggle">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style="height: 1.2em; width: 1.2em; opacity:0.5;"
@@ -341,6 +419,10 @@ const time = computed(() => {
   opacity: 0.5;
 }
 
+#nuxt-devtools-anchor .nuxt-devtools-nuxt-button {
+  flex: none;
+}
+
 #nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-nuxt-button {
   transform: rotate(-90deg);
 }
@@ -358,7 +440,8 @@ const time = computed(() => {
   top: 0;
   transform: translate(-50%, -50%);
   display: flex;
-  justify-content: center;
+  justify-content: start;
+  overflow: hidden;
   align-items: center;
   gap: 2px;
   height: 30px;
@@ -369,14 +452,28 @@ const time = computed(() => {
   backdrop-filter: blur(10px);
   color: var(--nuxt-devtools-widget-fg);
   box-shadow: 2px 2px 8px var(--nuxt-devtools-widget-shadow);
-  transition: background 0.2s ease;
   user-select: none;
   touch-action: none;
+  max-width: 150px;
+  transition: max-width 0.6s ease, padding 0.5s ease, transform 0.4s ease, all 0.6s ease;
+}
+
+#nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel {
+  max-width: 32px;
+  padding: 2px 0;
 }
 
 #nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-panel {
   transform: translate(-50%, -50%) rotate(90deg);
   box-shadow: 2px -2px 8px var(--nuxt-devtools-widget-shadow);
+}
+
+#nuxt-devtools-anchor .nuxt-devtools-panel-content {
+  transition: opacity 0.4s ease;
+}
+
+#nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel-content {
+  opacity: 0;
 }
 
 #nuxt-devtools-anchor .nuxt-devtools-icon-button {
@@ -406,7 +503,7 @@ const time = computed(() => {
   width: 160px;
   height: 160px;
   opacity: 0;
-  transition: all 0.8s ease;
+  transition: all 1s ease;
   pointer-events: none;
   z-index: -1;
   border-radius: 9999px;

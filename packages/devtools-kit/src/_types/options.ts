@@ -152,6 +152,7 @@ export interface NuxtDevToolsOptions {
     hiddenTabs: string[]
     hiddenTabCategories: string[]
     pinnedTabs: string[]
+    minimizePanelInactive: number
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null

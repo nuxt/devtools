@@ -20,11 +20,6 @@ watch(uiOptions, async (options) => {
   rpc.updateOptions('ui', options)
 }, { deep: true, flush: 'post' })
 
-// sync devtools options with frame state
-watchEffect(() => {
-  devToolsFrameState.value.closeOnOutsideClick = uiOptions.value.interactionCloseOnOutsideClick
-})
-
 // Migrate settings from localStorage to devtools options. TODO: remove in next major release
 if (localStorage.getItem('nuxt-devtools-settings')) {
   Object.assign(uiOptions.value, JSON.parse(localStorage.getItem('nuxt-devtools-settings')!))
