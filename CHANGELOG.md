@@ -1,3 +1,39 @@
+## [0.7.4](https://github.com/nuxt/devtools/compare/v0.7.3...v0.7.4) (2023-08-01)
+
+
+### Bug Fixes
+
+* find vite client path automatically, close [#352](https://github.com/nuxt/devtools/issues/352) ([b78d04f](https://github.com/nuxt/devtools/commit/b78d04f43ac5929047b5eb9e7db922b870e57777))
+
+
+
+## [0.7.3](https://github.com/nuxt/devtools/compare/v0.7.2...v0.7.3) (2023-08-01)
+
+
+### Bug Fixes
+
+* the panel is stuttering when dragging on the mobile end ([#350](https://github.com/nuxt/devtools/issues/350)) ([6677dd7](https://github.com/nuxt/devtools/commit/6677dd7918a9c2e1e854275b0f9ebacb1d468f0c))
+* upgrade `vite-plugin-inspect`, close [#324](https://github.com/nuxt/devtools/issues/324) ([ea41a5d](https://github.com/nuxt/devtools/commit/ea41a5d33f1b727b96ca32133c83058b9ece419e))
+
+
+
+## [0.7.2](https://github.com/nuxt/devtools/compare/v0.7.1...v0.7.2) (2023-07-31)
+
+
+### Bug Fixes
+
+* pinned tabs filter ([#348](https://github.com/nuxt/devtools/issues/348)) ([5c26895](https://github.com/nuxt/devtools/commit/5c268953331643c116c152d29fa0c9d49767fce0))
+* **ui-kit:** dialog closing and a11y ([#346](https://github.com/nuxt/devtools/issues/346)) ([95bd0a1](https://github.com/nuxt/devtools/commit/95bd0a1bc346f5bd83259f56ec0dcdb414bfc665))
+
+
+### Features
+
+* **assets:** add rename and delete action ([#343](https://github.com/nuxt/devtools/issues/343)) ([55f6863](https://github.com/nuxt/devtools/commit/55f6863be3b24b48ec3582f93e44c4a6d205d796))
+* enhance state editor ([#349](https://github.com/nuxt/devtools/issues/349)) ([ad56f47](https://github.com/nuxt/devtools/commit/ad56f473f1244845a7350cd82ade335384ab3a38))
+* support preview video assets ([#347](https://github.com/nuxt/devtools/issues/347)) ([b4dfc37](https://github.com/nuxt/devtools/commit/b4dfc378109815e7bda1ae1c10c266f03c98636f))
+
+
+
 ## [0.7.1](https://github.com/nuxt/devtools/compare/v0.7.0...v0.7.1) (2023-07-23)
 
 

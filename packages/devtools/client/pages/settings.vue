@@ -11,7 +11,10 @@ const {
   hiddenTabs,
   pinnedTabs,
   hiddenTabCategories,
+  minimizePanelInactive,
 } = useDevToolsUIOptions()
+
+const client = useClient()
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -19,6 +22,15 @@ const scaleOptions = [
   ['Normal', 1],
   ['Large', 16 / 15],
   ['Huge', 18 / 15],
+]
+
+const MinimizeInactiveOptions = [
+  ['Always', 0],
+  ['1s', 1000],
+  ['2s', 2000],
+  ['5s', 5000],
+  ['10s', 10000],
+  ['Never', -1],
 ]
 
 const categories = getCategorizedTabs(useAllTabs())
@@ -58,6 +70,15 @@ function pinMove(name: string, delta: number) {
   newPinnedTabs.splice(newIndex, 0, name)
   pinnedTabs.value = newPinnedTabs
 }
+
+// sync devtools options with frame state
+watchEffect(() => {
+  client.value.frameState.value.closeOnOutsideClick = interactionCloseOnOutsideClick.value
+})
+
+watchEffect(() => {
+  client.value.frameState.value.minimizePanelInactive = minimizePanelInactive.value
+})
 </script>
 
 <template>
@@ -133,6 +154,17 @@ function pinMove(name: string, delta: number) {
               </NButton>
             </NDarkToggle>
           </div>
+        </div>
+        <div py3 flex="~ col gap-1" border="b base">
+          <h3 mb1 text-lg>
+            Floating Panel
+          </h3>
+          <p>Minimize panel on inactive</p>
+          <NSelect v-model.number="minimizePanelInactive" n="primary">
+            <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
         </div>
         <div py3 flex="~ col gap-1" border="b base">
           <h3 mb1 text-lg>

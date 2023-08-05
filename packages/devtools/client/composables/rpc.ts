@@ -1,6 +1,6 @@
 import { createBirpc } from 'birpc'
 import { parse, stringify } from 'flatted'
-import { createHotContext } from 'vite-hot-client'
+import { tryCreateHotContext } from 'vite-hot-client'
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
 import { WS_EVENT_NAME } from '../../src/constant'
 
@@ -41,7 +41,18 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
 })
 
 async function connectVite() {
-  const hot = await createHotContext()
+  // @ts-expect-error no types
+
+  let base = window.__NUXT__.config?.app?.baseURL
+  if (base && !base.endsWith('/'))
+    base += '/'
+  const hot = await tryCreateHotContext(undefined, [
+    ...(base
+      ? [`${base}_nuxt/`, base]
+      : []),
+    '/_nuxt/',
+    '/',
+  ])
 
   if (!hot)
     throw new Error('Unable to connect to devtools')

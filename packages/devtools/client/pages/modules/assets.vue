@@ -83,6 +83,7 @@ const navbar = ref<HTMLElement>()
       <template #actions>
         <div flex-none flex="~ gap2 items-center">
           <NIconButton
+            v-tooltip.bottom-end="'Toggle View'"
             text-lg
             :icon="view === 'grid' ? 'i-carbon-list' : 'i-carbon-grid'"
             title="Toggle view"
@@ -130,7 +131,7 @@ const navbar = ref<HTMLElement>()
       :navbar="navbar"
       @close="selected = undefined"
     >
-      <AssetDetails v-if="selected" :asset="selected" />
+      <AssetDetails v-if="selected" v-model="selected" />
     </DrawerRight>
   </div>
 </template>

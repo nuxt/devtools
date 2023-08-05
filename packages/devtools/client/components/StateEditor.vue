@@ -72,8 +72,8 @@ async function refresh() {
       </button>
       <slot name="actions" v-bind="{ isOpen, name, state }" />
       <template v-if="isOpen">
-        <NIconButton title="Refresh View" icon="carbon-renew" @click="refresh" />
         <QuickType :name="name" :input="JSON.stringify(proxy)" />
+        <NIconButton v-tooltip.bottom="'Refresh View'" title="Refresh View" icon="carbon-renew" @click="refresh" />
       </template>
     </div>
     <template v-if="isOpen || !name">

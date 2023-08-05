@@ -164,6 +164,7 @@ async function fetchData() {
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
         response.statusCode = res.status
+        response.error = undefined
       },
       onResponseError(res) {
         response.error = res.response._data
@@ -330,10 +331,11 @@ watchEffect(() => {
       </NButton>
       <div flex-auto />
       <NButton
-        icon="carbon-launch"
+        v-tooltip="'Open in Editor'"
+        title="Open in Editor"
         @click="openInEditor(route.filepath)"
       >
-        Open in Editor
+        <NIcon icon="carbon-launch" />
       </NButton>
     </div>
     <div

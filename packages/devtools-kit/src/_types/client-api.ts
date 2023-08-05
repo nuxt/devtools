@@ -9,6 +9,18 @@ import type { ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 import type { TimelineMetrics } from './timeline-metrics'
 
+export interface DevToolsFrameState {
+  width: number
+  height: number
+  top: number
+  left: number
+  open: boolean
+  route: string
+  position: 'left' | 'right' | 'bottom' | 'top'
+  closeOnOutsideClick: boolean
+  minimizePanelInactive: number
+}
+
 export interface NuxtDevtoolsClientHooks {
   /**
    * When the DevTools navigates, used for persisting the current tab
@@ -80,6 +92,8 @@ export interface NuxtDevtoolsHostClient {
   updateClient(): NuxtDevtoolsHostClient
 
   getIframe(): HTMLIFrameElement | undefined
+
+  frameState: Ref<DevToolsFrameState>
 }
 
 export interface NuxtDevtoolsClient {
