@@ -7,7 +7,7 @@ import { devToolsClient } from '../runtime/client'
 const props = withDefaults(
   defineProps<{
     code: string
-    lang?: Lang
+    lang?: Lang | 'text'
     lines?: boolean
     transformRendered?: (code: string) => string
   }>(), {
@@ -18,7 +18,9 @@ const props = withDefaults(
 const emit = defineEmits(['loaded'])
 
 const rendered = computed(() => {
-  const result = devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang) || { code: props.code, supported: false }
+  const result = props.lang === 'text'
+    ? { code: props.code, supported: false }
+    : devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang) || { code: props.code, supported: false }
   if (result.supported && props.transformRendered)
     result.code = props.transformRendered(result.code)
   if (result.supported)

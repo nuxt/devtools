@@ -52,6 +52,7 @@ addEventListener('keydown', (e) => {
 })
 
 const { scale } = useDevToolsUIOptions()
+const dataSchema = useSchemaInput()
 
 onMounted(() => {
   const injectClient = useInjectionClient()
@@ -107,5 +108,8 @@ registerCommands(() =>
     </div>
     <DisconnectIndicator />
     <RestartDialogs />
+    <div v-lazy-show="dataSchema">
+      <LazyDataSchemaDrawer />
+    </div>
   </div>
 </template>

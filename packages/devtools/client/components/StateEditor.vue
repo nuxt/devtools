@@ -73,7 +73,10 @@ async function refresh() {
       <slot name="actions" v-bind="{ isOpen, name, state }" />
       <template v-if="isOpen">
         <NIconButton v-tooltip.bottom="'Refresh View'" title="Refresh View" icon="carbon-renew" @click="refresh" />
-        <LazyQuickType v-if="proxy" :name="name" :input="JSON.stringify(proxy)" />
+        <DataSchemaButton
+          v-if="proxy"
+          :getter="() => ({ name, input: JSON.stringify(proxy) })"
+        />
       </template>
     </div>
     <template v-if="isOpen || !name">

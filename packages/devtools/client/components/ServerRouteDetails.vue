@@ -473,9 +473,9 @@ watchEffect(() => {
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
-        <LazyQuickType
+        <DataSchemaButton
           v-if="response.contentType === 'application/json'"
-          :input="responseContent"
+          :getter="() => ({ input: responseContent })"
         />
         <div flex-auto />
         <div op50>
