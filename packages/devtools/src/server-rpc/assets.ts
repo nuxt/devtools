@@ -114,6 +114,10 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
         }),
       )
     },
+    async writeStaticAsset(token: string, path: string, data: string) {
+      await ensureDevAuthToken(token)
+      return await fsp.writeFile(path, data, 'utf-8')
+    },
     async deleteStaticAsset(token: string, path: string) {
       await ensureDevAuthToken(token)
 

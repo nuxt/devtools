@@ -17,11 +17,42 @@ const imageMeta = computedAsync(() => {
   return rpc.getImageMeta(asset.value.filePath)
 })
 
-const textContent = computedAsync(() => {
+const editDialog = ref(false)
+const newTextContent = ref()
+const textContentCounter = ref(0)
+const textContent = computedAsync(async () => {
   if (asset.value.type !== 'text')
     return undefined
-  return rpc.getTextAssetContent(asset.value.filePath)
+
+  // eslint-disable-next-line no-unused-expressions
+  textContentCounter.value
+
+  const content = await rpc.getTextAssetContent(asset.value.filePath)
+  newTextContent.value = content
+  return content
 })
+
+async function saveTextContent() {
+  if (textContent.value !== newTextContent.value) {
+    try {
+      await rpc.writeStaticAsset(await ensureDevAuthToken(), asset.value.filePath, newTextContent.value)
+      editDialog.value = false
+      textContentCounter.value++
+      showNotification({
+        message: 'Updated',
+        icon: 'i-carbon-checkmark',
+        classes: 'text-green',
+      })
+    }
+    catch (error) {
+      showNotification({
+        message: 'Something went wrong!',
+        icon: 'i-carbon-warning',
+        classes: 'text-red',
+      })
+    }
+  }
+}
 
 const config = useServerConfig()
 const hasNuxtImage = computed(() => {
@@ -267,6 +298,9 @@ async function renameAsset() {
       <NButton :to="asset.publicPath" download target="_blank" icon="carbon-download" n="green">
         Download
       </NButton>
+      <NButton v-if="asset.type === 'text'" icon="carbon-edit" n="cyan" @click="editDialog = !editDialog">
+        Edit
+      </NButton>
       <NButton icon="carbon-text-annotation-toggle" n="blue" @click="renameDialog = !renameDialog">
         Rename
       </NButton>
@@ -311,6 +345,24 @@ async function renameAsset() {
         </NButton>
         <NButton icon="carbon-text-annotation-toggle" n="blue" @click="renameAsset">
           Rename
+        </NButton>
+      </div>
+    </div>
+  </NDialog>
+  <NDialog v-if="asset.type === 'text'" v-model="editDialog">
+    <div flex="~ col gap-4" min-h-full w-full of-hidden p4>
+      <textarea
+        v-model="newTextContent"
+        placeholder="Item value..."
+        class="h-lg w-xl of-auto rounded-lg p-4 text-sm font-mono outline-none"
+        @keydown.enter="saveTextContent"
+      />
+      <div flex justify-end gap-4>
+        <NButton icon="carbon-close" @click="editDialog = false">
+          Cancel
+        </NButton>
+        <NButton icon="carbon:save" n="primary" @click="saveTextContent">
+          save
         </NButton>
       </div>
     </div>

@@ -56,7 +56,8 @@ export interface ServerFunctions {
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
   writeStaticAssets(token: string, file: { name: string; data: string }[], path: string): Promise<string[]>
-  deleteStaticAsset(token: string, file: string): Promise<void>
+  writeStaticAsset(token: string, filepath: string, data: string): Promise<void>
+  deleteStaticAsset(token: string, filepath: string): Promise<void>
   renameStaticAsset(token: string, oldPath: string, newPath: string): Promise<void>
 
   // Actions
