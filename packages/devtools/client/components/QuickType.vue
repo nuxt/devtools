@@ -33,7 +33,7 @@ const generatedJson = computedAsync(async () => {
   const result = await quicktype({
     inputData,
     lang: selectedLang.value,
-    rendererOptions: options.value?.reduce((acc, cur) => {
+    rendererOptions: options.value?.reduce((acc: any, cur: any) => {
       acc[cur.name] = cur.defaultValue
       return acc
     }, {} as any),
@@ -46,13 +46,10 @@ const shikiLanguage = computed<Lang>(() => {
   const lang = selectedLang.value.toLocaleLowerCase()
   if (lang.startsWith('javascript'))
     return 'javascript'
-
   else if (lang.startsWith('json'))
     return 'json'
-
   else if (lang.startsWith('typescript'))
     return 'typescript'
-
   else
     return lang as Lang
 })
@@ -68,41 +65,56 @@ watch(selectedLang, () => {
 function toggleDrawer() {
   drawer.value = !drawer.value
 }
+
+const copy = useCopy()
+
+function copyToClipboard() {
+  copy(generatedJson.value)
+}
 </script>
 
 <template>
   <div>
     <slot name="button" :click="toggleDrawer">
-      <NIconButton title="Generate Types" icon="logos-typescript-icon" @click="toggleDrawer()" />
+      <NIconButton
+        v-tooltip="'Generate Data Schema'"
+        title="Generate Data Schema"
+        icon="carbon:container-services" @click="toggleDrawer()"
+      />
     </slot>
     <Teleport v-if="language" to="body">
-      <DrawerRight v-model="drawer" auto-close md-w-xl n-code-block @close="drawer = false">
+      <DrawerRight v-model="drawer" auto-close md-w-2xl n-code-block @close="drawer = false">
         <div border="b base" flex="~ items-center gap-2" sticky left-0 right-0 top-0 z-1 p3 bg-base>
+          <p mr-2>
+            Schema
+          </p>
           <NSelect v-model="selectedLang" n="xs primary">
             <option v-for="lang of languages" :key="lang.displayName">
               {{ lang.displayName }}
             </option>
           </NSelect>
-          <NDropdown v-if="options" n="sm lime">
+          <NDropdown v-if="options?.length" n="sm lime">
             <template #trigger="{ click }">
               <NIconButton icon="carbon-settings" p3.1 border="~ base" @click="click()" />
               <span v-if="options" flex="~ items-center justify-center" absolute bottom--1 right--2 h-4 w-4 rounded-full bg-lime:30 text-8px>
                 {{ options.length }}
               </span>
             </template>
-            <div flex="~ col gap-2" h-sm w-xs of-auto p2>
+            <div flex="~ col" w-100 of-auto py2>
               <NSwitch
                 v-for="item, index of options"
                 :key="item.name"
                 v-model="options[index].defaultValue"
-                flex="~ gap-2" rounded px2 py3
+                flex="~ gap-2" rounded px2 py2
               >
-                <span capitalize op75>
+                <span text-xs capitalize op75>
                   {{ item.description }}
                 </span>
               </NSwitch>
             </div>
           </NDropdown>
+          <div flex-auto />
+          <NIconButton icon="carbon-copy" border="~ base" mr-6 p3.1 @click="copyToClipboard()" />
         </div>
         <NCodeBlock v-if="generatedJson" :lang="shikiLanguage" :code="generatedJson" />
       </DrawerRight>

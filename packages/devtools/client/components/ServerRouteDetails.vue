@@ -455,7 +455,6 @@ watchEffect(() => {
     </NLoading>
     <template v-else>
       <div border="b base" flex="~ gap2" items-center px4 py2>
-        <QuickType :input="responseContent" />
         <div>Response</div>
         <Badge
           v-if="response.error"
@@ -474,6 +473,10 @@ watchEffect(() => {
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
+        <LazyQuickType
+          v-if="response.contentType === 'application/json'"
+          :input="responseContent"
+        />
         <div flex-auto />
         <div op50>
           Request finished in

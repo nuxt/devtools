@@ -51,7 +51,7 @@ const rendered = computed(() => {
 .n-code-block-lines .shiki code .line::before {
   content: counter(step);
   counter-increment: step;
-  width: 2rem;
+  width: 2.5rem;
   padding-right: 0.5rem;
   margin-right: 0.5rem;
   display: inline-block;
