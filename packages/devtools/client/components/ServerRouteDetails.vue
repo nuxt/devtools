@@ -473,6 +473,10 @@ watchEffect(() => {
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
+        <DataSchemaButton
+          v-if="response.contentType === 'application/json'"
+          :getter="() => ({ input: responseContent })"
+        />
         <div flex-auto />
         <div op50>
           Request finished in
