@@ -83,10 +83,11 @@ async function uploadFiles() {
       reader.onload = () => resolve(reader.result as string)
     }) as string
     // TODO: add validation
-    const data = result.split(';base64,').pop() as string
+    const content = result.split(';base64,').pop() as string
     readyFiles.push({
-      name: file.name,
-      data,
+      path: file.name,
+      encoding: 'base64' as BufferEncoding,
+      content,
     })
   }
   await rpc.writeStaticAssets(await ensureDevAuthToken(), [...readyFiles], props.folder).then(() => {

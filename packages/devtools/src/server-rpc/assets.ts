@@ -89,34 +89,34 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
         return undefined
       }
     },
-    async writeStaticAssets(token: string, files: { name: string; data: string }[], path: string) {
+    async writeStaticAssets(token: string, files: { path: string; content: string; encoding?: BufferEncoding; update?: boolean }[], folder: string) {
       await ensureDevAuthToken(token)
 
-      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + path)
+      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
 
       return await Promise.all(
-        files.map(async ({ name, data }) => {
-          let dir = resolve(baseDir, name)
-          try {
-            await fsp.stat(dir)
-            const ext = dir.split('.').pop() as string
-            const base = dir.slice(0, dir.length - ext.length - 1)
-            let i = 1
-            while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
-              i++
-            dir = `${base}-${i}.${ext}`
+        files.map(async ({ path, content, encoding, update }) => {
+          let dir = resolve(baseDir, path)
+          if (!update) {
+            try {
+              await fsp.stat(dir)
+              const ext = dir.split('.').pop() as string
+              const base = dir.slice(0, dir.length - ext.length - 1)
+              let i = 1
+              while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
+                i++
+              dir = `${base}-${i}.${ext}`
+            }
+            catch (err) {
+              // Ignore error if file doesn't exist
+            }
           }
-          catch (err) {
-            // Ignore error if file doesn't exist
-          }
-          await fsp.writeFile(dir, data, 'base64')
+          await fsp.writeFile(dir, content, {
+            encoding: encoding ?? 'utf-8',
+          })
           return dir
         }),
       )
-    },
-    async writeStaticAsset(token: string, path: string, data: string) {
-      await ensureDevAuthToken(token)
-      return await fsp.writeFile(path, data, 'utf-8')
     },
     async deleteStaticAsset(token: string, path: string) {
       await ensureDevAuthToken(token)

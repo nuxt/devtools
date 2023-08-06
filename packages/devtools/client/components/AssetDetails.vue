@@ -35,7 +35,11 @@ const textContent = computedAsync(async () => {
 async function saveTextContent() {
   if (textContent.value !== newTextContent.value) {
     try {
-      await rpc.writeStaticAsset(await ensureDevAuthToken(), asset.value.filePath, newTextContent.value)
+      await rpc.writeStaticAssets(await ensureDevAuthToken(), [{
+        path: asset.value.path,
+        content: newTextContent.value,
+        update: true,
+      }], '')
       editDialog.value = false
       textContentCounter.value++
       showNotification({
@@ -203,6 +207,8 @@ async function renameAsset() {
       </div>
       <div x-divider />
     </div>
+
+    {{ asset }}
 
     <table max-w-full w-full table-fixed>
       <tbody>
