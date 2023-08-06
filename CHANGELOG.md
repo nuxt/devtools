@@ -1,3 +1,21 @@
+## [0.7.5](https://github.com/nuxt/devtools/compare/v0.7.4...v0.7.5) (2023-08-06)
+
+
+### Bug Fixes
+
+* add AuthRequiredPanel to AuthConfirmDialog ([#367](https://github.com/nuxt/devtools/issues/367)) ([ce53651](https://github.com/nuxt/devtools/commit/ce53651d24def0803e79526a122bc478247cbf60))
+* requestForAuth devServer host ([#357](https://github.com/nuxt/devtools/issues/357)) ([5e89ce8](https://github.com/nuxt/devtools/commit/5e89ce85c8da655d46352078cc0fd6c6078715ed))
+* **server-routes:** clear error onResponse ([#356](https://github.com/nuxt/devtools/issues/356)) ([313fa1b](https://github.com/nuxt/devtools/commit/313fa1b2ec5bc111613a81c971a89742b7bf7bef))
+
+
+### Features
+
+* add tooltip to buttons ([#359](https://github.com/nuxt/devtools/issues/359)) ([4a29829](https://github.com/nuxt/devtools/commit/4a298296c7029ba33a675f1f2210d69d03d03faa))
+* minimize panel on inactive ([#361](https://github.com/nuxt/devtools/issues/361)) ([2b92663](https://github.com/nuxt/devtools/commit/2b92663343657606ee5debe10d745b3e04ea1059))
+* quicktype ([#351](https://github.com/nuxt/devtools/issues/351)) ([41ff4ad](https://github.com/nuxt/devtools/commit/41ff4adddaf4faca1608ffc61bd2161c7d497050))
+
+
+
 ## [0.7.4](https://github.com/nuxt/devtools/compare/v0.7.3...v0.7.4) (2023-08-01)
 
 
