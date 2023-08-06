@@ -3,7 +3,7 @@ import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import { debounce } from 'perfect-debounce'
 import fg from 'fast-glob'
-import type { AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
@@ -89,15 +89,15 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
         return undefined
       }
     },
-    async writeStaticAssets(token: string, files: { path: string; content: string; encoding?: BufferEncoding; update?: boolean }[], folder: string) {
+    async writeStaticAssets(token: string, files: AssetEntry[], folder: string) {
       await ensureDevAuthToken(token)
 
       const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
 
       return await Promise.all(
-        files.map(async ({ path, content, encoding, update }) => {
+        files.map(async ({ path, content, encoding, override }) => {
           let dir = resolve(baseDir, path)
-          if (!update) {
+          if (!override) {
             try {
               await fsp.stat(dir)
               const ext = dir.split('.').pop() as string

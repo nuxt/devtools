@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { AssetEntry } from '~/../src/types'
+
 const props = defineProps({
   folder: {
     type: String,
@@ -75,7 +77,7 @@ async function uploadFiles() {
   if (wsConnecting.value || wsError.value)
     return
 
-  const readyFiles = []
+  const uploadFiles: AssetEntry[] = []
   for (const file of files.value) {
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -84,13 +86,13 @@ async function uploadFiles() {
     }) as string
     // TODO: add validation
     const content = result.split(';base64,').pop() as string
-    readyFiles.push({
+    uploadFiles.push({
       path: file.name,
-      encoding: 'base64' as BufferEncoding,
+      encoding: 'base64',
       content,
     })
   }
-  await rpc.writeStaticAssets(await ensureDevAuthToken(), [...readyFiles], props.folder).then(() => {
+  await rpc.writeStaticAssets(await ensureDevAuthToken(), [...uploadFiles], props.folder).then(() => {
     close()
     showNotification({
       message: 'Files uploaded successfully!',

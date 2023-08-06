@@ -38,7 +38,7 @@ async function saveTextContent() {
       await rpc.writeStaticAssets(await ensureDevAuthToken(), [{
         path: asset.value.path,
         content: newTextContent.value,
-        update: true,
+        override: true,
       }], '')
       editDialog.value = false
       textContentCounter.value++
