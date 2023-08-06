@@ -2,7 +2,7 @@ import type { InstallModuleReturn, ModuleActionType, ModuleStaticInfo } from '..
 
 export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
 
-export const AuthComfirm = createTemplatePromise<boolean>()
+export const AuthConfirm = createTemplatePromise<boolean>()
 
 interface RestartDialog {
   id: string
