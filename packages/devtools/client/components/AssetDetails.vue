@@ -208,8 +208,6 @@ async function renameAsset() {
       <div x-divider />
     </div>
 
-    {{ asset }}
-
     <table max-w-full w-full table-fixed>
       <tbody>
         <tr>
