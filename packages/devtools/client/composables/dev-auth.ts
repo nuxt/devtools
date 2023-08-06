@@ -31,33 +31,8 @@ export async function ensureDevAuthToken() {
   if (isDevAuthed.value)
     return devAuthToken.value!
 
-  if (!devAuthToken.value) {
-    const info = new UAParser(navigator.userAgent).getResult()
-    const desc = [
-      info.browser.name,
-      info.browser.version,
-      '|',
-      info.os.name,
-      info.os.version,
-      info.device.type,
-    ].filter(i => i).join(' ')
-    rpc.requestForAuth(desc)
-
-    const result = await Promise.race([
-      AuthComfirm.start(),
-      until(devAuthToken.value).toBeTruthy(),
-    ])
-
-    if (result === false) {
-      // @unocss-include
-      showNotification({
-        message: 'Action canceled',
-        icon: 'carbon-close',
-        classes: 'text-orange',
-      })
-      throw new Error('User canceled auth')
-    }
-  }
+  if (!devAuthToken.value)
+    await authConfirmAction()
 
   isDevAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
   if (!isDevAuthed.value) {
@@ -67,8 +42,37 @@ export async function ensureDevAuthToken() {
       icon: 'i-carbon-warning-alt',
       classes: 'text-red',
     })
+    await authConfirmAction()
     throw new Error('Invalid auth token')
   }
 
   return devAuthToken.value!
+}
+
+async function authConfirmAction() {
+  const info = new UAParser(navigator.userAgent).getResult()
+  const desc = [
+    info.browser.name,
+    info.browser.version,
+    '|',
+    info.os.name,
+    info.os.version,
+    info.device.type,
+  ].filter(i => i).join(' ')
+  rpc.requestForAuth(desc)
+
+  const result = await Promise.race([
+    AuthConfirm.start(),
+    until(devAuthToken.value).toBeTruthy(),
+  ])
+
+  if (result === false) {
+    // @unocss-include
+    showNotification({
+      message: 'Action canceled',
+      icon: 'carbon-close',
+      classes: 'text-orange',
+    })
+    throw new Error('User canceled auth')
+  }
 }
