@@ -3,7 +3,7 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
+import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 import type { AnalyzeBuildsInfo } from './analyze-build'
@@ -55,7 +55,7 @@ export interface ServerFunctions {
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
-  writeStaticAssets(token: string, file: { path: string; content: string; encoding?: BufferEncoding; update?: boolean }[], folder: string): Promise<string[]>
+  writeStaticAssets(token: string, file: AssetEntry[], folder: string): Promise<string[]>
   deleteStaticAsset(token: string, filepath: string): Promise<void>
   renameStaticAsset(token: string, oldPath: string, newPath: string): Promise<void>
 
