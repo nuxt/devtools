@@ -5,7 +5,13 @@ import { AuthConfirm } from '~/composables/dialog'
 <template>
   <AuthConfirm v-slot="{ resolve }">
     <NDialog :model-value="!isDevAuthed" class="border-none" @close="resolve(false)">
-      <AuthRequiredPanel />
+      <AuthRequiredPanel>
+        <template #actions>
+          <NButton @click="resolve(false)">
+            Cancel
+          </NButton>
+        </template>
+      </AuthRequiredPanel>
     </NDialog>
   </AuthConfirm>
 </template>

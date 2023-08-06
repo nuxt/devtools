@@ -55,9 +55,12 @@ async function input() {
           />
           <NIconButton border="~ base" hover="border-primary text-green" p3.8 icon="i-carbon-arrow-right" @click="input" />
         </form>
-        <NButton disabled icon="i-carbon-time">
-          Waiting for authorization...
-        </NButton>
+        <div flex="~ gap-2">
+          <slot name="actions" />
+          <NButton disabled icon="i-carbon-time">
+            Waiting for authorization...
+          </NButton>
+        </div>
       </div>
     </NCard>
   </NPanelGrids>
