@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.7.4",
   "private": true,
-  "packageManager": "pnpm@8.6.11",
+  "packageManager": "pnpm@8.6.12",
   "scripts": {
     "build": "pnpm -r --filter=\"./packages/**/*\" run build",
     "stub": "pnpm -r run stub",
@@ -18,14 +18,14 @@
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.39.8",
+    "@antfu/eslint-config": "^0.40.0",
     "@antfu/ni": "^0.21.5",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "^0.4.0",
     "@nuxt/schema": "^3.6.5",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^20.4.5",
+    "@types/node": "^20.4.8",
     "@types/pacote": "^11.1.5",
     "@types/wait-on": "^5.3.1",
     "@types/which": "^3.0.0",
