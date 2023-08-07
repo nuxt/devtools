@@ -440,7 +440,7 @@ onMounted(() => {
   top: 0;
   transform: translate(-50%, -50%);
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   overflow: hidden;
   align-items: center;
   gap: 2px;
