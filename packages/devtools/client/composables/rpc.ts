@@ -44,11 +44,12 @@ async function connectVite() {
   // @ts-expect-error no types
 
   let base = window.__NUXT__.config?.app?.baseURL
+  const buildAssetsDir = window.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
   if (base && !base.endsWith('/'))
     base += '/'
   const hot = await tryCreateHotContext(undefined, [
     ...(base
-      ? [`${base}_nuxt/`, base]
+      ? [`${base}${buildAssetsDir}/`, base]
       : []),
     '/_nuxt/',
     '/',
