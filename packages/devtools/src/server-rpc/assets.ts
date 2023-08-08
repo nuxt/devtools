@@ -3,7 +3,7 @@ import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import { debounce } from 'perfect-debounce'
 import fg from 'fast-glob'
-import type { AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
@@ -89,27 +89,31 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
         return undefined
       }
     },
-    async writeStaticAssets(token: string, files: { name: string; data: string }[], path: string) {
+    async writeStaticAssets(token: string, files: AssetEntry[], folder: string) {
       await ensureDevAuthToken(token)
 
-      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + path)
+      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
 
       return await Promise.all(
-        files.map(async ({ name, data }) => {
-          let dir = resolve(baseDir, name)
-          try {
-            await fsp.stat(dir)
-            const ext = dir.split('.').pop() as string
-            const base = dir.slice(0, dir.length - ext.length - 1)
-            let i = 1
-            while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
-              i++
-            dir = `${base}-${i}.${ext}`
+        files.map(async ({ path, content, encoding, override }) => {
+          let dir = resolve(baseDir, path)
+          if (!override) {
+            try {
+              await fsp.stat(dir)
+              const ext = dir.split('.').pop() as string
+              const base = dir.slice(0, dir.length - ext.length - 1)
+              let i = 1
+              while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
+                i++
+              dir = `${base}-${i}.${ext}`
+            }
+            catch (err) {
+              // Ignore error if file doesn't exist
+            }
           }
-          catch (err) {
-            // Ignore error if file doesn't exist
-          }
-          await fsp.writeFile(dir, data, 'base64')
+          await fsp.writeFile(dir, content, {
+            encoding: encoding ?? 'utf-8',
+          })
           return dir
         }),
       )
