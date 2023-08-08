@@ -33,12 +33,14 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
       if (!nitro)
         return []
       return [
-        ...nitro.scannedHandlers.map(item => ({
-          route: item.route,
-          filepath: item.handler,
-          method: item.method,
-          type: item.route?.startsWith('/api') ? 'api' : 'route',
-        })),
+        ...nitro.scannedHandlers
+          .filter(item => !item.middleware)
+          .map(item => ({
+            route: item.route,
+            filepath: item.handler,
+            method: item.method,
+            type: item.route?.startsWith('/api') ? 'api' : 'route',
+          })),
         ...nitro.options.handlers
           .filter(item => !item.route?.startsWith('/_nitro') && !item.route?.startsWith('/__nuxt') && !item.middleware)
           .map(item => ({
