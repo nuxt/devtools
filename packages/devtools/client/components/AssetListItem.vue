@@ -41,6 +41,7 @@ const icon = computed(() => {
       flex="~ gap-2" w-full items-center hover="bg-active" px4 py1
       :style="{ paddingLeft: `calc(1rem + ${index * 1.5}em)` }"
       :class="{ 'bg-active': !isCollection && model?.filePath === item?.filePath }"
+      border="b base"
       @click="isCollection ? open = !open : model = item"
     >
       <div :class="icon" />
@@ -49,7 +50,6 @@ const icon = computed(() => {
       </span>
       <NIcon v-if="isCollection" icon="carbon:chevron-right" :transform-rotate="open ? 90 : 0" transition />
     </button>
-    <div x-divider />
     <slot v-if="open">
       <AssetListItem
         v-for="subItem in item?.children"

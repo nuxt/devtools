@@ -177,6 +177,13 @@ export interface AssetInfo {
   mtime: number
 }
 
+export interface AssetEntry {
+  path: string
+  content: string
+  encoding?: BufferEncoding
+  override?: boolean
+}
+
 export interface CodeSnippet {
   code: string
   lang: string
