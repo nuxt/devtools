@@ -64,7 +64,7 @@ const byTree = computed(() => {
 
 const selected = ref<AssetInfo>()
 
-const view = ref<'list' | 'grid'>('grid')
+const { view } = useDevToolsOptions('assets')
 
 function toggleView() {
   view.value = view.value === 'list' ? 'grid' : 'list'
