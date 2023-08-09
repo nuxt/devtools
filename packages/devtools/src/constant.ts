@@ -46,4 +46,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
       headers: [],
     },
   },
+  assets: {
+    view: 'grid',
+  },
 }
