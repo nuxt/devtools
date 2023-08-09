@@ -16,21 +16,25 @@ export default defineNuxtPlugin(() => {
     rpc.openInEditor(url)
   }
 
-  window.__NUXT_DEVTOOLS_VIEW__ = {
-    setClient(_client) {
-      if (client.value === _client)
-        return
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_VIEW__', {
+    value: <typeof window['__NUXT_DEVTOOLS_VIEW__']>{
+      setClient(_client) {
+        if (client.value === _client)
+          return
 
-      client.value = _client
+        client.value = _client
 
-      _client.hooks.hook('host:update:reactivity', onUpdateReactivity)
-      _client.hooks.hook('host:inspector:update', onInspectorUpdate)
-      _client.hooks.hook('host:inspector:click', onInspectorClick)
+        _client.hooks.hook('host:update:reactivity', onUpdateReactivity)
+        _client.hooks.hook('host:inspector:update', onInspectorUpdate)
+        _client.hooks.hook('host:inspector:click', onInspectorClick)
 
-      // eslint-disable-next-line no-console
-      console.log('[nuxt-devtools] Client connected', _client)
+        // eslint-disable-next-line no-console
+        console.log('[nuxt-devtools] Client connected', _client)
+      },
     },
-  }
+    enumerable: false,
+    configurable: true,
+  })
 
   router.afterEach(() => {
     const path = router.currentRoute.value.path
