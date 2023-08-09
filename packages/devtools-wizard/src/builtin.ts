@@ -22,7 +22,7 @@ function findNuxtConfig(cwd: string) {
 }
 
 function printOutManual(value: boolean) {
-  consola.info(c.yellow('To manually enable Nuxt Devtools, add the following to your Nuxt config:'))
+  consola.info(c.yellow('To manually enable Nuxt DevTools, add the following to your Nuxt config:'))
   consola.info(c.cyan(`\n  devtools: { enabled: ${value} }\n`))
 }
 
@@ -51,7 +51,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
     const generated = mod.generate().code
 
     if (source.trim() === generated.trim()) {
-      consola.info(c.yellow(`Nuxt Devtools is already ${value ? 'enabled' : 'disabled'}`))
+      consola.info(c.yellow(`Nuxt DevTools is already ${value ? 'enabled' : 'disabled'}`))
     }
     else {
       consola.log('')
@@ -88,7 +88,7 @@ export async function enable(cwd: string) {
   if (await toggleConfig(cwd, true)) {
     // disable global devtools
     await import('./global').then(r => r.disableSilently(cwd))
-    consola.success(c.green('Nuxt Devtools is enabled! Restart your Nuxt app to start using it.'))
+    consola.success(c.green('Nuxt DevTools is enabled! Restart your Nuxt app to start using it.'))
   }
 }
 
@@ -96,7 +96,7 @@ export async function disable(cwd: string) {
   if (await toggleConfig(cwd, false)) {
     // disable global devtools
     await import('./global').then(r => r.disableSilently(cwd))
-    consola.success('Nuxt Devtools disabled for this project.')
+    consola.success('Nuxt DevTools disabled for this project.')
   }
 }
 
