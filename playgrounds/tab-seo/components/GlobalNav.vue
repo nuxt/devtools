@@ -1,6 +1,18 @@
+<script setup lang="ts">
+const nd = useNuxtDevTools()
+</script>
+
 <template>
   <div px10 pt10 op50>
     Click to navigate and see the SEO tab
+    <template v-if="nd">
+      <button
+        border="~ rounded gray/30" ml2 px2 hover="border-green text-green"
+        @click="nd.devtools.navigate('/modules/open-graph')"
+      >
+        Open devtools
+      </button>
+    </template>
   </div>
   <div px10 py5 flex="~ gap-4">
     <NuxtLink to="/" active-class="text-green">

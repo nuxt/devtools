@@ -2,7 +2,7 @@
  * Local development module entry
  *
  * Change `@nuxt/devtools` to the absolute path of this module in any of your Nuxt projects,
- * allows you to try Nuxt Devtools locally directly from the source code. HMR is supported
+ * allows you to try Nuxt DevTools locally directly from the source code. HMR is supported
  * for the front-end client.
  *
  * For example, if you clone this repo to `/users/me/nuxt-devtools`, update your nuxt config:
@@ -70,14 +70,14 @@ export default defineNuxtModule<ModuleOptions>({
         },
         {
           id: 'devtools:local',
-          name: 'Nuxt Devtools Local',
+          name: 'Nuxt DevTools Local',
           icon: 'logos-nuxt-icon',
         },
         nuxt,
       )
     })
 
-    logger.info(`Nuxt Devtools is using local client from \`${clientDir}\``)
+    logger.info(`Nuxt DevTools is using local client from \`${clientDir}\``)
 
     return enableModule(options, nuxt)
   },

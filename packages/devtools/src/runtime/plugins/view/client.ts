@@ -102,6 +102,8 @@ export async function setupDevToolsClient({
     },
   })
 
+  window.__NUXT_DEVTOOLS_HOST__ = client
+
   let iframe: HTMLIFrameElement | undefined
 
   function syncClient() {
@@ -161,7 +163,7 @@ export async function setupDevToolsClient({
         else if (retry-- <= 0) {
           clearInterval(interval)
           // eslint-disable-next-line prefer-promise-reject-errors
-          reject('Nuxt Devtools client injection failed')
+          reject('Nuxt DevTools client injection failed')
         }
       }, timeout)
     })
