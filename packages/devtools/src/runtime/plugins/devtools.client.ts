@@ -25,7 +25,12 @@ export default defineNuxtPlugin((nuxt: any) => {
     console.error(e)
   }
 
-  const timeMetric = window.__NUXT_DEVTOOLS_TIME_METRIC__ = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
+  const timeMetric = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
+    value: timeMetric,
+    enumerable: false,
+    configurable: true,
+  })
   timeMetric.pluginInit = Date.now()
 
   const clientHooks = setupHooksDebug(nuxt.hooks)

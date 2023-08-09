@@ -159,4 +159,7 @@ export interface NuxtDevToolsOptions {
     view: 'tree' | 'list'
     inputDefaults: Record<string, ServerRouteInput[]>
   }
+  assets: {
+    view: 'grid' | 'list'
+  }
 }

@@ -22,18 +22,23 @@ export function initTimelineMetrics(): TimelineMetrics {
   if (window.__NUXT_DEVTOOLS_TIMELINE_METRICS__)
     return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__
 
-  return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ = reactive(
-    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
-      events: [],
-      nonLiteralSymbol,
-      // TODO: sync with server config
-      options: useObjectStorage('nuxt-devtools-timeline-metrics-options', {
-        enabled: false,
-        stacktrace: true,
-        arguments: true,
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIMELINE_METRICS__', {
+    value: reactive(
+      window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
+        events: [],
+        nonLiteralSymbol,
+        // TODO: sync with server config
+        options: useObjectStorage('nuxt-devtools-timeline-metrics-options', {
+          enabled: false,
+          stacktrace: true,
+          arguments: true,
+        }),
       }),
-    },
-  )
+    enumerable: false,
+    configurable: true,
+  })
+
+  return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__!
 }
 
 const wrapperFunctions = new WeakMap<any, any>()
