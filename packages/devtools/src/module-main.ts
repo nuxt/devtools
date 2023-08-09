@@ -50,7 +50,13 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     config.externals.inline.push(join(runtimeDir, 'nitro'))
     config.virtual = config.virtual || {}
     config.virtual['#nuxt-devtools-inline'] = `export const script = \`
-window.__NUXT_DEVTOOLS_TIME_METRIC__ = window.__NUXT_DEVTOOLS_TIME_METRIC__ || {}
+if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
+    value: {},
+    enumerable: false,
+    configurable: true,
+  })
+}
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 \``
     config.plugins = config.plugins || []
