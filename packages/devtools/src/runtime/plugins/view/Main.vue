@@ -31,7 +31,7 @@ watchEffect(() => {
 const SNAP_THRESHOLD = 2
 
 const vars = computed(() => {
-  const dark = props.client.colorMode.value === 'dark'
+  const dark = props.client.app.colorMode.value === 'dark'
   return {
     '--nuxt-devtools-widget-bg': dark ? '#111' : '#ffffff',
     '--nuxt-devtools-widget-fg': dark ? '#F5F5F5' : '#111',
@@ -285,7 +285,7 @@ const iframeStyle = computed(() => {
 
 const time = computed(() => {
   let type = ''
-  const metric = props.client.loadingTimeMetrics
+  const metric = props.client.metrics.loading()
   let time = -1
   if (metric.pageEnd && metric.pageStart) {
     time = metric.pageEnd - metric.pageStart
@@ -328,7 +328,7 @@ onMounted(() => {
         class="nuxt-devtools-icon-button nuxt-devtools-nuxt-button"
         title="Toggle Nuxt DevTools"
         :style="state.open ? '' : 'filter:saturate(0)'"
-        @click="client.toggle()"
+        @click="client.devtools.toggle()"
       >
         <svg
           viewBox="0 0 324 324" fill="none" xmlns="http://www.w3.org/2000/svg"

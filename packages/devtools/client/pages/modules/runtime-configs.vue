@@ -31,7 +31,7 @@ const privateConfig = computed(() => {
       text="App Config"
       :padding="false"
     >
-      <StateEditor :state="client.appConfig" />
+      <StateEditor :state="client.app.appConfig" />
     </NSectionBlock>
 
     <NSectionBlock

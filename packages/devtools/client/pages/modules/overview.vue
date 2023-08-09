@@ -22,6 +22,7 @@ function goIntro() {
 }
 
 const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
+const metricsLoading = computed(() => client.value?.metrics.loading())
 </script>
 
 <template>
@@ -87,35 +88,35 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
             <div carbon-plug text-3xl />
             <div>{{ config.plugins.length }} plugins</div>
           </NuxtLink>
-          <div v-if="client?.loadingTimeMetrics" pointer-events-none min-w-40 p4 theme-card-lime flex="~ auto gap-6">
+          <div v-if="metricsLoading" pointer-events-none min-w-40 p4 theme-card-lime flex="~ auto gap-6">
             <div i-carbon-time-plot flex-none text-3xl />
             <div grid="~ cols-[auto_auto] gap-x-5 items-center">
-              <template v-if="client.loadingTimeMetrics.ssrStart">
+              <template v-if="metricsLoading.ssrStart">
                 <div text-sm>
                   SSR to full load
                 </div>
                 <div text-right>
-                  {{ formatDuration(client.loadingTimeMetrics.appLoad! - client.loadingTimeMetrics.ssrStart!) }}
+                  {{ formatDuration(metricsLoading.appLoad! - metricsLoading.ssrStart!) }}
                 </div>
               </template>
               <div text-sm>
                 Page load
               </div>
               <div text-right>
-                {{ formatDuration(client.loadingTimeMetrics.appLoad! - client.loadingTimeMetrics.appInit!) }}
+                {{ formatDuration(metricsLoading.appLoad! - metricsLoading.appInit!) }}
               </div>
               <div text-sm>
                 Navigation
               </div>
               <div text-right>
-                {{ formatDuration(client.loadingTimeMetrics.pageEnd! - client.loadingTimeMetrics.pageStart!) }}
+                {{ formatDuration(metricsLoading.pageEnd! - metricsLoading.pageStart!) }}
               </div>
-              <template v-if="client.loadingTimeMetrics.hmrStart">
+              <template v-if="metricsLoading.hmrStart">
                 <div text-sm>
                   HMR
                 </div>
                 <div text-right>
-                  {{ formatDuration(client.loadingTimeMetrics.hmrEnd! - client.loadingTimeMetrics.hmrStart!) }}
+                  {{ formatDuration(metricsLoading.hmrEnd! - metricsLoading.hmrStart!) }}
                 </div>
               </template>
             </div>

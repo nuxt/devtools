@@ -73,11 +73,11 @@ function pinMove(name: string, delta: number) {
 
 // sync devtools options with frame state
 watchEffect(() => {
-  client.value.frameState.value.closeOnOutsideClick = interactionCloseOnOutsideClick.value
+  client.value.app.frameState.value.closeOnOutsideClick = interactionCloseOnOutsideClick.value
 })
 
 watchEffect(() => {
-  client.value.frameState.value.minimizePanelInactive = minimizePanelInactive.value
+  client.value.app.frameState.value.minimizePanelInactive = minimizePanelInactive.value
 })
 </script>
 

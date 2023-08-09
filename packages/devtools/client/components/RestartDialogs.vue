@@ -17,7 +17,7 @@ nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
           if (result) {
             rpc.restartNuxt()
             setTimeout(() => {
-              client.value?.reloadPage()
+              client.value?.app.reload()
             }, 500)
           }
         })
