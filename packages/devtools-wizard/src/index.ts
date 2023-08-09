@@ -24,11 +24,11 @@ async function run() {
 
   consola.log('')
   consola.log(c.bold(c.green(' Nuxt ')))
-  consola.log(`${c.inverse(c.bold(c.green(' Devtools ')))} ${c.green(`v${version}`)} ${c.yellow('(experimental)')}`)
+  consola.log(`${c.inverse(c.bold(c.green(' DevTools ')))} ${c.green(`v${version}`)} ${c.yellow('(experimental)')}`)
   consola.log(`\n${c.gray('Learn more at https://devtools.nuxtjs.org\n')}`)
 
   if (moduleName.endsWith('-edge'))
-    throw new Error('Edge release of Nuxt Devtools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
+    throw new Error('Edge release of Nuxt DevTools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')
 
   const nuxtVersion = await getNuxtVersion(cwd)
   if (!nuxtVersion) {
@@ -40,14 +40,14 @@ async function run() {
   const isDevToolsBuiltIn = semver.gte(nuxtVersion, '3.4.0')
 
   if (command === 'enable') {
-    consola.log(c.green('Enabling Nuxt Devtools...'))
+    consola.log(c.green('Enabling Nuxt DevTools...'))
     if (isDevToolsBuiltIn)
       await import('./builtin').then(r => r.enable(cwd))
     else
       await import('./global').then(r => r.enable(cwd))
   }
   else if (command === 'disable') {
-    consola.log(c.magenta('Disabling Nuxt Devtools...'))
+    consola.log(c.magenta('Disabling Nuxt DevTools...'))
     if (isDevToolsBuiltIn)
       await import('./builtin').then(r => r.disable(cwd))
     else
