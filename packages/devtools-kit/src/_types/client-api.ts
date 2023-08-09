@@ -73,7 +73,6 @@ export interface NuxtDevtoolsHostClient {
     close(): void
     open(): void
     toggle(): void
-
     reload(): void
     navigate(path: string): void
 
@@ -100,15 +99,15 @@ export interface NuxtDevtoolsHostClient {
   metrics: {
     clientHooks(): HookInfo[]
     clientPlugins(): PluginMetric[] | undefined
+    clientTimeline(): TimelineMetrics | undefined
     loading(): LoadingTimeMetric
-    timeline(): TimelineMetrics | undefined
   }
 
   /**
    * Update client
    * @internal
    */
-  updateClient(): NuxtDevtoolsHostClient
+  syncClient(): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {

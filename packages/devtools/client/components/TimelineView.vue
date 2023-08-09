@@ -6,7 +6,7 @@ const client = useClient()
 const view = ref<'table' | 'list'>('table')
 const selected = ref<TimelineEvent | undefined>()
 
-const metrics = computed(() => client.value?.metrics.timeline())
+const metrics = computed(() => client.value?.metrics.clientTimeline())
 
 function clear() {
   if (metrics.value)

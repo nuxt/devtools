@@ -39,7 +39,7 @@ export async function setupDevToolsClient({
     inspector: getInspectorInstance(),
 
     getIframe,
-    updateClient,
+    syncClient,
 
     devtools: {
       toggle() {
@@ -66,7 +66,7 @@ export async function setupDevToolsClient({
           return
         state.value.open = true
         return nextTick(() => {
-          client.updateClient()
+          client.syncClient()
         })
       },
       async navigate(path: string) {
@@ -97,14 +97,14 @@ export async function setupDevToolsClient({
     metrics: {
       clientPlugins: () => window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
       clientHooks: () => Object.values(clientHooks),
-      timeline: () => timeline,
+      clientTimeline: () => timeline,
       loading: () => timeMetric,
     },
   })
 
   let iframe: HTMLIFrameElement | undefined
 
-  function updateClient() {
+  function syncClient() {
     if (!client.inspector)
       client.inspector = getInspectorInstance()
 
@@ -127,7 +127,7 @@ export async function setupDevToolsClient({
         iframe.src = initialUrl
         iframe.onload = async () => {
           await waitForClientInjection()
-          client.updateClient()
+          client.syncClient()
         }
       }
       catch (e) {
@@ -255,7 +255,7 @@ export async function setupDevToolsClient({
     }
   }
 
-  client.updateClient()
+  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'
