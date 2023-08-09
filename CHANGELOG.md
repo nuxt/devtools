@@ -1,3 +1,22 @@
+## [0.7.6](https://github.com/nuxt/devtools/compare/v0.7.5...v0.7.6) (2023-08-09)
+
+
+### Bug Fixes
+
+* devtools panel justify content ([#369](https://github.com/nuxt/devtools/issues/369)) ([c3272f4](https://github.com/nuxt/devtools/commit/c3272f4eb0be06cd4ccf5d9b52e09bcf16af5380))
+* notification z-index ([#376](https://github.com/nuxt/devtools/issues/376)) ([3867814](https://github.com/nuxt/devtools/commit/3867814caaa26e94b6a4f31a4b234064890fa7ec))
+* resolve DevTools vite loading issue with buildAssetsDir ([#375](https://github.com/nuxt/devtools/issues/375)) ([22bcd0d](https://github.com/nuxt/devtools/commit/22bcd0dda68c8c42b3ce4f5feaa286203c2e3488))
+* **server-routes:** filter middleware from scannedHandlers ([#377](https://github.com/nuxt/devtools/issues/377)) ([09f6da3](https://github.com/nuxt/devtools/commit/09f6da38cedcbd15d23fbccbbe9a97dc5f619a9a))
+
+
+### Features
+
+* **assets:** able to edit text content ([#366](https://github.com/nuxt/devtools/issues/366)) ([1e56198](https://github.com/nuxt/devtools/commit/1e56198e72a9dd0b779679d9095bda2e01e1635f))
+* **assets:** options storage ([#379](https://github.com/nuxt/devtools/issues/379)) ([75512f8](https://github.com/nuxt/devtools/commit/75512f8a5bbf2c0aa63c1b65aa03911787c9e9b6))
+* **docs:** devtools logo ([#380](https://github.com/nuxt/devtools/issues/380)) ([8d34de1](https://github.com/nuxt/devtools/commit/8d34de1617536897b68d0f9d191e4048bfd7613b))
+
+
+
 ## [0.7.5](https://github.com/nuxt/devtools/compare/v0.7.4...v0.7.5) (2023-08-06)
 
 
