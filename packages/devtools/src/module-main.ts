@@ -19,7 +19,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
 
   if (nuxt.options.builder !== '@nuxt/vite-builder') {
-    logger.warn('Nuxt Devtools only supports Vite mode, module is disabled.')
+    logger.warn('Nuxt DevTools only supports Vite mode, module is disabled.')
     return
   }
 
@@ -142,5 +142,5 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     isGlobalInstall: isGlobalInstall(),
   })
 
-  logger.success(`Nuxt Devtools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
+  logger.success(`Nuxt DevTools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
 }
