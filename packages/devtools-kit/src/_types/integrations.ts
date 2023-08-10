@@ -1,5 +1,6 @@
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Import, UnimportMeta } from 'unimport'
+import type { Component } from 'nuxt/schema'
 
 export interface HookInfo {
   name: string
@@ -194,4 +195,10 @@ export interface CodeSnippet {
 export interface ComponentRelationship {
   id: string
   deps: string[]
+}
+
+export interface ComponentWithRelationships {
+  component: Component
+  dependencies?: string[]
+  dependents?: string[]
 }

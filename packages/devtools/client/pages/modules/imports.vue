@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 const config = useServerConfig()
-const onlyUsed = ref(false)
+const filterMode = ref<'all' | 'using' | 'not-used'>('all')
 
 const search = ref('')
 const autoImports = useAutoImports()
@@ -37,9 +37,13 @@ const filtered = computed(() => {
     ? fuse.value.search(search.value).map(i => i.item)
     : functions.value
 
-  if (onlyUsed.value && importsMetadata.value) {
+  if (filterMode.value === 'using' && importsMetadata.value) {
     result = result
       .filter(i => (i.as || i.name) in importsMetadata.value!.injectionUsage)
+  }
+  else if (filterMode.value === 'not-used' && importsMetadata.value) {
+    result = result
+      .filter(i => !((i.as || i.name) in importsMetadata.value!.injectionUsage))
   }
 
   const count = {
@@ -72,11 +76,18 @@ const filtered = computed(() => {
 
 <template>
   <div v-if="config" relative h-full of-auto>
-    <Navbar v-model:search="search" pb2>
-      <div v-if="importsMetadata">
-        <NSwitch v-model="onlyUsed" n="primary sm">
-          Show used only
-        </NSwitch>
+    <Navbar v-model:search="search" pb3>
+      <div v-if="importsMetadata" flex="~ gap-2 items-center">
+        <NIcon icon="carbon-filter" op50 />
+        <NSelectTabs
+          v-model="filterMode"
+          n="primary sm"
+          :options="[
+            { label: 'All', value: 'all' },
+            { label: 'Using', value: 'using' },
+            { label: 'Not used', value: 'not-used' },
+          ]"
+        />
       </div>
     </Navbar>
     <NSectionBlock

@@ -1,7 +1,8 @@
 import { relative } from 'pathe'
 import type { Ref } from 'vue'
+import type { Component } from 'nuxt/schema'
+import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import type { AsyncDataOptions } from '#app'
-import type { NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -140,4 +141,21 @@ export function useSessionState<T>(name: string, initialValue: T) {
   return useState(name, () => {
     return useSessionStorage(name, initialValue, { listenToStorageChanges: false })
   })
+}
+
+export function getComponentRelationships(component: Component, relationships?: ComponentRelationship[] | null): ComponentWithRelationships {
+  const dependencies = relationships
+    ?.find(i => i.id === component.filePath)
+    ?.deps
+    ?.map(i => relationships?.find(j => j.id === i)?.id)
+    .filter(Boolean) as string[] | undefined
+  const dependents = relationships
+    ?.filter(i => i.deps.includes(component.filePath))
+    .map(i => i.id)
+
+  return {
+    component,
+    dependencies,
+    dependents,
+  }
 }
