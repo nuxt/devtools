@@ -42,6 +42,14 @@ export interface NuxtDevtoolsClientHooks {
    * Triggers reactivity manually, since Vue won't be reactive across frames)
    */
   'host:update:reactivity': () => void
+  /**
+   * Host action to control the DevTools navigation
+   */
+  'host:action:navigate': (path: string) => void
+  /**
+   * Host action to reload the DevTools
+   */
+  'host:action:reload': () => void
 }
 
 /**
@@ -49,10 +57,9 @@ export interface NuxtDevtoolsClientHooks {
  */
 export interface NuxtDevtoolsHostClient {
   nuxt: NuxtApp
-  appConfig: AppConfig
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
-  colorMode: Ref<'dark' | 'light'>
+  getIframe(): HTMLIFrameElement | undefined
 
   inspector?: {
     instance?: VueInspectorClient
@@ -62,38 +69,45 @@ export interface NuxtDevtoolsHostClient {
     isEnabled: Ref<boolean>
   }
 
-  loadingTimeMetrics: LoadingTimeMetric
-  getClientHooksMetrics(): HookInfo[]
+  devtools: {
+    close(): void
+    open(): void
+    toggle(): void
+    reload(): void
+    navigate(path: string): void
 
-  clientPluginMetrics: PluginMetric[] | undefined
-  clientTimelineMetrics: TimelineMetrics | undefined
+    /**
+     * Popup the DevTools frame into Picture-in-Picture mode
+     *
+     * Requires Chrome 111 with experimental flag enabled.
+     *
+     * Function is undefined when not supported.
+     *
+     * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
+     */
+    popup?(): any
+  }
 
-  reloadPage(): void
+  app: {
+    reload(): void
+    navigate(path: string, hard?: boolean): void
+    appConfig: AppConfig
+    colorMode: Ref<'dark' | 'light'>
+    frameState: Ref<DevToolsFrameState>
+  }
 
-  close(): void
-  open(): void
-  toggle(): void
-
-  /**
-   * Popup the DevTools frame into Picture-in-Picture mode
-   *
-   * Requires Chrome 111 with experimental flag enabled.
-   *
-   * Function is undefined when not supported.
-   *
-   * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-   */
-  popup?(): any
+  metrics: {
+    clientHooks(): HookInfo[]
+    clientPlugins(): PluginMetric[] | undefined
+    clientTimeline(): TimelineMetrics | undefined
+    loading(): LoadingTimeMetric
+  }
 
   /**
    * Update client
    * @internal
    */
-  updateClient(): NuxtDevtoolsHostClient
-
-  getIframe(): HTMLIFrameElement | undefined
-
-  frameState: Ref<DevToolsFrameState>
+  syncClient(): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {

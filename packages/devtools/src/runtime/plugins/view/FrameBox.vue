@@ -34,7 +34,7 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
   if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {
     e.preventDefault()
     props.client.inspector?.disable()
-    props.client.close()
+    props.client.devtools.close()
   }
 })
 

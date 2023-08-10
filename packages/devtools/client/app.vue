@@ -36,7 +36,7 @@ const isUtilityView = computed(() => route.path.startsWith('/__'))
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
 watch(
-  () => client.value?.colorMode.value,
+  () => client.value?.app.colorMode.value,
   (mode) => {
     if (mode)
       colorMode.value = mode
@@ -46,7 +46,7 @@ watch(
 
 addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
-    client.value?.close()
+    client.value?.devtools.close()
     e.preventDefault()
   }
 })
