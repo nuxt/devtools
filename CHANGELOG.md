@@ -1,3 +1,15 @@
+# [0.8.0](https://github.com/nuxt/devtools/compare/v0.7.6...v0.8.0) (2023-08-10)
+
+
+### Features
+
+* **components:** show dependencies and dependents in component details ([7dbc3d1](https://github.com/nuxt/devtools/commit/7dbc3d1e93c8e366a32d006b82b55c67c1203ef1))
+* composables useNuxtDevTools ([#383](https://github.com/nuxt/devtools/issues/383)) ([e74b60c](https://github.com/nuxt/devtools/commit/e74b60cf7b51d5ce842a119eab52d839e58ee8e5))
+* filter for used/unused components, close [#358](https://github.com/nuxt/devtools/issues/358) ([5012012](https://github.com/nuxt/devtools/commit/5012012cb28c4b5d246ea7fc9b863db34fb3f7e7))
+* **ui-kit:** add `NSelectTab` component ([509a1ec](https://github.com/nuxt/devtools/commit/509a1ecefd8c22dd9801ecc063a24b2295c93943))
+
+
+
 ## [0.7.6](https://github.com/nuxt/devtools/compare/v0.7.5...v0.7.6) (2023-08-09)
 
 
