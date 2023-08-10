@@ -10,6 +10,7 @@ definePageMeta({
 
 const client = useClient()
 const components = useComponents()
+const relationships = useComponentsRelationships()
 
 const { componentsView: view } = useDevToolsUIOptions()
 
@@ -29,6 +30,7 @@ function toggleView() {
     <component
       :is="view === 'list' ? ComponentsList : ComponentsGraph"
       :components="components"
+      :relationships="relationships"
     >
       <div flex-none flex="~ gap3">
         <NIconButton

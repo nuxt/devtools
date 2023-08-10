@@ -6,6 +6,7 @@ import type { ComponentRelationship } from '~/../src/types'
 
 const props = defineProps<{
   components: Component[]
+  relationships?: ComponentRelationship[] | null
 }>()
 
 const container = ref<HTMLElement>()
@@ -23,7 +24,6 @@ const selected = ref<{
 const pages = useServerPages()
 const config = useServerConfig()
 const layouts = useLayouts()
-const relationships = useComponentsRelationships()
 
 const {
   componentsGraphShowNodeModules: showNodeModules,
@@ -36,10 +36,9 @@ const {
 const selectedFilter = ref<ComponentRelationship>()
 
 const entries = computed(() => {
-  const relations = (relationships.value || [])
+  const relations = (props.relationships || [])
   if (selectedFilter.value) {
     const set = new Set<ComponentRelationship>()
-    relations.find(i => i.id === selected.value?.id)
     function addToSet(rel?: ComponentRelationship) {
       if (!rel || set.has(rel))
         return
@@ -126,6 +125,20 @@ const data = computed<Data>(() => {
     nodes,
     edges,
   }
+})
+
+const selectedDependencies = computed(() => {
+  if (!selected.value?.component)
+    return []
+  const deps = props.relationships?.find(i => i.id === selected.value?.component?.filePath)?.deps
+  return deps?.map(i => props.relationships?.find(j => j.id === i)?.id).filter(Boolean) as string[]
+})
+
+const selectedDependents = computed(() => {
+  if (!selected.value?.component)
+    return []
+  const deps = props.relationships?.filter(i => i.deps.includes(selected.value!.component!.filePath!))
+  return deps?.map(i => props.relationships?.find(j => j.id === i.id)?.id).filter(Boolean) as string[]
 })
 
 onMounted(() => {
@@ -252,9 +265,13 @@ function setFilter() {
       w-80
       @close="selected = undefined"
     >
-      <div v-if="selected && selected.component" p4 pr10 pt4 flex="~ col gap4">
-        <ComponentDetails :component="selected.component" />
-        <div>
+      <div v-if="selected && selected.component" py4 pt4 flex="~ col">
+        <ComponentDetails
+          :component="selected.component"
+          :dependencies="selectedDependencies"
+          :dependents="selectedDependents"
+        />
+        <div border="t base" p4>
           <NButton n="primary solid" @click="setFilter()">
             Filter to this component
           </NButton>
