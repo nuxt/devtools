@@ -27,6 +27,8 @@ export default defineNuxtPlugin(() => {
         _client.hooks.hook('host:update:reactivity', onUpdateReactivity)
         _client.hooks.hook('host:inspector:update', onInspectorUpdate)
         _client.hooks.hook('host:inspector:click', onInspectorClick)
+        _client.hooks.hook('host:action:reload', () => location.reload())
+        _client.hooks.hook('host:action:navigate', (path: string) => router.push(path))
 
         // eslint-disable-next-line no-console
         console.log('[nuxt-devtools] Client connected', _client)

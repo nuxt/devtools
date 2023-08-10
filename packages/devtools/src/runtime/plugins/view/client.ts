@@ -35,56 +35,78 @@ export async function setupDevToolsClient({
 
   const client: NuxtDevtoolsHostClient = shallowReactive({
     nuxt: markRaw(nuxt as any),
-    appConfig: useAppConfig() as any,
     hooks: createHooks(),
-    getClientHooksMetrics: () => Object.values(clientHooks),
-    clientPluginMetrics: window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
-    clientTimelineMetrics: timeline,
-    loadingTimeMetrics: timeMetric,
-    reloadPage() {
-      location.reload()
-    },
-    toggle() {
-      if (state.value.open)
-        client.close()
-      else
-        client.open()
-    },
-    close() {
-      if (!state.value.open)
-        return
-      state.value.open = false
-      if (popupWindow.value) {
-        try {
-          popupWindow.value.close()
-        }
-        catch (e) {
-        }
-        popupWindow.value = null
-      }
-    },
-    open() {
-      if (state.value.open)
-        return
-      state.value.open = true
-      nextTick(() => {
-        client.updateClient()
-      })
-    },
     inspector: getInspectorInstance(),
-    colorMode,
+
     getIframe,
-    updateClient,
-    frameState: state,
+    syncClient,
+
+    devtools: {
+      toggle() {
+        if (state.value.open)
+          client.devtools.close()
+        else
+          client.devtools.open()
+      },
+      close() {
+        if (!state.value.open)
+          return
+        state.value.open = false
+        if (popupWindow.value) {
+          try {
+            popupWindow.value.close()
+          }
+          catch (e) {
+          }
+          popupWindow.value = null
+        }
+      },
+      open() {
+        if (state.value.open)
+          return
+        state.value.open = true
+        return nextTick(() => {
+          client.syncClient()
+        })
+      },
+      async navigate(path: string) {
+        if (!state.value.open)
+          await client.devtools.open()
+        await client.hooks.callHook('host:action:navigate', path)
+      },
+      async reload() {
+        await client.hooks.callHook('host:action:reload')
+      },
+    },
+
+    app: {
+      appConfig: useAppConfig() as any,
+      reload() {
+        location.reload()
+      },
+      navigate(path: string, hard = false) {
+        if (hard)
+          location.href = path
+        else
+          router.push(path)
+      },
+      colorMode,
+      frameState: state,
+    },
+
+    metrics: {
+      clientPlugins: () => window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
+      clientHooks: () => Object.values(clientHooks),
+      clientTimeline: () => timeline,
+      loading: () => timeMetric,
+    },
   })
 
   let iframe: HTMLIFrameElement | undefined
 
-  function updateClient() {
+  function syncClient() {
     if (!client.inspector)
       client.inspector = getInspectorInstance()
-
-    client.clientPluginMetrics = window.__NUXT_DEVTOOLS_PLUGINS_METRIC__
 
     try {
       iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
@@ -105,7 +127,7 @@ export async function setupDevToolsClient({
         iframe.src = initialUrl
         iframe.onload = async () => {
           await waitForClientInjection()
-          client.updateClient()
+          client.syncClient()
         }
       }
       catch (e) {
@@ -196,7 +218,7 @@ export async function setupDevToolsClient({
   // https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
   const documentPictureInPicture = window.documentPictureInPicture
   if (documentPictureInPicture?.requestWindow) {
-    client.popup = async () => {
+    client.devtools.popup = async () => {
       const iframe = getIframe()
       if (!iframe)
         return
@@ -233,7 +255,7 @@ export async function setupDevToolsClient({
     }
   }
 
-  client.updateClient()
+  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'
@@ -243,7 +265,7 @@ export async function setupDevToolsClient({
   // Shortcut to toggle devtools
   addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      client.toggle()
+      client.devtools.toggle()
   })
 
   const app = createApp({
@@ -349,8 +371,8 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   // trigger update for reactivity
   watch(() => [
     client.nuxt.payload,
-    client.colorMode.value,
-    client.loadingTimeMetrics,
+    client.app.colorMode.value,
+    client.metrics.loading(),
     timeMetric,
   ], () => {
     refreshReactivity()
