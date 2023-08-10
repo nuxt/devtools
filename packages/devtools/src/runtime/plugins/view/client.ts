@@ -102,6 +102,8 @@ export async function setupDevToolsClient({
     },
   })
 
+  window.__NUXT_DEVTOOLS_HOST__ = client
+
   let iframe: HTMLIFrameElement | undefined
 
   function syncClient() {

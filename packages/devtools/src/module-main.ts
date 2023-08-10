@@ -88,6 +88,13 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     config.server.watch.ignored.push('**/.nuxt/analyze/**')
   })
 
+  nuxt.hook('imports:extend', (imports) => {
+    imports.push({
+      name: 'useNuxtDevTools',
+      from: join(runtimeDir, 'use-nuxt-devtools'),
+    })
+  })
+
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
     server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
