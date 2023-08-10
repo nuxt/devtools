@@ -259,6 +259,44 @@ const radio = ref('a')
         </div>
         <ShowSource src="/playground/pages/index.vue#L246" />
       </NCard>
+
+      <NCard class="p4">
+        <div class="n-header-upper">
+          Select
+        </div>
+        <div class="flex flex-col gap-2">
+          <NSelect n="lime6 dark:lime5" model-value="apple">
+            <option value="apple">
+              Apple
+            </option>
+            <option value="banana">
+              Banana
+            </option>
+            <option value="orange">
+              Orange
+            </option>
+          </NSelect>
+        </div>
+        <ShowSource src="/playground/pages/index.vue#L263" />
+      </NCard>
+
+      <NCard class="p4">
+        <div class="n-header-upper">
+          Select Tabs
+        </div>
+        <div class="flex gap-2">
+          <NSelectTabs
+            n="amber6 dark:amber5 sm"
+            model-value="apple"
+            :options="[
+              { value: 'apple', label: 'Apple' },
+              { value: 'banana', label: 'Banana' },
+              { value: 'orange', label: 'Orange' },
+            ]"
+          />
+        </div>
+        <ShowSource src="/playground/pages/index.vue#L263" />
+      </NCard>
     </div>
   </div>
 </template>
