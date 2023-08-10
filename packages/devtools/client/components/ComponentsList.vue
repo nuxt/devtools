@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component } from 'nuxt/schema'
 import Fuse from 'fuse.js'
-import type { ComponentRelationship } from '../../types'
+import type { ComponentRelationship, ComponentWithRelationships } from '../../types'
 
 const props = defineProps<{
   components: Component[]
@@ -9,20 +9,31 @@ const props = defineProps<{
 }>()
 
 const search = ref('')
+const filterMode = ref<'all' | 'using' | 'not-used'>('all')
 
-const fuse = computed(() => new Fuse(props.components, {
+const componentWithRelationships = computed(() => {
+  const components = props.components
+    .map(c => getComponentRelationships(c, props.relationships))
+  if (filterMode.value === 'using')
+    return components.filter(c => c.dependents?.length)
+  else if (filterMode.value === 'not-used')
+    return components.filter(c => !c.dependents?.length)
+  return components
+})
+
+const fuse = computed(() => new Fuse(componentWithRelationships.value, {
   keys: [
-    'pascalName',
-    'filePath',
-    'kebabName',
+    'component.pascalName',
+    'component.filePath',
+    'component.kebabName',
   ],
 }))
 
 const filtered = computed(() => {
-  const user: Component[] = []
-  const lib = new Map<string, Component[]>()
-  const builtin: Component[] = []
-  const runtime: Component[] = []
+  const user: ComponentWithRelationships[] = []
+  const lib = new Map<string, ComponentWithRelationships[]>()
+  const builtin: ComponentWithRelationships[] = []
+  const runtime: ComponentWithRelationships[] = []
 
   const count = {
     user: 0,
@@ -33,12 +44,13 @@ const filtered = computed(() => {
 
   const result = search.value
     ? fuse.value.search(search.value).map(i => i.item)
-    : props.components
+    : componentWithRelationships.value
 
   result
     .forEach((component) => {
-      if (component.filePath && isNodeModulePath(component.filePath)) {
-        const name = getModuleNameFromPath(component.filePath)
+      const c = component.component
+      if (c.filePath && isNodeModulePath(c.filePath)) {
+        const name = getModuleNameFromPath(c.filePath)
         if (!name)
           return
         if (name === 'nuxt') {
@@ -52,7 +64,7 @@ const filtered = computed(() => {
           count.lib++
         }
       }
-      else if (component.global && !component.filePath) {
+      else if (c.global && !c.filePath) {
         runtime.push(component)
         count.runtime++
       }
@@ -64,7 +76,6 @@ const filtered = computed(() => {
 
   return {
     count,
-
     user,
     builtin,
     lib,
@@ -74,10 +85,22 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <Navbar v-model:search="search">
+  <Navbar v-model:search="search" pb3>
     <template #actions>
       <slot />
     </template>
+    <div flex="~ gap-2 items-center">
+      <NIcon icon="carbon-filter" op50 />
+      <NSelectTabs
+        v-model="filterMode"
+        n="primary sm"
+        :options="[
+          { label: 'All', value: 'all' },
+          { label: 'Using', value: 'using' },
+          { label: 'Not used', value: 'not-used' },
+        ]"
+      />
+    </div>
   </Navbar>
   <NSectionBlock
     v-if="filtered.user.length"
@@ -88,9 +111,8 @@ const filtered = computed(() => {
   >
     <ComponentItem
       v-for="c of filtered.user"
-      :key="c.filePath"
-      :component="c"
-      :relationships="relationships"
+      :key="c.component.filePath"
+      v-bind="c"
     />
   </NSectionBlock>
   <NSectionBlock
@@ -101,9 +123,9 @@ const filtered = computed(() => {
     :description="`Total components: ${filtered.count.runtime}`"
   >
     <ComponentItem
-      v-for="c of filtered.runtime" :key="c.filePath"
-      :component="c"
-      :relationships="relationships"
+      v-for="c of filtered.runtime"
+      :key="c.component.filePath"
+      v-bind="c"
     />
   </NSectionBlock>
   <NSectionBlock
@@ -114,9 +136,8 @@ const filtered = computed(() => {
   >
     <ComponentItem
       v-for="c of filtered.builtin"
-      :key="c.filePath"
-      :component="c"
-      :relationships="relationships"
+      :key="c.component.filePath"
+      v-bind="c"
     />
   </NSectionBlock>
   <NSectionBlock
@@ -131,9 +152,8 @@ const filtered = computed(() => {
       <div pl4>
         <ComponentItem
           v-for="c of value"
-          :key="c.filePath"
-          :component="c"
-          :relationships="relationships"
+          :key="c.component.filePath"
+          v-bind="c"
         />
       </div>
     </div>

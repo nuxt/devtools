@@ -1,21 +1,11 @@
 <script setup lang="ts">
 import type { Component } from 'nuxt/schema'
-import type { ComponentRelationship } from '../../types'
 
 const props = defineProps<{
   component: Component
-  relationships?: ComponentRelationship[] | null
+  dependencies?: string[]
+  dependents?: string[]
 }>()
-
-const dependencies = computed(() => {
-  const deps = props.relationships?.find(i => i.id === props.component.filePath)?.deps
-  return deps?.map(i => props.relationships?.find(j => j.id === i)?.id).filter(Boolean) as string[]
-})
-
-const dependents = computed(() => {
-  const deps = props.relationships?.filter(i => i.deps.includes(props.component.filePath))
-  return deps?.map(i => props.relationships?.find(j => j.id === i.id)?.id).filter(Boolean) as string[]
-})
 
 // @ts-expect-error types
 const filePath = computed(() => props.component.filePath || props.component.file || props.component.__file || '')
@@ -29,7 +19,7 @@ const filePath = computed(() => props.component.filePath || props.component.file
     w-full items-center rounded px2 py1
   >
     <VDropdown>
-      <button hover:text-primary>
+      <button hover:text-primary :class="dependents && dependents.length === 0 ? 'op50' : ''">
         <ComponentName :component="component" />
       </button>
       <template #popper>
@@ -41,8 +31,8 @@ const filePath = computed(() => props.component.filePath || props.component.file
         />
       </template>
     </VDropdown>
-    <sup v-if="dependents?.length" ml--1 op50>
-      {{ dependents?.length }}
+    <sup v-if="dependents?.length" ml--1 text-primary>
+      x{{ dependents?.length }}
     </sup>
     <Badge
       v-if="component.global"

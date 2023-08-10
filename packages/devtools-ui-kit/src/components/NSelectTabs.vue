@@ -18,7 +18,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <fieldset
-    class="n-select-tabs flex flex-inline flex-wrap items-center border n-border-base rounded focus-within:n-focus-base focus-within:border-context n-bg-base"
+    class="n-select-tabs flex flex-inline flex-wrap items-center border n-border-base rounded n-bg-base"
   >
     <label
       v-for="i, idx of options"
