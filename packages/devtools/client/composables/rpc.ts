@@ -43,8 +43,8 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
 async function connectVite() {
   // @ts-expect-error no types
 
-  let base = window.__NUXT__.config?.app?.baseURL
-  const buildAssetsDir = window.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
+  let base = window.parent.__NUXT__.config?.app?.baseURL
+  const buildAssetsDir = window.parent.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
   if (base && !base.endsWith('/'))
     base += '/'
   const hot = await tryCreateHotContext(undefined, [
