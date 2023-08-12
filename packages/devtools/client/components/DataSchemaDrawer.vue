@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { InputData, jsonInputForTargetLanguage, quicktype } from 'quicktype-core'
 import { all as languages } from 'quicktype-core/dist/language/All'
-import type { Lang } from 'shiki-es'
+import type { BuiltinLanguages } from 'shikiji'
 
 const input = useSchemaInput()
 
@@ -43,7 +43,7 @@ const generatedJson = computedAsync(async () => {
   return result.lines.join('\n')
 })
 
-const shikiLanguage = computed<Lang>(() => {
+const shikiLanguage = computed<BuiltinLanguages>(() => {
   const lang = selectedLang.value.toLocaleLowerCase()
   if (lang.startsWith('javascript'))
     return 'javascript'
@@ -52,7 +52,7 @@ const shikiLanguage = computed<Lang>(() => {
   else if (lang.startsWith('typescript'))
     return 'typescript'
   else
-    return lang as Lang
+    return lang as BuiltinLanguages
 })
 
 watch(options, () => {

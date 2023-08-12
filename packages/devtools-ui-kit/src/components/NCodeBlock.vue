@@ -1,13 +1,13 @@
 <script setup lang="ts">
 // This components requires to run in DevTools to render correctly
 import { computed, nextTick } from 'vue'
-import type { Lang } from 'shiki-es'
+import type { BuiltinLanguages } from 'shikiji'
 import { devToolsClient } from '../runtime/client'
 
 const props = withDefaults(
   defineProps<{
     code: string
-    lang?: Lang | 'text'
+    lang?: BuiltinLanguages | 'text'
     lines?: boolean
     transformRendered?: (code: string) => string
   }>(), {

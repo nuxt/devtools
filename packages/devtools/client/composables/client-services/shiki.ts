@@ -1,30 +1,34 @@
-import type { Highlighter, Lang } from 'shiki-es'
-import { getHighlighter } from 'shiki-es'
+import type { BuiltinLanguages, HighlighterCore } from 'shikiji'
+import { getHighlighterCore } from 'shikiji/core'
+import { getWasmInlined } from 'shikiji/wasm'
 
-export const shiki = ref<Highlighter>()
+export const shiki = shallowRef<HighlighterCore>()
 
 let promise: Promise<any> | null = null
 
-export function renderCodeHighlight(code: string, lang?: Lang) {
+export function renderCodeHighlight(code: string, lang: BuiltinLanguages | 'text' = 'text') {
   const mode = useColorMode()
 
   if (!promise && !shiki.value) {
     // Only loading when needed
-    promise = getHighlighter({
+    promise = getHighlighterCore({
       themes: [
-        'vitesse-dark',
-        'vitesse-light',
+        import('shikiji/themes/vitesse-dark.mjs'),
+        import('shikiji/themes/vitesse-light.mjs'),
       ],
       langs: [
-        'css',
-        'javascript',
-        'typescript',
-        'html',
-        'vue',
-        'vue-html',
-        'bash',
-        'diff',
+        import('shikiji/langs/json.mjs'),
+        import('shikiji/langs/yaml.mjs'),
+        import('shikiji/langs/css.mjs'),
+        import('shikiji/langs/javascript.mjs'),
+        import('shikiji/langs/typescript.mjs'),
+        import('shikiji/langs/vue.mjs'),
+        import('shikiji/langs/vue-html.mjs'),
+        import('shikiji/langs/html.mjs'),
+        import('shikiji/langs/diff.mjs'),
+        import('shikiji/langs/shellscript.mjs'),
       ],
+      loadWasm: getWasmInlined,
     }).then((i) => {
       shiki.value = i
     })
