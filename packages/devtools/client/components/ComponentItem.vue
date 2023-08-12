@@ -3,6 +3,7 @@ import type { Component } from 'nuxt/schema'
 
 const props = defineProps<{
   component: Component
+  isUserComponent?: boolean
   dependencies?: string[]
   dependents?: string[]
 }>()
@@ -27,7 +28,8 @@ const filePath = computed(() => props.component.filePath || props.component.file
           :component="component"
           :dependencies="dependencies"
           :dependents="dependents"
-          w-100 pt4
+          :is-user-component="isUserComponent"
+          :class="isUserComponent ? 'h-100 w-200 pt4' : 'w-100 pt4'"
         />
       </template>
     </VDropdown>

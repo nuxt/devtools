@@ -112,6 +112,7 @@ const filtered = computed(() => {
     <ComponentItem
       v-for="c of filtered.user"
       :key="c.component.filePath"
+      :is-user-component="true"
       v-bind="c"
     />
   </NSectionBlock>

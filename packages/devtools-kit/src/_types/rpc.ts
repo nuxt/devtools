@@ -1,6 +1,7 @@
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
+import type { Data as VisData } from 'vis-network'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
@@ -51,6 +52,7 @@ export interface ServerFunctions {
   generateAnalyzeBuildName(): Promise<string>
   startAnalyzeBuild(token: string, name: string): Promise<string>
   clearAnalyzeBuilds(token: string, names?: string[]): Promise<void>
+  getComponentGraph(input: string): VisData | null
 
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>

@@ -1,10 +1,11 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import boxen from 'boxen'
 import c from 'picocolors'
+import { analyzeSetupScript, analyzeTemplate, getVisData, parse } from 'vue-hook-optimizer'
 import { logger } from '@nuxt/kit'
 
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -144,6 +145,37 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       catch (e) {
         console.error(e)
         return false
+      }
+    },
+    getComponentGraph(input: string) {
+      if (input.startsWith('./'))
+        input = resolve(process.cwd(), input)
+      const path = [
+        input,
+        `${input}.vue`,
+      ].find(i => existsSync(i))
+      if (!path) {
+        console.error('File not found:', input)
+        return null
+      }
+
+      try {
+        const code = readFileSync(path, 'utf-8')
+
+        const sfc = parse(code)
+        const graph = analyzeSetupScript(sfc.descriptor.scriptSetup?.content || '')
+        let nodes = new Set<string>()
+        try {
+          nodes = analyzeTemplate(sfc.descriptor.template!.content)
+        }
+        catch (e) {
+          console.error(e)
+        }
+        return getVisData(graph, nodes)
+      }
+      catch (e) {
+        console.error(e)
+        return null
       }
     },
     restartNuxt(hard = true) {
