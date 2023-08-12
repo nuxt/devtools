@@ -1,12 +1,9 @@
-import { promisify } from 'node:util'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addVitePlugin } from '@nuxt/kit'
 import Inspect from 'vite-plugin-inspect'
-import folderSizeCallback from 'fast-folder-size'
 import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
-
-const folderSize = promisify(folderSizeCallback)
+import { folderSize } from '../utils/folder-size'
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
   if (options.viteInspect !== false) {
