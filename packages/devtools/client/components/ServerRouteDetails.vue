@@ -289,6 +289,8 @@ watchEffect(() => {
       routeInputBodyJSON.value = JSON.parse(routeInputBodyJSON.value)
   }
 })
+
+const copy = useCopy()
 </script>
 
 <template>
@@ -303,12 +305,23 @@ watchEffect(() => {
             {{ method.toUpperCase() }}
           </option>
         </NSelect>
-        <NTextInput
-          :model-value="finalPath"
-          disabled flex-auto font-mono
-          p="x5 y2"
-          n="primary xs"
-        />
+        <div relative w-full>
+          <NTextInput
+            :model-value="finalPath"
+            disabled flex-auto font-mono
+            p="x5 y2"
+            n="primary xs"
+          />
+          <NButton
+            v-tooltip="'Copy URL'"
+            title="Copy URL"
+            absolute right-2 top-1.7
+            n="xs blue"
+            @click="copy(finalURL)"
+          >
+            <NIcon icon="carbon:copy" />
+          </NButton>
+        </div>
         <NButton n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
         </NButton>
