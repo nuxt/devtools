@@ -24,6 +24,7 @@ export default defineBuildConfig({
     'vite-plugin-vue-inspector',
     'error-stack-parser-es',
     'shikiji',
+    'vis-network',
   ],
   declaration: true,
   rollup: {
