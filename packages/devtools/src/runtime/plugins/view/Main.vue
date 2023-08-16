@@ -387,6 +387,11 @@ onMounted(() => {
   transform: translate(-50%, -50%) rotate(0);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 15px !important;
+  box-sizing: border-box;
+}
+
+#nuxt-devtools-anchor * {
+  box-sizing: border-box;
 }
 
 #nuxt-devtools-anchor button {
