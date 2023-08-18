@@ -1,4 +1,4 @@
-<a href="https://devtools.nuxtjs.org"><img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg"></a>
+<a href="https://devtools.nuxtjs.org"><img width="1200" alt="Nuxt DevTools" src="https://github.com/nuxt/devtools/assets/904724/1ced0b20-7ba0-47df-9e56-075bc4c8bc73"></a>
 <br>
 <h1>
 Nuxt DevTools <sup>Preview</sup>
