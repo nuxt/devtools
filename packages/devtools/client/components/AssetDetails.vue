@@ -118,6 +118,7 @@ const supportsPreview = computed(() => {
     'image',
     'text',
     'video',
+    'audio',
     'font',
   ].includes(asset.value.type)
 })
