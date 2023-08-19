@@ -25,6 +25,10 @@ defineProps<{
     <div v-else-if="asset.type === 'video'">
       <video :src="asset.publicPath" :autoplay="detail" :controls="detail" />
     </div>
+    <div v-else-if="asset.type === 'audio'">
+      <div v-if="!detail" i-carbon-volume-up text-3xl op20 />
+      <audio v-else :src="asset.publicPath" controls />
+    </div>
     <div v-else i-carbon-help text-3xl op20 />
   </div>
 </template>
