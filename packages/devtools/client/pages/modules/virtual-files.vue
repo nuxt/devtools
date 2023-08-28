@@ -20,7 +20,11 @@ watchEffect(() => {
   if (!fileId.value)
     return
   const url = `/_vfs.json/${encodeURIComponent(fileId.value)}`
-  fetch(url)
+  fetch(url, {
+    headers: {
+      accept: 'application/json',
+    },
+  })
     .then(i => i.json())
     .then(i => current.value = i.current)
 })
