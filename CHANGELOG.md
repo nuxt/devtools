@@ -1,3 +1,12 @@
+## [0.8.2](https://github.com/nuxt/devtools/compare/v0.8.1...v0.8.2) (2023-08-28)
+
+
+### Bug Fixes
+
+* **virtual-files:** fetch data as json ([131a2ee](https://github.com/nuxt/devtools/commit/131a2ee56cba272ef51ccad3ccd648255ea1a668))
+
+
+
 ## [0.8.1](https://github.com/nuxt/devtools/compare/v0.8.0...v0.8.1) (2023-08-28)
 
 
