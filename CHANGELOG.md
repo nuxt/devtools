@@ -1,3 +1,29 @@
+## [0.8.2](https://github.com/nuxt/devtools/compare/v0.8.1...v0.8.2) (2023-08-28)
+
+
+### Bug Fixes
+
+* **virtual-files:** fetch data as json ([131a2ee](https://github.com/nuxt/devtools/commit/131a2ee56cba272ef51ccad3ccd648255ea1a668))
+
+
+
+## [0.8.1](https://github.com/nuxt/devtools/compare/v0.8.0...v0.8.1) (2023-08-28)
+
+
+### Bug Fixes
+
+* default box-sizing for floating panel ([a674379](https://github.com/nuxt/devtools/commit/a67437927c5ab7425f361ac9462f5fff914bef4d))
+* find vite client path from subframe parent ([#386](https://github.com/nuxt/devtools/issues/386)) ([e28606a](https://github.com/nuxt/devtools/commit/e28606a3a76b986ee35f73258783237ddad649aa))
+* improve client injection error message ([de9baa3](https://github.com/nuxt/devtools/commit/de9baa34224045c019cf19a84e090ab0aa7c29d2))
+
+
+### Features
+
+* audio preview ([#397](https://github.com/nuxt/devtools/issues/397)) ([cb5ddc6](https://github.com/nuxt/devtools/commit/cb5ddc6fb554839dee869c08bb505313771d865d))
+* **server-routes:** copy url button ([#389](https://github.com/nuxt/devtools/issues/389)) ([7903740](https://github.com/nuxt/devtools/commit/7903740be7f61001d557b4047bc40ca35683deda))
+
+
+
 # [0.8.0](https://github.com/nuxt/devtools/compare/v0.7.6...v0.8.0) (2023-08-10)
 
 

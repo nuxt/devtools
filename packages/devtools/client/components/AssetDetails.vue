@@ -74,8 +74,8 @@ const codeSnippets = computed(() => {
       { lang: 'vue-html', code: `<img${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Plain Image' },
     )
     hasNuxtImage.value && items.push(
-      { lang: 'vue-html', code: `<NuxtImage${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Image', docs: 'https://image.nuxtjs.org/components/nuxt-img' },
-      { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxtjs.org/components/nuxt-picture' },
+      { lang: 'vue-html', code: `<NuxtImg${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Img', docs: 'https://image.nuxt.com/usage/nuxt-img' },
+      { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxt.com/usage/nuxt-picture' },
     )
     return items
   }
@@ -118,6 +118,7 @@ const supportsPreview = computed(() => {
     'image',
     'text',
     'video',
+    'audio',
     'font',
   ].includes(asset.value.type)
 })

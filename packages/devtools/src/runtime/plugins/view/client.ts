@@ -128,8 +128,14 @@ export async function setupDevToolsClient({
         iframe.id = 'nuxt-devtools-iframe'
         iframe.src = initialUrl
         iframe.onload = async () => {
-          await waitForClientInjection()
-          client.syncClient()
+          try {
+            await waitForClientInjection()
+            client.syncClient()
+          }
+          catch (e) {
+            console.error('Nuxt DevTools client injection failed')
+            console.error(e)
+          }
         }
       }
       catch (e) {
@@ -141,12 +147,13 @@ export async function setupDevToolsClient({
   }
 
   function waitForClientInjection(retry = 10, timeout = 200) {
+    let lastError: any
     const test = () => {
       try {
         return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
       }
       catch (e) {
-
+        lastError = e
       }
       return false
     }
@@ -162,8 +169,7 @@ export async function setupDevToolsClient({
         }
         else if (retry-- <= 0) {
           clearInterval(interval)
-          // eslint-disable-next-line prefer-promise-reject-errors
-          reject('Nuxt DevTools client injection failed')
+          reject(lastError)
         }
       }, timeout)
     })

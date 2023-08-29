@@ -1,7 +1,7 @@
 import { defineNuxtModule } from '@nuxt/kit'
 import Markdown from 'vite-plugin-vue-markdown'
 import LinkAttributes from 'markdown-it-link-attributes'
-import type { BuiltinLanguages } from 'shikiji'
+import type { BuiltinLanguage } from 'shikiji'
 import { getHighlighter } from 'shikiji'
 
 export default defineNuxtModule({
@@ -38,7 +38,7 @@ export default defineNuxtModule({
               },
             })
             md.options.highlight = (code, lang) => {
-              const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguages
+              const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguage
               const dark = highlighter.codeToHtml(code, { lang: _lang || 'text', theme: 'vitesse-dark' })
                 .replace('<pre class="shiki"', '<pre class="shiki shiki-dark"')
               const light = highlighter.codeToHtml(code, { lang: _lang || 'text', theme: 'vitesse-light' })

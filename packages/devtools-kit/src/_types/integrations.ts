@@ -26,7 +26,7 @@ export interface PackageUpdateInfo {
   needsUpdate: boolean
 }
 
-export type PackageManagerName = 'npm' | 'yarn' | 'pnpm'
+export type PackageManagerName = 'npm' | 'yarn' | 'pnpm' | 'bun'
 
 export type NpmCommandType = 'install' | 'uninstall' | 'update'
 

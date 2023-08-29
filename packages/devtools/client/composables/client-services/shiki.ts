@@ -1,4 +1,4 @@
-import type { BuiltinLanguages, HighlighterCore } from 'shikiji'
+import type { BuiltinLanguage, HighlighterCore } from 'shikiji'
 import { getHighlighterCore } from 'shikiji/core'
 import { getWasmInlined } from 'shikiji/wasm'
 
@@ -6,7 +6,7 @@ export const shiki = shallowRef<HighlighterCore>()
 
 let promise: Promise<any> | null = null
 
-export function renderCodeHighlight(code: string, lang: BuiltinLanguages | 'text' = 'text') {
+export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text' = 'text') {
   const mode = useColorMode()
 
   if (!promise && !shiki.value) {
