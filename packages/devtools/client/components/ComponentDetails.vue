@@ -28,7 +28,7 @@ onMounted(async () => {
       },
     },
     groups: {
-      normal: {
+      used: {
         color: {
           border: '#3d7de4',
           background: '#9dc2f9',
@@ -38,13 +38,13 @@ onMounted(async () => {
           },
         },
       },
-      used: {
+      normal: {
         color: {
-          border: '#f6a72b',
-          background: '#fffe47',
+          border: '#ccc',
+          background: '#ddd',
           highlight: {
-            border: '#f6a72b',
-            background: '#fffe47',
+            border: '#ccc',
+            background: '#ddd',
           },
         },
       },
@@ -115,16 +115,28 @@ onMounted(async () => {
         class="absolute right-[10px] top-[10px] flex flex-col gap-1 border-0 p-1 p2 px3 text-xs glass-effect"
       >
         <div class="flex items-center align-baseline">
-          <d
-            class="mr-1 inline-block h-[10px] w-[10px] border border-[#f6a72b] rounded-full border-solid bg-[#fffe47]"
+          <div
+            class="mr-1 inline-block h-[10px] w-[10px] border border-[#3d7de4] border-solid bg-[#9dc2f9]"
           />
           <span>USED IN TEMPLATE</span>
         </div>
         <div class="flex items-center align-baseline">
           <div
-            class="mr-1 inline-block h-[10px] w-[10px] border border-[#3d7de4] rounded-full border-solid bg-[#9dc2f9]"
+            class="mr-1 inline-block h-[10px] w-[10px] border border-[#ddd] border-solid bg-[#eee]"
           />
           <span>NOT USED IN TEMPLATE</span>
+        </div>
+        <div class="flex items-center align-baseline">
+          <div
+            class="mr-1 inline-block h-[10px] w-[10px] border border-[#333] rounded-full border-solid"
+          />
+          <span>Variant</span>
+        </div>
+        <div class="flex items-center align-baseline">
+          <div
+            class="mr-1 inline-block h-[10px] w-[10px] rotate-45 scale-80 transform border border-[#333] border-solid"
+          />
+          <span>Function</span>
         </div>
       </NCard>
     </div>

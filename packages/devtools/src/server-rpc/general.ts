@@ -5,7 +5,7 @@ import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import boxen from 'boxen'
 import c from 'picocolors'
-import { analyzeSetupScript, analyzeTemplate, getVisData, parse } from 'vue-hook-optimizer'
+import { analyzeOptions, analyzeSetupScript, analyzeTemplate, getVisData, parse } from 'vue-hook-optimizer'
 import { logger } from '@nuxt/kit'
 
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -163,7 +163,25 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
         const code = readFileSync(path, 'utf-8')
 
         const sfc = parse(code)
-        const graph = analyzeSetupScript(sfc.descriptor.scriptSetup?.content || '')
+        let graph = {
+          nodes: new Set<{
+            label: string
+            type: string
+          }>(),
+          edges: new Map<{
+            label: string
+            type: string
+          }, Set<{
+            label: string
+            type: string
+          }>>(),
+        }
+        if (sfc.descriptor.scriptSetup?.content)
+          graph = analyzeSetupScript(sfc.descriptor.scriptSetup.content)
+
+        else if (sfc.descriptor.script?.content)
+          graph = analyzeOptions(sfc.descriptor.script.content)
+
         let nodes = new Set<string>()
         try {
           nodes = analyzeTemplate(sfc.descriptor.template!.content)

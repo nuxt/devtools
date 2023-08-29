@@ -210,8 +210,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0(vite@4.4.3)
       vue-hook-optimizer:
-        specifier: 0.0.5
-        version: 0.0.5
+        specifier: 0.0.11
+        version: 0.0.11
       wait-on:
         specifier: ^7.0.1
         version: 7.0.1
@@ -7055,7 +7055,7 @@ packages:
       lodash-es: 4.17.21
       vanilla-jsoneditor: 0.17.8
       vue: 3.3.4
-      vue-demi: 0.14.5(vue@3.3.4)
+      vue-demi: 0.14.6(vue@3.3.4)
       vue-global-config: 0.4.0(vue@3.3.4)
     dev: true
 
@@ -11770,6 +11770,21 @@ packages:
     dependencies:
       vue: 3.3.4
 
+  /vue-demi@0.14.6(vue@3.3.4):
+    resolution: {integrity: sha512-8QA7wrYSHKaYgUxDA5ZC24w+eHm3sYCbp0EzcDwKqN3p6HqtTCGR/GVsPyZW92unff4UlcSh++lmqDWN3ZIq4w==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.3.4
+    dev: true
+
   /vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
 
@@ -11806,8 +11821,8 @@ packages:
       vue-demi: 0.13.11(vue@3.3.4)
     dev: true
 
-  /vue-hook-optimizer@0.0.5:
-    resolution: {integrity: sha512-jYxJXUYaDFCaGVM9w1N+ASZpPysO9R+eun5+T5LRPHfPLHyQVa/iTLqBzsHG4ZKRco+v7MYknoQaqbqXgyTHVA==}
+  /vue-hook-optimizer@0.0.11:
+    resolution: {integrity: sha512-dlcBOLYxI821Tl0Lua0oeRsnAFFyJn83vBo7n/zQANn4tNO/zpB3lswEFjEb26cruHuwpsyTWHVTXqQDlS4PCA==}
     dev: false
 
   /vue-observe-visibility@2.0.0-alpha.1(vue@3.3.4):
