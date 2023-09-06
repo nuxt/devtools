@@ -90,7 +90,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
     </template>
     <template #links>
       <UButton to="/get-started/installation" icon="i-ph-rocket-launch-duotone" size="xl">
-        Get started
+        {{ page.hero?.button }}
       </UButton>
       <UInput aria-label="Copy code to get started" :model-value="source" name="get-started" disabled autocomplete="off"
         size="xl" :ui="{ base: 'disabled:cursor-default', icon: { trailing: { pointer: '' } } }">
@@ -105,7 +105,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
     </template>
     <div class="pt-12">
       <VideoPlayer :source="{ type: 'mp4', src: '/videos/nuxt.mp4' }" poster="/videos/poster-volta.webp" />
-      <span class="pt-4">Discover Nuxt DevTools in 3 minutes ✨</span>
+      <div class="mt-4">{{ page.hero?.videoText }}</div>
     </div>
 
   </ULandingHero>
@@ -164,7 +164,6 @@ const formatNumber = function (num: number, fractionDigits = 0) {
                 </div>
               </div>
             </ULandingSection>
-
           </li>
         </ul>
         <div
@@ -185,11 +184,11 @@ const formatNumber = function (num: number, fractionDigits = 0) {
         title: 'text-2xl font-medium tracking-tight text-white sm:text-3xl text-center lg:text-left'
       }">
         <template #title>
-          Trusted and supported by our amazing community
+          <span v-html="section.title" />
         </template>
 
         <template #links>
-          <UAvatarGroup :max="13" size="md" class="flex-wrap [&_span:first-child]:text-xs">
+          <UAvatarGroup :max="13" size="md" class="flex-wrap [&_span:first-child]:text-xs lg:self-start">
             <UTooltip v-for="(contributor, index) of module.contributors" :key="index" :text="contributor.username"
               class="rounded-full" :ui="{ background: 'bg-gray-50 dark:bg-gray-800/50' }"
               :popper="{ offsetDistance: 16 }">
@@ -204,25 +203,25 @@ const formatNumber = function (num: number, fractionDigits = 0) {
             </UTooltip>
           </UAvatarGroup>
           <p class="text-sm text-center">
-            Created and maintained by 50+ contributors
+            {{ section.avatarText }}
           </p>
         </template>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-16">
-          <NuxtLink class="text-center group" to="https://npmjs.org/package/@nuxthq/ui" target="_blank">
+          <NuxtLink class="text-center group" to="https://npmjs.org/package/@nuxt/devtools" target="_blank">
             <p
               class="text-6xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400">
               {{ formatNumber(module.stats.downloads) }}+
             </p>
-            <p>downloads</p>
+            <p>{{ section.firstStat }}</p>
           </NuxtLink>
 
-          <NuxtLink class="text-center group" to="https://github.com/nuxtlabs/ui" target="_blank">
+          <NuxtLink class="text-center group" to="https://github.com/nuxt/devtools" target="_blank">
             <p
               class="text-6xl font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400">
               {{ formatNumber(module.stats.stars) }}+
             </p>
-            <p>stars</p>
+            <p>{{ section.secondStat }}</p>
           </NuxtLink>
         </div>
       </ULandingCTA>
@@ -249,7 +248,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
             </div>
           </div>
         </div>
-        <UButton to="/guide/get-started/" size="xl" label="Read the documentation" variant="outline" color="transparent"
+        <UButton to="/guide/get-started/" size="xl" :label="section.button" variant="outline" color="transparent"
           class="w-fit mt-8" />
       </div>
     </template>
