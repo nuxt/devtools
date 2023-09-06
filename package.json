@@ -15,7 +15,7 @@
     "docs": "nuxi dev docs",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks",
-    "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
+    "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare && CI=true nuxi prepare docs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.41.0",
