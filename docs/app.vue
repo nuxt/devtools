@@ -16,9 +16,6 @@ useHead({
   link: () => [
     { rel: 'canonical', href: `https://devtools.nuxtjs.org${withoutTrailingSlash(route.path)}` },
   ],
-  bodyAttrs: {
-    class: 'dark:bg-gray-950 overflow-x-hidden',
-  },
 })
 const links = [{
   label: 'Documentation',
@@ -47,14 +44,17 @@ provide('navigation', navigation)
 <template>
   <UHeader :links="links">
     <template #logo>
-      <Logo />
+      <Logo class="h-6 w-auto" />
     </template>
+
     <template #right>
       <UColorModeButton v-if="!$colorMode.forced" />
       <USocialButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" />
       <USocialButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" />
-      <USocialButton aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
-        to="https://github.com/nuxt/devtools" />
+      <USocialButton
+        aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
+        to="https://github.com/nuxt/devtools"
+      />
     </template>
     <!-- Mobile panel -->
     <template v-if="$route.path !== '/'" #panel>
@@ -62,23 +62,27 @@ provide('navigation', navigation)
       <LazyUNavigationTree :links="mapContentNavigation(navigation)" default-open :multiple="false" />
     </template>
   </UHeader>
+
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+
   <UFooter :links="links">
     <template #left>
       <span class="text-sm">
-            Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">
-              MIT License
-            </NuxtLink>
-          </span>
+        Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">
+          MIT License
+        </NuxtLink>
+      </span>
     </template>
     <template #right>
       <UColorModeButton v-if="!$colorMode.forced" />
       <USocialButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" />
       <USocialButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" />
-      <USocialButton aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
-        to="https://github.com/nuxt/devtools" />
+      <USocialButton
+        aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
+        to="https://github.com/nuxt/devtools"
+      />
     </template>
   </UFooter>
   <ClientOnly>
@@ -87,10 +91,6 @@ provide('navigation', navigation)
 </template>
 
 <style>
-html.dark {
-  color-scheme: dark;
-}
-
 .shiki {
   padding: 0.6rem;
   border-radius: 0.2rem;

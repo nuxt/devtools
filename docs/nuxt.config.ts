@@ -14,10 +14,6 @@ export default defineNuxtConfig({
     ...(process.env.CI ? [] : ['../local']),
   ],
 
-  css: [
-    '~/style.css',
-  ],
-
   colorMode: {
     preference: 'dark',
   },
