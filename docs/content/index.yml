@@ -1,0 +1,49 @@
+navigation: false
+hero:
+  title: 'Unleash Nuxt <br><span class="text-primary-400">Developer Experience</span>'
+  description: 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
+sections:
+  - title: Enhance projects with<br><span class="text-primary-400">Advanced DevTools</span>
+    slot: tools
+    class: 'dark:lg:bg-gray-950/50'
+    toolsCards:
+      - title: 'Developer experience'
+        description: 'Enhance your DX even further, and adding an extra layer of enjoyment to the development journey!'
+        icon: 'i-ph-code-light'
+        to: ''
+      - title: 'Inspection & debug'
+        description: 'See the relationships between your components, composables, modules and so much more.'
+        icon: 'i-ph-magnifying-glass'
+        to: ''
+      - title: 'Transparency conventions'
+        description: 'Understand your Nuxt app structure to debug and optimize your Nuxt application effectively.'
+        icon: 'i-ph-wall'
+        to: ''
+      - title: 'Real-time insights'
+        description: "Get real-time insights into your app's performance. Analyze your data for seamless user experience."
+        icon: 'i-ph-gradient'
+        to: ''
+      - title: 'Tailor-made documentation'
+        description: 'Get personalized documentation for your Nuxt application, based on your usage patterns and needs.'
+        icon: 'i-ph-book-open'
+        to: ''
+      - title: 'Extendable & hackable'
+        description: "Provide interactive views for integrations. Making it easy to explore and understand your application's data and performance."
+        icon: 'i-ph-plug'
+        to: ''
+  - title: 'Explore the depths of your<br><span class="text-primary-400">Nuxt project</span>'
+    slot: project
+    projectCards:
+      - title: 'Pages'
+        description: "Access your app's routes interactively and use the text box to read and test how each route matches the Pages tab."
+        to: '#'
+      - title: 'Components'
+        description: "Explore your app's components interactively in the Components tab. Easily search and view their source code."
+        to: '#'
+      - title: 'Imports'
+        description: 'Interactively explore Nuxt auto-imports in the Imports tab. See all files, sources, and optional descriptions and documentations.'
+        to: '#'
+  - slot: cta
+  - title: Get started<br><span class="text-primary-400">Now</span>
+    description: 'Start using Nuxt DevTools quickly by installing it in your projects in a few lines! <br><i>Nuxt DevTools requires Nuxt v3.1.0 or higher.</i>'
+    slot: get-started

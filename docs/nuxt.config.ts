@@ -18,8 +18,6 @@ export default defineNuxtConfig({
     '~/style.css',
   ],
 
-  devtools: { enabled: true },
-
   colorMode: {
     preference: 'dark',
   },
