@@ -24,7 +24,7 @@ const links = [{
 }, {
   label: 'Playground',
   icon: 'i-ph-play-duotone',
-  to: '/playgrounds',
+  to: '/playground',
 }, {
   label: 'Releases',
   icon: 'i-heroicons-rocket-launch-solid',
@@ -51,8 +51,10 @@ provide('navigation', navigation)
       <UColorModeButton v-if="!$colorMode.forced" />
       <USocialButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" />
       <USocialButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" />
-      <USocialButton aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
-        to="https://github.com/nuxt/devtools" />
+      <USocialButton
+        aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
+        to="https://github.com/nuxt/devtools"
+      />
     </template>
     <!-- Mobile panel -->
     <template v-if="$route.path !== '/'" #panel>
@@ -68,17 +70,19 @@ provide('navigation', navigation)
   <UFooter :links="links">
     <template #left>
       <span class="text-sm">
-                Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">
-                  MIT License
-                </NuxtLink>
-              </span>
+        Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">
+          MIT License
+        </NuxtLink>
+      </span>
     </template>
     <template #right>
       <UColorModeButton v-if="!$colorMode.forced" />
       <USocialButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" />
       <USocialButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" />
-      <USocialButton aria-label="Nuxt Devtools on GitHub" icon="i-simple-icons-github"
-        to="https://github.com/nuxt/devtools" />
+      <USocialButton
+        aria-label="Nuxt Devtools on GitHub" icon="i-simple-icons-github"
+        to="https://github.com/nuxt/devtools"
+      />
     </template>
   </UFooter>
   <ClientOnly>

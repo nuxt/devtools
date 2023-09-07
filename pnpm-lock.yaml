@@ -27,7 +27,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(@nuxt/kit@3.7.1)(nuxi@3.7.3)
       '@nuxt/schema':
-        specifier: ^3.7.0
+        specifier: ^3.7.1
         version: 3.7.1(rollup@3.29.0)
       '@types/markdown-it':
         specifier: ^13.0.1
@@ -72,7 +72,7 @@ importers:
         specifier: ^14.0.1
         version: 14.0.1
       nuxt:
-        specifier: ^3.7.0
+        specifier: ^3.7.1
         version: 3.7.1(@parcel/watcher@2.3.0)(@types/node@20.5.9)(eslint@8.48.0)(rollup@3.29.0)(typescript@5.2.2)(vue-tsc@1.8.10)
       pathe:
         specifier: ^1.1.1
@@ -99,7 +99,7 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(vite@4.4.9)
       vue-tsc:
-        specifier: ^1.8.8
+        specifier: ^1.8.10
         version: 1.8.10(typescript@5.2.2)
 
   docs:
@@ -118,7 +118,7 @@ importers:
         version: 1.0.0-rc.1(rollup@3.29.0)
       '@nuxthq/elements':
         specifier: npm:@nuxthq/elements-edge@latest
-        version: /@nuxthq/elements-edge@0.0.1-28235056.51848fa(rollup@3.29.0)(vue@3.3.4)(webpack@5.88.2)
+        version: /@nuxthq/elements-edge@0.0.1-28235068.a87a248(rollup@3.29.0)(vue@3.3.4)(webpack@5.88.2)
       '@nuxthq/studio':
         specifier: ^0.14.0
         version: 0.14.0(rollup@3.29.0)
@@ -2447,8 +2447,8 @@ packages:
       - vti
       - vue-tsc
 
-  /@nuxthq/elements-edge@0.0.1-28235056.51848fa(rollup@3.29.0)(vue@3.3.4)(webpack@5.88.2):
-    resolution: {integrity: sha512-pY7q6TcVlJOPO3aK+K94KbDEVobiV/1SJYuNJSHXdFotX0gfvz3biGQFT393je2VfX+zTzfgTiIffaLovhWkUA==}
+  /@nuxthq/elements-edge@0.0.1-28235068.a87a248(rollup@3.29.0)(vue@3.3.4)(webpack@5.88.2):
+    resolution: {integrity: sha512-glMci03fz5DlyeHDL7sZdRNRtd0UJS0w4XUA+3CTMP4aM60nIuD43gGkxJy4WCCSBYSro8+bh83u/4pYlj9YAw==}
     dependencies:
       '@nuxt/ui': 2.8.0(rollup@3.29.0)(vue@3.3.4)(webpack@5.88.2)
       '@vueuse/core': 10.4.1(vue@3.3.4)
