@@ -1,3 +1,7 @@
+---
+navigation: false
+---
+
 You just need to go to your `nuxt.config` file and set `devtools` to `true`:
 
 ```ts [nuxt.config.ts]

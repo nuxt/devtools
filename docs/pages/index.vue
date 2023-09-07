@@ -4,6 +4,7 @@ import { pick } from 'lodash-es'
 definePageMeta({
   colorMode: 'dark',
 })
+
 const title = 'Nuxt DevTool: Unleash Nuxt Developer Experience'
 const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
 useSeoMeta({
@@ -26,6 +27,8 @@ const intervalId = ref()
 const currentStep = ref(0)
 const projectsSectionVisible = ref(false)
 const nuxtProjectsSection = ref(null)
+const progressBarMaxDuration = 8000
+const progressBarCounter = ref(0)
 
 onMounted(() => console.log({ nuxtProjectsSection }))
 
@@ -54,18 +57,6 @@ const { stop } = useIntersectionObserver(
     projectsSectionVisible.value = isIntersecting
   },
 )
-
-watch(projectsSectionVisible, () => {
-  if (projectsSectionVisible.value) {
-    intervalId.value = setInterval(() => {
-      if (currentStep.value < 2) {
-        currentStep.value++
-      } else {
-        currentStep.value = 0
-      }
-    }, 4000)
-  }
-})
 
 const formatNumber = function (num: number, fractionDigits = 0) {
   if (num > 999 && num < 1000000) {
@@ -158,7 +149,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
                 {{ project.description }}
               </template>
               <div
-                class="lg:hidden lg:w-[60%] items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 h-full place-self-center">
+                class="lg:hidden items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 h-full place-self-center relative">
                 <div class="p-4">
                   <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`" />
                 </div>
@@ -167,7 +158,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
           </li>
         </ul>
         <div
-          class="hidden lg:flex lg:w-[60%] items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 h-full place-self-center">
+          class="relative hidden lg:flex lg:w-[60%] items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 h-full place-self-center">
           <div class="p-4">
             <NuxtImg
               :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`" />

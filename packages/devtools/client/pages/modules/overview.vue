@@ -38,11 +38,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
         <div flex="~" mt--10 items-center justify-center>
           <NuxtLogo h-14 md:h-18 />
           <button mr--16 mt--6 @click="goIntro">
-            <Badge
-              bg-green-400:10 text-green-400
-              title="preview"
-              v-text="'preview'"
-            />
+            <Badge bg-green-400:10 text-green-400 title="preview" v-text="'preview'" />
           </button>
         </div>
         <div mb6 mt--1 text-center text-sm flex="~ gap-1 wrap">
@@ -50,11 +46,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             Nuxt DevTools
           </span>
           <code op40>v{{ version }}</code>
-          <NpmVersionCheck
-            package-name="@nuxt/devtools"
-            :options="{ dev: true }"
-            :show-version="false"
-          />
+          <NpmVersionCheck package-name="@nuxt/devtools" :options="{ dev: true }" :show-version="false" />
         </div>
       </div>
       <!-- Main Grid -->
@@ -68,7 +60,10 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
           <code>v{{ vueVersion }}</code>
         </div>
         <template v-if="config">
-          <NuxtLink v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/pages">
+          <NuxtLink
+            v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto"
+            to="/modules/pages"
+          >
             <div carbon-tree-view-alt text-3xl />
             <div>{{ routes.length }} pages</div>
           </NuxtLink>
@@ -124,27 +119,36 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
         </template>
       </div>
       <div flex="~ col gap2">
-        <NTip
-          v-if="showConnectionWarning"
-          n="yellow5" icon="carbon-unlink" justify-center
-        >
+        <NTip v-if="showConnectionWarning" n="yellow5" icon="carbon-unlink" justify-center>
           Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
         </NTip>
       </div>
       <div flex="~ gap-6 wrap" mt-5 items-center justify-center>
-        <a href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue" transition>
+        <a
+          href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue"
+          transition
+        >
           <div i-carbon-star />
           Star on GitHub
         </a>
-        <a href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-yellow" transition>
+        <a
+          href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50
+          hover="op100 text-yellow" transition
+        >
           <div i-carbon-data-enrichment />
           Ideas & Suggestions
         </a>
-        <a href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-lime" transition>
+        <a
+          href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50
+          hover="op100 text-lime" transition
+        >
           <div i-carbon-plan />
           Project Roadmap
         </a>
-        <a href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-rose" transition>
+        <a
+          href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50
+          hover="op100 text-rose" transition
+        >
           <div i-carbon-debug />
           Bug Reports
         </a>
