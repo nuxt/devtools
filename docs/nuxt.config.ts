@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image',
     '@nuxt/content',
-    '@nuxthq/ui',
+    '@nuxt/ui',
     '@nuxthq/studio',
     '@vueuse/nuxt',
     '@nuxtjs/fontaine',
