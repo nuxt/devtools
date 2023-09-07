@@ -13,6 +13,7 @@
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
     "test": "pnpm lint",
     "docs": "nuxi dev docs",
+    "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare && CI=true nuxi prepare docs"
