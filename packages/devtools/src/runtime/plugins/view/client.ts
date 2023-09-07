@@ -342,7 +342,7 @@ export function useClientColorMode(): Ref<ColorScheme> {
 
 function setupRouteTracking(timeline: TimelineMetrics, router: Router) {
   // Add initial route event
-  if (router && timeline.options.enabled) {
+  if (timeline.options.enabled && router?.currentRoute?.value?.path) {
     const start = timeline.events[0]?.start || Date.now()
     timeline.events.unshift({
       type: 'route',

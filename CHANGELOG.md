@@ -1,3 +1,12 @@
+## [0.8.3](https://github.com/nuxt/devtools/compare/v0.8.2...v0.8.3) (2023-09-06)
+
+
+### Bug Fixes
+
+* route tracking handle `currentRoute` to be null ([7ca1fc9](https://github.com/nuxt/devtools/commit/7ca1fc92c171e87aa9f23c6b80729c6291447f19))
+
+
+
 ## [0.8.2](https://github.com/nuxt/devtools/compare/v0.8.1...v0.8.2) (2023-08-28)
 
 
