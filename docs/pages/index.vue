@@ -26,8 +26,6 @@ const currentStep = ref(0)
 const projectsSectionVisible = ref(false)
 const nuxtProjectsSection = ref(null)
 
-onMounted(() => console.log({ nuxtProjectsSection }))
-
 const { data: module } = await useFetch<{
   stats: {
     downloads: number
@@ -95,6 +93,7 @@ watch(projectsSectionVisible, () => {
       </UInput>
     </template>
     <div class="pt-12">
+      <!-- TODO: put devtools poster and video instead -->
       <VideoPlayer :source="{ type: 'mp4', src: '/videos/nuxt.mp4' }" poster="/videos/poster-volta.webp" />
       <div class="mt-4">
         {{ page.hero?.videoText }}
@@ -112,6 +111,7 @@ watch(projectsSectionVisible, () => {
     </template>
 
     <template #tools>
+      <!-- TODO: Links on card ? -->
       <UPageGrid>
         <UPageCard v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
           :title="card.title" :description="card.description"
@@ -119,6 +119,7 @@ watch(projectsSectionVisible, () => {
       </UPageGrid>
     </template>
 
+    <!-- TODO: change image -->
     <template #project>
       <div ref="nuxtProjectsSection" class="flex flex-row gap-x-12">
         <ul class="flex flex-col items-center justify-center lg:w-[40%]">
