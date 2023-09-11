@@ -1,6 +1,10 @@
 export default defineNuxtConfig({
   extends: process.env.NUXT_ELEMENTS_PATH || '@nuxthq/elements',
 
+  routeRules: {
+    '/guide': { redirect: '/guide/getting-started' }
+  },
+
   modules: [
     '@nuxt/image',
     '@nuxt/content',

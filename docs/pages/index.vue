@@ -1,8 +1,4 @@
 <script setup lang="ts">
-definePageMeta({
-  colorMode: 'dark',
-})
-
 const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
 const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
 useSeoMeta({
@@ -15,8 +11,13 @@ useSeoMeta({
   twitterImage: 'https://devtools.nuxt.com/social-card.png',
 })
 
-const { data: getStarted } = await useAsyncData('landing-get-started', () => queryContent('/home/get-started').findOne())
-const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
+const { data } = await useAsyncData('landing', () => {
+  return Promise.all([
+    queryContent('/home/get-started').findOne(),
+    queryContent('/').findOne()
+  ])
+})
+const [getStarted, page] = data.value
 
 const source = ref('npx nuxi@latest devtools enable')
 const { copy, copied } = useClipboard({ source })
@@ -255,7 +256,7 @@ watch(projectsSectionVisible, () => {
             </div>
           </div>
         </div>
-        <UButton to="/guide" size="xl" :label="section.button" variant="outline" color="transparent" class="mt-8 w-fit" />
+        <UButton to="/guide/getting-started" size="xl" :label="section.button" variant="outline" color="transparent" class="mt-8 w-fit" />
       </div>
     </template>
   </ULandingSection>
