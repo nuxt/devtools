@@ -136,8 +136,8 @@ watch(projectsSectionVisible, () => {
                   :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'">
                   {{ project.description }}
                 </p>
-                <UButton :to="project.to" trailing variant="link" color="white" size="md"
-                  :ui="{ size: { md: 'text-md' } }" class="-ml-2.5">
+                <UButton trailing variant="link" color="white" size="md" :ui="{ size: { md: 'text-md' } }"
+                  class="-ml-2.5 z-20" :to="project.to">
                   <span class="group-hover:text-white transition-color duration-200" :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
                   <UIcon name="i-ph-arrow-right" class="w-5 h-5 group-hover:text-white"
                     :class="currentStep === index ? 'text-white' : 'text-gray-400'" />
@@ -172,9 +172,6 @@ watch(projectsSectionVisible, () => {
           </div>
         </div>
 
-        <div>
-
-        </div>
         <div class="w-full flex justify-center pt-8">
           <UButton size="xl" variant="outline" color="transparent" to="/guide/features">
             {{ section.button }}
