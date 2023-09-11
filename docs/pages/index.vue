@@ -11,8 +11,8 @@ useSeoMeta({
   ogTitle: title,
   description,
   ogDescription: description,
-  ogImage: 'https://image.nuxt.com/social-card.png',
-  twitterImage: 'https://image.nuxt.com/social-card.png',
+  ogImage: 'https://devtools.nuxt.com/social-card.png',
+  twitterImage: 'https://devtools.nuxt.com/social-card.png',
 })
 
 const { data: getStarted } = await useAsyncData('landing-get-started', () => queryContent('/home/get-started').findOne())
@@ -78,7 +78,7 @@ watch(projectsSectionVisible, () => {
       {{ page.hero?.description }}
     </template>
     <template #links>
-      <UButton to="/guide" icon="i-ph-rocket-launch-duotone" size="xl">
+      <UButton to="/guide/getting-started" icon="i-ph-rocket-launch-duotone" size="xl">
         {{ page.hero?.button }}
       </UButton>
       <UInput aria-label="Copy code to get started" :model-value="source" name="get-started" disabled autocomplete="off"
@@ -121,49 +121,64 @@ watch(projectsSectionVisible, () => {
 
     <!-- TODO: change image -->
     <template #project>
-      <div ref="nuxtProjectsSection" class="flex flex-row gap-x-12">
-        <ul class="flex flex-col items-center justify-center lg:w-[40%]">
-          <li v-for="(project, index) in section.projectCards" :key="index">
-            <UCard class="relative hidden lg:block cursor-pointer"
-              :ui="{ background: 'bg-transparent dark:bg-transparent', sahdow: 'none', ring: 'ring-0', body: { background: 'bg-transparent dark:bg-transparent', base: 'flex flex-col space-y-2' } }">
-              <div class="absolute inset-0 h-full w-full" @click="selectProjectCard(index)" />
-              <h4 class="text-xl font-medium" :class="currentStep === index ? 'text-white' : 'text-gray-400'">
-                {{ project.title }}
-              </h4>
-              <p :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'">
-                {{ project.description }}
-              </p>
-              <UButton :to="project.to" trailing-icon="i-ph-arrow-right" variant="link" color="white" size="md"
-                :ui="{ size: { md: 'text-md' } }" class="-ml-2.5">
-                <span :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
-              </UButton>
-            </UCard>
+      <div>
+        <div ref="nuxtProjectsSection" class="flex flex-row gap-x-12">
+          <ul class="flex flex-col items-center justify-center lg:w-[40%]">
+            <li v-for="(project, index) in section.projectCards" :key="index">
+              <UCard class="relative hidden lg:block cursor-pointer group"
+                :ui="{ background: 'bg-transparent dark:bg-transparent', sahdow: 'none', ring: 'ring-0', body: { background: 'bg-transparent dark:bg-transparent', base: 'flex flex-col space-y-2' } }">
+                <div class="absolute inset-0 h-full w-full" @click="selectProjectCard(index)" />
+                <h4 class="text-xl font-medium group-hover:text-white transition-color duration-200"
+                  :class="currentStep === index ? 'text-white ' : 'text-gray-400'">
+                  {{ project.title }}
+                </h4>
+                <p class="group-hover:text-gray-400 transition-color duration-200"
+                  :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'">
+                  {{ project.description }}
+                </p>
+                <UButton :to="project.to" trailing variant="link" color="white" size="md"
+                  :ui="{ size: { md: 'text-md' } }" class="-ml-2.5">
+                  <span class="group-hover:text-white transition-color duration-200" :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
+                  <UIcon name="i-ph-arrow-right" class="w-5 h-5 group-hover:text-white"
+                    :class="currentStep === index ? 'text-white' : 'text-gray-400'" />
+                </UButton>
+              </UCard>
 
-            <ULandingSection align="center"
-              :icon="index === 0 ? 'i-ph-tree-structure' : index === 1 ? 'i-ph-circles-three' : 'i-ph-function'"
-              class="lg:hidden"
-              :ui="{ base: 'flex flex-col items-center', wrapper: 'py-8 sm:py-12', icon: { wrapper: 'relative rounded-lg flex items-center justify-center mb-6 w-10 h-10 bg-gray-700 flex-shrink-0' }, title: 'text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl' }">
-              <template #title>
-                {{ project.title }}
-              </template>
-              <template #description>
-                {{ project.description }}
-              </template>
-              <div
-                class="relative h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:hidden">
-                <div class="p-4">
-                  <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`" />
+              <ULandingSection align="center"
+                :icon="index === 0 ? 'i-ph-tree-structure' : index === 1 ? 'i-ph-circles-three' : 'i-ph-function'"
+                class="lg:hidden"
+                :ui="{ base: 'flex flex-col items-center', wrapper: 'py-8 sm:py-12', icon: { wrapper: 'relative rounded-lg flex items-center justify-center mb-6 w-10 h-10 bg-gray-700 flex-shrink-0' }, title: 'text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl' }">
+                <template #title>
+                  {{ project.title }}
+                </template>
+                <template #description>
+                  {{ project.description }}
+                </template>
+                <div
+                  class="relative h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:hidden">
+                  <div class="p-4">
+                    <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`" />
+                  </div>
                 </div>
-              </div>
-            </ULandingSection>
-          </li>
-        </ul>
-        <div
-          class="relative hidden h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:w-[60%] lg:flex">
-          <div class="p-4">
-            <NuxtImg
-              :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`" />
+              </ULandingSection>
+            </li>
+          </ul>
+          <div
+            class="relative hidden h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:w-[60%] lg:flex">
+            <div class="p-4">
+              <NuxtImg
+                :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`" />
+            </div>
           </div>
+        </div>
+
+        <div>
+
+        </div>
+        <div class="w-full flex justify-center pt-8">
+          <UButton size="xl" variant="outline" color="transparent" to="/guide/features">
+            {{ section.button }}
+          </UButton>
         </div>
       </div>
     </template>
