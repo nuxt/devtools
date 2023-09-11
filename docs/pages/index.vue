@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { pick } from 'lodash-es'
-
 definePageMeta({
   colorMode: 'dark',
 })
@@ -41,7 +39,7 @@ const { data: module } = await useFetch<{
     username: string
   }[]
 }>('https://api.nuxt.com/modules/devtools', {
-  transform: module => pick(module, ['stats', 'contributors']),
+  transform: ({ stats, contributors }) => ({ stats, contributors }),
 })
 
 function selectProjectCard(index) {
@@ -57,16 +55,7 @@ const { stop } = useIntersectionObserver(
   },
 )
 
-const formatNumber = function (num: number, fractionDigits = 0) {
-  if (num > 999 && num < 1000000)
-    return `${(num / 1000).toFixed(fractionDigits)}k` // convert to K for number from > 1000 < 1 million
-
-  else if (num > 1000000)
-    return `${(num / 1000000).toFixed(fractionDigits)}m` // convert to M for number from > 1 million
-
-  else
-    return String(num)
-}
+const { format: formatNumber } = Intl.NumberFormat('en-GB', { notation: 'compact' })
 </script>
 
 <template>
@@ -230,7 +219,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
             >
               {{ formatNumber(module.stats.downloads) }}+
             </p>
-            <p>{{ section.firstStat }}</p>
+            <p>Monthly Downloads</p>
           </NuxtLink>
 
           <NuxtLink class="group text-center" to="https://github.com/nuxt/devtools" target="_blank">
@@ -239,7 +228,7 @@ const formatNumber = function (num: number, fractionDigits = 0) {
             >
               {{ formatNumber(module.stats.stars) }}+
             </p>
-            <p>{{ section.secondStat }}</p>
+            <p>Stars</p>
           </NuxtLink>
         </div>
       </ULandingCTA>
