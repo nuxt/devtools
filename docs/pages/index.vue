@@ -247,7 +247,7 @@ watch(projectsSectionVisible, () => {
   </ULandingSection>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .gradient {
   position: absolute;
   top: -5vh;
