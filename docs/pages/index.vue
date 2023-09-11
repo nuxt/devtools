@@ -5,7 +5,7 @@ definePageMeta({
   colorMode: 'dark',
 })
 
-const title = 'Nuxt DevTool: Unleash Nuxt Developer Experience'
+const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
 const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
 useSeoMeta({
   titleTemplate: '',
