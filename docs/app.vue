@@ -5,7 +5,6 @@ const { mapContentNavigation } = useElementsHelpers()
 
 const route = useRoute()
 useServerSeoMeta({
-  titleTemplate: '%s - Nuxt DevTools',
   ogSiteName: 'Nuxt DevTools',
   twitterCard: 'summary_large_image',
 })
