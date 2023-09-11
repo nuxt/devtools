@@ -157,7 +157,8 @@ watch(projectsSectionVisible, () => {
                 <div
                   class="relative h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:hidden">
                   <div class="p-4">
-                    <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`" />
+                    <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`"
+                      class="rounded-lg" />
                   </div>
                 </div>
               </ULandingSection>
@@ -166,8 +167,8 @@ watch(projectsSectionVisible, () => {
           <div
             class="relative hidden h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:w-[60%] lg:flex">
             <div class="p-4">
-              <NuxtImg
-                :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`" />
+              <NuxtImg :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`"
+                class="rounded-lg" />
             </div>
           </div>
         </div>
