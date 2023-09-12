@@ -9,10 +9,16 @@ const { data: page } = await useAsyncData(`docs-${route.path}`, () => queryConte
 if (!page.value)
   throw createError({ statusCode: 404, statusMessage: 'Page not found' })
 
-const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () => queryContent()
-  .where({ _extension: 'md', navigation: { $ne: false } })
-  .findSurround(route.path.endsWith('/') ? route.path.slice(0, -1) : route.path),
-)
+const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () => {
+  return queryContent()
+    .where({ _extension: 'md', navigation: { $ne: false } })
+    .findSurround(route.path.endsWith('/') ? route.path.slice(0, -1) : route.path)
+}, {
+  transform(surround) {
+    return surround.map(doc => doc.navigation === false ? null : doc)
+  }
+})
+
 
 useSeoMeta({
   titleTemplate: '%s - Nuxt DevTools',
