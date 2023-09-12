@@ -17,7 +17,7 @@ const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () 
 useSeoMeta({
   titleTemplate: '%s - Nuxt DevTools',
   title: page.value.title,
-  ogTitle: `${page.value.title} - 'Nuxt DevTools`,
+  ogTitle: `${page.value.title} - Nuxt DevTools`,
   description: page.value.description,
   ogDescription: page.value.description,
 })
