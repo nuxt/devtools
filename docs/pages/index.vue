@@ -90,7 +90,7 @@ watch(projectsSectionVisible, () => {
       <UModal v-model="videoModalOpen" :ui="{ width: 'sm:max-w-[560px]' }">
         <div>
           <iframe
-            width="560"
+            width="100%"
             height="315"
             src="https://www.youtube-nocookie.com/embed/Wkla7ATW8Vc?si=po2wmux2Ybfq0Evm"
             title="Nuxt Devtools by LearnVue"
