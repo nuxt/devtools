@@ -1,9 +1,6 @@
 <script setup>
-import { withoutTrailingSlash } from 'ufo'
-
 const { mapContentNavigation } = useElementsHelpers()
 
-const route = useRoute()
 useServerSeoMeta({
   ogSiteName: 'Nuxt DevTools',
   twitterCard: 'summary_large_image',
@@ -11,10 +8,7 @@ useServerSeoMeta({
 useHead({
   htmlAttrs: {
     lang: 'en',
-  },
-  link: () => [
-    { rel: 'canonical', href: `https://devtools.nuxtjs.org${withoutTrailingSlash(route.path)}` },
-  ],
+  }
 })
 const links = [{
   label: 'Documentation',
@@ -38,9 +32,9 @@ provide('navigation', navigation)
 </script>
 
 <template>
-  <UHeader :links="links">
+  <UHeader :links="links" class="dark:text-gray-200">
     <template #logo>
-      <Logo class="h-6 w-auto" />
+      <Logo />
     </template>
 
     <template #right>
@@ -64,10 +58,8 @@ provide('navigation', navigation)
   <UFooter :links="links">
     <template #left>
       <span class="text-sm">
-            Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">
-              MIT License
-            </NuxtLink>
-          </span>
+        Published under <NuxtLink to="https://github.com/nuxt/devtools" target="_blank" class="underline">MIT License</NuxtLink>
+      </span>
     </template>
     <template #right>
       <UColorModeButton v-if="!$colorMode.forced" />
@@ -83,6 +75,9 @@ provide('navigation', navigation)
 </template>
 
 <style>
+html.dark {
+  color-scheme: dark;
+}
 .shiki {
   padding: 0.6rem;
   border-radius: 0.2rem;
