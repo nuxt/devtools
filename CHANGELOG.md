@@ -6284,13 +6284,13 @@
   - `@nuxt/devtools/kit` is moved `@nuxt/devtools-kit`
   - `@nuxt/devtools/iframe-client` is moved to `@nuxt/devtools-kit/iframe-client`
   - Extendable RPC is introduced, you can now integration your own client-server communication
-- Learn more at [docs](https://devtools.nuxtjs.org/)
+- Learn more at [docs](https://devtools.nuxt.com/)
 
 ## New Tabs
 
 ### Assets
 
-The assets tab that shows all your static assets and their information. You can copy the paths of the assets, or the code snippets of using them. In the future, with the integrations of [Nuxt Image](https://image.nuxtjs.org/), you can even optimize images with a single click.
+The assets tab that shows all your static assets and their information. You can copy the paths of the assets, or the code snippets of using them. In the future, with the integrations of [Nuxt Image](https://image.nuxt.com/), you can even optimize images with a single click.
 
 <img width="1526" alt="tab-assets" src="https://user-images.githubusercontent.com/11247099/227901468-1089c0a9-8229-4a66-8dee-a3d2a20c9466.png">
 

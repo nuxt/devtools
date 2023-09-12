@@ -25,7 +25,7 @@ async function run() {
   consola.log('')
   consola.log(c.bold(c.green(' Nuxt ')))
   consola.log(`${c.inverse(c.bold(c.green(' DevTools ')))} ${c.green(`v${version}`)} ${c.yellow('(experimental)')}`)
-  consola.log(`\n${c.gray('Learn more at https://devtools.nuxtjs.org\n')}`)
+  consola.log(`\n${c.gray('Learn more at https://devtools.nuxt.com\n')}`)
 
   if (moduleName.endsWith('-edge'))
     throw new Error('Edge release of Nuxt DevTools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#edge-release-channel')

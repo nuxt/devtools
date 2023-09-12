@@ -1,4 +1,4 @@
-<a href="https://devtools.nuxtjs.org"><img width="1200" alt="Nuxt DevTools" src="https://github-production-user-asset-6210df.s3.amazonaws.com/904724/261577617-a10567bd-ad33-48cc-9bda-9e37dbe1929f.png"></a>
+<a href="https://devtools.nuxt.com"><img width="1200" alt="Nuxt DevTools" src="https://github-production-user-asset-6210df.s3.amazonaws.com/904724/261577617-a10567bd-ad33-48cc-9bda-9e37dbe1929f.png"></a>
 <br>
 <h1>
 Nuxt DevTools <sup>Preview</sup>
@@ -18,7 +18,7 @@ Unleash Nuxt Developer Experience.
 <p>
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
   <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a> |
-  <a href="https://devtools.nuxtjs.org/">📚 Documentation</a>
+  <a href="https://devtools.nuxt.com/">📚 Documentation</a>
 </p>
 
 <br>
@@ -110,11 +110,11 @@ Read the [**Announcement Blog Post 🎊**](https://nuxt.com/blog/introducing-nux
 
 ## Module Authors
 
-Please refer to the [Module Authors Guide](https://devtools.nuxtjs.org/module/guide).
+Please refer to the [Module Authors Guide](https://devtools.nuxt.com/module/guide).
 
 ## Contribution Guide
 
-Please refer to the [Contribution Guide](https://devtools.nuxtjs.org/development/contributing).
+Please refer to the [Contribution Guide](https://devtools.nuxt.com/development/contributing).
 
 ## License
 
