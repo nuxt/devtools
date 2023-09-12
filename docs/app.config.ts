@@ -21,7 +21,7 @@ export default defineAppConfig({
       },
       dark: {
         background: 'var(--color-gray-950)',
-        foreground: 'var(--color-gray-400)',
+        foreground: 'var(--color-gray-200)',
       },
     },
   },
