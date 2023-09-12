@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  colorMode: 'dark'
+})
+
 const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
 const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
 useSeoMeta({
@@ -114,7 +118,7 @@ watch(projectsSectionVisible, () => {
     <template #tools>
       <!-- TODO: Links on card ? -->
       <UPageGrid>
-        <UPageCard v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
+        <ULandingCard v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
           :title="card.title" :description="card.description"
           :ui="{ to: 'hover:ring-2 dark:hover:ring-gray-500 hover:ring-gray-500 hover:bg-gray-100/50', icon: { base: 'w-10 h-10 flex-shrink-0 text-gray-100' }, body: { base: 'h-full', background: 'bg-gradient-to-b from-gray-900 to-gray-950' } }" />
       </UPageGrid>

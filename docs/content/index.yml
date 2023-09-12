@@ -38,13 +38,13 @@ sections:
     button: 'Explore all features'
     projectCards:
       - title: 'Pages'
-        description: "Access your app's routes interactively and use the text box to read and test how each route matches the Pages tab."
+        description: "Display your current routes with useful information such as what layout or middleware it has, and provides a quick way to navigate between pages. You can also use the textbox to see how each route is matched."
         to: '/guide/features#pages'
       - title: 'Components'
-        description: "Explore your app's components interactively in the Components tab. Easily search and view their source code."
+        description: "Display all the components you are using in your app and where they are from. You can also search for them and go to the source code."
         to: '/guide/features#components'
       - title: 'Imports'
-        description: 'Interactively explore Nuxt auto-imports in the Imports tab. See all files, sources, and optional descriptions and documentations.'
+        description: 'Disover all the auto-imports composables and utils registered in your app. You can see which files are importing them, and where they are from. Some entries can also provide short descriptions and documentation links.'
         to: '/guide/features#imports'
   - slot: cta
     title: Trusted and supported by our<br />amazing community
