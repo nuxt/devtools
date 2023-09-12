@@ -1,12 +1,9 @@
-import { promisify } from 'node:util'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addVitePlugin } from '@nuxt/kit'
 import Inspect from 'vite-plugin-inspect'
-import folderSizeCallback from 'fast-folder-size'
+import { getFolderSize } from '../utils/fs'
 import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
-
-const folderSize = promisify(folderSizeCallback)
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
   if (options.viteInspect !== false) {
@@ -21,7 +18,11 @@ export async function setup(nuxt: Nuxt, options: ModuleOptions) {
   nuxt.hook('build:analyze:done', async (meta) => {
     const _meta = meta as AnalyzeBuildMeta
     _meta.size = _meta.size || {}
-    _meta.size.clientBundle = await folderSize(join(meta.buildDir, 'dist/client'))
-    _meta.size.nitroBundle = await folderSize(meta.outDir)
+
+    const dirs = [join(meta.buildDir, 'dist/client'), meta.outDir]
+    const [clientBundleSize, nitroBundleSize] = await Promise.all(dirs.map(getFolderSize))
+
+    _meta.size.clientBundle = clientBundleSize
+    _meta.size.nitroBundle = nitroBundleSize
   })
 }

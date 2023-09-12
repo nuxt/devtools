@@ -31,7 +31,7 @@ export function setupClientRPC() {
     },
     async navigateTo(path: string) {
       client.value.open()
-      if (router.currentRoute.value.path !== path)
+      if (router.currentRoute.value?.path !== path)
         router.push(path)
     },
   } satisfies ClientFunctions)

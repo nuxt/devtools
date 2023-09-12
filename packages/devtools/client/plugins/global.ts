@@ -39,8 +39,8 @@ export default defineNuxtPlugin(() => {
   })
 
   router.afterEach(() => {
-    const path = router.currentRoute.value.path
-    if (path.includes('__'))
+    const path = router.currentRoute.value?.path
+    if (!path || path.includes('__'))
       return
     client.value?.hooks.callHook('devtools:navigate', path)
   })
