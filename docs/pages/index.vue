@@ -87,7 +87,7 @@ watch(projectsSectionVisible, () => {
         {{ page.hero?.button }}
       </UButton>
       <UButton size="xl" color="white" icon="i-ph-video-duotone" @click="videoModalOpen = true">
-        What is Nuxt Devtools?
+        What is Nuxt DevTools?
       </UButton>
       <UModal v-model="videoModalOpen" :ui="{ width: 'sm:max-w-[560px]' }">
         <div>
