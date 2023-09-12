@@ -2,7 +2,7 @@
 definePageMeta({
   colorMode: 'dark'
 })
-
+const videoModalOpen = ref(false)
 const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
 const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
 useSeoMeta({
@@ -86,24 +86,23 @@ watch(projectsSectionVisible, () => {
       <UButton to="/guide/getting-started" icon="i-ph-rocket-launch-duotone" size="xl">
         {{ page.hero?.button }}
       </UButton>
-      <UInput aria-label="Copy code to get started" :model-value="source" name="get-started" disabled autocomplete="off"
-        size="xl" :ui="{ base: 'disabled:cursor-default', icon: { trailing: { pointer: '' } } }">
-        <template #leading>
-          <UIcon name="i-ph-terminal" />
-        </template>
-        <template #trailing>
-          <UButton aria-label="Copy Code" :color="copied ? 'green' : 'gray'" variant="ghost" :padded="false"
-            :icon="copied ? 'i-ph-check-square-duotone' : 'i-ph-copy-duotone'" @click="copy(source)" />
-        </template>
-      </UInput>
+      <UButton size="xl" color="white" icon="i-ph-video-duotone" @click="videoModalOpen = true">
+        What is Nuxt Devtools?
+      </UButton>
+      <UModal v-model="videoModalOpen" :ui="{ width: 'sm:max-w-[560px]' }">
+        <div>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube-nocookie.com/embed/Wkla7ATW8Vc?si=po2wmux2Ybfq0Evm"
+            title="Nuxt Devtools by LearnVue"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          />
+        </div>
+      </UModal>
     </template>
-    <div class="pt-12">
-      <!-- TODO: put devtools poster and video instead -->
-      <VideoPlayer :source="{ type: 'mp4', src: '/videos/nuxt.mp4' }" poster="/videos/poster-volta.webp" />
-      <div class="mt-4">
-        {{ page.hero?.videoText }}
-      </div>
-    </div>
   </ULandingHero>
 
   <ULandingSection v-for="(section, index) of page.sections" :key="index" v-bind="section">
