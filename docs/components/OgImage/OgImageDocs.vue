@@ -34,12 +34,6 @@ defineProps({
         {{ description }}
       </p>
     </div>
-    <Logo class="w-[349px] h-[60px] text-white" />
+    <Logo class="w-[492px] h-[60px] text-white" />
   </div>
 </template>
-
-<style scoped>
-._gradient {
-
-}
-</style>

@@ -4,7 +4,8 @@ definePageMeta({
 })
 const videoModalOpen = ref(false)
 const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
-const description = 'Nuxt DevTools: Elevate your Nuxt App insight and Developer Experience. Enhance transparency, identify performance gaps, and seamlessly manage app configurations.'
+const description = 'The Nuxt DevTools gives you insights and transparency about your Nuxt App. Identify performance gaps and seamlessly manage your app configurations.'
+
 useSeoMeta({
   titleTemplate: '',
   title,
@@ -22,9 +23,6 @@ const { data } = await useAsyncData('landing', () => {
   ])
 })
 const [getStarted, page] = data.value
-
-const source = ref('npx nuxi@latest devtools enable')
-const { copy, copied } = useClipboard({ source })
 
 const intervalId = ref()
 const currentStep = ref(0)
@@ -73,9 +71,9 @@ watch(projectsSectionVisible, () => {
 </script>
 
 <template>
-  <ULandingHero align="center" direction="vertical"
-    :ui="{ container: 'flex flex-col lg:gap-12', description: 'mt-6 text-lg/8 lg:px-28 text-gray-400' }">
-    <span class="gradient" />
+  <span class="gradient" />
+  <ULandingHero orientation="horizontal" :ui="{ container: 'flex lg:gap-12' }">
+    <Illustration class="hidden lg:block h-64" />
     <template #title>
       <span v-html="page.hero?.title" />
     </template>
@@ -115,7 +113,6 @@ watch(projectsSectionVisible, () => {
     </template>
 
     <template #tools>
-      <!-- TODO: Links on card ? -->
       <UPageGrid>
         <ULandingCard v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
           :title="card.title" :description="card.description"
@@ -123,7 +120,6 @@ watch(projectsSectionVisible, () => {
       </UPageGrid>
     </template>
 
-    <!-- TODO: change image -->
     <template #project>
       <div>
         <div ref="nuxtProjectsSection" class="flex flex-row gap-x-12">
@@ -267,12 +263,12 @@ watch(projectsSectionVisible, () => {
 
 <style scoped lang="postcss">
 .gradient {
-  position: absolute;
-  top: -5vh;
+  position: fixed;
+  top: 25vh;
   width: 100%;
   height: 30vh;
   background: radial-gradient(50% 50% at 50% 50%, #00DC82 0%, rgba(0, 220, 130, 0) 100%);
-  filter: blur(150px);
+  filter: blur(180px);
   opacity: 0.6;
   z-index: -1;
 }
