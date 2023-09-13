@@ -13,6 +13,7 @@
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
     "test": "pnpm lint",
     "docs": "nuxi dev docs",
+    "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
@@ -47,7 +48,7 @@
     "ua-parser-js": "^1.0.35",
     "unocss": "^0.55.7",
     "vite-hot-client": "^0.2.2",
-    "vue-tsc": "^1.8.8"
+    "vue-tsc": "^1.8.10"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
