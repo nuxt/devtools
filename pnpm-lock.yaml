@@ -280,8 +280,8 @@ importers:
         specifier: ^6.6.2
         version: 6.6.2
       json-editor-vue:
-        specifier: ^0.10.15
-        version: 0.10.15(vanilla-jsoneditor@0.18.3)(vue@3.3.4)
+        specifier: ^0.10.16
+        version: 0.10.16(vanilla-jsoneditor@0.18.3)(vue@3.3.4)
       markdown-it:
         specifier: ^13.0.1
         version: 13.0.1
@@ -352,7 +352,7 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0
       nuxt:
-        specifier: ^3.6.5
+        specifier: ^3.7.3
         version: 3.7.3(@parcel/watcher@2.3.0)(@types/node@20.6.1)(eslint@8.49.0)(rollup@3.29.1)(typescript@5.2.2)(vue-tsc@1.8.11)
       vite:
         specifier: '*'
@@ -2183,6 +2183,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -6807,8 +6808,8 @@ packages:
   /json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
 
-  /json-editor-vue@0.10.15(vanilla-jsoneditor@0.18.3)(vue@3.3.4):
-    resolution: {integrity: sha512-TWCwVV/M7Qy0MGDiw+6rEL/5xgmNYDw3JSa0N6Ycfdzm4h64tuPizCBMi0UKvvf2/VXrWSy7joghQ7H5J2Gfbg==}
+  /json-editor-vue@0.10.16(vanilla-jsoneditor@0.18.3)(vue@3.3.4):
+    resolution: {integrity: sha512-+RLEZwSC9BjNMdN2vo3BCJKmPwvPa5lCxhIaXQrOVQsdAmtF+BUERghEURQ5jaYBDpYZnk+t6Xkh75v0JcUeXw==}
     requiresBuild: true
     peerDependencies:
       '@vue/composition-api': '>=1'
@@ -8098,6 +8099,9 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
