@@ -7,8 +7,6 @@ export const shiki = shallowRef<HighlighterCore>()
 let promise: Promise<any> | null = null
 
 export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text' = 'text') {
-  const mode = useColorMode()
-
   if (!promise && !shiki.value) {
     // Only loading when needed
     promise = getHighlighterCore({
@@ -45,7 +43,10 @@ export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text'
   return {
     code: shiki.value!.codeToHtml(code, {
       lang,
-      theme: mode.value === 'dark' ? 'vitesse-dark' : 'vitesse-light',
+      themes: {
+        dark: 'vitesse-dark',
+        light: 'vitesse-light',
+      },
     }),
     supported: true,
   }

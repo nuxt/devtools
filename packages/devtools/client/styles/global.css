@@ -57,21 +57,13 @@ html.dark {
 .prose hr {
   --uno: border-solid border-1 border-b border-base h-1px w-full block my-2 op50;
 }
-.dark .vitesse-light {
-  display: none;
+
+.dark .shiki {
+  background: var(--shiki-dark-bg, inherit) !important;
 }
-html:not(.dark) .vitesse-dark {
-  display: none;
-}
-.prose pre:has(.shiki-container) {
-  padding: 0;
-  margin: 0;
-  font-size: 1.1em;
-}
-.prose pre.shiki {
-  padding: 1em;
-  margin: 0;
-  --uno: border border-base rounded;
+
+.dark .shiki span {
+  color: var(--shiki-dark, inherit) !important;
 }
 
 /* Splitpanes */

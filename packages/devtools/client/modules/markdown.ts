@@ -3,6 +3,7 @@ import Markdown from 'unplugin-vue-markdown/vite'
 import LinkAttributes from 'markdown-it-link-attributes'
 import type { BuiltinLanguage } from 'shikiji'
 import { getHighlighter } from 'shikiji'
+import { bundledLanguages } from 'shikiji/langs'
 
 export default defineNuxtModule({
   async setup(_, nuxt) {
@@ -19,17 +20,10 @@ export default defineNuxtModule({
 
     nuxt.options.extensions.push('.md')
 
-    const highlighter = await getHighlighter({
-      themes: [
-        'vitesse-dark',
-        'vitesse-light',
-      ],
-    })
-
     nuxt.hook('vite:extendConfig', async (config) => {
       config.plugins!.push(
         Markdown({
-          markdownItSetup(md) {
+          async markdownItSetup(md) {
             md.use(LinkAttributes, {
               matcher: (link: string) => /^https?:\/\//.test(link),
               attrs: {
@@ -37,13 +31,24 @@ export default defineNuxtModule({
                 rel: 'noopener',
               },
             })
+
+            const highlighter = await getHighlighter({
+              themes: [
+                'vitesse-dark',
+                'vitesse-light',
+              ],
+              langs: Object.keys(bundledLanguages),
+            })
+
             md.options.highlight = (code, lang) => {
               const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguage
-              const dark = highlighter.codeToHtml(code, { lang: _lang || 'text', theme: 'vitesse-dark' })
-                .replace('<pre class="shiki"', '<pre class="shiki shiki-dark"')
-              const light = highlighter.codeToHtml(code, { lang: _lang || 'text', theme: 'vitesse-light' })
-                .replace('<pre class="shiki"', '<pre class="shiki shiki-light"')
-              return `<div class="shiki-container">${dark}${light}</div>`
+              return highlighter.codeToHtml(code, {
+                lang: _lang || 'text',
+                themes: {
+                  dark: 'vitesse-dark',
+                  light: 'vitesse-light',
+                },
+              })
             }
           },
         }),
