@@ -153,6 +153,8 @@ export interface NuxtDevToolsOptions {
     hiddenTabCategories: string[]
     pinnedTabs: string[]
     minimizePanelInactive: number
+    sidebarMinimized: boolean
+    sidebarScrollable: boolean
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null

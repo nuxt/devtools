@@ -51,7 +51,7 @@ addEventListener('keydown', (e) => {
   }
 })
 
-const { scale } = useDevToolsUIOptions()
+const { scale, sidebarMinimized } = useDevToolsUIOptions()
 const dataSchema = useSchemaInput()
 
 onMounted(() => {
@@ -89,8 +89,8 @@ registerCommands(() =>
       Connecting....
     </NLoading>
     <div
-      v-else :grid="isUtilityView ? 'flex' : '~ cols-[50px_1fr]'"
-      h-full h-screen of-hidden font-sans bg-base
+      v-else :grid="isUtilityView ? 'flex' : sidebarMinimized ? '~ cols-[50px_1fr]' : '~ cols-[250px_1fr]'"
+      h-full h-screen of-hidden font-sans transition-all bg-base
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
