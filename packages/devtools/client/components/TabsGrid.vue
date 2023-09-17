@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CategorizedTabs } from '../../types'
+import type { CategorizedTabs } from '../../src/types'
 
 defineProps<{
   categories: CategorizedTabs
