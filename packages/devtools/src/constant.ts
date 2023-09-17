@@ -36,7 +36,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     hiddenTabs: [],
     pinnedTabs: [],
     hiddenTabCategories: [],
-    sidebarMinimized: true,
+    sidebarExpanded: false,
     sidebarScrollable: false,
   },
   serverRoutes: {

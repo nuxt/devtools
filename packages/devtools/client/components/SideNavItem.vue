@@ -34,7 +34,10 @@ function onClick() {
       :to="tabPath"
       :flex="`~ items-center ${minimized ? 'justify-center' : 'justify-between'}`"
       hover="bg-active"
-      relative block h-10 :w="minimized ? '10' : 'full'" select-none :rounded="minimized ? 'xl' : ''" :p="minimized ? '1' : 'x4'" text-secondary
+      relative block h-10
+      :w="minimized ? '10' : 'full'" select-none
+      :rounded="minimized ? 'xl' : ''"
+      :p="minimized ? '1' : 'x3'" text-secondary
       exact-active-class="!text-primary bg-active"
       @click="onClick"
     >
@@ -45,7 +48,7 @@ function onClick() {
           title="Settings"
           :show-title="false"
         />
-        <span v-if="!minimized">
+        <span v-if="!minimized" overflow-hidden text-ellipsis ws-nowrap>
           {{ tab.title }}
         </span>
       </div>

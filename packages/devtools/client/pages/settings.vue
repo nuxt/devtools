@@ -12,7 +12,7 @@ const {
   pinnedTabs,
   hiddenTabCategories,
   minimizePanelInactive,
-  sidebarMinimized,
+  sidebarExpanded,
   sidebarScrollable,
 } = useDevToolsUIOptions()
 
@@ -154,10 +154,20 @@ watchEffect(() => {
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
               <NButton n="primary" @click="toggle">
-                <div carbon-sun translate-y--1px dark:carbon-moon /> {{ isDark.value ? 'Dark' : 'Light' }}
+                <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
               </NButton>
             </NDarkToggle>
           </div>
+          <NCheckbox v-model="sidebarExpanded" n-primary>
+            <span>
+              Expand Sidebar
+            </span>
+          </NCheckbox>
+          <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
+            <span>
+              Scrollable Sidebar
+            </span>
+          </NCheckbox>
         </div>
         <div py3 flex="~ col gap-1" border="b base">
           <h3 mb1 text-lg>
@@ -192,16 +202,6 @@ watchEffect(() => {
           </NCheckbox> -->
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
-          </NCheckbox>
-          <NCheckbox v-model="sidebarMinimized" n-primary>
-            <span>
-              Minimized Sidebar
-            </span>
-          </NCheckbox>
-          <NCheckbox v-model="sidebarScrollable" :disabled="!sidebarMinimized" n-primary>
-            <span>
-              Scrollable Sidebar
-            </span>
           </NCheckbox>
         </div>
       </div>
