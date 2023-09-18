@@ -2,6 +2,8 @@
 const client = useClient()
 const nuxt = useNuxtApp()
 
+const { sidebarExpanded } = useDevToolsUIOptions()
+
 function refreshData() {
   nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
   triggerRef(client)
@@ -24,6 +26,10 @@ function toggleSplitScreen() {
           <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
         </NButton>
       </NDarkToggle>
+      <NButton n="sm primary" @click="sidebarExpanded = !sidebarExpanded">
+        <NIcon :icon="sidebarExpanded ? 'i-carbon-side-panel-close' : 'i-carbon-side-panel-open'" />
+        {{ sidebarExpanded ? 'Minimize Sidebar' : 'Expand Sidebar' }}
+      </NButton>
       <NButton n="sm primary" to="/settings">
         <div i-carbon-settings-adjust /> Settings
       </NButton>

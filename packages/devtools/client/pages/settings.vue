@@ -12,6 +12,8 @@ const {
   pinnedTabs,
   hiddenTabCategories,
   minimizePanelInactive,
+  sidebarExpanded,
+  sidebarScrollable,
 } = useDevToolsUIOptions()
 
 const client = useClient()
@@ -156,6 +158,16 @@ watchEffect(() => {
               </NButton>
             </NDarkToggle>
           </div>
+          <NCheckbox v-model="sidebarExpanded" n-primary>
+            <span>
+              Expand Sidebar
+            </span>
+          </NCheckbox>
+          <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
+            <span>
+              Scrollable Sidebar
+            </span>
+          </NCheckbox>
         </div>
         <div py3 flex="~ col gap-1" border="b base">
           <h3 mb1 text-lg>

@@ -3,6 +3,7 @@ import TabsGrid from './TabsGrid.vue'
 
 const client = useClient()
 const allTabs = useEnabledTabs()
+const { sidebarExpanded, sidebarScrollable } = useDevToolsUIOptions()
 
 const showDocking = ref(false)
 const showMoreTabs = ref(false)
@@ -28,8 +29,14 @@ const containerCapacity = computed(() => {
 const inlineTabs = computed(() => allTabs.value.slice(0, containerCapacity.value))
 const overflowTabs = computed(() => allTabs.value.slice(containerCapacity.value))
 
+const categorizedTabs = getCategorizedTabs(allTabs)
 const categorizedInlineTabs = getCategorizedTabs(inlineTabs)
 const categorizedOverflowTabs = getCategorizedTabs(overflowTabs)
+
+const displayedTabs = computed(() => (sidebarScrollable.value || sidebarExpanded.value)
+  ? categorizedTabs.value
+  : categorizedInlineTabs.value,
+)
 
 onClickOutside(
   panel,
@@ -46,8 +53,14 @@ onClickOutside(
 </script>
 
 <template>
-  <div id="nuxt-devtools-side-nav" border="r base" flex="~ col" z-100 h-full items-center of-hidden bg-base>
-    <div flex="~ none col items-center">
+  <div
+    id="nuxt-devtools-side-nav"
+    border="r base" flex="~ col"
+    z-100 h-full items-start of-hidden bg-base
+  >
+    <div
+      sticky top-0 z-1 w-full p1 bg-base border="b base"
+    >
       <VDropdown
         placement="left-start"
         :distance="12"
@@ -58,41 +71,56 @@ onClickOutside(
       >
         <button
           ref="buttonDocking"
-          flex="~"
+          flex="~ items-center justify-center gap-2"
           hover="bg-active"
-          relative my1 h-10 w-10 select-none items-center justify-center rounded-xl p1
-          text-secondary
+          relative h-10 select-none p2 text-secondary
           exact-active-class="!text-primary bg-active"
-          :class="client ? '' : 'saturate-0'"
+          :class="[
+            client ? '' : 'saturate-0',
+            sidebarExpanded ? 'w-full rounded pl2.5' : 'w-10 rounded-xl',
+          ]"
           :title="client ? 'Nuxt DevTools' : 'DevTools Client not connected, try open it in iframe mode'"
           @click="toggleDocking"
         >
           <div i-logos-nuxt-icon h-6 w-6 />
+          <template v-if="sidebarExpanded">
+            <span text="lg white" font-600>
+              DevTools
+            </span>
+            <div flex-auto />
+            <div i-carbon-overflow-menu-vertical />
+          </template>
         </button>
         <template #popper>
           <DockingPanel ref="panel" />
         </template>
       </VDropdown>
-      <div h-1px w-8 border="b base" />
     </div>
 
-    <div flex="~ auto col gap-0.5 items-center" of-hidden py1>
-      <template v-for="[name, tabs], idx of categorizedInlineTabs" :key="name">
+    <div
+      flex="~ auto col gap-0.5 items-center" w-full p1 class="no-scrollbar"
+      :class="sidebarExpanded ? '' : 'of-x-hidden of-y-auto'"
+    >
+      <template v-for="[name, tabs], idx of displayedTabs" :key="name">
         <template v-if="tabs.length">
-          <div v-if="idx" my1 h-1px w-8 border="b base" />
+          <div v-if="idx" my1 h-1px w-full border="b base" />
           <SideNavItem
             v-for="tab of tabs"
             :key="tab.name"
             :tab="tab"
+            :minimized="!sidebarExpanded"
           />
         </template>
       </template>
       <div flex-auto />
     </div>
 
-    <div flex="~ none col items-center gap-1" pb1>
+    <div
+      :flex="`~ items-center gap-1 ${sidebarExpanded ? '' : 'none col'}`"
+      border="t base" sticky bottom-0 w-full p1 bg-base
+    >
       <VDropdown
-        v-if="overflowTabs.length"
+        v-if="overflowTabs.length && !sidebarScrollable && !sidebarExpanded"
         placement="left-end"
         :distance="12"
         :triggers="[]"
@@ -123,18 +151,15 @@ onClickOutside(
           <TabsGrid :categories="categorizedOverflowTabs" max-w-80 target="main" />
         </template>
       </VDropdown>
-      <NuxtLink
-        to="/settings"
-        flex="~ items-center justify-center"
-        hover="bg-active"
-        relative block h-10 w-10 select-none rounded-xl p1 text-secondary
-        exact-active-class="!text-primary bg-active"
-      >
-        <TabIcon
-          text-xl
-          icon="i-carbon-settings-adjust" title="Settings" :show-title="false"
-        />
-      </NuxtLink>
+      <SideNavItem
+        :minimized="!sidebarExpanded"
+        :tab="{
+          icon: 'i-carbon:settings-adjust',
+          title: 'Settings',
+          name: 'settings',
+          path: '/settings',
+        }"
+      />
     </div>
   </div>
 </template>
