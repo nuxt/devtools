@@ -394,9 +394,6 @@ importers:
       '@iconify-json/tabler':
         specifier: ^1.1.91
         version: 1.1.91
-      '@nuxt/devtools':
-        specifier: workspace:*
-        version: link:../devtools
       '@nuxt/devtools-kit':
         specifier: workspace:*
         version: link:../devtools-kit
@@ -446,6 +443,9 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3
     devDependencies:
+      '@nuxt/devtools':
+        specifier: workspace:*
+        version: link:../devtools
       nuxt:
         specifier: ^3.7.3
         version: 3.7.3(@parcel/watcher@2.3.0)(@types/node@20.6.1)(eslint@8.49.0)(rollup@3.29.1)(typescript@5.2.2)(vue-tsc@1.8.11)
