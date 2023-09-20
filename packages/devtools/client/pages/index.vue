@@ -24,8 +24,8 @@ function visit() {
     </p>
     <p mb6 op50>
       Learn more at
-      <NLink href="https://devtools.nuxtjs.org/" target="_blank" rel="noopener noreferrer" n="primary">
-        devtools.nuxtjs.org
+      <NLink href="https://devtools.nuxt.com/" target="_blank" rel="noopener noreferrer" n="primary">
+        devtools.nuxt.com
       </NLink>
     </p>
 
