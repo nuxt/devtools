@@ -1,3 +1,23 @@
+## [0.8.4](https://github.com/nuxt/devtools/compare/v0.8.3...v0.8.4) (2023-09-20)
+
+
+### Bug Fixes
+
+* copy `__NUXT__` object to popup frame ([ea46cea](https://github.com/nuxt/devtools/commit/ea46cea183a6cebb17b109812667807c4f038ec3))
+* **deps:** set `@nuxt/devtools` as `devDependency` ([#425](https://github.com/nuxt/devtools/issues/425)) ([4e280c9](https://github.com/nuxt/devtools/commit/4e280c91d97902e0afd9c60b65904cfe7f9bbcdb))
+* popup button ([d1171b0](https://github.com/nuxt/devtools/commit/d1171b0557a2b349caf6183382950f62ed9ae55f))
+* **settings:** make sure client has value ([#418](https://github.com/nuxt/devtools/issues/418)) ([9757c00](https://github.com/nuxt/devtools/commit/9757c00b03020b2676a4e74b35d6312dd4d06e79))
+
+
+### Features
+
+* collapsible sidebar ([#420](https://github.com/nuxt/devtools/issues/420)) ([530244b](https://github.com/nuxt/devtools/commit/530244b2d4793477e926d41e3beaa8c629d168d3))
+* migrate new shikiji themes mode ([7688cc4](https://github.com/nuxt/devtools/commit/7688cc411e99fa28d5feedb14805ca8f3d2717da))
+* redesign settings page ([b777b8e](https://github.com/nuxt/devtools/commit/b777b8ed36effca166a0f5fcd876620a1e23e5d9))
+* rework docs ([#413](https://github.com/nuxt/devtools/issues/413)) ([c9e6e7d](https://github.com/nuxt/devtools/commit/c9e6e7d57bb48a624ba71357f347cc353e53b614))
+
+
+
 ## [0.8.3](https://github.com/nuxt/devtools/compare/v0.8.2...v0.8.3) (2023-09-06)
 
 
