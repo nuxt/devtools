@@ -1,5 +1,4 @@
 import type { ClientFunctions } from '../../src/types'
-import { userAgentInfo } from '~/composables/dev-auth'
 
 export function setupClientRPC() {
   const nuxt = useNuxtApp()
