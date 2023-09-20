@@ -1,5 +1,5 @@
-import { MaybeRefOrGetter } from 'vue'
-import { TabCategory } from '../src/types'
+import type { MaybeRefOrGetter } from 'vue'
+import type { TabCategory } from '../src/types'
 
 declare module '#app' {
   interface PageMeta {
