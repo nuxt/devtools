@@ -3,8 +3,7 @@ import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
-import boxen from 'boxen'
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
 
 import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -154,23 +153,24 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       const token = await getDevAuthToken()
 
       const message = [
-        `A browser is requesting permissions of ${c.bold(c.yellow('writing files and running commands'))} from the DevTools UI.`,
-        c.bold(info),
+        `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,
+        colors.bold(info),
         '',
         'Please open the following URL in the browser:',
-        c.bold(c.green(`${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}${ROUTE_AUTH}?token=${token}`)),
+        colors.bold(colors.green(`${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}${ROUTE_AUTH}?token=${token}`)),
         '',
         'Or manually copy and paste the following token:',
-        c.bold(c.cyan(token)),
+        colors.bold(colors.cyan(token)),
       ]
 
-      // eslint-disable-next-line no-console
-      console.log(`\n${boxen(message.join('\n'), {
-        padding: 1,
-        borderColor: 'yellow',
-        borderStyle: 'round',
-        title: 'Permission Request',
-      })}\n`)
+      logger.box({
+        message: message.join('\n'),
+        title: colors.bold(colors.yellow(' Permission Request ')),
+        style: {
+          borderColor: 'yellow',
+          borderStyle: 'rounded',
+        },
+      })
     },
     async verifyAuthToken(token: string) {
       return token === await getDevAuthToken()
