@@ -249,6 +249,7 @@ export async function setupDevToolsClient({
       `
       pip.__NUXT_DEVTOOLS_DISABLE__ = true
       pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
+      pip.__NUXT__ = window.parent?.__NUXT__ || window.__NUXT__
       pip.document.title = 'Nuxt DevTools'
       pip.document.head.appendChild(style)
       pip.document.body.appendChild(iframe)
