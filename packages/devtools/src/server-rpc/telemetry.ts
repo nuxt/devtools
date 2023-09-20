@@ -19,10 +19,10 @@ export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) 
         return {
           name: 'devtools',
           version,
-          debug: true,
           ...payload,
         }
       }
+      t.createEvent('devtools', { event: 'enabled' })
     })
   }
 
@@ -33,6 +33,7 @@ export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) 
       if (!telemetry)
         return
       telemetry.createEvent('devtools', payload)
+      // TODO: throttle instead of debounce
       if (timer)
         clearTimeout(timer)
       timer = setTimeout(() => {

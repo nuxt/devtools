@@ -145,6 +145,9 @@ export interface VSCodeTunnelOptions {
 }
 
 export interface NuxtDevToolsOptions {
+  behavior: {
+    telemetry: boolean | null
+  }
   ui: {
     componentsView: 'list' | 'graph'
     componentsGraphShowNodeModules: boolean

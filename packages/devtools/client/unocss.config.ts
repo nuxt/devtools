@@ -38,6 +38,7 @@ export default defineConfig({
       fonts: {
         sans: 'Inter:400,500',
         mono: 'Fira Code',
+        stylish: 'Caveat',
       },
     }),
     presetTypography(),
