@@ -19,7 +19,7 @@ function visit() {
       👋 Hi there, welcome to Nuxt DevTools!
     </p>
     <p max-w-190 text-lg>
-      <NuxtLogo inline-block h-8 translate-y--0.8 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
+      <NuxtLogo mr-0.5 inline-block h-5 translate-y--1.1 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
       development experience with Nuxt. Enjoy!<br>
     </p>
     <p mb6 op50>

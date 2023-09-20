@@ -36,12 +36,9 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
       <!-- Banner -->
       <div flex="~ col" mt-5 items-center md:mt-20>
         <div flex="~" mt--10 items-center justify-center>
-          <NuxtLogo h-14 md:h-18 />
-          <button mr--16 mt--6 @click="goIntro">
-            <Badge bg-green-400:10 text-green-400 title="preview" v-text="'preview'" />
-          </button>
+          <NuxtLogo h-10 />
         </div>
-        <div mb6 mt--1 text-center text-sm flex="~ gap-1 wrap">
+        <div mb6 mt3 text-center text-sm flex="~ gap-1 wrap">
           <span op40>
             Nuxt DevTools
           </span>
