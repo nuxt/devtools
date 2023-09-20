@@ -60,6 +60,7 @@ export interface ServerFunctions {
   renameStaticAsset(token: string, oldPath: string, newPath: string): Promise<void>
 
   // Actions
+  telemetryEvent(payload: object): void
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>

@@ -5,11 +5,19 @@ const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__
 
 const showInfo = ref(false)
 const copy = useCopy()
+
+function popup() {
+  const fn = client.value?.devtools?.popup
+  if (fn) {
+    telemetry('popup')
+    fn()
+  }
+}
 </script>
 
 <template>
   <template v-if="!isInPopup">
-    <NButton v-if="client?.devtools.popup" n="sm primary" @click="client.devtools.popup()">
+    <NButton v-if="client?.devtools.popup" n="sm primary" @click="popup()">
       <div carbon-launch /> Popup
     </NButton>
     <template v-else>

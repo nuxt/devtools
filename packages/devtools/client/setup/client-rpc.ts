@@ -1,4 +1,5 @@
 import type { ClientFunctions } from '../../src/types'
+import { userAgentInfo } from '~/composables/dev-auth'
 
 export function setupClientRPC() {
   const nuxt = useNuxtApp()
@@ -30,7 +31,7 @@ export function setupClientRPC() {
         processAnalyzeBuildInfo.value = undefined
     },
     async navigateTo(path: string) {
-      client.value.open()
+      client.value.devtools.open()
       if (router.currentRoute.value?.path !== path)
         router.push(path)
     },
@@ -43,4 +44,6 @@ export function setupClientRPC() {
         devAuthToken.value ||= 'disabled'
       }
     })
+
+  telemetry('open')
 }

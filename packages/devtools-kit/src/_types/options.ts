@@ -82,6 +82,13 @@ export interface ModuleOptions {
       exclude?: (string | RegExp | ((item: Import) => boolean))[]
     }
   }
+
+  /**
+   * Enable anonymous telemetry, helping us improve Nuxt DevTools.
+   *
+   * By default it will respect global Nuxt telemetry settings.
+   */
+  telemetry?: boolean
 }
 
 export interface ModuleGlobalOptions {
