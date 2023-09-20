@@ -86,25 +86,24 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div px6 py6>
+  <div px8 py6>
     <NIconTitle
       class="mb-5 text-xl op75"
       icon="i-carbon-settings-adjust"
       text="DevTools Settings"
     />
     <div grid="~ md:cols-2 gap-x-10 gap-y-3" max-w-300>
-      <div flex="~ col gap-1" py3>
-        <h3 mb1 text-lg>
+      <div flex="~ col gap-2">
+        <h3 text-lg>
           Tabs
         </h3>
         <template v-for="[name, tabs] of categories" :key="name">
-          <div
-            v-if="tabs.length"
-            flex="~ col gap-1" mx--1
-            :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''" pt-2
+          <NCard
+            v-if="tabs.length" p3 flex="~ col gap-1"
+            :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''"
           >
             <NSwitch
-              flex="~ row-reverse" px2 py1 n-lime
+              flex="~ row-reverse" py1 pl2 pr1 n-lime
               :model-value="!hiddenTabCategories.includes(name)"
               @update:model-value="v => toggleTabCategory(name, v)"
             >
@@ -112,45 +111,46 @@ watchEffect(() => {
                 <span capitalize op75>{{ name }}</span>
               </div>
             </NSwitch>
-            <div flex="~ col gap-1" border="~ base rounded" py3 pl4 pr2>
-              <template v-for="tab of tabs" :key="tab.name">
-                <NSwitch
-                  flex="~ row-reverse" py1 pl2 pr1 n-primary
-                  :model-value="!hiddenTabs.includes(tab.name)"
-                  @update:model-value="v => toggleTab(tab.name, v)"
-                >
-                  <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
-                    <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-                    <span>{{ tab.title }}</span>
-                    <div flex-auto />
-                    <template v-if="pinnedTabs.includes(tab.name)">
-                      <NIconButton
-                        icon="i-carbon-caret-up"
-                        :disabled="pinnedTabs.indexOf(tab.name) === 0"
-                        @click="pinMove(tab.name, -1)"
-                      />
-                      <NIconButton
-                        icon="i-carbon-caret-down"
-                        :disabled="pinnedTabs.indexOf(tab.name) === pinnedTabs.length - 1"
-                        @click="pinMove(tab.name, 1)"
-                      />
-                    </template>
+
+            <div mx--1 my1 h-1px border="b base" op75 />
+
+            <template v-for="tab of tabs" :key="tab.name">
+              <NSwitch
+                flex="~ row-reverse" py1 pl2 pr1 n-primary
+                :model-value="!hiddenTabs.includes(tab.name)"
+                @update:model-value="v => toggleTab(tab.name, v)"
+              >
+                <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                  <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
+                  <span>{{ tab.title }}</span>
+                  <div flex-auto />
+                  <template v-if="pinnedTabs.includes(tab.name)">
                     <NIconButton
-                      :icon="pinnedTabs.includes(tab.name) ? ' i-carbon-pin-filled rotate--45' : ' i-carbon-pin op50'"
-                      @click="togglePinTab(tab.name)"
+                      icon="i-carbon-caret-up"
+                      :disabled="pinnedTabs.indexOf(tab.name) === 0"
+                      @click="pinMove(tab.name, -1)"
                     />
-                  </div>
-                </NSwitch>
-              </template>
-            </div>
-          </div>
+                    <NIconButton
+                      icon="i-carbon-caret-down"
+                      :disabled="pinnedTabs.indexOf(tab.name) === pinnedTabs.length - 1"
+                      @click="pinMove(tab.name, 1)"
+                    />
+                  </template>
+                  <NIconButton
+                    :icon="pinnedTabs.includes(tab.name) ? ' i-carbon-pin-filled rotate--45' : ' i-carbon-pin op50'"
+                    @click="togglePinTab(tab.name)"
+                  />
+                </div>
+              </NSwitch>
+            </template>
+          </NCard>
         </template>
       </div>
-      <div>
-        <div py3 flex="~ col gap-1" border="b base">
-          <h3 mb1 text-lg>
-            Appearance
-          </h3>
+      <div flex="~ col gap-2">
+        <h3 text-lg>
+          Appearance
+        </h3>
+        <NCard p4 flex="~ col gap-2">
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
               <NButton n="primary" @click="toggle">
@@ -158,6 +158,14 @@ watchEffect(() => {
               </NButton>
             </NDarkToggle>
           </div>
+          <div mx--2 my1 h-1px border="b base" op75 />
+          <p>UI Scale</p>
+          <NSelect v-model="scale" n="primary">
+            <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
+          <div mx--2 my1 h-1px border="b base" op75 />
           <NCheckbox v-model="sidebarExpanded" n-primary>
             <span>
               Expand Sidebar
@@ -168,32 +176,12 @@ watchEffect(() => {
               Scrollable Sidebar
             </span>
           </NCheckbox>
-        </div>
-        <div py3 flex="~ col gap-1" border="b base">
-          <h3 mb1 text-lg>
-            Floating Panel
-          </h3>
-          <p>Minimize panel on inactive</p>
-          <NSelect v-model.number="minimizePanelInactive" n="primary">
-            <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
-              {{ i[0] }}
-            </option>
-          </NSelect>
-        </div>
-        <div py3 flex="~ col gap-1" border="b base">
-          <h3 mb1 text-lg>
-            UI Scale
-          </h3>
-          <NSelect v-model="scale" n="primary">
-            <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
-              {{ i[0] }}
-            </option>
-          </NSelect>
-        </div>
-        <div py3 flex="~ col gap-1">
-          <h3 mb1 text-lg>
-            Features
-          </h3>
+        </NCard>
+
+        <h3 mt2 text-lg>
+          Features
+        </h3>
+        <NCard p4 flex="~ col gap-2">
           <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
             <span>Close DevTools when clicking outside</span>
           </NCheckbox>
@@ -203,7 +191,16 @@ watchEffect(() => {
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
           </NCheckbox>
-        </div>
+
+          <div mx--2 my1 h-1px border="b base" op75 />
+
+          <p>Minimize floating panel on inactive</p>
+          <NSelect v-model.number="minimizePanelInactive" n="primary">
+            <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
+        </NCard>
       </div>
     </div>
   </div>

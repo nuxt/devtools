@@ -44,7 +44,7 @@ export function unocssPreset(): Preset {
         'color': 'white !important',
       }],
       ['n-disabled', {
-        'opacity': 0.4,
+        'opacity': 0.6,
         'pointer-events': 'none',
         'filter': 'saturate(0)',
       }],
