@@ -9,7 +9,7 @@ const copy = useCopy()
 
 <template>
   <template v-if="!isInPopup">
-    <NButton v-if="client?.popup" n="sm primary" @click="client.popup()">
+    <NButton v-if="client?.devtools.popup" n="sm primary" @click="client.devtools.popup()">
       <div carbon-launch /> Popup
     </NButton>
     <template v-else>
