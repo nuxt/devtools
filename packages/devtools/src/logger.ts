@@ -1,3 +1,3 @@
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 
-export const LOG_PREFIX = c.cyan('Nuxt DevTools:')
+export const LOG_PREFIX = colors.cyan('Nuxt DevTools:')
