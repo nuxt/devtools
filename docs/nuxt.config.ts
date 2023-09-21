@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  extends: '@nuxthq/elements',
+  extends: '@nuxt/ui-pro',
 
   routeRules: {
     '/guide': { redirect: '/guide/getting-started' }

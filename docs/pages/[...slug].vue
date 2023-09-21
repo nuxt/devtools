@@ -3,7 +3,6 @@ definePageMeta({
   layout: 'docs',
 })
 const route = useRoute()
-const { findPageHeadline } = useElementsHelpers()
 
 const { data: page } = await useAsyncData(`docs-${route.path}`, () => queryContent(route.path).findOne())
 if (!page.value)
