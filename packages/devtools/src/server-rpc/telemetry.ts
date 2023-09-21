@@ -3,9 +3,22 @@ import type { NuxtHooks } from '@nuxt/schema'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { version } from '../../package.json'
 
-const SEND_DELAY = 10_000
+const SEND_DELAY = 1_000
 
 type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
+
+function throttle<T extends () => any>(fn: T, delay: number) {
+  let timer: ReturnType<typeof setTimeout> | undefined
+
+  return () => {
+    if (!timer) {
+      timer = setTimeout(() => {
+        timer = undefined
+        fn()
+      }, delay)
+    }
+  }
+}
 
 export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) {
   let telemetry: ArgumentsType<NuxtHooks['telemetry:setup']>[0] | undefined
@@ -26,19 +39,21 @@ export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) 
     })
   }
 
-  let timer: ReturnType<typeof setTimeout> | undefined
+  const throttledSend = throttle(() => {
+    telemetry?.sendEvents()
+  }, SEND_DELAY)
 
   return {
-    telemetryEvent(payload: object) {
+    telemetryEvent(payload: object, immediate = false) {
       if (!telemetry)
         return
+
       telemetry.createEvent('devtools', payload)
-      // TODO: throttle instead of debounce
-      if (timer)
-        clearTimeout(timer)
-      timer = setTimeout(() => {
-        telemetry!.sendEvents()
-      }, SEND_DELAY)
+
+      if (immediate)
+        telemetry.sendEvents()
+      else
+        throttledSend()
     },
   }
 }

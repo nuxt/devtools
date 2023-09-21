@@ -4,7 +4,7 @@ watch(telemetryEnabled, async (value) => {
   await rpc.updateOptions('behavior', { telemetry: value })
 })
 
-export function telemetry(event: string, payload?: object) {
+export function telemetry(event: string, payload?: object, immediate = false) {
   if (telemetryEnabled.value === false)
     return
 
@@ -17,5 +17,5 @@ export function telemetry(event: string, payload?: object) {
     deviceType: userAgentInfo.device.type,
     inPopup: !!window.__NUXT_DEVTOOLS_IS_POPUP__,
     ...payload,
-  })
+  }, immediate)
 }

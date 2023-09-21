@@ -149,20 +149,20 @@ export interface NuxtDevToolsOptions {
     telemetry: boolean | null
   }
   ui: {
-    componentsView: 'list' | 'graph'
-    componentsGraphShowNodeModules: boolean
     componentsGraphShowGlobalComponents: boolean
-    componentsGraphShowPages: boolean
     componentsGraphShowLayouts: boolean
+    componentsGraphShowNodeModules: boolean
+    componentsGraphShowPages: boolean
     componentsGraphShowWorkspace: boolean
+    componentsView: 'list' | 'graph'
+    hiddenTabCategories: string[]
+    hiddenTabs: string[]
     interactionCloseOnOutsideClick: boolean
+    minimizePanelInactive: number
+    pinnedTabs: string[]
+    scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    scale: number
-    hiddenTabs: string[]
-    hiddenTabCategories: string[]
-    pinnedTabs: string[]
-    minimizePanelInactive: number
     sidebarExpanded: boolean
     sidebarScrollable: boolean
   }
