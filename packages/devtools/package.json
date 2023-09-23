@@ -19,10 +19,10 @@
   "types": "./dist/types.d.ts",
   "bin": "./cli.mjs",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
@@ -43,7 +43,6 @@
     "@nuxt/devtools-wizard": "workspace:*",
     "@nuxt/kit": "^3.7.3",
     "birpc": "^0.2.14",
-    "boxen": "^7.1.1",
     "consola": "^3.2.3",
     "error-stack-parser-es": "^0.1.1",
     "execa": "^7.2.0",
@@ -64,7 +63,6 @@
     "pacote": "^17.0.4",
     "pathe": "^1.1.1",
     "perfect-debounce": "^1.0.0",
-    "picocolors": "^1.0.0",
     "pkg-types": "^1.0.3",
     "rc9": "^2.1.1",
     "semver": "^7.5.4",

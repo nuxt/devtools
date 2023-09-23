@@ -35,8 +35,7 @@ const categorizedOverflowTabs = getCategorizedTabs(overflowTabs)
 
 const displayedTabs = computed(() => (sidebarScrollable.value || sidebarExpanded.value)
   ? categorizedTabs.value
-  : categorizedInlineTabs.value,
-)
+  : categorizedInlineTabs.value)
 
 onClickOutside(
   panel,

@@ -5,7 +5,7 @@ import { addPlugin, addVitePlugin, logger } from '@nuxt/kit'
 import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 import { version } from '../package.json'
 import type { ModuleOptions } from './types'
 import { setupRPC } from './server-rpc'
@@ -149,5 +149,5 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     isGlobalInstall: isGlobalInstall(),
   })
 
-  logger.success(`Nuxt DevTools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
+  logger.success(`Nuxt DevTools is enabled ${colors.dim(`v${version}`)}${isGlobalInstall() ? colors.dim('[global]') : ''} ${colors.yellow('(experimental)')}`)
 }

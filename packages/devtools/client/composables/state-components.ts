@@ -15,8 +15,7 @@ export function useComponents() {
       .filter(i => !/^Lazy[A-Z]/.test(i.pascalName))
       // dedupe server components
       .filter(i => !(serverComponents.value || [])
-        .find((s: any) => s.pascalName === i.pascalName)),
-  )
+        .find((s: any) => s.pascalName === i.pascalName)))
 
   return computed(() => [
     ...globalComponents.value,

@@ -29,11 +29,9 @@ function visit() {
       </NLink>
     </p>
 
-
     <NButton to="/modules/overview" n="lg primary" @click="visit">
       <span>Get Started</span>
     </NButton>
-
 
     <div absolute bottom-0 left-0 right-0 p4>
       <NCheckbox v-model="telemetry">

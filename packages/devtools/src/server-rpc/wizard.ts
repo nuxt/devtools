@@ -1,4 +1,4 @@
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
 import type { NuxtDevtoolsServerContext, ServerFunctions, WizardActions } from '@nuxt/devtools-kit/types'
 import { wizard } from '../wizard'
@@ -8,7 +8,7 @@ export function setupWizardRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerC
   return {
     async runWizard(token, name: WizardActions, ...args: any[]) {
       await ensureDevAuthToken(token)
-      logger.info(LOG_PREFIX, `Running wizard ${c.green(name)}...`)
+      logger.info(LOG_PREFIX, `Running wizard ${colors.green(name)}...`)
       return (wizard[name] as any)(nuxt, ...args as [])
     },
   } satisfies Partial<ServerFunctions>

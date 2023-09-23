@@ -3,7 +3,6 @@ definePageMeta({
   layout: 'docs',
 })
 const route = useRoute()
-const { findPageHeadline } = useElementsHelpers()
 
 const { data: page } = await useAsyncData(`docs-${route.path}`, () => queryContent(route.path).findOne())
 if (!page.value)
@@ -16,9 +15,8 @@ const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () 
 }, {
   transform(surround) {
     return surround.map(doc => doc.navigation === false ? null : doc)
-  }
+  },
 })
-
 
 useSeoMeta({
   titleTemplate: '%s - Nuxt DevTools',

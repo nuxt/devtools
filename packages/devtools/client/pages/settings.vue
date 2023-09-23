@@ -18,7 +18,6 @@ const {
   sidebarScrollable,
 } = useDevToolsUIOptions()
 
-
 const client = useClient()
 
 const scaleOptions = [
@@ -157,7 +156,7 @@ watchEffect(() => {
           <div>
             <NDarkToggle v-slot="{ toggle, isDark }">
               <NButton n="primary" @click="toggle">
-                <div carbon-sun dark:carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
+                <div i-carbon-sun dark:i-carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
               </NButton>
             </NDarkToggle>
           </div>

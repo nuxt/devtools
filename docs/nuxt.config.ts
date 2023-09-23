@@ -1,8 +1,8 @@
 export default defineNuxtConfig({
-  extends: '@nuxthq/elements',
+  extends: '@nuxt/ui-pro',
 
   routeRules: {
-    '/guide': { redirect: '/guide/getting-started' }
+    '/guide': { redirect: '/guide/getting-started' },
   },
 
   modules: [
@@ -41,7 +41,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/api/search.json'],
-      autoSubfolderIndex: false
+      autoSubfolderIndex: false,
     },
   },
 

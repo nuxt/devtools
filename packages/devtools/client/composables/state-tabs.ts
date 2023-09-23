@@ -106,8 +106,7 @@ export function useEnabledTabs() {
         return false
       return true
     })
-    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')),
-  )
+    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')))
 }
 
 export function useAllRoutes() {

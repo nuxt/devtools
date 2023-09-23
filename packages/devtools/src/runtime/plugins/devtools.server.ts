@@ -1,8 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
 import { defineNuxtPlugin } from '#app'
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
 import { useState } from '#imports'
 

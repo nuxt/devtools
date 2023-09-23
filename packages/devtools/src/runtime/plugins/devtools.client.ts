@@ -3,7 +3,7 @@ import { shallowReactive, watchEffect } from 'vue'
 import type { Router } from 'vue-router'
 import { setupHooksDebug } from '../shared/hooks'
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 
