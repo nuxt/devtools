@@ -23,10 +23,10 @@
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",

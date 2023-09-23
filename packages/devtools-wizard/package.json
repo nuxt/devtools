@@ -8,10 +8,10 @@
   "main": "./dist/index.mjs",
   "bin": "./cli.mjs",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",

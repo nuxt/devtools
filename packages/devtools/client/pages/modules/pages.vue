@@ -71,7 +71,7 @@ function navigateToRoute(path: string) {
         v-model="routeInput"
         font-mono
         icon="carbon-direction-right-01 scale-y--100"
-        :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
+        :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange'"
         @keydown.enter="navigate"
       />
       <div>

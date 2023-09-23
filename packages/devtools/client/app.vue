@@ -77,8 +77,7 @@ registerCommands(() =>
           },
         },
       ]
-    : [],
-)
+    : [])
 </script>
 
 <template>

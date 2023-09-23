@@ -7,7 +7,8 @@ const props = withDefaults(
     info?: ModuleStaticInfo
     compact?: boolean
     maintainers?: boolean
-  }>(), {
+  }>(),
+  {
     maintainers: true,
   },
 )

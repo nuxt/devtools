@@ -51,7 +51,6 @@ export function useInstalledModules() {
           ...mod,
         }
       })
-      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))),
-    )
+      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))))
   })
 }

@@ -15,9 +15,8 @@ const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () 
 }, {
   transform(surround) {
     return surround.map(doc => doc.navigation === false ? null : doc)
-  }
+  },
 })
-
 
 useSeoMeta({
   titleTemplate: '%s - Nuxt DevTools',

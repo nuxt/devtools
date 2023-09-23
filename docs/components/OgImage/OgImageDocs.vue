@@ -21,19 +21,19 @@ defineProps({
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-between items-start bg-[#020420] p-20 pt-32 pb-16">
+  <div class="h-full w-full flex flex-col items-start justify-between bg-[#020420] p-20 pb-16 pt-32">
     <div
       style="position: absolute;width: 1156px;height: 1000px;left: -215px;top: -337px;background: radial-gradient(50% 50% at 50% 50%, #00DC82 0%, rgba(0, 220, 130, 0) 100%);filter: blur(180.5px);opacity: 0.5;"
     />
     <div>
-      <h1 class="text-8xl mb-4 text-white flex items-center">
+      <h1 class="mb-4 flex items-center text-8xl text-white">
         <span>{{ title }}</span>
-        <img v-if="image" :src="image" class="h-20 w-20 rounded ml-8">
+        <img v-if="image" :src="image" class="ml-8 h-20 w-20 rounded">
       </h1>
-      <p class="text-5xl text-gray-200 leading-tight pr-10">
+      <p class="pr-10 text-5xl leading-tight text-gray-200">
         {{ description }}
       </p>
     </div>
-    <Logo class="w-[492px] h-[60px] text-white" />
+    <Logo class="h-[60px] w-[492px] text-white" />
   </div>
 </template>

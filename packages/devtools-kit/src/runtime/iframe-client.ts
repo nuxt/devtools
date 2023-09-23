@@ -15,10 +15,10 @@ export function onDevtoolsClientConnected(fn: (client: NuxtDevtoolsIframeClient)
   if (typeof window === 'undefined')
     return
 
-  // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+  // eslint-disable-next-line ts/prefer-ts-expect-error
   // @ts-ignore injection
   if (window.__NUXT_DEVTOOLS__) {
-    // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+    // eslint-disable-next-line ts/prefer-ts-expect-error
     // @ts-ignore injection
     fns.forEach(fn => fn(window.__NUXT_DEVTOOLS__))
   }

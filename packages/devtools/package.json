@@ -19,10 +19,10 @@
   "types": "./dist/types.d.ts",
   "bin": "./cli.mjs",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
