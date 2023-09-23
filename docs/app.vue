@@ -70,21 +70,21 @@ provide('navigation', navigation)
     </template>
     <template #right>
       <UColorModeButton v-if="!$colorMode.forced" />
-      <<<<<<< HEAD
-      <UButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" target="_blank" color="gray" variant="ghost" />
-      <UButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" target="_blank" color="gray" variant="ghost" />
+      <UButton
+        aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs"
+        to="https://nuxt.com"
+        target="_blank" color="gray" variant="ghost"
+      />
+      <UButton
+        aria-label="Nuxt on X" icon="i-simple-icons-x"
+        to="https://x.com/nuxt_js"
+        target="_blank" color="gray" variant="ghost"
+      />
       <UButton
         aria-label="Nuxt Devtools on GitHub" icon="i-simple-icons-github"
-        to="https://github.com/nuxt/devtools" target="_blank" color="gray" variant="ghost"
-      />
-      =======
-      <USocialButton aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs" to="https://nuxt.com" />
-      <USocialButton aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js" />
-      <USocialButton
-        aria-label="Nuxt Devtools on GitHub" icon="i-simple-icons-github"
         to="https://github.com/nuxt/devtools"
+        target="_blank" color="gray" variant="ghost"
       />
-      >>>>>>> d2d55be (chore: migrate to flat eslint config)
     </template>
   </UFooter>
   <ClientOnly>
