@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore tsconfig
-import { NuxtLink } from '#components'
-
 const props = defineProps<{
   to?: string
   href?: string
@@ -16,12 +12,11 @@ const link = computed(() => props.href || props.to)
 </script>
 
 <template>
-  <component
-    :is="NuxtLink"
+  <NuxtLink
     v-bind="link ? {
       href: link,
-      target: '_blank',
-      rel: 'noopener noreferrer',
+      target,
+      rel: target === '_blank' ? 'noopener noreferrer' : null,
     } : {}"
     :class="{ 'n-link n-transition hover:n-link-hover n-link-base': link || underline }"
   >
@@ -30,5 +25,5 @@ const link = computed(() => props.href || props.to)
       v-if="link && target === '_blank'"
       i-carbon:arrow-up-right translate-y--1 text-xs op50
     />
-  </component>
+  </NuxtLink>
 </template>
