@@ -22,7 +22,7 @@ const anyObj = {} as any
         <NCodeBlock :code="args[1].commands.join(' ')" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
 
         <p op50>
-          Then your <NLink role="button" n="primary" @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
+          Then your <NLink role="button" n="primary" underline @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
         </p>
 
         <CodeDiff

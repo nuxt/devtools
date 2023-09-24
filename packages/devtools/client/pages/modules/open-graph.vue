@@ -147,21 +147,23 @@ until(router).toBeTruthy().then((v) => {
               <div v-if="index" x-divider />
               <div v-if="index" x-divider />
               <div mr2 px4 py2>
-                <NTextExternalLink
+                <NLink
                   op50
-                  :link="getDocs(item)"
+                  :href="getDocs(item)"
+                  target="_blank"
                   n="primary"
                 >
                   {{ item.name }}
-                </NTextExternalLink>
+                </NLink>
               </div>
-              <NTextExternalLink
-                :link=" item.value.match(/^https?:\/\//) ? item.value : undefined"
+              <NLink
+                :href="item.value.match(/^https?:\/\//) ? item.value : undefined"
+                target="_blank"
                 w-full p2 font-mono
                 n="primary"
               >
                 {{ item.value }}
-              </NTextExternalLink>
+              </NLink>
             </template>
           </NCard>
         </NSectionBlock>
