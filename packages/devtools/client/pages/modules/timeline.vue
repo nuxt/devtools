@@ -21,7 +21,7 @@ async function showPopup() {
 </script>
 
 <template>
-  <TimelineView v-if="!options?.timeline?.enabled" />
+  <TimelineView v-if="options?.timeline?.enabled" />
   <template v-else>
     <NPanelGrids>
       <LaunchPage
