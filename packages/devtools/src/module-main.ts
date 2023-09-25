@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import os from 'node:os'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addPlugin, addVitePlugin, logger } from '@nuxt/kit'
@@ -149,5 +150,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     isGlobalInstall: isGlobalInstall(),
   })
 
-  logger.success(`Nuxt DevTools is enabled ${colors.dim(`v${version}`)}${isGlobalInstall() ? colors.dim('[global]') : ''} ${colors.yellow('(experimental)')}`)
+  const isMac = os.platform() === 'darwin'
+
+  logger.success(`Nuxt DevTools enabled ${colors.dim(`(v${version})`)}, press \`Shift\` + \`${isMac ? 'Option' : 'Alt'}\` + \`D\` in app to open ${isGlobalInstall() ? colors.dim('[global]') : ''} ${colors.yellow('(experimental)')}`)
 }
