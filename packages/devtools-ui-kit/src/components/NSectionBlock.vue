@@ -11,7 +11,8 @@ const props = withDefaults(
     collapse?: boolean
     open?: boolean
     padding?: boolean | string
-  }>(), {
+  }>(),
+  {
     containerClass: '',
     open: true,
     padding: true,

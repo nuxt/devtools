@@ -33,7 +33,8 @@ export function initTimelineMetrics(): TimelineMetrics {
           stacktrace: true,
           arguments: true,
         }),
-      }),
+      },
+    ),
     enumerable: false,
     configurable: true,
   })

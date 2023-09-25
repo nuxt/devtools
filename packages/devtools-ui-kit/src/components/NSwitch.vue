@@ -4,7 +4,8 @@ import { useVModel } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
     modelValue?: boolean
-    disabled?: boolean }>(),
+    disabled?: boolean
+  }>(),
   {
     modelValue: false,
     disabled: false,

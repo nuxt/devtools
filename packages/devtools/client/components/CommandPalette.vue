@@ -19,8 +19,7 @@ const fuse = computed(() => new Fuse(items.value, {
 
 const filtered = computed(() => search.value
   ? fuse.value.search(search.value).map(i => i.item)
-  : (items.value || []),
-)
+  : (items.value || []))
 
 const selectedIndex = ref(0)
 

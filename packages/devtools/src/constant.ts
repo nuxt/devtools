@@ -21,6 +21,9 @@ export const defaultOptions: ModuleOptions = {
 }
 
 export const defaultTabOptions: NuxtDevToolsOptions = {
+  behavior: {
+    telemetry: null,
+  },
   ui: {
     componentsView: 'list',
     componentsGraphShowNodeModules: false,
