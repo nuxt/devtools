@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { telemetryEnabled } from '~/composables/telemetry'
+
 definePageMeta({
   layout: 'full',
 })
@@ -200,6 +202,28 @@ watchEffect(() => {
               {{ i[0] }}
             </option>
           </NSelect>
+        </NCard>
+
+        <h3 mt2 text-lg>
+          Feedback
+        </h3>
+        <NCard p4 flex="~ col gap-2">
+          <NCheckbox v-model="telemetryEnabled" n-primary>
+            <span>Send anonymous statistics, help us improving DevTools</span>
+          </NCheckbox>
+
+          <div mx--2 my1 h-1px border="b base" op75 />
+
+          <div flex="~ gap-2">
+            <NButton n="blue" to="https://github.com/nuxt/devtools/discussions/29" target="_blank">
+              <div i-carbon-data-enrichment />
+              Ideas & Suggestions
+            </NButton>
+            <NButton n="orange" to="https://github.com/nuxt/devtools/issues" target="_blank">
+              <div i-carbon-debug />
+              Bug Reports
+            </NButton>
+          </div>
         </NCard>
       </div>
     </div>

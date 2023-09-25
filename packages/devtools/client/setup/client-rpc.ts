@@ -30,7 +30,7 @@ export function setupClientRPC() {
         processAnalyzeBuildInfo.value = undefined
     },
     async navigateTo(path: string) {
-      client.value.open()
+      client.value.devtools.open()
       if (router.currentRoute.value?.path !== path)
         router.push(path)
     },
@@ -43,4 +43,14 @@ export function setupClientRPC() {
         devAuthToken.value ||= 'disabled'
       }
     })
+
+  const {
+    hiddenTabs,
+    pinnedTabs,
+  } = useDevToolsUIOptions()
+
+  telemetry('open', {
+    hiddenTabs: hiddenTabs.value.join(','),
+    pinnedTabs: pinnedTabs.value.join(','),
+  }, true)
 }

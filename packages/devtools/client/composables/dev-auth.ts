@@ -49,15 +49,16 @@ export async function ensureDevAuthToken() {
   return devAuthToken.value!
 }
 
+export const userAgentInfo = new UAParser(navigator.userAgent).getResult()
+
 async function authConfirmAction() {
-  const info = new UAParser(navigator.userAgent).getResult()
   const desc = [
-    info.browser.name,
-    info.browser.version,
+    userAgentInfo.browser.name,
+    userAgentInfo.browser.version,
     '|',
-    info.os.name,
-    info.os.version,
-    info.device.type,
+    userAgentInfo.os.name,
+    userAgentInfo.os.version,
+    userAgentInfo.device.type,
   ].filter(i => i).join(' ')
   rpc.requestForAuth(desc)
 

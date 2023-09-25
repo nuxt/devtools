@@ -35,21 +35,19 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
 
       <!-- Banner -->
       <div flex="~ col" mt-5 items-center md:mt-20>
-        <div flex="~" mt--10 items-center justify-center>
-          <NuxtLogo h-14 md:h-18 />
-          <button mr--16 mt--6 @click="goIntro">
-            <Badge bg-green-400:10 text-green-400 title="preview">
-              preview
-            </Badge>
-          </button>
-        </div>
-        <div mb6 mt--1 text-center text-sm flex="~ gap-1 wrap">
+        <NuxtLink
+          flex="~" mt--10 items-center justify-center
+          to="https://devtools.nuxt.com/" target="_blank"
+        >
+          <NuxtLogo h-10 />
+        </NuxtLink>
+        <button mb6 mt3 text-center text-sm flex="~ gap-1 wrap" @click="goIntro">
           <span op40>
             Nuxt DevTools
           </span>
           <code op40>v{{ version }}</code>
           <NpmVersionCheck package-name="@nuxt/devtools" :options="{ dev: true }" :show-version="false" />
-        </div>
+        </button>
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">

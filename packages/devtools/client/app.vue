@@ -32,7 +32,7 @@ setupClientRPC()
 const client = useClient()
 const route = useRoute()
 const colorMode = useColorMode()
-const isUtilityView = computed(() => route.path.startsWith('/__'))
+const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
 watch(
