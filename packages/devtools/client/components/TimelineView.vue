@@ -93,15 +93,17 @@ function toggleView() {
         @select="s => selected = s"
       />
     </div>
-    <DrawerBottom
+    <NDrawer
       :model-value="!!selected"
       auto-close
+      transition="bottom"
+      left="#nuxt-devtools-side-nav"
       @close="selected = undefined"
     >
       <div min-h-50 px3 py2>
         <TimelineDetailsFunction v-if="selected?.type === 'function'" :record="selected" />
         <TimelineDetailsRoute v-else-if="selected?.type === 'route'" :record="selected" />
       </div>
-    </DrawerBottom>
+    </NDrawer>
   </div>
 </template>

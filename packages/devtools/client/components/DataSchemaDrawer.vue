@@ -72,7 +72,7 @@ function copyToClipboard() {
 
 <template>
   <Teleport v-if="language" to="body">
-    <DrawerRight :model-value="!!input?.input" auto-close max-w-screen w-2xl n-code-block @close="input = null">
+    <NDrawer :model-value="!!input?.input" auto-close max-w-screen w-2xl n-code-block @close="input = null">
       <div border="b base" flex="~ items-center gap-2" sticky left-0 right-0 top-0 z-1 p3 bg-base>
         <p mr-2>
           Schema
@@ -106,6 +106,6 @@ function copyToClipboard() {
         <NIconButton icon="carbon-copy" border="~ base" mr-6 p3.1 @click="copyToClipboard()" />
       </div>
       <NCodeBlock v-if="generatedJson" :lang="shikiLanguage" :code="generatedJson" />
-    </DrawerRight>
+    </NDrawer>
   </Teleport>
 </template>

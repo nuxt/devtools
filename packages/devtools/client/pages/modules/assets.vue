@@ -125,14 +125,14 @@ const navbar = ref<HTMLElement>()
         :item="item"
       />
     </div>
-    <DrawerRight
+    <NDrawer
       :model-value="!!selected"
       auto-close w-120
-      :navbar="navbar"
+      :top="navbar"
       @close="selected = undefined"
     >
       <AssetDetails v-if="selected" v-model="selected" />
-    </DrawerRight>
+    </NDrawer>
   </div>
 </template>
 
