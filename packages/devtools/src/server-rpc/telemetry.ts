@@ -3,7 +3,7 @@ import type { NuxtHooks } from '@nuxt/schema'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { version } from '../../package.json'
 
-const SEND_DELAY = 1_000
+const SEND_DELAY = 5_000
 
 type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
 
