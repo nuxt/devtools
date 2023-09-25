@@ -65,7 +65,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             to="/modules/pages"
           >
             <div carbon-tree-view-alt text-3xl />
-            <div>{{ routes.length }} pages</div>
+            <div>{{ routes.length }} {{ routes.length <= 1 ? 'page' : 'pages' }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/components">
             <div i-carbon-assembly-cluster text-3xl />
