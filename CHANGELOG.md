@@ -1,3 +1,13 @@
+## [0.8.5](https://github.com/nuxt/devtools/compare/v0.8.4...v0.8.5) (2023-09-25)
+
+
+### Features
+
+* print shortcuts in console ([97b3e18](https://github.com/nuxt/devtools/commit/97b3e186e8798142c54d2599329ca97c97ea4b59))
+* telemetry support ([#427](https://github.com/nuxt/devtools/issues/427)) ([8677d00](https://github.com/nuxt/devtools/commit/8677d003c414cc5baf8f951bd71cc6dfa07871ee))
+
+
+
 ## [0.8.4](https://github.com/nuxt/devtools/compare/v0.8.3...v0.8.4) (2023-09-20)
 
 
