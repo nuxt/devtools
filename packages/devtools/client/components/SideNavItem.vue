@@ -20,6 +20,11 @@ const badge = computed(() => 'badge' in props.tab && props.tab.badge?.())
 const isActive = computed(() => route.path.startsWith(tabPath.value))
 
 function onClick() {
+  telemetry('tab-click', {
+    tab: props.tab.name,
+    tabPosition: props.target,
+  })
+
   if ('onClick' in props.tab && props.tab.onClick)
     props.tab.onClick()
   else if (props.target === 'side')

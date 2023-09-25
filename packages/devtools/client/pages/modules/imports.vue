@@ -18,8 +18,7 @@ const importsMetadata = computed(() => autoImports.value?.metadata)
 const functions = computed(() => autoImports.value?.imports
   .filter(i => i.as || i.name)
   .sort((a, b) => (a.as || a.name).localeCompare(b.as || b.name))
-  || [],
-)
+  || [])
 
 const fuse = computed(() => new Fuse(functions.value, {
   keys: [

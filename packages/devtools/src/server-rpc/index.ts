@@ -19,6 +19,7 @@ import { setupServerRoutesRPC } from './server-routes'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupOptionsRPC } from './options'
 import { setupTimelineRPC } from './timeline'
+import { setupTelemetryRPC } from './telemetry'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -92,6 +93,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupAnalyzeBuildRPC(ctx),
     ...setupOptionsRPC(ctx),
     ...setupTimelineRPC(ctx),
+    ...setupTelemetryRPC(ctx),
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()

@@ -20,23 +20,19 @@ function parseExpressRoute(route: string) {
   return route
     .split(/(:\w+[\?\*]?(?:\(\))?)/)
     .filter(Boolean)
-    .map(i =>
-      i[0] === ':'
-        ? i.replace(/\(\)$/, '?')
-        : i,
-    )
+    .map(i => i[0] === ':'
+      ? i.replace(/\(\)$/, '?')
+      : i)
 }
 
 const path = computed(() => parts.value
   .map(
-    (i, idx) =>
-      i[0] === ':'
-        ? partsInput.value[idx]
-        : i,
+    (i, idx) => i[0] === ':'
+      ? partsInput.value[idx]
+      : i,
   )
   .join('')
-  .replace(/\/+/g, '/'),
-)
+  .replace(/\/+/g, '/'))
 const hasWildcard = computed(() => props.route.path.includes(':'))
 
 function navigate() {

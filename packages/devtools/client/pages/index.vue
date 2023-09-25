@@ -1,38 +1,42 @@
 <script setup lang="ts">
+import { telemetryEnabled } from '~/composables/telemetry'
+
 definePageMeta({
   layout: 'none',
 })
 
+const telemetry = ref(true)
+
 function visit() {
+  telemetryEnabled.value = telemetry.value
   isFirstVisit.value = false
 }
 </script>
 
 <template>
-  <div flex="~ col gap4" mxa h-screen w-160 items-center justify-center text-center>
-    <div flex="~" items-center justify-center>
-      <NuxtLogo />
-      <Badge mr--15 mt--5 bg-green-400:10 text-green-400 title="preview" v-text="'preview'" />
-    </div>
-    <p my2 text-xl font-bold>
-      👋 Welcome trying the preview of Nuxt DevTools!
+  <NPanelGrids flex="~ col gap3" relative h-screen w-full items-center justify-center text-center>
+    <p my2 text-3em font-bold font-stylish text-primary>
+      👋 Hi there, welcome to Nuxt DevTools!
     </p>
-    <p text-lg>
-      <b font-bold>Nuxt DevTools</b> is a set of visual tools that help you to know your app/site better, and enhance your
-      development experience with Nuxt.
+    <p max-w-190 text-lg>
+      <NuxtLogo mr-0.5 inline-block h-5 translate-y--1.1 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
+      development experience with Nuxt. Enjoy!<br>
     </p>
-    <p text-lg>
-      Be aware that
-      <span rounded bg-orange:10 px2 py0.5 font-bold text-orange>Nuxt DevTools is still in early preview</span>, features
-      might be incomplete and unstable. <a
-        href="https://github.com/nuxt/devtools" target="_blank" text-primary
-        hover-underline
-      >Create an issue or discussion</a> if you find any bugs or have any suggestions. Thank you and have
-      fun!
+    <p mb6 op50>
+      Learn more at
+      <NLink href="https://devtools.nuxt.com/" target="_blank" rel="noopener noreferrer" n="primary">
+        devtools.nuxt.com
+      </NLink>
     </p>
 
-    <NButton to="/modules/overview" mt-4 n="xl primary" @click="visit">
+    <NButton to="/modules/overview" n="lg primary" @click="visit">
       <span>Get Started</span>
     </NButton>
-  </div>
+
+    <div absolute bottom-0 left-0 right-0 p4>
+      <NCheckbox v-model="telemetry">
+        <span op50>Send anonymous statistics, help us improving DevTools</span>
+      </NCheckbox>
+    </div>
+  </NPanelGrids>
 </template>

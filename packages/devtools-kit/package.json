@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-kit",
   "type": "module",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
@@ -23,10 +23,10 @@
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -50,6 +50,6 @@
     "unbuild": "^2.0.0",
     "unimport": "^3.3.0",
     "vite-plugin-vue-inspector": "^3.7.1",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.5"
   }
 }

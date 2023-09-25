@@ -82,6 +82,13 @@ export interface ModuleOptions {
       exclude?: (string | RegExp | ((item: Import) => boolean))[]
     }
   }
+
+  /**
+   * Enable anonymous telemetry, helping us improve Nuxt DevTools.
+   *
+   * By default it will respect global Nuxt telemetry settings.
+   */
+  telemetry?: boolean
 }
 
 export interface ModuleGlobalOptions {
@@ -138,21 +145,24 @@ export interface VSCodeTunnelOptions {
 }
 
 export interface NuxtDevToolsOptions {
+  behavior: {
+    telemetry: boolean | null
+  }
   ui: {
-    componentsView: 'list' | 'graph'
-    componentsGraphShowNodeModules: boolean
     componentsGraphShowGlobalComponents: boolean
-    componentsGraphShowPages: boolean
     componentsGraphShowLayouts: boolean
+    componentsGraphShowNodeModules: boolean
+    componentsGraphShowPages: boolean
     componentsGraphShowWorkspace: boolean
+    componentsView: 'list' | 'graph'
+    hiddenTabCategories: string[]
+    hiddenTabs: string[]
     interactionCloseOnOutsideClick: boolean
+    minimizePanelInactive: number
+    pinnedTabs: string[]
+    scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    scale: number
-    hiddenTabs: string[]
-    hiddenTabCategories: string[]
-    pinnedTabs: string[]
-    minimizePanelInactive: number
     sidebarExpanded: boolean
     sidebarScrollable: boolean
   }

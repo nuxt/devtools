@@ -22,7 +22,8 @@ if (props.state)
 else if (typeof props.state === 'number' || typeof props.state !== 'string')
   proxy.value = props.state
 
-const watcher = watchPausable(proxy,
+const watcher = watchPausable(
+  proxy,
   (value) => {
     if (typeof value !== 'number' && typeof value !== 'string')
       deepSync(value, props.state)

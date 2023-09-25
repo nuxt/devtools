@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  colorMode: 'dark'
+  colorMode: 'dark',
 })
 const videoModalOpen = ref(false)
 const title = 'Nuxt DevTools: Unleash Nuxt Developer Experience'
@@ -19,7 +19,7 @@ useSeoMeta({
 const { data } = await useAsyncData('landing', () => {
   return Promise.all([
     queryContent('/home/get-started').findOne(),
-    queryContent('/').findOne()
+    queryContent('/').findOne(),
   ])
 })
 const [getStarted, page] = data.value
@@ -37,34 +37,34 @@ const { data: module } = await useFetch<{
   contributors: {
     username: string
   }[]
-}>('https://api.nuxt.com/modules/devtools', {
-  transform: ({ stats, contributors }) => ({ stats, contributors }),
-})
+}>('https://api.nuxt.com/modules/devtools',
+  {
+    transform: ({ stats, contributors }: any) => ({ stats, contributors }),
+  },
+)
 
-function selectProjectCard (index) {
+function selectProjectCard(index: number) {
   currentStep.value = index
 
   clearInterval(intervalId.value)
 }
 
-const { stop } = useIntersectionObserver(
+useIntersectionObserver(
   nuxtProjectsSection,
-  ([{ isIntersecting }], observerElement) => {
+  ([{ isIntersecting }]) => {
     projectsSectionVisible.value = isIntersecting
   },
 )
 
 const { format: formatNumber } = Intl.NumberFormat('en-GB', { notation: 'compact' })
 
-
 watch(projectsSectionVisible, () => {
   if (projectsSectionVisible.value) {
     intervalId.value = setInterval(() => {
-      if (currentStep.value < 2) {
-        currentStep.value++
-      } else {
+      if (currentStep.value < 2)
+        currentStep.value += 1
+      else
         currentStep.value = 0
-      }
     }, 4000)
   }
 })
@@ -73,7 +73,7 @@ watch(projectsSectionVisible, () => {
 <template>
   <span class="gradient" />
   <ULandingHero orientation="horizontal" :ui="{ container: 'flex lg:gap-12' }">
-    <Illustration class="hidden lg:block h-64" />
+    <Illustration class="hidden h-64 lg:block" />
     <template #title>
       <span v-html="page.hero?.title" />
     </template>
@@ -114,9 +114,11 @@ watch(projectsSectionVisible, () => {
 
     <template #tools>
       <UPageGrid>
-        <ULandingCard v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
+        <ULandingCard
+          v-for="card in section.toolsCards" :key="card.title" :to="card.to" :icon="card.icon"
           :title="card.title" :description="card.description"
-          :ui="{ to: 'hover:ring-2 dark:hover:ring-gray-500 hover:ring-gray-500 hover:bg-gray-100/50', icon: { base: 'w-10 h-10 flex-shrink-0 text-gray-100' }, body: { base: 'h-full', background: 'bg-gradient-to-b from-gray-900 to-gray-950' } }" />
+          :ui="{ to: 'hover:ring-2 dark:hover:ring-gray-500 hover:ring-gray-500 hover:bg-gray-100/50', icon: { base: 'w-10 h-10 flex-shrink-0 text-gray-100' }, body: { base: 'h-full', background: 'bg-gradient-to-b from-gray-900 to-gray-950' } }"
+        />
       </UPageGrid>
     </template>
 
@@ -124,30 +126,42 @@ watch(projectsSectionVisible, () => {
       <div>
         <div ref="nuxtProjectsSection" class="flex flex-row gap-x-12">
           <ul class="flex flex-col items-center justify-center lg:w-[40%]">
-            <li v-for="(project, index) in section.projectCards" :key="index">
-              <UCard class="relative hidden lg:block cursor-pointer group"
-                :ui="{ background: 'bg-transparent dark:bg-transparent', sahdow: 'none', ring: 'ring-0', body: { background: 'bg-transparent dark:bg-transparent', base: 'flex flex-col space-y-2' } }">
+            <li v-for="(project, idx) in section.projectCards" :key="idx">
+              <UCard
+                class="group relative hidden cursor-pointer lg:block"
+                :ui="{ background: 'bg-transparent dark:bg-transparent', sahdow: 'none', ring: 'ring-0', body: { background: 'bg-transparent dark:bg-transparent', base: 'flex flex-col space-y-2' } }"
+              >
                 <div class="absolute inset-0 h-full w-full" @click="selectProjectCard(index)" />
-                <h4 class="text-xl font-medium group-hover:text-white transition-color duration-200"
-                  :class="currentStep === index ? 'text-white ' : 'text-gray-400'">
+                <h4
+                  class="text-xl font-medium transition-color duration-200 group-hover:text-white"
+                  :class="currentStep === index ? 'text-white ' : 'text-gray-400'"
+                >
                   {{ project.title }}
                 </h4>
-                <p class="group-hover:text-gray-400 transition-color duration-200"
-                  :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'">
+                <p
+                  class="transition-color duration-200 group-hover:text-gray-400"
+                  :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'"
+                >
                   {{ project.description }}
                 </p>
-                <UButton trailing variant="link" color="white" size="md" :ui="{ size: { md: 'text-md' } }"
-                  class="-ml-2.5 z-20" :to="project.to">
-                  <span class="group-hover:text-white transition-color duration-200" :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
-                  <UIcon name="i-ph-arrow-right" class="w-5 h-5 group-hover:text-white"
-                    :class="currentStep === index ? 'text-white' : 'text-gray-400'" />
+                <UButton
+                  trailing variant="link" color="white" size="md" :ui="{ size: { md: 'text-md' } }"
+                  class="z-20 -ml-2.5" :to="project.to"
+                >
+                  <span class="transition-color duration-200 group-hover:text-white" :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
+                  <UIcon
+                    name="i-ph-arrow-right" class="h-5 w-5 group-hover:text-white"
+                    :class="currentStep === index ? 'text-white' : 'text-gray-400'"
+                  />
                 </UButton>
               </UCard>
 
-              <ULandingSection align="center"
+              <ULandingSection
+                align="center"
                 :icon="index === 0 ? 'i-ph-tree-structure' : index === 1 ? 'i-ph-circles-three' : 'i-ph-function'"
                 class="lg:hidden"
-                :ui="{ base: 'flex flex-col items-center', wrapper: 'py-8 sm:py-12', icon: { wrapper: 'relative rounded-lg flex items-center justify-center mb-6 w-10 h-10 bg-gray-700 flex-shrink-0' }, title: 'text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl' }">
+                :ui="{ base: 'flex flex-col items-center', wrapper: 'py-8 sm:py-12', icon: { wrapper: 'relative rounded-lg flex items-center justify-center mb-6 w-10 h-10 bg-gray-700 flex-shrink-0' }, title: 'text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl' }"
+              >
                 <template #title>
                   {{ project.title }}
                 </template>
@@ -155,20 +169,26 @@ watch(projectsSectionVisible, () => {
                   {{ project.description }}
                 </template>
                 <div
-                  class="relative h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:hidden">
+                  class="relative h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:hidden"
+                >
                   <div class="p-4">
-                    <NuxtImg :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`"
-                      class="rounded-lg" />
+                    <NuxtImg
+                      :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`"
+                      class="rounded-lg"
+                    />
                   </div>
                 </div>
               </ULandingSection>
             </li>
           </ul>
           <div
-            class="relative hidden h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:w-[60%] lg:flex">
+            class="relative hidden h-full place-self-center items-center justify-center border border-slate-200/10 rounded-xl bg-slate-700/20 lg:w-[60%] lg:flex"
+          >
             <div class="p-4">
-              <NuxtImg :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`"
-                class="rounded-lg" />
+              <NuxtImg
+                :src="`/images/${currentStep === 0 ? 'pages' : currentStep === 1 ? 'components' : 'imports'}.webp`"
+                class="rounded-lg"
+              />
             </div>
           </div>
         </div>
@@ -182,26 +202,35 @@ watch(projectsSectionVisible, () => {
     </template>
 
     <template #cta>
-      <ULandingCTA align="left" card :ui="{
-        background: 'bg-gradient-to-b from-gray-900 to-gray-950',
-        body: { background: 'bg-gradient-to-b from-gray-900 to-gray-950' },
-        links: 'mt-10 flex flex-col space-y-4 items-center justify-center lg:justify-start gap-x-6',
-        title: 'text-2xl font-medium tracking-tight text-white sm:text-3xl text-center lg:text-left',
-      }">
+      <ULandingCTA
+        align="left" card
+        :ui="{
+          background: 'bg-gradient-to-b from-gray-900 to-gray-950',
+          body: { background: 'bg-gradient-to-b from-gray-900 to-gray-950' },
+          links: 'mt-10 flex flex-col space-y-4 items-center justify-center lg:justify-start gap-x-6',
+          title: 'text-2xl font-medium tracking-tight text-white sm:text-3xl text-center lg:text-left',
+        }"
+      >
         <template #title>
           <span v-html="section.title" />
         </template>
 
         <template #links>
           <UAvatarGroup :max="13" size="md" class="flex-wrap lg:self-start [&_span:first-child]:text-xs">
-            <UTooltip v-for="(contributor, index) of module.contributors" :key="index" :text="contributor.username"
+            <UTooltip
+              v-for="(contributor, idx) of module.contributors" :key="idx" :text="contributor.username"
               class="rounded-full" :ui="{ background: 'bg-gray-50 dark:bg-gray-800/50' }"
-              :popper="{ offsetDistance: 16 }">
-              <UAvatar :alt="contributor.username" :src="`https://github.com/${contributor.username}.png`"
+              :popper="{ offsetDistance: 16 }"
+            >
+              <UAvatar
+                :alt="contributor.username" :src="`https://github.com/${contributor.username}.png`"
                 class="lg:hover:ring-primary-500 dark:lg:hover:ring-primary-400 transition-transform lg:hover:scale-125 lg:hover:ring-2"
-                size="md">
-                <NuxtLink :to="`https://github.com/${contributor.username}`" target="_blank" class="focus:outline-none"
-                  tabindex="-1">
+                size="md"
+              >
+                <NuxtLink
+                  :to="`https://github.com/${contributor.username}`" target="_blank" class="focus:outline-none"
+                  tabindex="-1"
+                >
                   <span class="absolute inset-0" aria-hidden="true" />
                 </NuxtLink>
               </UAvatar>
@@ -215,7 +244,8 @@ watch(projectsSectionVisible, () => {
         <div class="flex flex-col items-center justify-center gap-8 sm:flex-row lg:gap-16">
           <NuxtLink class="group text-center" to="https://npmjs.org/package/@nuxt/devtools" target="_blank">
             <p
-              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white">
+              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
+            >
               {{ formatNumber(module.stats.downloads) }}+
             </p>
             <p>Monthly Downloads</p>
@@ -223,7 +253,8 @@ watch(projectsSectionVisible, () => {
 
           <NuxtLink class="group text-center" to="https://github.com/nuxt/devtools" target="_blank">
             <p
-              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white">
+              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
+            >
               {{ formatNumber(module.stats.stars) }}+
             </p>
             <p>Stars</p>
@@ -237,16 +268,20 @@ watch(projectsSectionVisible, () => {
         <div class="flex flex-col space-y-6">
           <div class="flex space-x-4">
             <div class="relative hidden flex-col justify-between py-[20px] md:flex">
-              <svg width="1" height="154" viewBox="0 0 1 154" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="absolute left-4 z-[-1]">
+              <svg
+                width="1" height="154" viewBox="0 0 1 154" fill="none" xmlns="http://www.w3.org/2000/svg"
+                class="absolute left-4 z-[-1]"
+              >
                 <path d="M0.500244 0.568115L0.500244 153.568" stroke="#334155" stroke-dasharray="4 4" />
               </svg>
               <div
-                class="h-8 w-8 flex items-center justify-center border border-1 border-gray-700 rounded-full bg-gray-800 px-4 py-2">
+                class="h-8 w-8 flex items-center justify-center border border-1 border-gray-700 rounded-full bg-gray-800 px-4 py-2"
+              >
                 1
               </div>
               <div
-                class="h-8 w-8 flex items-center justify-center border border-1 border-gray-700 rounded-full bg-gray-800 px-4 py-2">
+                class="h-8 w-8 flex items-center justify-center border border-1 border-gray-700 rounded-full bg-gray-800 px-4 py-2"
+              >
                 2
               </div>
             </div>
