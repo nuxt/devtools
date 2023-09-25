@@ -38,7 +38,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
         <div flex="~" mt--10 items-center justify-center>
           <NuxtLogo h-14 md:h-18 />
           <button mr--16 mt--6 @click="goIntro">
-            <Badge bg-green-400:10 text-green-400 title="preview" v-text="'preview'" />
+            <NBadge n="green" title="preview" v-text="'preview'" />
           </button>
         </div>
         <div mb6 mt--1 text-center text-sm flex="~ gap-1 wrap">

@@ -12,7 +12,7 @@ function visit() {
   <div flex="~ col gap4" mxa h-screen w-160 items-center justify-center text-center>
     <div flex="~" items-center justify-center>
       <NuxtLogo />
-      <Badge mr--15 mt--5 bg-green-400:10 text-green-400 title="preview" v-text="'preview'" />
+      <NBadge n="green" mr--15 mt--5 title="preview" v-text="'preview'" />
     </div>
     <p my2 text-xl font-bold>
       👋 Welcome trying the preview of Nuxt DevTools!

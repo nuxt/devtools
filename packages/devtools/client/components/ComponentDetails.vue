@@ -20,9 +20,9 @@ const copy = useCopy()
     <div flex="~ gap2" px3>
       <ComponentName :component="component" />
       <NIconButton title="Copy name" flex-none icon="carbon-copy" @click="copy(`<${name}></${name}>`)" />
-      <Badge
+      <NBadge
         v-if="component.global"
-        bg-green-400:10 text-green-400
+        n="green"
         title="Registered at runtime as a global component"
         v-text="'runtime'"
       />
