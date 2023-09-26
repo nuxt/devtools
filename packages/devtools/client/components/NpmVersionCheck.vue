@@ -83,9 +83,10 @@ async function updateWithConfirm() {
         </NCheckbox>
 
         <div flex="~ gap-3" mt2 justify-end>
-          <NTip n="sm purple" flex-auto icon="carbon-chemistry">
-            Experimental feature. Please make sure to backup your project first.
+          <NTip n="sm amber" flex-auto icon="i-carbon-data-backup">
+            Please make sure to backup your project first.
           </NTip>
+
           <NButton @click="resolve(false)">
             Cancel
           </NButton>

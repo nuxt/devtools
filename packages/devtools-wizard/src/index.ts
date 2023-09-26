@@ -24,7 +24,7 @@ async function run() {
 
   consola.log('')
   consola.log(colors.bold(colors.green(' Nuxt ')))
-  consola.log(`${colors.inverse(colors.bold(colors.green(' DevTools ')))} ${colors.green(`v${version}`)} ${colors.yellow('(experimental)')}`)
+  consola.log(`${colors.inverse(colors.bold(colors.green(' DevTools ')))} ${colors.green(`v${version}`)}`)
   consola.log(`\n${colors.gray('Learn more at https://devtools.nuxt.com\n')}`)
 
   if (moduleName.endsWith('-edge'))
@@ -32,7 +32,7 @@ async function run() {
 
   const nuxtVersion = await getNuxtVersion(cwd)
   if (!nuxtVersion) {
-    consola.error('Unable to find any installed nuxt version in current directory')
+    consola.error('Unable to find any installed nuxt version icurrent directory')
     process.exit(1)
   }
   // Nuxt 3.4.0 will have devtools built-in
