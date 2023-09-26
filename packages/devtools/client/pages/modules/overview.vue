@@ -65,23 +65,23 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             to="/modules/pages"
           >
             <div carbon-tree-view-alt text-3xl />
-            <div>{{ routes.length }} pages</div>
+            <div>{{ pluralizeByCount(routes.length, 'page') }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/components">
             <div i-carbon-assembly-cluster text-3xl />
-            <div>{{ components.length }} components</div>
+            <div>{{ pluralizeByCount(components.length, 'component') }}</div>
           </NuxtLink>
           <NuxtLink v-if="config && autoImports" min-w-40 p4 theme-card-yellow flex="~ col auto" to="/modules/imports">
             <div carbon-function text-3xl />
-            <div>{{ autoImports.imports.length }} imports</div>
+            <div>{{ pluralizeByCount(autoImports.imports.length, 'import') }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-purple flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
-            <div>{{ installedModules.length }} modules</div>
+            <div>{{ pluralizeByCount(installedModules.length, 'module') }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 p4 theme-card-teal flex="~ col auto" to="/modules/plugins">
             <div carbon-plug text-3xl />
-            <div>{{ config.plugins.length }} plugins</div>
+            <div>{{ pluralizeByCount(config.plugins.length, 'plugin') }}</div>
           </NuxtLink>
           <div v-if="metricsLoading" pointer-events-none min-w-40 p4 theme-card-lime flex="~ auto gap-6">
             <div i-carbon-time-plot flex-none text-3xl />
