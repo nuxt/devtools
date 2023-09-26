@@ -44,10 +44,7 @@ async function showPopup() {
           </h2>
 
           <p op50>
-            Your <NLink
-              role="button" n="primary"
-              @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'"
-            /> will be updated as:
+            Your <NLink role="button" n="primary" underline @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
           </p>
 
           <CodeDiff

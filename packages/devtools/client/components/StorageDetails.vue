@@ -182,7 +182,8 @@ async function renameCurrentItem() {
       </div>
       <NPanelGrids v-else>
         <NCard px6 py4>
-          Select one key to start.<br>Learn more about <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
+          Select one key to start.<br>Learn more about
+          <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
             Nitro storage
           </NLink>
         </NCard>
@@ -195,7 +196,8 @@ async function renameCurrentItem() {
     </p>
     <p v-else>
       No custom storage defined in <code>nitro.storage</code>.<br>
-      Learn more about <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
+      Learn more about
+      <NLink href="https://nitro.unjs.io/guide/storage" n="orange" target="_blank">
         Nitro storage
       </NLink>
     </p>

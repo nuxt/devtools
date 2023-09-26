@@ -87,13 +87,14 @@ const selectedTab = ref(tabs[0])
           <div v-if="index" x-divider />
           <div flex="~ gap-1 items-center" px4 py2>
             <div i-carbon-warning text-orange />
-            <NTextExternalLink
-              op50
-              :link="item.docs"
+            <NLink
+              op-50
+              :href="item.docs"
+              target="_blank"
               n="orange"
             >
               {{ item.name }}
-            </NTextExternalLink>
+            </NLink>
           </div>
           <div w-full p2 op75>
             {{ item.description }}
