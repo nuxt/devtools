@@ -63,7 +63,7 @@ registerCommands(() => [
 </script>
 
 <template>
-  <PanelLeftRight :left-size="30">
+  <NSplitPane :left-size="30">
     <template #left>
       <div flex="~ col">
         <template v-for="build of info?.builds" :key="build.slug">
@@ -96,7 +96,7 @@ registerCommands(() => [
       <BuildAnalyzeDetails v-if="selected" :current="selected" />
       <NPanelGrids v-else />
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
 
   <PromiseConfirm v-slot="{ resolve }">
     <NDialog :model-value="true" @close="resolve(false)">

@@ -66,42 +66,6 @@ html.dark {
   color: var(--shiki-dark, inherit) !important;
 }
 
-/* Splitpanes */
-.splitpanes__splitter {
-  position: relative;
-}
-.splitpanes__splitter:before {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transition: .2s ease;
-  content: '';
-  transition: opacity 0.4s;
-  z-index: 1;
-}
-.splitpanes__splitter:hover:before {
-  background: #8881;
-  opacity: 1;
-}
-.splitpanes--vertical>.splitpanes__splitter {
-  min-width: 0 !important;
-  width: 0 !important;
-}
-.splitpanes--horizontal>.splitpanes__splitter {
-  min-height: 0 !important;
-  height: 0 !important;
-}
-.splitpanes--vertical>.splitpanes__splitter:before {
-  left: -5px;
-  right: -4px;
-  height: 100%;
-}
-.splitpanes--horizontal>.splitpanes__splitter:before {
-  top: -5px;
-  bottom: -4px;
-  width: 100%;
-}
-
 /* JSON Editor */
 textarea {
   background: #8881
