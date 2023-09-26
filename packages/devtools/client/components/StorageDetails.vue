@@ -112,7 +112,7 @@ async function renameCurrentItem() {
   <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
     <template #left>
       <div class="h-[48px] flex items-center justify-between gap1 px-3">
-        <NIconButton icon="carbon-chevron-left" ml--1 @click="currentStorage = ''" />
+        <NButton icon="carbon-chevron-left" ml--1 :border="false" @click="currentStorage = ''" />
         <div class="w-full text-sm">
           <NSelect v-model="currentStorage" n="primary" icon="carbon-data-base">
             <option v-for="(_storage, name) of storageMounts" :key="name" :value="name">

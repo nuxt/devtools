@@ -28,9 +28,10 @@ watchEffect(() => {
         <span :class="t.id === selected?.id ? '' : 'op50'">
           {{ t.name }}{{ t.isTerminated ? ' (terminated)' : '' }}
         </span>
-        <NIconButton
+        <NButton
           v-if="t.isTerminated"
           icon="carbon-close" mx--2
+          :border="false"
           @click.stop="remove(t.id)"
         />
       </button>

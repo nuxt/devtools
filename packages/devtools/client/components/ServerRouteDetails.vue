@@ -411,8 +411,9 @@ const copy = useCopy()
             <div flex-none>
               Default Inputs
             </div>
-            <NIconButton
+            <NButton
               icon="i-carbon-edit"
+              :border="false"
               @click="emit('open-default-input')"
             />
             <div x-divider />

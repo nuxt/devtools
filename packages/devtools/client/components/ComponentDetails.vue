@@ -19,7 +19,7 @@ const copy = useCopy()
   <div flex="~ col gap1" items-start of-hidden>
     <div flex="~ gap2" px3>
       <ComponentName :component="component" />
-      <NIconButton title="Copy name" flex-none icon="carbon-copy" @click="copy(`<${name}></${name}>`)" />
+      <NButton title="Copy name" flex-none icon="carbon-copy" :border="false" @click="copy(`<${name}></${name}>`)" />
       <NBadge
         v-if="component.global"
         n="green"

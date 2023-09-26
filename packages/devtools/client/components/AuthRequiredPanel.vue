@@ -53,7 +53,7 @@ async function input() {
             :n="isFailed ? 'red' : undefined"
             @keydown.enter="input"
           />
-          <NIconButton border="~ base" hover="border-primary text-green" p3.8 icon="i-carbon-arrow-right" @click="input" />
+          <NButton n="green" h-full icon="i-carbon-arrow-right" @click="input" />
         </form>
         <div flex="~ gap-2">
           <slot name="actions" />

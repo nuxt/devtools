@@ -35,7 +35,7 @@ const currentServerRoute = useCurrentServeRoute()
       <!-- TODO: maybe add options to create/delete/copy ... -->
       <!-- <NDropdown v-model="dropdown" position="right" n="sm">
         <template #trigger="{ click }">
-          <NIconButton icon="carbon-overflow-menu-vertical" @click.stop.prevent="click()" />
+          <NButton icon="carbon-overflow-menu-vertical" :border="false" @click.stop.prevent="click()" />
         </template>
       </NDropdown> -->
     </button>

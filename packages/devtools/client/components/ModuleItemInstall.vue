@@ -50,7 +50,7 @@ const anyObj = {} as any
       <NBadge n="green" v-text="'Installed'" />
       <NDropdown v-if="isUninstallable" n="sm green">
         <template #trigger="{ click }">
-          <NIconButton icon="carbon-overflow-menu-vertical" @click="click()" />
+          <NButton icon="carbon-overflow-menu-vertical" :border="false" @click="click()" />
         </template>
         <NButton icon="carbon-trash-can" n="red" @click="useModuleAction(item, 'uninstall')">
           Uninstall

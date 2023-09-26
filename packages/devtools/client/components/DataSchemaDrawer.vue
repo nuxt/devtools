@@ -84,7 +84,7 @@ function copyToClipboard() {
         </NSelect>
         <NDropdown v-if="options?.length" n="sm lime">
           <template #trigger="{ click }">
-            <NIconButton icon="carbon-settings" p3.1 border="~ base" @click="click()" />
+            <NButton icon="carbon-settings" h-full @click="click()" />
             <span v-if="options" flex="~ items-center justify-center" absolute bottom--1 right--2 h-4 w-4 rounded-full bg-lime:30 text-8px>
               {{ options.length }}
             </span>
@@ -103,7 +103,7 @@ function copyToClipboard() {
           </div>
         </NDropdown>
         <div flex-auto />
-        <NIconButton icon="carbon-copy" border="~ base" mr-6 p3.1 @click="copyToClipboard()" />
+        <NButton icon="carbon-copy" mr-6 h-full @click="copyToClipboard()" />
       </div>
       <NCodeBlock v-if="generatedJson" :lang="shikiLanguage" :code="generatedJson" />
     </NDrawer>

@@ -68,7 +68,7 @@ const transitionType = {
       }"
       v-bind="$attrs"
     >
-      <NIconButton absolute right-2 top-2 z-20 text-xl icon="carbon-close" @click="$emit('close')" />
+      <NButton absolute right-2 top-2 z-20 text-xl icon="carbon-close" :border="false" @click="$emit('close')" />
       <div relative h-full w-full of-auto>
         <slot />
       </div>

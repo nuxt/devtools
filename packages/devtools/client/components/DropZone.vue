@@ -153,9 +153,10 @@ useEventListener('drop', onDrop)
     fixed bottom-0 left-13 right-0 top-0 z-10 backdrop-blur-20 transition-all
     :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'"
   >
-    <NIconButton
+    <NButton
       icon="carbon-close"
       absolute right-5 top-5 z-20 text-xl
+      :border="false"
       @click="close"
     />
     <div v-if="!files?.length" h-full w-full flex items-center justify-center>
@@ -189,12 +190,15 @@ useEventListener('drop', onDrop)
           </div>
           <div flex="~ gap1" items-center>
             <NTextInput
-              n="xs" flex-auto
+              n="xs"
+              h-full flex-auto
               :model-value="file.name"
               @update:model-value="changeName(file, ($event.target as HTMLInputElement).value)"
             />
-            <NIconButton
-              icon="carbon-delete" flex-none
+            <NButton
+              n="red"
+              icon="carbon-trash-can"
+              h-full flex-none
               title="Remove file"
               @click="removeFile(index)"
             />
