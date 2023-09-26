@@ -48,9 +48,9 @@ function clear() {
 <template>
   <div ref="container" h-full w-full of-auto bg-black />
   <div border="t base" flex="~ gap-2" items-center p2>
-    <NIconButton title="Clear" icon="i-carbon-clean" @click="clear()" />
-    <NIconButton v-if="info?.restartable" title="Restart" icon="carbon-renew" @click="rpc.runTerminalAction(id, 'restart')" />
-    <NIconButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" @click="rpc.runTerminalAction(id, 'terminate')" />
+    <NButton title="Clear" icon="i-carbon-clean" :border="false" @click="clear()" />
+    <NButton v-if="info?.restartable" title="Restart" icon="carbon-renew" :border="false" @click="rpc.runTerminalAction(id, 'restart')" />
+    <NButton v-if="info?.terminatable" title="Terminate" icon="carbon-delete" :border="false" @click="rpc.runTerminalAction(id, 'terminate')" />
     <span text-sm op50>{{ info?.description }}</span>
   </div>
 </template>

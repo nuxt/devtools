@@ -47,11 +47,12 @@ async function refreshData(keys?: string[]) {
       </template>
       <StateGroup :state="payload.data">
         <template #actions="{ isOpen, name }">
-          <NIconButton
+          <NButton
             v-if="isOpen && name"
             v-tooltip.bottom="`Re-fetch '${name}'`"
             :title="`Re-fetch '${name}'`"
             icon="carbon-recycle"
+            :border="false"
             @click="refreshData([name])"
           />
         </template>

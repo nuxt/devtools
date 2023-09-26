@@ -31,10 +31,11 @@ const { showHelpButtons } = useDevToolsUIOptions()
         z-200 h-full w-150 overflow-auto px8 py4 bg-base
       >
         <slot />
-        <NIconButton
+        <NButton
           icon="carbon-close"
           pos="absolute top-3 right-3"
           rounded-full text-xl
+          :border="false"
           @click="open = false"
         />
       </div>

@@ -218,11 +218,12 @@ async function renameAsset() {
           <td>
             <div flex="~ gap-1" w-full items-center>
               <FilepathItem :filepath="asset.filePath" text-left />
-              <NIconButton
+              <NButton
                 v-tooltip="'Open in Editor'"
                 flex-none
                 title="Open in Editor"
                 icon="carbon-launch"
+                :border="false"
                 @click="openInEditor(asset.filePath)"
               />
             </div>
@@ -237,19 +238,21 @@ async function renameAsset() {
               <div flex-auto of-hidden truncate ws-pre font-mono>
                 {{ asset.publicPath }}
               </div>
-              <NIconButton
+              <NButton
                 v-tooltip="'Copy public path'"
                 flex-none
                 title="Copy public path"
                 icon="carbon-copy"
+                :border="false"
                 @click="copy(asset.publicPath)"
               />
-              <NIconButton
+              <NButton
                 v-tooltip="'Open in browser'"
                 flex-none
                 :to="asset.publicPath"
                 icon="carbon-launch"
                 target="_blank"
+                :border="false"
                 title="Open in browser"
               />
             </div>

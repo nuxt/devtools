@@ -127,19 +127,22 @@ watchEffect(() => {
                   <span>{{ tab.title }}</span>
                   <div flex-auto />
                   <template v-if="pinnedTabs.includes(tab.name)">
-                    <NIconButton
+                    <NButton
                       icon="i-carbon-caret-up"
                       :disabled="pinnedTabs.indexOf(tab.name) === 0"
+                      :border="false"
                       @click="pinMove(tab.name, -1)"
                     />
-                    <NIconButton
+                    <NButton
                       icon="i-carbon-caret-down"
                       :disabled="pinnedTabs.indexOf(tab.name) === pinnedTabs.length - 1"
+                      :border="false"
                       @click="pinMove(tab.name, 1)"
                     />
                   </template>
-                  <NIconButton
+                  <NButton
                     :icon="pinnedTabs.includes(tab.name) ? ' i-carbon-pin-filled rotate--45' : ' i-carbon-pin op50'"
+                    :border="false"
                     @click="togglePinTab(tab.name)"
                   />
                 </div>

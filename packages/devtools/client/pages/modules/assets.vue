@@ -82,9 +82,9 @@ const navbar = ref<HTMLElement>()
     <Navbar ref="navbar" v-model:search="search" pb2>
       <template #actions>
         <div flex-none flex="~ gap2 items-center">
-          <NIconButton
+          <NButton
             v-tooltip.bottom-end="'Toggle View'"
-            text-lg
+            text-lg :border="false"
             :icon="view === 'grid' ? 'i-carbon-list' : 'i-carbon-grid'"
             title="Toggle view"
             @click="toggleView"

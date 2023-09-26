@@ -33,17 +33,17 @@ function toggleView() {
       :relationships="relationships"
     >
       <div flex-none flex="~ gap3">
-        <NIconButton
+        <NButton
           v-tooltip.bottom-end="'Toggle View'"
-          text-lg
+          text-lg :border="false"
           :icon="view === 'graph' ? 'i-carbon-list' : 'i-carbon-network-4'"
           title="Toggle view"
           @click="toggleView"
         />
-        <NIconButton
+        <NButton
           v-if="client?.inspector?.instance"
           v-tooltip.bottom-end="'Inspect Vue components'"
-          text-lg
+          text-lg :border="false"
           icon="i-tabler-focus-2"
           title="Inspect Vue components"
           @click="openComponentInspector"

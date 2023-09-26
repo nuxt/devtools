@@ -69,16 +69,18 @@ function toggleView() {
           </NCheckbox>
         </template> -->
         <div flex-auto />
-        <NIconButton
+        <NButton
           :icon="view === 'table' ? 'i-carbon-roadmap' : 'i-carbon-list'"
           class="ml-2"
           title="Toggle View"
+          :border="false"
           @click="toggleView"
         />
-        <NIconButton
+        <NButton
           icon="i-carbon-trash-can"
           hover-text-red
           class="ml-2"
+          :border="false"
           @click="clear"
         />
       </div>

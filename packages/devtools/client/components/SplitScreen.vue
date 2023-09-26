@@ -77,9 +77,11 @@ onClickOutside(gridPanel, (e) => {
         </template>
       </VDropdown>
       <div flex-auto />
-      <NIconButton
+      <NButton
+        v-tooltip="'Close split screen'"
         icon="i-carbon:side-panel-open"
         title="Close split screen"
+        :border="false"
         @click="closeSplitScreen"
       />
     </div>
