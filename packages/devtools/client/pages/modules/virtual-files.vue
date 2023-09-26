@@ -61,7 +61,7 @@ const filteredFiles = computed(() => {
 </script>
 
 <template>
-  <PanelLeftRight class="virtual-files" storage-key="tab-virtual-files">
+  <NSplitPane class="virtual-files" storage-key="tab-virtual-files">
     <template #left>
       <Navbar
         v-model:search="searchString"
@@ -94,7 +94,7 @@ const filteredFiles = computed(() => {
         </NCard>
       </NPanelGrids>
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
 
   <HelpFab>
     <DocsVirtualFiles />

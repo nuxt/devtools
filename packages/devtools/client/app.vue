@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import 'floating-vue/dist/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
-import 'splitpanes/dist/splitpanes.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 import { setupClientRPC } from './setup/client-rpc'
@@ -94,14 +93,14 @@ registerCommands(() =>
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <PanelLeftRight storage-key="devtools:split-screen-mode" :min-size="20">
+        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20">
           <template #left>
             <NuxtPage />
           </template>
           <template v-if="splitScreenEnabled && splitScreenAvailable" #right>
             <SplitScreen />
           </template>
-        </PanelLeftRight>
+        </NSplitPane>
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />

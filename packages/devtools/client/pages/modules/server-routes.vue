@@ -131,7 +131,7 @@ function capitalize(str: string) {
 </script>
 
 <template>
-  <PanelLeftRight storage-key="tab-server-routes">
+  <NSplitPane storage-key="tab-server-routes">
     <template #left>
       <Navbar v-model:search="search" pb2>
         <template #actions>
@@ -177,7 +177,7 @@ function capitalize(str: string) {
         </NCard>
       </NPanelGrids>
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
   <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     <div>
       <div p4 border="b base">

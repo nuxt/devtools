@@ -109,7 +109,7 @@ async function renameCurrentItem() {
 </script>
 
 <template>
-  <PanelLeftRight v-if="currentStorage" storage-key="tab-storage">
+  <NSplitPane v-if="currentStorage" storage-key="tab-storage">
     <template #left>
       <div class="h-[48px] flex items-center justify-between gap1 px-3">
         <NIconButton icon="carbon-chevron-left" ml--1 @click="currentStorage = ''" />
@@ -189,7 +189,7 @@ async function renameCurrentItem() {
         </NCard>
       </NPanelGrids>
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
   <NPanelGrids v-else>
     <p v-if="Object.keys(storageMounts as any).length" op50>
       Select one storage to start:
