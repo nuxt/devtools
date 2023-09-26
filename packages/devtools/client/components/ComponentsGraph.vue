@@ -259,10 +259,10 @@ function setFilter() {
         </div>
       </div>
     </NCard>
-    <DrawerRight
+    <NDrawer
       :model-value="!!(selected && selected.component)"
-      :navbar="navbar"
-      w-80
+      :top="navbar"
+      border="t l base" w-80
       @close="selected = undefined"
     >
       <div v-if="selected && selected.component" py4 pt4 flex="~ col">
@@ -277,6 +277,6 @@ function setFilter() {
           </NButton>
         </div>
       </div>
-    </DrawerRight>
+    </NDrawer>
   </div>
 </template>

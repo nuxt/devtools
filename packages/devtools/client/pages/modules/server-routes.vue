@@ -178,7 +178,7 @@ function capitalize(str: string) {
       </NPanelGrids>
     </template>
   </PanelLeftRight>
-  <DrawerRight v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
+  <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     <div>
       <div p4 border="b base">
         <span text-lg>Default Inputs</span>
@@ -195,5 +195,5 @@ function capitalize(str: string) {
         <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ type: 'string' }" />
       </NSectionBlock>
     </div>
-  </DrawerRight>
+  </NDrawer>
 </template>
