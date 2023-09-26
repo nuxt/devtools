@@ -47,9 +47,7 @@ const anyObj = {} as any
     @click="isInstalled ? null : useModuleAction(item, 'install')"
   >
     <template v-if="isInstalled" #badge>
-      <Badge bg-green-400:10 text-green-400>
-        Installed
-      </Badge>
+      <NBadge n="green" v-text="'Installed'" />
       <NDropdown v-if="isUninstallable" n="sm green">
         <template #trigger="{ click }">
           <NIconButton icon="carbon-overflow-menu-vertical" @click="click()" />

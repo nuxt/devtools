@@ -17,24 +17,24 @@ const shortPath = computed(() => parseReadablePath(props.plugin.src, config.valu
     </div>
     <FilepathItem :filepath="props.plugin.src" :subpath="true" />
     <div>
-      <Badge
+      <NBadge
         v-if="shortPath.startsWith('#')"
-        bg-rose-400:10 text-rose
+        n="rose"
         v-text="'virtual'"
       />
-      <Badge
+      <NBadge
         v-else-if="!shortPath.startsWith('.')"
-        bg-gray-400:10 text-gray
+        n="gray"
         v-text="'module'"
       />
-      <Badge
+      <NBadge
         v-if="plugin.mode === 'server'"
-        bg-teal-400:10 text-teal-400
+        n="teal"
         v-text="'server'"
       />
-      <Badge
+      <NBadge
         v-if="plugin.mode === 'client'"
-        bg-orange-400:10 text-orange-400
+        n="orange"
         v-text="'client'"
       />
     </div>

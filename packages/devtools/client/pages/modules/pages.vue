@@ -133,9 +133,9 @@ function navigateToRoute(path: string) {
         <tr v-for="m of middleware" :key="m.path" h-7>
           <td>
             <span mr1>{{ m.name }}</span>
-            <Badge
+            <NBadge
               v-if="m.global"
-              bg-green-400:10 text-green-400
+              n="green"
               title="Registered at runtime as a global component"
               v-text="'global'"
             />

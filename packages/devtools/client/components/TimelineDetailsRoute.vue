@@ -11,9 +11,7 @@ const timeAgo = useTimeAgo(() => props.record.start, { showSecond: true })
 <template>
   <div v-if="record" p-4 flex="~ col gap-2">
     <div mx--1>
-      <Badge bg-green-400:10 text-green-400 op50>
-        Route Change
-      </Badge>
+      <NBadge n="green" v-text="'Route Change'" />
     </div>
     <div flex="~ gap-1 items-center" font-mono>
       <span op50>{{ record.from }}</span>

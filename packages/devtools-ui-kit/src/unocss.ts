@@ -146,6 +146,9 @@ export function unocssPreset(): Preset {
       // icon-button
       'n-icon-button': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:n-bg-active',
 
+      // badge
+      'n-badge': 'bg-context/10 text-context mx-0.5 select-none whitespace-nowrap rounded px-1.5 py-0.5 text-xs',
+
       // loading
       'n-loading': 'flex h-full w-full justify-center items-center',
       'n-panel-grids': 'n-panel-grids-light dark:n-panel-grids-dark',

@@ -22,9 +22,9 @@ const currentServerRoute = useCurrentServeRoute()
     >
       <div :class="{ 'w-12': !item.routes }" flex-none text-left>
         <NIcon v-if="item.type === 'collection'" icon="carbon:chevron-right" mb0.5 :transform-rotate="open ? 90 : 0" transition />
-        <Badge
+        <NBadge
           v-else
-          :class="getRequestMethodClass(item.method || '*')"
+          :n="getRequestMethodClass(item.method || '*')"
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>

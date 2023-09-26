@@ -469,20 +469,13 @@ const copy = useCopy()
     <template v-else>
       <div border="b base" flex="~ gap2" items-center px4 py2>
         <div>Response</div>
-        <Badge
+        <NBadge
           v-if="response.error"
-          bg-red-400:10 text-red-400
+          n="red"
         >
           Error
-        </Badge>
-        <Badge
-          :class="{
-            'bg-orange-400:10 text-orange-400': response.error,
-            'bg-green-400:10 text-green-400': !response.error,
-          }"
-        >
-          {{ response.statusCode }}
-        </Badge>
+        </NBadge>
+        <NBadge :n="response.error ? 'orange' : 'green'" v-text="response.statusCode" />
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
@@ -494,9 +487,9 @@ const copy = useCopy()
         <div op50>
           Request finished in
         </div>
-        <Badge bg-green-400:10 text-green-400>
+        <NBadge n="green">
           {{ response.fetchTime }} ms
-        </Badge>
+        </NBadge>
       </div>
       <div v-if="responseLang === 'pdf'" flex-auto overflow-auto>
         <div border="~ base" h-full w-full rounded>

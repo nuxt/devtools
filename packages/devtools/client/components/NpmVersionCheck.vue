@@ -50,15 +50,15 @@ async function updateWithConfirm() {
     <code v-if="info && showVersion">{{ `v${info.current}` }}</code>
     <template v-if="info?.latest">
       <button v-if="info.needsUpdate" @click="updateWithConfirm()">
-        <Badge
-          bg-green-400:10 text-green-400
+        <NBadge
+          n="green"
           title="updates available"
           v-text="'updates available'"
         />
       </button>
-      <Badge
+      <NBadge
         v-else
-        bg-gray-400:10 text-gray-400
+        n="gray"
         title="latest"
         v-text="'latest'"
       />

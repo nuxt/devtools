@@ -34,9 +34,9 @@ const filePath = computed(() => props.component.filePath || props.component.file
     <sup v-if="dependents?.length" ml--1 text-primary>
       x{{ dependents?.length }}
     </sup>
-    <Badge
+    <NBadge
       v-if="component.global"
-      bg-green-400:10 text-green-400
+      n="green"
       title="Registered at runtime as a global component"
       v-text="'runtime'"
     />
