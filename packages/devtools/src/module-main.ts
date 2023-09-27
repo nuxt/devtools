@@ -31,30 +31,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
-  const explicitEnabled = (nuxt.options.devtools === true)
+  // Determine if user aware devtools, by checking the presentation in the config
+  const enabledExplicitly = (nuxt.options.devtools === true)
     || (nuxt.options.devtools && nuxt.options.devtools.enabled)
+    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge')
 
   await nuxt.callHook('devtools:before')
 
+  // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
-
-  // `import settings from '#build/devtools/settings'`
-  // Mainly for the injected runtime plugin to access the settings
-  addTemplate({
-    filename: 'devtools/settings.mjs',
-    async getContents() {
-      const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
-        {
-          ...defaultTabOptions.ui,
-          showPanel: explicitEnabled ? true : null,
-        },
-        { root: nuxt.options.rootDir },
-      )
-      return `export default ${JSON.stringify({
-        ui: uiOptions,
-      })}`
-    },
-  })
 
   addPlugin({
     src: join(runtimeDir, 'plugins/devtools.client'),
@@ -64,6 +49,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addPlugin({
     src: join(runtimeDir, 'plugins/devtools.server'),
     mode: 'server',
+  })
+
+  // Mainly for the injected runtime plugin to access the settings
+  // Usage `import settings from '#build/devtools/settings'`
+  addTemplate({
+    filename: 'devtools/settings.mjs',
+    async getContents() {
+      const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
+        {
+          ...defaultTabOptions.ui,
+          // When not enabled explicitly, we hide the panel by default
+          showPanel: enabledExplicitly ? true : null,
+        },
+        { root: nuxt.options.rootDir },
+      )
+      return `export default ${JSON.stringify({
+        ui: uiOptions,
+      })}`
+    },
   })
 
   // Inject inline script
