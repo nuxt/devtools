@@ -1,21 +1,17 @@
 import { homedir } from 'node:os'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
+import { dirname } from 'node:path'
 import { join } from 'pathe'
 import { hash } from 'ohash'
 
 interface Options {
   root: string
-  key: string | boolean
+  key?: string | boolean
 }
 
-export async function readOptions<T>(defaults: T, options: Options): Promise<T> {
-  let hashedKey
-  if (options.key)
-    hashedKey = hash(`${options.root}:${options.key}`)
-  else
-    hashedKey = hash(options.root)
-  const filePath = join(homedir(), '.nuxt/devtools', `${hashedKey}.json`)
+export async function readLocalOptions<T>(defaults: T, options: Options): Promise<T> {
+  const { filePath } = getOptionsFilepath(options)
 
   if (existsSync(filePath)) {
     const options = {
@@ -29,18 +25,29 @@ export async function readOptions<T>(defaults: T, options: Options): Promise<T> 
   }
 }
 
-export async function writeOptions<T>(settings: T, options: Options) {
-  const dir = join(homedir(), '.nuxt/devtools')
-  if (!existsSync(dir))
-    await fs.mkdir(dir, { recursive: true })
-
+function getOptionsFilepath(options: Options) {
   let hashedKey
   if (options.key)
     hashedKey = hash(`${options.root}:${options.key}`)
   else
     hashedKey = hash(options.root)
-  const filePath = join(dir, `${hashedKey}.json`)
+  const filePath = join(homedir(), '.nuxt/devtools', `${hashedKey}.json`)
+  return {
+    filePath,
+    hashedKey,
+  }
+}
 
+export async function clearLocalOptions(options: Options) {
+  const { filePath } = getOptionsFilepath(options)
+  if (existsSync(filePath))
+    await fs.unlink(filePath)
+}
+
+export async function writeLocalOptions<T>(settings: T, options: Options) {
+  const { filePath, hashedKey } = getOptionsFilepath(options)
+
+  await fs.mkdir(dirname(filePath), { recursive: true })
   await fs.writeFile(
     filePath,
     JSON.stringify(

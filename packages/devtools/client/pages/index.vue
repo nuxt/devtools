@@ -6,9 +6,16 @@ definePageMeta({
 })
 
 const telemetry = ref(true)
+const enableFloatPanel = ref(true)
+
+const {
+  showPanel,
+} = useDevToolsUIOptions()
 
 function visit() {
   telemetryEnabled.value = telemetry.value
+  if (showPanel.value == null && enableFloatPanel.value)
+    showPanel.value = true
   isFirstVisit.value = false
 }
 </script>
@@ -34,9 +41,14 @@ function visit() {
     </NButton>
 
     <div absolute bottom-0 left-0 right-0 p4>
-      <NCheckbox v-model="telemetry">
-        <span op50>Send anonymous statistics, help us improving DevTools</span>
-      </NCheckbox>
+      <div flex="~ col gap-2" mxa w-max>
+        <NCheckbox v-if="showPanel == null" v-model="enableFloatPanel" n="green6">
+          <span op50>Show floating panel from now on</span>
+        </NCheckbox>
+        <NCheckbox v-model="telemetry" n="green6">
+          <span op50>Send anonymous statistics, help us improving DevTools</span>
+        </NCheckbox>
+      </div>
     </div>
   </NPanelGrids>
 </template>

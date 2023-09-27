@@ -1,5 +1,5 @@
 import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { readOptions, writeOptions } from '../utils/options'
+import { readLocalOptions, writeLocalOptions } from '../utils/local-options'
 import { defaultTabOptions } from '../constant'
 
 export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
@@ -15,7 +15,7 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   }
 
   async function read<T extends keyof NuxtDevToolsOptions>(tab: T) {
-    options![tab] = await readOptions<NuxtDevToolsOptions[T]>(defaultTabOptions[tab], {
+    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(defaultTabOptions[tab], {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
@@ -26,9 +26,17 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
     async updateOptions(tab, _settings) {
       const settings = await getOptions(tab)
       Object.assign(settings, _settings)
-      await writeOptions({ ...settings }, {
-        root: nuxt.options.rootDir,
-        key: tab !== 'ui' && tab,
+      await writeLocalOptions(
+        { ...settings },
+        {
+          root: nuxt.options.rootDir,
+          key: tab !== 'ui' && tab,
+        },
+      )
+      nuxt.callHook('builder:generateApp', {
+        filter(template) {
+          return template.filename.includes('devtools/settings.mjs')
+        },
       })
     },
     getOptions,
