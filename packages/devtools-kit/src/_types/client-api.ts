@@ -5,6 +5,7 @@ import type { NuxtApp } from 'nuxt/dist/app/nuxt'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { BuiltinLanguage } from 'shikiji'
+import type { $Fetch } from 'ofetch'
 import type { ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 import type { TimelineMetrics } from './timeline-metrics'
@@ -94,6 +95,7 @@ export interface NuxtDevtoolsHostClient {
     appConfig: AppConfig
     colorMode: Ref<'dark' | 'light'>
     frameState: Ref<DevToolsFrameState>
+    $fetch: $Fetch
   }
 
   metrics: {

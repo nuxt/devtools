@@ -170,6 +170,7 @@ export interface NuxtDevToolsOptions {
     selectedRoute: ServerRouteInfo | null
     view: 'tree' | 'list'
     inputDefaults: Record<string, ServerRouteInput[]>
+    sendFrom: 'app' | 'devtools'
   }
   assets: {
     view: 'grid' | 'list'
