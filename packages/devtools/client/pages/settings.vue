@@ -7,7 +7,7 @@ definePageMeta({
 
 const {
   interactionCloseOnOutsideClick,
-  // showExperimentalFeatures,
+  showPanel,
   showHelpButtons,
   scale,
   hiddenTabs,
@@ -107,7 +107,7 @@ watchEffect(() => {
             <NSwitch
               flex="~ row-reverse" py1 pl2 pr1 n-lime
               :model-value="!hiddenTabCategories.includes(name)"
-              @update:model-value="v => toggleTabCategory(name, v)"
+              @update:model-value="(v: boolean) => toggleTabCategory(name, v)"
             >
               <div flex="~ gap-2" flex-auto items-center justify-start>
                 <span capitalize op75>{{ name }}</span>
@@ -120,7 +120,7 @@ watchEffect(() => {
               <NSwitch
                 flex="~ row-reverse" py1 pl2 pr1 n-primary
                 :model-value="!hiddenTabs.includes(tab.name)"
-                @update:model-value="v => toggleTab(tab.name, v)"
+                @update:model-value="(v: boolean) => toggleTab(tab.name, v)"
               >
                 <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
                   <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
@@ -197,10 +197,14 @@ watchEffect(() => {
             <span>Show help buttons</span>
           </NCheckbox>
 
+          <NCheckbox v-model="showPanel" n-primary>
+            <span>Always show the floating panel</span>
+          </NCheckbox>
+
           <div mx--2 my1 h-1px border="b base" op75 />
 
           <p>Minimize floating panel on inactive</p>
-          <NSelect v-model.number="minimizePanelInactive" n="primary">
+          <NSelect v-model.number="minimizePanelInactive" n-primary>
             <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>

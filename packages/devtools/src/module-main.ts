@@ -2,17 +2,18 @@ import { existsSync } from 'node:fs'
 import os from 'node:os'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
-import { addPlugin, addVitePlugin, logger } from '@nuxt/kit'
+import { addPlugin, addTemplate, addVitePlugin, logger } from '@nuxt/kit'
 import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
 import { colors } from 'consola/utils'
 import { version } from '../package.json'
-import type { ModuleOptions } from './types'
+import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT } from './constant'
+import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT, defaultTabOptions } from './constant'
 import { getDevAuthToken } from './dev-auth'
+import { readLocalOptions } from './utils/local-options'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -30,8 +31,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
+  // Determine if user aware devtools, by checking the presentation in the config
+  const enabledExplicitly = (nuxt.options.devtools === true)
+    || (nuxt.options.devtools && nuxt.options.devtools.enabled)
+    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge')
+
   await nuxt.callHook('devtools:before')
 
+  // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
 
   addPlugin({
@@ -42,6 +49,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addPlugin({
     src: join(runtimeDir, 'plugins/devtools.server'),
     mode: 'server',
+  })
+
+  // Mainly for the injected runtime plugin to access the settings
+  // Usage `import settings from '#build/devtools/settings'`
+  addTemplate({
+    filename: 'devtools/settings.mjs',
+    async getContents() {
+      const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
+        {
+          ...defaultTabOptions.ui,
+          // When not enabled explicitly, we hide the panel by default
+          showPanel: enabledExplicitly ? true : null,
+        },
+        { root: nuxt.options.rootDir },
+      )
+      return `export default ${JSON.stringify({
+        ui: uiOptions,
+      })}`
+    },
   })
 
   // Inject inline script

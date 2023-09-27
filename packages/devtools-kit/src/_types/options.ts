@@ -163,6 +163,7 @@ export interface NuxtDevToolsOptions {
     scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
+    showPanel: boolean | null
     sidebarExpanded: boolean
     sidebarScrollable: boolean
   }

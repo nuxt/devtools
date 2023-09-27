@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import type { CSSProperties } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
+import { settings } from '../../settings'
 import { state } from './state'
 import { millisecondToHumanreadable, useEventListener, useScreenSafeArea } from './utils'
 import FrameBox from './FrameBox.vue'
@@ -20,6 +21,12 @@ const panelMargins = reactive({
 const safeArea = useScreenSafeArea()
 
 const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
+let isInit = true
+
+watchEffect(() => {
+  if (state.value.open)
+    isInit = false
+})
 
 watchEffect(() => {
   panelMargins.left = safeArea.left.value + 10
@@ -167,6 +174,17 @@ function bringUp() {
 }
 
 const isHidden = computed(() => {
+  if (state.value.open)
+    return false
+  if (settings.ui.showPanel === true)
+    return false
+  if (settings.ui.showPanel === false)
+    return true
+  // If not explicitly set, hide the panel on first load
+  return isInit
+})
+
+const isMinimized = computed(() => {
   if (state.value.minimizePanelInactive < 0)
     return false
   if (state.value.minimizePanelInactive === 0)
@@ -180,18 +198,25 @@ const isHidden = computed(() => {
     && state.value.minimizePanelInactive
 })
 
-const anchorStyle = computed(() => ({
-  left: `${anchorPos.value.left}px`,
-  top: `${anchorPos.value.top}px`,
-}))
+const anchorStyle = computed(() => {
+  return {
+    left: `${anchorPos.value.left}px`,
+    top: `${anchorPos.value.top}px`,
+    pointerEvents: isHidden.value ? 'none' : 'auto',
+  } as const
+})
 
 const panelStyle = computed(() => {
   const style: any = {
     transform: isVertical.value
-      ? `translate(${isHidden.value ? `calc(-50% ${state.value.position === 'right' ? '+' : '-'} 15px)` : '-50%'}, -50%) rotate(90deg)`
-      : `translate(-50%, ${isHidden.value ? `calc(-50% ${state.value.position === 'top' ? '-' : '+'} 15px)` : '-50%'})`,
+      ? `translate(${isMinimized.value ? `calc(-50% ${state.value.position === 'right' ? '+' : '-'} 15px)` : '-50%'}, -50%) rotate(90deg)`
+      : `translate(-50%, ${isMinimized.value ? `calc(-50% ${state.value.position === 'top' ? '-' : '+'} 15px)` : '-50%'})`,
   }
   if (isHidden.value) {
+    style.opacity = 0
+    style.pointerEvents = 'none'
+  }
+  if (isMinimized.value) {
     switch (state.value.position) {
       case 'top':
       case 'right':
@@ -313,11 +338,15 @@ onMounted(() => {
     :style="[anchorStyle, vars]"
     :class="{
       'nuxt-devtools-vertical': isVertical,
-      'nuxt-devtools-hide': isHidden,
+      'nuxt-devtools-hide': isMinimized,
     }"
     @mousemove="bringUp"
   >
-    <div v-if="!isSafari" class="nuxt-devtools-glowing" :style="isDragging ? 'opacity: 0.6 !important' : ''" />
+    <div
+      v-if="!isSafari"
+      class="nuxt-devtools-glowing"
+      :style="isDragging ? 'opacity: 0.6 !important' : ''"
+    />
     <div
       ref="panelEl"
       class="nuxt-devtools-panel"
@@ -460,7 +489,7 @@ onMounted(() => {
   user-select: none;
   touch-action: none;
   max-width: 150px;
-  transition: max-width 0.6s ease, padding 0.5s ease, transform 0.4s ease, all 0.6s ease;
+  transition: all 0.6s ease, max-width 0.6s ease, padding 0.5s ease, transform 0.4s ease, opacity 0.2s ease;
 }
 
 #nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel {
