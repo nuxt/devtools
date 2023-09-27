@@ -16,6 +16,7 @@ export default defineBuildConfig({
     'nitropack',
     'unimport',
     'unstorage',
+    'ofetch',
     'vue',
     'vue-router',
     'nuxt/dist/app/nuxt',
