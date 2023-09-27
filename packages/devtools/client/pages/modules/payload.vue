@@ -62,7 +62,7 @@ async function refreshData(keys?: string[]) {
       v-if="payload.functions && Object.keys(payload.functions).length"
       icon="carbon-function"
       text="Functions"
-      description="State for functions (experimental)"
+      description="State for functions"
     >
       <StateEditor
         ml--6
