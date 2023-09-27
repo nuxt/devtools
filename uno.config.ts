@@ -1,6 +1,6 @@
 import { defineConfig } from 'unocss'
 
-import config from './packages/devtools/client/unocss.config'
+import config from './packages/devtools/client/uno.config'
 
 export default defineConfig({
   ...config,

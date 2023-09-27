@@ -1,5 +1,5 @@
 import { defineConfig, presetAttributify, presetIcons, presetTypography, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
-import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
+import { unocssPreset as uiKit } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
   shortcuts: [
@@ -21,6 +21,7 @@ export default defineConfig({
   presets: [
     presetUno(),
     presetAttributify(),
+    presetTypography(),
     presetIcons({
       prefix: ['i-', ''],
       scale: 1.2,
@@ -36,8 +37,7 @@ export default defineConfig({
         stylish: 'Caveat',
       },
     }),
-    presetTypography(),
-    devtoolsUIKitUnoPreset(),
+    uiKit(),
   ],
   transformers: [
     transformerDirectives(),
