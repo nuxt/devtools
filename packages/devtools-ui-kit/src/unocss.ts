@@ -21,6 +21,8 @@ export function unocssPreset(): Preset {
     name: '@nuxt/devtools-ui-kit',
     theme: mergeDeep<Theme>(unoTheme, {
       colors: {
+        brand: '#00DC82',
+        primary: '#099e61',
         context: 'rgba(var(--nui-c-context),%alpha)',
       },
       fontFamily: {

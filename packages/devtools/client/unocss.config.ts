@@ -18,11 +18,6 @@ export default defineConfig({
     },
     [/^theme-card-(\w+)$/, $ => `p2 flex gap2 border border-base bg-base items-center rounded min-w-40 min-h-25 justify-center transition-all saturate-0 op50 shadow hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
   ],
-  theme: {
-    colors: {
-      primary: '#00DC82',
-    },
-  },
   presets: [
     presetUno(),
     presetAttributify(),
