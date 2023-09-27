@@ -10,6 +10,7 @@ import {
   presetIcons,
   presetTypography,
   presetUno,
+  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -21,10 +22,9 @@ export function unocssPreset(): Preset {
     name: '@nuxt/devtools-ui-kit',
     theme: mergeDeep<Theme>(unoTheme, {
       colors: {
+        brand: '#00DC82',
+        primary: '#099e61',
         context: 'rgba(var(--nui-c-context),%alpha)',
-      },
-      fontFamily: {
-        sans: 'Avenir, Helvetica, Arial, sans-serif',
       },
     }),
     rules: [
@@ -147,7 +147,8 @@ export function unocssPreset(): Preset {
       'n-icon-button': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:n-bg-active',
 
       // badge
-      'n-badge': 'bg-context/10 text-context mx-0.5 select-none whitespace-nowrap rounded px-1.5 py-0.5 text-xs',
+      'n-badge-base': 'bg-context/10 text-context rounded whitespace-nowrap select-none',
+      'n-badge': 'n-badge-base mx-0.5 px-1.5 py-0.5 text-xs',
 
       // loading
       'n-loading': 'flex h-full w-full justify-center items-center',
@@ -173,6 +174,12 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
           'vertical-align': 'middle',
         },
         // ...(user?.icons || {})
+      }),
+      presetWebFonts({
+        fonts: {
+          sans: 'DM Sans',
+          mono: 'DM Mono',
+        },
       }),
       unocssPreset(),
       ...(user.presets || []),

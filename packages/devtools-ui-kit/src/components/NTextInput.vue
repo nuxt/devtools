@@ -8,6 +8,7 @@ const props = withDefaults(
     placeholder?: string
     disabled?: boolean
     autofocus?: boolean
+    readonly?: boolean
     type?: string
   }>(),
   {

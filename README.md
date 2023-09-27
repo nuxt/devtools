@@ -23,10 +23,6 @@ Unleash Nuxt Developer Experience.
 
 <br>
 
-> **Warning**: Experimental and under heavy development. APIs are subject to change.
-
-<br>
-
 ## Installation
 
 > Nuxt DevTools requires **Nuxt v3.1.0 or higher**.

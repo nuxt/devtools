@@ -24,7 +24,7 @@ const currentServerRoute = useCurrentServeRoute()
         <NIcon v-if="item.type === 'collection'" icon="carbon:chevron-right" mb0.5 :transform-rotate="open ? 90 : 0" transition />
         <NBadge
           v-else
-          :n="getRequestMethodClass(item.method || '*')"
+          :class="getRequestMethodClass(item.method || '*')"
           v-text="(item.method || '*').toUpperCase()"
         />
       </div>

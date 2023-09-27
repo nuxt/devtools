@@ -82,13 +82,13 @@ export function getIsMacOS() {
 
 // @unocss-include
 const requestMethodClass: Record<string, string> = {
-  get: 'green',
-  post: 'blue',
-  put: 'orange',
-  delete: 'red',
-  patch: 'purple',
-  head: 'teal',
-  default: 'gray',
+  get: 'n-green',
+  post: 'n-blue',
+  put: 'n-orange',
+  delete: 'n-red',
+  patch: 'n-purple',
+  head: 'n-teal',
+  default: 'n-gray',
 }
 
 export function getRequestMethodClass(method: string) {

@@ -80,7 +80,7 @@ registerCommands(() =>
 </script>
 
 <template>
-  <div fixed inset-0 h-screen w-screen>
+  <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
     <Notification />
     <NLoading v-if="waiting">
