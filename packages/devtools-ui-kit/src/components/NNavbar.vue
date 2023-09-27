@@ -1,14 +1,8 @@
 <script setup lang="ts">
-defineProps({
-  search: {
-    type: String,
-    default: undefined,
-  },
-  noPadding: {
-    type: Boolean,
-    default: false,
-  },
-})
+defineProps<{
+  search?: string
+  noPadding?: boolean
+}>()
 
 const emit = defineEmits<{
   (event: 'update:search', value: string): void
@@ -22,7 +16,7 @@ function update(event: any) {
 <template>
   <div flex="~ col gap2" border="b base" flex-1 navbar-glass :class="[{ p4: !noPadding }]">
     <div flex="~ gap4" items-center>
-      <slot name="search">
+      <slot v-if="search !== undefined" name="search">
         <NTextInput
           placeholder="Search..."
           icon="carbon-search"

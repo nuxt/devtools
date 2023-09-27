@@ -95,7 +95,7 @@ until(router).toBeTruthy().then((v) => {
 <template>
   <div flex="~" h-full w-full of-hidden>
     <div h-full flex-auto of-auto>
-      <Navbar>
+      <NNavbar>
         <template #search>
           <NTextInput
             v-model="routeInput"
@@ -135,7 +135,7 @@ until(router).toBeTruthy().then((v) => {
             />
           </div>
         </template>
-      </Navbar>
+      </NNavbar>
       <div flex="~ col">
         <NSectionBlock
           text="Tags"
