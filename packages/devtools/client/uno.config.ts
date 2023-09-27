@@ -1,5 +1,5 @@
 import { defineConfig, presetAttributify, presetIcons, presetTypography, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
-import { unocssPreset as devtoolsUIKitUnoPreset } from '../../devtools-ui-kit/src/unocss'
+import { unocssPreset as uiKit } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
   shortcuts: [
@@ -18,14 +18,10 @@ export default defineConfig({
     },
     [/^theme-card-(\w+)$/, $ => `p2 flex gap2 border border-base bg-base items-center rounded min-w-40 min-h-25 justify-center transition-all saturate-0 op50 shadow hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
   ],
-  theme: {
-    colors: {
-      primary: '#00DC82',
-    },
-  },
   presets: [
     presetUno(),
     presetAttributify(),
+    presetTypography(),
     presetIcons({
       prefix: ['i-', ''],
       scale: 1.2,
@@ -36,13 +32,12 @@ export default defineConfig({
     }),
     presetWebFonts({
       fonts: {
-        sans: 'Inter:400,500',
-        mono: 'Fira Code',
+        sans: 'DM Sans',
+        mono: 'DM Mono',
         stylish: 'Caveat',
       },
     }),
-    presetTypography(),
-    devtoolsUIKitUnoPreset(),
+    uiKit(),
   ],
   transformers: [
     transformerDirectives(),
@@ -56,5 +51,8 @@ export default defineConfig({
     'carbon-ibm-watson-discovery',
     'simple-icons-nuxtdotjs',
     'bxl-visual-studio',
+  ],
+  configDeps: [
+    '../../packages/devtools-ui-kit/src/unocss.ts',
   ],
 })

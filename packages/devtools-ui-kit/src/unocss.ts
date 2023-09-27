@@ -10,6 +10,7 @@ import {
   presetIcons,
   presetTypography,
   presetUno,
+  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -21,10 +22,9 @@ export function unocssPreset(): Preset {
     name: '@nuxt/devtools-ui-kit',
     theme: mergeDeep<Theme>(unoTheme, {
       colors: {
+        brand: '#00DC82',
+        primary: '#099e61',
         context: 'rgba(var(--nui-c-context),%alpha)',
-      },
-      fontFamily: {
-        sans: 'Avenir, Helvetica, Arial, sans-serif',
       },
     }),
     rules: [
@@ -174,6 +174,12 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
           'vertical-align': 'middle',
         },
         // ...(user?.icons || {})
+      }),
+      presetWebFonts({
+        fonts: {
+          sans: 'DM Sans',
+          mono: 'DM Mono',
+        },
       }),
       unocssPreset(),
       ...(user.presets || []),
