@@ -296,11 +296,19 @@ const copy = useCopy()
 <template>
   <div h-full w-full flex="~ col">
     <div flex="~ col gap-2" flex-none p4 navbar-glass>
-      <div flex="~ gap2">
-        <NButton v-if="route.method" :class="getRequestMethodClass(routeMethod)" pointer-events-none tabindex="-1">
+      <div flex="~ gap2 items-center">
+        <NButton
+          v-if="route.method" class="n-badge-base n-sm"
+          :class="getRequestMethodClass(routeMethod)"
+          pointer-events-none font-mono tabindex="-1"
+        >
           {{ routeMethod.toUpperCase() }}
         </NButton>
-        <NSelect v-else v-model="routeMethod" :class="getRequestMethodClass(routeMethod)">
+        <NSelect
+          v-else v-model="routeMethod"
+          class="n-badge-base n-sm"
+          :class="getRequestMethodClass(routeMethod)"
+        >
           <option v-for="method of methods" :key="method" :class="getRequestMethodClass(method)">
             {{ method.toUpperCase() }}
           </option>
@@ -308,19 +316,19 @@ const copy = useCopy()
         <div relative w-full>
           <NTextInput
             :model-value="finalPath"
-            disabled flex-auto font-mono
+            readonly flex-auto font-mono
             p="x5 y2"
-            n="primary xs"
+            n="sm"
           />
           <NButton
             v-tooltip="'Copy URL'"
             title="Copy URL"
-            absolute right-2 top-1.7
+            absolute right-2 top-1.5
             n="xs blue"
+            icon="carbon:copy"
+            :border="false"
             @click="copy(finalURL)"
-          >
-            <NIcon icon="carbon:copy" />
-          </NButton>
+          />
         </div>
         <NButton n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
