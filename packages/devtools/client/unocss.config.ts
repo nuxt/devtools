@@ -31,8 +31,8 @@ export default defineConfig({
     }),
     presetWebFonts({
       fonts: {
-        sans: 'Inter:400,500',
-        mono: 'Fira Code',
+        sans: 'DM Sans',
+        mono: 'DM Mono',
         stylish: 'Caveat',
       },
     }),
@@ -51,5 +51,8 @@ export default defineConfig({
     'carbon-ibm-watson-discovery',
     'simple-icons-nuxtdotjs',
     'bxl-visual-studio',
+  ],
+  configDeps: [
+    '../../packages/devtools-ui-kit/src/unocss.ts',
   ],
 })
