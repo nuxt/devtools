@@ -126,12 +126,10 @@ const parsedBody = computed(() => {
 })
 
 const domain = computed(() => {
-  let url = config.value?.devServer.url || 'http://localhost'
+  let url = window?.location.origin
   if (url.charAt(url.length - 1) === '/')
     url = url.slice(0, -1)
-  const port = config.value?.devServer.port || 3000
-  const hasPort = url.includes(`:${port}`)
-  return hasPort ? url : `${url}:${port}`
+  return url
 })
 
 const finalPath = computed(() => {
