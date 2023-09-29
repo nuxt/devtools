@@ -156,8 +156,8 @@ export function unocssPreset(): Preset {
       'n-panel-grids-center': 'n-panel-grids flex flex-col h-full gap-2 items-center justify-center',
 
       // glass
-      'glass-effect': 'backdrop-blur-6 bg-white/80 dark:bg-[#151515]/90',
-      'navbar-glass': 'sticky z-10 top-0 glass-effect',
+      'n-glass-effect': 'backdrop-blur-6 bg-white/80 dark:bg-[#151515]/90',
+      'n-navbar-glass': 'sticky z-10 top-0 n-glass-effect',
     },
   }
 }
