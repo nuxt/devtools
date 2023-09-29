@@ -4,4 +4,4 @@ Vue Components allow us to split the UI into independent and reusable pieces, an
 
 Components placed in the components/ directory are automatically registered by Nuxt. They can be used in your templates without importing them.
 
-[Learn more on the documentation](https://nuxt.com/docs/guide/directory-structure/components)
+[Learn more in the documentation](https://nuxt.com/docs/guide/directory-structure/components)
