@@ -17,7 +17,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
   }, 500)
 
   nuxt.hook('builder:watch', (event, key) => {
-    if (key.startsWith(publicDir) && (event === 'add' || event === 'unlink'))
+    if (key.startsWith(nuxt.options.dir.public) && (event === 'add' || event === 'unlink'))
       refreshDebounced()
   })
 
