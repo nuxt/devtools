@@ -8,7 +8,7 @@ onMounted(async () => {
     }
   }
   if (!isDevAuthed.value)
-    rpc.requestForAuth()
+    requestForAuth()
 })
 
 const authInput = ref('')

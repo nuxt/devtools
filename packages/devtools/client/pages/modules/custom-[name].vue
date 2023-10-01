@@ -24,7 +24,7 @@ onMounted(() => {
     }, 2000)
   }
   else if (tab.value.requireAuth && !isDevAuthed.value) {
-    rpc.requestForAuth()
+    requestForAuth()
   }
 })
 </script>

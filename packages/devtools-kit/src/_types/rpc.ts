@@ -64,7 +64,7 @@ export interface ServerFunctions {
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>
-  requestForAuth(info?: string): Promise<void>
+  requestForAuth(info?: string, origin?: string): Promise<void>
   verifyAuthToken(token: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
   installNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
