@@ -19,6 +19,9 @@ export async function checkForUpdateOf(name: string, current?: string, nuxt = us
       current = info.packageJson.version
     }
 
+    if (!current)
+      return
+
     const packument = await import('pacote').then(r => r.default?.packument || r.packument)
     const manifest = await packument(name)
 
