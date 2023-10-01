@@ -1,3 +1,32 @@
+# [1.0.0-beta.0](https://github.com/nuxt/devtools/compare/v0.8.5...v1.0.0-beta.0) (2023-10-01)
+
+
+### Bug Fixes
+
+* improve permssion prompt ([91ae0bd](https://github.com/nuxt/devtools/commit/91ae0bd1708acd0dca9642150ac1d5109ef78d80))
+* **overview:** pluralize nouns properly ([#436](https://github.com/nuxt/devtools/issues/436)) ([5011c35](https://github.com/nuxt/devtools/commit/5011c353b089e264276b7d685907458199153a87))
+* **server-routes:** use window.location.origin for doamin ([#450](https://github.com/nuxt/devtools/issues/450)) ([a85e3c0](https://github.com/nuxt/devtools/commit/a85e3c0478e44e6d1e32fcc93a512c22c551c6fa))
+* terminals view ([df5dd76](https://github.com/nuxt/devtools/commit/df5dd7673cd065fa7f729b28f8eb33bd0b2b10e1))
+* **ui:** improve some ui details ([cd0b8a5](https://github.com/nuxt/devtools/commit/cd0b8a57e331df855aabd998eb110e94153205f6))
+* **ui:** improve theme color contrast ([88220f0](https://github.com/nuxt/devtools/commit/88220f017d4d070197ec872b79d00acb4f7c2c34))
+
+
+### Features
+
+* hide panel by default when not explicit enabled ([#440](https://github.com/nuxt/devtools/issues/440)) ([7c614c9](https://github.com/nuxt/devtools/commit/7c614c9893a2dc746b65e08f93c19f624c215440))
+* **server-routes:** send from app instead of devtools, close [#253](https://github.com/nuxt/devtools/issues/253) ([#441](https://github.com/nuxt/devtools/issues/441)) ([57deaf0](https://github.com/nuxt/devtools/commit/57deaf08b9815f69ada40b268378050a48766e29))
+* **ui:** NBadge component ([#433](https://github.com/nuxt/devtools/issues/433)) ([5e0f9dd](https://github.com/nuxt/devtools/commit/5e0f9dda62c20acaf81598321fe5cce69b7b3c9c))
+* **ui:** NDrawer component ([#435](https://github.com/nuxt/devtools/issues/435)) ([7a387de](https://github.com/nuxt/devtools/commit/7a387deb2b0bd9020ee34ba7ade3fa242993395e))
+* **ui:** NSplitPane component ([#438](https://github.com/nuxt/devtools/issues/438)) ([7bc4701](https://github.com/nuxt/devtools/commit/7bc47015578d65238fb5f32db245581f9a3dce95))
+* **ui:** switch fonts to `DM Sans` and `DM Mono` to align with Nuxt's theme ([43c5b47](https://github.com/nuxt/devtools/commit/43c5b473cc6d44d23383b76f565eab6bea506841))
+
+
+### Performance Improvements
+
+* remove `wait-on` dep ([694d853](https://github.com/nuxt/devtools/commit/694d853b33143caee2e25250fc2ea84247322166))
+
+
+
 ## [0.8.5](https://github.com/nuxt/devtools/compare/v0.8.4...v0.8.5) (2023-09-25)
 
 
