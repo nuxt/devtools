@@ -36,8 +36,8 @@ export interface ServerFunctions {
 
   // Terminal
   getTerminals(): TerminalInfo[]
-  getTerminalDetail(token: string, id: string): TerminalInfo | undefined
-  runTerminalAction(id: string, action: TerminalAction): Promise<boolean>
+  getTerminalDetail(token: string, id: string): Promise<TerminalInfo | undefined>
+  runTerminalAction(token: string, id: string, action: TerminalAction): Promise<boolean>
 
   // Storage
   getStorageMounts(): Promise<StorageMounts>

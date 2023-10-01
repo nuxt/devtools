@@ -3,8 +3,8 @@ const terminals = useTerminals()
 const terminalId = useCurrentTerminalId()
 const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))
 
-function remove(id: string) {
-  rpc.runTerminalAction(id, 'remove')
+async function remove(id: string) {
+  rpc.runTerminalAction(await ensureDevAuthToken(), id, 'remove')
 }
 
 watchEffect(() => {
