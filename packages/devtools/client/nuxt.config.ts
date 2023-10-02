@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   ssr: false,
   pages: true,
   nitro: {
+    preset: 'static',
     output: {
       publicDir: r('../dist/client'),
     },

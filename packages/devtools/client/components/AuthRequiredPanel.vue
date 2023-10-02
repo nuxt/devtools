@@ -44,18 +44,20 @@ async function input() {
         Please check your terminal for the instructions and then come back.
       </p>
       <div flex="~ gap-3" mt5 justify-between>
-        <form relative flex="~ inline gap-2 items-center" @submit.prevent="input">
-          <p absolute left-1 top--5 text-xs op-50>
+        <form relative flex="~ col gap-2" @submit.prevent="input">
+          <p text-xs op-50>
             Or you can manually paste the token below:
           </p>
-          <NTextInput
-            v-model="authInput" placeholder="Enter token here"
-            :n="isFailed ? 'red' : undefined"
-            @keydown.enter="input"
-          />
-          <NButton n="green" h-full icon="i-carbon-arrow-right" @click="input" />
+          <div flex="~ inline gap-2 items-center">
+            <NTextInput
+              v-model="authInput" placeholder="Enter token here"
+              :n="isFailed ? 'red' : undefined"
+              @keydown.enter="input"
+            />
+            <NButton n="green" h-full icon="i-carbon-arrow-right" @click="input" />
+          </div>
         </form>
-        <div flex="~ gap-2">
+        <div flex="~ gap-2 items-end">
           <slot name="actions" />
           <NButton disabled icon="i-carbon-time">
             Waiting for authorization...

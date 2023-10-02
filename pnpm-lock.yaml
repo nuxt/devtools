@@ -198,8 +198,8 @@ importers:
         specifier: '*'
         version: 4.4.9(@types/node@20.8.0)
       vite-plugin-inspect:
-        specifier: ^0.7.38
-        version: 0.7.38(@nuxt/kit@3.7.4)(rollup@3.29.1)(vite@4.4.9)
+        specifier: ^0.7.40
+        version: 0.7.40(@nuxt/kit@3.7.4)(rollup@3.29.1)(vite@4.4.9)
       vite-plugin-vue-inspector:
         specifier: ^3.7.2
         version: 3.7.2(vite@4.4.9)
@@ -223,11 +223,11 @@ importers:
         specifier: ^1.1.12
         version: 1.1.12
       '@iconify-json/simple-icons':
-        specifier: ^1.1.72
-        version: 1.1.72
+        specifier: ^1.1.73
+        version: 1.1.73
       '@iconify-json/tabler':
-        specifier: ^1.1.93
-        version: 1.1.93
+        specifier: ^1.1.94
+        version: 1.1.94
       '@nuxt/content':
         specifier: ^2.8.5
         version: 2.8.5(rollup@3.29.1)(vue@3.3.4)
@@ -271,8 +271,8 @@ importers:
         specifier: ^6.6.2
         version: 6.6.2
       json-editor-vue:
-        specifier: ^0.10.18
-        version: 0.10.18(vanilla-jsoneditor@0.18.7)(vue@3.3.4)
+        specifier: ^0.10.19
+        version: 0.10.19(vanilla-jsoneditor@0.18.7)(vue@3.3.4)
       markdown-it:
         specifier: ^13.0.2
         version: 13.0.2
@@ -380,8 +380,8 @@ importers:
         specifier: ^1.1.12
         version: 1.1.12
       '@iconify-json/tabler':
-        specifier: ^1.1.93
-        version: 1.1.93
+        specifier: ^1.1.94
+        version: 1.1.94
       '@nuxt/devtools-kit':
         specifier: workspace:*
         version: link:../devtools-kit
@@ -1436,14 +1436,14 @@ packages:
     dependencies:
       '@iconify/types': 2.0.0
 
-  /@iconify-json/simple-icons@1.1.72:
-    resolution: {integrity: sha512-ylH9Q9CE61fcj8ZTeNeydC3wk8gEaoArUbkTdEpIHx4TRqr9ryhQ1XYMffuz1o636NWX/QhtR0sgpZHDjQg6WQ==}
+  /@iconify-json/simple-icons@1.1.73:
+    resolution: {integrity: sha512-L9ShYHhAkJ7KHx+6wM5HK2tnCkAIKjSIyDUtTexoG8LcZF7MgiUloNfDGPDa4Vt0Oy5yHlnFBiOvqy2ojKB/8Q==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true
 
-  /@iconify-json/tabler@1.1.93:
-    resolution: {integrity: sha512-duHt+SmLIiNwJ2HpdGBwZKZQimuVOLZlYwgIs0QpR2zUxP/GlRncQ19R9HUcDYtD/OtKx+lk3ceHUcNIcXfZsQ==}
+  /@iconify-json/tabler@1.1.94:
+    resolution: {integrity: sha512-rjNUm5q/RiKRPIrmZz7b7F864HkUTIfGXA20GbTCDgEUvF2mHyUiSzlXf5f45WzGhGoAeJdeGoWGWvnODyBj0w==}
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -2068,6 +2068,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     bundledDependencies:
       - napi-wasm
 
@@ -6527,8 +6528,8 @@ packages:
   /json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
 
-  /json-editor-vue@0.10.18(vanilla-jsoneditor@0.18.7)(vue@3.3.4):
-    resolution: {integrity: sha512-wcZUZgvPDInUHHINWJpI4Swq6TwOlEm4KdJukqdC5+3Jb9H5E3ln0RITRyZWGbAsrck/gzmVgm2naB4+tJk3eQ==}
+  /json-editor-vue@0.10.19(vanilla-jsoneditor@0.18.7)(vue@3.3.4):
+    resolution: {integrity: sha512-LuoN+iCHAiXtg3jC07+ATn1u56loyA4S12fDyN/uODqZ7e7dTuH0Kqkm9rDGsQZYASgi7E5lWwnn0yoXDNdLDw==}
     requiresBuild: true
     peerDependencies:
       '@vue/composition-api': '>=1'
@@ -7827,6 +7828,9 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -10836,8 +10840,8 @@ packages:
       vscode-uri: 3.0.7
       vue-tsc: 1.8.15(typescript@5.2.2)
 
-  /vite-plugin-inspect@0.7.38(@nuxt/kit@3.7.4)(rollup@3.29.1)(vite@4.4.9):
-    resolution: {integrity: sha512-+p6pJVtBOLGv+RBrcKAFUdx+euizg0bjL35HhPyM0MjtKlqoC5V9xkCmO9Ctc8JrTyXqODbHqiLWJKumu5zJ7g==}
+  /vite-plugin-inspect@0.7.40(@nuxt/kit@3.7.4)(rollup@3.29.1)(vite@4.4.9):
+    resolution: {integrity: sha512-tsfva6MCg0ch6ckReWHvJ/9xf/zjTuJvakONf2qcMBB/iu9JqiRixfxMa/yLGrlNaBe6fUZHOVhtN2Me3Kthow==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
