@@ -168,6 +168,11 @@ async function fetchData() {
     ? client.value!.app!.$fetch
     : $fetch as $Fetch
 
+  telemetry('server-routes:fetch', {
+    method: routeMethod.value,
+    sendFrom: resolvedSendFrom.value,
+  })
+
   try {
     response.data = await f(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,

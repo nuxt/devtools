@@ -150,6 +150,7 @@ function navigateToRoute(path: string) {
   <LaunchPage
     v-else
     icon="carbon-tree-view-alt"
+    name="wizard-pages"
     title="Nuxt Routing"
     description="Create `./pages/index.vue` to enable routing"
     :actions="[

@@ -97,7 +97,7 @@ const navbar = ref<HTMLElement>()
       </div>
     </Navbar>
 
-    <DropZone folder="/" />
+    <AssetDropZone folder="/" />
 
     <template v-if="view === 'grid'">
       <template v-if="byFolders.length > 1">

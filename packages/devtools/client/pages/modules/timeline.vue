@@ -26,6 +26,7 @@ async function showPopup() {
     <NPanelGrids>
       <LaunchPage
         icon="i-carbon-roadmap"
+        name="feature-timeline"
         title="Timeline"
         description="Timeline enables the inspection of when composable being executed and the route changes."
         :actions="[

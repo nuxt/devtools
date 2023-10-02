@@ -2,9 +2,13 @@ import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } 
 import { readLocalOptions, writeLocalOptions } from '../utils/local-options'
 import { defaultTabOptions } from '../constant'
 
-export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
-  let options: NuxtDevToolsOptions | undefined
+let options: NuxtDevToolsOptions | undefined
 
+export function getOptions() {
+  return options
+}
+
+export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
     if (!options || options[tab]) {
       options = defaultTabOptions
@@ -21,6 +25,8 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
     })
     return options
   }
+
+  getOptions('ui')
 
   return {
     async updateOptions(tab, _settings) {

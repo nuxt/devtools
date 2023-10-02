@@ -57,6 +57,7 @@ onMounted(() => {
   </template>
   <template v-else-if="tab.view.type === 'launch'">
     <LaunchPage
+      :name="`custom-${tab.name}`"
       :icon="tab.view.icon || tab.icon"
       :title="tab.view.title || tab.title"
       :description="tab.view.description"

@@ -77,6 +77,8 @@ async function uploadFiles() {
   if (wsConnecting.value || wsError.value)
     return
 
+  telemetry('assets:upload')
+
   const uploadFiles: AssetEntry[] = []
   for (const file of files.value) {
     const reader = new FileReader()

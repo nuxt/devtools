@@ -16,6 +16,10 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
   const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
   const result = await method(await ensureDevAuthToken(), item.npm, true)
 
+  telemetry(`modules:${type}`, {
+    moduleName: item.npm,
+  })
+
   if (!result.commands)
     return
 
