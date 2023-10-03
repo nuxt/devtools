@@ -4,4 +4,4 @@ Nuxt provides a module system to extend the framework core and simplify integrat
 
 You can explore the list of modules on [nuxt.com/modules](https://nuxt.com/modules) or install them directly inside the DevTools.
 
-[Learn more on the documentation](https://nuxt.com/docs/guide/concepts/modules)
+[Learn more in the documentation](https://nuxt.com/docs/guide/concepts/modules)
