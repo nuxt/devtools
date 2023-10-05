@@ -4,49 +4,46 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-importers:
-
-  .:
-    dependencies:
-      '@iconify-json/ph':
-        specifier: ^1.1.6
-        version: 1.1.6
-      '@iconify-json/simple-icons':
-        specifier: ^1.1.73
-        version: 1.1.73
-      '@nuxt/content':
-        specifier: ^2.8.5
-        version: 2.8.5(vue@3.3.4)
-      '@nuxt/image':
-        specifier: 1.0.0-rc.2
-        version: 1.0.0-rc.2
-      '@nuxt/ui-pro':
-        specifier: ^0.1.0
-        version: 0.1.0(vue@3.3.4)(webpack@5.88.2)
-      '@nuxthq/studio':
-        specifier: ^1.0.0
-        version: 1.0.0
-      '@nuxtjs/fontaine':
-        specifier: ^0.4.1
-        version: 0.4.1
-      '@nuxtjs/google-fonts':
-        specifier: ^3.0.2
-        version: 3.0.2
-      '@nuxtjs/plausible':
-        specifier: ^0.2.3
-        version: 0.2.3
-      '@vueuse/core':
-        specifier: ^10.4.1
-        version: 10.4.1(vue@3.3.4)
-      '@vueuse/nuxt':
-        specifier: ^10.4.1
-        version: 10.4.1(nuxt@3.7.4)(vue@3.3.4)
-      nuxt:
-        specifier: ^3.7.4
-        version: 3.7.4
-      nuxt-og-image:
-        specifier: ^2.1.1
-        version: 2.1.1(vue@3.3.4)
+dependencies:
+  '@iconify-json/ph':
+    specifier: ^1.1.6
+    version: 1.1.6
+  '@iconify-json/simple-icons':
+    specifier: ^1.1.73
+    version: 1.1.73
+  '@nuxt/content':
+    specifier: ^2.8.5
+    version: 2.8.5(vue@3.3.4)
+  '@nuxt/image':
+    specifier: 1.0.0-rc.2
+    version: 1.0.0-rc.2
+  '@nuxt/ui-pro':
+    specifier: ^0.2.0
+    version: 0.2.0(vue@3.3.4)(webpack@5.88.2)
+  '@nuxthq/studio':
+    specifier: ^1.0.0
+    version: 1.0.0
+  '@nuxtjs/fontaine':
+    specifier: ^0.4.1
+    version: 0.4.1
+  '@nuxtjs/google-fonts':
+    specifier: ^3.0.2
+    version: 3.0.2
+  '@nuxtjs/plausible':
+    specifier: ^0.2.3
+    version: 0.2.3
+  '@vueuse/core':
+    specifier: ^10.4.1
+    version: 10.4.1(vue@3.3.4)
+  '@vueuse/nuxt':
+    specifier: ^10.4.1
+    version: 10.4.1(nuxt@3.7.4)(vue@3.3.4)
+  nuxt:
+    specifier: ^3.7.4
+    version: 3.7.4
+  nuxt-og-image:
+    specifier: ^2.1.1
+    version: 2.1.1(vue@3.3.4)
 
 packages:
 
@@ -901,6 +898,15 @@ packages:
       - supports-color
     dev: false
 
+  /@iconify/vue@4.1.1(vue@3.3.4):
+    resolution: {integrity: sha512-RL85Bm/DAe8y6rT6pux7D2FJSiUEM/TPfyK7GrbAOfTSwrhvwJW+S5yijdGcmtXouA8MtuH9C7l4hiSE4mLMjg==}
+    peerDependencies:
+      vue: '>=3'
+    dependencies:
+      '@iconify/types': 2.0.0
+      vue: 3.3.4
+    dev: false
+
   /@ioredis/commands@1.2.0:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
     dev: false
@@ -1269,11 +1275,13 @@ packages:
       - supports-color
     dev: false
 
-  /@nuxt/ui-pro@0.1.0(vue@3.3.4)(webpack@5.88.2):
-    resolution: {integrity: sha512-nioKaQ20msCyhk51Pyi1uEEFFhtkxSRZvFxeVcysKpf82TGpBfPkTRGzrWGzNiKSiGM3RpawkS48LYYdW7S+/w==}
+  /@nuxt/ui-pro@0.2.0(vue@3.3.4)(webpack@5.88.2):
+    resolution: {integrity: sha512-sCJsm+TWmAFKRD6TuliJ6U6e2Jr9AWi1Oa2eD7wh6sFIpa7M/G9pIkOEfG6yEH3qdb+zLpNcEYDr6OnnJTEz5g==}
     dependencies:
       '@nuxt/ui': 2.9.0(vue@3.3.4)(webpack@5.88.2)
       '@vueuse/core': 10.4.1(vue@3.3.4)
+      defu: 6.1.2
+      nuxt-icon: 0.5.0(vue@3.3.4)
       ofetch: 1.3.3
       pathe: 1.1.1
       tailwind-merge: 1.14.0
@@ -6450,6 +6458,17 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
+    dev: false
+
+  /nuxt-icon@0.5.0(vue@3.3.4):
+    resolution: {integrity: sha512-ND4yh8kW4VyIbORP3cWjgVrOAvy6QSDFDTJltakdqmxVfVysNIs/bx2NzlkHeR1EOS8E/jVcemfTPmRsJ7WUVw==}
+    dependencies:
+      '@iconify/vue': 4.1.1(vue@3.3.4)
+      '@nuxt/kit': 3.7.4
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+      - vue
     dev: false
 
   /nuxt-og-image@2.1.1(vue@3.3.4):
