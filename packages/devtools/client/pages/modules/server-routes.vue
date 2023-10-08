@@ -133,7 +133,7 @@ function capitalize(str: string) {
 <template>
   <NSplitPane storage-key="tab-server-routes">
     <template #left>
-      <Navbar v-model:search="search" pb2>
+      <NNavbar v-model:search="search" pb2>
         <template #actions>
           <NButton
             v-tooltip="'Toggle View'"
@@ -156,7 +156,7 @@ function capitalize(str: string) {
           <span v-if="search" op50>{{ filtered.length }} matched · </span>
           <span op50>{{ serverRoutes?.length }} routes in total</span>
         </div>
-      </Navbar>
+      </NNavbar>
 
       <ServerRouteListItem
         v-for="item in view === 'tree' ? filterByCollection : filtered"

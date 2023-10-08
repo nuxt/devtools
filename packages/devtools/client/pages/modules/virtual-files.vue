@@ -63,7 +63,7 @@ const filteredFiles = computed(() => {
 <template>
   <NSplitPane class="virtual-files" storage-key="tab-virtual-files">
     <template #left>
-      <Navbar
+      <NNavbar
         v-model:search="searchString"
         no-padding p3
       />
