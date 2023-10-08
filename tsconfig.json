@@ -2,10 +2,10 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": ["esnext", "dom"],
-    "module": "esnext",
-    "rootDir": ".",
-    "moduleResolution": "node",
     "baseUrl": ".",
+    "rootDir": ".",
+    "module": "esnext",
+    "moduleResolution": "node",
     "paths": {
       "@nuxt/devtools": ["./packages/devtools/src/index.ts"],
       "@nuxt/devtools-kit": ["./packages/devtools-kit/src/index.ts"],
@@ -13,9 +13,9 @@
       "@nuxt/devtools-kit/iframe-client": ["./packages/devtools-kit/src/runtime/iframe-client.ts"]
     },
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true
   },
   "exclude": [

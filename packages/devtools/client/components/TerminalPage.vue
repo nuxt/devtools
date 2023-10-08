@@ -16,7 +16,7 @@ watchEffect(() => {
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
     <!-- TODO: Refactor to have general component -->
-    <div flex="~" border="b base" flex-1 items-center navbar-glass>
+    <div flex="~" border="b base" flex-1 items-center n-navbar-glass>
       <button
         v-for="t of terminals"
         :key="t.id" border="r base"

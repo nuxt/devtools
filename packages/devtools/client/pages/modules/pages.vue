@@ -56,7 +56,7 @@ function navigateToRoute(path: string) {
 
 <template>
   <div v-if="config?.pages && router" h-full of-auto>
-    <div border="b base" flex="~ col gap1" px4 py3 navbar-glass>
+    <div border="b base" flex="~ col gap1" px4 py3 n-navbar-glass>
       <div>
         <template v-if="route.path !== routeInput">
           <span op50>Navigate from </span>

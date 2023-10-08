@@ -38,11 +38,9 @@ const { data: mod } = await useFetch<{
   contributors: {
     username: string
   }[]
-}>('https://api.nuxt.com/modules/devtools',
-  {
-    transform: ({ stats, contributors }: any) => ({ stats, contributors }),
-  },
-)
+}>('https://api.nuxt.com/modules/devtools', {
+  transform: ({ stats, contributors }: any) => ({ stats, contributors }),
+})
 
 function selectProjectCard(index: number) {
   currentStep.value = index

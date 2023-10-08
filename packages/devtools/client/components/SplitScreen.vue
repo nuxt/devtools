@@ -50,7 +50,7 @@ onClickOutside(gridPanel, (e) => {
 
 <template>
   <div h-full h-screen of-hidden>
-    <div border="b base" flex="~ gap1" z-99 px4 py3 navbar-glass>
+    <div border="b base" flex="~ gap1" z-99 px4 py3 n-navbar-glass>
       <VDropdown
         placement="bottom-start"
         :distance="12"
