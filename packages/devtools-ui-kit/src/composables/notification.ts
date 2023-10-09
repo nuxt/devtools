@@ -1,17 +1,17 @@
-let _showNotification: typeof showNotification
+let _devtoolsUiShowNotification: typeof devtoolsUiShowNotification
 
-export type Position = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+export type DevtoolsUiShowNotificationPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
 
-export function showNotification(data: {
+export function devtoolsUiShowNotification(data: {
   message: string
   icon?: string
   classes?: string
   duration?: number
-  position?: Position
+  position?: DevtoolsUiShowNotificationPosition
 }) {
-  _showNotification?.(data)
+  _devtoolsUiShowNotification?.(data)
 }
 
-export function provideNotificationFn(fn: typeof showNotification) {
-  _showNotification = fn
+export function devtoolsUiProvideNotificationFn(fn: typeof devtoolsUiShowNotification) {
+  _devtoolsUiShowNotification = fn
 }

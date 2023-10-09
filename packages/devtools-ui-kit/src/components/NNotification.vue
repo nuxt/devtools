@@ -1,16 +1,16 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
 
-import type { Position } from '../composables/notification'
-import { provideNotificationFn } from '../composables/notification'
+import type { DevtoolsUiShowNotificationPosition } from '../composables/notification'
+import { devtoolsUiProvideNotificationFn } from '../composables/notification'
 
 const show = ref(false)
 const icon = ref<string>()
 const text = ref<string>()
 const classes = ref<string>()
-const position = ref<Position>('top-center')
+const position = ref<DevtoolsUiShowNotificationPosition>('top-center')
 
-provideNotificationFn((data) => {
+devtoolsUiProvideNotificationFn((data) => {
   text.value = data.message
   icon.value = data.icon
   classes.value = data.classes ?? 'text-primary border-primary'
