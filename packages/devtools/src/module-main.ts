@@ -87,7 +87,7 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 \``
     config.plugins = config.plugins || []
-    config.plugins.push(join(runtimeDir, 'nitro/inline'))
+    config.plugins.unshift(join(runtimeDir, 'nitro/inline'))
   })
 
   const {
