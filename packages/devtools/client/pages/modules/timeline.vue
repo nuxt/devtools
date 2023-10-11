@@ -13,10 +13,19 @@ const Dialog = createTemplatePromise<boolean, [string, string]>()
 const openInEditor = useOpenInEditor()
 
 async function showPopup() {
-  const [source, modified] = await rpc.enableTimeline(true)
-  if (!await Dialog.start(source, modified))
-    return
-  await rpc.enableTimeline(false)
+  try {
+    const [source, modified] = await rpc.enableTimeline(true)
+    if (!await Dialog.start(source, modified))
+      return
+    await rpc.enableTimeline(false)
+  }
+  catch {
+    showNotification({
+      message: 'Failed to enable timeline automatically. Check the terminal for more details.',
+      icon: 'i-carbon-warning',
+      classes: 'text-red',
+    })
+  }
 }
 </script>
 

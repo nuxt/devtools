@@ -7,6 +7,7 @@ import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { checkForUpdateOf } from '../npm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
+import { magicastGuard } from '../utils/magicast'
 
 export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   let detectPromise: Promise<PackageManager | undefined> | undefined
@@ -97,11 +98,13 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       let source = latestGenerated
       if (source == null)
         source = await fs.readFile(filepath, 'utf-8')
-      const mod = parseModule(source, { sourceFileName: filepath })
 
-      addNuxtModule(mod, name)
+      const generated = await magicastGuard(async () => {
+        const mod = parseModule(source!, { sourceFileName: filepath })
+        addNuxtModule(mod, name)
 
-      const generated = mod.generate().code
+        return mod.generate().code
+      })
       const processId = `nuxt:add-module:${name}`
 
       if (!dry) {
@@ -153,20 +156,22 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
       const filepath = nuxt.options._nuxtConfigFile
       const source = await fs.readFile(filepath, 'utf-8')
-      const mod = parseModule(source, { sourceFileName: filepath })
+      const generated = await magicastGuard(async () => {
+        const mod = parseModule(source, { sourceFileName: filepath })
 
-      // TODO: remove module from config
-      // removeNuxtModule(mod, name)
-      const config = getDefaultExportOptions(mod)
-      config.modules ||= []
-      if (config.modules.includes(name)) {
-        Object.values(config.modules).forEach((value, index) => {
-          if (value === name)
-            config.modules.splice(index - 1, 1)
-        })
-      }
+        // TODO: remove module from config
+        // removeNuxtModule(mod, name)
+        const config = getDefaultExportOptions(mod)
+        config.modules ||= []
+        if (config.modules.includes(name)) {
+          Object.values(config.modules).forEach((value, index) => {
+            if (value === name)
+              config.modules.splice(index - 1, 1)
+          })
+        }
 
-      const generated = mod.generate().code
+        return mod.generate().code
+      })
 
       const processId = `nuxt:remove-module:${name}`
 
