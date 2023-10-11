@@ -8,7 +8,7 @@ import { logger } from '@nuxt/kit'
 import destr from 'destr'
 import { snakeCase } from 'scule'
 
-import type { ModuleOptions } from '@nuxt/schema'
+import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
@@ -77,7 +77,7 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
     getServerConfig() {
       return nuxt.options
     },
-    getServerRuntimeConfig() {
+    getServerRuntimeConfig(): Record<string, any> {
       // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
       // Since this operation happends on the Nitro runtime
       const ENV_PREFIX = 'NITRO_'
@@ -138,13 +138,13 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
         dirs: importDirs,
       }
     },
-    getServerLayouts() {
+    getServerLayouts(): NuxtLayout[] {
       return Object.values(app?.layouts || [])
     },
-    getServerHooks() {
+    getServerHooks(): HookInfo[] {
       return Object.values(serverHooks)
     },
-    async openInEditor(input: string) {
+    async openInEditor(input: string): Promise<boolean> {
       if (input.startsWith('./'))
         input = resolve(process.cwd(), input)
 
