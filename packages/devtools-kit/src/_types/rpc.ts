@@ -12,6 +12,7 @@ import type { InstallModuleReturn } from './server-ctx'
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig(): NuxtOptions
+  getServerRuntimeConfig(): Record<string, any>
   getModuleOptions(): ModuleOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>

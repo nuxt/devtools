@@ -36,8 +36,9 @@ export default defineNuxtConfig({
     fixture2: 'from nuxt.config.ts',
   },
   runtimeConfig: {
-    fixture3: 'private runtime config from nuxt.config.ts',
-    public: {
+    'fixture3': 'private runtime config from nuxt.config.ts',
+    'api-key': 'null',
+    'public': {
       fixture4: 'public runtime config from nuxt.config.ts',
     },
   },

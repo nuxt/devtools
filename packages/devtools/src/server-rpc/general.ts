@@ -5,6 +5,9 @@ import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
+import type { Nitro } from 'nitropack'
+import destr from 'destr'
+import { snakeCase } from 'scule'
 
 import type { ModuleOptions } from '@nuxt/schema'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -74,6 +77,42 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
   return {
     getServerConfig() {
       return nuxt.options
+    },
+    getServerRuntimeConfig() {
+      // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
+      // Since this operation happends on the Nitro runtime
+      const ENV_PREFIX = 'NITRO_'
+      const ENV_PREFIX_ALT = 'NUXT_'
+
+      function _getEnv(key: string) {
+        const envKey = snakeCase(key).toUpperCase()
+        return destr(process.env[ENV_PREFIX + envKey] ?? process.env[ENV_PREFIX_ALT + envKey])
+      }
+
+      function _isObject(input: unknown) {
+        return typeof input === 'object' && !Array.isArray(input)
+      }
+
+      function _applyEnv(obj: any, parentKey = '') {
+        for (const key in obj) {
+          const subKey = parentKey ? `${parentKey}_${key}` : key
+          const envValue = _getEnv(subKey)
+          if (_isObject(obj[key])) {
+            if (_isObject(envValue))
+              obj[key] = { ...obj[key], ...(envValue as any) }
+
+            _applyEnv(obj[key], subKey)
+          }
+          else {
+            obj[key] = envValue ?? obj[key]
+          }
+        }
+        return obj
+      }
+
+      const runtime = { ...nuxt.options.runtimeConfig }
+      _applyEnv(runtime)
+      return runtime
     },
     getModuleOptions(): ModuleOptions {
       return options
