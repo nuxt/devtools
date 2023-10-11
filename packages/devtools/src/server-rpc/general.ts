@@ -5,7 +5,6 @@ import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
-import type { Nitro } from 'nitropack'
 import destr from 'destr'
 import { snakeCase } from 'scule'
 
@@ -190,6 +189,9 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       return nuxt.callHook('restart', { hard })
     },
     async requestForAuth(info: string, origin?: string) {
+      if (options.disableAuthorization)
+        return
+
       const token = await getDevAuthToken()
 
       origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
@@ -215,6 +217,8 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       })
     },
     async verifyAuthToken(token: string) {
+      if (options.disableAuthorization)
+        return true
       return token === await getDevAuthToken()
     },
   } satisfies Partial<ServerFunctions>
