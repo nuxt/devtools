@@ -6,7 +6,8 @@ import { resolve } from 'pathe'
 import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
 
-import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { ModuleOptions } from '@nuxt/schema'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
 import { ROUTE_AUTH } from '../constant'
@@ -74,22 +75,22 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
     getServerConfig() {
       return nuxt.options
     },
-    getModuleOptions() {
+    getModuleOptions(): ModuleOptions {
       return options
     },
-    getServerApp() {
+    getServerApp(): NuxtApp | undefined {
       return serverApp
     },
-    getComponents() {
+    getComponents(): Component[] {
       return components
     },
     async getComponentsRelationships() {
       return [] // replaced by vite-inspector setup
     },
-    getServerPages() {
+    getServerPages(): NuxtPage[] {
       return serverPages
     },
-    getAutoImports() {
+    getAutoImports(): AutoImportsWithMetadata {
       return {
         imports: [
           ...imports,

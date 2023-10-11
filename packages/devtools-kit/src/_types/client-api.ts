@@ -1,7 +1,6 @@
 import type {} from '@nuxt/schema'
 import type { Ref } from 'vue'
-import type { AppConfig } from 'nuxt/schema'
-import type { NuxtApp } from 'nuxt/dist/app/nuxt'
+import type { AppConfig, NuxtApp } from 'nuxt/schema'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { BuiltinLanguage } from 'shikiji'
