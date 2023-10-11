@@ -27,6 +27,7 @@ export interface ServerFunctions {
   // Options
   getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]>
   updateOptions<T extends keyof NuxtDevToolsOptions>(tab: T, settings: Partial<NuxtDevToolsOptions[T]>): Promise<void>
+  clearOptions(): Promise<void>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>

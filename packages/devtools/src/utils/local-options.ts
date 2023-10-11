@@ -5,12 +5,12 @@ import { dirname } from 'node:path'
 import { join } from 'pathe'
 import { hash } from 'ohash'
 
-interface Options {
+interface LocalOptionSearchOptions {
   root: string
   key?: string | boolean
 }
 
-export async function readLocalOptions<T>(defaults: T, options: Options): Promise<T> {
+export async function readLocalOptions<T>(defaults: T, options: LocalOptionSearchOptions): Promise<T> {
   const { filePath } = getOptionsFilepath(options)
 
   if (existsSync(filePath)) {
@@ -25,7 +25,7 @@ export async function readLocalOptions<T>(defaults: T, options: Options): Promis
   }
 }
 
-function getOptionsFilepath(options: Options) {
+function getOptionsFilepath(options: LocalOptionSearchOptions) {
   let hashedKey
   if (options.key)
     hashedKey = hash(`${options.root}:${options.key}`)
@@ -38,13 +38,13 @@ function getOptionsFilepath(options: Options) {
   }
 }
 
-export async function clearLocalOptions(options: Options) {
+export async function clearLocalOptions(options: LocalOptionSearchOptions) {
   const { filePath } = getOptionsFilepath(options)
   if (existsSync(filePath))
     await fs.unlink(filePath)
 }
 
-export async function writeLocalOptions<T>(settings: T, options: Options) {
+export async function writeLocalOptions<T>(settings: T, options: LocalOptionSearchOptions) {
   const { filePath, hashedKey } = getOptionsFilepath(options)
 
   await fs.mkdir(dirname(filePath), { recursive: true })

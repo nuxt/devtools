@@ -1,5 +1,5 @@
 import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { readLocalOptions, writeLocalOptions } from '../utils/local-options'
+import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils/local-options'
 import { defaultTabOptions } from '../constant'
 
 let options: NuxtDevToolsOptions | undefined
@@ -28,6 +28,13 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
   getOptions('ui')
 
+  async function clearOptions() {
+    options = undefined
+    await clearLocalOptions({
+      root: nuxt.options.rootDir,
+    })
+  }
+
   return {
     async updateOptions(tab, _settings) {
       const settings = await getOptions(tab)
@@ -46,5 +53,6 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
       })
     },
     getOptions,
+    clearOptions,
   } satisfies Partial<ServerFunctions>
 }

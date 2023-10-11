@@ -75,6 +75,19 @@ function pinMove(name: string, delta: number) {
   pinnedTabs.value = newPinnedTabs
 }
 
+async function clearOptions() {
+  // eslint-disable-next-line no-alert
+  if (confirm('Are you sure you to reset all local settings & state? The app will reload.')) {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('nuxt-devtools-'))
+        localStorage.removeItem(key)
+    })
+    await rpc.clearOptions()
+    client.value?.app?.reload?.()
+    window.location.reload()
+  }
+}
+
 // sync devtools options with frame state
 watchEffect(() => {
   if (client.value)
@@ -232,6 +245,16 @@ watchEffect(() => {
             </NButton>
           </div>
         </NCard>
+
+        <h3 mt2 text-lg>
+          Debug
+        </h3>
+        <div flex="~ gap-2">
+          <NButton n="orange" @click="clearOptions">
+            <div i-carbon-breaking-change />
+            Reset Local Settings & State
+          </NButton>
+        </div>
       </div>
     </div>
   </div>
