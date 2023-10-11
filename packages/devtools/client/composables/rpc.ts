@@ -17,7 +17,7 @@ export const clientFunctions = {
 
 export const extendedRpcMap = new Map<string, any>()
 
-export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
+export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions, {
   post: async (d) => {
     (await connectPromise).send(WS_EVENT_NAME, d)
   },

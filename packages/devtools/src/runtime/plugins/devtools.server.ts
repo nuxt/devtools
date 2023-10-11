@@ -1,14 +1,10 @@
-// eslint-disable-next-line ts/prefer-ts-expect-error
-// @ts-ignore tsconfig
+import type { TimelineServerState } from '../../types'
 import { defineNuxtPlugin } from '#app'
-
-// eslint-disable-next-line ts/prefer-ts-expect-error
-// @ts-ignore tsconfig
 import { useState } from '#imports'
 
 export default defineNuxtPlugin(() => {
   // record ssr start time
-  const state = useState('__nuxt_devtools__', () => ({}))
+  const state = useState<TimelineServerState>('__nuxt_devtools__', () => ({}))
   state.value = {
     timeSsrStart: Date.now(),
   }

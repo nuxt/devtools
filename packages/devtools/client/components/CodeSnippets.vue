@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { CodeSnippet } from '~~/../src/types'
+import type { BuiltinLanguage } from 'shikiji'
+import type { CodeSnippet } from '../../types'
 
 const props = defineProps<{
   codeSnippets: CodeSnippet[]
@@ -7,6 +8,8 @@ const props = defineProps<{
 
 const selected = shallowRef<CodeSnippet | undefined>(props.codeSnippets[0])
 const copy = useCopy()
+
+const selectedLang = computed(() => (selected.value?.lang || 'text') as BuiltinLanguage)
 
 watchEffect(() => {
   if (!props.codeSnippets.includes(selected.value!))
@@ -35,7 +38,7 @@ watchEffect(() => {
     <template v-if="selected">
       <NCodeBlock
         :code="selected.code"
-        :lang="selected.lang"
+        :lang="selectedLang"
         :lines="false"
         w-full of-auto p3
       />

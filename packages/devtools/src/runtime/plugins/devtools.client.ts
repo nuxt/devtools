@@ -5,6 +5,7 @@ import { setupHooksDebug } from '../shared/hooks'
 
 // eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
+import type { TimelineServerState } from '../../types'
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
@@ -46,7 +47,7 @@ export default defineNuxtPlugin((nuxt: any) => {
     timeMetric.pageEnd = Date.now()
   })
 
-  const ssrState = useState('__nuxt_devtools__', () => ({}))
+  const ssrState = useState<TimelineServerState>('__nuxt_devtools__', () => ({}))
 
   watchEffect(() => {
     if (ssrState.value.timeSsrStart)
