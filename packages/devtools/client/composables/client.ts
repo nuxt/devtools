@@ -8,7 +8,7 @@ export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
 
-export function useClientRoute() {
+export function useClientRoute(): ComputedRef<ReturnType<typeof useRoute>> {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$route)
 }

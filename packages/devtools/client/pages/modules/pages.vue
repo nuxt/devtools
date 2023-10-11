@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { nextTick } from 'vue'
-
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Pages',
@@ -20,21 +18,15 @@ const layouts = useLayouts()
 
 const routes = useMergedRouteList()
 
-const middleware = computed(() => {
-  return serverApp.value?.middleware || []
-})
-
+const middleware = computed(() => serverApp.value?.middleware || [])
 const routeInput = ref('')
 
-until(route).toBeTruthy().then((v) => {
-  routeInput.value = v.path
-})
+onMounted(() => {
+  if (route.value)
+    routeInput.value = route.value.path
 
-until(router).toBeTruthy().then((v) => {
-  v.afterEach(() => {
-    nextTick(() => {
-      routeInput.value = route.value.path
-    })
+  router.value?.afterEach((to) => {
+    routeInput.value = to.fullPath
   })
 })
 
@@ -44,13 +36,12 @@ async function navigate() {
 }
 
 const routeInputMatched = computed(() => {
-  if (routeInput.value === route.value.path)
-    return []
   return router.value.resolve(routeInput.value || '/').matched
 })
 
 function navigateToRoute(path: string) {
   router.value.push(path)
+  routeInput.value = path
 }
 </script>
 
@@ -85,18 +76,23 @@ function navigateToRoute(path: string) {
       </div>
     </div>
     <NSectionBlock
-      v-if="routeInputMatched.length"
       icon="carbon-tree-view"
       text="Matched Routes"
       :padding="false"
     >
-      <RoutesTable
-        :pages="routeInputMatched"
-        :layouts="layouts || []"
-        :matched="[]"
-        :matched-pending="routeInputMatched"
-        @navigate="navigateToRoute"
-      />
+      <div min-h-14>
+        <RoutesTable
+          v-if="routeInputMatched.length"
+          :pages="routeInputMatched"
+          :layouts="layouts || []"
+          :matched="route.matched"
+          :matched-pending="routeInputMatched"
+          @navigate="navigateToRoute"
+        />
+        <div v-else class="py-4 text-center">
+          <span op50>No routes matched</span>
+        </div>
+      </div>
     </NSectionBlock>
     <NSectionBlock
       icon="carbon-tree-view-alt"
