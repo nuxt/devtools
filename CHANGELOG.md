@@ -1,3 +1,23 @@
+# [1.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* **assets:** watcher ([#455](https://github.com/nuxt/devtools/issues/455)) ([70bfed7](https://github.com/nuxt/devtools/commit/70bfed7f5da7f8a1f5afe24f9da67c70ee7b8657))
+* auto install works with yarn berry, close [#454](https://github.com/nuxt/devtools/issues/454) ([cdf50b4](https://github.com/nuxt/devtools/commit/cdf50b429d15acf67378e496a21111e6a2023b02))
+* move inline script timing to work with `nuxt-security`, [#463](https://github.com/nuxt/devtools/issues/463) ([c5e41da](https://github.com/nuxt/devtools/commit/c5e41da02bd0a88f9f31f0abd7e8c133f4372014))
+* resolve private runtime correctly from `.env`, close [#424](https://github.com/nuxt/devtools/issues/424) ([708bb18](https://github.com/nuxt/devtools/commit/708bb18848317566c588557ec6aad2aadb32c9f8))
+
+
+### Features
+
+* ability to reset options ([95b5ba1](https://github.com/nuxt/devtools/commit/95b5ba137332a77047d1b0c2f86b52cb7553e287))
+* disable dev auth on sandboxed env ([14935ee](https://github.com/nuxt/devtools/commit/14935ee4a97bffa408f4f0de9a6844dc3be506af))
+* provide better error message for magicast, close [#395](https://github.com/nuxt/devtools/issues/395) ([6f5ce18](https://github.com/nuxt/devtools/commit/6f5ce189dedbb255f76ae10692162f548bc60de8))
+* **ui:** NNavbar component ([#442](https://github.com/nuxt/devtools/issues/442)) ([b77b98b](https://github.com/nuxt/devtools/commit/b77b98b43eb505ead547217e4093a3804cfdeaaa))
+
+
+
 # [1.0.0-beta.0](https://github.com/nuxt/devtools/compare/v0.8.5...v1.0.0-beta.0) (2023-10-01)
 
 
