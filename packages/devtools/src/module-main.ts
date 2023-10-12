@@ -178,5 +178,15 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   const isMac = os.platform() === 'darwin'
 
-  logger.success(`Nuxt DevTools ${colors.dim(`v${version}`)}${isGlobalInstall() ? colors.dim(' [global]') : ''} enabled, press \`Shift\` + \`${isMac ? 'Option' : 'Alt'}\` + \`D\` in app to open.`)
+  logger.log([
+    colors.yellow(`  ➜ DevTools: `),
+    colors.dim('press '),
+    colors.green('Shift'),
+    colors.dim(' + '),
+    colors.green(isMac ? 'Option' : 'Alt'),
+    colors.dim(' + '),
+    colors.green('D'),
+    colors.dim(` in the browser (v${version})`),
+    '\n',
+  ].join(''))
 }
