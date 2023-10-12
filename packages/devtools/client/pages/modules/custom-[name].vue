@@ -13,7 +13,7 @@ const route = useRoute()
 const router = useRouter()
 const name = computed(() => props.name ?? route.params.name)
 const tabs = useAllTabs()
-const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab)
+const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab | undefined)
 
 onMounted(() => {
   // if the tab is not found and passed a certain timeout, redirect to the overview page
@@ -46,7 +46,7 @@ onMounted(() => {
       </div>
     </NPanelGrids>
   </template>
-  <template v-if="tab.requireAuth && !isDevAuthed">
+  <template v-else-if="tab.requireAuth && !isDevAuthed">
     <AuthRequiredPanel />
   </template>
   <template v-else-if="tab.view.type === 'iframe'">
