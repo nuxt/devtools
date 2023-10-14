@@ -42,14 +42,14 @@ async function saveTextContent() {
       }], '')
       editDialog.value = false
       textContentCounter.value++
-      showNotification({
+      devtoolsUiShowNotification({
         message: 'Updated',
         icon: 'i-carbon-checkmark',
         classes: 'text-green',
       })
     }
     catch (error) {
-      showNotification({
+      devtoolsUiShowNotification({
         message: 'Something went wrong!',
         icon: 'i-carbon-warning',
         classes: 'text-red',
@@ -129,14 +129,14 @@ async function deleteAsset() {
     await rpc.deleteStaticAsset(await ensureDevAuthToken(), asset.value.filePath)
     asset.value = undefined as any
     deleteDialog.value = false
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Asset deleted',
       icon: 'i-carbon-checkmark',
       classes: 'text-green',
     })
   }
   catch (error) {
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Something went wrong!',
       icon: 'i-carbon-warning',
       classes: 'text-red',
@@ -151,7 +151,7 @@ async function renameAsset() {
   const oldName = parts.slice(-1)[0].split('.').slice(0, -1).join('.')
 
   if (!newName.value || newName.value === oldName) {
-    return showNotification({
+    return devtoolsUiShowNotification({
       message: 'Please enter a new name',
       icon: 'i-carbon-warning',
       classes: 'text-orange',
@@ -164,14 +164,14 @@ async function renameAsset() {
     await rpc.renameStaticAsset(await ensureDevAuthToken(), asset.value.filePath, fullPath)
     asset.value = undefined as any
     renameDialog.value = false
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Asset renamed',
       icon: 'i-carbon-checkmark',
       classes: 'text-green',
     })
   }
   catch (error) {
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Something went wrong!',
       icon: 'i-carbon-warning',
       classes: 'text-red',

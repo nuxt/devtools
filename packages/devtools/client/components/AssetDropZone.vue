@@ -51,7 +51,7 @@ function setFiles(data: FileList | null) {
       }
       else {
         if (file.type === '') {
-          showNotification({
+          devtoolsUiShowNotification({
             message: 'Folders are not supported yet',
             icon: 'carbon:face-dissatisfied',
             classes: 'text-orange',
@@ -61,7 +61,7 @@ function setFiles(data: FileList | null) {
           newFiles.push(file)
         }
         else {
-          showNotification({
+          devtoolsUiShowNotification({
             message: `"${file.type}" file type is not allowed`,
             icon: 'carbon:face-dissatisfied',
             classes: 'text-orange',
@@ -96,14 +96,14 @@ async function uploadFiles() {
   }
   await rpc.writeStaticAssets(await ensureDevAuthToken(), [...uploadFiles], props.folder).then(() => {
     close()
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Files uploaded successfully!',
       icon: 'i-carbon:checkmark',
     })
   }).catch((error) => {
     console.error(error)
     close()
-    showNotification({
+    devtoolsUiShowNotification({
       message: `Error uploading files: ${error}`,
       icon: 'i-carbon-warning',
       classes: 'text-red',

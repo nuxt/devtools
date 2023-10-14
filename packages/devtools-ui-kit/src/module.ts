@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import { addComponentsDir, createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
+import { addComponentsDir, addImportsDir, createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
 import defu from 'defu'
 import { extendUnocssOptions } from './unocss'
 
@@ -24,6 +24,9 @@ export default defineNuxtModule<ModuleOptions>({
     dev: false,
   },
   async setup(options, nuxt) {
+    // composables
+    addImportsDir(rPath('./composables'))
+
     // Standard components
     addComponentsDir({ path: rPath('./components') })
 

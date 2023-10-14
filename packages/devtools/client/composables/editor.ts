@@ -33,7 +33,7 @@ export function useCopy() {
   return (text: string) => {
     clipboard.copy(text)
 
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Copied to clipboard',
       icon: 'carbon-checkmark',
     })

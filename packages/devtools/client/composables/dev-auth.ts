@@ -37,7 +37,7 @@ export async function ensureDevAuthToken() {
   isDevAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
   if (!isDevAuthed.value) {
     devAuthToken.value = null
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Invalid auth token, action canceled',
       icon: 'i-carbon-warning-alt',
       classes: 'text-red',
@@ -74,7 +74,7 @@ async function authConfirmAction() {
 
   if (result === false) {
     // @unocss-include
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Action canceled',
       icon: 'carbon-close',
       classes: 'text-orange',
