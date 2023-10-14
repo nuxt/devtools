@@ -1,3 +1,23 @@
+# [1.0.0-beta.2](https://github.com/nuxt/devtools/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2023-10-14)
+
+
+### Bug Fixes
+
+* current route reactivity on pages tab ([d2d44c3](https://github.com/nuxt/devtools/commit/d2d44c30d248c32efd0b523630e5c6b686aa177c))
+* improve RWD of open-graph tab ([dfeaf23](https://github.com/nuxt/devtools/commit/dfeaf23a599dccc901db54903afdb962cb769a33))
+* improve UI layout of pages tab ([66e59ae](https://github.com/nuxt/devtools/commit/66e59ae89f82e6c76281e4e6feef66a6c4607012))
+* increase `DETAILS_MAX_ITEMS` ([de90087](https://github.com/nuxt/devtools/commit/de9008767a383b686f52e69b15d5730c50a4e292))
+* navbar on components graph view ([501432f](https://github.com/nuxt/devtools/commit/501432f549cdb9338ac868acb77b846788b689ef))
+* require auth condition ([2e968cd](https://github.com/nuxt/devtools/commit/2e968cd22fb93b6eeeac9b35f56d29422cb4c423))
+
+
+### Features
+
+* improve console message ([a5b19ef](https://github.com/nuxt/devtools/commit/a5b19eff5c7adec6a73da7f326aa3412b229f292))
+* **ui:** NNotification component ([#443](https://github.com/nuxt/devtools/issues/443)) ([dc10625](https://github.com/nuxt/devtools/commit/dc10625d7e4d46d091f5e2bbb9cba1081e5b844c))
+
+
+
 # [1.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2023-10-11)
 
 
