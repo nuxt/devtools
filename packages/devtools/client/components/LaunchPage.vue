@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import type { ModuleLaunchAction } from '~~/../src/types'
 
-defineProps<{
+const props = defineProps<{
+  name?: string
   icon?: string
   title?: string
   description?: string
   actions?: ModuleLaunchAction[]
 }>()
 
-defineEmits<{
+const emits = defineEmits<{
   (e: 'action', idx: number): void
 }>()
+
+function launch(action: ModuleLaunchAction, idx: number) {
+  telemetry(`launch-page`, {
+    pageName: props.name,
+  })
+  action.handle?.()
+  emits('action', idx)
+}
 </script>
 
 <template>
@@ -29,7 +38,7 @@ defineEmits<{
             :to="action.src"
             :target="action.src ? '_blank' : undefined"
             v-bind="action.attrs"
-            @click="() => { action.handle?.(); $emit('action', idx) }"
+            @click="launch(action, idx)"
           >
             <NIcon v-if="action.pending" icon="carbon-circle-dash" animate-spin />
             {{ action.label }}

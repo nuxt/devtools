@@ -1,3 +1,4 @@
+import { provider } from 'std-env'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 
 export const ROUTE_PATH = '/__nuxt_devtools__'
@@ -7,6 +8,8 @@ export const ROUTE_AUTH = `${ROUTE_PATH}/auth`
 export const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`
 export const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
 export const WS_EVENT_NAME = 'nuxt:devtools:rpc'
+
+const isSandboxed = provider === 'stackblitz' || provider === 'codesandbox'
 
 export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
@@ -18,6 +21,7 @@ export const defaultOptions: ModuleOptions = {
     port: 3080,
     reuseExistingServer: true,
   },
+  disableAuthorization: isSandboxed,
 }
 
 export const defaultTabOptions: NuxtDevToolsOptions = {
@@ -34,6 +38,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     interactionCloseOnOutsideClick: false,
     showExperimentalFeatures: false,
     showHelpButtons: true,
+    showPanel: null,
     scale: 1,
     minimizePanelInactive: 5000,
     hiddenTabs: [],
@@ -50,6 +55,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
       body: [],
       headers: [],
     },
+    sendFrom: 'app',
   },
   assets: {
     view: 'grid',

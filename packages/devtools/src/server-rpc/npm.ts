@@ -1,18 +1,20 @@
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import isInstalledGlobally from 'is-installed-globally'
+import type { PackageManager } from 'nypm'
 import { detectPackageManager } from 'nypm'
 import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { checkForUpdateOf } from '../npm'
-import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageManagerName, PackageUpdateInfo, ServerFunctions } from '../types'
+import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
+import { magicastGuard } from '../utils/magicast'
 
 export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
-  let detectPromise: Promise<PackageManagerName> | undefined
+  let detectPromise: Promise<PackageManager | undefined> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
   function getPackageManager() {
-    detectPromise ||= detectPackageManager(nuxt.options.rootDir).then(r => r?.name || 'npm')
+    detectPromise ||= detectPackageManager(nuxt.options.rootDir)
     return detectPromise
   }
 
@@ -23,12 +25,29 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
     } = options
     const agent = await getPackageManager()
 
-    // TODO: smartly detect dev/global installs as default
-    if (command === 'install' || command === 'update')
-      return [agent, agent === 'npm' ? 'install' : 'add', `${packageName}@latest`, dev ? '-D' : '', global ? '-g' : '', '--ignore-scripts'].filter(Boolean)
+    const name = agent?.name || 'npm'
 
-    if (command === 'uninstall')
-      return [agent, agent === 'npm' ? 'uninstall' : 'remove', packageName, global ? '-g' : ''].filter(Boolean)
+    // TODO: smartly detect dev/global installs as default
+    if (command === 'install' || command === 'update') {
+      return [
+        name,
+        name === 'npm' ? 'install' : 'add',
+        `${packageName}@latest`,
+        dev ? '-D' : '',
+        global ? '-g' : '',
+        // In yarn berry, `--ignore-scripts` is removed
+        (name === 'yarn' && !agent?.version?.startsWith('1.')) ? '' : '--ignore-scripts',
+      ].filter(Boolean)
+    }
+
+    if (command === 'uninstall') {
+      return [
+        name,
+        name === 'npm' ? 'uninstall' : 'remove',
+        packageName,
+        global ? '-g' : '',
+      ].filter(Boolean)
+    }
   }
 
   async function runNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {
@@ -63,7 +82,6 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         updatesPromise.set(name, checkForUpdateOf(name, undefined, nuxt))
       return updatesPromise.get(name)!
     },
-    getPackageManager,
     getNpmCommand,
     async runNpmCommand(token, ...args) {
       await ensureDevAuthToken(token)
@@ -80,11 +98,13 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       let source = latestGenerated
       if (source == null)
         source = await fs.readFile(filepath, 'utf-8')
-      const mod = parseModule(source, { sourceFileName: filepath })
 
-      addNuxtModule(mod, name)
+      const generated = await magicastGuard(async () => {
+        const mod = parseModule(source!, { sourceFileName: filepath })
+        addNuxtModule(mod, name)
 
-      const generated = mod.generate().code
+        return mod.generate().code
+      })
       const processId = `nuxt:add-module:${name}`
 
       if (!dry) {
@@ -136,20 +156,22 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
       const filepath = nuxt.options._nuxtConfigFile
       const source = await fs.readFile(filepath, 'utf-8')
-      const mod = parseModule(source, { sourceFileName: filepath })
+      const generated = await magicastGuard(async () => {
+        const mod = parseModule(source, { sourceFileName: filepath })
 
-      // TODO: remove module from config
-      // removeNuxtModule(mod, name)
-      const config = getDefaultExportOptions(mod)
-      config.modules ||= []
-      if (config.modules.includes(name)) {
-        Object.values(config.modules).forEach((value, index) => {
-          if (value === name)
-            config.modules.splice(index - 1, 1)
-        })
-      }
+        // TODO: remove module from config
+        // removeNuxtModule(mod, name)
+        const config = getDefaultExportOptions(mod)
+        config.modules ||= []
+        if (config.modules.includes(name)) {
+          Object.values(config.modules).forEach((value, index) => {
+            if (value === name)
+              config.modules.splice(index - 1, 1)
+          })
+        }
 
-      const generated = mod.generate().code
+        return mod.generate().code
+      })
 
       const processId = `nuxt:remove-module:${name}`
 

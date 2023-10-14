@@ -75,7 +75,7 @@ const filtered = computed(() => {
 
 <template>
   <div v-if="config" relative h-full of-auto>
-    <Navbar v-model:search="search" pb3>
+    <NNavbar v-model:search="search" pb3>
       <div v-if="importsMetadata" flex="~ gap-2 items-center">
         <NIcon icon="carbon-filter" op50 />
         <NSelectTabs
@@ -88,7 +88,7 @@ const filtered = computed(() => {
           ]"
         />
       </div>
-    </Navbar>
+    </NNavbar>
     <NSectionBlock
       v-if="filtered.user.size"
       :open="filtered.count.user <= DETAILS_MAX_ITEMS"

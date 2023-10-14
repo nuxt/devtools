@@ -5,8 +5,11 @@ import { resolveBuiltinPresets } from 'unimport'
 import { resolve } from 'pathe'
 import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
+import destr from 'destr'
+import { snakeCase } from 'scule'
 
-import type { HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
 import { ROUTE_AUTH } from '../constant'
@@ -74,22 +77,58 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
     getServerConfig() {
       return nuxt.options
     },
-    getModuleOptions() {
+    getServerRuntimeConfig(): Record<string, any> {
+      // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
+      // Since this operation happends on the Nitro runtime
+      const ENV_PREFIX = 'NITRO_'
+      const ENV_PREFIX_ALT = 'NUXT_'
+
+      function _getEnv(key: string) {
+        const envKey = snakeCase(key).toUpperCase()
+        return destr(process.env[ENV_PREFIX + envKey] ?? process.env[ENV_PREFIX_ALT + envKey])
+      }
+
+      function _isObject(input: unknown) {
+        return typeof input === 'object' && !Array.isArray(input)
+      }
+
+      function _applyEnv(obj: any, parentKey = '') {
+        for (const key in obj) {
+          const subKey = parentKey ? `${parentKey}_${key}` : key
+          const envValue = _getEnv(subKey)
+          if (_isObject(obj[key])) {
+            if (_isObject(envValue))
+              obj[key] = { ...obj[key], ...(envValue as any) }
+
+            _applyEnv(obj[key], subKey)
+          }
+          else {
+            obj[key] = envValue ?? obj[key]
+          }
+        }
+        return obj
+      }
+
+      const runtime = { ...nuxt.options.runtimeConfig }
+      _applyEnv(runtime)
+      return runtime
+    },
+    getModuleOptions(): ModuleOptions {
       return options
     },
-    getServerApp() {
+    getServerApp(): NuxtApp | undefined {
       return serverApp
     },
-    getComponents() {
+    getComponents(): Component[] {
       return components
     },
     async getComponentsRelationships() {
       return [] // replaced by vite-inspector setup
     },
-    getServerPages() {
+    getServerPages(): NuxtPage[] {
       return serverPages
     },
-    getAutoImports() {
+    getAutoImports(): AutoImportsWithMetadata {
       return {
         imports: [
           ...imports,
@@ -99,13 +138,13 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
         dirs: importDirs,
       }
     },
-    getServerLayouts() {
+    getServerLayouts(): NuxtLayout[] {
       return Object.values(app?.layouts || [])
     },
-    getServerHooks() {
+    getServerHooks(): HookInfo[] {
       return Object.values(serverHooks)
     },
-    async openInEditor(input: string) {
+    async openInEditor(input: string): Promise<boolean> {
       if (input.startsWith('./'))
         input = resolve(process.cwd(), input)
 
@@ -149,15 +188,20 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },
-    async requestForAuth(info: string) {
+    async requestForAuth(info: string, origin?: string) {
+      if (options.disableAuthorization)
+        return
+
       const token = await getDevAuthToken()
+
+      origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
 
       const message = [
         `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,
         colors.bold(info),
         '',
         'Please open the following URL in the browser:',
-        colors.bold(colors.green(`${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}${ROUTE_AUTH}?token=${token}`)),
+        colors.bold(colors.green(`${origin}${ROUTE_AUTH}?token=${token}`)),
         '',
         'Or manually copy and paste the following token:',
         colors.bold(colors.cyan(token)),
@@ -173,6 +217,8 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       })
     },
     async verifyAuthToken(token: string) {
+      if (options.disableAuthorization)
+        return true
       return token === await getDevAuthToken()
     },
   } satisfies Partial<ServerFunctions>

@@ -154,6 +154,10 @@ export function unocssPreset(): Preset {
       'n-loading': 'flex h-full w-full justify-center items-center',
       'n-panel-grids': 'n-panel-grids-light dark:n-panel-grids-dark',
       'n-panel-grids-center': 'n-panel-grids flex flex-col h-full gap-2 items-center justify-center',
+
+      // glass
+      'n-glass-effect': 'backdrop-blur-6 bg-white/80 dark:bg-[#151515]/90',
+      'n-navbar-glass': 'sticky z-10 top-0 n-glass-effect',
     },
   }
 }

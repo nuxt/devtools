@@ -64,7 +64,7 @@ function getMiddlewarePath(name: any) {
                 v-text="'active'"
               />
               <NBadge
-                v-if="matchedPending.find(m => m.name === item.name)"
+                v-else-if="matchedPending.find(m => m.name === item.name)"
                 n="teal"
                 title="next"
                 v-text="'next'"

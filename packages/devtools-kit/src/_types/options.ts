@@ -163,6 +163,7 @@ export interface NuxtDevToolsOptions {
     scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
+    showPanel: boolean | null
     sidebarExpanded: boolean
     sidebarScrollable: boolean
   }
@@ -170,6 +171,7 @@ export interface NuxtDevToolsOptions {
     selectedRoute: ServerRouteInfo | null
     view: 'tree' | 'list'
     inputDefaults: Record<string, ServerRouteInput[]>
+    sendFrom: 'app' | 'devtools'
   }
   assets: {
     view: 'grid' | 'list'

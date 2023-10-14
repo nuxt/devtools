@@ -61,7 +61,7 @@ const transitionType = {
       :border="`${transition === 'right' ? 'l' : transition === 'bottom' ? 't' : 'b'} base`"
       flex="~ col gap-1"
       :class="{ 'right-0': transition === 'right' || transition === 'bottom' }"
-      absolute bottom-0 z-10 z-20 of-auto text-sm glass-effect
+      absolute bottom-0 z-10 z-20 of-auto text-sm n-glass-effect
       :style="{
         top: transition === 'bottom' ? 'auto' : `${height}px`,
         left: transition === 'right' && !width ? 'auto' : `${width}px`,

@@ -2,6 +2,7 @@ import type { } from '@nuxt/telemetry'
 import type { NuxtHooks } from '@nuxt/schema'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { version } from '../../package.json'
+import { getOptions } from './options'
 
 const SEND_DELAY = 5_000
 
@@ -20,9 +21,13 @@ function throttle<T extends () => any>(fn: T, delay: number) {
   }
 }
 
-export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) {
-  let telemetry: ArgumentsType<NuxtHooks['telemetry:setup']>[0] | undefined
+let telemetry: ArgumentsType<NuxtHooks['telemetry:setup']>[0] | undefined
 
+const throttledSend = throttle(() => {
+  telemetry?.sendEvents()
+}, SEND_DELAY)
+
+export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) {
   if (options.telemetry !== false) {
     // Only when global telemetry is enabled, the hook will be called
     nuxt.hook('telemetry:setup', (t) => {
@@ -39,21 +44,24 @@ export function setupTelemetryRPC({ nuxt, options }: NuxtDevtoolsServerContext) 
     })
   }
 
-  const throttledSend = throttle(() => {
-    telemetry?.sendEvents()
-  }, SEND_DELAY)
-
   return {
     telemetryEvent(payload: object, immediate = false) {
-      if (!telemetry)
-        return
-
-      telemetry.createEvent('devtools', payload)
-
-      if (immediate)
-        telemetry.sendEvents()
-      else
-        throttledSend()
+      telemetryEvent(payload, immediate)
     },
   }
+}
+
+export function telemetryEvent(payload: object, immediate = false) {
+  if (!telemetry)
+    return
+
+  if (getOptions()?.behavior.telemetry === false)
+    return
+
+  telemetry.createEvent('devtools', payload)
+
+  if (immediate)
+    telemetry.sendEvents()
+  else
+    throttledSend()
 }

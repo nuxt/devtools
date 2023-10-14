@@ -85,7 +85,7 @@ const filtered = computed(() => {
 </script>
 
 <template>
-  <Navbar v-model:search="search" pb3>
+  <NNavbar v-model:search="search" pb3>
     <template #actions>
       <slot />
     </template>
@@ -101,7 +101,7 @@ const filtered = computed(() => {
         ]"
       />
     </div>
-  </Navbar>
+  </NNavbar>
   <NSectionBlock
     v-if="filtered.user.length"
     icon="carbon-nominal"

@@ -13,7 +13,7 @@ const route = useRoute()
 const router = useRouter()
 const name = computed(() => props.name ?? route.params.name)
 const tabs = useAllTabs()
-const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab)
+const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab | undefined)
 
 onMounted(() => {
   // if the tab is not found and passed a certain timeout, redirect to the overview page
@@ -24,7 +24,7 @@ onMounted(() => {
     }, 2000)
   }
   else if (tab.value.requireAuth && !isDevAuthed.value) {
-    rpc.requestForAuth()
+    requestForAuth()
   }
 })
 </script>
@@ -46,7 +46,7 @@ onMounted(() => {
       </div>
     </NPanelGrids>
   </template>
-  <template v-if="tab.requireAuth && !isDevAuthed">
+  <template v-else-if="tab.requireAuth && !isDevAuthed">
     <AuthRequiredPanel />
   </template>
   <template v-else-if="tab.view.type === 'iframe'">
@@ -57,11 +57,12 @@ onMounted(() => {
   </template>
   <template v-else-if="tab.view.type === 'launch'">
     <LaunchPage
+      :name="`custom-${tab.name}`"
       :icon="tab.view.icon || tab.icon"
       :title="tab.view.title || tab.title"
       :description="tab.view.description"
       :actions="tab.view.actions"
-      @action="idx => rpc.customTabAction(tab.name, idx)"
+      @action="idx => rpc.customTabAction(tab!.name, idx)"
     />
   </template>
   <template v-else>

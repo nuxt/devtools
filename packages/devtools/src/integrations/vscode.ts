@@ -6,7 +6,6 @@ import { logger } from '@nuxt/kit'
 import { execa } from 'execa'
 import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
-import waitOn from 'wait-on'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { LOG_PREFIX } from '../logger'
 import type { NuxtDevtoolsServerContext } from '../types'
@@ -90,11 +89,11 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       nuxt,
     )
 
-    await waitOn({
-      resources: [url],
-      timeout: 20_000,
-      reverse: true,
-    })
+    for (let i = 0; i < 100; i++) {
+      if (await fetch(url).then(r => r.ok).catch(() => false))
+        break
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
 
     await new Promise(resolve => setTimeout(resolve, 2000))
     loaded = true
@@ -121,10 +120,11 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       command.kill()
     })
 
-    await waitOn({
-      resources: [url],
-      timeout: 20_000,
-    })
+    for (let i = 0; i < 100; i++) {
+      if (await fetch(url).then(r => r.ok).catch(() => false))
+        break
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
 
     await new Promise(resolve => setTimeout(resolve, 2000))
     loaded = true

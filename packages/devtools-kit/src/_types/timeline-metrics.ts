@@ -12,6 +12,10 @@ export interface TimelineEventFunction {
   isPromise?: boolean
 }
 
+export interface TimelineServerState {
+  timeSsrStart?: number
+}
+
 export interface TimelineEventRoute {
   type: 'route'
   start: number

@@ -79,7 +79,7 @@ const navbar = ref<HTMLElement>()
 
 <template>
   <div h-full of-auto>
-    <Navbar ref="navbar" v-model:search="search" pb2>
+    <NNavbar ref="navbar" v-model:search="search" pb2>
       <template #actions>
         <div flex-none flex="~ gap2 items-center">
           <NButton
@@ -95,9 +95,9 @@ const navbar = ref<HTMLElement>()
         <span v-if="search">{{ filtered.length }} matched · </span>
         <span>{{ assets?.length }} assets in total</span>
       </div>
-    </Navbar>
+    </NNavbar>
 
-    <DropZone folder="/" />
+    <AssetDropZone folder="/" />
 
     <template v-if="view === 'grid'">
       <template v-if="byFolders.length > 1">

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { diffLines } from 'diff'
 import { unrefElement } from '@vueuse/core'
+import type { BuiltinLanguage } from 'shikiji'
 
 const props = defineProps<{
   from: string
   to: string
-  lang: string
+  lang: BuiltinLanguage | 'text'
 }>()
 
 function calculateDiff(from: string, to: string) {

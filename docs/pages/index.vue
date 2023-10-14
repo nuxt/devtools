@@ -22,14 +22,15 @@ const { data } = await useAsyncData('landing', () => {
     queryContent('/').findOne(),
   ])
 })
-const [getStarted, page] = data.value
+
+const [getStarted, page] = data.value! || []
 
 const intervalId = ref()
 const currentStep = ref(0)
 const projectsSectionVisible = ref(false)
 const nuxtProjectsSection = ref(null)
 
-const { data: module } = await useFetch<{
+const { data: mod } = await useFetch<{
   stats: {
     downloads: number
     stars: number
@@ -37,11 +38,9 @@ const { data: module } = await useFetch<{
   contributors: {
     username: string
   }[]
-}>('https://api.nuxt.com/modules/devtools',
-  {
-    transform: ({ stats, contributors }: any) => ({ stats, contributors }),
-  },
-)
+}>('https://api.nuxt.com/modules/devtools', {
+  transform: ({ stats, contributors }: any) => ({ stats, contributors }),
+})
 
 function selectProjectCard(index: number) {
   currentStep.value = index
@@ -216,9 +215,9 @@ watch(projectsSectionVisible, () => {
         </template>
 
         <template #links>
-          <UAvatarGroup :max="13" size="md" class="flex-wrap lg:self-start [&_span:first-child]:text-xs">
+          <UAvatarGroup v-if="mod" :max="13" size="md" class="flex-wrap lg:self-start [&_span:first-child]:text-xs">
             <UTooltip
-              v-for="(contributor, idx) of module.contributors" :key="idx" :text="contributor.username"
+              v-for="(contributor, idx) of mod.contributors" :key="idx" :text="contributor.username"
               class="rounded-full" :ui="{ background: 'bg-gray-50 dark:bg-gray-800/50' }"
               :popper="{ offsetDistance: 16 }"
             >
@@ -241,12 +240,12 @@ watch(projectsSectionVisible, () => {
           </p>
         </template>
 
-        <div class="flex flex-col items-center justify-center gap-8 sm:flex-row lg:gap-16">
+        <div v-if="mod" class="flex flex-col items-center justify-center gap-8 sm:flex-row lg:gap-16">
           <NuxtLink class="group text-center" to="https://npmjs.org/package/@nuxt/devtools" target="_blank">
             <p
               class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
             >
-              {{ formatNumber(module.stats.downloads) }}+
+              {{ formatNumber(mod.stats.downloads) }}+
             </p>
             <p>Monthly Downloads</p>
           </NuxtLink>
@@ -255,7 +254,7 @@ watch(projectsSectionVisible, () => {
             <p
               class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
             >
-              {{ formatNumber(module.stats.stars) }}+
+              {{ formatNumber(mod.stats.stars) }}+
             </p>
             <p>Stars</p>
           </NuxtLink>

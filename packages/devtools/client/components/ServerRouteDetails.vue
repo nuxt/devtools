@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
 import { createReusableTemplate } from '@vueuse/core'
+import type { $Fetch } from 'ofetch'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
 const props = defineProps<{
@@ -14,6 +15,7 @@ const emit = defineEmits<{
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
 const config = useServerConfig()
+const client = useClient()
 
 const response = reactive({
   contentType: 'text/plain',
@@ -67,7 +69,16 @@ const routeInputs = reactive({
   headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
-const { inputDefaults } = useDevToolsOptions('serverRoutes')
+const {
+  inputDefaults,
+  sendFrom,
+} = useDevToolsOptions('serverRoutes')
+
+const resolvedSendFrom = computed(() => {
+  if (!client?.value?.app?.$fetch)
+    return 'devtools'
+  return sendFrom.value
+})
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 // https://github.com/unjs/h3/blob/main/src/utils/body.ts#L19
@@ -115,12 +126,10 @@ const parsedBody = computed(() => {
 })
 
 const domain = computed(() => {
-  let url = config.value?.devServer.url || 'http://localhost'
+  let url = window?.location.origin
   if (url.charAt(url.length - 1) === '/')
     url = url.slice(0, -1)
-  const port = config.value?.devServer.port || 3000
-  const hasPort = url.includes(`:${port}`)
-  return hasPort ? url : `${url}:${port}`
+  return url
 })
 
 const finalPath = computed(() => {
@@ -155,8 +164,17 @@ async function fetchData() {
 
   const start = Date.now()
 
+  const f = resolvedSendFrom.value === 'app'
+    ? client.value!.app!.$fetch
+    : $fetch as $Fetch
+
+  telemetry('server-routes:fetch', {
+    method: routeMethod.value,
+    sendFrom: resolvedSendFrom.value,
+  })
+
   try {
-    response.data = await $fetch(finalURL.value, {
+    response.data = await f(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
       headers: parsedHeader.value,
       query: parsedQuery.value,
@@ -295,17 +313,19 @@ const copy = useCopy()
 
 <template>
   <div h-full w-full flex="~ col">
-    <div flex="~ col gap-2" flex-none p4 navbar-glass>
+    <div flex="~ col gap-2" flex-none p4 n-navbar-glass>
       <div flex="~ gap2 items-center">
         <NButton
-          v-if="route.method" class="n-badge-base n-sm"
+          v-if="route.method"
+          class="n-badge-base n-sm"
           :class="getRequestMethodClass(routeMethod)"
           pointer-events-none font-mono tabindex="-1"
         >
           {{ routeMethod.toUpperCase() }}
         </NButton>
         <NSelect
-          v-else v-model="routeMethod"
+          v-else
+          v-model="routeMethod"
           class="n-badge-base n-sm"
           :class="getRequestMethodClass(routeMethod)"
         >
@@ -320,15 +340,24 @@ const copy = useCopy()
             p="x5 y2"
             n="sm"
           />
-          <NButton
-            v-tooltip="'Copy URL'"
-            title="Copy URL"
-            absolute right-2 top-1.5
-            n="xs blue"
-            icon="carbon:copy"
-            :border="false"
-            @click="copy(finalURL)"
-          />
+          <div absolute right-2 top-1.5 flex="~ gap-1">
+            <NButton
+              v-tooltip="'Copy URL'"
+              title="Copy URL"
+              n="xs blue"
+              icon="carbon:copy"
+              :border="false"
+              @click="copy(finalURL)"
+            />
+            <NButton
+              v-tooltip="'Open in Editor'"
+              title="Open in Editor"
+              icon="carbon-launch"
+              n="xs blue"
+              :border="false"
+              @click="openInEditor(route.filepath)"
+            />
+          </div>
         </div>
         <NButton n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
@@ -351,13 +380,21 @@ const copy = useCopy()
         </span>
       </NButton>
       <div flex-auto />
-      <NButton
-        v-tooltip="'Open in Editor'"
-        title="Open in Editor"
-        @click="openInEditor(route.filepath)"
+      <div text-xs op50>
+        Send from
+      </div>
+      <NSelect
+        v-model="resolvedSendFrom"
+        class="n-xs"
+        :disabled="!client?.app?.$fetch"
       >
-        <NIcon icon="carbon-launch" />
-      </NButton>
+        <option value="app">
+          App
+        </option>
+        <option value="devtools">
+          DevTools
+        </option>
+      </NSelect>
     </div>
     <div
       v-if="activeTab === 'params'"

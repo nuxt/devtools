@@ -4,7 +4,9 @@ import type { ChannelOptions } from 'birpc'
 
 import { parse, stringify } from 'flatted'
 import type { Nuxt } from 'nuxt/schema'
+import { colors } from 'consola/utils'
 import type { Plugin } from 'vite'
+import { logger } from '@nuxt/kit'
 import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
@@ -39,7 +41,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         return extendedRpcMap.get(namespace)?.[fnName]
       },
       onError(error, name) {
-        console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
+        logger.error(
+          colors.yellow(`[nuxt-devtools] RPC error on executing "${colors.bold(name)}":\n`)
+          + colors.red(error?.message || ''),
+        )
       },
       timeout: 120_000,
     },

@@ -200,7 +200,7 @@ function setFilter() {
 </script>
 
 <template>
-  <Navbar ref="navbar" absolute left-0 right-0 top-0>
+  <NNavbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
       <div flex="~ gap-4 wrap" w-full>
         <NCheckbox v-model="showPages" n="primary sm">
@@ -225,11 +225,11 @@ function setFilter() {
       <div flex-auto />
       <slot />
     </template>
-  </Navbar>
+  </NNavbar>
 
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
-    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm glass-effect>
+    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm n-glass-effect>
       <div grid="~ cols-[20px_1fr] items-center gap-y-1">
         <div h-3 w-3 rounded-full bg-hex-42b883 />
         <div op50>

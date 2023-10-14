@@ -3,8 +3,8 @@ const terminals = useTerminals()
 const terminalId = useCurrentTerminalId()
 const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))
 
-function remove(id: string) {
-  rpc.runTerminalAction(id, 'remove')
+async function remove(id: string) {
+  rpc.runTerminalAction(await ensureDevAuthToken(), id, 'remove')
 }
 
 watchEffect(() => {
@@ -16,7 +16,7 @@ watchEffect(() => {
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
     <!-- TODO: Refactor to have general component -->
-    <div flex="~" border="b base" flex-1 items-center navbar-glass>
+    <div flex="~" border="b base" flex-1 items-center n-navbar-glass>
       <button
         v-for="t of terminals"
         :key="t.id" border="r base"

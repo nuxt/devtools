@@ -16,6 +16,7 @@ const props = withDefaults(
     type: 'text',
   },
 )
+
 const emit = defineEmits<{ (...args: any): void }>()
 const input = useVModel(props, 'modelValue', emit, { passive: true })
 </script>

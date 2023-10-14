@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
-
-// @ts-expect-error auto imported from @nuxtjs/color-mode
 import { useColorMode } from '#imports'
 
 const mode = useColorMode()

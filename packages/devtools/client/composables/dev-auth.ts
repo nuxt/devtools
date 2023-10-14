@@ -51,7 +51,7 @@ export async function ensureDevAuthToken() {
 
 export const userAgentInfo = new UAParser(navigator.userAgent).getResult()
 
-async function authConfirmAction() {
+export async function requestForAuth() {
   const desc = [
     userAgentInfo.browser.name,
     userAgentInfo.browser.version,
@@ -60,7 +60,12 @@ async function authConfirmAction() {
     userAgentInfo.os.version,
     userAgentInfo.device.type,
   ].filter(i => i).join(' ')
-  rpc.requestForAuth(desc)
+  return await rpc.requestForAuth(desc, window.location.origin)
+}
+
+async function authConfirmAction() {
+  if (!devAuthToken.value)
+    requestForAuth()
 
   const result = await Promise.race([
     AuthConfirm.start(),

@@ -1,11 +1,12 @@
 import type {} from '@nuxt/schema'
 import type { Ref } from 'vue'
 import type { AppConfig } from 'nuxt/schema'
-import type { NuxtApp } from 'nuxt/dist/app/nuxt'
+import type { NuxtApp } from 'nuxt/app'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
 import type { BuiltinLanguage } from 'shikiji'
-import type { ServerFunctions } from './rpc'
+import type { $Fetch } from 'ofetch'
+import type { ClientFunctions, ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 import type { TimelineMetrics } from './timeline-metrics'
 
@@ -94,6 +95,7 @@ export interface NuxtDevtoolsHostClient {
     appConfig: AppConfig
     colorMode: Ref<'dark' | 'light'>
     frameState: Ref<DevToolsFrameState>
+    $fetch: $Fetch
   }
 
   metrics: {
@@ -111,7 +113,7 @@ export interface NuxtDevtoolsHostClient {
 }
 
 export interface NuxtDevtoolsClient {
-  rpc: BirpcReturn<ServerFunctions>
+  rpc: BirpcReturn<ServerFunctions, ClientFunctions>
   renderCodeHighlight: (code: string, lang?: BuiltinLanguage) => {
     code: string
     supported: boolean
