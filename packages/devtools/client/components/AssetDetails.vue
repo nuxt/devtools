@@ -315,9 +315,10 @@ async function renameAsset() {
       <NButton icon="carbon-delete" n="red" @click="deleteDialog = !deleteDialog">
         Delete
       </NButton>
-      <NButton v-if="asset.type === 'image'" disabled icon="carbon-image-service">
+      <!-- TODO: integrate with Nuxt Image -->
+      <!-- <NButton v-if="asset.type === 'image'" disabled icon="carbon-image-service">
         Optimize image (Coming soon)
-      </NButton>
+      </NButton> -->
     </div>
 
     <div flex-auto />
