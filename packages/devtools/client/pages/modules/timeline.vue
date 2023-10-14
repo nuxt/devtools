@@ -20,7 +20,7 @@ async function showPopup() {
     await rpc.enableTimeline(false)
   }
   catch {
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Failed to enable timeline automatically. Check the terminal for more details.',
       icon: 'i-carbon-warning',
       classes: 'text-red',
