@@ -16,8 +16,9 @@ function update(event: any) {
 <template>
   <div flex="~ col gap2" border="b base" flex-1 n-navbar-glass :class="[{ p4: !noPadding }]">
     <div flex="~ gap4" items-center>
-      <slot v-if="search !== undefined" name="search">
+      <slot name="search">
         <NTextInput
+          v-if="search !== undefined"
           placeholder="Search..."
           icon="carbon-search"
           n="primary" flex-auto
