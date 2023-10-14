@@ -20,18 +20,29 @@ const routes = useMergedRouteList()
 
 const middleware = computed(() => serverApp.value?.middleware || [])
 const routeInput = ref('')
+const count = ref(0)
+
+const currentRoute = computed(() => {
+  // Additionall reactivity tracker
+  // eslint-disable-next-line no-unused-expressions
+  (middleware.value, routeInput.value, layouts.value, count.value)
+  return router.value?.currentRoute.value.path
+})
 
 onMounted(() => {
   if (route.value)
-    routeInput.value = route.value.path
+    routeInput.value = router.value?.currentRoute.value.path
 
+  router.value?.beforeEach((to) => {
+    routeInput.value = to.fullPath
+  })
   router.value?.afterEach((to) => {
     routeInput.value = to.fullPath
   })
 })
 
 async function navigate() {
-  if (routeInput.value !== route.value.path)
+  if (routeInput.value !== router.value?.currentRoute.value.path)
     router.value.push(routeInput.value || '/')
 }
 
@@ -49,9 +60,9 @@ function navigateToRoute(path: string) {
   <div v-if="config?.pages && router" h-full of-auto>
     <div border="b base" flex="~ col gap1" px4 py3 n-navbar-glass>
       <div>
-        <template v-if="route.path !== routeInput">
+        <template v-if="currentRoute !== routeInput">
           <span op50>Navigate from </span>
-          <span font-mono>{{ route.path }}</span>
+          <span font-mono>{{ currentRoute }}</span>
           <span op50> to </span>
         </template>
         <template v-else>
@@ -62,11 +73,11 @@ function navigateToRoute(path: string) {
         v-model="routeInput"
         font-mono
         icon="carbon-direction-right-01 scale-y--100"
-        :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange'"
+        :class="currentRoute === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange'"
         @keydown.enter="navigate"
       />
       <div>
-        <template v-if="route.path !== routeInput">
+        <template v-if="currentRoute !== routeInput">
           <span>Press <b font-bold>Enter</b> to navigate</span>
           <span v-if="!routeInputMatched.length" text-orange op75> (no match)</span>
         </template>
