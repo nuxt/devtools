@@ -44,10 +44,12 @@ export default defineNuxtModule<ModuleOptions>({
       config.server ||= {}
       // add proxy to client
       config.server.proxy ||= {}
+      // TODO: ws proxy is not working
       config.server.proxy[ROUTE_CLIENT] = {
         target: `http://localhost:${PORT}`,
         changeOrigin: true,
         followRedirects: true,
+        ws: true,
       }
       // add fs allow for local modules
       config.server.fs ||= {}
@@ -77,7 +79,7 @@ export default defineNuxtModule<ModuleOptions>({
       )
     })
 
-    logger.info(`Nuxt DevTools is using local client from \`${clientDir}\``)
+    logger.info(`Nuxt DevTools is using local client from \`${clientDir}\` at port \`${PORT}\``)
 
     return enableModule(options, nuxt)
   },
