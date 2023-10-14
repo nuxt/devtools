@@ -93,8 +93,8 @@ until(router).toBeTruthy().then((v) => {
 </script>
 
 <template>
-  <div flex="~" h-full w-full of-hidden>
-    <div h-full flex-auto of-auto>
+  <div flex="~ col lg:row" h-full w-full of-hidden>
+    <div flex-auto of-auto>
       <NNavbar>
         <template #search>
           <NTextInput
@@ -170,7 +170,13 @@ until(router).toBeTruthy().then((v) => {
         <OpenGraphMissingTabs :tags="headTags" :matched-route-filepath="routeMatchedFilePath" />
       </div>
     </div>
-    <SocialPreviewGroup v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />
+    <SocialPreviewGroup
+      v-if="showPreview && headTags?.length"
+      :tags="headTags"
+      flex-none border-base
+      lt-lg="border-t"
+      lg="h-full w-140 border-l"
+    />
   </div>
 
   <HelpFab>

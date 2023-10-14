@@ -81,11 +81,14 @@ const selectedTab = ref(tabs[0])
         <div border="b base" flex-auto />
       </div>
 
-      <NCard v-if="selectedTab === tabs[0]" grid="~ cols-[max-content_1fr]" m4 items-center justify-between of-hidden>
+      <NCard
+        v-if="selectedTab === tabs[0]"
+        grid="~ cols-[1fr] lg:cols-[max-content_1fr]" m4 items-center justify-between of-hidden
+      >
         <template v-for="item, index of missingTags" :key="index">
           <div v-if="index" x-divider />
           <div v-if="index" x-divider />
-          <div flex="~ gap-1 items-center" px4 py2>
+          <div flex="~ gap-1 items-center" class="px2 pt2" lg="px4 py2">
             <div i-carbon-warning text-orange />
             <NLink
               op-50

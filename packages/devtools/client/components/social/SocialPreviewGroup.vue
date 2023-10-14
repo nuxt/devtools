@@ -23,7 +23,7 @@ const card = computed(() => getSocialPreviewCard(props.tags, {
 </script>
 
 <template>
-  <div h-full w-520 flex="~ col">
+  <div flex="~ col">
     <div flex="~ wrap" w-full flex-none>
       <template v-for="name, idx of types" :key="idx">
         <button
