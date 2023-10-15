@@ -60,9 +60,14 @@ async function connectVite() {
     onMessage(data)
   })
 
-  // TODO:
-  // hot.on('vite:connect', (data) => {})
-  // hot.on('vite:disconnect', (data) => {})
+  wsConnecting.value = true
+
+  hot.on('vite:ws:connect', () => {
+    wsConnecting.value = false
+  })
+  hot.on('vite:ws:disconnect', () => {
+    wsConnecting.value = true
+  })
 
   return hot
 }

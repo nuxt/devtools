@@ -148,7 +148,7 @@ export async function setupDevToolsClient({
     return iframe
   }
 
-  function waitForClientInjection(retry = 10, timeout = 200) {
+  function waitForClientInjection(retry = 20, timeout = 300) {
     let lastError: any
     const test = () => {
       try {
