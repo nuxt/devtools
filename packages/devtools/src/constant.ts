@@ -62,7 +62,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
   },
 }
 
-export const allowedExtensions = [
+export const defaultAllowedExtensions = [
   'png',
   'jpg',
   'jpeg',

@@ -84,19 +84,26 @@ export interface ModuleOptions {
   }
 
   /**
+   * Options for assets tab
+   */
+  assets?: {
+    /**
+     * Allowed file extensions for assets tab to upload.
+     * To security concern.
+     *
+     * Set to '*' to disbale this limitation entirely
+     *
+     * @default Common media and txt files
+     */
+    uploadExtensions?: '*' | string[]
+  }
+
+  /**
    * Enable anonymous telemetry, helping us improve Nuxt DevTools.
    *
    * By default it will respect global Nuxt telemetry settings.
    */
   telemetry?: boolean
-  assets?: {
-    /**
-     * Allowed extensions for assets tab upload
-     *
-     * @default ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'mp4', 'ogg', 'mp3', 'wav']
-     */
-    uploadExtensions?: string[]
-  }
 }
 
 export interface ModuleGlobalOptions {

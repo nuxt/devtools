@@ -1,16 +1,17 @@
 import fsp from 'node:fs/promises'
+import { parse } from 'node:path'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import { debounce } from 'perfect-debounce'
 import fg from 'fast-glob'
 import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { allowedExtensions } from '../constant'
+import { defaultAllowedExtensions } from '../constant'
 
 export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
   let cache: AssetInfo[] | null = null
 
-  const extensions = options.assets?.uploadExtensions || allowedExtensions
+  const extensions = options.assets?.uploadExtensions || defaultAllowedExtensions
 
   const publicDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
 
@@ -101,10 +102,11 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         files.map(async ({ path, content, encoding, override }) => {
           let finalPath = resolve(baseDir, path)
 
-          // eslint-disable-next-line unused-imports/no-unused-vars
-          const [name, ext] = finalPath.split('.')
-          if (!extensions.includes(ext))
-            throw new Error(`${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}`)
+          const { ext } = parse(finalPath)
+          if (extensions !== '*') {
+            if (!extensions.includes(ext.toLowerCase()))
+              throw new Error(`File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
+          }
 
           if (!override) {
             try {
