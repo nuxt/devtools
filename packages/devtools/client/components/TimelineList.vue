@@ -31,12 +31,12 @@ const emit = defineEmits<{
         >
           {{ event.name }}
         </div>
-        <div flex="~" font-mono>
+        <div flex="~" ml--1 font-mono>
           <div op30>
             (
           </div>
           <template v-for="a, index in event.args " :key="index">
-            <div v-if="idx" mr2 op30>
+            <div v-if="index" mr2 op30>
               ,
             </div>
             <div op75>
