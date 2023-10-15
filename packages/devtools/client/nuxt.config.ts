@@ -61,6 +61,11 @@ export default defineNuxtConfig({
         'vis-data',
       ],
     },
+    server: {
+      hmr: {
+        clientPort: process.env.PORT ? +process.env.PORT : undefined,
+      },
+    },
   },
   typescript: {
     includeWorkspace: true,

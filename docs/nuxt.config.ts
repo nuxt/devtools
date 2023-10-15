@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxtjs/plausible',
     'nuxt-og-image',
-    // ...(process.env.CI ? [] : ['../local']),
+    ...(process.env.CI ? [] : ['../local']),
   ],
 
   colorMode: {
@@ -57,7 +57,10 @@ export default defineNuxtConfig({
     },
   },
 
-  devtools: {
-    enabled: true,
-  },
+  // devtools: {
+  //   enabled: true,
+  //   componentInspector: {
+  //     cleanHtml: false,
+  //   },
+  // },
 })

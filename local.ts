@@ -63,11 +63,12 @@ export default defineNuxtModule<ModuleOptions>({
       startSubprocess(
         {
           command: 'npx',
-          args: ['nuxi', 'dev', '--port', PORT.toString()],
+          args: ['nuxi', 'dev'],
           cwd: clientDir,
           stdio: 'pipe',
           env: {
             NUXT_DEVTOOLS_LOCAL: 'true',
+            PORT: PORT.toString(),
           },
         },
         {
