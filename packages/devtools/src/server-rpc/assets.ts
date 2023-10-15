@@ -1,13 +1,17 @@
 import fsp from 'node:fs/promises'
+import { parse } from 'node:path'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import { debounce } from 'perfect-debounce'
 import fg from 'fast-glob'
 import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { defaultAllowedExtensions } from '../constant'
 
-export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoolsServerContext) {
+export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
   let cache: AssetInfo[] | null = null
+
+  const extensions = options.assets?.uploadExtensions || defaultAllowedExtensions
 
   const publicDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
 
@@ -96,25 +100,31 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh }: NuxtDevtoo
 
       return await Promise.all(
         files.map(async ({ path, content, encoding, override }) => {
-          let dir = resolve(baseDir, path)
+          let finalPath = resolve(baseDir, path)
+
+          const { ext } = parse(finalPath)
+          if (extensions !== '*') {
+            if (!extensions.includes(ext.toLowerCase()))
+              throw new Error(`File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
+          }
+
           if (!override) {
             try {
-              await fsp.stat(dir)
-              const ext = dir.split('.').pop() as string
-              const base = dir.slice(0, dir.length - ext.length - 1)
+              await fsp.stat(finalPath)
+              const base = finalPath.slice(0, finalPath.length - ext.length - 1)
               let i = 1
               while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
                 i++
-              dir = `${base}-${i}.${ext}`
+              finalPath = `${base}-${i}.${ext}`
             }
             catch (err) {
               // Ignore error if file doesn't exist
             }
           }
-          await fsp.writeFile(dir, content, {
+          await fsp.writeFile(finalPath, content, {
             encoding: encoding ?? 'utf-8',
           })
-          return dir
+          return finalPath
         }),
       )
     },

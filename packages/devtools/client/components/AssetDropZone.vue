@@ -2,18 +2,20 @@
 import type { AssetEntry } from '~/../src/types'
 
 const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    required: true,
+  },
   folder: {
     type: String,
     required: true,
   },
 })
 
-const visible = ref(false)
+const visible = useVModel(props, 'modelValue')
 const lastTarget = ref()
 
 const files = ref<File[]>([])
-// TODO: add option to user to choose types
-const uploadTypes: string[] = ['image', 'video']
 
 function onDragEnter(e: DragEvent) {
   lastTarget.value = e.target
@@ -57,16 +59,7 @@ function setFiles(data: FileList | null) {
             classes: 'text-orange',
           })
         }
-        else if (uploadTypes.some(type => file.type.includes(type))) {
-          newFiles.push(file)
-        }
-        else {
-          devtoolsUiShowNotification({
-            message: `"${file.type}" file type is not allowed`,
-            icon: 'carbon:face-dissatisfied',
-            classes: 'text-orange',
-          })
-        }
+        newFiles.push(file)
       }
     }
     files.value = [...files.value, ...newFiles]
@@ -101,10 +94,9 @@ async function uploadFiles() {
       icon: 'i-carbon:checkmark',
     })
   }).catch((error) => {
-    console.error(error)
     close()
     devtoolsUiShowNotification({
-      message: `Error uploading files: ${error}`,
+      message: `Error uploading files: ${error?.message ?? 'unknown'}`,
       icon: 'i-carbon-warning',
       classes: 'text-red',
     })
@@ -156,13 +148,15 @@ useEventListener('drop', onDrop)
     :class="visible ? 'opacity-100 visible' : 'opacity-0 invisible'"
   >
     <NButton
+      v-tooltip.bottom-end="'Close'"
       icon="carbon-close"
+      title="Close"
       absolute right-5 top-5 z-20 text-xl
       :border="false"
       @click="close"
     />
     <div v-if="!files?.length" h-full w-full flex items-center justify-center>
-      <label for="drop-zone-input" text-3xl>
+      <label for="drop-zone-input" text-3xl hover="text-green cursor-pointer" transition-all>
         <NIcon icon="carbon-cloud-upload" mr-2 /> Drop files here or click to select
       </label>
       <input
@@ -179,7 +173,7 @@ useEventListener('drop', onDrop)
           Drag and drop files to upload
         </p>
       </div>
-      <div grid="~ cols-minmax-8rem" overflow-auto p6>
+      <div grid="~ cols-minmax-8rem gap-8" overflow-auto p6>
         <div
           v-for="file, index of files" :key="file.name"
           flex="~ col gap-2" relative h-50 w-40 items-center

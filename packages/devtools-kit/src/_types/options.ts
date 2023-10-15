@@ -52,7 +52,7 @@ export interface ModuleOptions {
    */
   experimental?: {
     /**
-     * Timline tab
+     * Timeline tab
      * @deprecated Use `timeline.enable` instead
      */
     timeline?: boolean
@@ -81,6 +81,21 @@ export interface ModuleOptions {
       includeFrom?: string[]
       exclude?: (string | RegExp | ((item: Import) => boolean))[]
     }
+  }
+
+  /**
+   * Options for assets tab
+   */
+  assets?: {
+    /**
+     * Allowed file extensions for assets tab to upload.
+     * To security concern.
+     *
+     * Set to '*' to disbale this limitation entirely
+     *
+     * @default Common media and txt files
+     */
+    uploadExtensions?: '*' | string[]
   }
 
   /**
