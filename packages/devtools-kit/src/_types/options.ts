@@ -52,7 +52,7 @@ export interface ModuleOptions {
    */
   experimental?: {
     /**
-     * Timline tab
+     * Timeline tab
      * @deprecated Use `timeline.enable` instead
      */
     timeline?: boolean
@@ -89,6 +89,14 @@ export interface ModuleOptions {
    * By default it will respect global Nuxt telemetry settings.
    */
   telemetry?: boolean
+  assets?: {
+    /**
+     * Allowed extensions for assets tab upload
+     *
+     * @default ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'mp4', 'ogg', 'mp3', 'wav']
+     */
+    uploadExtensions?: string[]
+  }
 }
 
 export interface ModuleGlobalOptions {
