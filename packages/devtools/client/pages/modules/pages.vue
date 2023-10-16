@@ -26,12 +26,12 @@ const currentRoute = computed(() => {
   // Additionall reactivity tracker
   // eslint-disable-next-line no-unused-expressions
   (middleware.value, routeInput.value, layouts.value, count.value)
-  return router.value?.currentRoute.value.path
+  return router.value?.currentRoute?.value?.path
 })
 
 onMounted(() => {
   if (route.value)
-    routeInput.value = router.value?.currentRoute.value.path
+    routeInput.value = router.value?.currentRoute?.value?.path
 
   router.value?.beforeEach((to) => {
     routeInput.value = to.fullPath
@@ -42,7 +42,7 @@ onMounted(() => {
 })
 
 async function navigate() {
-  if (routeInput.value !== router.value?.currentRoute.value.path)
+  if (routeInput.value !== router.value?.currentRoute?.value?.path)
     router.value.push(routeInput.value || '/')
 }
 

@@ -11,8 +11,17 @@ useHead({
 </script>
 
 <template>
-  <GlobalNav />
-  <div px10 text-6xl>
-    <NuxtPage />
+  <div px10 pt-10 text-4xl>
+    Timeline Example
   </div>
+  <GlobalNav />
+  <NCard mx10 border-dashed p6>
+    <NuxtPage />
+  </NCard>
 </template>
+
+<style>
+html.dark {
+  background: #050505;
+}
+</style>

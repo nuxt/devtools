@@ -19,6 +19,6 @@ useHead({
 
 <template>
   <div>
-    Dynamic, {{ name }}!
+    Dynamic page, {{ name }}!
   </div>
 </template>

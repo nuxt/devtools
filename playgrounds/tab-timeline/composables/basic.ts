@@ -1,8 +1,8 @@
-export function sleep(ms: number) {
+export function myFunctionA(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export async function doSomething() {
-  await sleep(2000)
+export async function myFunctionB() {
+  await myFunctionA(2000)
   return 'something'
 }
