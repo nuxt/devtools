@@ -122,6 +122,7 @@ export interface ModuleStaticInfo {
   learn_more: string
   category: string
   type: ModuleType
+  stats: ModuleStats
   maintainers: MaintainerInfo[]
   contributors: GitHubContributor[]
   compatibility: ModuleCompatibility
@@ -130,6 +131,13 @@ export interface ModuleStaticInfo {
 export interface ModuleCompatibility {
   nuxt: string
   requires: { bridge?: boolean | 'optional' }
+}
+
+export interface ModuleStats {
+  downloads: number
+  stars: number
+  publishedAt: number
+  createdAt: number
 }
 
 export type CompatibilityStatus = 'working' | 'wip' | 'unknown' | 'not-working'
