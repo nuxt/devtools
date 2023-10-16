@@ -55,6 +55,7 @@ export interface ServerRouteInfo {
 
 export type ServerRouteInputType = 'string' | 'number' | 'boolean' | 'file' | 'date' | 'time' | 'datetime-local'
 export interface ServerRouteInput {
+  active: boolean
   key: string
   value: any
   type?: ServerRouteInputType

@@ -14,7 +14,7 @@ const emit = defineEmits<{ (...args: any): void }>()
 const params = useVModel(props, 'modelValue', emit, { passive: true })
 
 const filteredKeys = computed(() => {
-  return [...props.keys, 'key', 'value', 'type']
+  return [...props.keys, 'active', 'key', 'value', 'type']
 })
 
 const keysObject = computed(() => {
@@ -72,6 +72,12 @@ watch(() => params, (items) => {
       <slot name="input" :item="item" />
 
       <template v-for="key of filteredKeys" :key="key">
+        <NCheckbox
+          v-if="item.type !== null && key === 'active'"
+          v-model="item[key]"
+          n="sm primary"
+          :disabled="disabled"
+        />
         <NTextInput
           v-if="item.type !== null && key === 'key'"
           v-model="item[key]"
@@ -112,7 +118,7 @@ watch(() => params, (items) => {
 
       <slot name="input-actions">
         <NButton n="red" :disabled="disabled" :class="disabled ? 'op0!' : ''" @click="params.splice(index, 1)">
-          <NIcon icon="carbon:delete" />
+          <NIcon icon="carbon:trash-can" />
         </NButton>
       </slot>
     </div>
