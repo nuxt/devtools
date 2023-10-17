@@ -1,3 +1,27 @@
+# [1.0.0-beta.3](https://github.com/nuxt/devtools/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2023-10-17)
+
+
+### Bug Fixes
+
+* timline list ui fix ([2ea18f3](https://github.com/nuxt/devtools/commit/2ea18f3e755861c9a278b1feefec09f45638eae5))
+* ui error when pages not enabled ([c455748](https://github.com/nuxt/devtools/commit/c455748c7fbbcf8de4d33cdb861e2bae71f0841c))
+* **ui:** dialog backdrop ([#471](https://github.com/nuxt/devtools/issues/471)) ([87ec2ff](https://github.com/nuxt/devtools/commit/87ec2ffb8c2a2a86f5efaaefb149665dcef41a8b))
+
+
+### Features
+
+* add `telegram` social preview  tab ([#473](https://github.com/nuxt/devtools/issues/473)) ([64036ca](https://github.com/nuxt/devtools/commit/64036cae1abbf24379e336df93e4ccf6c3bfb341))
+* add link for Nuxt and Vue on overview tab ([5314fff](https://github.com/nuxt/devtools/commit/5314ffffed4f5f90110f97473281180ca0104345))
+* add more telemetry events ([a565d57](https://github.com/nuxt/devtools/commit/a565d57448549a21726cef6f9ff5d21ec6173872))
+* **assets:** file upload extension validation ([#391](https://github.com/nuxt/devtools/issues/391)) ([df623e0](https://github.com/nuxt/devtools/commit/df623e00204fd9d396744193d1f50b8c1c76f151))
+* bring back disconnected dialog ([a81721d](https://github.com/nuxt/devtools/commit/a81721d5525394f30907efd05676825a62577140))
+* improve disconnect indicator ([8654684](https://github.com/nuxt/devtools/commit/8654684c20eb6bd11261d0e7acc207604de875b8))
+* improve UX of dev auth ([bb4baf5](https://github.com/nuxt/devtools/commit/bb4baf5cfb842db6482b86c506a86db9126b5a34))
+* **modules:** dynamic sorting for module installation list ([#470](https://github.com/nuxt/devtools/issues/470)) ([4478015](https://github.com/nuxt/devtools/commit/44780154c8b2c293a86950e926f6a7bc90a5edc5))
+* **server-routes:** add optional checkbox for inputs ([#474](https://github.com/nuxt/devtools/issues/474)) ([077a907](https://github.com/nuxt/devtools/commit/077a907feae0e61631e5862e0681dccbeafcc091))
+
+
+
 # [1.0.0-beta.2](https://github.com/nuxt/devtools/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2023-10-14)
 
 
