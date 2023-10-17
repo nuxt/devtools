@@ -128,12 +128,6 @@ On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#
   - This helps us improve compatibility across different browsers and operating systems.
 - Click event on some action buttons
 
-## Follow us
-
-<p valign="center">
-  <a href="https://chat.nuxt.dev"><img width="20px" src="./.github/assets/discord.svg" alt="Discord"></a>&nbsp;&nbsp;<a href="https://twitter.nuxt.dev"><img width="20px" src="./.github/assets/twitter.svg" alt="Twitter"></a>&nbsp;&nbsp;<a href="https://github.nuxt.dev"><img width="20px" src="./.github/assets/github.svg" alt="GitHub"></a>
-</p>
-
 ## License
 
 [MIT](./LICENSE)

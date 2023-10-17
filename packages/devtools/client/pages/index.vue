@@ -47,6 +47,7 @@ function visit() {
         </NCheckbox>
         <NCheckbox v-model="telemetry" n="green6">
           <span op50>Send anonymous statistics, help us improving DevTools</span>
+          <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op35 v-text="'Learn more'" />
         </NCheckbox>
       </div>
     </div>

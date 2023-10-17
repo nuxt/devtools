@@ -1,5 +1,4 @@
 import { useClipboard } from '@vueuse/core'
-import { telemetryEvent } from '../../src/server-rpc/telemetry'
 
 export function useOpenInEditor() {
   const config = useServerConfig()

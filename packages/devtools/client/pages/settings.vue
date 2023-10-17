@@ -230,6 +230,7 @@ watchEffect(() => {
         <NCard p4 flex="~ col gap-2">
           <NCheckbox v-model="telemetryEnabled" n-primary>
             <span>Send anonymous statistics, help us improving DevTools</span>
+            <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op50 v-text="'Learn more'" />
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />
