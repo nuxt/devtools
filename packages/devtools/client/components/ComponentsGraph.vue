@@ -219,7 +219,7 @@ function setFilter() {
           <span op75>Show global components</span>
         </NCheckbox>
       </div>
-      <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
+      <button v-if="selectedFilter" flex="~ gap-1" flex-none items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
       <div flex-auto />
