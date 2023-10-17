@@ -85,9 +85,6 @@ To configure Nuxt DevTools, you can pass the `devtools` options.
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/devtools',
-  ],
   devtools: {
     // Enable devtools (default: true)
     enabled: true,
@@ -111,6 +108,31 @@ Please refer to the [Module Authors Guide](https://devtools.nuxt.com/module/guid
 ## Contribution Guide
 
 Please refer to the [Contribution Guide](https://devtools.nuxt.com/development/contributing).
+
+## Anonymous Usage Analytics
+
+Nuxt DevTools collects anonymous telemetry data about general usage. This helps us to accurately gauge feature usage and customization across all our users. This data will let us better understand how each features in Nuxt DevTools are used, measuring improvements made (DX and performances) and their relevance. It would also help us to prioritize our efforts and focus on the features that matter the most to our users.
+
+Nuxt DevTools' telemetry data is piped through [Nuxt Telemetry](https://github.com/nuxt/telemetry), meaning that Nuxt DevTools will respect your local and global Nuxt Telemetry settings. You can also opt-out Nuxt DevTools' telemetry in the Nuxt DevTools settings.
+
+The data we collect is completely anonymous, not traceable to the source (using hash+seed), and only meaningful in aggregate form. No data we collect is personally identifiable or trackable.
+
+### Events
+
+On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#events), Nuxt DevTools also collects the following events:
+
+- Versions of Nuxt DevTools
+- Navigations between tabs/feature
+  - This helps us to understand which features are used the most to prioritize our efforts.
+- Browser and OS names and versions
+  - This helps us improve compatibility across different browsers and operating systems.
+- Click event on some action buttons
+
+## Follow us
+
+<p valign="center">
+  <a href="https://chat.nuxt.dev"><img width="20px" src="./.github/assets/discord.svg" alt="Discord"></a>&nbsp;&nbsp;<a href="https://twitter.nuxt.dev"><img width="20px" src="./.github/assets/twitter.svg" alt="Twitter"></a>&nbsp;&nbsp;<a href="https://github.nuxt.dev"><img width="20px" src="./.github/assets/github.svg" alt="GitHub"></a>
+</p>
 
 ## License
 
