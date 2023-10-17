@@ -64,9 +64,9 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
-  query: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
+  query: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
 const {
@@ -151,9 +151,9 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
-function parseInputs(inputs: any[]) {
+function parseInputs(inputs: ServerRouteInput[]) {
   const formatted = Object.fromEntries(
-    inputs.filter(({ key, value }) => key && value !== undefined).map(({ key, value }) => [key, value]),
+    inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
   return Object.entries(formatted).length ? formatted : undefined
 }
@@ -236,6 +236,9 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
   return snippets
 })
 
+const cookies = ref(getCookies())
+const newCookie = reactive({ key: '', value: '' })
+
 const tabs = computed(() => {
   const items = []
   if (paramNames.value.length) {
@@ -265,6 +268,7 @@ const tabs = computed(() => {
   items.push({
     name: 'Cookies',
     slug: 'cookies',
+    length: cookies.value.length,
   })
   items.push({
     name: 'Snippets',
@@ -273,16 +277,12 @@ const tabs = computed(() => {
   return items
 })
 
-const cookies = ref(getCookies())
-
 function getCookies() {
   return document.cookie.split('; ').map((i) => {
     const [key, value] = i.split('=')
     return { key, value }
-  })
+  }).filter(i => i.key)
 }
-
-const newCookie = reactive({ key: '', value: '' })
 
 function updateCookie(key: string, value: any) {
   if (!key)
@@ -359,7 +359,7 @@ const copy = useCopy()
             />
           </div>
         </div>
-        <NButton n="primary solid" @click="fetchData">
+        <NButton h-full n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
         </NButton>
       </div>
@@ -429,7 +429,7 @@ const copy = useCopy()
           @input="updateCookie(cookie.key, $event.target?.value)"
         />
         <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
-          <NIcon icon="i-carbon-delete" />
+          <NIcon icon="i-carbon-trash-can" />
         </NButton>
       </div>
       <div flex="~ gap-4">
@@ -449,7 +449,7 @@ const copy = useCopy()
       </div>
     </div>
     <DefineDefaultInputs>
-      <ServerRouteInputs v-model="currentParams" :default="{ type: 'string' }" max-h-xs of-auto>
+      <ServerRouteInputs v-model="currentParams" :default="{ active: true, type: 'string' }" max-h-xs of-auto>
         <template v-if="inputDefaults[activeTab]?.length">
           <div flex="~ gap2" mb--2 items-center op50>
             <div w-5 x-divider />

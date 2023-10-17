@@ -194,7 +194,7 @@ function capitalize(str: string) {
         :padding="false"
         :icon="ServerRouteTabIcons[tab]"
       >
-        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ type: 'string' }" />
+        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ active: true, type: 'string' }" />
       </NSectionBlock>
     </div>
   </NDrawer>
