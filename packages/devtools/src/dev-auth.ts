@@ -18,7 +18,7 @@ export async function getDevAuthToken() {
     token = (await fs.readFile(filepath, 'utf-8')).trim()
 
   if (!token)
-    token = randomStr(32)
+    token = randomStr(16)
 
   await fs.mkdir(dir, { recursive: true })
   await fs.writeFile(filepath, token, 'utf-8')
