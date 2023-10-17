@@ -55,14 +55,14 @@ function authorize() {
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
-        <div p4 theme-card-green flex="~ col auto">
+        <NuxtLink to="https://nuxt.com" target="_blank" p4 theme-card-green flex="~ col auto">
           <div logos-nuxt-icon text-3xl />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
-        </div>
-        <div v-if="vueVersion" p4 theme-card-green flex="~ col auto">
+        </NuxtLink>
+        <NuxtLink v-if="vueVersion" to="https://vuejs.org" target="_blank" p4 theme-card-green flex="~ col auto">
           <div logos-vue text-3xl />
           <code>v{{ vueVersion }}</code>
-        </div>
+        </NuxtLink>
         <template v-if="config">
           <NuxtLink
             v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto"
