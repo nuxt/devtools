@@ -244,7 +244,7 @@ async function renameAsset() {
                 title="Copy public path"
                 icon="carbon-copy"
                 :border="false"
-                @click="copy(asset.publicPath)"
+                @click="copy(asset.publicPath, 'assets-public-path')"
               />
               <NButton
                 v-tooltip="'Open in browser'"

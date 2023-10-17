@@ -108,7 +108,7 @@ const selectedTab = ref(tabs[0])
         <p flex="~ gap-1 wrap items-center">
           <NButton
             icon="carbon-copy" n="xs" px-2
-            @click="copy(codeSnippet)"
+            @click="copy(codeSnippet, 'open-graph-suggestion')"
           >
             Copy
           </NButton>
@@ -133,7 +133,7 @@ const selectedTab = ref(tabs[0])
           <div flex="~ gap-2" n="sm primary" absolute right-2 top-2>
             <NButton
               icon="carbon-copy"
-              @click="copy(codeSnippet)"
+              @click="copy(codeSnippet, 'open-graph-suggestion')"
             >
               Copy
             </NButton>

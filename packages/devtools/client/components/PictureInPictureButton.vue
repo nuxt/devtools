@@ -40,7 +40,7 @@ function popup() {
         <p>
           Your current browser does not seem to support the API, or the flag is not enabled yet.
           You can try enabling the flag by visiting
-          <NButton n="xs primary" title="Click to Copy" @click="copy('chrome://flags/#document-picture-in-picture-api')">
+          <NButton n="xs primary" title="Click to Copy" @click="copy('chrome://flags/#document-picture-in-picture-api', 'external-docs')">
             chrome://flags/#document-picture-in-picture-api
           </NButton>
           and restart the browser.

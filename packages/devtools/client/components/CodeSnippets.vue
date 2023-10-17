@@ -4,6 +4,7 @@ import type { CodeSnippet } from '../../types'
 
 const props = defineProps<{
   codeSnippets: CodeSnippet[]
+  eventType?: string
 }>()
 
 const selected = shallowRef<CodeSnippet | undefined>(props.codeSnippets[0])
@@ -45,7 +46,7 @@ watchEffect(() => {
       <div flex="~ gap-2" px3 pb3 n="sm primary">
         <NButton
           icon="carbon-copy"
-          @click="copy(selected!.code)"
+          @click="copy(selected!.code, eventType || `code-snippet-${selected.name}`)"
         >
           Copy
         </NButton>

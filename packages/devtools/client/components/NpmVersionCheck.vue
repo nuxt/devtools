@@ -32,6 +32,12 @@ async function updateWithConfirm() {
   const processId = await update(async (command) => {
     return PromiseConfirm.start(command)
   })
+
+  telemetry('npm:update', {
+    packageName: props.packageName,
+    oldVersion: info.value?.current,
+  })
+
   if (processId && shouldRestartServer.value) {
     restartDialogs.value.push({
       id: processId,

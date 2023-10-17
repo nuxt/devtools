@@ -55,7 +55,7 @@ const docsUrl = computed(() => {
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
-            <NButton icon="carbon-copy" @click="copy(name)">
+            <NButton icon="carbon-copy" @click="copy(name, 'imports-name')">
               Copy
             </NButton>
             <NButton v-if="filepath" icon="carbon-code" @click="filepath && openInEditor(filepath)">

@@ -1,4 +1,5 @@
 import { useClipboard } from '@vueuse/core'
+import { telemetryEvent } from '../../src/server-rpc/telemetry'
 
 export function useOpenInEditor() {
   const config = useServerConfig()
@@ -30,8 +31,12 @@ export function useOpenInEditor() {
 export function useCopy() {
   const clipboard = useClipboard()
 
-  return (text: string) => {
+  return (text: string, type?: string) => {
     clipboard.copy(text)
+
+    telemetry('copy', {
+      copyType: type,
+    })
 
     devtoolsUiShowNotification({
       message: 'Copied to clipboard',

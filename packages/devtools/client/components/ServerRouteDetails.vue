@@ -347,7 +347,7 @@ const copy = useCopy()
               n="xs blue"
               icon="carbon:copy"
               :border="false"
-              @click="copy(finalURL)"
+              @click="copy(finalURL, 'server-route-url')"
             />
             <NButton
               v-tooltip="'Open in Editor'"
