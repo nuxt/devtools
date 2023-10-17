@@ -53,7 +53,7 @@ addEventListener('keydown', (e) => {
 const { scale, sidebarExpanded } = useDevToolsUIOptions()
 const dataSchema = useSchemaInput()
 
-onMounted(() => {
+onMounted(async () => {
   const injectClient = useInjectionClient()
   watchEffect(() => {
     window.__NUXT_DEVTOOLS__ = injectClient.value
@@ -62,6 +62,14 @@ onMounted(() => {
   watchEffect(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
+
+  if (!isDevAuthed.value) {
+    if (devAuthToken.value) {
+      const result = await rpc.verifyAuthToken(devAuthToken.value)
+      if (result)
+        isDevAuthed.value = true
+    }
+  }
 })
 
 registerCommands(() =>
@@ -97,7 +105,7 @@ registerCommands(() =>
           <template #left>
             <NuxtPage />
           </template>
-          <template v-if="splitScreenEnabled && splitScreenAvailable" #right>
+          <template v-if="!isUtilityView && splitScreenEnabled && splitScreenAvailable" #right>
             <SplitScreen />
           </template>
         </NSplitPane>
