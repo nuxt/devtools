@@ -27,36 +27,15 @@ Unleash Nuxt Developer Experience.
 
 > Nuxt DevTools requires **Nuxt v3.1.0 or higher**.
 
-You can opt-in Nuxt DevTools per project by going to the project root and run:
+Nuxt DevTools is **enabled by default** in Nuxt v3.8.0. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
 
-```bash
-npx nuxi@latest devtools enable
-```
+If you want to explicitly enable or disable Nuxt DevTools, you can update your `nuxt.config` with:
 
-Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd>) to toggle the DevTools.
-
-> **Note**: If you using `nvm` or other Node version managers, we suggest to run the enable command again after switching Node version.
-
-Similarly, you can disable it per project by running:
-
-```bash
-npx nuxi@latest devtools disable
-```
-
-### Install Manually
-
-Nuxt DevTools is currently provided as a module (might be changed in the future). If you prefer, you can also install it locally, which will be activated for all your team members.
-
-```bash
-npm i -D @nuxt/devtools
-```
-
-```ts
-// nuxt.config.ts
+```js
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/devtools',
-  ],
+  devtools: {
+    enabled: true // or false to disable
+  }
 })
 ```
 
@@ -76,7 +55,6 @@ You can opt-in to the edge release channel by running:
 ```
 
 Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
-
 
 ### Module Options
 
