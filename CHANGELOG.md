@@ -1,3 +1,12 @@
+# [1.0.0](https://github.com/nuxt/devtools/compare/v1.0.0-beta.3...v1.0.0) (2023-10-18)
+
+
+### Features
+
+* add the type attribute for buttons ([#478](https://github.com/nuxt/devtools/issues/478)) ([4a9ec67](https://github.com/nuxt/devtools/commit/4a9ec67404ad254e730eb512ae51228e08282c37))
+
+
+
 # [1.0.0-beta.3](https://github.com/nuxt/devtools/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2023-10-17)
 
 
