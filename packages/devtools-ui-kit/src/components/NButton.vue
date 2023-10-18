@@ -8,8 +8,10 @@ withDefaults(defineProps<{
   icon?: string
   border?: boolean
   disabled?: boolean
+  type?: 'submit' | 'reset' | 'button'
 }>(), {
   border: true,
+  type: 'button',
 })
 </script>
 
@@ -17,7 +19,7 @@ withDefaults(defineProps<{
   <Component
     :is="to ? NuxtLink : 'button'"
     :to="to"
-    v-bind="$attrs"
+    v-bind="{ ...$attrs, ...(!to && { type }) }"
     :class="[
       { 'n-button-base active:n-button-active focus-visible:n-focus-base hover:n-button-hover': border },
       { 'n-icon-button': !$slots.default },
