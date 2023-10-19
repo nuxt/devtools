@@ -72,7 +72,7 @@ watch(projectsSectionVisible, () => {
 <template>
   <span class="gradient" />
   <ULandingHero orientation="horizontal" :ui="{ container: 'flex lg:gap-12' }">
-    <Illustration class="hidden h-64 lg:block" />
+    <Illustration class="mx-auto hidden h-64 lg:block" />
     <template #title>
       <span v-html="page.hero?.title" />
     </template>
