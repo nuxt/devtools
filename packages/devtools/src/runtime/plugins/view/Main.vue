@@ -47,7 +47,7 @@ const vars = computed(() => {
   }
 })
 
-const frameBox = ref<InstanceType<typeof FrameBox>>()
+const frameBox = ref<HTMLDivElement>()
 const panelEl = ref<HTMLDivElement>()
 const anchorEl = ref<HTMLDivElement>()
 
@@ -239,6 +239,8 @@ const iframeStyle = computed(() => {
   // eslint-disable-next-line no-unused-expressions, no-sequences
   mousePosition.x, mousePosition.y
 
+  const { width: frameWidth, height: frameHeight } = frameBox.value?.getBoundingClientRect() || { width: 0, height: 0 }
+
   const halfHeight = (panelEl.value?.clientHeight || 0) / 2
 
   const frameMargin = {
@@ -255,6 +257,7 @@ const iframeStyle = computed(() => {
   const maxHeight = windowSize.height - marginVertical
 
   const style: CSSProperties = {
+    position: 'fixed',
     zIndex: -1,
     pointerEvents: isDragging.value ? 'none' : 'auto',
     width: `min(${state.value.width}vw, calc(100vw - ${marginHorizontal}px))`,
@@ -271,21 +274,21 @@ const iframeStyle = computed(() => {
   switch (state.value.position) {
     case 'top':
     case 'bottom':
-      style.left = 0
-      style.transform = 'translate(-50%, 0)'
+      style.left = `${-frameWidth / 2}px`
+      style.transform = 'translate(0, 0)'
       if ((anchorX - frameMargin.left) < width / 2)
-        style.left = `${width / 2 - anchorX + frameMargin.left}px`
+        style.left = `${width / 2 - anchorX + frameMargin.left - frameWidth / 2}px`
       else if ((windowSize.width - anchorX - frameMargin.right) < width / 2)
-        style.left = `${windowSize.width - anchorX - width / 2 - frameMargin.right}px`
+        style.left = `${windowSize.width - anchorX - width / 2 - frameMargin.right - frameWidth / 2}px`
       break
     case 'right':
     case 'left':
-      style.top = 0
-      style.transform = 'translate(0, -50%)'
+      style.top = `${-frameHeight / 2}px`
+      style.transform = 'translate(0, 0)'
       if ((anchorY - frameMargin.top) < height / 2)
-        style.top = `${height / 2 - anchorY + frameMargin.top}px`
+        style.top = `${height / 2 - anchorY + frameMargin.top - frameHeight / 2}px`
       else if ((windowSize.height - anchorY - frameMargin.bottom) < height / 2)
-        style.top = `${windowSize.height - anchorY - height / 2 - frameMargin.bottom}px`
+        style.top = `${windowSize.height - anchorY - height / 2 - frameMargin.bottom - frameHeight / 2}px`
       break
   }
 
@@ -398,12 +401,13 @@ onMounted(() => {
         </button>
       </template>
     </div>
-    <FrameBox
-      ref="frameBox"
-      :client="client"
-      :style="iframeStyle"
-      :is-dragging="isDragging"
-    />
+
+    <div ref="frameBox" :style="iframeStyle">
+      <FrameBox
+        :client="client"
+        :is-dragging="isDragging"
+      />
+    </div>
   </div>
 </template>
 
