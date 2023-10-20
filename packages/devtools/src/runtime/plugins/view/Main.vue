@@ -4,7 +4,7 @@ import type { CSSProperties } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { settings } from '../../settings'
 import { state } from './state'
-import { millisecondToHumanreadable, useEventListener, useScreenSafeArea } from './utils'
+import { millisecondToHumanreadable, useElementBounding, useEventListener, useScreenSafeArea } from './utils'
 import FrameBox from './FrameBox.vue'
 
 const props = defineProps<{
@@ -235,11 +235,11 @@ const panelStyle = computed(() => {
   return style
 })
 
+const { width: frameWidth, height: frameHeight } = useElementBounding(frameBox)
+
 const iframeStyle = computed(() => {
   // eslint-disable-next-line no-unused-expressions, no-sequences
   mousePosition.x, mousePosition.y
-
-  const { width: frameWidth, height: frameHeight } = frameBox.value?.getBoundingClientRect() || { width: 0, height: 0 }
 
   const halfHeight = (panelEl.value?.clientHeight || 0) / 2
 
@@ -274,21 +274,21 @@ const iframeStyle = computed(() => {
   switch (state.value.position) {
     case 'top':
     case 'bottom':
-      style.left = `${-frameWidth / 2}px`
+      style.left = `${-frameWidth.value / 2}px`
       style.transform = 'translate(0, 0)'
       if ((anchorX - frameMargin.left) < width / 2)
-        style.left = `${width / 2 - anchorX + frameMargin.left - frameWidth / 2}px`
+        style.left = `${width / 2 - anchorX + frameMargin.left - frameWidth.value / 2}px`
       else if ((windowSize.width - anchorX - frameMargin.right) < width / 2)
-        style.left = `${windowSize.width - anchorX - width / 2 - frameMargin.right - frameWidth / 2}px`
+        style.left = `${windowSize.width - anchorX - width / 2 - frameMargin.right - frameWidth.value / 2}px`
       break
     case 'right':
     case 'left':
-      style.top = `${-frameHeight / 2}px`
+      style.top = `${-frameHeight.value / 2}px`
       style.transform = 'translate(0, 0)'
       if ((anchorY - frameMargin.top) < height / 2)
-        style.top = `${height / 2 - anchorY + frameMargin.top - frameHeight / 2}px`
+        style.top = `${height / 2 - anchorY + frameMargin.top - frameHeight.value / 2}px`
       else if ((windowSize.height - anchorY - frameMargin.bottom) < height / 2)
-        style.top = `${windowSize.height - anchorY - height / 2 - frameMargin.bottom - frameHeight / 2}px`
+        style.top = `${windowSize.height - anchorY - height / 2 - frameMargin.bottom - frameHeight.value / 2}px`
       break
   }
 
