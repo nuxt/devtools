@@ -1,4 +1,4 @@
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin } from '#imports'
 
 export default defineNuxtPlugin((_nuxtApp) => {
   // eslint-disable-next-line no-console
