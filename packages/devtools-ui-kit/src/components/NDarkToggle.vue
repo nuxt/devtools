@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick } from 'vue'
 
-// @ts-expect-error auto imported from @nuxtjs/color-mode
-import { useColorMode } from '#imports'
+import { useColorMode } from '@vueuse/core'
 
 const mode = useColorMode()
 const isDark = computed<boolean>({
@@ -10,7 +9,7 @@ const isDark = computed<boolean>({
     return mode.value === 'dark'
   },
   set() {
-    mode.preference = isDark.value ? 'light' : 'dark'
+    mode.value = isDark.value ? 'light' : 'dark'
   },
 })
 
