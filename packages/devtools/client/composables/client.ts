@@ -1,4 +1,3 @@
-import type { Lang } from 'shiki-es'
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '@nuxt/devtools-kit/types'
 import type { Unhead } from '@unhead/schema'
 import { renderMarkdown } from './client-services/markdown'
@@ -9,7 +8,7 @@ export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
 
-export function useClientRoute() {
+export function useClientRoute(): ComputedRef<ReturnType<typeof useRoute>> {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$route)
 }
@@ -47,7 +46,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
       rpc,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {
-        return renderCodeHighlight(code, lang as Lang)
+        return renderCodeHighlight(code, lang)
       },
       renderMarkdown(code) {
         return renderMarkdown(code)

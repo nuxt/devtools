@@ -12,9 +12,9 @@ const ignoredModules = [
 
 export function useModulesList() {
   return useAsyncState('getModulesList', async () => {
-    const modules = await $fetch<ModuleStaticInfo[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
-    return modules
-      .filter((m: ModuleStaticInfo) => !ignoredModules.includes(m.npm) && m.compatibility.nuxt.includes('^3'))
+    const m = await $fetch<{ modules: ModuleStaticInfo[] }>('https://api.nuxt.com/modules?version=3')
+    return m.modules
+      .filter((item: ModuleStaticInfo) => !ignoredModules.includes(item.npm) && item.compatibility.nuxt.includes('^3'))
   })
 }
 
@@ -51,7 +51,6 @@ export function useInstalledModules() {
           ...mod,
         }
       })
-      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))),
-    )
+      .filter(i => i && (!i.name || !ignoredModules.includes(i.name))))
   })
 }

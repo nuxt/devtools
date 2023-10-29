@@ -82,7 +82,7 @@ const copy = useCopy()
             <NButton
               title="Copy to clipboard"
               icon="carbon-copy"
-              @click="copy(JSON.stringify(clone, null, 2))"
+              @click="copy(JSON.stringify(clone, null, 2), 'timeline-argument')"
             >
               Copy
             </NButton>

@@ -5,11 +5,19 @@ const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__
 
 const showInfo = ref(false)
 const copy = useCopy()
+
+function popup() {
+  const fn = client.value?.devtools?.popup
+  if (fn) {
+    telemetry('popup')
+    fn()
+  }
+}
 </script>
 
 <template>
   <template v-if="!isInPopup">
-    <NButton v-if="client?.popup" n="sm primary" @click="client.popup()">
+    <NButton v-if="client?.devtools.popup" n="sm primary" @click="popup()">
       <div carbon-launch /> Popup
     </NButton>
     <template v-else>
@@ -32,7 +40,7 @@ const copy = useCopy()
         <p>
           Your current browser does not seem to support the API, or the flag is not enabled yet.
           You can try enabling the flag by visiting
-          <NButton n="xs primary" title="Click to Copy" @click="copy('chrome://flags/#document-picture-in-picture-api')">
+          <NButton n="xs primary" title="Click to Copy" @click="copy('chrome://flags/#document-picture-in-picture-api', 'external-docs')">
             chrome://flags/#document-picture-in-picture-api
           </NButton>
           and restart the browser.

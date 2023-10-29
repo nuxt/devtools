@@ -1,4 +1,4 @@
-export const DETAILS_MAX_ITEMS = 35
+export const DETAILS_MAX_ITEMS = 50
 
 export const ComposablesDocs = {
   nuxt: {
@@ -51,4 +51,13 @@ export const ComposablesDocs = {
 
     nextTick: 'https://vuejs.org/api/general.html#nexttick',
   },
+}
+
+export const ServerRouteTabIcons: Record<string, string> = {
+  snippet: 'i-carbon-code',
+  headers: 'i-carbon-html-reference',
+  cookies: 'i-carbon-cookie',
+  params: 'i-carbon-text-selection',
+  query: 'i-carbon-help',
+  body: 'i-carbon-document',
 }

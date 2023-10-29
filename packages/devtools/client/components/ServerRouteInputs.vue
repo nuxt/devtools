@@ -3,19 +3,18 @@ const props = withDefaults(defineProps<{
   modelValue: any
   keys?: string[]
   default?: any
-  exclude?: string[]
+  disabled?: boolean
 }>(), {
   keys: () => [],
+  disabled: false,
   default: () => ({}),
-  exclude: () => [],
 })
 
 const emit = defineEmits<{ (...args: any): void }>()
-const params = useVModel(props, 'modelValue', emit, { passive: true }) as any
+const params = useVModel(props, 'modelValue', emit, { passive: true })
 
 const filteredKeys = computed(() => {
-  const keys = [...props.keys, 'key', 'value', 'type']
-  return [...keys.filter(i => !props.exclude.includes(i))]
+  return [...props.keys, 'active', 'key', 'value', 'type']
 })
 
 const keysObject = computed(() => {
@@ -25,7 +24,6 @@ const keysObject = computed(() => {
   return obj
 })
 
-// TODO: add better support for file, color, etc
 const inputTypes = ['string', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
 
 function onFileInputChange(index: number, event: Event) {
@@ -35,10 +33,37 @@ function onFileInputChange(index: number, event: Event) {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      params[index].value = reader.result
+      params.value[index].value = reader.result
     }
   }
 }
+
+watch(() => params, (items) => {
+  items.value.forEach((item: any) => {
+    if (item.type === 'number' && typeof item.value !== 'number') {
+      const parsed = Number.parseFloat(item.value)
+      item.value = Number.isNaN(parsed) ? 0 : parsed
+    }
+    else if (item.type === 'boolean' && typeof item.value !== 'boolean') {
+      item.value = true
+    }
+    else if (item.type === 'file' && typeof item.value !== 'object') {
+      item.value = ''
+    }
+    else if (item.type === 'date' && typeof item.value === 'string' && !item.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      item.value = new Date().toISOString().slice(0, 10)
+    }
+    else if (item.type === 'time' && typeof item.value === 'string' && !item.value.match(/^\d{2}:\d{2}$/)) {
+      item.value = new Date().toISOString().slice(11, 16)
+    }
+    else if (item.type === 'datetime-local' && typeof item.value === 'string' && !item.value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+      item.value = new Date().toISOString().slice(0, 16)
+    }
+    else if (item.type === 'string') {
+      item.value = item.value.toString()
+    }
+  })
+}, { deep: true, immediate: true, flush: 'sync' })
 </script>
 
 <template>
@@ -47,15 +72,44 @@ function onFileInputChange(index: number, event: Event) {
       <slot name="input" :item="item" />
 
       <template v-for="key of filteredKeys" :key="key">
-        <NTextInput v-if="item?.type !== null && key === 'key'" v-model="item[key]" :placeholder="key" flex-1 font-mono n="sm" />
-        <template v-else-if="key !== 'type'">
-          <NTextInput v-if="item.type === 'file'" type="file" @change="onFileInputChange(index, $event)" />
+        <NCheckbox
+          v-if="item.type !== null && key === 'active'"
+          v-model="item[key]"
+          n="sm primary"
+          :disabled="disabled"
+        />
+        <NTextInput
+          v-if="item.type !== null && key === 'key'"
+          v-model="item[key]"
+          :placeholder="key" flex-1 font-mono n="sm primary"
+          :disabled="disabled"
+          :class="disabled ? 'op50' : ''"
+        />
+        <template v-else-if="key === 'value'">
+          <NTextInput
+            v-if="item.type === 'file'" type="file"
+            :disabled="disabled"
+            :class="disabled ? 'op75' : ''"
+            @change="onFileInputChange(index, $event)"
+          />
           <div v-else-if="item.type === 'boolean'" ml2 flex>
-            <NCheckbox v-model="item.value" placeholder="Value" n="green lg" />
+            <NCheckbox v-model="item.value" placeholder="Value" n="green lg" :disabled="disabled" />
           </div>
-          <NTextInput v-else v-model="item.value" :type="item.type" placeholder="Value" flex-1 font-mono n="sm" />
+          <NTextInput
+            v-else
+            v-model="item.value"
+            :type="item.type" placeholder="Value"
+            flex-1 font-mono n="sm primary"
+            :disabled="disabled"
+            :class="disabled ? 'op75' : ''"
+          />
         </template>
-        <NSelect v-else-if="key === 'type'" v-model="item.type" n="sm green">
+        <NSelect
+          v-else-if="key === 'type'"
+          v-model="item.type" n="sm green"
+          :class="disabled ? 'op75' : ''"
+          :disabled="disabled"
+        >
           <option v-for="typeItem of inputTypes" :key="typeItem" :value="typeItem">
             {{ typeItem }}
           </option>
@@ -63,12 +117,12 @@ function onFileInputChange(index: number, event: Event) {
       </template>
 
       <slot name="input-actions">
-        <NButton n="red" @click="params.splice(index, 1)">
-          <NIcon icon="carbon:delete" />
+        <NButton n="red" :disabled="disabled" :class="disabled ? 'op0!' : ''" @click="params.splice(index, 1)">
+          <NIcon icon="carbon:trash-can" />
         </NButton>
       </slot>
     </div>
-    <div flex gap-4>
+    <div v-if="!disabled" flex gap-4>
       <slot name="actions" :params="params">
         <NButton
           icon="carbon-add" n="sm primary"
@@ -86,5 +140,6 @@ function onFileInputChange(index: number, event: Event) {
         </NButton>
       </slot>
     </div>
+    <slot />
   </div>
 </template>

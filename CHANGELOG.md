@@ -1,3 +1,304 @@
+# [1.0.0](https://github.com/nuxt/devtools/compare/v1.0.0-beta.3...v1.0.0) (2023-10-18)
+
+
+### Features
+
+* add the type attribute for buttons ([#478](https://github.com/nuxt/devtools/issues/478)) ([4a9ec67](https://github.com/nuxt/devtools/commit/4a9ec67404ad254e730eb512ae51228e08282c37))
+
+
+
+# [1.0.0-beta.3](https://github.com/nuxt/devtools/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2023-10-17)
+
+
+### Bug Fixes
+
+* timline list ui fix ([2ea18f3](https://github.com/nuxt/devtools/commit/2ea18f3e755861c9a278b1feefec09f45638eae5))
+* ui error when pages not enabled ([c455748](https://github.com/nuxt/devtools/commit/c455748c7fbbcf8de4d33cdb861e2bae71f0841c))
+* **ui:** dialog backdrop ([#471](https://github.com/nuxt/devtools/issues/471)) ([87ec2ff](https://github.com/nuxt/devtools/commit/87ec2ffb8c2a2a86f5efaaefb149665dcef41a8b))
+
+
+### Features
+
+* add `telegram` social preview  tab ([#473](https://github.com/nuxt/devtools/issues/473)) ([64036ca](https://github.com/nuxt/devtools/commit/64036cae1abbf24379e336df93e4ccf6c3bfb341))
+* add link for Nuxt and Vue on overview tab ([5314fff](https://github.com/nuxt/devtools/commit/5314ffffed4f5f90110f97473281180ca0104345))
+* add more telemetry events ([a565d57](https://github.com/nuxt/devtools/commit/a565d57448549a21726cef6f9ff5d21ec6173872))
+* **assets:** file upload extension validation ([#391](https://github.com/nuxt/devtools/issues/391)) ([df623e0](https://github.com/nuxt/devtools/commit/df623e00204fd9d396744193d1f50b8c1c76f151))
+* bring back disconnected dialog ([a81721d](https://github.com/nuxt/devtools/commit/a81721d5525394f30907efd05676825a62577140))
+* improve disconnect indicator ([8654684](https://github.com/nuxt/devtools/commit/8654684c20eb6bd11261d0e7acc207604de875b8))
+* improve UX of dev auth ([bb4baf5](https://github.com/nuxt/devtools/commit/bb4baf5cfb842db6482b86c506a86db9126b5a34))
+* **modules:** dynamic sorting for module installation list ([#470](https://github.com/nuxt/devtools/issues/470)) ([4478015](https://github.com/nuxt/devtools/commit/44780154c8b2c293a86950e926f6a7bc90a5edc5))
+* **server-routes:** add optional checkbox for inputs ([#474](https://github.com/nuxt/devtools/issues/474)) ([077a907](https://github.com/nuxt/devtools/commit/077a907feae0e61631e5862e0681dccbeafcc091))
+
+
+
+# [1.0.0-beta.2](https://github.com/nuxt/devtools/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2023-10-14)
+
+
+### Bug Fixes
+
+* current route reactivity on pages tab ([d2d44c3](https://github.com/nuxt/devtools/commit/d2d44c30d248c32efd0b523630e5c6b686aa177c))
+* improve RWD of open-graph tab ([dfeaf23](https://github.com/nuxt/devtools/commit/dfeaf23a599dccc901db54903afdb962cb769a33))
+* improve UI layout of pages tab ([66e59ae](https://github.com/nuxt/devtools/commit/66e59ae89f82e6c76281e4e6feef66a6c4607012))
+* increase `DETAILS_MAX_ITEMS` ([de90087](https://github.com/nuxt/devtools/commit/de9008767a383b686f52e69b15d5730c50a4e292))
+* navbar on components graph view ([501432f](https://github.com/nuxt/devtools/commit/501432f549cdb9338ac868acb77b846788b689ef))
+* require auth condition ([2e968cd](https://github.com/nuxt/devtools/commit/2e968cd22fb93b6eeeac9b35f56d29422cb4c423))
+
+
+### Features
+
+* improve console message ([a5b19ef](https://github.com/nuxt/devtools/commit/a5b19eff5c7adec6a73da7f326aa3412b229f292))
+* **ui:** NNotification component ([#443](https://github.com/nuxt/devtools/issues/443)) ([dc10625](https://github.com/nuxt/devtools/commit/dc10625d7e4d46d091f5e2bbb9cba1081e5b844c))
+
+
+
+# [1.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* **assets:** watcher ([#455](https://github.com/nuxt/devtools/issues/455)) ([70bfed7](https://github.com/nuxt/devtools/commit/70bfed7f5da7f8a1f5afe24f9da67c70ee7b8657))
+* auto install works with yarn berry, close [#454](https://github.com/nuxt/devtools/issues/454) ([cdf50b4](https://github.com/nuxt/devtools/commit/cdf50b429d15acf67378e496a21111e6a2023b02))
+* move inline script timing to work with `nuxt-security`, [#463](https://github.com/nuxt/devtools/issues/463) ([c5e41da](https://github.com/nuxt/devtools/commit/c5e41da02bd0a88f9f31f0abd7e8c133f4372014))
+* resolve private runtime correctly from `.env`, close [#424](https://github.com/nuxt/devtools/issues/424) ([708bb18](https://github.com/nuxt/devtools/commit/708bb18848317566c588557ec6aad2aadb32c9f8))
+
+
+### Features
+
+* ability to reset options ([95b5ba1](https://github.com/nuxt/devtools/commit/95b5ba137332a77047d1b0c2f86b52cb7553e287))
+* disable dev auth on sandboxed env ([14935ee](https://github.com/nuxt/devtools/commit/14935ee4a97bffa408f4f0de9a6844dc3be506af))
+* provide better error message for magicast, close [#395](https://github.com/nuxt/devtools/issues/395) ([6f5ce18](https://github.com/nuxt/devtools/commit/6f5ce189dedbb255f76ae10692162f548bc60de8))
+* **ui:** NNavbar component ([#442](https://github.com/nuxt/devtools/issues/442)) ([b77b98b](https://github.com/nuxt/devtools/commit/b77b98b43eb505ead547217e4093a3804cfdeaaa))
+
+
+
+# [1.0.0-beta.0](https://github.com/nuxt/devtools/compare/v0.8.5...v1.0.0-beta.0) (2023-10-01)
+
+
+### Bug Fixes
+
+* improve permssion prompt ([91ae0bd](https://github.com/nuxt/devtools/commit/91ae0bd1708acd0dca9642150ac1d5109ef78d80))
+* **overview:** pluralize nouns properly ([#436](https://github.com/nuxt/devtools/issues/436)) ([5011c35](https://github.com/nuxt/devtools/commit/5011c353b089e264276b7d685907458199153a87))
+* **server-routes:** use window.location.origin for doamin ([#450](https://github.com/nuxt/devtools/issues/450)) ([a85e3c0](https://github.com/nuxt/devtools/commit/a85e3c0478e44e6d1e32fcc93a512c22c551c6fa))
+* terminals view ([df5dd76](https://github.com/nuxt/devtools/commit/df5dd7673cd065fa7f729b28f8eb33bd0b2b10e1))
+* **ui:** improve some ui details ([cd0b8a5](https://github.com/nuxt/devtools/commit/cd0b8a57e331df855aabd998eb110e94153205f6))
+* **ui:** improve theme color contrast ([88220f0](https://github.com/nuxt/devtools/commit/88220f017d4d070197ec872b79d00acb4f7c2c34))
+
+
+### Features
+
+* hide panel by default when not explicit enabled ([#440](https://github.com/nuxt/devtools/issues/440)) ([7c614c9](https://github.com/nuxt/devtools/commit/7c614c9893a2dc746b65e08f93c19f624c215440))
+* **server-routes:** send from app instead of devtools, close [#253](https://github.com/nuxt/devtools/issues/253) ([#441](https://github.com/nuxt/devtools/issues/441)) ([57deaf0](https://github.com/nuxt/devtools/commit/57deaf08b9815f69ada40b268378050a48766e29))
+* **ui:** NBadge component ([#433](https://github.com/nuxt/devtools/issues/433)) ([5e0f9dd](https://github.com/nuxt/devtools/commit/5e0f9dda62c20acaf81598321fe5cce69b7b3c9c))
+* **ui:** NDrawer component ([#435](https://github.com/nuxt/devtools/issues/435)) ([7a387de](https://github.com/nuxt/devtools/commit/7a387deb2b0bd9020ee34ba7ade3fa242993395e))
+* **ui:** NSplitPane component ([#438](https://github.com/nuxt/devtools/issues/438)) ([7bc4701](https://github.com/nuxt/devtools/commit/7bc47015578d65238fb5f32db245581f9a3dce95))
+* **ui:** switch fonts to `DM Sans` and `DM Mono` to align with Nuxt's theme ([43c5b47](https://github.com/nuxt/devtools/commit/43c5b473cc6d44d23383b76f565eab6bea506841))
+
+
+### Performance Improvements
+
+* remove `wait-on` dep ([694d853](https://github.com/nuxt/devtools/commit/694d853b33143caee2e25250fc2ea84247322166))
+
+
+
+## [0.8.5](https://github.com/nuxt/devtools/compare/v0.8.4...v0.8.5) (2023-09-25)
+
+
+### Features
+
+* print shortcuts in console ([97b3e18](https://github.com/nuxt/devtools/commit/97b3e186e8798142c54d2599329ca97c97ea4b59))
+* telemetry support ([#427](https://github.com/nuxt/devtools/issues/427)) ([8677d00](https://github.com/nuxt/devtools/commit/8677d003c414cc5baf8f951bd71cc6dfa07871ee))
+
+
+
+## [0.8.4](https://github.com/nuxt/devtools/compare/v0.8.3...v0.8.4) (2023-09-20)
+
+
+### Bug Fixes
+
+* copy `__NUXT__` object to popup frame ([ea46cea](https://github.com/nuxt/devtools/commit/ea46cea183a6cebb17b109812667807c4f038ec3))
+* **deps:** set `@nuxt/devtools` as `devDependency` ([#425](https://github.com/nuxt/devtools/issues/425)) ([4e280c9](https://github.com/nuxt/devtools/commit/4e280c91d97902e0afd9c60b65904cfe7f9bbcdb))
+* popup button ([d1171b0](https://github.com/nuxt/devtools/commit/d1171b0557a2b349caf6183382950f62ed9ae55f))
+* **settings:** make sure client has value ([#418](https://github.com/nuxt/devtools/issues/418)) ([9757c00](https://github.com/nuxt/devtools/commit/9757c00b03020b2676a4e74b35d6312dd4d06e79))
+
+
+### Features
+
+* collapsible sidebar ([#420](https://github.com/nuxt/devtools/issues/420)) ([530244b](https://github.com/nuxt/devtools/commit/530244b2d4793477e926d41e3beaa8c629d168d3))
+* migrate new shikiji themes mode ([7688cc4](https://github.com/nuxt/devtools/commit/7688cc411e99fa28d5feedb14805ca8f3d2717da))
+* redesign settings page ([b777b8e](https://github.com/nuxt/devtools/commit/b777b8ed36effca166a0f5fcd876620a1e23e5d9))
+* rework docs ([#413](https://github.com/nuxt/devtools/issues/413)) ([c9e6e7d](https://github.com/nuxt/devtools/commit/c9e6e7d57bb48a624ba71357f347cc353e53b614))
+
+
+
+## [0.8.3](https://github.com/nuxt/devtools/compare/v0.8.2...v0.8.3) (2023-09-06)
+
+
+### Bug Fixes
+
+* route tracking handle `currentRoute` to be null ([7ca1fc9](https://github.com/nuxt/devtools/commit/7ca1fc92c171e87aa9f23c6b80729c6291447f19))
+
+
+
+## [0.8.2](https://github.com/nuxt/devtools/compare/v0.8.1...v0.8.2) (2023-08-28)
+
+
+### Bug Fixes
+
+* **virtual-files:** fetch data as json ([131a2ee](https://github.com/nuxt/devtools/commit/131a2ee56cba272ef51ccad3ccd648255ea1a668))
+
+
+
+## [0.8.1](https://github.com/nuxt/devtools/compare/v0.8.0...v0.8.1) (2023-08-28)
+
+
+### Bug Fixes
+
+* default box-sizing for floating panel ([a674379](https://github.com/nuxt/devtools/commit/a67437927c5ab7425f361ac9462f5fff914bef4d))
+* find vite client path from subframe parent ([#386](https://github.com/nuxt/devtools/issues/386)) ([e28606a](https://github.com/nuxt/devtools/commit/e28606a3a76b986ee35f73258783237ddad649aa))
+* improve client injection error message ([de9baa3](https://github.com/nuxt/devtools/commit/de9baa34224045c019cf19a84e090ab0aa7c29d2))
+
+
+### Features
+
+* audio preview ([#397](https://github.com/nuxt/devtools/issues/397)) ([cb5ddc6](https://github.com/nuxt/devtools/commit/cb5ddc6fb554839dee869c08bb505313771d865d))
+* **server-routes:** copy url button ([#389](https://github.com/nuxt/devtools/issues/389)) ([7903740](https://github.com/nuxt/devtools/commit/7903740be7f61001d557b4047bc40ca35683deda))
+
+
+
+# [0.8.0](https://github.com/nuxt/devtools/compare/v0.7.6...v0.8.0) (2023-08-10)
+
+
+### Features
+
+* **components:** show dependencies and dependents in component details ([7dbc3d1](https://github.com/nuxt/devtools/commit/7dbc3d1e93c8e366a32d006b82b55c67c1203ef1))
+* composables useNuxtDevTools ([#383](https://github.com/nuxt/devtools/issues/383)) ([e74b60c](https://github.com/nuxt/devtools/commit/e74b60cf7b51d5ce842a119eab52d839e58ee8e5))
+* filter for used/unused components, close [#358](https://github.com/nuxt/devtools/issues/358) ([5012012](https://github.com/nuxt/devtools/commit/5012012cb28c4b5d246ea7fc9b863db34fb3f7e7))
+* **ui-kit:** add `NSelectTab` component ([509a1ec](https://github.com/nuxt/devtools/commit/509a1ecefd8c22dd9801ecc063a24b2295c93943))
+
+
+
+## [0.7.6](https://github.com/nuxt/devtools/compare/v0.7.5...v0.7.6) (2023-08-09)
+
+
+### Bug Fixes
+
+* devtools panel justify content ([#369](https://github.com/nuxt/devtools/issues/369)) ([c3272f4](https://github.com/nuxt/devtools/commit/c3272f4eb0be06cd4ccf5d9b52e09bcf16af5380))
+* notification z-index ([#376](https://github.com/nuxt/devtools/issues/376)) ([3867814](https://github.com/nuxt/devtools/commit/3867814caaa26e94b6a4f31a4b234064890fa7ec))
+* resolve DevTools vite loading issue with buildAssetsDir ([#375](https://github.com/nuxt/devtools/issues/375)) ([22bcd0d](https://github.com/nuxt/devtools/commit/22bcd0dda68c8c42b3ce4f5feaa286203c2e3488))
+* **server-routes:** filter middleware from scannedHandlers ([#377](https://github.com/nuxt/devtools/issues/377)) ([09f6da3](https://github.com/nuxt/devtools/commit/09f6da38cedcbd15d23fbccbbe9a97dc5f619a9a))
+
+
+### Features
+
+* **assets:** able to edit text content ([#366](https://github.com/nuxt/devtools/issues/366)) ([1e56198](https://github.com/nuxt/devtools/commit/1e56198e72a9dd0b779679d9095bda2e01e1635f))
+* **assets:** options storage ([#379](https://github.com/nuxt/devtools/issues/379)) ([75512f8](https://github.com/nuxt/devtools/commit/75512f8a5bbf2c0aa63c1b65aa03911787c9e9b6))
+* **docs:** devtools logo ([#380](https://github.com/nuxt/devtools/issues/380)) ([8d34de1](https://github.com/nuxt/devtools/commit/8d34de1617536897b68d0f9d191e4048bfd7613b))
+
+
+
+## [0.7.5](https://github.com/nuxt/devtools/compare/v0.7.4...v0.7.5) (2023-08-06)
+
+
+### Bug Fixes
+
+* add AuthRequiredPanel to AuthConfirmDialog ([#367](https://github.com/nuxt/devtools/issues/367)) ([ce53651](https://github.com/nuxt/devtools/commit/ce53651d24def0803e79526a122bc478247cbf60))
+* requestForAuth devServer host ([#357](https://github.com/nuxt/devtools/issues/357)) ([5e89ce8](https://github.com/nuxt/devtools/commit/5e89ce85c8da655d46352078cc0fd6c6078715ed))
+* **server-routes:** clear error onResponse ([#356](https://github.com/nuxt/devtools/issues/356)) ([313fa1b](https://github.com/nuxt/devtools/commit/313fa1b2ec5bc111613a81c971a89742b7bf7bef))
+
+
+### Features
+
+* add tooltip to buttons ([#359](https://github.com/nuxt/devtools/issues/359)) ([4a29829](https://github.com/nuxt/devtools/commit/4a298296c7029ba33a675f1f2210d69d03d03faa))
+* minimize panel on inactive ([#361](https://github.com/nuxt/devtools/issues/361)) ([2b92663](https://github.com/nuxt/devtools/commit/2b92663343657606ee5debe10d745b3e04ea1059))
+* quicktype ([#351](https://github.com/nuxt/devtools/issues/351)) ([41ff4ad](https://github.com/nuxt/devtools/commit/41ff4adddaf4faca1608ffc61bd2161c7d497050))
+
+
+
+## [0.7.4](https://github.com/nuxt/devtools/compare/v0.7.3...v0.7.4) (2023-08-01)
+
+
+### Bug Fixes
+
+* find vite client path automatically, close [#352](https://github.com/nuxt/devtools/issues/352) ([b78d04f](https://github.com/nuxt/devtools/commit/b78d04f43ac5929047b5eb9e7db922b870e57777))
+
+
+
+## [0.7.3](https://github.com/nuxt/devtools/compare/v0.7.2...v0.7.3) (2023-08-01)
+
+
+### Bug Fixes
+
+* the panel is stuttering when dragging on the mobile end ([#350](https://github.com/nuxt/devtools/issues/350)) ([6677dd7](https://github.com/nuxt/devtools/commit/6677dd7918a9c2e1e854275b0f9ebacb1d468f0c))
+* upgrade `vite-plugin-inspect`, close [#324](https://github.com/nuxt/devtools/issues/324) ([ea41a5d](https://github.com/nuxt/devtools/commit/ea41a5d33f1b727b96ca32133c83058b9ece419e))
+
+
+
+## [0.7.2](https://github.com/nuxt/devtools/compare/v0.7.1...v0.7.2) (2023-07-31)
+
+
+### Bug Fixes
+
+* pinned tabs filter ([#348](https://github.com/nuxt/devtools/issues/348)) ([5c26895](https://github.com/nuxt/devtools/commit/5c268953331643c116c152d29fa0c9d49767fce0))
+* **ui-kit:** dialog closing and a11y ([#346](https://github.com/nuxt/devtools/issues/346)) ([95bd0a1](https://github.com/nuxt/devtools/commit/95bd0a1bc346f5bd83259f56ec0dcdb414bfc665))
+
+
+### Features
+
+* **assets:** add rename and delete action ([#343](https://github.com/nuxt/devtools/issues/343)) ([55f6863](https://github.com/nuxt/devtools/commit/55f6863be3b24b48ec3582f93e44c4a6d205d796))
+* enhance state editor ([#349](https://github.com/nuxt/devtools/issues/349)) ([ad56f47](https://github.com/nuxt/devtools/commit/ad56f473f1244845a7350cd82ade335384ab3a38))
+* support preview video assets ([#347](https://github.com/nuxt/devtools/issues/347)) ([b4dfc37](https://github.com/nuxt/devtools/commit/b4dfc378109815e7bda1ae1c10c266f03c98636f))
+
+
+
+## [0.7.1](https://github.com/nuxt/devtools/compare/v0.7.0...v0.7.1) (2023-07-23)
+
+
+### Bug Fixes
+
+* **kit:** broken types for `useDevtoolsClient()` ([#340](https://github.com/nuxt/devtools/issues/340)) ([934b1d4](https://github.com/nuxt/devtools/commit/934b1d42930c45cbaea70a66de8100d43821b386))
+* **kit:** types for `renderCodeHighlight` ([#341](https://github.com/nuxt/devtools/issues/341)) ([d4e1541](https://github.com/nuxt/devtools/commit/d4e1541a48e09f595cfd9320d8f30e243cec7d0e))
+
+
+### Features
+
+* **server-routes:** add cookies tab ([#338](https://github.com/nuxt/devtools/issues/338)) ([33e1417](https://github.com/nuxt/devtools/commit/33e1417ce85c90b146b2abf8b221edf30840b736))
+
+
+
+# [0.7.0](https://github.com/nuxt/devtools/compare/v0.6.7...v0.7.0) (2023-07-20)
+
+
+### Bug Fixes
+
+* analyze build without git ([#320](https://github.com/nuxt/devtools/issues/320)) ([76a566b](https://github.com/nuxt/devtools/commit/76a566ba1b2eb7b34130075d5334f1b734c8e809))
+* **client:** close button add zIndex ([#315](https://github.com/nuxt/devtools/issues/315)) ([37427ec](https://github.com/nuxt/devtools/commit/37427ec8281ba790827b0b77a08bfddeed90a785))
+* do not sync floating panel state across tabs ([41752b2](https://github.com/nuxt/devtools/commit/41752b2366f84b6827a55fbcac113e72dbe051e0))
+* **plugin-metrics:** properly forward all args, close [#337](https://github.com/nuxt/devtools/issues/337) ([ec1c821](https://github.com/nuxt/devtools/commit/ec1c82169a8459c4d70c757bed4cf4c48137b48c))
+* respect Nuxt's `devServer` config when creating request for auth URL ([#328](https://github.com/nuxt/devtools/issues/328)) ([7d766ac](https://github.com/nuxt/devtools/commit/7d766ac86bf1e8cfe380e9d865255592629066f1))
+* **server-routes:** filter only dir as collection ([#329](https://github.com/nuxt/devtools/issues/329)) ([4d2f842](https://github.com/nuxt/devtools/commit/4d2f842e3aca31a0e2fee9b5cb216261c11d4f62))
+* **timeline:** duplication injection ([f5e3766](https://github.com/nuxt/devtools/commit/f5e37662261c7d380e530d0bb66a4dac66a08723))
+* **timeline:** error tolerant promising checking ([762a669](https://github.com/nuxt/devtools/commit/762a669dcbee99fe2319d8f74014bd27f46e259b))
+* **timeline:** filter logic ([414ad1c](https://github.com/nuxt/devtools/commit/414ad1ce39ad15d85559ca3bf519ff10f418dab3))
+* **timeline:** result check ([72c877b](https://github.com/nuxt/devtools/commit/72c877b0b4009f73e93f4a5ebd304208b7d22e2e))
+* use `error-stack-parser-es` ([8c1974b](https://github.com/nuxt/devtools/commit/8c1974b12b99cce73443cfcf9cc1765f3d4ea7fd))
+
+
+### Features
+
+* **assets:** add watcher ([#336](https://github.com/nuxt/devtools/issues/336)) ([bde6a6a](https://github.com/nuxt/devtools/commit/bde6a6a5e298fa2bf4e8e6f952b364dfa6def42d))
+* **assets:** tree view for list mode ([#335](https://github.com/nuxt/devtools/issues/335)) ([57b9ca5](https://github.com/nuxt/devtools/commit/57b9ca5b1c65c1d9fb4f923835926b983d7289d6))
+* experimental timeline ([#323](https://github.com/nuxt/devtools/issues/323)) ([99073e4](https://github.com/nuxt/devtools/commit/99073e4788511f9681c77438fc9f77d959ece5c9))
+* install modules at once ([#333](https://github.com/nuxt/devtools/issues/333)) ([03f9a8c](https://github.com/nuxt/devtools/commit/03f9a8cb041926e96e81076211281fbcefd95457))
+* **server-routes:** add global default inputs ([#321](https://github.com/nuxt/devtools/issues/321)) ([80a284f](https://github.com/nuxt/devtools/commit/80a284ffa5710f21a206a799b5769844fba5a115))
+* **server-routes:** toggle view ([#310](https://github.com/nuxt/devtools/issues/310)) ([81b2816](https://github.com/nuxt/devtools/commit/81b2816716e278519f6c5b6a3817d4f152126a8c))
+* set module search field autofocus ([#313](https://github.com/nuxt/devtools/issues/313)) ([dd1a177](https://github.com/nuxt/devtools/commit/dd1a17774ce68af2ed2c7682eb25f7156bcc3224))
+* split screen support ([#327](https://github.com/nuxt/devtools/issues/327)) ([f2eee67](https://github.com/nuxt/devtools/commit/f2eee67dafc2b428de806356f8490c5468fa440c))
+* **timeline:** dialog to enable with one click ([92dfd21](https://github.com/nuxt/devtools/commit/92dfd21aece17323f1c12b005fd990f161e47382))
+* **timeline:** list view ([9601cb4](https://github.com/nuxt/devtools/commit/9601cb4463b451df58165f3df91672f1c8ad3961))
+* **timeline:** scale on Alt+wheel ([1050e05](https://github.com/nuxt/devtools/commit/1050e05e4aa2da9220e6ce6186b891c47a995fb0))
+
+
+
 ## [0.6.7](https://github.com/nuxt/devtools/compare/v0.6.6...v0.6.7) (2023-07-05)
 
 
@@ -6115,13 +6416,13 @@
   - `@nuxt/devtools/kit` is moved `@nuxt/devtools-kit`
   - `@nuxt/devtools/iframe-client` is moved to `@nuxt/devtools-kit/iframe-client`
   - Extendable RPC is introduced, you can now integration your own client-server communication
-- Learn more at [docs](https://devtools.nuxtjs.org/)
+- Learn more at [docs](https://devtools.nuxt.com/)
 
 ## New Tabs
 
 ### Assets
 
-The assets tab that shows all your static assets and their information. You can copy the paths of the assets, or the code snippets of using them. In the future, with the integrations of [Nuxt Image](https://image.nuxtjs.org/), you can even optimize images with a single click.
+The assets tab that shows all your static assets and their information. You can copy the paths of the assets, or the code snippets of using them. In the future, with the integrations of [Nuxt Image](https://image.nuxt.com/), you can even optimize images with a single click.
 
 <img width="1526" alt="tab-assets" src="https://user-images.githubusercontent.com/11247099/227901468-1089c0a9-8229-4a66-8dee-a3d2a20c9466.png">
 

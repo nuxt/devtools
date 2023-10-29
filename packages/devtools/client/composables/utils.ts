@@ -1,7 +1,8 @@
 import { relative } from 'pathe'
 import type { Ref } from 'vue'
+import type { Component } from 'nuxt/schema'
+import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import type { AsyncDataOptions } from '#app'
-import type { NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -81,13 +82,13 @@ export function getIsMacOS() {
 
 // @unocss-include
 const requestMethodClass: Record<string, string> = {
-  get: 'bg-green-400:10 text-green-400',
-  post: 'bg-blue-400:10 text-blue-400',
-  put: 'bg-orange-400:10 text-orange-400',
-  delete: 'bg-red-400:10 text-red-400',
-  patch: 'bg-purple-400:10 text-purple-400',
-  head: 'bg-teal-400:10 text-teal-400',
-  default: 'bg-gray-400:10 text-gray-400',
+  get: 'n-green',
+  post: 'n-blue',
+  put: 'n-orange',
+  delete: 'n-red',
+  patch: 'n-purple',
+  head: 'n-teal',
+  default: 'n-gray',
 }
 
 export function getRequestMethodClass(method: string) {
@@ -134,4 +135,31 @@ export function getHashColorFromString(name: string, saturation = 65, lightness 
     hash = name.charCodeAt(i) + ((hash << 5) - hash)
   const h = hash % 360
   return `hsla(${h}, ${saturation}%, ${lightness}%, ${opacity})`
+}
+
+export function useSessionState<T>(name: string, initialValue: T) {
+  return useState(name, () => {
+    return useSessionStorage(name, initialValue, { listenToStorageChanges: false })
+  })
+}
+
+export function getComponentRelationships(component: Component, relationships?: ComponentRelationship[] | null): ComponentWithRelationships {
+  const dependencies = relationships
+    ?.find(i => i.id === component.filePath)
+    ?.deps
+    ?.map(i => relationships?.find(j => j.id === i)?.id)
+    .filter(Boolean) as string[] | undefined
+  const dependents = relationships
+    ?.filter(i => i.deps.includes(component.filePath))
+    .map(i => i.id)
+
+  return {
+    component,
+    dependencies,
+    dependents,
+  }
+}
+
+export function pluralizeByCount(count: number, singular: string, plural = `${singular}s`) {
+  return `${count} ${count <= 1 ? singular : plural}`
 }

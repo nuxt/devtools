@@ -47,8 +47,7 @@ export function useCommands() {
             router.push(('path' in i && i.path) ? i.path : `/modules/custom-${i.name}`)
         },
       }
-    }),
-  )
+    }))
 
   return computed(() => {
     return [

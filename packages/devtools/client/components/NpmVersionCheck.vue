@@ -26,19 +26,28 @@ const shouldRestartServer = ref(true)
 const restartDialogs = useRestartDialogs()
 
 const PromiseConfirm = createTemplatePromise<boolean, [string]>()
+const terminalId = useCurrentTerminalId()
 
 async function updateWithConfirm() {
   const processId = await update(async (command) => {
     return PromiseConfirm.start(command)
   })
+
+  telemetry('npm:update', {
+    packageName: props.packageName,
+    oldVersion: info.value?.current,
+  })
+
   if (processId && shouldRestartServer.value) {
     restartDialogs.value.push({
       id: processId,
       message: `${props.packageName} has been updated. Do you want to restart the Nuxt server now?`,
     })
   }
-  if (processId && shouldGotoTerminal.value)
-    router.push(`/modules/terminals?id=${encodeURIComponent(processId)}`)
+  if (processId && shouldGotoTerminal.value) {
+    terminalId.value = processId
+    router.push('/modules/terminals')
+  }
 }
 </script>
 
@@ -47,15 +56,15 @@ async function updateWithConfirm() {
     <code v-if="info && showVersion">{{ `v${info.current}` }}</code>
     <template v-if="info?.latest">
       <button v-if="info.needsUpdate" @click="updateWithConfirm()">
-        <Badge
-          bg-green-400:10 text-green-400
+        <NBadge
+          n="green"
           title="updates available"
           v-text="'updates available'"
         />
       </button>
-      <Badge
+      <NBadge
         v-else
-        bg-gray-400:10 text-gray-400
+        n="gray"
         title="latest"
         v-text="'latest'"
       />
@@ -80,9 +89,10 @@ async function updateWithConfirm() {
         </NCheckbox>
 
         <div flex="~ gap-3" mt2 justify-end>
-          <NTip n="sm purple" flex-auto icon="carbon-chemistry">
-            Experimental feature. Please make sure to backup your project first.
+          <NTip n="sm amber" flex-auto icon="i-carbon-data-backup">
+            Please make sure to backup your project first.
           </NTip>
+
           <NButton @click="resolve(false)">
             Cancel
           </NButton>

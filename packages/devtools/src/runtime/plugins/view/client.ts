@@ -3,12 +3,13 @@ import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallo
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { Router } from 'vue-router'
+import type { $Fetch } from 'ofetch'
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '../../../types'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
 
@@ -35,55 +36,81 @@ export async function setupDevToolsClient({
 
   const client: NuxtDevtoolsHostClient = shallowReactive({
     nuxt: markRaw(nuxt as any),
-    appConfig: useAppConfig() as any,
     hooks: createHooks(),
-    getClientHooksMetrics: () => Object.values(clientHooks),
-    clientPluginMetrics: window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
-    clientTimelineMetrics: timeline,
-    loadingTimeMetrics: timeMetric,
-    reloadPage() {
-      location.reload()
-    },
-    toggle() {
-      if (state.value.open)
-        client.close()
-      else
-        client.open()
-    },
-    close() {
-      if (!state.value.open)
-        return
-      state.value.open = false
-      if (popupWindow.value) {
-        try {
-          popupWindow.value.close()
-        }
-        catch (e) {
-        }
-        popupWindow.value = null
-      }
-    },
-    open() {
-      if (state.value.open)
-        return
-      state.value.open = true
-      nextTick(() => {
-        client.updateClient()
-      })
-    },
     inspector: getInspectorInstance(),
-    colorMode,
+
     getIframe,
-    updateClient,
+    syncClient,
+
+    devtools: {
+      toggle() {
+        if (state.value.open)
+          client.devtools.close()
+        else
+          client.devtools.open()
+      },
+      close() {
+        if (!state.value.open)
+          return
+        state.value.open = false
+        if (popupWindow.value) {
+          try {
+            popupWindow.value.close()
+          }
+          catch (e) {
+          }
+          popupWindow.value = null
+        }
+      },
+      open() {
+        if (state.value.open)
+          return
+        state.value.open = true
+        return nextTick(() => {
+          client.syncClient()
+        })
+      },
+      async navigate(path: string) {
+        if (!state.value.open)
+          await client.devtools.open()
+        await client.hooks.callHook('host:action:navigate', path)
+      },
+      async reload() {
+        await client.hooks.callHook('host:action:reload')
+      },
+    },
+
+    app: {
+      appConfig: useAppConfig() as any,
+      reload() {
+        location.reload()
+      },
+      navigate(path: string, hard = false) {
+        if (hard)
+          location.href = path
+        else
+          router.push(path)
+      },
+      colorMode,
+      frameState: state,
+      $fetch: globalThis.$fetch as $Fetch,
+    },
+
+    metrics: {
+      clientPlugins: () => window.__NUXT_DEVTOOLS_PLUGINS_METRIC__,
+      clientHooks: () => Object.values(clientHooks),
+      clientTimeline: () => timeline,
+      loading: () => timeMetric,
+    },
   })
+
+  window.__NUXT_DEVTOOLS_HOST__ = client
 
   let iframe: HTMLIFrameElement | undefined
 
-  function updateClient() {
+  function syncClient() {
     if (!client.inspector)
       client.inspector = getInspectorInstance()
-
-    client.clientPluginMetrics = window.__NUXT_DEVTOOLS_PLUGINS_METRIC__
 
     try {
       iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
@@ -103,8 +130,14 @@ export async function setupDevToolsClient({
         iframe.id = 'nuxt-devtools-iframe'
         iframe.src = initialUrl
         iframe.onload = async () => {
-          await waitForClientInjection()
-          client.updateClient()
+          try {
+            await waitForClientInjection()
+            client.syncClient()
+          }
+          catch (e) {
+            console.error('Nuxt DevTools client injection failed')
+            console.error(e)
+          }
         }
       }
       catch (e) {
@@ -115,13 +148,14 @@ export async function setupDevToolsClient({
     return iframe
   }
 
-  function waitForClientInjection(retry = 10, timeout = 200) {
+  function waitForClientInjection(retry = 20, timeout = 300) {
+    let lastError: any
     const test = () => {
       try {
         return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
       }
       catch (e) {
-
+        lastError = e
       }
       return false
     }
@@ -137,8 +171,7 @@ export async function setupDevToolsClient({
         }
         else if (retry-- <= 0) {
           clearInterval(interval)
-          // eslint-disable-next-line prefer-promise-reject-errors
-          reject('Nuxt Devtools client injection failed')
+          reject(lastError)
         }
       }, timeout)
     })
@@ -195,7 +228,7 @@ export async function setupDevToolsClient({
   // https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
   const documentPictureInPicture = window.documentPictureInPicture
   if (documentPictureInPicture?.requestWindow) {
-    client.popup = async () => {
+    client.devtools.popup = async () => {
       const iframe = getIframe()
       if (!iframe)
         return
@@ -218,6 +251,7 @@ export async function setupDevToolsClient({
       `
       pip.__NUXT_DEVTOOLS_DISABLE__ = true
       pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
+      pip.__NUXT__ = window.parent?.__NUXT__ || window.__NUXT__
       pip.document.title = 'Nuxt DevTools'
       pip.document.head.appendChild(style)
       pip.document.body.appendChild(iframe)
@@ -232,7 +266,7 @@ export async function setupDevToolsClient({
     }
   }
 
-  client.updateClient()
+  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'
@@ -242,7 +276,7 @@ export async function setupDevToolsClient({
   // Shortcut to toggle devtools
   addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      client.close()
+      client.devtools.toggle()
   })
 
   const app = createApp({
@@ -311,7 +345,7 @@ export function useClientColorMode(): Ref<ColorScheme> {
 
 function setupRouteTracking(timeline: TimelineMetrics, router: Router) {
   // Add initial route event
-  if (router && timeline.options.enabled) {
+  if (timeline.options.enabled && router?.currentRoute?.value?.path) {
     const start = timeline.events[0]?.start || Date.now()
     timeline.events.unshift({
       type: 'route',
@@ -348,8 +382,8 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   // trigger update for reactivity
   watch(() => [
     client.nuxt.payload,
-    client.colorMode.value,
-    client.loadingTimeMetrics,
+    client.app.colorMode.value,
+    client.metrics.loading(),
     timeMetric,
   ], () => {
     refreshReactivity()

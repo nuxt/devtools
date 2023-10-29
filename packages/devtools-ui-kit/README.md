@@ -4,6 +4,6 @@
 
 > **Warning**: This library is heavily working in progress. Breaking changes may not follow semver. Pin the version if used.
 
-UI kit for module authors to build embedded views for Nuxt Devtools.
+UI kit for module authors to build embedded views for Nuxt DevTools.
 
-Please refer to the [DevTools UI Kit](https://devtools.nuxtjs.org/module/ui-kit) for the full documentation.
+Please refer to the [DevTools UI Kit](https://devtools.nuxt.com/module/ui-kit) for the full documentation.

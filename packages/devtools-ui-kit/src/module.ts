@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import { addComponentsDir, createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
+import { addComponentsDir, addImportsDir, createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
 import defu from 'defu'
 import { extendUnocssOptions } from './unocss'
 
@@ -24,6 +24,9 @@ export default defineNuxtModule<ModuleOptions>({
     dev: false,
   },
   async setup(options, nuxt) {
+    // composables
+    addImportsDir(rPath('./composables'))
+
     // Standard components
     addComponentsDir({ path: rPath('./components') })
 
@@ -32,9 +35,11 @@ export default defineNuxtModule<ModuleOptions>({
     if (!options.dev)
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
 
-    // @ts-expect-error - module options
+    // eslint-disable-next-line ts/prefer-ts-expect-error
+    // @ts-ignore - module options
     nuxt.options.vueuse = nuxt.options.vueuse || {}
-    // @ts-expect-error - module options
+    // eslint-disable-next-line ts/prefer-ts-expect-error
+    // @ts-ignore - module options
     nuxt.options.colorMode = defu(nuxt.options.colorMode, { classSuffix: '' })
 
     const resolver = createResolver(import.meta.url)

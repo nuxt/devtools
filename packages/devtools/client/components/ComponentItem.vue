@@ -3,6 +3,8 @@ import type { Component } from 'nuxt/schema'
 
 const props = defineProps<{
   component: Component
+  dependencies?: string[]
+  dependents?: string[]
 }>()
 
 // @ts-expect-error types
@@ -11,23 +13,30 @@ const filePath = computed(() => props.component.filePath || props.component.file
 
 <template>
   <div
-
     hover="bg-active"
     class="group"
     flex="~ gap2"
     w-full items-center rounded px2 py1
   >
     <VDropdown>
-      <button hover:text-primary>
+      <button hover:text-primary :class="dependents && dependents.length === 0 ? 'op50' : ''">
         <ComponentName :component="component" />
       </button>
       <template #popper>
-        <ComponentDetails :component="component" p4 />
+        <ComponentDetails
+          :component="component"
+          :dependencies="dependencies"
+          :dependents="dependents"
+          w-100 pt4
+        />
       </template>
     </VDropdown>
-    <Badge
+    <sup v-if="dependents?.length" ml--1 text-primary>
+      x{{ dependents?.length }}
+    </sup>
+    <NBadge
       v-if="component.global"
-      bg-green-400:10 text-green-400
+      n="green"
       title="Registered at runtime as a global component"
       v-text="'runtime'"
     />

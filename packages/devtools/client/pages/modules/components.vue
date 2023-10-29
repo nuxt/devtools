@@ -10,6 +10,7 @@ definePageMeta({
 
 const client = useClient()
 const components = useComponents()
+const relationships = useComponentsRelationships()
 
 const { componentsView: view } = useDevToolsUIOptions()
 
@@ -29,17 +30,20 @@ function toggleView() {
     <component
       :is="view === 'list' ? ComponentsList : ComponentsGraph"
       :components="components"
+      :relationships="relationships"
     >
       <div flex-none flex="~ gap3">
-        <NIconButton
-          text-lg
+        <NButton
+          v-tooltip.bottom-end="'Toggle View'"
+          text-lg :border="false"
           :icon="view === 'graph' ? 'i-carbon-list' : 'i-carbon-network-4'"
           title="Toggle view"
           @click="toggleView"
         />
-        <NIconButton
+        <NButton
           v-if="client?.inspector?.instance"
-          text-lg
+          v-tooltip.bottom-end="'Inspect Vue components'"
+          text-lg :border="false"
           icon="i-tabler-focus-2"
           title="Inspect Vue components"
           @click="openComponentInspector"

@@ -126,3 +126,5 @@ export interface ModuleBuiltinTab {
 }
 
 export type ModuleTabInfo = ModuleCustomTab | ModuleBuiltinTab
+
+export type CategorizedTabs = [TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]][]

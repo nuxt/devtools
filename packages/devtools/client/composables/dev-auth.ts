@@ -31,44 +31,54 @@ export async function ensureDevAuthToken() {
   if (isDevAuthed.value)
     return devAuthToken.value!
 
-  if (!devAuthToken.value) {
-    const info = new UAParser(navigator.userAgent).getResult()
-    const desc = [
-      info.browser.name,
-      info.browser.version,
-      '|',
-      info.os.name,
-      info.os.version,
-      info.device.type,
-    ].filter(i => i).join(' ')
-    rpc.requestForAuth(desc)
-
-    const result = await Promise.race([
-      AuthComfirm.start(),
-      until(devAuthToken.value).toBeTruthy(),
-    ])
-
-    if (result === false) {
-      // @unocss-include
-      showNotification({
-        message: 'Action canceled',
-        icon: 'carbon-close',
-        classes: 'text-orange',
-      })
-      throw new Error('User canceled auth')
-    }
-  }
+  if (!devAuthToken.value)
+    await authConfirmAction()
 
   isDevAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
   if (!isDevAuthed.value) {
     devAuthToken.value = null
-    showNotification({
+    devtoolsUiShowNotification({
       message: 'Invalid auth token, action canceled',
       icon: 'i-carbon-warning-alt',
       classes: 'text-red',
     })
+    await authConfirmAction()
     throw new Error('Invalid auth token')
   }
 
   return devAuthToken.value!
+}
+
+export const userAgentInfo = new UAParser(navigator.userAgent).getResult()
+
+export async function requestForAuth() {
+  const desc = [
+    userAgentInfo.browser.name,
+    userAgentInfo.browser.version,
+    '|',
+    userAgentInfo.os.name,
+    userAgentInfo.os.version,
+    userAgentInfo.device.type,
+  ].filter(i => i).join(' ')
+  return await rpc.requestForAuth(desc, window.location.origin)
+}
+
+async function authConfirmAction() {
+  if (!devAuthToken.value)
+    requestForAuth()
+
+  const result = await Promise.race([
+    AuthConfirm.start(),
+    until(devAuthToken.value).toBeTruthy(),
+  ])
+
+  if (result === false) {
+    // @unocss-include
+    devtoolsUiShowNotification({
+      message: 'Action canceled',
+      icon: 'carbon-close',
+      classes: 'text-orange',
+    })
+    throw new Error('User canceled auth')
+  }
 }

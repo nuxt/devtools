@@ -1,6 +1,6 @@
 import { createBirpc } from 'birpc'
 import { parse, stringify } from 'flatted'
-import { createHotContext } from 'vite-hot-client'
+import { tryCreateHotContext } from 'vite-hot-client'
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
 import { WS_EVENT_NAME } from '../../src/constant'
 
@@ -17,7 +17,7 @@ export const clientFunctions = {
 
 export const extendedRpcMap = new Map<string, any>()
 
-export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
+export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions, {
   post: async (d) => {
     (await connectPromise).send(WS_EVENT_NAME, d)
   },
@@ -41,7 +41,17 @@ export const rpc = createBirpc<ServerFunctions>(clientFunctions, {
 })
 
 async function connectVite() {
-  const hot = await createHotContext()
+  let base = window.parent?.__NUXT__?.config?.app?.baseURL
+  const buildAssetsDir = window.parent?.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
+  if (base && !base.endsWith('/'))
+    base += '/'
+  const hot = await tryCreateHotContext(undefined, [
+    ...(base
+      ? [`${base}${buildAssetsDir}/`, base]
+      : []),
+    '/_nuxt/',
+    '/',
+  ])
 
   if (!hot)
     throw new Error('Unable to connect to devtools')
@@ -50,9 +60,14 @@ async function connectVite() {
     onMessage(data)
   })
 
-  // TODO:
-  // hot.on('vite:connect', (data) => {})
-  // hot.on('vite:disconnect', (data) => {})
+  wsConnecting.value = true
+
+  hot.on('vite:ws:connect', () => {
+    wsConnecting.value = false
+  })
+  hot.on('vite:ws:disconnect', () => {
+    wsConnecting.value = true
+  })
 
   return hot
 }

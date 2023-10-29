@@ -1,17 +1,17 @@
 {
   "name": "@nuxt/devtools-wizard",
   "type": "module",
-  "version": "0.6.7",
+  "version": "1.0.0",
   "description": "CLI Wizard to toggle Nuxt DevTools",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "main": "./dist/index.mjs",
   "bin": "./cli.mjs",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -22,19 +22,18 @@
   "dependencies": {
     "consola": "^3.2.3",
     "diff": "^5.1.0",
-    "execa": "^7.1.1",
+    "execa": "^7.2.0",
     "global-dirs": "^3.0.1",
-    "magicast": "^0.2.9",
+    "magicast": "^0.3.0",
     "pathe": "^1.1.1",
-    "picocolors": "^1.0.0",
     "pkg-types": "^1.0.3",
     "prompts": "^2.4.2",
     "rc9": "^2.1.1",
     "semver": "^7.5.4"
   },
   "devDependencies": {
-    "@types/diff": "^5.0.3",
-    "@types/prompts": "^2.4.4",
-    "unbuild": "^1.2.1"
+    "@types/diff": "^5.0.6",
+    "@types/prompts": "^2.4.6",
+    "unbuild": "^2.0.0"
   }
 }

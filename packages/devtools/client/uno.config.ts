@@ -1,0 +1,56 @@
+import { defineConfig, presetAttributify, presetIcons, presetTypography, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+import { unocssPreset as uiKit } from '../../devtools-ui-kit/src/unocss'
+
+export default defineConfig({
+  shortcuts: [
+    {
+      // General Tokens
+      'bg-base': 'n-bg-base',
+      'bg-active': 'n-bg-active',
+      'border-base': 'n-border-base',
+
+      'text-secondary': 'color-black/50 dark:color-white/50',
+
+      // Reusable
+      'x-divider': 'h-1px w-full bg-gray/15',
+    },
+    [/^theme-card-(\w+)$/, $ => `p2 flex gap2 border border-base bg-base items-center rounded min-w-40 min-h-25 justify-center transition-all saturate-0 op50 shadow hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
+  ],
+  presets: [
+    presetUno(),
+    presetAttributify(),
+    presetTypography(),
+    presetIcons({
+      prefix: ['i-', ''],
+      scale: 1.2,
+      extraProperties: {
+        'display': 'inline-block',
+        'vertical-align': 'middle',
+      },
+    }),
+    presetWebFonts({
+      fonts: {
+        sans: 'DM Sans',
+        mono: 'DM Mono',
+        stylish: 'Caveat',
+      },
+    }),
+    uiKit(),
+  ],
+  transformers: [
+    transformerDirectives(),
+  ],
+  content: {
+    filesystem: [
+      'content/*.md',
+    ],
+  },
+  safelist: [
+    'carbon-ibm-watson-discovery',
+    'simple-icons-nuxtdotjs',
+    'bxl-visual-studio',
+  ],
+  configDeps: [
+    '../../packages/devtools-ui-kit/src/unocss.ts',
+  ],
+})

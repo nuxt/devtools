@@ -10,6 +10,7 @@ import {
   presetIcons,
   presetTypography,
   presetUno,
+  presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -21,10 +22,9 @@ export function unocssPreset(): Preset {
     name: '@nuxt/devtools-ui-kit',
     theme: mergeDeep<Theme>(unoTheme, {
       colors: {
+        brand: '#00DC82',
+        primary: '#099e61',
         context: 'rgba(var(--nui-c-context),%alpha)',
-      },
-      fontFamily: {
-        sans: 'Avenir, Helvetica, Arial, sans-serif',
       },
     }),
     rules: [
@@ -44,7 +44,7 @@ export function unocssPreset(): Preset {
         'color': 'white !important',
       }],
       ['n-disabled', {
-        'opacity': 0.4,
+        'opacity': 0.6,
         'pointer-events': 'none',
         'filter': 'saturate(0)',
       }],
@@ -146,10 +146,18 @@ export function unocssPreset(): Preset {
       // icon-button
       'n-icon-button': 'aspect-1/1 w-1.6em h-1.6em flex items-center justify-center rounded op50 hover:op100 hover:n-bg-active',
 
+      // badge
+      'n-badge-base': 'bg-context/10 text-context rounded whitespace-nowrap select-none',
+      'n-badge': 'n-badge-base mx-0.5 px-1.5 py-0.5 text-xs',
+
       // loading
       'n-loading': 'flex h-full w-full justify-center items-center',
       'n-panel-grids': 'n-panel-grids-light dark:n-panel-grids-dark',
       'n-panel-grids-center': 'n-panel-grids flex flex-col h-full gap-2 items-center justify-center',
+
+      // glass
+      'n-glass-effect': 'backdrop-blur-6 bg-white/80 dark:bg-[#151515]/90',
+      'n-navbar-glass': 'sticky z-10 top-0 n-glass-effect',
     },
   }
 }
@@ -170,6 +178,12 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
           'vertical-align': 'middle',
         },
         // ...(user?.icons || {})
+      }),
+      presetWebFonts({
+        fonts: {
+          sans: 'DM Sans',
+          mono: 'DM Mono',
+        },
       }),
       unocssPreset(),
       ...(user.presets || []),

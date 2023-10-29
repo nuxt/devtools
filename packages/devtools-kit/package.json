@@ -1,19 +1,19 @@
 {
   "name": "@nuxt/devtools-kit",
   "type": "module",
-  "version": "0.6.7",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": "nuxt/devtools",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     },
     "./types": {
       "types": "./types.d.ts",
-      "require": "./dist/types.cjs",
-      "import": "./dist/types.mjs"
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.cjs"
     },
     "./iframe-client": {
       "types": "./iframe-client.d.ts",
@@ -23,10 +23,10 @@
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts",
     "*.cjs",
-    "*.mjs"
+    "*.d.ts",
+    "*.mjs",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -35,21 +35,21 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "nuxt": "^3.6.1",
+    "nuxt": "^3.7.4",
     "vite": "*"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.6.2",
-    "@nuxt/schema": "^3.6.2",
-    "execa": "^7.1.1"
+    "@nuxt/kit": "^3.7.4",
+    "@nuxt/schema": "^3.7.4",
+    "execa": "^7.2.0"
   },
   "devDependencies": {
-    "birpc": "^0.2.12",
-    "error-stack-parser-es": "^0.1.0",
+    "birpc": "^0.2.14",
+    "error-stack-parser-es": "^0.1.1",
     "hookable": "^5.5.3",
-    "unbuild": "^1.2.1",
-    "unimport": "^3.0.14",
-    "vite-plugin-vue-inspector": "^3.4.2",
-    "vue-router": "^4.2.4"
+    "unbuild": "^2.0.0",
+    "unimport": "^3.4.0",
+    "vite-plugin-vue-inspector": "^4.0.0",
+    "vue-router": "^4.2.5"
   }
 }

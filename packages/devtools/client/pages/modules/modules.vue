@@ -7,6 +7,7 @@ definePageMeta({
 
 const installModuleOpen = ref(false)
 const installedModules = useInstalledModules()
+const terminalId = useCurrentTerminalId()
 
 const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
@@ -42,7 +43,8 @@ registerCommands(() => [
       <NuxtLink
         v-for="m of processInstallingModules"
         :key="m.processId" block min-h-30
-        :to="`/modules/terminals?id=${encodeURIComponent(m.processId)}`"
+        to="/modules/terminals"
+        @click="terminalId = m.processId"
       >
         <NCard
           border="1.5 dashed"
@@ -105,10 +107,10 @@ registerCommands(() => [
         v-if="installModuleOpen" border="l base"
         pos="fixed bottom-0 right-0 top-0" z-200 w-150 bg-base
       >
-        <NIconButton
+        <NButton
           icon="carbon-close"
           pos="absolute top-3 right-3 z-10"
-          rounded-full text-xl
+          rounded-full text-xl :border="false"
           @click="installModuleOpen = false"
         />
 

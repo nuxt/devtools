@@ -28,10 +28,6 @@ function getLatencyColor(latency: number | undefined) {
   return ''
 }
 
-function formatDuration(duration: number | undefined) {
-
-}
-
 const units = computed(() => {
   if (!props.duration || props.duration < 1)
     return ['<1', 'ms']

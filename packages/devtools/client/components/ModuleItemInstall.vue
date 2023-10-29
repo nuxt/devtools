@@ -16,6 +16,10 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
   const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
   const result = await method(await ensureDevAuthToken(), item.npm, true)
 
+  telemetry(`modules:${type}`, {
+    moduleName: item.npm,
+  })
+
   if (!result.commands)
     return
 
@@ -47,12 +51,10 @@ const anyObj = {} as any
     @click="isInstalled ? null : useModuleAction(item, 'install')"
   >
     <template v-if="isInstalled" #badge>
-      <Badge bg-green-400:10 text-green-400>
-        Installed
-      </Badge>
+      <NBadge n="green" v-text="'Installed'" />
       <NDropdown v-if="isUninstallable" n="sm green">
         <template #trigger="{ click }">
-          <NIconButton icon="carbon-overflow-menu-vertical" @click="click()" />
+          <NButton icon="carbon-overflow-menu-vertical" :border="false" @click="click()" />
         </template>
         <NButton icon="carbon-trash-can" n="red" @click="useModuleAction(item, 'uninstall')">
           Uninstall

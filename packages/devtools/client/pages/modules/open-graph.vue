@@ -93,9 +93,9 @@ until(router).toBeTruthy().then((v) => {
 </script>
 
 <template>
-  <div flex="~" h-full w-full of-hidden>
-    <div h-full flex-auto of-auto>
-      <Navbar>
+  <div flex="~ col lg:row" h-full w-full of-hidden>
+    <div flex-auto of-auto>
+      <NNavbar>
         <template #search>
           <NTextInput
             v-model="routeInput"
@@ -109,30 +109,33 @@ until(router).toBeTruthy().then((v) => {
         </template>
         <template #actions>
           <div flex-none flex="~ gap2 items-center">
-            <NIconButton
+            <NButton
               v-if="routeMatchedFilePath"
-              text-lg
+              v-tooltip="'Open file in editor'"
+              text-lg :border="false"
               icon="carbon:launch"
               title="Open file in editor"
               @click="openInEditor(routeMatchedFilePath)"
             />
 
-            <NIconButton
-              text-lg
+            <NButton
+              v-tooltip="'Refresh Data'"
+              text-lg :border="false"
               icon="carbon:reset"
               title="Refresh Data"
               @click="refresh"
             />
 
-            <NIconButton
-              text-lg
+            <NButton
+              v-tooltip="'Toggle Preview'"
+              text-lg :border="false"
               :icon="showPreview ? 'carbon:side-panel-open' : 'carbon:open-panel-right'"
               title="Toggle Preview"
               @click="showPreview = !showPreview"
             />
           </div>
         </template>
-      </Navbar>
+      </NNavbar>
       <div flex="~ col">
         <NSectionBlock
           text="Tags"
@@ -144,28 +147,36 @@ until(router).toBeTruthy().then((v) => {
               <div v-if="index" x-divider />
               <div v-if="index" x-divider />
               <div mr2 px4 py2>
-                <NTextExternalLink
+                <NLink
                   op50
-                  :link="getDocs(item)"
+                  :href="getDocs(item)"
+                  target="_blank"
                   n="primary"
                 >
                   {{ item.name }}
-                </NTextExternalLink>
+                </NLink>
               </div>
-              <NTextExternalLink
-                :link=" item.value.match(/^https?:\/\//) ? item.value : undefined"
+              <NLink
+                :href="item.value.match(/^https?:\/\//) ? item.value : undefined"
+                target="_blank"
                 w-full p2 font-mono
                 n="primary"
               >
                 {{ item.value }}
-              </NTextExternalLink>
+              </NLink>
             </template>
           </NCard>
         </NSectionBlock>
         <OpenGraphMissingTabs :tags="headTags" :matched-route-filepath="routeMatchedFilePath" />
       </div>
     </div>
-    <SocialPreviewGroup v-if="showPreview && headTags?.length" :tags="headTags" border="l base" w-540px flex-none />
+    <SocialPreviewGroup
+      v-if="showPreview && headTags?.length"
+      :tags="headTags"
+      flex-none border-base
+      lt-lg="border-t"
+      lg="h-full w-140 border-l"
+    />
   </div>
 
   <HelpFab>

@@ -1,7 +1,7 @@
-<a href="https://devtools.nuxtjs.org"><img width="1200" alt="Nuxt DevTools" src="https://user-images.githubusercontent.com/904724/217796838-597625f1-3f5a-4fb1-9720-68fd1c7d6615.jpg"></a>
+<a href="https://devtools.nuxt.com"><img width="1200" alt="Nuxt DevTools" src="https://github-production-user-asset-6210df.s3.amazonaws.com/904724/261577617-a10567bd-ad33-48cc-9bda-9e37dbe1929f.png"></a>
 <br>
 <h1>
-Nuxt DevTools <sup>Preview</sup>
+Nuxt DevTools
 </h1>
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -18,12 +18,8 @@ Unleash Nuxt Developer Experience.
 <p>
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
   <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a> |
-  <a href="https://devtools.nuxtjs.org/">📚 Documentation</a>
+  <a href="https://devtools.nuxt.com/">📚 Documentation</a>
 </p>
-
-<br>
-
-> **Warning**: Experimental and under heavy development. APIs are subject to change.
 
 <br>
 
@@ -31,36 +27,15 @@ Unleash Nuxt Developer Experience.
 
 > Nuxt DevTools requires **Nuxt v3.1.0 or higher**.
 
-You can opt-in Nuxt DevTools per project by going to the project root and run:
+Nuxt DevTools is **enabled by default** in Nuxt v3.8.0. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
 
-```bash
-npx nuxi@latest devtools enable
-```
+If you want to explicitly enable or disable Nuxt DevTools, you can update your `nuxt.config` with:
 
-Restart your Nuxt server and open your app in browser. Click the Nuxt icon on the bottom (or press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd>) to toggle the DevTools.
-
-> **Note**: If you using `nvm` or other Node version managers, we suggest to run the enable command again after switching Node version.
-
-Similarly, you can disable it per project by running:
-
-```bash
-npx nuxi@latest devtools disable
-```
-
-### Install Manually
-
-Nuxt DevTools is currently provided as a module (might be changed in the future). If you prefer, you can also install it locally, which will be activated for all your team members.
-
-```bash
-npm i -D @nuxt/devtools
-```
-
-```ts
-// nuxt.config.ts
+```js
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/devtools',
-  ],
+  devtools: {
+    enabled: true // or false to disable
+  }
 })
 ```
 
@@ -81,7 +56,6 @@ You can opt-in to the edge release channel by running:
 
 Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
 
-
 ### Module Options
 
 To configure Nuxt DevTools, you can pass the `devtools` options. 
@@ -89,9 +63,6 @@ To configure Nuxt DevTools, you can pass the `devtools` options.
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/devtools',
-  ],
   devtools: {
     // Enable devtools (default: true)
     enabled: true,
@@ -110,11 +81,30 @@ Read the [**Announcement Blog Post 🎊**](https://nuxt.com/blog/introducing-nux
 
 ## Module Authors
 
-Please refer to the [Module Authors Guide](https://devtools.nuxtjs.org/module/guide).
+Please refer to the [Module Authors Guide](https://devtools.nuxt.com/module/guide).
 
 ## Contribution Guide
 
-Please refer to the [Contribution Guide](https://devtools.nuxtjs.org/development/contributing).
+Please refer to the [Contribution Guide](https://devtools.nuxt.com/development/contributing).
+
+## Anonymous Usage Analytics
+
+Nuxt DevTools collects anonymous telemetry data about general usage. This helps us to accurately gauge feature usage and customization across all our users. This data will let us better understand how each features in Nuxt DevTools are used, measuring improvements made (DX and performances) and their relevance. It would also help us to prioritize our efforts and focus on the features that matter the most to our users.
+
+Nuxt DevTools' telemetry data is piped through [Nuxt Telemetry](https://github.com/nuxt/telemetry), meaning that Nuxt DevTools will respect your local and global Nuxt Telemetry settings. You can also opt-out Nuxt DevTools' telemetry in the Nuxt DevTools settings.
+
+The data we collect is completely anonymous, not traceable to the source (using hash+seed), and only meaningful in aggregate form. No data we collect is personally identifiable or trackable.
+
+### Events
+
+On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#events), Nuxt DevTools also collects the following events:
+
+- Versions of Nuxt DevTools
+- Navigations between tabs/feature
+  - This helps us to understand which features are used the most to prioritize our efforts.
+- Browser and OS names and versions
+  - This helps us improve compatibility across different browsers and operating systems.
+- Click event on some action buttons
 
 ## License
 

@@ -8,7 +8,7 @@ onMounted(async () => {
     }
   }
   if (!isDevAuthed.value)
-    rpc.requestForAuth()
+    requestForAuth()
 })
 
 const authInput = ref('')
@@ -32,7 +32,7 @@ async function input() {
 
 <template>
   <NPanelGrids v-if="!isDevAuthed">
-    <NCard flex="~ col gap-2" mxa items-center p6 text-center>
+    <NCard flex="~ col gap-2" mxa p6>
       <h3 class="mb2 text-lg font-medium leading-6" flex="~ items-center gap-1" text-orange>
         <span class="i-carbon-information-square" /> Permissions required
       </h3>
@@ -43,20 +43,27 @@ async function input() {
         A request is sent to the server.<br>
         Please check your terminal for the instructions and then come back.
       </p>
-      <div flex="~ gap-3" mt2 justify-end>
-        <NButton disabled icon="i-carbon-time">
-          Waiting for authorization...
-        </NButton>
+      <div flex="~ gap-3" mt5 justify-between>
+        <form relative flex="~ col gap-2" @submit.prevent="input">
+          <p text-xs op-50>
+            Or you can manually paste the token below:
+          </p>
+          <div flex="~ inline gap-2 items-center">
+            <NTextInput
+              v-model="authInput" placeholder="Enter token here"
+              :n="isFailed ? 'red' : undefined"
+              @keydown.enter="input"
+            />
+            <NButton n="green" h-full icon="i-carbon-arrow-right" @click="input" />
+          </div>
+        </form>
+        <div flex="~ gap-2 items-end">
+          <slot name="actions" />
+          <NButton disabled icon="i-carbon-time">
+            Waiting for authorization...
+          </NButton>
+        </div>
       </div>
-      <p>Or you can manually paste the token here:</p>
-      <form flex="~ inline gap-2 items-center" @submit.prevent="input">
-        <NTextInput
-          v-model="authInput" placeholder="Enter token here"
-          :n="isFailed ? 'red' : undefined"
-          @keydown.enter="input"
-        />
-        <NIconButton icon="i-carbon-arrow-right" @click="input" />
-      </form>
     </NCard>
   </NPanelGrids>
   <template v-else>

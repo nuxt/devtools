@@ -16,6 +16,7 @@ export default defineBuildConfig({
     'nitropack',
     'unimport',
     'unstorage',
+    'ofetch',
     'vue',
     'vue-router',
     'nuxt/dist/app/nuxt',
@@ -23,6 +24,7 @@ export default defineBuildConfig({
     'hookable',
     'vite-plugin-vue-inspector',
     'error-stack-parser-es',
+    'shikiji',
   ],
   declaration: true,
   rollup: {

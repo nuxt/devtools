@@ -34,7 +34,7 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
   if (e.key === 'Escape' && props.client.inspector?.isEnabled.value) {
     e.preventDefault()
     props.client.inspector?.disable()
-    props.client.close()
+    props.client.devtools.close()
   }
 })
 
@@ -161,8 +161,11 @@ useEventListener(window, 'mouseleave', () => {
 
 <style scoped>
 .nuxt-devtools-frame {
+  width: 100%;
+  height: 100%;
   position: fixed;
   z-index: 2147483645;
+  -webkit-font-smoothing: antialiased;
 }
 
 .nuxt-devtools-frame :deep(iframe) {

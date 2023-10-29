@@ -155,8 +155,7 @@ export const ogTags: OpenGraphTagDefine[] = [
       meta: [{
         name: 'twitter:description',
         content: '[twitter:description]',
-      },
-      ],
+      }],
     },
     seoMeta: {
       twitterDescription: '[twitter:description]',

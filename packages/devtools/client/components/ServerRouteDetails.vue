@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import type { CodeSnippet, ServerRouteInfo, ServerRouteInput, ServerRouteInputType } from '~/../src/types'
+import { createReusableTemplate } from '@vueuse/core'
+import type { $Fetch } from 'ofetch'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
 const props = defineProps<{
   route: ServerRouteInfo
 }>()
 
-const currentRoute = useRoute()
+const emit = defineEmits<{
+  (event: 'open-default-input'): void
+}>()
+
+const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
+
 const config = useServerConfig()
+const client = useClient()
 
 const response = reactive({
   contentType: 'text/plain',
@@ -56,18 +64,28 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
-  query: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  headers: [{ key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
+  query: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref({})
+const {
+  inputDefaults,
+  sendFrom,
+} = useDevToolsOptions('serverRoutes')
+
+const resolvedSendFrom = computed(() => {
+  if (!client?.value?.app?.$fetch)
+    return 'devtools'
+  return sendFrom.value
+})
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
-// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L12
+// https://github.com/unjs/h3/blob/main/src/utils/body.ts#L19
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(currentRoute.query.tab ? currentRoute.query.tab : paramNames.value.length ? 'params' : 'query')
+const activeTab = ref(paramNames.value.length ? 'params' : 'query')
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -81,34 +99,37 @@ const currentParams = computed({
   },
 })
 
-// TODO: add global inputs
 const parsedQuery = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.query),
     ...parseInputs(routeInputs.query),
   }
 })
 const parsedHeader = computed(() => {
   return {
+    ...parseInputs(inputDefaults.value.headers),
     ...parseInputs(routeInputs.headers),
   }
 })
 const parsedBody = computed(() => {
   return hasBody.value
     ? selectedTabInput.value === 'json'
-      ? routeInputBodyJSON.value
+      ? {
+          ...parseInputs(inputDefaults.value.body),
+          ...routeInputBodyJSON.value,
+        }
       : {
+          ...parseInputs(inputDefaults.value.body),
           ...parseInputs(routeInputs.body),
         }
     : undefined
 })
 
 const domain = computed(() => {
-  let url = config.value?.devServer.url || 'http://localhost'
+  let url = window?.location.origin
   if (url.charAt(url.length - 1) === '/')
     url = url.slice(0, -1)
-  const port = config.value?.devServer.port || 3000
-  const hasPort = url.includes(`:${port}`)
-  return hasPort ? url : `${url}:${port}`
+  return url
 })
 
 const finalPath = computed(() => {
@@ -130,9 +151,9 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
-function parseInputs(inputs: any[]) {
+function parseInputs(inputs: ServerRouteInput[]) {
   const formatted = Object.fromEntries(
-    inputs.filter(({ key, value }) => key && value !== undefined).map(({ key, value }) => [key, value]),
+    inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
   return Object.entries(formatted).length ? formatted : undefined
 }
@@ -143,8 +164,17 @@ async function fetchData() {
 
   const start = Date.now()
 
+  const f = resolvedSendFrom.value === 'app'
+    ? client.value!.app!.$fetch
+    : $fetch as $Fetch
+
+  telemetry('server-routes:fetch', {
+    method: routeMethod.value,
+    sendFrom: resolvedSendFrom.value,
+  })
+
   try {
-    response.data = await $fetch(finalURL.value, {
+    response.data = await f(finalURL.value, {
       method: routeMethod.value.toUpperCase() as any,
       headers: parsedHeader.value,
       query: parsedQuery.value,
@@ -152,6 +182,7 @@ async function fetchData() {
       onResponse({ response: res }) {
         response.contentType = (res.headers.get('content-type') || '').toString().toLowerCase().trim()
         response.statusCode = res.status
+        response.error = undefined
       },
       onResponseError(res) {
         response.error = res.response._data
@@ -171,9 +202,9 @@ const codeSnippets = computed(() => {
   const snippets: CodeSnippet[] = []
 
   const items: string[] = []
-  const headers = routeInputs.headers
-    .filter(({ key, value }) => key && value && !(key === 'Content-Type' && value === 'application/json'))
-    .map(({ key, value }) => `  '${key}': '${value}'`).join(',\n')
+  const headers = Object.entries(parsedHeader.value)
+    .filter(([key, value]) => key && value && !(key === 'Content-Type' && value === 'application/json'))
+    .map(([key, value]) => `  '${key}': '${value}'`).join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
@@ -205,43 +236,70 @@ ${items.join(',\n').split('\n').map(line => `  ${line}`).join('\n')}
   return snippets
 })
 
+const cookies = ref(getCookies())
+const newCookie = reactive({ key: '', value: '' })
+
 const tabs = computed(() => {
   const items = []
   if (paramNames.value.length) {
     items.push({
       name: 'Params',
       slug: 'params',
-      icon: 'carbon-text-selection',
       length: paramNames.value.length,
     })
   }
   items.push({
     name: 'Query',
     slug: 'query',
-    icon: 'carbon-help',
     length: routeInputs.query.length,
   })
   if (hasBody.value) {
     items.push({
       name: 'Body',
       slug: 'body',
-      icon: 'carbon-document',
       length: routeInputs.body.length,
     })
   }
   items.push({
     name: 'Headers',
     slug: 'headers',
-    icon: 'carbon-html-reference',
     length: routeInputs.headers.length,
+  })
+  items.push({
+    name: 'Cookies',
+    slug: 'cookies',
+    length: cookies.value.length,
   })
   items.push({
     name: 'Snippets',
     slug: 'snippet',
-    icon: 'carbon-code',
   })
   return items
 })
+
+function getCookies() {
+  return document.cookie.split('; ').map((i) => {
+    const [key, value] = i.split('=')
+    return { key, value }
+  }).filter(i => i.key)
+}
+
+function updateCookie(key: string, value: any) {
+  if (!key)
+    return
+  const exist = cookies.value.find(cookie => cookie.key === key)
+  const cookie = useCookie(key)
+  if (exist !== undefined) {
+    if (value === undefined)
+      cookies.value = cookies.value.filter(cookie => cookie.key !== key)
+  }
+  else {
+    cookies.value.push({ key, value })
+    newCookie.key = ''
+    newCookie.value = ''
+  }
+  cookie.value = value
+}
 
 watchEffect(() => {
   if (selectedTabInput.value === 'json') {
@@ -250,76 +308,93 @@ watchEffect(() => {
   }
 })
 
-const types: ServerRouteInputType[] = []
-watch(currentParams, (value) => {
-  if (!value)
-    return
-
-  value.forEach((input, index) => {
-    if (types.length) {
-      if (types[index] !== input.type && input.type !== undefined) {
-        types[index] = input.type
-        if (input.type !== 'string') {
-          if (input.type === 'boolean' && typeof input.value !== 'boolean')
-            input.value = true
-          else if (input.type === 'number' && typeof input.value !== 'number')
-            input.value = 0
-          else
-            input.value = ''
-        }
-        else if (input.type === 'string') {
-          input.value = input.value.toString()
-        }
-      }
-    }
-    else {
-      types[index] = input.type ?? 'string'
-    }
-  })
-}, { immediate: true, deep: true })
+const copy = useCopy()
 </script>
 
 <template>
   <div h-full w-full flex="~ col">
-    <div flex="~ col gap-2" flex-none p4 navbar-glass>
-      <div flex="~ gap2">
-        <NButton v-if="route.method" :class="getRequestMethodClass(routeMethod)" pointer-events-none tabindex="-1">
+    <div flex="~ col gap-2" flex-none p4 n-navbar-glass>
+      <div flex="~ gap2 items-center">
+        <NButton
+          v-if="route.method"
+          class="n-badge-base n-sm"
+          :class="getRequestMethodClass(routeMethod)"
+          pointer-events-none font-mono tabindex="-1"
+        >
           {{ routeMethod.toUpperCase() }}
         </NButton>
-        <NSelect v-else v-model="routeMethod" :class="getRequestMethodClass(routeMethod)">
+        <NSelect
+          v-else
+          v-model="routeMethod"
+          class="n-badge-base n-sm"
+          :class="getRequestMethodClass(routeMethod)"
+        >
           <option v-for="method of methods" :key="method" :class="getRequestMethodClass(method)">
             {{ method.toUpperCase() }}
           </option>
         </NSelect>
-        <NTextInput
-          :model-value="finalPath"
-          disabled flex-auto font-mono
-          p="x5 y2"
-          n="primary xs"
-        />
-        <NButton n="primary solid" @click="fetchData">
+        <div relative w-full>
+          <NTextInput
+            :model-value="finalPath"
+            readonly flex-auto font-mono
+            p="x5 y2"
+            n="sm"
+          />
+          <div absolute right-2 top-1.5 flex="~ gap-1">
+            <NButton
+              v-tooltip="'Copy URL'"
+              title="Copy URL"
+              n="xs blue"
+              icon="carbon:copy"
+              :border="false"
+              @click="copy(finalURL, 'server-route-url')"
+            />
+            <NButton
+              v-tooltip="'Open in Editor'"
+              title="Open in Editor"
+              icon="carbon-launch"
+              n="xs blue"
+              :border="false"
+              @click="openInEditor(route.filepath)"
+            />
+          </div>
+        </div>
+        <NButton h-full n="primary solid" @click="fetchData">
           <NIcon icon="carbon:send" />
         </NButton>
       </div>
     </div>
 
-    <div flex="~ gap2" w-full items-center px4 pb2 text-center text-sm border="b base">
+    <div flex="~ gap2 wrap" w-full items-center px4 pb2 text-center text-sm border="b base">
       <NButton
         v-for="tab of tabs"
         :key="tab.slug"
         :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
         @click="activeTab = tab.slug"
       >
-        <NIcon :icon="tab.icon" />
-        {{ tab.name }} {{ tab?.length ? `(${tab.length})` : '' }}
+        <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
+        {{ tab.name }}
+        {{ tab?.length ? `(${tab.length})` : '' }}
+        <span>
+          {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+        </span>
       </NButton>
       <div flex-auto />
-      <NButton
-        icon="carbon-launch"
-        @click="openInEditor(route.filepath)"
+      <div text-xs op50>
+        Send from
+      </div>
+      <NSelect
+        v-model="resolvedSendFrom"
+        class="n-xs"
+        :disabled="!client?.app?.$fetch"
       >
-        Open in Editor
-      </NButton>
+        <option value="app">
+          App
+        </option>
+        <option value="devtools">
+          DevTools
+        </option>
+      </NSelect>
     </div>
     <div
       v-if="activeTab === 'params'"
@@ -337,14 +412,68 @@ watch(currentParams, (value) => {
         />
       </template>
     </div>
-    <div v-if="activeTab === 'snippet'" relative>
+    <div
+      v-if="activeTab === 'cookies'"
+      border="b base" p4 flex="~ col gap-4" font-mono
+    >
+      <div v-for="cookie in cookies" :key="cookie.key" flex="~ gap-4 items-center">
+        <NTextInput
+          placeholder="Key..."
+          :model-value="cookie.key"
+          disabled op-70
+        />
+        <NTextInput
+          placeholder="Value..."
+          :model-value="cookie.value"
+          flex-1 n="primary"
+          @input="updateCookie(cookie.key, $event.target?.value)"
+        />
+        <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
+          <NIcon icon="i-carbon-trash-can" />
+        </NButton>
+      </div>
+      <div flex="~ gap-4">
+        <NTextInput
+          v-model="newCookie.key"
+          placeholder="Key"
+          n="primary" flex-1
+        />
+        <NTextInput
+          v-model="newCookie.value"
+          placeholder="Value"
+          n="primary" flex-1
+        />
+        <NButton title="Add" n="primary" @click="updateCookie(newCookie.key, newCookie.value)">
+          <NIcon icon="i-carbon-save" />
+        </NButton>
+      </div>
+    </div>
+    <DefineDefaultInputs>
+      <ServerRouteInputs v-model="currentParams" :default="{ active: true, type: 'string' }" max-h-xs of-auto>
+        <template v-if="inputDefaults[activeTab]?.length">
+          <div flex="~ gap2" mb--2 items-center op50>
+            <div w-5 x-divider />
+            <div flex-none>
+              Default Inputs
+            </div>
+            <NButton
+              icon="i-carbon-edit"
+              :border="false"
+              @click="emit('open-default-input')"
+            />
+            <div x-divider />
+          </div>
+          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled p0 />
+        </template>
+      </ServerRouteInputs>
+    </DefineDefaultInputs>
+    <div v-if="activeTab === 'snippet'">
       <CodeSnippets
         v-if="codeSnippets.length"
-        border="b base"
         :code-snippets="codeSnippets"
       />
     </div>
-    <div v-else-if="currentParams" relative n-code-block border="b base">
+    <div v-else-if="currentParams" border="b base" relative n-code-block>
       <template v-if="activeTab === 'body'">
         <div flex="~ wrap" w-full>
           <template v-for="item of tabInputs" :key="item">
@@ -362,7 +491,7 @@ watch(currentParams, (value) => {
           <div border="b base" flex-auto />
         </div>
 
-        <ServerRouteInputs v-if="selectedTabInput === 'input'" v-model="currentParams" :default="{ type: 'string' }" />
+        <UseDefaultInputs v-if="selectedTabInput === 'input'" />
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
@@ -371,7 +500,7 @@ watch(currentParams, (value) => {
           v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
         />
       </template>
-      <ServerRouteInputs v-else v-model="currentParams" :default="{ type: 'string' }" />
+      <UseDefaultInputs v-else />
     </div>
 
     <NPanelGrids v-if="!started">
@@ -386,30 +515,27 @@ watch(currentParams, (value) => {
     <template v-else>
       <div border="b base" flex="~ gap2" items-center px4 py2>
         <div>Response</div>
-        <Badge
+        <NBadge
           v-if="response.error"
-          bg-red-400:10 text-red-400
+          n="red"
         >
           Error
-        </Badge>
-        <Badge
-          :class="{
-            'bg-orange-400:10 text-orange-400': response.error,
-            'bg-green-400:10 text-green-400': !response.error,
-          }"
-        >
-          {{ response.statusCode }}
-        </Badge>
+        </NBadge>
+        <NBadge :n="response.error ? 'orange' : 'green'" v-text="response.statusCode" />
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
+        <DataSchemaButton
+          v-if="response.contentType === 'application/json'"
+          :getter="() => ({ input: responseContent })"
+        />
         <div flex-auto />
         <div op50>
           Request finished in
         </div>
-        <Badge bg-green-400:10 text-green-400>
+        <NBadge n="green">
           {{ response.fetchTime }} ms
-        </Badge>
+        </NBadge>
       </div>
       <div v-if="responseLang === 'pdf'" flex-auto overflow-auto>
         <div border="~ base" h-full w-full rounded>

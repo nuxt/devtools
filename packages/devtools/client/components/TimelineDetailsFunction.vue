@@ -29,9 +29,7 @@ const importItem = computed(() => {
 <template>
   <div v-if="record" p-4 flex="~ col gap-2" text-base>
     <div mx--1>
-      <Badge bg-yellow-600:10 text-yellow-600 op75>
-        Function call
-      </Badge>
+      <NBadge n="yellow" v-text="'Function call'" />
     </div>
     <div flex="~ gap-1" font-mono>
       <ComposableItem

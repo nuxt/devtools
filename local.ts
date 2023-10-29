@@ -2,7 +2,7 @@
  * Local development module entry
  *
  * Change `@nuxt/devtools` to the absolute path of this module in any of your Nuxt projects,
- * allows you to try Nuxt Devtools locally directly from the source code. HMR is supported
+ * allows you to try Nuxt DevTools locally directly from the source code. HMR is supported
  * for the front-end client.
  *
  * For example, if you clone this repo to `/users/me/nuxt-devtools`, update your nuxt config:
@@ -44,10 +44,12 @@ export default defineNuxtModule<ModuleOptions>({
       config.server ||= {}
       // add proxy to client
       config.server.proxy ||= {}
+      // TODO: ws proxy is not working
       config.server.proxy[ROUTE_CLIENT] = {
         target: `http://localhost:${PORT}`,
         changeOrigin: true,
         followRedirects: true,
+        ws: true,
       }
       // add fs allow for local modules
       config.server.fs ||= {}
@@ -61,23 +63,24 @@ export default defineNuxtModule<ModuleOptions>({
       startSubprocess(
         {
           command: 'npx',
-          args: ['nuxi', 'dev', '--port', PORT.toString()],
+          args: ['nuxi', 'dev'],
           cwd: clientDir,
           stdio: 'pipe',
           env: {
             NUXT_DEVTOOLS_LOCAL: 'true',
+            PORT: PORT.toString(),
           },
         },
         {
           id: 'devtools:local',
-          name: 'Nuxt Devtools Local',
+          name: 'Nuxt DevTools Local',
           icon: 'logos-nuxt-icon',
         },
         nuxt,
       )
     })
 
-    logger.info(`Nuxt Devtools is using local client from \`${clientDir}\``)
+    logger.info(`Nuxt DevTools is using local client from \`${clientDir}\` at port \`${PORT}\``)
 
     return enableModule(options, nuxt)
   },

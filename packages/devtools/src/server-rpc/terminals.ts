@@ -1,6 +1,6 @@
 import type { NuxtDevtoolsServerContext, ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 
-export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerContext) {
+export function setupTerminalRPC({ nuxt, rpc, refresh, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   const terminals = new Map<string, TerminalState>()
 
   nuxt.hook('devtools:terminal:register', (terminal) => {
@@ -63,10 +63,12 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
       return Array.from(terminals.values())
         .map(i => serializeTerminal(i))
     },
-    getTerminalDetail(id: string) {
+    async getTerminalDetail(token: string, id: string) {
+      await ensureDevAuthToken(token)
       return serializeTerminal(terminals.get(id), true)
     },
-    async runTerminalAction(id: string, action: TerminalAction) {
+    async runTerminalAction(token: string, id: string, action: TerminalAction) {
+      await ensureDevAuthToken(token)
       const terminal = terminals.get(id)
       if (!terminal)
         return false

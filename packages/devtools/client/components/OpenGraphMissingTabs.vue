@@ -81,19 +81,23 @@ const selectedTab = ref(tabs[0])
         <div border="b base" flex-auto />
       </div>
 
-      <NCard v-if="selectedTab === tabs[0]" grid="~ cols-[max-content_1fr]" m4 items-center justify-between of-hidden>
+      <NCard
+        v-if="selectedTab === tabs[0]"
+        grid="~ cols-[1fr] lg:cols-[max-content_1fr]" m4 items-center justify-between of-hidden
+      >
         <template v-for="item, index of missingTags" :key="index">
           <div v-if="index" x-divider />
           <div v-if="index" x-divider />
-          <div flex="~ gap-1 items-center" px4 py2>
+          <div flex="~ gap-1 items-center" class="px2 pt2" lg="px4 py2">
             <div i-carbon-warning text-orange />
-            <NTextExternalLink
-              op50
-              :link="item.docs"
+            <NLink
+              op-50
+              :href="item.docs"
+              target="_blank"
               n="orange"
             >
               {{ item.name }}
-            </NTextExternalLink>
+            </NLink>
           </div>
           <div w-full p2 op75>
             {{ item.description }}
@@ -104,7 +108,7 @@ const selectedTab = ref(tabs[0])
         <p flex="~ gap-1 wrap items-center">
           <NButton
             icon="carbon-copy" n="xs" px-2
-            @click="copy(codeSnippet)"
+            @click="copy(codeSnippet, 'open-graph-suggestion')"
           >
             Copy
           </NButton>
@@ -129,7 +133,7 @@ const selectedTab = ref(tabs[0])
           <div flex="~ gap-2" n="sm primary" absolute right-2 top-2>
             <NButton
               icon="carbon-copy"
-              @click="copy(codeSnippet)"
+              @click="copy(codeSnippet, 'open-graph-suggestion')"
             >
               Copy
             </NButton>

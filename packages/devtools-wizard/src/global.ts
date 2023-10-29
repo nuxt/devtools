@@ -1,7 +1,7 @@
 /**
- * This module is for installing Nuxt Devtools globally and enabling it for a project.
+ * This module is for installing Nuxt DevTools globally and enabling it for a project.
  *
- * Since Nuxt v3.4, Nuxt Devtools is shipped with Nuxt so we only using this for Nuxt below v3.4.
+ * Since Nuxt v3.4, Nuxt DevTools is shipped with Nuxt so we only using this for Nuxt below v3.4.
  */
 import fs from 'node:fs'
 import { readUser, writeUser } from 'rc9'
@@ -18,11 +18,11 @@ const pathRegex = /[\\\/]@nuxt[\\\/]devtools[\\\/]/
 
 export async function enable(cwd: string) {
   const rc = readUser(RC_PATH)
-  consola.info('Installed Nuxt Devtools...')
+  consola.info('Installed Nuxt DevTools...')
   await execa('npm', ['install', '-g', `${moduleName}@latest`], { stdio: 'inherit' })
 
   markEnable(rc, cwd)
-  consola.info('Nuxt Devtools enabled! Restart your Nuxt app to start using it.')
+  consola.info('Nuxt DevTools enabled! Restart your Nuxt app to start using it.')
 }
 
 function markEnable(rc: RC, path: string) {
@@ -30,7 +30,7 @@ function markEnable(rc: RC, path: string) {
   const targetPath = resolve(modulePath, 'module.cjs').replace(/\\/g, '/')
 
   if (!fs.existsSync(targetPath))
-    throw new Error('Failed to locate the global Nuxt Devtools module. You may try it again')
+    throw new Error('Failed to locate the global Nuxt DevTools module. You may try it again')
 
   // remove all entries
   removeModule(rc)
@@ -59,13 +59,13 @@ export async function disable(cwd: string, args: string[]) {
   const isRemove = args.includes('--remove')
 
   if (markDisable(rc, cwd))
-    consola.success('Nuxt Devtools disabled for this project.')
+    consola.success('Nuxt DevTools disabled for this project.')
   else if (!isRemove)
-    consola.warn('Nuxt Devtools is not enabled for this project.')
+    consola.warn('Nuxt DevTools is not enabled for this project.')
 
   if (isRemove) {
     removeModule(rc)
-    consola.success('Nuxt Devtools is removed globally')
+    consola.success('Nuxt DevTools is removed globally')
   }
 
   writeUser(rc, RC_PATH)

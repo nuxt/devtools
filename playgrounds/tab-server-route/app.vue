@@ -2,7 +2,13 @@
 </script>
 
 <template>
-  <div px10 text-6xl>
+  <div p10 text-6xl>
     Server Routes [Playground]
   </div>
 </template>
+
+<style>
+html.dark {
+  background: #050505;
+}
+</style>

@@ -1,47 +1,73 @@
 import fsp from 'node:fs/promises'
+import { parse } from 'node:path'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
+import { debounce } from 'perfect-debounce'
 import fg from 'fast-glob'
-import type { AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { defaultAllowedExtensions } from '../constant'
 
-export function setupAssetsRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
+export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
+  let cache: AssetInfo[] | null = null
+
+  const extensions = options.assets?.uploadExtensions || defaultAllowedExtensions
+
+  const publicDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
+
+  const refreshDebounced = debounce(() => {
+    cache = null
+    refresh('getStaticAssets')
+  }, 500)
+
+  nuxt.hook('builder:watch', (event, key) => {
+    if (key.startsWith(nuxt.options.dir.public) && (event === 'add' || event === 'unlink'))
+      refreshDebounced()
+  })
+
+  async function scan() {
+    if (cache)
+      return cache
+
+    const baseURL = nuxt.options.app.baseURL
+    const files = await fg(['**/*'], {
+      cwd: publicDir,
+      onlyFiles: true,
+    })
+
+    function guessType(path: string): AssetType {
+      if (/\.(png|jpe?g|jxl|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(path))
+        return 'image'
+      if (/\.(mp4|webm|ogv|mov|avi|flv|wmv|mpg|mpeg|mkv|3gp|3g2|ts|mts|m2ts|vob|ogm|ogx|rm|rmvb|asf|amv|divx|m4v|svi|viv|f4v|f4p|f4a|f4b)$/i.test(path))
+        return 'video'
+      if (/\.(mp3|wav|ogg|flac|aac|wma|alac|ape|ac3|dts|tta|opus|amr|aiff|au|mid|midi|ra|rm|wv|weba|dss|spx|vox|tak|dsf|dff|dsd|cda)$/i.test(path))
+        return 'audio'
+      if (/\.(woff2?|eot|ttf|otf|ttc|pfa|pfb|pfm|afm)/i.test(path))
+        return 'font'
+      if (/\.(json[5c]?|te?xt|[mc]?[jt]sx?|md[cx]?|markdown)/i.test(path))
+        return 'text'
+      return 'other'
+    }
+
+    cache = await Promise.all(files.map(async (path) => {
+      const filePath = resolve(publicDir, path)
+      const stat = await fsp.lstat(filePath)
+      return {
+        path,
+        publicPath: join(baseURL, path),
+        filePath,
+        type: guessType(path),
+        size: stat.size,
+        mtime: stat.mtimeMs,
+      }
+    }))
+
+    return cache
+  }
 
   return {
     async getStaticAssets() {
-      const dir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
-      const baseURL = nuxt.options.app.baseURL
-      const files = await fg(['**/*'], {
-        cwd: dir,
-        onlyFiles: true,
-      })
-
-      function guessType(path: string): AssetType {
-        if (/\.(png|jpe?g|jxl|gif|svg|webp|avif|ico|bmp|tiff?)$/i.test(path))
-          return 'image'
-        if (/\.(mp4|webm|ogv|mov|avi|flv|wmv|mpg|mpeg|mkv|3gp|3g2|ts|mts|m2ts|vob|ogm|ogx|rm|rmvb|asf|amv|divx|m4v|svi|viv|f4v|f4p|f4a|f4b)$/i.test(path))
-          return 'video'
-        if (/\.(mp3|wav|ogg|flac|aac|wma|alac|ape|ac3|dts|tta|opus|amr|aiff|au|mid|midi|ra|rm|wv|weba|dss|spx|vox|tak|dsf|dff|dsd|cda)$/i.test(path))
-          return 'audio'
-        if (/\.(woff2?|eot|ttf|otf|ttc|pfa|pfb|pfm|afm)/i.test(path))
-          return 'font'
-        if (/\.(json[5c]?|te?xt|[mc]?[jt]sx?|md[cx]?|markdown)/i.test(path))
-          return 'text'
-        return 'other'
-      }
-
-      return await Promise.all(files.map(async (path) => {
-        const filePath = resolve(dir, path)
-        const stat = await fsp.lstat(filePath)
-        return {
-          path,
-          publicPath: join(baseURL, path),
-          filePath,
-          type: guessType(path),
-          size: stat.size,
-          mtime: stat.mtimeMs,
-        }
-      }))
+      return await scan()
     },
     async getImageMeta(filepath: string) {
       if (_imageMetaCache.has(filepath))
@@ -67,30 +93,53 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerC
         return undefined
       }
     },
-    async writeStaticAssets(token: string, files: { name: string; data: string }[], path: string) {
+    async writeStaticAssets(token: string, files: AssetEntry[], folder: string) {
       await ensureDevAuthToken(token)
 
-      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + path)
+      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
 
       return await Promise.all(
-        files.map(async ({ name, data }) => {
-          let dir = resolve(baseDir, name)
-          try {
-            await fsp.stat(dir)
-            const ext = dir.split('.').pop() as string
-            const base = dir.slice(0, dir.length - ext.length - 1)
-            let i = 1
-            while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
-              i++
-            dir = `${base}-${i}.${ext}`
+        files.map(async ({ path, content, encoding, override }) => {
+          let finalPath = resolve(baseDir, path)
+
+          const { ext } = parse(finalPath)
+          if (extensions !== '*') {
+            if (!extensions.includes(ext.toLowerCase()))
+              throw new Error(`File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
           }
-          catch (err) {
-            // Ignore error if file doesn't exist
+
+          if (!override) {
+            try {
+              await fsp.stat(finalPath)
+              const base = finalPath.slice(0, finalPath.length - ext.length - 1)
+              let i = 1
+              while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
+                i++
+              finalPath = `${base}-${i}.${ext}`
+            }
+            catch (err) {
+              // Ignore error if file doesn't exist
+            }
           }
-          await fsp.writeFile(dir, data, 'base64')
-          return dir
+          await fsp.writeFile(finalPath, content, {
+            encoding: encoding ?? 'utf-8',
+          })
+          return finalPath
         }),
       )
+    },
+    async deleteStaticAsset(token: string, path: string) {
+      await ensureDevAuthToken(token)
+
+      return await fsp.unlink(path)
+    },
+    async renameStaticAsset(token: string, oldPath: string, newPath: string) {
+      await ensureDevAuthToken(token)
+
+      const exist = cache?.find(asset => asset.filePath === newPath)
+      if (exist)
+        throw new Error(`File ${newPath} already exists`)
+      return await fsp.rename(oldPath, newPath)
     },
   } satisfies Partial<ServerFunctions>
 }

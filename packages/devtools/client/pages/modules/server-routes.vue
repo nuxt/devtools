@@ -13,18 +13,21 @@ definePageMeta({
   },
 })
 
-const vueRoute = useRoute()
-const vueRouter = useRouter()
+const inputDefaultsDrawer = ref(false)
 
 const serverRoutes = useServerRoutes()
-const { selectedRoute, view } = useDevToolsOptions('serverRoutes')
+const currentServerRoute = useCurrentServeRoute()
+
+const { selectedRoute, view, inputDefaults } = useDevToolsOptions('serverRoutes')
 
 const selected = computed(() => {
-  const route = serverRoutes.value?.find(i => i.route === vueRoute.query?.path && i.method === vueRoute.query?.method)
-  if (route)
+  if (!currentServerRoute.value && selectedRoute.value)
+    currentServerRoute.value = selectedRoute.value.filepath
+
+  const route = serverRoutes.value?.find(i => i.filepath === currentServerRoute.value)
+
+  if (currentServerRoute.value !== selectedRoute.value?.filepath && route)
     selectedRoute.value = route
-  if (selectedRoute.value)
-    vueRouter.push({ query: { path: selectedRoute.value.route, method: selectedRoute.value.method } })
   return route
 })
 
@@ -59,9 +62,6 @@ const filterByCollection = computed(() => {
     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
 
     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
-      collectionNames[collectionNames.length - 1] = collectionNames[collectionNames.length - 1].split('.')[0]
-
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1] === 'index')
       collectionNames.pop()
 
     let parentCollection: ServerRouteInfo | null = null
@@ -124,25 +124,39 @@ const filterByCollection = computed(() => {
 function toggleView() {
   view.value = view.value === 'tree' ? 'list' : 'tree'
 }
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
 </script>
 
 <template>
-  <PanelLeftRight storage-key="tab-server-routes">
+  <NSplitPane storage-key="tab-server-routes">
     <template #left>
-      <Navbar v-model:search="search" pb2>
+      <NNavbar v-model:search="search" pb2>
         <template #actions>
-          <NIconButton
+          <NButton
+            v-tooltip="'Toggle View'"
             text-lg
             :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
             title="Toggle view"
+            :border="false"
             @click="toggleView"
+          />
+          <NButton
+            v-tooltip="'Default Inputs'"
+            text-lg
+            icon="i-carbon-cics-sit-overrides"
+            title="Default Inputs"
+            :border="false"
+            @click="inputDefaultsDrawer = !inputDefaultsDrawer"
           />
         </template>
         <div flex="~ gap1" text-sm>
           <span v-if="search" op50>{{ filtered.length }} matched · </span>
           <span op50>{{ serverRoutes?.length }} routes in total</span>
         </div>
-      </Navbar>
+      </NNavbar>
 
       <ServerRouteListItem
         v-for="item in view === 'tree' ? filterByCollection : filtered"
@@ -156,6 +170,7 @@ function toggleView() {
           v-if="selected"
           :key="selected.filepath"
           :route="selected"
+          @open-default-input="inputDefaultsDrawer = true"
         />
       </KeepAlive>
       <NPanelGrids v-if="!selected">
@@ -164,5 +179,23 @@ function toggleView() {
         </NCard>
       </NPanelGrids>
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
+  <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
+    <div>
+      <div p4 border="b base">
+        <span text-lg>Default Inputs</span>
+        <br>
+        <span text-white op50>Merged as default for every request in DevTools</span>
+      </div>
+      <NSectionBlock
+        v-for="tab of Object.keys(inputDefaults)"
+        :key="tab"
+        :text="`${capitalize(tab)} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
+        :padding="false"
+        :icon="ServerRouteTabIcons[tab]"
+      >
+        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ active: true, type: 'string' }" />
+      </NSectionBlock>
+    </div>
+  </NDrawer>
 </template>

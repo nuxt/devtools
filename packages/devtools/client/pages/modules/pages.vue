@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { nextTick } from 'vue'
-
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Pages',
@@ -20,47 +18,51 @@ const layouts = useLayouts()
 
 const routes = useMergedRouteList()
 
-const middleware = computed(() => {
-  return serverApp.value?.middleware || []
-})
-
+const middleware = computed(() => serverApp.value?.middleware || [])
 const routeInput = ref('')
+const count = ref(0)
 
-until(route).toBeTruthy().then((v) => {
-  routeInput.value = v.path
+const currentRoute = computed(() => {
+  // Additionall reactivity tracker
+  // eslint-disable-next-line no-unused-expressions
+  (middleware.value, routeInput.value, layouts.value, count.value)
+  return router.value?.currentRoute?.value?.path
 })
 
-until(router).toBeTruthy().then((v) => {
-  v.afterEach(() => {
-    nextTick(() => {
-      routeInput.value = route.value.path
-    })
+onMounted(() => {
+  if (route.value)
+    routeInput.value = router.value?.currentRoute?.value?.path
+
+  router.value?.beforeEach((to) => {
+    routeInput.value = to.fullPath
+  })
+  router.value?.afterEach((to) => {
+    routeInput.value = to.fullPath
   })
 })
 
 async function navigate() {
-  if (routeInput.value !== route.value.path)
+  if (routeInput.value !== router.value?.currentRoute?.value?.path)
     router.value.push(routeInput.value || '/')
 }
 
 const routeInputMatched = computed(() => {
-  if (routeInput.value === route.value.path)
-    return []
   return router.value.resolve(routeInput.value || '/').matched
 })
 
 function navigateToRoute(path: string) {
   router.value.push(path)
+  routeInput.value = path
 }
 </script>
 
 <template>
   <div v-if="config?.pages && router" h-full of-auto>
-    <div border="b base" flex="~ col gap1" px4 py3 navbar-glass>
+    <div border="b base" flex="~ col gap1" px4 py3 n-navbar-glass>
       <div>
-        <template v-if="route.path !== routeInput">
+        <template v-if="currentRoute !== routeInput">
           <span op50>Navigate from </span>
-          <span font-mono>{{ route.path }}</span>
+          <span font-mono>{{ currentRoute }}</span>
           <span op50> to </span>
         </template>
         <template v-else>
@@ -71,11 +73,11 @@ function navigateToRoute(path: string) {
         v-model="routeInput"
         font-mono
         icon="carbon-direction-right-01 scale-y--100"
-        :class="route.path === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange' "
+        :class="currentRoute === routeInput ? '' : routeInputMatched.length ? 'text-green' : 'text-orange'"
         @keydown.enter="navigate"
       />
       <div>
-        <template v-if="route.path !== routeInput">
+        <template v-if="currentRoute !== routeInput">
           <span>Press <b font-bold>Enter</b> to navigate</span>
           <span v-if="!routeInputMatched.length" text-orange op75> (no match)</span>
         </template>
@@ -85,18 +87,23 @@ function navigateToRoute(path: string) {
       </div>
     </div>
     <NSectionBlock
-      v-if="routeInputMatched.length"
       icon="carbon-tree-view"
       text="Matched Routes"
       :padding="false"
     >
-      <RoutesTable
-        :pages="routeInputMatched"
-        :layouts="layouts || []"
-        :matched="[]"
-        :matched-pending="routeInputMatched"
-        @navigate="navigateToRoute"
-      />
+      <div min-h-14>
+        <RoutesTable
+          v-if="routeInputMatched.length"
+          :pages="routeInputMatched"
+          :layouts="layouts || []"
+          :matched="route.matched"
+          :matched-pending="routeInputMatched"
+          @navigate="navigateToRoute"
+        />
+        <div v-else class="py-4 text-center">
+          <span op50>No routes matched</span>
+        </div>
+      </div>
     </NSectionBlock>
     <NSectionBlock
       icon="carbon-tree-view-alt"
@@ -133,9 +140,9 @@ function navigateToRoute(path: string) {
         <tr v-for="m of middleware" :key="m.path" h-7>
           <td>
             <span mr1>{{ m.name }}</span>
-            <Badge
+            <NBadge
               v-if="m.global"
-              bg-green-400:10 text-green-400
+              n="green"
               title="Registered at runtime as a global component"
               v-text="'global'"
             />
@@ -150,6 +157,7 @@ function navigateToRoute(path: string) {
   <LaunchPage
     v-else
     icon="carbon-tree-view-alt"
+    name="wizard-pages"
     title="Nuxt Routing"
     description="Create `./pages/index.vue` to enable routing"
     :actions="[

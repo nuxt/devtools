@@ -1,12 +1,26 @@
 import type {} from '@nuxt/schema'
 import type { Ref } from 'vue'
 import type { AppConfig } from 'nuxt/schema'
-import type { NuxtApp } from 'nuxt/dist/app/nuxt'
+import type { NuxtApp } from 'nuxt/app'
 import type { Hookable } from 'hookable'
 import type { BirpcReturn } from 'birpc'
-import type { ServerFunctions } from './rpc'
+import type { BuiltinLanguage } from 'shikiji'
+import type { $Fetch } from 'ofetch'
+import type { ClientFunctions, ServerFunctions } from './rpc'
 import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
 import type { TimelineMetrics } from './timeline-metrics'
+
+export interface DevToolsFrameState {
+  width: number
+  height: number
+  top: number
+  left: number
+  open: boolean
+  route: string
+  position: 'left' | 'right' | 'bottom' | 'top'
+  closeOnOutsideClick: boolean
+  minimizePanelInactive: number
+}
 
 export interface NuxtDevtoolsClientHooks {
   /**
@@ -29,6 +43,14 @@ export interface NuxtDevtoolsClientHooks {
    * Triggers reactivity manually, since Vue won't be reactive across frames)
    */
   'host:update:reactivity': () => void
+  /**
+   * Host action to control the DevTools navigation
+   */
+  'host:action:navigate': (path: string) => void
+  /**
+   * Host action to reload the DevTools
+   */
+  'host:action:reload': () => void
 }
 
 /**
@@ -36,10 +58,9 @@ export interface NuxtDevtoolsClientHooks {
  */
 export interface NuxtDevtoolsHostClient {
   nuxt: NuxtApp
-  appConfig: AppConfig
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
-  colorMode: Ref<'dark' | 'light'>
+  getIframe(): HTMLIFrameElement | undefined
 
   inspector?: {
     instance?: VueInspectorClient
@@ -49,41 +70,51 @@ export interface NuxtDevtoolsHostClient {
     isEnabled: Ref<boolean>
   }
 
-  loadingTimeMetrics: LoadingTimeMetric
-  getClientHooksMetrics(): HookInfo[]
+  devtools: {
+    close(): void
+    open(): void
+    toggle(): void
+    reload(): void
+    navigate(path: string): void
 
-  clientPluginMetrics: PluginMetric[] | undefined
-  clientTimelineMetrics: TimelineMetrics | undefined
+    /**
+     * Popup the DevTools frame into Picture-in-Picture mode
+     *
+     * Requires Chrome 111 with experimental flag enabled.
+     *
+     * Function is undefined when not supported.
+     *
+     * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
+     */
+    popup?(): any
+  }
 
-  reloadPage(): void
+  app: {
+    reload(): void
+    navigate(path: string, hard?: boolean): void
+    appConfig: AppConfig
+    colorMode: Ref<'dark' | 'light'>
+    frameState: Ref<DevToolsFrameState>
+    $fetch: $Fetch
+  }
 
-  close(): void
-  open(): void
-  toggle(): void
-
-  /**
-   * Popup the DevTools frame into Picture-in-Picture mode
-   *
-   * Requires Chrome 111 with experimental flag enabled.
-   *
-   * Function is undefined when not supported.
-   *
-   * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-   */
-  popup?(): any
+  metrics: {
+    clientHooks(): HookInfo[]
+    clientPlugins(): PluginMetric[] | undefined
+    clientTimeline(): TimelineMetrics | undefined
+    loading(): LoadingTimeMetric
+  }
 
   /**
    * Update client
    * @internal
    */
-  updateClient(): NuxtDevtoolsHostClient
-
-  getIframe(): HTMLIFrameElement | undefined
+  syncClient(): NuxtDevtoolsHostClient
 }
 
 export interface NuxtDevtoolsClient {
-  rpc: BirpcReturn<ServerFunctions>
-  renderCodeHighlight: (code: string, lang: string, lines?: boolean, theme?: string) => {
+  rpc: BirpcReturn<ServerFunctions, ClientFunctions>
+  renderCodeHighlight: (code: string, lang?: BuiltinLanguage) => {
     code: string
     supported: boolean
   }

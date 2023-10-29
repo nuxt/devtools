@@ -5,9 +5,5 @@ definePageMeta({
 </script>
 
 <template>
-  <NPanelGrids h-screen w-screen px5>
-    <div>
-      Your App
-    </div>
-  </NPanelGrids>
+  <div h-screen w-screen bg-black />
 </template>

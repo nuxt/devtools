@@ -47,10 +47,12 @@ async function refreshData(keys?: string[]) {
       </template>
       <StateGroup :state="payload.data">
         <template #actions="{ isOpen, name }">
-          <NIconButton
+          <NButton
             v-if="isOpen && name"
+            v-tooltip.bottom="`Re-fetch '${name}'`"
             :title="`Re-fetch '${name}'`"
             icon="carbon-recycle"
+            :border="false"
             @click="refreshData([name])"
           />
         </template>
@@ -60,7 +62,7 @@ async function refreshData(keys?: string[]) {
       v-if="payload.functions && Object.keys(payload.functions).length"
       icon="carbon-function"
       text="Functions"
-      description="State for functions (experimental)"
+      description="State for functions"
     >
       <StateEditor
         ml--6

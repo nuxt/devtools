@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import 'floating-vue/dist/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
-import 'splitpanes/dist/splitpanes.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 import { setupClientRPC } from './setup/client-rpc'
+import { splitScreenAvailable } from '~/composables/storage'
 
 if (process.client)
   import('./setup/unocss-runtime')
@@ -31,11 +31,11 @@ setupClientRPC()
 const client = useClient()
 const route = useRoute()
 const colorMode = useColorMode()
-const isUtilityView = computed(() => route.path.startsWith('/__'))
+const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
 watch(
-  () => client.value?.colorMode.value,
+  () => client.value?.app.colorMode.value,
   (mode) => {
     if (mode)
       colorMode.value = mode
@@ -45,14 +45,15 @@ watch(
 
 addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
-    client.value?.close()
+    client.value?.devtools.close()
     e.preventDefault()
   }
 })
 
-const { scale } = useDevToolsUIOptions()
+const { scale, sidebarExpanded } = useDevToolsUIOptions()
+const dataSchema = useSchemaInput()
 
-onMounted(() => {
+onMounted(async () => {
   const injectClient = useInjectionClient()
   watchEffect(() => {
     window.__NUXT_DEVTOOLS__ = injectClient.value
@@ -61,28 +62,61 @@ onMounted(() => {
   watchEffect(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
+
+  if (!isDevAuthed.value) {
+    if (devAuthToken.value) {
+      const result = await rpc.verifyAuthToken(devAuthToken.value)
+      if (result)
+        isDevAuthed.value = true
+    }
+  }
 })
+
+registerCommands(() =>
+  splitScreenAvailable.value
+    ? [
+        {
+          id: 'action:split-screen',
+          title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
+          icon: 'i-carbon-split-screen',
+          action: () => {
+            splitScreenEnabled.value = !splitScreenEnabled.value
+          },
+        },
+      ]
+    : [])
 </script>
 
 <template>
-  <div fixed inset-0 h-screen w-screen>
+  <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
-    <Notification />
+    <NNotification />
     <NLoading v-if="waiting">
       Connecting....
     </NLoading>
     <div
-      v-else :grid="isUtilityView ? 'flex' : '~ cols-[50px_1fr]'"
+      v-else
+      :class="isUtilityView ? 'flex' : sidebarExpanded ? 'grid grid-cols-[250px_1fr]' : 'grid grid-cols-[50px_1fr]'"
       h-full h-screen of-hidden font-sans bg-base
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NuxtPage />
+        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20">
+          <template #left>
+            <NuxtPage />
+          </template>
+          <template v-if="!isUtilityView && splitScreenEnabled && splitScreenAvailable" #right>
+            <SplitScreen />
+          </template>
+        </NSplitPane>
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />
     </div>
     <DisconnectIndicator />
     <RestartDialogs />
+    <div v-lazy-show="dataSchema">
+      <LazyDataSchemaDrawer />
+    </div>
   </div>
 </template>

@@ -1,5 +1,6 @@
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Import, UnimportMeta } from 'unimport'
+import type { Component } from 'nuxt/schema'
 
 export interface HookInfo {
   name: string
@@ -25,7 +26,7 @@ export interface PackageUpdateInfo {
   needsUpdate: boolean
 }
 
-export type PackageManagerName = 'npm' | 'yarn' | 'pnpm'
+export type PackageManagerName = 'npm' | 'yarn' | 'pnpm' | 'bun'
 
 export type NpmCommandType = 'install' | 'uninstall' | 'update'
 
@@ -54,6 +55,7 @@ export interface ServerRouteInfo {
 
 export type ServerRouteInputType = 'string' | 'number' | 'boolean' | 'file' | 'date' | 'time' | 'datetime-local'
 export interface ServerRouteInput {
+  active: boolean
   key: string
   value: any
   type?: ServerRouteInputType
@@ -121,6 +123,7 @@ export interface ModuleStaticInfo {
   learn_more: string
   category: string
   type: ModuleType
+  stats: ModuleStats
   maintainers: MaintainerInfo[]
   contributors: GitHubContributor[]
   compatibility: ModuleCompatibility
@@ -129,6 +132,13 @@ export interface ModuleStaticInfo {
 export interface ModuleCompatibility {
   nuxt: string
   requires: { bridge?: boolean | 'optional' }
+}
+
+export interface ModuleStats {
+  downloads: number
+  stars: number
+  publishedAt: number
+  createdAt: number
 }
 
 export type CompatibilityStatus = 'working' | 'wip' | 'unknown' | 'not-working'
@@ -177,6 +187,13 @@ export interface AssetInfo {
   mtime: number
 }
 
+export interface AssetEntry {
+  path: string
+  content: string
+  encoding?: BufferEncoding
+  override?: boolean
+}
+
 export interface CodeSnippet {
   code: string
   lang: string
@@ -187,4 +204,10 @@ export interface CodeSnippet {
 export interface ComponentRelationship {
   id: string
   deps: string[]
+}
+
+export interface ComponentWithRelationships {
+  component: Component
+  dependencies?: string[]
+  dependents?: string[]
 }

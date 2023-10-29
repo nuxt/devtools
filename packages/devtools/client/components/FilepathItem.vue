@@ -10,8 +10,7 @@ const openInEditor = useOpenInEditor()
 const config = useServerConfig()
 const parsed = computed(() => (props.filepath && config.value)
   ? parseReadablePath(props.filepath, config.value.rootDir)
-  : { path: props.filepath || '' },
-)
+  : { path: props.filepath || '' })
 </script>
 
 <template>

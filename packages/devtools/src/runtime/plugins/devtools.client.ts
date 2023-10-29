@@ -3,8 +3,9 @@ import { shallowReactive, watchEffect } from 'vue'
 import type { Router } from 'vue-router'
 import { setupHooksDebug } from '../shared/hooks'
 
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+// eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
+import type { TimelineServerState } from '../../types'
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {
@@ -25,7 +26,12 @@ export default defineNuxtPlugin((nuxt: any) => {
     console.error(e)
   }
 
-  const timeMetric = window.__NUXT_DEVTOOLS_TIME_METRIC__ = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
+  const timeMetric = shallowReactive(window.__NUXT_DEVTOOLS_TIME_METRIC__ || {})
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
+    value: timeMetric,
+    enumerable: false,
+    configurable: true,
+  })
   timeMetric.pluginInit = Date.now()
 
   const clientHooks = setupHooksDebug(nuxt.hooks)
@@ -41,7 +47,7 @@ export default defineNuxtPlugin((nuxt: any) => {
     timeMetric.pageEnd = Date.now()
   })
 
-  const ssrState = useState('__nuxt_devtools__', () => ({}))
+  const ssrState = useState<TimelineServerState>('__nuxt_devtools__', () => ({}))
 
   watchEffect(() => {
     if (ssrState.value.timeSsrStart)
@@ -56,5 +62,15 @@ export default defineNuxtPlugin((nuxt: any) => {
         timeMetric,
         router,
       })
+
+      const isMac = typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('mac')
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `✨ %cNuxt DevTools %c Press Shift + ${isMac ? 'Option' : 'Alt'} + D to open DevTools`,
+        'color: black; border-radius: 3px 0 0 3px; padding: 2px 2px 1px 10px; background: #00DC82',
+        'border-radius: 0 3px 3px 0; padding: 2px 10px 1px 2px; background: #00DC8220',
+        '',
+      )
     })
 })

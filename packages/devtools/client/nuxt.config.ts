@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   ssr: false,
   pages: true,
   nitro: {
+    preset: 'static',
     output: {
       publicDir: r('../dist/client'),
     },
@@ -35,8 +36,9 @@ export default defineNuxtConfig({
     fixture2: 'from nuxt.config.ts',
   },
   runtimeConfig: {
-    fixture3: 'private runtime config from nuxt.config.ts',
-    public: {
+    'fixture3': 'private runtime config from nuxt.config.ts',
+    'api-key': 'null',
+    'public': {
       fixture4: 'public runtime config from nuxt.config.ts',
     },
   },
@@ -59,5 +61,13 @@ export default defineNuxtConfig({
         'vis-data',
       ],
     },
+    server: {
+      hmr: {
+        clientPort: process.env.PORT ? +process.env.PORT : undefined,
+      },
+    },
+  },
+  typescript: {
+    includeWorkspace: true,
   },
 })

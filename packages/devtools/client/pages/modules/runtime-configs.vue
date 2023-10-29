@@ -11,12 +11,12 @@ definePageMeta({
 })
 
 const client = useClient()
-const serverConfig = useServerConfig()
+const runtimeConfig = useServerRuntimeConfig()
 const payload = computed(() => client.value?.nuxt.payload)
 
 const privateConfig = computed(() => {
   const clone = {
-    ...serverConfig.value?.runtimeConfig,
+    ...runtimeConfig.value,
   }
   delete clone.public
   delete clone.app
@@ -31,7 +31,7 @@ const privateConfig = computed(() => {
       text="App Config"
       :padding="false"
     >
-      <StateEditor :state="client.appConfig" />
+      <StateEditor :state="client.app.appConfig" />
     </NSectionBlock>
 
     <NSectionBlock

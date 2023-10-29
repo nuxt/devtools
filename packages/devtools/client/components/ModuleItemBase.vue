@@ -7,7 +7,8 @@ const props = withDefaults(
     info?: ModuleStaticInfo
     compact?: boolean
     maintainers?: boolean
-  }>(), {
+  }>(),
+  {
     maintainers: true,
   },
 )
@@ -88,6 +89,21 @@ const openInEditor = useOpenInEditor()
       </slot>
 
       <slot name="items" />
+
+      <div v-if="data.stats" flex="~ gap-4 items-center">
+        <div flex="~ gap-1 items-center" op50>
+          <NIcon icon="carbon-star" text-lg />
+          <span>
+            {{ data.stats.stars }}
+          </span>
+        </div>
+        <div flex="~ gap-1 items-center" op50>
+          <NIcon icon="carbon-download" text-lg />
+          <span>
+            {{ data.stats.downloads }}
+          </span>
+        </div>
+      </div>
     </div>
     <div flex="~ col" items-end>
       <div

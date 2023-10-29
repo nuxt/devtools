@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import fsp from 'node:fs/promises'
 import { relative } from 'node:path'
 import { consola } from 'consola'
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 import { parseModule } from 'magicast'
 import { diffLines } from 'diff'
 import { join } from 'pathe'
@@ -22,14 +22,14 @@ function findNuxtConfig(cwd: string) {
 }
 
 function printOutManual(value: boolean) {
-  consola.info(c.yellow('To manually enable Nuxt Devtools, add the following to your Nuxt config:'))
-  consola.info(c.cyan(`\n  devtools: { enabled: ${value} }\n`))
+  consola.info(colors.yellow('To manually enable Nuxt DevTools, add the following to your Nuxt config:'))
+  consola.info(colors.cyan(`\n  devtools: { enabled: ${value} }\n`))
 }
 
 async function toggleConfig(cwd: string, value?: boolean) {
   const nuxtConfig = findNuxtConfig(cwd)
   if (!nuxtConfig) {
-    consola.error(c.red('Unable to find Nuxt config file in current directory'))
+    consola.error(colors.red('Unable to find Nuxt config file in current directory'))
     process.exitCode = 1
     printOutManual(true)
     return false
@@ -51,12 +51,12 @@ async function toggleConfig(cwd: string, value?: boolean) {
     const generated = mod.generate().code
 
     if (source.trim() === generated.trim()) {
-      consola.info(c.yellow(`Nuxt Devtools is already ${value ? 'enabled' : 'disabled'}`))
+      consola.info(colors.yellow(`Nuxt DevTools is already ${value ? 'enabled' : 'disabled'}`))
     }
     else {
       consola.log('')
       consola.log('We are going to update the Nuxt config with with the following changes:')
-      consola.log(c.bold(c.green(`./${relative(cwd, nuxtConfig)}`)))
+      consola.log(colors.bold(colors.green(`./${relative(cwd, nuxtConfig)}`)))
       consola.log('')
       printDiffToCLI(source, generated)
       consola.log('')
@@ -75,7 +75,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
     }
   }
   catch (err) {
-    consola.error(c.red('Unable to update Nuxt config file automatically'))
+    consola.error(colors.red('Unable to update Nuxt config file automatically'))
     process.exitCode = 1
     printOutManual(true)
     return false
@@ -88,7 +88,7 @@ export async function enable(cwd: string) {
   if (await toggleConfig(cwd, true)) {
     // disable global devtools
     await import('./global').then(r => r.disableSilently(cwd))
-    consola.success(c.green('Nuxt Devtools is enabled! Restart your Nuxt app to start using it.'))
+    consola.success(colors.green('Nuxt DevTools is enabled! Restart your Nuxt app to start using it.'))
   }
 }
 
@@ -96,7 +96,7 @@ export async function disable(cwd: string) {
   if (await toggleConfig(cwd, false)) {
     // disable global devtools
     await import('./global').then(r => r.disableSilently(cwd))
-    consola.success('Nuxt Devtools disabled for this project.')
+    consola.success('Nuxt DevTools disabled for this project.')
   }
 }
 
@@ -114,11 +114,11 @@ function printDiffToCLI(from: string, to: string) {
       if (!diff.added)
         no += 1
       if (diff.added)
-        output += c.green(`+    | ${line}\n`)
+        output += colors.green(`+    | ${line}\n`)
       else if (diff.removed)
-        output += c.red(`-${no.toString().padStart(3, ' ')} | ${line}\n`)
+        output += colors.red(`-${no.toString().padStart(3, ' ')} | ${line}\n`)
       else
-        output += c.gray(`${c.dim(`${no.toString().padStart(4, ' ')} |`)} ${line}\n`)
+        output += colors.gray(`${colors.dim(`${no.toString().padStart(4, ' ')} |`)} ${line}\n`)
     }
   }
 

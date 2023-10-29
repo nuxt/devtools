@@ -1,21 +1,29 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-// @ts-ignore tsconfig
-import { NuxtLink } from '#components'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   to?: string
   href?: string
   target?: string
+  underline?: boolean
 }>()
+
+const link = computed(() => props.href || props.to)
 </script>
 
 <template>
-  <Component
-    :is="(href || target) ? 'a' : NuxtLink"
-    v-bind="$props"
-    class="n-link n-transition hover:n-link-hover n-link-base"
+  <NuxtLink
+    v-bind="link ? {
+      href: link,
+      target,
+      rel: target === '_blank' ? 'noopener noreferrer' : null,
+    } : {}"
+    :class="{ 'n-link n-transition hover:n-link-hover n-link-base': link || underline }"
   >
     <slot />
-  </Component>
+    <div
+      v-if="link && target === '_blank'"
+      i-carbon:arrow-up-right translate-y--1 text-xs op50
+    />
+  </NuxtLink>
 </template>

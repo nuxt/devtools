@@ -57,15 +57,15 @@ function getMiddlewarePath(name: any) {
         <tr v-for="item of sorted" :key="item.name" class="group" h-7 border="b dashed transparent hover:base">
           <td w-20 pr-1>
             <div flex items-center justify-end>
-              <Badge
+              <NBadge
                 v-if="matched.find(m => m.name === item.name)"
-                bg-green-400:10 text-green-400
+                n="green"
                 title="active"
                 v-text="'active'"
               />
-              <Badge
-                v-if="matchedPending.find(m => m.name === item.name)"
-                bg-teal-400:10 text-teal-400
+              <NBadge
+                v-else-if="matchedPending.find(m => m.name === item.name)"
+                n="teal"
                 title="next"
                 v-text="'next'"
               />

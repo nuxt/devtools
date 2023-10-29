@@ -1,5 +1,5 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 
-test('basic', async () => {
+it('basic', async () => {
   expect(1 + 2).toBe(3)
 })

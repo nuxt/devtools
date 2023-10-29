@@ -57,57 +57,13 @@ html.dark {
 .prose hr {
   --uno: border-solid border-1 border-b border-base h-1px w-full block my-2 op50;
 }
-.dark .vitesse-light {
-  display: none;
-}
-html:not(.dark) .vitesse-dark {
-  display: none;
-}
-.prose pre:has(.shiki-container) {
-  padding: 0;
-  margin: 0;
-  font-size: 1.1em;
-}
-.prose pre.shiki {
-  padding: 1em;
-  margin: 0;
-  --uno: border border-base rounded;
+
+.dark .shiki {
+  background: var(--shiki-dark-bg, inherit) !important;
 }
 
-/* Splitpanes */
-.splitpanes__splitter {
-  position: relative;
-}
-.splitpanes__splitter:before {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transition: .2s ease;
-  content: '';
-  transition: opacity 0.4s;
-  z-index: 1;
-}
-.splitpanes__splitter:hover:before {
-  background: #8881;
-  opacity: 1;
-}
-.splitpanes--vertical>.splitpanes__splitter {
-  min-width: 0 !important;
-  width: 0 !important;
-}
-.splitpanes--horizontal>.splitpanes__splitter {
-  min-height: 0 !important;
-  height: 0 !important;
-}
-.splitpanes--vertical>.splitpanes__splitter:before {
-  left: -5px;
-  right: -4px;
-  height: 100%;
-}
-.splitpanes--horizontal>.splitpanes__splitter:before {
-  top: -5px;
-  bottom: -4px;
-  width: 100%;
+.dark .shiki span {
+  color: var(--shiki-dark, inherit) !important;
 }
 
 /* JSON Editor */

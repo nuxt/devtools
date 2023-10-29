@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatTimeAgo } from '@vueuse/core'
+import { telemetry } from '~/composables/telemetry'
 import type { AnalyzeBuildMeta } from '~/../src/types'
 import { satisfyNuxtVersion } from '~/composables/npm'
 
@@ -17,12 +18,9 @@ const PromiseConfirm = createTemplatePromise<boolean>()
 
 const info = useAnalyzeBuildInfo()
 const router = useRouter()
-const route = useRoute()
+const slug = useSessionState<string>('analyze-build:slug', '')
 
-const selected = computed(() => {
-  const slug = route.query.slug as string
-  return info.value?.builds.find(b => b.slug === slug) ?? info.value?.builds[0]
-})
+const selected = computed(() => info.value?.builds.find(b => b.slug === slug.value) ?? info.value?.builds[0])
 
 const shouldGotoTerminal = ref(false)
 
@@ -34,6 +32,8 @@ async function start() {
   if (!await PromiseConfirm.start())
     return
 
+  telemetry('analyze-build:start')
+
   processAnalyzeBuildInfo.value = {
     name: buildNameInput.value,
     processId: await rpc.startAnalyzeBuild(await ensureDevAuthToken(), buildNameInput.value),
@@ -42,9 +42,13 @@ async function start() {
     gotoTerminal()
 }
 
+const terminalId = useCurrentTerminalId()
+
 function gotoTerminal() {
-  if (processAnalyzeBuildInfo.value?.processId)
-    router.push(`/modules/terminals?id=${encodeURIComponent(processAnalyzeBuildInfo.value.processId)}`)
+  if (processAnalyzeBuildInfo.value?.processId) {
+    terminalId.value = processAnalyzeBuildInfo.value.processId
+    router.push('/modules/terminals')
+  }
 }
 
 function formatDuration(build: AnalyzeBuildMeta) {
@@ -62,23 +66,23 @@ registerCommands(() => [
 </script>
 
 <template>
-  <PanelLeftRight :left-size="30">
+  <NSplitPane :left-size="30">
     <template #left>
       <div flex="~ col">
         <template v-for="build of info?.builds" :key="build.slug">
-          <NuxtLink
+          <button
             flex="~ col gap1" hover:bg-active p3
             :class="build.slug === selected?.slug ? 'text-primary bg-active' : ''"
-            :to="`?slug=${encodeURIComponent(build.slug)}`"
+            @click="slug = build.slug"
           >
             <code>{{ build.name }}</code>
-            <div flex="~ gap-1 items-center wrap" text-sm op60>
+            <div flex="~ gap-1 items-center wrap" w-full text-sm op60>
               <div i-carbon-time />
               <span>{{ formatDuration(build) }}</span>
               <div flex-auto />
               <span>{{ formatTimeAgo(new Date(build.endTime)) }}</span>
             </div>
-          </NuxtLink>
+          </button>
           <div x-divider />
         </template>
         <div flex="~ items-center justify-center wrap" p4>
@@ -95,7 +99,7 @@ registerCommands(() => [
       <BuildAnalyzeDetails v-if="selected" :current="selected" />
       <NPanelGrids v-else />
     </template>
-  </PanelLeftRight>
+  </NSplitPane>
 
   <PromiseConfirm v-slot="{ resolve }">
     <NDialog :model-value="true" @close="resolve(false)">

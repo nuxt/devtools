@@ -1,5 +1,5 @@
 <template>
   <div>
-    [Nuxt Devtools Playground]
+    [Nuxt DevTools Playground]
   </div>
 </template>

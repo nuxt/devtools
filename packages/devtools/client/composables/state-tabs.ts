@@ -1,6 +1,6 @@
 import { objectPick } from '@antfu/utils'
 import type { MaybeRef } from 'vue'
-import type { ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
@@ -57,10 +57,11 @@ function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBu
   }
 }
 
-export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>) {
+export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>): ComputedRef<CategorizedTabs> {
   const {
     pinnedTabs,
   } = useDevToolsUIOptions()
+
   return computed(() => {
     const categories = getCategorizedRecord()
     for (const tab of unref(tabs)) {
@@ -81,7 +82,7 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
     if (categories.pinned?.length)
       categories.pinned.sort((a, b) => pinnedTabs.value.indexOf(a.name) - pinnedTabs.value.indexOf(b.name))
 
-    return Object.entries(categories)
+    return Object.entries(categories) as CategorizedTabs
   })
 }
 
@@ -94,16 +95,18 @@ export function useEnabledTabs() {
   return computed(() => tabs.value
     .filter((tab, idx) => {
       const _tab = tab as ModuleBuiltinTab
+      const isPinned = settings.pinnedTabs.value.includes(_tab.name)
+      if (isPinned && settings.hiddenTabCategories.value.includes('pinned'))
+        return false
       if (tabShows[idx] && !toValue(tabShows[idx]))
         return false
       if (settings.hiddenTabs.value.includes(_tab.name))
         return false
-      if (settings.hiddenTabCategories.value.includes(tab.category || 'app'))
+      if (settings.hiddenTabCategories.value.includes(tab.category || 'app') && !isPinned)
         return false
       return true
     })
-    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')),
-  )
+    .sort((a, b) => categoryOrder.indexOf(a.category || 'app') - categoryOrder.indexOf(b.category || 'app')))
 }
 
 export function useAllRoutes() {

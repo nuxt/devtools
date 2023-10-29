@@ -9,9 +9,10 @@ const types = [
   'twitter',
   'facebook',
   'linkedin',
+  'telegram',
 ]
 
-const selected = ref(types[0])
+const selected = useLocalStorage('nuxt-devtools-social-preview-tab', types[0])
 
 const card = computed(() => getSocialPreviewCard(props.tags, {
   title: [{ tag: 'title' }],
@@ -23,7 +24,7 @@ const card = computed(() => getSocialPreviewCard(props.tags, {
 </script>
 
 <template>
-  <div h-full w-520 flex="~ col">
+  <div flex="~ col">
     <div flex="~ wrap" w-full flex-none>
       <template v-for="name, idx of types" :key="idx">
         <button
@@ -48,6 +49,9 @@ const card = computed(() => getSocialPreviewCard(props.tags, {
       </div>
       <div v-else-if="selected === 'linkedin'">
         <SocialLinkedin :card="card" />
+      </div>
+      <div v-else-if="selected === 'telegram'">
+        <SocialTelegram :card="card" />
       </div>
     </div>
   </div>

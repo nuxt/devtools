@@ -3,7 +3,7 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageManagerName, PackageUpdateInfo, ServerRouteInfo } from './integrations'
+import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 import type { AnalyzeBuildsInfo } from './analyze-build'
@@ -12,6 +12,7 @@ import type { InstallModuleReturn } from './server-ctx'
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig(): NuxtOptions
+  getServerRuntimeConfig(): Record<string, any>
   getModuleOptions(): ModuleOptions
   getComponents(): Component[]
   getComponentsRelationships(): Promise<ComponentRelationship[]>
@@ -27,17 +28,17 @@ export interface ServerFunctions {
   // Options
   getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]>
   updateOptions<T extends keyof NuxtDevToolsOptions>(tab: T, settings: Partial<NuxtDevToolsOptions[T]>): Promise<void>
+  clearOptions(): Promise<void>
 
   // Updates
   checkForUpdateFor(name: string): Promise<PackageUpdateInfo | undefined>
-  getPackageManager(): Promise<PackageManagerName>
   getNpmCommand(command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<string[] | undefined>
   runNpmCommand(token: string, command: NpmCommandType, packageName: string, options?: NpmCommandOptions): Promise<{ processId: string } | undefined>
 
   // Terminal
   getTerminals(): TerminalInfo[]
-  getTerminalDetail(token: string, id: string): TerminalInfo | undefined
-  runTerminalAction(id: string, action: TerminalAction): Promise<boolean>
+  getTerminalDetail(token: string, id: string): Promise<TerminalInfo | undefined>
+  runTerminalAction(token: string, id: string, action: TerminalAction): Promise<boolean>
 
   // Storage
   getStorageMounts(): Promise<StorageMounts>
@@ -55,17 +56,21 @@ export interface ServerFunctions {
   // Queries
   getImageMeta(filepath: string): Promise<ImageMeta | undefined>
   getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
-  writeStaticAssets(token: string, file: { name: string; data: string }[], path: string): Promise<string[]>
+  writeStaticAssets(token: string, file: AssetEntry[], folder: string): Promise<string[]>
+  deleteStaticAsset(token: string, filepath: string): Promise<void>
+  renameStaticAsset(token: string, oldPath: string, newPath: string): Promise<void>
 
   // Actions
+  telemetryEvent(payload: object, immediate?: boolean): void
   customTabAction(name: string, action: number): Promise<boolean>
   runWizard<T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>): Promise<void>
   openInEditor(filepath: string): Promise<boolean>
-  requestForAuth(info?: string): Promise<void>
+  requestForAuth(info?: string, origin?: string): Promise<void>
   verifyAuthToken(token: string): Promise<boolean>
   restartNuxt(hard?: boolean): Promise<void>
   installNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
   uninstallNuxtModule(token: string, name: string, dry?: boolean): Promise<InstallModuleReturn>
+  enableTimeline(dry: boolean): Promise<[string, string]>
 }
 
 export interface ClientFunctions {

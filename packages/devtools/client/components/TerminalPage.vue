@@ -1,45 +1,40 @@
 <script setup lang="ts">
 const terminals = useTerminals()
-const route = useRoute()
-const router = useRouter()
+const terminalId = useCurrentTerminalId()
+const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))
 
-const selected = computed(() => {
-  const id = route.query.id as string
-  return terminals.value?.find(t => t.id === id)
-})
-
-function remove(id: string) {
-  rpc.runTerminalAction(id, 'remove')
-  router.replace('/modules/terminals')
+async function remove(id: string) {
+  rpc.runTerminalAction(await ensureDevAuthToken(), id, 'remove')
 }
 
 watchEffect(() => {
-  if (!route.query.id && terminals.value?.length)
-    router.replace(`/modules/terminals?id=${encodeURIComponent(terminals.value[0].id)}`)
+  if (!terminalId.value && terminals.value?.length)
+    terminalId.value = terminals.value[0].id
 })
 </script>
 
 <template>
   <div v-if="terminals?.length" h-full w-full of-hidden grid="~ rows-[max-content_1fr_max-content]">
     <!-- TODO: Refactor to have general component -->
-    <div flex="~" border="b base" flex-1 items-center navbar-glass>
-      <NuxtLink
+    <div flex="~" border="b base" flex-1 items-center n-navbar-glass>
+      <button
         v-for="t of terminals"
         :key="t.id" border="r base"
         flex="~ gap-2" items-center px3 py2
         :class="t.id === selected?.id ? 'bg-active' : ''"
-        :to="`/modules/terminals?id=${encodeURIComponent(t.id)}` "
+        @click="terminalId = t.id"
       >
         <NIcon v-if="t.icon " :icon="t.icon" />
         <span :class="t.id === selected?.id ? '' : 'op50'">
           {{ t.name }}{{ t.isTerminated ? ' (terminated)' : '' }}
         </span>
-        <NIconButton
+        <NButton
           v-if="t.isTerminated"
           icon="carbon-close" mx--2
+          :border="false"
           @click.stop="remove(t.id)"
         />
-      </NuxtLink>
+      </button>
     </div>
 
     <template v-if="selected">
@@ -47,7 +42,7 @@ watchEffect(() => {
     </template>
     <template v-else>
       <div p10>
-        Terminal <code>{{ route.query.id }}</code> not found
+        Terminal <code>{{ terminalId }}</code> not found
       </div>
     </template>
   </div>

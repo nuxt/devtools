@@ -22,23 +22,29 @@ export function initTimelineMetrics(): TimelineMetrics {
   if (window.__NUXT_DEVTOOLS_TIMELINE_METRICS__)
     return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__
 
-  return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ = reactive(
-    window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
-      events: [],
-      nonLiteralSymbol,
-      // TODO: sync with server config
-      options: useObjectStorage('nuxt-devtools-timeline-metrics-options', {
-        enabled: false,
-        stacktrace: true,
-        arguments: true,
-      }),
-    },
-  )
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIMELINE_METRICS__', {
+    value: reactive(
+      window.__NUXT_DEVTOOLS_TIMELINE_METRICS__ || {
+        events: [],
+        nonLiteralSymbol,
+        // TODO: sync with server config
+        options: useObjectStorage('nuxt-devtools-timeline-metrics-options', {
+          enabled: false,
+          stacktrace: true,
+          arguments: true,
+        }),
+      },
+    ),
+    enumerable: false,
+    configurable: true,
+  })
+
+  return window.__NUXT_DEVTOOLS_TIMELINE_METRICS__!
 }
 
 const wrapperFunctions = new WeakMap<any, any>()
 
-export function __wrapFunction(name: string, fn: any) {
+export function __nuxtTimelineWrap(name: string, fn: any) {
   if (process.server)
     return fn
   if (typeof fn !== 'function')
@@ -67,14 +73,18 @@ export function __wrapFunction(name: string, fn: any) {
     metrics.events.push(event)
     const result = fn.apply(this, args)
     // handle promises
-    if ('then' in result && typeof result.then === 'function') {
-      return result
-        .then((i: any) => i)
-        .finally(() => {
-          event.end = Date.now()
-          return result
-        })
+    try {
+      if (result && typeof result.then === 'function') {
+        event.isPromise = true
+        return result
+          .then((i: any) => i)
+          .finally(() => {
+            event.end = Date.now()
+            return result
+          })
+      }
     }
+    catch (e) {}
     event.end = Date.now()
     return result
   }

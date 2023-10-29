@@ -18,10 +18,10 @@ useHead({
 })
 
 onMounted(() => {
-  doSomething()
+  myFunctionB()
 
   setTimeout(() => {
-    doSomething()
+    myFunctionB()
   }, 2000)
 })
 </script>

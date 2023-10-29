@@ -1,17 +1,19 @@
 import { existsSync } from 'node:fs'
+import os from 'node:os'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
-import { addPlugin, addVitePlugin, logger } from '@nuxt/kit'
+import { addPlugin, addTemplate, addVitePlugin, logger } from '@nuxt/kit'
 import type { ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
-import c from 'picocolors'
+import { colors } from 'consola/utils'
 import { version } from '../package.json'
-import type { ModuleOptions } from './types'
+import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT } from './constant'
+import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT, defaultTabOptions } from './constant'
 import { getDevAuthToken } from './dev-auth'
+import { readLocalOptions } from './utils/local-options'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -19,7 +21,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
 
   if (nuxt.options.builder !== '@nuxt/vite-builder') {
-    logger.warn('Nuxt Devtools only supports Vite mode, module is disabled.')
+    logger.warn('Nuxt DevTools only supports Vite mode, module is disabled.')
     return
   }
 
@@ -29,8 +31,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
+  // Determine if user aware devtools, by checking the presentation in the config
+  const enabledExplicitly = (nuxt.options.devtools === true)
+    || (nuxt.options.devtools && nuxt.options.devtools.enabled)
+    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge')
+
   await nuxt.callHook('devtools:before')
 
+  // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
 
   addPlugin({
@@ -43,6 +51,25 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'server',
   })
 
+  // Mainly for the injected runtime plugin to access the settings
+  // Usage `import settings from '#build/devtools/settings'`
+  addTemplate({
+    filename: 'devtools/settings.mjs',
+    async getContents() {
+      const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
+        {
+          ...defaultTabOptions.ui,
+          // When not enabled explicitly, we hide the panel by default
+          showPanel: enabledExplicitly ? true : null,
+        },
+        { root: nuxt.options.rootDir },
+      )
+      return `export default ${JSON.stringify({
+        ui: uiOptions,
+      })}`
+    },
+  })
+
   // Inject inline script
   nuxt.hook('nitro:config', (config) => {
     config.externals = config.externals || {}
@@ -50,11 +77,17 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     config.externals.inline.push(join(runtimeDir, 'nitro'))
     config.virtual = config.virtual || {}
     config.virtual['#nuxt-devtools-inline'] = `export const script = \`
-window.__NUXT_DEVTOOLS_TIME_METRIC__ = window.__NUXT_DEVTOOLS_TIME_METRIC__ || {}
+if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
+    value: {},
+    enumerable: false,
+    configurable: true,
+  })
+}
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 \``
     config.plugins = config.plugins || []
-    config.plugins.push(join(runtimeDir, 'nitro/inline'))
+    config.plugins.unshift(join(runtimeDir, 'nitro/inline'))
   })
 
   const {
@@ -80,6 +113,13 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     if (!Array.isArray(config.server.watch.ignored))
       config.server.watch.ignored = [config.server.watch.ignored]
     config.server.watch.ignored.push('**/.nuxt/analyze/**')
+  })
+
+  nuxt.hook('imports:extend', (imports) => {
+    imports.push({
+      name: 'useNuxtDevTools',
+      from: join(runtimeDir, 'use-nuxt-devtools'),
+    })
   })
 
   // TODO: Use WS from nitro server when possible
@@ -123,7 +163,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     options.vscode?.enabled
       ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
       : null,
-    options.experimental?.timeline
+    (options.experimental?.timeline || options.timeline?.enabled)
       ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
       : null,
   ]
@@ -136,5 +176,17 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     isGlobalInstall: isGlobalInstall(),
   })
 
-  logger.success(`Nuxt Devtools is enabled ${c.dim(`v${version}`)}${isGlobalInstall() ? c.dim('[global]') : ''} ${c.yellow('(experimental)')}`)
+  const isMac = os.platform() === 'darwin'
+
+  logger.log([
+    colors.yellow(`  ➜ DevTools: `),
+    colors.dim('press '),
+    colors.green('Shift'),
+    colors.dim(' + '),
+    colors.green(isMac ? 'Option' : 'Alt'),
+    colors.dim(' + '),
+    colors.green('D'),
+    colors.dim(` in the browser (v${version})`),
+    '\n',
+  ].join(''))
 }

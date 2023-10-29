@@ -6,7 +6,7 @@ import { setupDevToolsUI } from './devtools'
 // Module options TypeScript interface definition
 export interface ModuleOptions {
   /**
-   * Enable Nuxt Devtools integration
+   * Enable Nuxt DevTools integration
    *
    * @default true
    */

@@ -1,7 +1,7 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { ServerRouteInfo } from './integrations'
+import type { ServerRouteInfo, ServerRouteInput } from './integrations'
 
 export interface ModuleOptions {
   /**
@@ -52,7 +52,8 @@ export interface ModuleOptions {
    */
   experimental?: {
     /**
-     * Timline tab
+     * Timeline tab
+     * @deprecated Use `timeline.enable` instead
      */
     timeline?: boolean
   }
@@ -61,6 +62,12 @@ export interface ModuleOptions {
    * Options for the timeline tab
    */
   timeline?: {
+    /**
+     * Enable timeline tab
+     *
+     * @default false
+     */
+    enabled?: boolean
     /**
      * Track on function calls
      */
@@ -75,6 +82,28 @@ export interface ModuleOptions {
       exclude?: (string | RegExp | ((item: Import) => boolean))[]
     }
   }
+
+  /**
+   * Options for assets tab
+   */
+  assets?: {
+    /**
+     * Allowed file extensions for assets tab to upload.
+     * To security concern.
+     *
+     * Set to '*' to disbale this limitation entirely
+     *
+     * @default Common media and txt files
+     */
+    uploadExtensions?: '*' | string[]
+  }
+
+  /**
+   * Enable anonymous telemetry, helping us improve Nuxt DevTools.
+   *
+   * By default it will respect global Nuxt telemetry settings.
+   */
+  telemetry?: boolean
 }
 
 export interface ModuleGlobalOptions {
@@ -131,24 +160,35 @@ export interface VSCodeTunnelOptions {
 }
 
 export interface NuxtDevToolsOptions {
+  behavior: {
+    telemetry: boolean | null
+  }
   ui: {
-    componentsView: 'list' | 'graph'
-    componentsGraphShowNodeModules: boolean
     componentsGraphShowGlobalComponents: boolean
-    componentsGraphShowPages: boolean
     componentsGraphShowLayouts: boolean
+    componentsGraphShowNodeModules: boolean
+    componentsGraphShowPages: boolean
     componentsGraphShowWorkspace: boolean
+    componentsView: 'list' | 'graph'
+    hiddenTabCategories: string[]
+    hiddenTabs: string[]
     interactionCloseOnOutsideClick: boolean
+    minimizePanelInactive: number
+    pinnedTabs: string[]
+    scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    scale: number
-    hiddenTabs: string[]
-    hiddenTabCategories: string[]
-    pinnedTabs: string[]
+    showPanel: boolean | null
+    sidebarExpanded: boolean
+    sidebarScrollable: boolean
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null
     view: 'tree' | 'list'
-    // TODO: add global inputs
+    inputDefaults: Record<string, ServerRouteInput[]>
+    sendFrom: 'app' | 'devtools'
+  }
+  assets: {
+    view: 'grid' | 'list'
   }
 }

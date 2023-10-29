@@ -6,6 +6,7 @@ import type { ComponentRelationship } from '~/../src/types'
 
 const props = defineProps<{
   components: Component[]
+  relationships?: ComponentRelationship[] | null
 }>()
 
 const container = ref<HTMLElement>()
@@ -23,7 +24,6 @@ const selected = ref<{
 const pages = useServerPages()
 const config = useServerConfig()
 const layouts = useLayouts()
-const relationships = useComponentsRelationships()
 
 const {
   componentsGraphShowNodeModules: showNodeModules,
@@ -36,10 +36,9 @@ const {
 const selectedFilter = ref<ComponentRelationship>()
 
 const entries = computed(() => {
-  const relations = (relationships.value || [])
+  const relations = (props.relationships || [])
   if (selectedFilter.value) {
     const set = new Set<ComponentRelationship>()
-    relations.find(i => i.id === selected.value?.id)
     function addToSet(rel?: ComponentRelationship) {
       if (!rel || set.has(rel))
         return
@@ -128,6 +127,20 @@ const data = computed<Data>(() => {
   }
 })
 
+const selectedDependencies = computed(() => {
+  if (!selected.value?.component)
+    return []
+  const deps = props.relationships?.find(i => i.id === selected.value?.component?.filePath)?.deps
+  return deps?.map(i => props.relationships?.find(j => j.id === i)?.id).filter(Boolean) as string[]
+})
+
+const selectedDependents = computed(() => {
+  if (!selected.value?.component)
+    return []
+  const deps = props.relationships?.filter(i => i.deps.includes(selected.value!.component!.filePath!))
+  return deps?.map(i => props.relationships?.find(j => j.id === i.id)?.id).filter(Boolean) as string[]
+})
+
 onMounted(() => {
   const options: Options = {
     nodes: {
@@ -187,34 +200,36 @@ function setFilter() {
 </script>
 
 <template>
-  <Navbar ref="navbar" absolute left-0 right-0 top-0>
+  <NNavbar ref="navbar" absolute left-0 right-0 top-0>
     <template #search>
-      <NCheckbox v-model="showPages" n="primary sm">
-        <span op75>Show pages</span>
-      </NCheckbox>
-      <NCheckbox v-model="showLayouts" n="primary sm">
-        <span op75>Show layouts</span>
-      </NCheckbox>
-      <NCheckbox v-model="showWorkspace" n="primary sm">
-        <span op75>Show workspace</span>
-      </NCheckbox>
-      <NCheckbox v-model="showNodeModules" n="primary sm">
-        <span op75>Show node_modules</span>
-      </NCheckbox>
-      <NCheckbox v-model="showGlobalComponents" n="primary sm">
-        <span op75>Show global components</span>
-      </NCheckbox>
-      <button v-if="selectedFilter" flex="~ gap-1" items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
+      <div flex="~ gap-4 wrap" w-full>
+        <NCheckbox v-model="showPages" n="primary sm">
+          <span op75>Show pages</span>
+        </NCheckbox>
+        <NCheckbox v-model="showLayouts" n="primary sm">
+          <span op75>Show layouts</span>
+        </NCheckbox>
+        <NCheckbox v-model="showWorkspace" n="primary sm">
+          <span op75>Show workspace</span>
+        </NCheckbox>
+        <NCheckbox v-model="showNodeModules" n="primary sm">
+          <span op75>Show node_modules</span>
+        </NCheckbox>
+        <NCheckbox v-model="showGlobalComponents" n="primary sm">
+          <span op75>Show global components</span>
+        </NCheckbox>
+      </div>
+      <button v-if="selectedFilter" flex="~ gap-1" flex-none items-center rounded-full bg-gray:20 py1 pl3 pr2 text-xs op50 hover:op100 @click="selectedFilter = undefined">
         Clear filter <div i-carbon-close />
       </button>
       <div flex-auto />
       <slot />
     </template>
-  </Navbar>
+  </NNavbar>
 
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
-    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm glass-effect>
+    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm n-glass-effect>
       <div grid="~ cols-[20px_1fr] items-center gap-y-1">
         <div h-3 w-3 rounded-full bg-hex-42b883 />
         <div op50>
@@ -244,20 +259,24 @@ function setFilter() {
         </div>
       </div>
     </NCard>
-    <DrawerRight
+    <NDrawer
       :model-value="!!(selected && selected.component)"
-      :navbar="navbar"
-      w-80
+      :top="navbar"
+      border="t l base" w-80
       @close="selected = undefined"
     >
-      <div v-if="selected && selected.component" p4 pr10 pt4 flex="~ col gap4">
-        <ComponentDetails :component="selected.component" />
-        <div>
+      <div v-if="selected && selected.component" py4 pt4 flex="~ col">
+        <ComponentDetails
+          :component="selected.component"
+          :dependencies="selectedDependencies"
+          :dependents="selectedDependents"
+        />
+        <div border="t base" p4>
           <NButton n="primary solid" @click="setFilter()">
             Filter to this component
           </NButton>
         </div>
       </div>
-    </DrawerRight>
+    </NDrawer>
   </div>
 </template>

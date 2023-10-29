@@ -22,8 +22,7 @@ const name = computed(() => props.item.as || props.item.name)
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
 const modules = computed(() =>
   (props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
-    .filter(i => !i.endsWith('?macro=true')),
-)
+    .filter(i => !i.endsWith('?macro=true')))
 
 const docsUrl = computed(() => {
   if (props.item.meta?.docsUrl)
@@ -56,7 +55,7 @@ const docsUrl = computed(() => {
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
-            <NButton icon="carbon-copy" @click="copy(name)">
+            <NButton icon="carbon-copy" @click="copy(name, 'imports-name')">
               Copy
             </NButton>
             <NButton v-if="filepath" icon="carbon-code" @click="filepath && openInEditor(filepath)">
