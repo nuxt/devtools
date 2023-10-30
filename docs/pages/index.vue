@@ -130,16 +130,16 @@ watch(projectsSectionVisible, () => {
                 class="group relative hidden cursor-pointer lg:block"
                 :ui="{ background: 'bg-transparent dark:bg-transparent', sahdow: 'none', ring: 'ring-0', body: { background: 'bg-transparent dark:bg-transparent', base: 'flex flex-col space-y-2' } }"
               >
-                <div class="absolute inset-0 h-full w-full" @click="selectProjectCard(index)" />
+                <div class="absolute inset-0 h-full w-full" @click="selectProjectCard(idx)" />
                 <h4
                   class="text-xl font-medium transition-color duration-200 group-hover:text-white"
-                  :class="currentStep === index ? 'text-white ' : 'text-gray-400'"
+                  :class="currentStep === idx ? 'text-white ' : 'text-gray-400'"
                 >
                   {{ project.title }}
                 </h4>
                 <p
                   class="transition-color duration-200 group-hover:text-gray-400"
-                  :class="currentStep === index ? 'text-gray-400' : 'text-gray-600'"
+                  :class="currentStep === idx ? 'text-gray-400' : 'text-gray-600'"
                 >
                   {{ project.description }}
                 </p>
@@ -147,17 +147,17 @@ watch(projectsSectionVisible, () => {
                   trailing variant="link" color="white" size="md" :ui="{ size: { md: 'text-md' } }"
                   class="z-20 -ml-2.5" :to="project.to"
                 >
-                  <span class="transition-color duration-200 group-hover:text-white" :class="currentStep === index ? 'text-white' : 'text-gray-400'">Learn more</span>
+                  <span class="transition-color duration-200 group-hover:text-white" :class="currentStep === idx ? 'text-white' : 'text-gray-400'">Learn more</span>
                   <UIcon
                     name="i-ph-arrow-right" class="h-5 w-5 group-hover:text-white"
-                    :class="currentStep === index ? 'text-white' : 'text-gray-400'"
+                    :class="currentStep === idx ? 'text-white' : 'text-gray-400'"
                   />
                 </UButton>
               </UCard>
 
               <ULandingSection
                 align="center"
-                :icon="index === 0 ? 'i-ph-tree-structure' : index === 1 ? 'i-ph-circles-three' : 'i-ph-function'"
+                :icon="idx === 0 ? 'i-ph-tree-structure' : idx === 1 ? 'i-ph-circles-three' : 'i-ph-function'"
                 class="lg:hidden"
                 :ui="{ base: 'flex flex-col items-center', wrapper: 'py-8 sm:py-12', icon: { wrapper: 'relative rounded-lg flex items-center justify-center mb-6 w-10 h-10 bg-gray-700 flex-shrink-0' }, title: 'text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl' }"
               >
@@ -172,7 +172,7 @@ watch(projectsSectionVisible, () => {
                 >
                   <div class="p-4">
                     <NuxtImg
-                      :src="`/images/${index === 0 ? 'pages' : index === 1 ? 'components' : 'imports'}.webp`"
+                      :src="`/images/${idx === 0 ? 'pages' : idx === 1 ? 'components' : 'imports'}.webp`"
                       class="rounded-lg"
                     />
                   </div>
