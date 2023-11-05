@@ -67,7 +67,7 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
                 : `import { __nuxtTimelineWrap } from ${JSON.stringify(helperPath)}`,
               ...injected.map(i => `const ${i.meta!.wrapperOriginalAs} = __nuxtTimelineWrap(${JSON.stringify(i.name)}, ${i.as})`),
               '',
-            ].join(';')
+            ].join(';\n')
             return result
           }
         },
