@@ -3,7 +3,11 @@
   "type": "module",
   "version": "1.0.0",
   "license": "MIT",
-  "repository": "nuxt/devtools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxt/devtools.git",
+    "directory": "packages/devtools"
+  },
   "homepage": "https://devtools.nuxt.com",
   "exports": {
     ".": {

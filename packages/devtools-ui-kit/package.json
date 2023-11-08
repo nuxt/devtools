@@ -3,7 +3,12 @@
   "type": "module",
   "version": "1.0.0",
   "license": "MIT",
-  "repository": "nuxt/devtools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxt/devtools.git",
+    "directory": "packages/devtools-ui-kit"
+  },
+  "homepage": "https://devtools.nuxt.com/module/ui-kit",
   "exports": {
     ".": {
       "import": "./dist/module.mjs",
