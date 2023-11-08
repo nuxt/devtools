@@ -104,7 +104,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
 
           const { ext } = parse(finalPath)
           if (extensions !== '*') {
-            if (!extensions.includes(ext.toLowerCase()))
+            if (!extensions.includes(ext.toLowerCase().slice(1)))
               throw new Error(`File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
           }
 
