@@ -32,7 +32,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   }
 
   // Determine if user aware devtools, by checking the presentation in the config
-  const enabledExplicitly = (nuxt.options.devtools === true)
+  const enabledExplicitly = (nuxt.options.devtools === true as unknown)
     || (nuxt.options.devtools && nuxt.options.devtools.enabled)
     || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge')
 
