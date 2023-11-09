@@ -1,3 +1,16 @@
+## [1.0.1](https://github.com/nuxt/devtools/compare/v1.0.0...v1.0.1) (2023-11-09)
+
+
+### Bug Fixes
+
+* **assets:** remove dot from file extension ([#512](https://github.com/nuxt/devtools/issues/512)) ([8e4ec7b](https://github.com/nuxt/devtools/commit/8e4ec7b792bb2e4f636143b6c9c3561585af7411))
+* blurred font ([#485](https://github.com/nuxt/devtools/issues/485)) ([9a52925](https://github.com/nuxt/devtools/commit/9a52925c7a37301d4513fad2734b47c493a4aa00))
+* dark mode compatibility with vite-inspect ([#501](https://github.com/nuxt/devtools/issues/501)) ([2785fa6](https://github.com/nuxt/devtools/commit/2785fa6e16333c014d8ca7743cf96c3aa0945466))
+* **devtools:** import app utilities from `#imports` ([#500](https://github.com/nuxt/devtools/issues/500)) ([68efb1b](https://github.com/nuxt/devtools/commit/68efb1bab82b4bf5aa013df0221ab1268dcd221f))
+* **doc:** active status of project cards ([#502](https://github.com/nuxt/devtools/issues/502)) ([25bba74](https://github.com/nuxt/devtools/commit/25bba74ff4e082f01b4655689accc091d4912cbf))
+
+
+
 # [1.0.0](https://github.com/nuxt/devtools/compare/v1.0.0-beta.3...v1.0.0) (2023-10-18)
 
 
