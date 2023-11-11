@@ -1,3 +1,13 @@
+## [1.0.2](https://github.com/nuxt/devtools/compare/v1.0.1...v1.0.2) (2023-11-11)
+
+
+### Bug Fixes
+
+* do not show false connecting overlay on legacy Vite, close [#497](https://github.com/nuxt/devtools/issues/497) ([a48c248](https://github.com/nuxt/devtools/commit/a48c2488c6f563212257fd144cf338b9b54ec091))
+* **timeline:** do not inject for macro module, close [#507](https://github.com/nuxt/devtools/issues/507) ([923edaf](https://github.com/nuxt/devtools/commit/923edafd3118aeb71971e91f3180cbc427d0c8f8))
+
+
+
 ## [1.0.1](https://github.com/nuxt/devtools/compare/v1.0.0...v1.0.1) (2023-11-09)
 
 
