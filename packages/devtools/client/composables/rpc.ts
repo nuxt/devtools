@@ -53,10 +53,13 @@ async function connectVite() {
     '/',
   ])
 
-  if (!hot)
+  if (!hot) {
+    wsConnecting.value = true
     throw new Error('Unable to connect to devtools')
+  }
 
   hot.on(WS_EVENT_NAME, (data) => {
+    wsConnecting.value = false
     onMessage(data)
   })
 
