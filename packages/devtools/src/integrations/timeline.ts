@@ -40,7 +40,9 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
 
     ctx.addons.push(
       {
-        injectImportsResolved(imports) {
+        injectImportsResolved(imports, _code, id) {
+          if (id?.includes('?macro=true'))
+            return
           return imports.map((i) => {
             if (!filter(i))
               return i
@@ -56,7 +58,9 @@ export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
             }
           })
         },
-        injectImportsStringified(str, imports, s) {
+        injectImportsStringified(str, imports, s, id) {
+          if (id?.includes('?macro=true'))
+            return
           const code = s.toString()
           const injected = imports.filter(i => i.meta?.wrapperOriginalAs)
           if (injected.length) {
