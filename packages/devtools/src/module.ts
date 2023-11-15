@@ -12,6 +12,10 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: defaultOptions,
   setup(options, nuxt) {
+    // Disbale in test mode
+    if (process.env.VITEST || process.env.TEST)
+      return
+
     if (typeof options === 'boolean')
       options = { enabled: options }
 
