@@ -14,11 +14,18 @@ export async function readLocalOptions<T>(defaults: T, options: LocalOptionSearc
   const { filePath } = getOptionsFilepath(options)
 
   if (existsSync(filePath)) {
-    const options = {
-      ...defaults,
-      ...JSON.parse(await fs.readFile(filePath, 'utf-8')).settings || {},
+    try {
+      const options = {
+        ...defaults,
+        ...JSON.parse(await fs.readFile(filePath, 'utf-8')).settings || {},
+      }
+      return options
     }
-    return options
+    catch (e) {
+      console.error(`[DevTools] failed to parse local options file: ${filePath}, fallback to defaults`)
+      console.error(e)
+      return { ...defaults }
+    }
   }
   else {
     return { ...defaults }
