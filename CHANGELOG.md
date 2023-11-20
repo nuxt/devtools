@@ -1,3 +1,18 @@
+## [1.0.3](https://github.com/nuxt/devtools/compare/v1.0.2...v1.0.3) (2023-11-20)
+
+
+### Bug Fixes
+
+* support user `baseURL`, close [#506](https://github.com/nuxt/devtools/issues/506) ([2697340](https://github.com/nuxt/devtools/commit/269734087ad45046828459c658ec737f6aad7c88))
+* tolerant parse error for local options, close [#518](https://github.com/nuxt/devtools/issues/518) ([e604124](https://github.com/nuxt/devtools/commit/e604124512c967cabd1ea623ef1c87e54a585192))
+
+
+### Features
+
+* disable devtools in test mode ([51e8de6](https://github.com/nuxt/devtools/commit/51e8de6da55f9f359da9d5e74bbb272a1b13ced4))
+
+
+
 ## [1.0.2](https://github.com/nuxt/devtools/compare/v1.0.1...v1.0.2) (2023-11-11)
 
 
