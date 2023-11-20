@@ -17,7 +17,7 @@ const anyObj = {} as any
         </h2>
 
         <p op50>
-          Following command will be executed in your terminal:
+          The following command will be executed in your terminal:
         </p>
         <NCodeBlock :code="args[1].commands.join(' ')" lang="bash" px4 py2 border="~ base rounded" :lines="false" />
 
