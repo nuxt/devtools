@@ -34,7 +34,7 @@ declare module '@nuxt/schema' {
      *
      * Returns true if terminal is found.
      */
-    'devtools:terminal:write': (_: { id: string; data: string }) => void
+    'devtools:terminal:write': (_: { id: string, data: string }) => void
 
     /**
      * Remove a terminal from devtools.
@@ -46,7 +46,7 @@ declare module '@nuxt/schema' {
     /**
      * Mark a terminal as terminated.
      */
-    'devtools:terminal:exit': (_: { id: string; code?: number }) => void
+    'devtools:terminal:exit': (_: { id: string, code?: number }) => void
   }
 }
 
@@ -58,7 +58,7 @@ declare module '@nuxt/schema' {
     /**
      * On terminal data.
      */
-    'devtools:terminal:data': (payload: { id: string; data: string }) => void
+    'devtools:terminal:data': (payload: { id: string, data: string }) => void
   }
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  getter: () => { name?: string; input: string }
+  getter: () => { name?: string, input: string }
 }>()
 
 const input = useSchemaInput()

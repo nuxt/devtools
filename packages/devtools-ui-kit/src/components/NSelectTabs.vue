@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     modelValue?: any
     disabled?: boolean
-    options: { value: any; label: string }[]
+    options: { value: any, label: string }[]
   }>(),
   {
     modelValue: undefined,

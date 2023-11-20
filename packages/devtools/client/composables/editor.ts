@@ -15,7 +15,7 @@ export function useOpenInEditor() {
     const [realpath, _line = 1, _col = 0] = path.split(/:/g)
 
     const vfs = virtualFiles.value?.entries.find(i => i.path === realpath || i.id === realpath)
-    || virtualFiles.value?.entries.find(i => i.path === filepath || i.id === filepath)
+      || virtualFiles.value?.entries.find(i => i.path === filepath || i.id === filepath)
     if (vfs) {
       // TODO: support line and col
       virtualFileId.value = vfs.id
