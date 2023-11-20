@@ -16,6 +16,7 @@ Unleash Nuxt Developer Experience.
 </p>
 
 <p>
+  <a href="https://nuxt.com/blog/nuxt-devtools-v1-0">👋 Introduction</a> |
   <a href="https://github.com/nuxt/devtools/discussions/29">💡 Ideas & Suggestions</a> |
   <a href="https://github.com/nuxt/devtools/discussions/31">🗺️ Project Roadmap</a> |
   <a href="https://devtools.nuxt.com/">📚 Documentation</a>
@@ -77,7 +78,7 @@ For all options available, please refer to TSDocs in your IDE, or the [type defi
 
 ## Features
 
-Read the [**Announcement Blog Post 🎊**](https://nuxt.com/blog/introducing-nuxt-devtools) for why we built Nuxt DevTools and what it can do!
+Read the [**Announcement Blog Post 🎊**](https://nuxt.com/blog/nuxt-devtools-v1-0) for why we built Nuxt DevTools and what it can do!
 
 ## Module Authors
 
