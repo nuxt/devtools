@@ -12,7 +12,6 @@ import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
-import { ROUTE_AUTH } from '../constant'
 
 export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
@@ -195,6 +194,8 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
       const token = await getDevAuthToken()
 
       origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
+
+      const ROUTE_AUTH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__/auth`.replace(/\/+/g, '/')
 
       const message = [
         `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,

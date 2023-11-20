@@ -14,9 +14,7 @@ export default defineNuxtConfig({
     DevTools,
   ],
   ssr: false,
-  pages: true,
   nitro: {
-    preset: 'static',
     output: {
       publicDir: r('../dist/client'),
     },
@@ -24,6 +22,12 @@ export default defineNuxtConfig({
       test: {
         driver: 'fs',
         base: r('./.data/test'),
+      },
+    },
+    hooks: {
+      'prerender:routes': function (routes) {
+        // Disable prerendering as it's an SPA
+        routes.clear()
       },
     },
   },
@@ -69,5 +73,12 @@ export default defineNuxtConfig({
   },
   typescript: {
     includeWorkspace: true,
+  },
+  // Production Overrides
+  $production: {
+    app: {
+      // We set a placeholder for the middleware to be replaced with the correct base URL
+      baseURL: '/__NUXT_DEVTOOLS_BASE__/',
+    },
   },
 })

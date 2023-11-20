@@ -41,17 +41,19 @@ export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions
 })
 
 async function connectVite() {
-  let base = window.parent?.__NUXT__?.config?.app?.baseURL
+  let base = window.parent?.__NUXT__?.config?.app?.baseURL ?? '/'
   const buildAssetsDir = window.parent?.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
   if (base && !base.endsWith('/'))
     base += '/'
-  const hot = await tryCreateHotContext(undefined, [
-    ...(base
-      ? [`${base}${buildAssetsDir}/`, base]
-      : []),
-    '/_nuxt/',
-    '/',
-  ])
+  const current = window.location.href.replace(/\/__nuxt_devtools__\/client\/.*$/, '/')
+  const hot = await tryCreateHotContext(undefined, Array.from(new Set([
+    current,
+    `${current}${buildAssetsDir}/`,
+    `${current}_nuxt/`,
+    base,
+    `${base}${buildAssetsDir}/`,
+    `${base}_nuxt/`,
+  ])))
 
   if (!hot) {
     wsConnecting.value = true

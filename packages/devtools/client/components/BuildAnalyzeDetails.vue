@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { formatTimeAgo } from '@vueuse/core'
 import type { AnalyzeBuildMeta } from '../../src/types'
+import { useRuntimeConfig } from '#imports'
 
 const props = defineProps<{
   current: AnalyzeBuildMeta
   prev?: AnalyzeBuildMeta
 }>()
 
-const ROUTE_ANALYZE = '/__nuxt_devtools__/analyze/'
+const runtimeConfig = useRuntimeConfig()
+const ROUTE_ANALYZE = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/analyze/`.replace(/\/+/g, '/')
 
 const tabs = computed(() => {
   const items = [

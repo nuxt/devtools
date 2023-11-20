@@ -1,9 +1,11 @@
 import { existsSync } from 'node:fs'
 import os from 'node:os'
+import fs from 'node:fs/promises'
+import type { ServerResponse } from 'node:http'
 import { join } from 'pathe'
 import type { Nuxt } from 'nuxt/schema'
 import { addPlugin, addTemplate, addVitePlugin, logger } from '@nuxt/kit'
-import type { ViteDevServer } from 'vite'
+import type { Connect, ViteDevServer } from 'vite'
 import { searchForWorkspaceRoot } from 'vite'
 import sirv from 'sirv'
 import { colors } from 'consola/utils'
@@ -11,7 +13,7 @@ import { version } from '../package.json'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { setupRPC } from './server-rpc'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
-import { ROUTE_ANALYZE, ROUTE_AUTH, ROUTE_AUTH_VERIFY, ROUTE_CLIENT, defaultTabOptions } from './constant'
+import { defaultTabOptions } from './constant'
 import { getDevAuthToken } from './dev-auth'
 import { readLocalOptions } from './utils/local-options'
 
@@ -122,12 +124,36 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     })
   })
 
+  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(/\/+/g, '/')
+  const ROUTE_CLIENT = `${ROUTE_PATH}/client`
+  const ROUTE_AUTH = `${ROUTE_PATH}/auth`
+  const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`
+  const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
+
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
     server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
-    // serve the front end in production
-    if (clientDirExists)
-      server.middlewares.use(ROUTE_CLIENT, sirv(clientDir, { single: true, dev: true }))
+    // Serve the front end in production
+    if (clientDirExists) {
+      const indexHtmlPath = join(clientDir, 'index.html')
+      const indexContent = fs.readFile(indexHtmlPath, 'utf-8')
+      const handleStatic = sirv(clientDir, {
+        dev: true,
+        single: false,
+      })
+      // We replace the base URL in the index.html based on user's settings
+      const handleIndex = async (res: ServerResponse) => {
+        res.setHeader('Content-Type', 'text/html')
+        res.statusCode = 200
+        res.write((await indexContent).replace(/\/__NUXT_DEVTOOLS_BASE__\//g, `${ROUTE_CLIENT}/`))
+        res.end()
+      }
+      server.middlewares.use(ROUTE_CLIENT, (req, res) => {
+        if (req.url === '/')
+          return handleIndex(res)
+        return handleStatic(req, res, () => handleIndex(res))
+      })
+    }
     server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
     server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res) => {
       const search = req.url?.split('?')[1]

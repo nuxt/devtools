@@ -11,7 +11,7 @@ import { popupWindow, state } from './state'
 
 // eslint-disable-next-line ts/prefer-ts-expect-error
 // @ts-ignore tsconfig
-import { useAppConfig } from '#imports'
+import { useAppConfig, useRuntimeConfig } from '#imports'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
@@ -123,7 +123,8 @@ export async function setupDevToolsClient({
 
   function getIframe() {
     if (!iframe) {
-      const CLIENT_PATH = '/__nuxt_devtools__/client'
+      const runtimeConfig = useRuntimeConfig()
+      const CLIENT_PATH = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/client`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
       try {
         iframe = document.createElement('iframe')
