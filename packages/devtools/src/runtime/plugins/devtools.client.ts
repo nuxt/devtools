@@ -55,8 +55,8 @@ export default defineNuxtPlugin((nuxt: any) => {
   })
 
   import('./view/client')
-    .then(({ setupDevToolsClient }) => {
-      setupDevToolsClient({
+    .then(async ({ setupDevToolsClient }) => {
+      await setupDevToolsClient({
         nuxt,
         clientHooks,
         timeMetric,

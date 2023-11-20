@@ -23,6 +23,9 @@
       <NButton n="primary sm" to="/dynamic-bar" active-class="n-solid">
         /dynamic-bar
       </NButton>
+      <NButton n="primary sm" to="/error" active-class="n-solid">
+        /error
+      </NButton>
     </div>
   </div>
 </template>

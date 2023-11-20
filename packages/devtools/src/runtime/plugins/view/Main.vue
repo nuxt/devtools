@@ -57,6 +57,8 @@ const draggingOffset = reactive({ x: 0, y: 0 })
 const mousePosition = reactive({ x: 0, y: 0 })
 
 function onPointerDown(e: PointerEvent) {
+  if (!panelEl.value)
+    return
   isDragging.value = true
   const { left, top, width, height } = panelEl.value!.getBoundingClientRect()
   draggingOffset.x = e.clientX - left - width / 2
