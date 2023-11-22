@@ -5,19 +5,7 @@ const props = defineProps<{
   record: TimelineEventFunction
 }>()
 
-const config = useServerConfig()
 const timeAgo = useTimeAgo(() => props.record.start, { showSecond: true })
-
-function urlToFilepath(url: string) {
-  let pathname = new URL(url).pathname
-  if (pathname.startsWith('/_nuxt/'))
-    pathname = pathname.slice(6)
-  if (pathname.startsWith('/@id/virtual:nuxt:'))
-    return `#build/${pathname.split('/.nuxt/')[1]}`.replace(/\.m?js$/, '')
-  if (pathname.includes('/@fs/'))
-    return `/${pathname.split('/@fs/')[1]}`
-  return (config.value?.rootDir || '') + pathname
-}
 
 const autoImports = useAutoImports()
 const importsMetadata = computed(() => autoImports.value?.metadata)
@@ -60,19 +48,9 @@ const importItem = computed(() => {
       </div>
     </div>
 
-    <div v-if="record.stacktrace" class="text-xs text-gray-400" mt2 grid="~ cols-[max-content_1fr] gap-x-4" font-mono>
-      <template v-for="item, idx of record.stacktrace" :key="idx">
-        <div text-right>
-          {{ item.functionName || `(anonymous)` }}
-        </div>
-        <div ws-nowrap>
-          <FilepathItem
-            v-if="item.fileName"
-            :filepath="`${urlToFilepath(item.fileName)}:${item.lineNumber}:${item.columnNumber}`"
-            subpath
-          />
-        </div>
-      </template>
-    </div>
+    <StacktraceList
+      v-if="record.stacktrace" :stacktrace="record.stacktrace"
+      class="text-xs text-gray-400"
+    />
   </div>
 </template>
