@@ -34,11 +34,15 @@ export async function readLocalOptions<T>(defaults: T, options: LocalOptionSearc
 
 function getOptionsFilepath(options: LocalOptionSearchOptions) {
   let hashedKey
+
   if (options.key)
     hashedKey = hash(`${options.root}:${options.key}`)
   else
     hashedKey = hash(options.root)
-  const filePath = join(homedir(), '.nuxt/devtools', `${hashedKey}.json`)
+
+  const home = process.env.XDG_CONFIG_HOME || homedir()
+  const filePath = join(home, '.nuxt/devtools', `${hashedKey}.json`)
+
   return {
     filePath,
     hashedKey,

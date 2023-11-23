@@ -10,7 +10,7 @@ export async function getDevAuthToken() {
   if (token)
     return token
 
-  const home = homedir()
+  const home = process.env.XDG_CONFIG_HOME || homedir()
   const dir = join(home, '.nuxt/devtools')
   const filepath = join(dir, 'dev-auth-token.txt')
 
