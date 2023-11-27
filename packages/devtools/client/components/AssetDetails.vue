@@ -87,6 +87,7 @@ const codeSnippets = computed(() => {
 })
 
 const copy = useCopy()
+const openInEditor = useOpenInEditor()
 const timeAgo = useTimeAgo(() => asset.value.mtime)
 const fileSize = computed(() => {
   const size = asset.value.size

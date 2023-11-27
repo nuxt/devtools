@@ -13,7 +13,13 @@ import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, Serv
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { getDevAuthToken } from '../dev-auth'
 
-export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC({
+  nuxt,
+  options,
+  refresh,
+  ensureDevAuthToken,
+  openInEditorHooks,
+}: NuxtDevtoolsServerContext) {
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -183,7 +189,8 @@ export function setupGeneralRPC({ nuxt, options, refresh, openInEditorHooks }: N
         return false
       }
     },
-    restartNuxt(hard = true) {
+    async restartNuxt(token: string, hard = true) {
+      await ensureDevAuthToken(token)
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },

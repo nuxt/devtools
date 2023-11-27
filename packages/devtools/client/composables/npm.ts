@@ -61,7 +61,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   async function restart() {
     if (state.value !== 'updated')
       return
-    await rpc.restartNuxt()
+    await rpc.restartNuxt(await ensureDevAuthToken())
   }
 
   return {

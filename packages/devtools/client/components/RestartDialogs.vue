@@ -13,9 +13,9 @@ nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
       state.value = state.value.filter(dialog => dialog.id !== id)
       PromiseConfirm
         .start(dialog.message)
-        .then((result) => {
+        .then(async (result) => {
           if (result) {
-            rpc.restartNuxt()
+            rpc.restartNuxt(await ensureDevAuthToken())
             setTimeout(() => {
               client.value?.app.reload()
             }, 500)
