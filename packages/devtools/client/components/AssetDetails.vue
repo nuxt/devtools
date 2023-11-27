@@ -9,12 +9,10 @@ const props = defineProps<{
 const emit = defineEmits<{ (...args: any): void }>()
 const asset = useVModel(props, 'modelValue', emit, { passive: true })
 
-const openInEditor = useOpenInEditor()
-
-const imageMeta = computedAsync(() => {
+const imageMeta = computedAsync(async () => {
   if (asset.value.type !== 'image')
     return undefined
-  return rpc.getImageMeta(asset.value.filePath)
+  return rpc.getImageMeta(await ensureDevAuthToken(), asset.value.filePath)
 })
 
 const editDialog = ref(false)
@@ -27,7 +25,7 @@ const textContent = computedAsync(async () => {
   // eslint-disable-next-line no-unused-expressions
   textContentCounter.value
 
-  const content = await rpc.getTextAssetContent(asset.value.filePath)
+  const content = await rpc.getTextAssetContent(await ensureDevAuthToken(), asset.value.filePath)
   newTextContent.value = content
   return content
 })

@@ -54,8 +54,8 @@ export interface ServerFunctions {
   clearAnalyzeBuilds(token: string, names?: string[]): Promise<void>
 
   // Queries
-  getImageMeta(filepath: string): Promise<ImageMeta | undefined>
-  getTextAssetContent(filepath: string, limit?: number): Promise<string | undefined>
+  getImageMeta(token: string, filepath: string): Promise<ImageMeta | undefined>
+  getTextAssetContent(token: string, filepath: string, limit?: number): Promise<string | undefined>
   writeStaticAssets(token: string, file: AssetEntry[], folder: string): Promise<string[]>
   deleteStaticAsset(token: string, filepath: string): Promise<void>
   renameStaticAsset(token: string, oldPath: string, newPath: string): Promise<void>

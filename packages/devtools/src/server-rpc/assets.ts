@@ -69,7 +69,9 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
     async getStaticAssets() {
       return await scan()
     },
-    async getImageMeta(filepath: string) {
+    async getImageMeta(token: string, filepath: string) {
+      await ensureDevAuthToken(token)
+
       if (_imageMetaCache.has(filepath))
         return _imageMetaCache.get(filepath)
       try {
@@ -83,7 +85,9 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         return undefined
       }
     },
-    async getTextAssetContent(filepath: string, limit = 300) {
+    async getTextAssetContent(token: string, filepath: string, limit = 300) {
+      await ensureDevAuthToken(token)
+
       try {
         const content = await fsp.readFile(filepath, 'utf-8')
         return content.slice(0, limit)
