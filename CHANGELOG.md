@@ -1,3 +1,20 @@
+## [1.0.4](https://github.com/nuxt/devtools/compare/v1.0.3...v1.0.4) (2023-11-27)
+
+
+### Bug Fixes
+
+* **pip:** check for https support ([#522](https://github.com/nuxt/devtools/issues/522)) ([5360cf4](https://github.com/nuxt/devtools/commit/5360cf48b8d8e151d3ced83428e3c84dd1b90264))
+* require auth token with `getImageMeta` and `getTextAssetContent` ([69316c4](https://github.com/nuxt/devtools/commit/69316c477455332bd2b2037956fa6cfe02610d2f))
+* require token for `restartNuxt` ([09384af](https://github.com/nuxt/devtools/commit/09384afe58dee0a7a4f8e3faaf8503e7a57f97b2))
+
+
+### Features
+
+* **devtools:** support for xdg-home-config ([#526](https://github.com/nuxt/devtools/issues/526)) ([4abd280](https://github.com/nuxt/devtools/commit/4abd2807613b61fe74a399a1851a9ac2e3313ab4))
+* error tab ([#520](https://github.com/nuxt/devtools/issues/520)) ([68b8cfc](https://github.com/nuxt/devtools/commit/68b8cfc725400935faef722ae381f79ebf44f161))
+
+
+
 ## [1.0.3](https://github.com/nuxt/devtools/compare/v1.0.2...v1.0.3) (2023-11-20)
 
 
