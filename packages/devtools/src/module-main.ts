@@ -27,7 +27,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
-  if (!nuxt.options.dev) {
+  if (!nuxt.options.dev || nuxt.options.test) {
     if (nuxt.options.build.analyze)
       await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
