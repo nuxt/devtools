@@ -3,6 +3,7 @@ import 'floating-vue/dist/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
+import { useEyeDropper } from '@vueuse/core'
 import { setupClientRPC } from './setup/client-rpc'
 import { splitScreenAvailable } from '~/composables/storage'
 
@@ -72,19 +73,33 @@ onMounted(async () => {
   }
 })
 
-registerCommands(() =>
-  splitScreenAvailable.value
-    ? [
-        {
-          id: 'action:split-screen',
-          title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
-          icon: 'i-carbon-split-screen',
-          action: () => {
-            splitScreenEnabled.value = !splitScreenEnabled.value
-          },
+const copy = useCopy()
+const eyeDropper = useEyeDropper({})
+
+registerCommands(() => [
+  ...(splitScreenAvailable.value
+    ? [{
+        id: 'action:split-screen',
+        title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
+        icon: 'i-carbon-split-screen',
+        action: () => {
+          splitScreenEnabled.value = !splitScreenEnabled.value
         },
-      ]
-    : [])
+      }]
+    : []),
+  ...(eyeDropper.isSupported.value
+    ? [{
+        id: 'action:eye-dropper',
+        title: 'Eye Dropper',
+        icon: 'i-carbon-eyedropper',
+        action: async () => {
+          const { sRGBHex } = await eyeDropper.open() || {}
+          if (sRGBHex)
+            copy(sRGBHex)
+        },
+      }]
+    : []),
+])
 </script>
 
 <template>
