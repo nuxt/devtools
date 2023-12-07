@@ -1,3 +1,18 @@
+## [1.0.5](https://github.com/nuxt/devtools/compare/v1.0.4...v1.0.5) (2023-12-07)
+
+
+### Bug Fixes
+
+* allow iframe to work in stricter cross-origin policy ([7ec0d3c](https://github.com/nuxt/devtools/commit/7ec0d3c84e817be849e0249e2bb5cee0f7336953))
+* **devtools:** don't enable devtools when in test mode ([#532](https://github.com/nuxt/devtools/issues/532)) ([3a7f143](https://github.com/nuxt/devtools/commit/3a7f143976e128cce6be2ce94673cb85effce9fd))
+
+
+### Features
+
+* add Eye Dropper command ([#530](https://github.com/nuxt/devtools/issues/530)) ([25584b9](https://github.com/nuxt/devtools/commit/25584b93dcd8eaa25013ce2c601796d098b7ac6f))
+
+
+
 ## [1.0.4](https://github.com/nuxt/devtools/compare/v1.0.3...v1.0.4) (2023-11-27)
 
 
