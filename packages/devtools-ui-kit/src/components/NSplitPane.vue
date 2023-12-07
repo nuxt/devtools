@@ -50,7 +50,7 @@ const size = key
   position: absolute;
   left: 0;
   top: 0;
-  transition: .2s ease;
+  transition: 0.2s ease;
   content: '';
   transition: opacity 0.4s;
   z-index: 1;
@@ -59,22 +59,22 @@ const size = key
   background: #8881;
   opacity: 1;
 }
-.splitpanes--vertical>.splitpanes__splitter {
+.splitpanes--vertical > .splitpanes__splitter {
   min-width: 0 !important;
   width: 0 !important;
-  @apply border-r border-base
+  @apply border-r border-base;
 }
-.splitpanes--horizontal>.splitpanes__splitter {
+.splitpanes--horizontal > .splitpanes__splitter {
   min-height: 0 !important;
   height: 0 !important;
-  @apply border-t border-base
+  @apply border-t border-base;
 }
-.splitpanes--vertical>.splitpanes__splitter:before {
+.splitpanes--vertical > .splitpanes__splitter:before {
   left: -5px;
   right: -4px;
   height: 100%;
 }
-.splitpanes--horizontal>.splitpanes__splitter:before {
+.splitpanes--horizontal > .splitpanes__splitter:before {
   top: -5px;
   bottom: -4px;
   width: 100%;

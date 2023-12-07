@@ -32,7 +32,7 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
 <template>
   <div relative h-full>
     <button
-      absolute left-0 right-0 top-0 bg-green:5 px2 py1 text-left text-xs font-mono text-green6
+      absolute left-0 right-0 top-0 bg-green:5 px2 py1 text-left text-xs text-green6 font-mono
       @click="segment.route ? emit('select', segment.route) : undefined"
     >
       {{ segment.route?.event.to }}

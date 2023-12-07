@@ -74,9 +74,7 @@ onMounted(async () => {
 })
 
 const copy = useCopy()
-const { open, isSupported, sRGBHex } = useEyeDropper()
-
-watch(sRGBHex, () => copy(sRGBHex.value))
+const eyeDropper = useEyeDropper({})
 
 registerCommands(() => [
   ...(splitScreenAvailable.value
@@ -89,13 +87,15 @@ registerCommands(() => [
         },
       }]
     : []),
-  ...(isSupported.value
+  ...(eyeDropper.isSupported.value
     ? [{
         id: 'action:eye-dropper',
         title: 'Eye Dropper',
         icon: 'i-carbon-eyedropper',
-        action: () => {
-          open()
+        action: async () => {
+          const { sRGBHex } = await eyeDropper.open() || {}
+          if (sRGBHex)
+            copy(sRGBHex)
         },
       }]
     : []),

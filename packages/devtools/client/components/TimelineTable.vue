@@ -150,7 +150,7 @@ useEventListener(scroller, 'wheel', (e: WheelEvent) => {
 <style scoped>
 .timeline-scroller::-webkit-scrollbar {
   height: 100px;
-  width: 0.1px;;
+  width: 0.1px;
 }
 
 .timeline-scroller::-webkit-scrollbar-track {

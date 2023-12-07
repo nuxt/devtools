@@ -12,7 +12,7 @@ const time = useDateFormat(useNow(), 'HH:mm')
 <template>
   <div class="relative max-w-[420px] min-w-[420px] rounded-[16px] rounded-bl-0 py-[6px] leading-[18px] drop-shadow-sm drop-shadow-color-[#10232f26] bg-base">
     <div class="pl-[10px] pr-[8px]">
-      <div class="leading-normal text-[#3390ec] underline">
+      <div class="text-[#3390ec] leading-normal underline">
         {{ card.url }}
       </div>
       <div class="quote w-full flex">
@@ -55,6 +55,6 @@ const time = useDateFormat(useNow(), 'HH:mm')
   border-radius: 2px;
   background-color: #3390ec;
   margin: 3px 8px 2px 0;
-  content: "";
+  content: '';
 }
 </style>

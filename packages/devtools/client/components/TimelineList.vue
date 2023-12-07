@@ -56,7 +56,7 @@ const emit = defineEmits<{
           <div text-xs font-mono op30>
             {{ event.from }}
           </div>
-          <div font-bold font-mono text-green>
+          <div text-green font-bold font-mono>
             {{ event.to }}
           </div>
         </div>

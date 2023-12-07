@@ -1,8 +1,9 @@
 import antfu from '@antfu/eslint-config'
-import pluginUnoCSS from '@unocss/eslint-plugin'
 
 export default await antfu(
   {
+    formatters: true,
+    unocss: true,
     ingores: [
       'clones',
       'docs',
@@ -13,15 +14,6 @@ export default await antfu(
     rules: {
       'node/prefer-global/process': 'off',
       'vue/no-v-text-v-html-on-component': 'off',
-    },
-  },
-  {
-    plugins: {
-      unocss: pluginUnoCSS,
-    },
-    rules: {
-      'unocss/order': 'warn',
-      'unocss/order-attributify': 'warn',
     },
   },
 )

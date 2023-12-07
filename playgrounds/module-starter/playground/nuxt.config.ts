@@ -16,7 +16,7 @@ export default defineNuxtConfig({
      */
     defineNuxtModule({
       setup(_, nuxt) {
-        if (!nuxt.options.dev)
+        if (!nuxt.options.dev || nuxt.options.test)
           return
 
         const _process = startSubprocess(

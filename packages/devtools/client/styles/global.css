@@ -2,8 +2,8 @@ html {
   --at-apply: font-sans;
   overflow-y: scroll;
   overscroll-behavior: none;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 body::-webkit-scrollbar {
   display: none;
@@ -21,14 +21,15 @@ html.dark {
 /* Overrides Floating Vue */
 .v-popper--theme-dropdown .v-popper__inner,
 .v-popper--theme-tooltip .v-popper__inner {
-  --at-apply: bg-base text-black dark:text-white rounded border border-base shadow;
+  --at-apply: bg-base text-black dark-text-white;
+  --at-apply: rounded border border-base shadow;
   box-shadow: 0 6px 30px #0000001a;
 }
 
 .v-popper--theme-tooltip .v-popper__arrow-inner,
 .v-popper--theme-dropdown .v-popper__arrow-inner {
   visibility: visible;
-  --at-apply: border-white dark:border-hex-121212;
+  --at-apply: border-white dark: border-hex-121212;
 }
 
 .v-popper--theme-tooltip .v-popper__arrow-outer,
@@ -43,16 +44,16 @@ html.dark {
 
 /* Markdown */
 .n-markdown a {
-  --at-apply: text-primary hover:underline;
+  --at-apply: text-primary hover-underline;
 }
 .prose a {
-  --uno: hover:text-primary;
+  --uno: hover-text-primary;
 }
 .prose code::before {
-  content: ""
+  content: '';
 }
 .prose code::after {
-  content: ""
+  content: '';
 }
 .prose hr {
   --uno: border-solid border-1 border-b border-base h-1px w-full block my-2 op50;
@@ -68,7 +69,7 @@ html.dark {
 
 /* JSON Editor */
 textarea {
-  background: #8881
+  background: #8881;
 }
 
 :root {
@@ -81,7 +82,8 @@ textarea {
   --jse-main-border: none !important;
 }
 
-.dark, .jse-theme-dark {
+.dark,
+.jse-theme-dark {
   --jse-panel-background: #111 !important;
   --jse-theme-color: #111 !important;
   --jse-text-color-inverse: #fff !important;

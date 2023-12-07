@@ -30,7 +30,7 @@ defineProps({
         <span>{{ title }}</span>
         <img v-if="image" :src="image" class="ml-8 h-20 w-20 rounded">
       </h1>
-      <p class="pr-10 text-5xl leading-tight text-gray-200">
+      <p class="pr-10 text-5xl text-gray-200 leading-tight">
         {{ description }}
       </p>
     </div>

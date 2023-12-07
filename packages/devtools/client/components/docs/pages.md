@@ -4,7 +4,7 @@ Nuxt provides a file-based routing to create routes within your web application 
 
 [Learn more in the documentation](https://nuxt.com/docs/getting-started/routing)
 
-----
+---
 
 # Middlewares
 

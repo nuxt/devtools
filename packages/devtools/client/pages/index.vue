@@ -22,7 +22,7 @@ function visit() {
 
 <template>
   <NPanelGrids flex="~ col gap3" relative h-screen w-full items-center justify-center text-center>
-    <p my2 text-3em font-bold font-stylish text-primary>
+    <p my2 text-3em text-primary font-bold font-stylish>
       👋 Hi there, welcome to Nuxt DevTools!
     </p>
     <p max-w-190 text-lg>

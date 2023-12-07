@@ -12,16 +12,17 @@ Timeline tracks your route navigations and functions calls in your Nuxt applicat
 
 Nuxt DevTools tracks function calls by wrapping them in the build time. It works for functions referenced by auto-imports, or explicit imports through `import {} from '#imports'`.
 
-```html
+```vue
 <script setup>
-import { useNuxtApp } from '#imports'
 import { useMouse } from '@vueuse/core'
+import { useNuxtApp } from '#imports'
 
 const route = useRoute() // tracked
 const app = useNuxtApp() // tracked
 
 // NOT tracked because it's directly imported
-const mouse = useMouse() 
+const mouse = useMouse()
+</script>
 ```
 
 By default, it tracks Nuxt provided composables as well as user defined functions. You can include/exclude functions by using the `include` and `exclude` options in the `nuxt.config.js` file.
