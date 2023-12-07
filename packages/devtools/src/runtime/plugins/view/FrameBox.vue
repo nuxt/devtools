@@ -173,7 +173,7 @@ useEventListener(window, 'mouseleave', () => {
   height: 100%;
   outline: none;
   background: var(--nuxt-devtools-widget-bg);
-  border: 1px solid rgba(125,125,125,0.2);
+  border: 1px solid rgba(125, 125, 125, 0.2);
   border-radius: 10px;
 }
 
@@ -203,6 +203,6 @@ useEventListener(window, 'mouseleave', () => {
   border-radius: 6px;
 }
 .nuxt-devtools-resize-handle:hover {
-  background: rgba(125,125,125,0.1);
+  background: rgba(125, 125, 125, 0.1);
 }
 </style>

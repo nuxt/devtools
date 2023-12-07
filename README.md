@@ -1,5 +1,6 @@
 <a href="https://devtools.nuxt.com"><img width="1200" alt="Nuxt DevTools" src="https://github-production-user-asset-6210df.s3.amazonaws.com/904724/261577617-a10567bd-ad33-48cc-9bda-9e37dbe1929f.png"></a>
 <br>
+
 <h1>
 Nuxt DevTools
 </h1>
@@ -59,7 +60,7 @@ Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and rein
 
 ### Module Options
 
-To configure Nuxt DevTools, you can pass the `devtools` options. 
+To configure Nuxt DevTools, you can pass the `devtools` options.
 
 ```ts
 // nuxt.config.ts
@@ -111,19 +112,15 @@ On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#
 
 [MIT](./LICENSE)
 
-
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/@nuxt/devtools/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/@nuxt/devtools
-
 [npm-downloads-src]: https://img.shields.io/npm/dt/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/@nuxt/devtools
-
 [license-src]: https://img.shields.io/npm/l/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://npmjs.com/package/@nuxt/devtools
-
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
-
 [volta-src]: https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg
 [volta-href]: https://volta.net/nuxt/devtools?utm_source=nuxt_devtools_readme

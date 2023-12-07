@@ -82,7 +82,7 @@ details[open] summary {
 }
 
 details summary::-webkit-details-marker {
-  display:none;
+  display: none;
 }
 
 details[open] .chevron {

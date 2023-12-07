@@ -59,6 +59,6 @@ const rendered = computed(() => {
   margin-right: 0.5rem;
   display: inline-block;
   text-align: right;
-  --at-apply: text-truegray:50;
+  --at-apply: text-truegray: 50;
 }
 </style>

@@ -495,7 +495,12 @@ onMounted(() => {
   user-select: none;
   touch-action: none;
   max-width: 150px;
-  transition: all 0.6s ease, max-width 0.6s ease, padding 0.5s ease, transform 0.4s ease, opacity 0.2s ease;
+  transition:
+    all 0.6s ease,
+    max-width 0.6s ease,
+    padding 0.5s ease,
+    transform 0.4s ease,
+    opacity 0.2s ease;
 }
 
 #nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel {
@@ -547,7 +552,7 @@ onMounted(() => {
   pointer-events: none;
   z-index: -1;
   border-radius: 9999px;
-  background-image: linear-gradient(45deg,#00dc82,#36e4da,#0047e1);
+  background-image: linear-gradient(45deg, #00dc82, #36e4da, #0047e1);
   filter: blur(60px);
 }
 </style>

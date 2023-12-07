@@ -243,7 +243,7 @@ watch(projectsSectionVisible, () => {
         <div v-if="mod" class="flex flex-col items-center justify-center gap-8 sm:flex-row lg:gap-16">
           <NuxtLink class="group text-center" to="https://npmjs.org/package/@nuxt/devtools" target="_blank">
             <p
-              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
+              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl text-gray-900 font-semibold dark:text-white"
             >
               {{ formatNumber(mod.stats.downloads) }}+
             </p>
@@ -252,7 +252,7 @@ watch(projectsSectionVisible, () => {
 
           <NuxtLink class="group text-center" to="https://github.com/nuxt/devtools" target="_blank">
             <p
-              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl font-semibold text-gray-900 dark:text-white"
+              class="group-hover:text-primary-500 dark:group-hover:text-primary-400 text-6xl text-gray-900 font-semibold dark:text-white"
             >
               {{ formatNumber(mod.stats.stars) }}+
             </p>
@@ -301,7 +301,11 @@ watch(projectsSectionVisible, () => {
   top: 25vh;
   width: 100%;
   height: 30vh;
-  background: radial-gradient(50% 50% at 50% 50%, #00DC82 0%, rgba(0, 220, 130, 0) 100%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #00dc82 0%,
+    rgba(0, 220, 130, 0) 100%
+  );
   filter: blur(180px);
   opacity: 0.6;
   z-index: -1;
