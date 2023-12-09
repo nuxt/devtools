@@ -89,12 +89,12 @@ const filterByCollection = computed(() => {
     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
 
     if (item.type === 'runtime') {
-      const array = item.filepath.split('/')
-      const indexOfDist = array.indexOf('dist')
-      prefix = array[indexOfDist - 1]
       collectionNames[0] = 'runtime'
-      if (prefix)
-        collectionNames.splice(1, 0, prefix)
+      const indexOfDist = filepathParts.indexOf('dist')
+      if (indexOfDist !== -1) {
+        prefix = filepathParts[indexOfDist - 1]
+        prefix && collectionNames.splice(1, 0, prefix)
+      }
     }
 
     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
