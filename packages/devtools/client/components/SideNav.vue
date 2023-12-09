@@ -83,7 +83,7 @@ onClickOutside(
         >
           <div i-logos-nuxt-icon h-6 w-6 />
           <template v-if="sidebarExpanded">
-            <span text="lg white" font-600>
+            <span text="lg black dark:white" font-600>
               DevTools
             </span>
             <div flex-auto />
