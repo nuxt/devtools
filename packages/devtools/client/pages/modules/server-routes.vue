@@ -57,65 +57,57 @@ const filterByCollection = computed(() => {
     collection.routes.push(route)
   }
 
+  const findOrCreateCollection = (routeName: string, parentCollection?: ServerRouteInfo) => {
+    const existingCollection = parentCollection
+      ? parentCollection.routes?.find(r => r.route === routeName)
+      : collections.find(c => c.route === routeName)
+
+    if (existingCollection)
+      return existingCollection
+
+    const newCollection: ServerRouteInfo = {
+      route: routeName,
+      filepath: routeName.replace(/\W/g, '-').toLowerCase(),
+      type: 'collection',
+      routes: [],
+    }
+
+    if (parentCollection)
+      addRouteToCollection(parentCollection, newCollection)
+
+    else
+      collections.push(newCollection)
+
+    return newCollection
+  }
+
   filtered.value.forEach((item) => {
+    let prefix: string | undefined
+    let parentCollection: ServerRouteInfo | undefined
+
     const filepathParts = item.filepath.split('/')
     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
+
+    if (item.type === 'runtime') {
+      collectionNames[0] = 'runtime'
+      const indexOfDist = filepathParts.indexOf('dist')
+      if (indexOfDist !== -1) {
+        prefix = filepathParts[indexOfDist - 1]
+        prefix && collectionNames.splice(1, 0, prefix)
+      }
+    }
 
     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
       collectionNames.pop()
 
-    let parentCollection: ServerRouteInfo | null = null
     collectionNames.forEach((collectionName) => {
-      const existingCollection = parentCollection
-        ? parentCollection.routes?.find(r => r.route === collectionName)
-        : collections.find(c => c.route === collectionName)
-
-      if (existingCollection) {
-        parentCollection = existingCollection
-      }
-      else {
-        const newCollection: ServerRouteInfo = {
-          route: collectionName,
-          filepath: collectionName.replace(/\W/g, '-').toLowerCase(),
-          type: 'collection',
-          routes: [],
-        }
-
-        if (parentCollection)
-          addRouteToCollection(parentCollection, newCollection)
-
-        else
-          collections.push(newCollection)
-
-        parentCollection = newCollection
-      }
+      parentCollection = findOrCreateCollection(collectionName, parentCollection)
     })
 
-    if (item.type === 'runtime') {
-      const runtimeCollection = collections.find(c => c.route === 'runtime')
-
-      if (runtimeCollection) {
-        addRouteToCollection(runtimeCollection, item)
-      }
-      else {
-        const newCollection: ServerRouteInfo = {
-          route: 'runtime',
-          filepath: 'runtime',
-          type: 'collection',
-          routes: [item],
-        }
-
-        collections.push(newCollection)
-      }
-    }
-
-    else if (parentCollection) {
+    if (parentCollection)
       addRouteToCollection(parentCollection, item)
-    }
-
-    else {
+    else
       collections.push(item)
-    }
   })
 
   return collections
