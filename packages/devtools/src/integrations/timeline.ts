@@ -4,7 +4,7 @@ import semver from 'semver'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { runtimeDir } from '../dirs'
 
-export async function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
+export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const helperPath = resolve(runtimeDir, 'function-metrics-helpers')
 
   const includeFrom = options.timeline?.functions?.includeFrom || [

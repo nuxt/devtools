@@ -19,7 +19,7 @@ import { readLocalOptions } from './utils/local-options'
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
-  if (process.env.TEST || process.env.NODE_ENV === 'test')
+  if (process.env.TEST || process.env.NODE_ENV === 'test' || nuxt.options.test)
     return
 
   if (nuxt.options.builder !== '@nuxt/vite-builder') {
@@ -27,7 +27,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
-  if (!nuxt.options.dev || nuxt.options.test) {
+  if (!nuxt.options.dev) {
     if (nuxt.options.build.analyze)
       await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
@@ -178,14 +178,15 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     })
   })
 
+  await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
+
+  if (options.viteInspect !== false)
+    await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
+
+  if (options.componentInspector !== false)
+    await import('./integrations/vue-inspector').then(({ setup }) => setup(ctx))
+
   const integrations = [
-    import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx)),
-    options.viteInspect !== false
-      ? import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
-      : null,
-    options.componentInspector !== false
-      ? import('./integrations/vue-inspector').then(({ setup }) => setup(ctx))
-      : null,
     options.vscode?.enabled
       ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
       : null,

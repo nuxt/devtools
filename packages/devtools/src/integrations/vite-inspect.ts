@@ -4,7 +4,7 @@ import Inspect from 'vite-plugin-inspect'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type { NuxtDevtoolsServerContext } from '../types'
 
-export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
+export function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
   const plugin = Inspect()
   addVitePlugin(plugin)
 
