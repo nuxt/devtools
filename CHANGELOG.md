@@ -1,3 +1,15 @@
+## [1.0.6](https://github.com/nuxt/devtools/compare/v1.0.5...v1.0.6) (2023-12-13)
+
+
+### Bug Fixes
+
+* improve rpc import message, close [#528](https://github.com/nuxt/devtools/issues/528) ([721dda8](https://github.com/nuxt/devtools/commit/721dda8afb10e575021c990a473943ebc92bdeb9))
+* **server-routes:** improve filterByCollection for runtime routes ([#538](https://github.com/nuxt/devtools/issues/538)) ([ec144d1](https://github.com/nuxt/devtools/commit/ec144d119ace0384d3f2d52b3f087f50e9851852))
+* **SideNav:** logo text color in light mode ([#537](https://github.com/nuxt/devtools/issues/537)) ([4dbe60d](https://github.com/nuxt/devtools/commit/4dbe60dce7205a72932a77754741c89fb6239002))
+* stable integrations setup to have consistent plugins order ([#542](https://github.com/nuxt/devtools/issues/542)) ([310929b](https://github.com/nuxt/devtools/commit/310929bd792f039bcd71b1e9be8f032084694447))
+
+
+
 ## [1.0.5](https://github.com/nuxt/devtools/compare/v1.0.4...v1.0.5) (2023-12-07)
 
 
