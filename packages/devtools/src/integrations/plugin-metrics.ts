@@ -1,6 +1,9 @@
 import type { NuxtDevtoolsServerContext } from '../types'
 
 export function setup({ nuxt }: NuxtDevtoolsServerContext) {
+  if (!nuxt.options.dev || nuxt.options.test)
+    return
+
   /**
    * Wrap plugins with performance metrics
    */
