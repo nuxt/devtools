@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import { createReusableTemplate } from '@vueuse/core'
+import { createReusableTemplate, watchDebounced } from '@vueuse/core'
 import type { $Fetch } from 'ofetch'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
@@ -308,6 +308,34 @@ watchEffect(() => {
   }
 })
 
+const savedRouteInputs = useLocalStorage<{ path: string, inputs: typeof routeInputs }[]>('nuxt-devtools:server-routes:inputs', () => [], {
+  window: window.parent,
+})
+
+watchDebounced(routeInputs, () => {
+  const savedEntry = savedRouteInputs.value?.find((entry: any) => entry.path === props.route.filepath)
+  if (!savedEntry) {
+    savedRouteInputs.value.push({
+      path: props.route.filepath,
+      inputs: routeInputs,
+    })
+  }
+  else {
+    //  update routeInputs with local storage
+    const { body, query, headers } = savedEntry.inputs
+    routeInputs.body = body
+    routeInputs.query = query
+    routeInputs.headers = headers
+  }
+}, { immediate: true, deep: true, debounce: 500 })
+
+function clearSavedCache() {
+  savedRouteInputs.value = []
+  routeInputs.body = []
+  routeInputs.query = []
+  routeInputs.headers = []
+}
+
 const copy = useCopy()
 </script>
 
@@ -369,15 +397,18 @@ const copy = useCopy()
       <NButton
         v-for="tab of tabs"
         :key="tab.slug"
+        v-tooltip="tab.name"
         :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
         @click="activeTab = tab.slug"
       >
         <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
-        {{ tab.name }}
-        {{ tab?.length ? `(${tab.length})` : '' }}
-        <span>
-          {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
-        </span>
+        <div class="hidden md:block">
+          {{ tab.name }}
+          {{ tab?.length ? `(${tab.length})` : '' }}
+          <span>
+            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+          </span>
+        </div>
       </NButton>
       <div flex-auto />
       <div text-xs op50>
@@ -395,6 +426,7 @@ const copy = useCopy()
           DevTools
         </option>
       </NSelect>
+      <NButton v-tooltip="'Clear Inputs Saved Cache'" n="orange" class="p-3" icon="i-carbon-clean" @click="clearSavedCache" />
     </div>
     <div
       v-if="activeTab === 'params'"
