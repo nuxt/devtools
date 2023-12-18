@@ -348,6 +348,8 @@ function clearSavedCache() {
   routeInputs.body = []
   routeInputs.query = []
   routeInputs.headers = []
+  routeParams.value = {}
+  activeTab.value = paramNames.value.length ? 'params' : 'query'
 }
 
 const copy = useCopy()
