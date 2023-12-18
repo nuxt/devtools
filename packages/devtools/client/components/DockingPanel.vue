@@ -33,8 +33,8 @@ function toggleSplitScreen() {
       <NButton n="primary sm" @click="refreshData">
         Refetch Data
       </NButton>
-      <NButton n="primary sm" @click="refreshPage">
-        Refresh Page
+      <NButton n="primary sm" @click="reloadPage">
+        Reload Page
       </NButton>
     </div>
   </div>
