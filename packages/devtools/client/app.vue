@@ -108,9 +108,9 @@ registerCommands(() => [
     },
     {
       id: 'action:refresh-page',
-      title: 'Refresh Page',
+      title: 'Reload Page',
       icon: 'i-carbon-reset',
-      action: refreshPage,
+      action: reloadPage,
     },
   ],
 ])
