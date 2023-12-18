@@ -1,17 +1,5 @@
 <script setup lang="ts">
-const client = useClient()
-const nuxt = useNuxtApp()
-
 const { sidebarExpanded } = useDevToolsUIOptions()
-
-function refreshData() {
-  nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
-  triggerRef(client)
-}
-
-function refreshPage() {
-  location.reload()
-}
 
 function toggleSplitScreen() {
   splitScreenEnabled.value = !splitScreenEnabled.value

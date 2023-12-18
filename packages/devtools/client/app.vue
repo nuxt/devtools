@@ -99,6 +99,20 @@ registerCommands(() => [
         },
       }]
     : []),
+  ...[
+    {
+      id: 'action:refresh-data',
+      title: 'Refresh Data',
+      icon: 'i-carbon-data-backup',
+      action: refreshData,
+    },
+    {
+      id: 'action:refresh-page',
+      title: 'Refresh Page',
+      icon: 'i-carbon-reset',
+      action: refreshPage,
+    },
+  ],
 ])
 </script>
 
