@@ -172,6 +172,6 @@ export function refreshData() {
   triggerRef(client)
 }
 
-export function refreshPage() {
+export function reloadPage() {
   location.reload()
 }
