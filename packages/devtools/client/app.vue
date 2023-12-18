@@ -107,7 +107,7 @@ registerCommands(() => [
       action: refreshData,
     },
     {
-      id: 'action:refresh-page',
+      id: 'action:reload-page',
       title: 'Reload Page',
       icon: 'i-carbon-reset',
       action: reloadPage,
