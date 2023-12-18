@@ -85,7 +85,7 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(paramNames.value.length ? 'params' : 'query')
+const activeTab = ref()
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -308,24 +308,38 @@ watchEffect(() => {
   }
 })
 
-const savedRouteInputs = useLocalStorage<{ path: string, inputs: typeof routeInputs }[]>('nuxt-devtools:server-routes:inputs', () => [], {
+const savedRouteInputs = useLocalStorage<{ path: string, tab: string, inputs: any }[]>('nuxt-devtools:server-routes:inputs', () => [], {
   window: window.parent,
 })
 
-watchDebounced(routeInputs, () => {
+watchDebounced([routeInputs, activeTab], () => {
   const savedEntry = savedRouteInputs.value?.find((entry: any) => entry.path === props.route.filepath)
+
   if (!savedEntry) {
-    savedRouteInputs.value.push({
+    const newEntry = {
       path: props.route.filepath,
-      inputs: routeInputs,
-    })
+      tab: paramNames.value.length ? 'params' : 'query',
+      inputs: {
+        ...routeInputs,
+        ...(paramNames.value.length ? { params: routeParams.value } : {}),
+      },
+    }
+    savedRouteInputs.value.push(newEntry)
+
+    if (!activeTab.value)
+      activeTab.value = newEntry.tab
   }
   else {
+    if (!activeTab.value)
+      activeTab.value = savedEntry.tab
+
+    if (savedEntry.tab !== activeTab.value)
+      savedEntry.tab = activeTab.value
+
     //  update routeInputs with local storage
-    const { body, query, headers } = savedEntry.inputs
-    routeInputs.body = body
-    routeInputs.query = query
-    routeInputs.headers = headers
+    const { body, query, headers, params } = savedEntry.inputs
+    Object.assign(routeInputs, { body, query, headers })
+    routeParams.value = params
   }
 }, { immediate: true, deep: true, debounce: 500 })
 
