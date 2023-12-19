@@ -8,7 +8,7 @@ function r(p: string) {
 
 export default defineNuxtConfig({
   modules: [
-    'nuxt-vitest',
+    '@nuxt/test-utils/module',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
