@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
-import { createReusableTemplate } from '@vueuse/core'
+import { createReusableTemplate, watchDebounced } from '@vueuse/core'
 import type { $Fetch } from 'ofetch'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 
@@ -85,7 +85,7 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
 
-const activeTab = ref(paramNames.value.length ? 'params' : 'query')
+const activeTab = ref()
 
 const tabInputs = ['input', 'json']
 const selectedTabInput = ref(tabInputs[0])
@@ -308,6 +308,50 @@ watchEffect(() => {
   }
 })
 
+const savedRouteInputs = useLocalStorage<{ path: string, tab: string, inputs: any }[]>('nuxt-devtools:server-routes:inputs', () => [], {
+  window: window.parent,
+})
+
+watchDebounced([routeInputs, activeTab], () => {
+  const savedEntry = savedRouteInputs.value?.find((entry: any) => entry.path === props.route.filepath)
+
+  if (!savedEntry) {
+    const newEntry = {
+      path: props.route.filepath,
+      tab: paramNames.value.length ? 'params' : 'query',
+      inputs: {
+        ...routeInputs,
+        ...(paramNames.value.length ? { params: routeParams.value } : {}),
+      },
+    }
+    savedRouteInputs.value.push(newEntry)
+
+    if (!activeTab.value)
+      activeTab.value = newEntry.tab
+  }
+  else {
+    if (!activeTab.value)
+      activeTab.value = savedEntry.tab
+
+    if (savedEntry.tab !== activeTab.value)
+      savedEntry.tab = activeTab.value
+
+    //  update routeInputs with local storage
+    const { body, query, headers, params } = savedEntry.inputs
+    Object.assign(routeInputs, { body, query, headers })
+    routeParams.value = params
+  }
+}, { immediate: true, deep: true, debounce: 500 })
+
+function clearSavedCache() {
+  savedRouteInputs.value = []
+  routeInputs.body = []
+  routeInputs.query = []
+  routeInputs.headers = []
+  routeParams.value = {}
+  activeTab.value = paramNames.value.length ? 'params' : 'query'
+}
+
 const copy = useCopy()
 </script>
 
@@ -369,15 +413,18 @@ const copy = useCopy()
       <NButton
         v-for="tab of tabs"
         :key="tab.slug"
+        v-tooltip="tab.name"
         :class="activeTab === tab.slug ? 'text-primary n-primary' : 'border-transparent shadow-none'"
         @click="activeTab = tab.slug"
       >
         <NIcon :icon="ServerRouteTabIcons[tab.slug]" />
-        {{ tab.name }}
-        {{ tab?.length ? `(${tab.length})` : '' }}
-        <span>
-          {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
-        </span>
+        <div class="hidden md:block">
+          {{ tab.name }}
+          {{ tab?.length ? `(${tab.length})` : '' }}
+          <span>
+            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+          </span>
+        </div>
       </NButton>
       <div flex-auto />
       <div text-xs op50>
@@ -395,6 +442,7 @@ const copy = useCopy()
           DevTools
         </option>
       </NSelect>
+      <NButton v-tooltip="'Clear Inputs Saved Cache'" n="orange" class="p-3" icon="i-carbon-clean" @click="clearSavedCache" />
     </div>
     <div
       v-if="activeTab === 'params'"
