@@ -90,7 +90,7 @@ registerCommands(() => [
   ...(eyeDropper.isSupported.value
     ? [{
         id: 'action:eye-dropper',
-        title: 'Eye Dropper',
+        title: 'Color Picker',
         icon: 'i-carbon-eyedropper',
         action: async () => {
           const { sRGBHex } = await eyeDropper.open() || {}
