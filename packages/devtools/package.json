@@ -11,7 +11,7 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/module.d.ts",
+      "types": "./dist/module.d.mts",
       "import": "./dist/module.mjs",
       "require": "./module.cjs"
     },
@@ -21,7 +21,7 @@
     "./*": "./*"
   },
   "main": "./module.cjs",
-  "types": "./dist/types.d.ts",
+  "types": "./dist/module.d.ts",
   "bin": "./cli.mjs",
   "files": [
     "*.cjs",
