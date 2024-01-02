@@ -90,7 +90,7 @@ registerCommands(() => [
   ...(eyeDropper.isSupported.value
     ? [{
         id: 'action:eye-dropper',
-        title: 'Eye Dropper',
+        title: 'Color Picker',
         icon: 'i-carbon-eyedropper',
         action: async () => {
           const { sRGBHex } = await eyeDropper.open() || {}
@@ -99,6 +99,20 @@ registerCommands(() => [
         },
       }]
     : []),
+  ...[
+    {
+      id: 'action:refresh-data',
+      title: 'Refresh Data',
+      icon: 'i-carbon-data-backup',
+      action: refreshData,
+    },
+    {
+      id: 'action:reload-page',
+      title: 'Reload Page',
+      icon: 'i-carbon-reset',
+      action: reloadPage,
+    },
+  ],
 ])
 </script>
 

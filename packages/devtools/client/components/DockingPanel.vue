@@ -1,17 +1,5 @@
 <script setup lang="ts">
-const client = useClient()
-const nuxt = useNuxtApp()
-
 const { sidebarExpanded } = useDevToolsUIOptions()
-
-function refreshData() {
-  nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
-  triggerRef(client)
-}
-
-function refreshPage() {
-  location.reload()
-}
 
 function toggleSplitScreen() {
   splitScreenEnabled.value = !splitScreenEnabled.value
@@ -45,8 +33,8 @@ function toggleSplitScreen() {
       <NButton n="primary sm" @click="refreshData">
         Refetch Data
       </NButton>
-      <NButton n="primary sm" @click="refreshPage">
-        Refresh Page
+      <NButton n="primary sm" @click="reloadPage">
+        Reload Page
       </NButton>
     </div>
   </div>

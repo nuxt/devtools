@@ -18,16 +18,14 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18.18.2
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm typecheck
       - name: Release Edge
-        if: |
-          github.event_name == 'push' &&
-          !contains(github.event.head_commit.message, '[skip-release]')
+        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-release]')
         run: ./scripts/release-edge.sh
         env:
           NPM_CONFIG_PROVENANCE: true
