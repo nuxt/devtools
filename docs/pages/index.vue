@@ -314,7 +314,7 @@ watch(projectsSectionVisible, () => {
 .prose {
   @apply text-white;
 
-  :where(code) {
+  :where(:deep(code)) {
     @apply text-gray-200;
   }
 }
