@@ -76,12 +76,13 @@ export function __nuxtTimelineWrap(name: string, fn: any) {
     try {
       if (result && typeof result.then === 'function') {
         event.isPromise = true
-        return result
+        result
           .then((i: any) => i)
           .finally(() => {
             event.end = Date.now()
             return result
           })
+        return result
       }
     }
     catch (e) {}
