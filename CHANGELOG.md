@@ -1,3 +1,22 @@
+## [1.0.7](https://github.com/nuxt/devtools/compare/v1.0.6...v1.0.7) (2024-01-11)
+
+
+### Bug Fixes
+
+* **devtools:** update default types to `module.d.ts`/`.mts` ([#559](https://github.com/nuxt/devtools/issues/559)) ([2ecd32c](https://github.com/nuxt/devtools/commit/2ecd32cd28d993e83a08c7a658c494c11e90daa0))
+* make twitter og tags optional ([41ee5ec](https://github.com/nuxt/devtools/commit/41ee5eca5e2cea5a1d093fb1a3bb4b9875adb819))
+* **open-graph:** fix type error, close [#563](https://github.com/nuxt/devtools/issues/563) ([c63055a](https://github.com/nuxt/devtools/commit/c63055a172bc49da59ebccb111841b767b30e427))
+* support `iframeProps` option for CSP, fix Stackblitz ([0eb7a82](https://github.com/nuxt/devtools/commit/0eb7a82bef1639ebfeace68f73ccebc11ea8e0a6))
+* **timeline-helper-wrapper:** Fix return value in timeline wrapper for promises ([#567](https://github.com/nuxt/devtools/issues/567)) ([0645e35](https://github.com/nuxt/devtools/commit/0645e351bc9724802ebf0537312279a7338215fb))
+* update title of Eye Dropper command ([#558](https://github.com/nuxt/devtools/issues/558)) ([ea58139](https://github.com/nuxt/devtools/commit/ea58139d1a5e2a8906c0d285325919518cfbab87))
+
+
+### Features
+
+* **server-routes:** implement persisting input values in localStorage ([#545](https://github.com/nuxt/devtools/issues/545)) ([67dbf65](https://github.com/nuxt/devtools/commit/67dbf6512be6ddc12898c57ca3019d81c87119c6))
+
+
+
 ## [1.0.6](https://github.com/nuxt/devtools/compare/v1.0.5...v1.0.6) (2023-12-13)
 
 
