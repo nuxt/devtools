@@ -157,7 +157,7 @@ until(router).toBeTruthy().then((v) => {
                 </NLink>
               </div>
               <NLink
-                :href="item.value.match(/^https?:\/\//) ? item.value : undefined"
+                :href="String(item.value).match(/^https?:\/\//) ? item.value : undefined"
                 target="_blank"
                 w-full p2 font-mono
                 n="primary"
