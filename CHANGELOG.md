@@ -1,3 +1,12 @@
+## [1.0.8](https://github.com/nuxt/devtools/compare/v1.0.7...v1.0.8) (2024-01-11)
+
+
+### Bug Fixes
+
+* remove debugging code ([f05143b](https://github.com/nuxt/devtools/commit/f05143bc90e59aba0355e3217a9276ff9d3cec47))
+
+
+
 ## [1.0.7](https://github.com/nuxt/devtools/compare/v1.0.6...v1.0.7) (2024-01-11)
 
 
