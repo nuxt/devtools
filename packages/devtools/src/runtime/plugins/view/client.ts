@@ -128,9 +128,13 @@ export async function setupDevToolsClient({
       const initialUrl = CLIENT_PATH + state.value.route
       try {
         iframe = document.createElement('iframe')
+
+        // custom iframe props
+        Object.fromEntries(runtimeConfig.app.devtools?.iframeProps || {})
+        for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
+          iframe.setAttribute(key, String(value))
+
         iframe.id = 'nuxt-devtools-iframe'
-        iframe.allow = 'cross-origin-isolated'
-        iframe.setAttribute('credentialless', 'true')
         iframe.src = initialUrl
         iframe.onload = async () => {
           try {

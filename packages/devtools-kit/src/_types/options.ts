@@ -48,6 +48,11 @@ export interface ModuleOptions {
   disableAuthorization?: boolean
 
   /**
+   * Props for the iframe element, useful for environment with stricter CSP
+   */
+  iframeProps?: Record<string, string | boolean>
+
+  /**
    * Experimental features
    */
   experimental?: {

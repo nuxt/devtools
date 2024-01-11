@@ -40,6 +40,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:before')
 
+  if (options.iframeProps)
+    nuxt.options.runtimeConfig.app.iframeProps = options.iframeProps
+
   // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
 
