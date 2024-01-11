@@ -126,29 +126,23 @@ export async function setupDevToolsClient({
       const runtimeConfig = useRuntimeConfig()
       const CLIENT_PATH = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/client`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
-      try {
-        iframe = document.createElement('iframe')
+      iframe = document.createElement('iframe')
 
-        // custom iframe props
-        Object.fromEntries(runtimeConfig.app.devtools?.iframeProps || {})
-        for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
-          iframe.setAttribute(key, String(value))
+      // custom iframe props
+      for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
+        iframe.setAttribute(key, String(value))
 
-        iframe.id = 'nuxt-devtools-iframe'
-        iframe.src = initialUrl
-        iframe.onload = async () => {
-          try {
-            await waitForClientInjection()
-            client.syncClient()
-          }
-          catch (e) {
-            console.error('Nuxt DevTools client injection failed')
-            console.error(e)
-          }
+      iframe.id = 'nuxt-devtools-iframe'
+      iframe.src = initialUrl
+      iframe.onload = async () => {
+        try {
+          await waitForClientInjection()
+          client.syncClient()
         }
-      }
-      catch (e) {
-        console.error(e)
+        catch (e) {
+          console.error('Nuxt DevTools client injection failed')
+          console.error(e)
+        }
       }
     }
 
