@@ -202,6 +202,7 @@ const radio = ref('a')
               n="pink6 dark:pink5"
               icon="carbon:user"
               placeholder="Your name..."
+              autocomplete="username"
             />
             <NTextInput
               n="pink6 dark:pink5"
@@ -214,6 +215,7 @@ const radio = ref('a')
               icon="carbon:password"
               type="password"
               placeholder="Your password..."
+              autocomplete="current-password"
               required
             />
             <NButton class="self-start">
