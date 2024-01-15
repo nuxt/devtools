@@ -66,9 +66,6 @@ export async function setupDevToolsClient({
         if (state.value.open)
           return
         state.value.open = true
-        return nextTick(() => {
-          client.syncClient()
-        })
       },
       async navigate(path: string) {
         if (!state.value.open)
@@ -266,8 +263,6 @@ export async function setupDevToolsClient({
       })
     }
   }
-
-  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'
