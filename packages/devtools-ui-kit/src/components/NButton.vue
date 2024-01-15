@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// @ts-expect-error tsconfig
+// eslint-disable-next-line ts/prefer-ts-expect-error
+// @ts-ignore tsconfig
 import { NuxtLink } from '#components'
 
 withDefaults(defineProps<{
