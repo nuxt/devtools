@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { Router } from 'vue-router'
