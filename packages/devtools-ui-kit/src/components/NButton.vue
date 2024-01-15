@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-// @ts-ignore tsconfig
+// @ts-expect-error tsconfig
 import { NuxtLink } from '#components'
 
 withDefaults(defineProps<{
@@ -19,7 +18,7 @@ withDefaults(defineProps<{
   <Component
     :is="to ? NuxtLink : 'button'"
     :to="to"
-    v-bind="{ ...$attrs, ...(!to && { type }), ...(disabled ? {disabled: true} : {}) }"
+    v-bind="{ ...$attrs, ...(!to && { type }), ...(disabled ? { disabled: true } : { tabindex: 0 }) }"
     :class="[
       { 'n-button-base active:n-button-active focus-visible:n-focus-base hover:n-button-hover': border },
       { 'n-icon-button': !$slots.default },
