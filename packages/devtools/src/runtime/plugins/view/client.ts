@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { Router } from 'vue-router'
@@ -66,9 +66,6 @@ export async function setupDevToolsClient({
         if (state.value.open)
           return
         state.value.open = true
-        return nextTick(() => {
-          client.syncClient()
-        })
       },
       async navigate(path: string) {
         if (!state.value.open)
@@ -266,8 +263,6 @@ export async function setupDevToolsClient({
       })
     }
   }
-
-  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'
