@@ -28,7 +28,7 @@ onMounted(() => {
   else {
     iframeEl.value = document.createElement('iframe')
     iframeEl.value.setAttribute('allow', allowedPermissions.join('; '))
-    iframe.value.setAttribute('aria-label','Nuxt Devtools')
+    iframeEl.value.setAttribute('aria-label','Nuxt Devtools')
 
     if (isPersistent)
       iframeCacheMap.set(key.value, iframeEl.value)
