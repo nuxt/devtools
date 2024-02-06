@@ -13,7 +13,8 @@ const emit = defineEmits<{
 const timeAgo = useTimeAgo(() => props.segment.start, {
   updateInterval: 1000,
   showSecond: true,
-  messages: {
+  controls: false,
+  messages: ({
     justNow: '',
     past: s => s,
     future: s => s,
@@ -25,7 +26,7 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
     day: d => `${d}d`,
     month: m => `${m}mo`,
     year: y => `${y}y`,
-  } as UseTimeAgoOptions<false>['messages'],
+  } satisfies UseTimeAgoOptions<false>['messages']) as any,
 })
 </script>
 

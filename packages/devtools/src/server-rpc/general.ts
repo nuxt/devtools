@@ -194,7 +194,7 @@ export function setupGeneralRPC({
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },
-    async requestForAuth(info: string, origin?: string) {
+    async requestForAuth(info, origin?) {
       if (options.disableAuthorization)
         return
 
@@ -206,7 +206,7 @@ export function setupGeneralRPC({
 
       const message = [
         `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,
-        colors.bold(info),
+        colors.bold(info || 'Unknown'),
         '',
         'Please open the following URL in the browser:',
         colors.bold(colors.green(`${origin}${ROUTE_AUTH}?token=${token}`)),

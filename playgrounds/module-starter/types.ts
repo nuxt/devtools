@@ -1,7 +1,7 @@
 export interface ServerFunctions {
-  toUpperCase(t: string): string
+  toUpperCase: (t: string) => string
 }
 
 export interface ClientFunctions {
-  greeting(t: string): void
+  greeting: (t: string) => void
 }
