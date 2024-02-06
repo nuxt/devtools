@@ -1,6 +1,5 @@
-import type { BuiltinLanguage, HighlighterCore } from 'shikiji'
-import { getHighlighterCore } from 'shikiji/core'
-import { getWasmInlined } from 'shikiji/wasm'
+import type { BuiltinLanguage, HighlighterCore } from 'shiki'
+import { getHighlighterCore } from 'shiki/core'
 
 export const shiki = shallowRef<HighlighterCore>()
 
@@ -11,22 +10,22 @@ export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text'
     // Only loading when needed
     promise = getHighlighterCore({
       themes: [
-        import('shikiji/themes/vitesse-dark.mjs'),
-        import('shikiji/themes/vitesse-light.mjs'),
+        import('shiki/themes/vitesse-dark.mjs'),
+        import('shiki/themes/vitesse-light.mjs'),
       ],
       langs: [
-        import('shikiji/langs/json.mjs'),
-        import('shikiji/langs/yaml.mjs'),
-        import('shikiji/langs/css.mjs'),
-        import('shikiji/langs/javascript.mjs'),
-        import('shikiji/langs/typescript.mjs'),
-        import('shikiji/langs/vue.mjs'),
-        import('shikiji/langs/vue-html.mjs'),
-        import('shikiji/langs/html.mjs'),
-        import('shikiji/langs/diff.mjs'),
-        import('shikiji/langs/shellscript.mjs'),
+        import('shiki/langs/json.mjs'),
+        import('shiki/langs/yaml.mjs'),
+        import('shiki/langs/css.mjs'),
+        import('shiki/langs/javascript.mjs'),
+        import('shiki/langs/typescript.mjs'),
+        import('shiki/langs/vue.mjs'),
+        import('shiki/langs/vue-html.mjs'),
+        import('shiki/langs/html.mjs'),
+        import('shiki/langs/diff.mjs'),
+        import('shiki/langs/shellscript.mjs'),
       ],
-      loadWasm: getWasmInlined,
+      loadWasm: import('shiki/wasm'),
     }).then((i) => {
       shiki.value = i
     })

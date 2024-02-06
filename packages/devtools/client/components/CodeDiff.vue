@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { diffLines } from 'diff'
 import { unrefElement } from '@vueuse/core'
-import type { BuiltinLanguage } from 'shikiji'
+import type { BuiltinLanguage } from 'shiki'
 
 const props = defineProps<{
   from: string

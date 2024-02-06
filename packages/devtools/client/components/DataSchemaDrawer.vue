@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { InputData, jsonInputForTargetLanguage, quicktype } from 'quicktype-core'
 import { all as languages } from 'quicktype-core/dist/language/All'
-import type { BuiltinLanguage } from 'shikiji'
+import type { BuiltinLanguage } from 'shiki'
 
 const input = useSchemaInput()
 
