@@ -1,4 +1,6 @@
-import { resolve } from 'pathe'
+import { createResolver } from 'nuxt/kit'
+
+const resolver = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
   ssr: false,
@@ -7,7 +9,7 @@ export default defineNuxtConfig({
   ],
   nitro: {
     output: {
-      publicDir: resolve(__dirname, '../dist/client'),
+      publicDir: resolver.resolve('../dist/client'),
     },
   },
   app: {
