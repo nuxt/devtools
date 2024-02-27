@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  tsx: ' ^4.6.1'
+
 importers:
 
   .:
@@ -6297,7 +6300,7 @@ packages:
     resolution: {integrity: sha512-tmaM9gfnSWqzePVJ5FJLYX9mMyE6ZevvOIvd1CMoMk2Fn1F3aKI/OQPjubS5wCIKlPpWfDfKFEtoslCNCiZJpQ==}
     hasBin: true
     dependencies:
-      tsx: 4.1.1
+      tsx: 4.7.1
     dev: true
 
   /espree@10.0.0:
@@ -10929,14 +10932,13 @@ packages:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
 
-  /tsx@4.1.1:
-    resolution: {integrity: sha512-zyPn5BFMB0TB5kMLbYPNx4x/oL/oSlaecdKCv6WeJ0TeSEfx8RTJWjuB5TZ2dSewktgfBsBO/HNA9mrMWqLXMA==}
+  /tsx@4.7.1:
+    resolution: {integrity: sha512-8d6VuibXHtlN5E3zFkgY8u4DX7Y3Z27zvvPKVmLon/D4AjuKzarkUBTLDBgj9iTQ0hg5xM7c/mYiRVM+HETf0g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
-      esbuild: 0.18.20
+      esbuild: 0.19.11
       get-tsconfig: 4.7.2
-      source-map-support: 0.5.21
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
