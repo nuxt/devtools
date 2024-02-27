@@ -55,6 +55,11 @@
     "vite-hot-client": "^0.2.3",
     "vue-tsc": "^1.8.27"
   },
+  "pnpm": {
+    "overrides": {
+      "tsx": " ^4.6.1"
+    }
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
