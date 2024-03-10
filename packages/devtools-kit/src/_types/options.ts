@@ -193,6 +193,9 @@ export interface NuxtDevToolsOptions {
     inputDefaults: Record<string, ServerRouteInput[]>
     sendFrom: 'app' | 'devtools'
   }
+  serverTasks: {
+    view: 'tree' | 'list'
+  }
   assets: {
     view: 'grid' | 'list'
   }

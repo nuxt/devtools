@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
 import type { HookInfo, RouteInfo } from '../../src/types'
+import type { ScannedNitroTasks } from '../../src/types/tasks'
 
 export function useServerPages() {
   return useAsyncState('getServerPages', () => rpc.getServerPages())
@@ -8,6 +9,10 @@ export function useServerPages() {
 
 export function useServerRoutes() {
   return useAsyncState('getServerRoutes', () => rpc.getServerRoutes())
+}
+
+export function useServerTasks() {
+  return useAsyncState('getServerTasks', () => $fetch<ScannedNitroTasks>('/_nitro/tasks'))
 }
 
 export function useServerHooks() {

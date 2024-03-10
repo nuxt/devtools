@@ -16,9 +16,18 @@ watchDebounced(serverRouteOptions, async (options) => {
   rpc.updateOptions('serverRoutes', options)
 }, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
 
+// Server Tasks
+const serverTasksOptions = ref(await rpc.getOptions('serverTasks'))
+const serverTasks = toRefs(serverTasksOptions)
+
+watchDebounced(serverTasksOptions, async (options) => {
+  rpc.updateOptions('serverTasks', options)
+}, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
+
 // Options List
 const list = {
   serverRoutes,
+  serverTasks,
   assets,
 }
 
