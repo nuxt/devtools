@@ -28,6 +28,9 @@ export default defineNuxtConfig({
         routes.clear()
       },
     },
+    experimental: {
+      tasks: true,
+    },
   },
   alias: {
     '@nuxt/devtools-kit/iframe-client': resolver.resolve('../../devtools-kit/src/runtime/iframe-client'),
