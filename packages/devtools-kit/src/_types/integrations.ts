@@ -69,6 +69,13 @@ export interface Payload {
   functions?: Record<string, any>
 }
 
+export interface ServerTaskInfo {
+  name: string
+  description: string
+  type: 'collection' | 'task'
+  tasks?: ServerTaskInfo[]
+}
+
 export interface PluginInfoWithMetic {
   src: string
   mode?: 'client' | 'server' | 'all'

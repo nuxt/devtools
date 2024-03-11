@@ -1,7 +1,7 @@
 import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { ServerRouteInfo, ServerRouteInput } from './integrations'
+import type { ServerRouteInfo, ServerRouteInput, ServerTaskInfo } from './integrations'
 
 export interface ModuleOptions {
   /**
@@ -194,6 +194,7 @@ export interface NuxtDevToolsOptions {
     sendFrom: 'app' | 'devtools'
   }
   serverTasks: {
+    selectedTask: ServerTaskInfo | null
     view: 'tree' | 'list'
   }
   assets: {

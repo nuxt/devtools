@@ -1,8 +1,3 @@
-export interface NitroTask {
-  name: string
-  description: string
-}
-
 export interface ScannedNitroTasks {
   tasks: {
     [name: string]: {

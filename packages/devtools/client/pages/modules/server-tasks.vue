@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import { satisfies } from 'semver'
-import type { NitroTask, ServerTaskInfo } from '../../../src/types/tasks'
-import type { ServerRouteInfo } from '~/../../src/types'
+import type { ServerTaskInfo } from '../../../src/types/tasks'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
 definePageMeta({
@@ -27,20 +25,20 @@ const tasks = computed<ServerTaskInfo[]>(() => Object.keys(serverTasks.value?.ta
   ...serverTasks.value!.tasks[taskKey],
   type: 'task',
 })))
-// const currentServerRoute = useCurrentServeRoute()
+const currentServerTask = useCurrentServerTask()
 
-const { view } = useDevToolsOptions('serverTasks')
+const { view, selectedTask } = useDevToolsOptions('serverTasks')
 
-// const selected = computed(() => {
-//   if (!currentServerRoute.value && selectedRoute.value)
-//     currentServerRoute.value = selectedRoute.value.filepath
+const selected = computed(() => {
+  if (!currentServerTask.value && selectedTask.value)
+    currentServerTask.value = selectedTask.value.name
 
-//   const route = serverRoutes.value?.find(i => i.filepath === currentServerRoute.value)
+  const task = tasks.value.find(i => i.name === currentServerTask.value)
 
-//   if (currentServerRoute.value !== selectedRoute.value?.filepath && route)
-//     selectedRoute.value = route
-//   return route
-// })
+  if (currentServerTask.value !== selectedTask.value?.name && task)
+    selectedTask.value = task
+  return task
+})
 
 const search = ref('')
 const fuse = computed(() => new Fuse(tasks.value, {
@@ -164,20 +162,20 @@ function toggleView() {
       />
     </template>
     <template #right>
-      right
-      <!-- <KeepAlive :max="10">
-        <ServerRouteDetails
-          v-if="selected"
-          :key="selected.filepath"
-          :route="selected"
-          @open-default-input="inputDefaultsDrawer = true"
-        />
+      <!-- <ServerRouteDetails
+        v-if="selected"
+        :key="selected.filepath"
+        :route="selected"
+        @open-default-input="inputDefaultsDrawer = true"
+      /> -->
+      <KeepAlive :max="10">
+        <pre v-if="selected">{{ selected }}</pre>
       </KeepAlive>
       <NPanelGrids v-if="!selected">
         <NCard px6 py2>
-          <span op75>Select a route to start</span>
+          <span op75>Select a task to start</span>
         </NCard>
-      </NPanelGrids> -->
+      </NPanelGrids>
     </template>
   </NSplitPane>
   <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
