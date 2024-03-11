@@ -1,15 +1,22 @@
 export interface NitroTask {
-  key: string
+  name: string
   description: string
 }
 
 export interface ScannedNitroTasks {
   tasks: {
-    [key: string]: {
+    [name: string]: {
       description: string
     }
   }
   scheduledTasks: false | {
     [cronPeriod: string]: string[]
   }
+}
+
+export interface ServerTaskInfo {
+  name: string
+  description: string
+  type: 'collection' | 'task'
+  tasks?: ServerTaskInfo[]
 }

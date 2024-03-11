@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import { satisfies } from 'semver'
+import type { NitroTask, ServerTaskInfo } from '../../../src/types/tasks'
 import type { ServerRouteInfo } from '~/../../src/types'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
@@ -20,9 +22,10 @@ definePageMeta({
 const inputDefaultsDrawer = ref(false)
 
 const serverTasks = useServerTasks()
-const tasks = computed(() => Object.keys(serverTasks.value?.tasks ?? {}).map(taskKey => ({
-  key: taskKey,
+const tasks = computed<ServerTaskInfo[]>(() => Object.keys(serverTasks.value?.tasks ?? {}).map(taskKey => ({
+  name: taskKey,
   ...serverTasks.value!.tasks[taskKey],
+  type: 'task',
 })))
 // const currentServerRoute = useCurrentServeRoute()
 
@@ -49,75 +52,73 @@ const fuse = computed(() => new Fuse(tasks.value, {
 }))
 
 const filtered = computed(() => {
-  const result = !search.value
-    ? tasks.value
-    : fuse.value.search(search.value).map(i => i.item)
+  const result = search.value
+    ? fuse.value.search(search.value).map(i => i.item)
+    : tasks.value
   return result
 })
 
-// const filterByCollection = computed(() => {
-//   const collections: ServerRouteInfo[] = []
+const filterByCollection = computed(() => {
+  const collections: ServerTaskInfo[] = []
 
-//   const addRouteToCollection = (collection: ServerRouteInfo, route: ServerRouteInfo) => {
-//     collection.routes = collection.routes || []
-//     collection.routes.push(route)
-//   }
+  const addTaskToCollection = (collection: ServerTaskInfo, route: ServerTaskInfo) => {
+    collection.tasks ||= []
+    collection.tasks.push(route)
+  }
 
-//   const findOrCreateCollection = (routeName: string, parentCollection?: ServerRouteInfo) => {
-//     const existingCollection = parentCollection
-//       ? parentCollection.routes?.find(r => r.route === routeName)
-//       : collections.find(c => c.route === routeName)
+  const findOrCreateCollection = (taskName: string, parentCollection?: ServerTaskInfo) => {
+    const existingCollection = parentCollection
+      ? parentCollection.tasks?.find(t => t.name === taskName)
+      : collections.find(c => c.name === taskName)
 
-//     if (existingCollection)
-//       return existingCollection
+    if (existingCollection) {
+      return {
+        ...existingCollection,
+        type: 'collection',
+      } satisfies ServerTaskInfo
+    }
 
-//     const newCollection: ServerRouteInfo = {
-//       route: routeName,
-//       filepath: routeName.replace(/\W/g, '-').toLowerCase(),
-//       type: 'collection',
-//       routes: [],
-//     }
+    const newCollection: ServerTaskInfo = {
+      name: taskName,
+      description: '',
+      type: 'collection',
+      tasks: [],
+    }
 
-//     if (parentCollection)
-//       addRouteToCollection(parentCollection, newCollection)
+    if (parentCollection)
+      addTaskToCollection(parentCollection, newCollection)
 
-//     else
-//       collections.push(newCollection)
+    else
+      collections.push(newCollection)
 
-//     return newCollection
-//   }
+    return newCollection
+  }
 
-//   filtered.value.forEach((item) => {
-//     let prefix: string | undefined
-//     let parentCollection: ServerRouteInfo | undefined
+  filtered.value.forEach((item) => {
+    let parentCollection: ServerTaskInfo | undefined
+    const taskItem = {
+      ...item,
+      type: 'task',
+    } satisfies ServerTaskInfo
 
-//     const filepathParts = item.filepath.split('/')
-//     const collectionNames = filepathParts.slice(filepathParts.indexOf('server') + 1)
+    const taskParts = item.name.split(':')
+    const collectionNames = taskParts.concat()
 
-//     if (item.type === 'runtime') {
-//       collectionNames[0] = 'runtime'
-//       const indexOfDist = filepathParts.indexOf('dist')
-//       if (indexOfDist !== -1) {
-//         prefix = filepathParts[indexOfDist - 1]
-//         prefix && collectionNames.splice(1, 0, prefix)
-//       }
-//     }
+    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
+      collectionNames.pop()
 
-//     if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
-//       collectionNames.pop()
+    collectionNames.forEach((collectionName) => {
+      parentCollection = findOrCreateCollection(collectionName, parentCollection)
+    })
 
-//     collectionNames.forEach((collectionName) => {
-//       parentCollection = findOrCreateCollection(collectionName, parentCollection)
-//     })
+    if (parentCollection)
+      addTaskToCollection(parentCollection, taskItem)
+    else
+      collections.push(taskItem)
+  })
 
-//     if (parentCollection)
-//       addRouteToCollection(parentCollection, item)
-//     else
-//       collections.push(item)
-//   })
-
-//   return collections
-// })
+  return collections
+})
 
 function toggleView() {
   view.value = view.value === 'tree' ? 'list' : 'tree'
@@ -157,8 +158,8 @@ function toggleView() {
       </NNavbar>
 
       <ServerTaskListItem
-        v-for="item in filtered"
-        :key="item.key"
+        v-for="item in view === 'tree' ? filterByCollection : filtered"
+        :key="item.name"
         :item="item"
       />
     </template>
