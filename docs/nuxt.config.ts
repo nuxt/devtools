@@ -8,11 +8,10 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image',
     '@nuxt/content',
+    '@nuxt/fonts',
     '@nuxt/ui',
     '@nuxthq/studio',
     '@vueuse/nuxt',
-    '@nuxtjs/fontaine',
-    '@nuxtjs/google-fonts',
     '@nuxtjs/plausible',
     'nuxt-og-image',
     ...(process.env.CI ? [] : ['../local']),
@@ -24,18 +23,6 @@ export default defineNuxtConfig({
 
   ui: {
     icons: ['heroicons', 'simple-icons', 'ph'],
-  },
-
-  fontMetrics: {
-    fonts: ['DM Sans'],
-  },
-
-  googleFonts: {
-    display: 'swap',
-    download: true,
-    families: {
-      'DM+Sans': [400, 500, 600, 700],
-    },
   },
 
   nitro: {
