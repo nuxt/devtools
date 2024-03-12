@@ -54,6 +54,11 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
   serverTasks: {
     selectedTask: null,
     view: 'list',
+    inputDefaults: {
+      query: [],
+      body: [],
+      headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }],
+    },
   },
   assets: {
     view: 'grid',

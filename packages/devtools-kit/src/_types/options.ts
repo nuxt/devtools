@@ -196,6 +196,7 @@ export interface NuxtDevToolsOptions {
   serverTasks: {
     selectedTask: ServerTaskInfo | null
     view: 'tree' | 'list'
+    inputDefaults: Record<string, ServerRouteInput[]>
   }
   assets: {
     view: 'grid' | 'list'

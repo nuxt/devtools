@@ -32,7 +32,7 @@ const scheduledTasks = computed(() => {
 
 const currentServerTask = useCurrentServerTask()
 
-const { view, selectedTask } = useDevToolsOptions('serverTasks')
+const { view, selectedTask, inputDefaults } = useDevToolsOptions('serverTasks')
 
 const selected = computed(() => {
   if (!currentServerTask.value && selectedTask.value)
@@ -126,19 +126,15 @@ const filterByCollection = computed(() => {
 function toggleView() {
   view.value = view.value === 'tree' ? 'list' : 'tree'
 }
-
-// function capitalize(str: string) {
-//   return str.charAt(0).toUpperCase() + str.slice(1)
-// }
 </script>
 
 <template>
   <NSplitPane storage-key="tab-server-tasks">
     <template #left>
-      <NSplitPane horizontal>
+      <NSplitPane horizontal storage-key="tab-server-tasks-split">
         <template #left>
           <NNavbar v-model:search="search" pb2>
-            <template #left>
+            <template #actions>
               <NButton
                 v-tooltip="'Toggle View'"
                 text-lg
@@ -194,24 +190,20 @@ function toggleView() {
       </NPanelGrids>
     </template>
   </NSplitPane>
-  <!-- @todo: Drawer for default inputs ? -->
-  <!-- <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
-    drawer
+  <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     <div>
       <div p4 border="b base">
         <span text-lg>Default Inputs</span>
         <br>
-        <span text-white op50>Merged as default for every request in DevTools</span>
+        <span text-white op50>Merged as default for every task in DevTools</span>
       </div>
       <NSectionBlock
-        v-for="tab of Object.keys(inputDefaults)"
-        :key="tab"
-        :text="`${capitalize(tab)} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
+        :text="`Query ${inputDefaults.query.length ? `(${inputDefaults.query.length})` : ''}`"
         :padding="false"
-        :icon="ServerRouteTabIcons[tab]"
+        :icon="ServerRouteTabIcons.query"
       >
-        <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ active: true, type: 'string' }" />
+        <ServerRouteInputs v-model="inputDefaults.query" py0 :default="{ active: true, type: 'string' }" />
       </NSectionBlock>
     </div>
-  </NDrawer> -->
+  </NDrawer>
 </template>

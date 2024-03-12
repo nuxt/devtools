@@ -8,12 +8,12 @@ const props = defineProps<{
   task: ServerTaskInfo
 }>()
 
-// @todo: default input ?
-// const emit = defineEmits<{
-//   (event: 'open-default-input'): void
-// }>()
+const emit = defineEmits<{
+  (event: 'open-default-input'): void
+}>()
 
 const routeInputBodyJSON = ref({ payload: {} })
+const { inputDefaults } = useDevToolsOptions('serverRoutes')
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
 const config = useServerConfig()
@@ -46,7 +46,7 @@ const selectedTabInput = ref(tabInputs[0])
 const routeInputs = reactive({
   query: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
   body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
+  headers: [] as ServerRouteInput[],
 })
 
 type RouteInputs = keyof typeof routeInputs
@@ -59,14 +59,13 @@ const currentParams = computed({
 
 const parsedQuery = computed(() => {
   return {
-    // ...parseInputs(inputDefaults.value.query),
+    ...parseInputs(inputDefaults.value.query),
     ...parseInputs(routeInputs.query),
   }
 })
 const parsedHeader = computed(() => {
   return {
-    // ...parseInputs(inputDefaults.value.headers),
-    ...parseInputs(routeInputs.headers),
+    ...parseInputs(inputDefaults.value.headers),
   }
 })
 const parsedBody = computed(() => {
@@ -116,9 +115,9 @@ async function fetchData() {
 
   const start = Date.now()
 
-  // telemetry('server-tasks:run', {
-  //   method: 'GET', // routeMethod.value,
-  // })
+  telemetry('server-tasks:run', {
+    method: method.value,
+  })
 
   try {
     response.data = await ($fetch as $Fetch)(finalURL.value, {
@@ -171,40 +170,36 @@ watchEffect(() => {
   }
 })
 
-// const savedRouteInputs = useLocalStorage<{ path: string, tab: string, inputs: any }[]>('nuxt-devtools:server-routes:inputs', () => [], {
-//   window: window.parent,
-// })
+const savedRouteInputs = useLocalStorage<{ task: string, tab: string, inputs: any }[]>('nuxt-devtools:server-tasks:inputs', () => [], {
+  window: window.parent,
+})
 
-// watchDebounced([routeInputs, activeTab], () => {
-//   const savedEntry = savedRouteInputs.value?.find((entry: any) => entry.path === props.route.filepath)
+watchDebounced([routeInputs, activeTab], () => {
+  const savedEntry = savedRouteInputs.value?.find(entry => entry.task === props.task.name)
 
-//   if (!savedEntry) {
-//     const newEntry = {
-//       path: props.route.filepath,
-//       tab: paramNames.value.length ? 'params' : 'query',
-//       inputs: {
-//         ...routeInputs,
-//         ...(paramNames.value.length ? { params: routeParams.value } : {}),
-//       },
-//     }
-//     savedRouteInputs.value.push(newEntry)
+  if (!savedEntry) {
+    const newEntry = {
+      task: props.task.name,
+      tab: 'query',
+      inputs: routeInputs,
+    }
+    savedRouteInputs.value.push(newEntry)
 
-//     if (!activeTab.value)
-//       activeTab.value = newEntry.tab
-//   }
-//   else {
-//     if (!activeTab.value)
-//       activeTab.value = savedEntry.tab
+    if (!activeTab.value)
+      activeTab.value = newEntry.tab
+  }
+  else {
+    if (!activeTab.value)
+      activeTab.value = savedEntry.tab
 
-//     if (savedEntry.tab !== activeTab.value)
-//       savedEntry.tab = activeTab.value
+    if (savedEntry.tab !== activeTab.value)
+      savedEntry.tab = activeTab.value
 
-//     //  update routeInputs with local storage
-//     const { body, query, headers, params } = savedEntry.inputs
-//     Object.assign(routeInputs, { body, query, headers })
-//     routeParams.value = params
-//   }
-// }, { immediate: true, deep: true, debounce: 500 })
+    //  update routeInputs with local storage
+    const { body, query, headers } = savedEntry.inputs
+    Object.assign(routeInputs, { body, query, headers })
+  }
+}, { immediate: true, deep: true, debounce: 500 })
 
 const copy = useCopy()
 </script>
@@ -264,11 +259,30 @@ const copy = useCopy()
         <div class="hidden md:block">
           {{ tab.name }}
           {{ tab?.length ? `(${tab.length})` : '' }}
+          <span>
+            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+          </span>
         </div>
       </NButton>
     </div>
     <DefineDefaultInputs>
-      <ServerRouteInputs v-model="currentParams" :default="{ active: true, type: 'string' }" max-h-xs of-auto />
+      <ServerRouteInputs v-model="currentParams" :default="{ active: true, type: 'string' }" max-h-xs of-auto>
+        <template v-if="inputDefaults[activeTab]?.length">
+          <div flex="~ gap2" mb--2 items-center op50>
+            <div w-5 x-divider />
+            <div flex-none>
+              Default Inputs
+            </div>
+            <NButton
+              icon="i-carbon-edit"
+              :border="false"
+              @click="emit('open-default-input')"
+            />
+            <div x-divider />
+          </div>
+          <ServerRouteInputs v-model="inputDefaults[activeTab]" disabled p0 />
+        </template>
+      </ServerRouteInputs>
     </DefineDefaultInputs>
     <div v-if="currentParams" border="b base" relative n-code-block>
       <template v-if="activeTab === 'body'">
@@ -310,7 +324,7 @@ const copy = useCopy()
     </NLoading>
     <template v-else>
       <div border="b base" flex="~ gap2" items-center px4 py2>
-        <div>Response</div>
+        <div>Result</div>
         <NBadge
           v-if="response.error"
           n="red"
@@ -321,10 +335,6 @@ const copy = useCopy()
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
-        <DataSchemaButton
-          v-if="response.contentType === 'application/json'"
-          :getter="() => ({ input: responseContent })"
-        />
         <div flex-auto />
         <div op50>
           Tasks finished in
