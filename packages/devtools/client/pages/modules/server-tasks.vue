@@ -162,14 +162,13 @@ function toggleView() {
       />
     </template>
     <template #right>
-      <!-- <ServerRouteDetails
-        v-if="selected"
-        :key="selected.filepath"
-        :route="selected"
-        @open-default-input="inputDefaultsDrawer = true"
-      /> -->
       <KeepAlive :max="10">
-        <pre v-if="selected">{{ selected }}</pre>
+        <ServerTaskDetails
+          v-if="selected"
+          :key="selected.name"
+          :task="selected"
+          @open-default-input="inputDefaultsDrawer = true"
+        />
       </KeepAlive>
       <NPanelGrids v-if="!selected">
         <NCard px6 py2>
@@ -178,9 +177,10 @@ function toggleView() {
       </NPanelGrids>
     </template>
   </NSplitPane>
-  <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
+  <!-- @todo: Drawer for default inputs ? -->
+  <!-- <NDrawer v-model="inputDefaultsDrawer" auto-close max-w-xl min-w-xl @close="inputDefaultsDrawer = false">
     drawer
-    <!-- <div>
+    <div>
       <div p4 border="b base">
         <span text-lg>Default Inputs</span>
         <br>
@@ -195,6 +195,6 @@ function toggleView() {
       >
         <ServerRouteInputs v-model="inputDefaults[tab]" py0 :default="{ active: true, type: 'string' }" />
       </NSectionBlock>
-    </div> -->
-  </NDrawer>
+    </div>
+  </NDrawer> -->
 </template>
