@@ -31,6 +31,10 @@ export default defineNuxtConfig({
     experimental: {
       tasks: true,
     },
+    scheduledTasks: {
+      '*/5 * * * *': ['collection:1', 'collection:2'],
+      '*/30 * * * *': ['ping'],
+    },
   },
   alias: {
     '@nuxt/devtools-kit/iframe-client': resolver.resolve('../../devtools-kit/src/runtime/iframe-client'),

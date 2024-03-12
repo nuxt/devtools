@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
+import cronstrue from 'cronstrue'
 import type { ServerTaskInfo } from '../../../src/types/tasks'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
@@ -25,6 +26,11 @@ const tasks = computed<ServerTaskInfo[]>(() => Object.keys(serverTasks.value?.ta
   ...serverTasks.value!.tasks[taskKey],
   type: 'task',
 })))
+
+const scheduledTasks = computed(() => {
+  return serverTasks.value?.scheduledTasks || []
+})
+
 const currentServerTask = useCurrentServerTask()
 
 const { view, selectedTask } = useDevToolsOptions('serverTasks')
@@ -130,36 +136,61 @@ function toggleView() {
 <template>
   <NSplitPane storage-key="tab-server-tasks">
     <template #left>
-      <NNavbar v-model:search="search" pb2>
-        <template #actions>
-          <NButton
-            v-tooltip="'Toggle View'"
-            text-lg
-            :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
-            title="Toggle view"
-            :border="false"
-            @click="toggleView"
-          />
-          <NButton
-            v-tooltip="'Default Inputs'"
-            text-lg
-            icon="i-carbon-cics-sit-overrides"
-            title="Default Inputs"
-            :border="false"
-            @click="inputDefaultsDrawer = !inputDefaultsDrawer"
+      <NSplitPane horizontal>
+        <template #left>
+          <NNavbar v-model:search="search" pb2>
+            <template #left>
+              <NButton
+                v-tooltip="'Toggle View'"
+                text-lg
+                :icon="view === 'list' ? 'i-carbon-list' : 'i-carbon-tree-view-alt'"
+                title="Toggle view"
+                :border="false"
+                @click="toggleView"
+              />
+              <NButton
+                v-tooltip="'Default Inputs'"
+                text-lg
+                icon="i-carbon-cics-sit-overrides"
+                title="Default Inputs"
+                :border="false"
+                @click="inputDefaultsDrawer = !inputDefaultsDrawer"
+              />
+            </template>
+            <div flex="~ gap1" text-sm>
+              <span v-if="search" op50>{{ filtered.length }} matched · </span>
+              <span op50>{{ tasks?.length }} tasks in total</span>
+            </div>
+          </NNavbar>
+          <ServerTaskListItem
+            v-for="item in view === 'tree' ? filterByCollection : filtered"
+            :key="item.name"
+            :item="item"
           />
         </template>
-        <div flex="~ gap1" text-sm>
-          <span v-if="search" op50>{{ filtered.length }} matched · </span>
-          <span op50>{{ tasks?.length }} tasks in total</span>
-        </div>
-      </NNavbar>
-
-      <ServerTaskListItem
-        v-for="item in view === 'tree' ? filterByCollection : filtered"
-        :key="item.name"
-        :item="item"
-      />
+        <template #right>
+          <div p2 space-y-2>
+            <ul v-for="cron in scheduledTasks" :key="cron.cron">
+              <li space-x-2>
+                <NBadge
+                  class="n-purple"
+                  font-mono
+                  v-text="cron.cron"
+                />
+                <span>{{ cronstrue.toString(cron.cron) }}</span>
+              </li>
+              <ul mt1 space-y-1>
+                <li v-for="task in cron.tasks" :key="task" ml6>
+                  <NBadge
+                    class="n-blue"
+                    v-text="task"
+                  />
+                </li>
+              </ul>
+            </ul>
+          </div>
+        </template>
+      </NSplitPane>
     </template>
     <template #right>
       <KeepAlive :max="10">

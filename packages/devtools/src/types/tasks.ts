@@ -5,8 +5,9 @@ export interface ScannedNitroTasks {
     }
   }
   scheduledTasks: false | {
-    [cronPeriod: string]: string[]
-  }
+    cron: string
+    tasks: string[]
+  }[]
 }
 
 export interface ServerTaskInfo {
