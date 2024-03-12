@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import cronstrue from 'cronstrue'
 import type { ServerTaskInfo } from '../../../src/types/tasks'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
@@ -170,23 +169,10 @@ function toggleView() {
         </template>
         <template #right>
           <div p2 space-y-2>
-            <ul v-for="cron in scheduledTasks" :key="cron.cron">
-              <li space-x-2>
-                <NBadge
-                  class="n-purple"
-                  font-mono
-                  v-text="cron.cron"
-                />
-                <span>{{ cronstrue.toString(cron.cron) }}</span>
+            <ul>
+              <li v-for="cronCollection in scheduledTasks" :key="cronCollection.cron">
+                <CronCollection :collection="cronCollection" />
               </li>
-              <ul mt1 space-y-1>
-                <li v-for="task in cron.tasks" :key="task" ml6>
-                  <NBadge
-                    class="n-blue"
-                    v-text="task"
-                  />
-                </li>
-              </ul>
             </ul>
           </div>
         </template>
