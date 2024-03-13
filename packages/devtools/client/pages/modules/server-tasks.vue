@@ -165,7 +165,7 @@ function toggleView() {
         </template>
         <template #right>
           <div px4 py2 border="b base">
-            Corn groups
+            Cron groups
           </div>
           <div>
             <ul>
