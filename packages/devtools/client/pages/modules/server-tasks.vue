@@ -9,8 +9,12 @@ definePageMeta({
   layout: 'full',
   category: 'server',
   show() {
+    const { enabled } = useDevToolsOptions('serverTasks')
     const serverTasks = useServerTasks()
     return () => {
+      if (!enabled.value)
+        return false
+
       return Object.keys(serverTasks.value?.tasks ?? {}).length
         || serverTasks.value?.scheduledTasks !== false
     }

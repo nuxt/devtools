@@ -52,6 +52,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     sendFrom: 'app',
   },
   serverTasks: {
+    enabled: false,
     selectedTask: null,
     view: 'list',
     inputDefaults: {

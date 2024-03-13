@@ -194,6 +194,7 @@ export interface NuxtDevToolsOptions {
     sendFrom: 'app' | 'devtools'
   }
   serverTasks: {
+    enabled: boolean
     selectedTask: ServerTaskInfo | null
     view: 'tree' | 'list'
     inputDefaults: Record<string, ServerRouteInput[]>
