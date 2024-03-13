@@ -23,16 +23,14 @@ const currentTaskRoute = useCurrentServerTask()
       <div flex-none text-left>
         <NIcon v-if="item.type === 'collection'" icon="carbon:chevron-right" mb0.5 :transform-rotate="open ? 90 : 0" transition />
       </div>
-      <span :class="{ 'flex items-center': item.tasks }" text-sm font-mono>
+      <span flex items-center text-sm font-mono>
         <template v-if="item.type === 'collection'">
           <NIcon :title="`${item.tasks?.length} tasks`" icon="carbon:folder" mr1 />
-          {{ item.name }}
         </template>
-        <NBadge
-          v-else
-          class="n-blue"
-          v-text="item.name"
-        />
+        <template v-else>
+          <NIcon icon="carbon:play" ml3 mr1 />
+        </template>
+        {{ item.name }}
       </span>
       <!-- TODO: maybe add options to create/delete/copy ... -->
       <!-- <NDropdown v-model="dropdown" position="right" n="sm">

@@ -164,7 +164,10 @@ function toggleView() {
           />
         </template>
         <template #right>
-          <div p2 space-y-2>
+          <div px4 py2 border="b base">
+            Corn groups
+          </div>
+          <div>
             <ul>
               <li v-for="cronCollection in scheduledTasks" :key="cronCollection.cron">
                 <CronCollection :collection="cronCollection" />
