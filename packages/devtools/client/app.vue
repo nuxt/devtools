@@ -130,7 +130,7 @@ registerCommands(() => [
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20" aaa>
+        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20">
           <template #left>
             <NuxtPage />
           </template>
