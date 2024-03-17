@@ -20,7 +20,7 @@ export function setup({ nuxt }: NuxtDevtoolsServerContext) {
       const appendTo = /\/entry\.m?js$/
 
       if (appendTo.test(filename))
-        code = `import 'virtual:vue-devtools-path:overlay.js';\n${code}`
+        code = `import 'virtual:vue-devtools-path:overlay.mjs';\n${code}`
 
       return code
     },
