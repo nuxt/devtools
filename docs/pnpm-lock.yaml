@@ -21,8 +21,8 @@ importers:
         specifier: 1.0.8
         version: 1.0.8(nuxt@3.10.3)(vite@5.1.4)
       '@nuxt/fonts':
-        specifier: ^0.2.0
-        version: 0.2.0(nuxt@3.10.3)(vite@5.1.4)
+        specifier: ^0.3.0
+        version: 0.3.0(nuxt@3.10.3)(vite@5.1.4)
       '@nuxt/image':
         specifier: 1.4.0
         version: 1.4.0
@@ -1838,8 +1838,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@nuxt/fonts@0.2.0(nuxt@3.10.3)(vite@5.1.4):
-    resolution: {integrity: sha512-Iflg2n90bsYtC1f4kangrNaKomMRLkd2vPxhZyNxNhiptNiNzA8bVydLeoFxjuxlQbXjUuAzOCjYyPP7lT+q9A==}
+  /@nuxt/fonts@0.3.0(nuxt@3.10.3)(vite@5.1.4):
+    resolution: {integrity: sha512-W9nHRvB+0X2D3Ey9HWQlZb3yYajzuP8X5erQGMUeQNK5hQeKUevo4YKX+YXsKCqpDiibqm9RMIoz6FOBLkBLFA==}
     dependencies:
       '@nuxt/devtools-kit': 1.0.8(nuxt@3.10.3)(vite@5.1.4)
       '@nuxt/kit': 3.10.3
@@ -1858,7 +1858,7 @@ packages:
       pathe: 1.1.2
       sirv: 2.0.4
       ufo: 1.4.0
-      unplugin: 1.9.0
+      unplugin: 1.10.0
       unstorage: 1.10.1
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -5958,7 +5958,7 @@ packages:
       magic-string: 0.30.8
       pathe: 1.1.2
       ufo: 1.4.0
-      unplugin: 1.9.0
+      unplugin: 1.10.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -7350,7 +7350,7 @@ packages:
       regexp-tree: 0.1.27
       type-level-regexp: 0.1.17
       ufo: 1.4.0
-      unplugin: 1.9.0
+      unplugin: 1.10.0
     dev: false
 
   /magic-string-ast@0.3.0:
@@ -11113,6 +11113,16 @@ packages:
       - vue
     dev: false
 
+  /unplugin@1.10.0:
+    resolution: {integrity: sha512-CuZtvvO8ua2Wl+9q2jEaqH6m3DoQ38N7pvBYQbbaeNlWGvK2l6GHiKi29aIHDPoSxdUzQ7Unevf1/ugil5X6Pg==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      acorn: 8.11.3
+      chokidar: 3.6.0
+      webpack-sources: 3.2.3
+      webpack-virtual-modules: 0.6.1
+    dev: false
+
   /unplugin@1.5.1:
     resolution: {integrity: sha512-0QkvG13z6RD+1L1FoibQqnvTwVBXvS4XSPwAyinVgoOCl2jAgwzdUKmEj05o4Lt8xwQI85Hb6mSyYkcAGwZPew==}
     dependencies:
@@ -11124,16 +11134,6 @@ packages:
 
   /unplugin@1.7.1:
     resolution: {integrity: sha512-JqzORDAPxxs8ErLV4x+LL7bk5pk3YlcWqpSNsIkAZj972KzFZLClc/ekppahKkOczGkwIG6ElFgdOgOlK4tXZw==}
-    dependencies:
-      acorn: 8.11.3
-      chokidar: 3.6.0
-      webpack-sources: 3.2.3
-      webpack-virtual-modules: 0.6.1
-    dev: false
-
-  /unplugin@1.9.0:
-    resolution: {integrity: sha512-14PslvMY3gNbXnQtNIRB566Q057L5Fe7f5LDEamxVi0QQVxoz5hrveBwwZLcKyHtZ09ysmipxRRj5Lv+BGz2Iw==}
-    engines: {node: '>=14.0.0'}
     dependencies:
       acorn: 8.11.3
       chokidar: 3.6.0

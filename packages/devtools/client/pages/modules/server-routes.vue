@@ -22,12 +22,15 @@ const { selectedRoute, view, inputDefaults } = useDevToolsOptions('serverRoutes'
 
 const selected = computed(() => {
   if (!currentServerRoute.value && selectedRoute.value)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     currentServerRoute.value = selectedRoute.value.filepath
 
   const route = serverRoutes.value?.find(i => i.filepath === currentServerRoute.value)
 
   if (currentServerRoute.value !== selectedRoute.value?.filepath && route)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     selectedRoute.value = route
+
   return route
 })
 

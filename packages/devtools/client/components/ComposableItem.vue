@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
+import { ComposablesDocs } from '../composables/constants'
 
 const props = withDefaults(
   defineProps<{
@@ -31,6 +32,7 @@ const docsUrl = computed(() => {
     return (ComposablesDocs.nuxt as any)[props.item.name]
   if (props.item.from === 'vue')
     return (ComposablesDocs.vue as any)[props.item.name]
+  return null
 })
 </script>
 
