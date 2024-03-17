@@ -185,6 +185,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
 
+  await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
+
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
 

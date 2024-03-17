@@ -6,10 +6,12 @@ export function useAllTabs() {
   const customTabs = useCustomTabs()
   const settings = useDevToolsUIOptions()
   const router = useRouter()
-
+  const vueDevToolsState = useVueDevToolsState()
+  const piniaDetected = computed(() => vueDevToolsState.activeAppRecord.value?.moduleDetectives?.pinia)
   const builtin = computed(() => [
     ...router.getRoutes()
       .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
+      .filter(route => route.path.startsWith('/modules/pinia') ? (piniaDetected.value ? route : false) : route)
       .filter(route => !route.meta.experimental || (route.meta.experimental && settings.showExperimentalFeatures.value))
       .sort((a, b) => (a.meta.order || 100) - (b.meta.order || 100))
       .map((i): ModuleBuiltinTab => {
