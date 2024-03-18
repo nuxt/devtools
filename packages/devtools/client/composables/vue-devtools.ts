@@ -7,7 +7,7 @@ export function useVueDevToolsState() {
   }
 }
 
-export function onVueDevToolsClientConnected(callback: () => void) {
+export function onVueDevToolsConnected(callback: () => void) {
   if (connected.value) {
     callback()
   }
