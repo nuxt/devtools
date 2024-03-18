@@ -2,6 +2,8 @@
 import { Pinia } from '@vue/devtools-applet'
 import '@vue/devtools-applet/style.css'
 
+const { connected } = useVueDevToolsState()
+
 definePageMeta({
   icon: 'i-logos-pinia',
   title: 'Pinia',
@@ -11,6 +13,9 @@ definePageMeta({
 
 <template>
   <div class="h-full w-full">
-    <Pinia />
+    <Pinia v-if="connected" />
+    <NLoading v-else>
+      Connecting....
+    </NLoading>
   </div>
 </template>

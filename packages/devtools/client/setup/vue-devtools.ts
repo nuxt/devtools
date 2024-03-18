@@ -4,18 +4,28 @@ import { toggleHighPerfMode } from '@vue/devtools-kit'
 
 export type DevtoolsBridgeAppRecord = Pick<AppRecord, 'name' | 'id' | 'version' | 'routerId' | 'moduleDetectives'>
 
+const appConnected = ref(false)
+const clientConnected = ref(false)
 const appRecords = ref<Array<DevtoolsBridgeAppRecord>>([])
 const activeAppRecordId = ref<string | null>(null)
+export const connected = computed(() => appConnected.value && clientConnected.value)
 export const activeAppRecord = computed(() => appRecords.value.find(r => r.id === activeAppRecordId.value))
 
 export function initVueDevToolsState() {
-  getDevToolsState().then((_data) => {
-    const data = _data!
-    appRecords.value = data.appRecords
-    activeAppRecordId.value = data.activeAppRecordId
+  getDevToolsState().then((data) => {
+    if (data)
+      return
+    appConnected.value = data!.connected
+    clientConnected.value = data!.clientConnected
+    appRecords.value = data!.appRecords
+    activeAppRecordId.value = data!.activeAppRecordId
   })
 
   onDevToolsStateUpdated((data) => {
+    if (!data)
+      return
+    appConnected.value = data!.connected
+    clientConnected.value = data!.clientConnected
     appRecords.value = data.appRecords
     activeAppRecordId.value = data.activeAppRecordId
   })
