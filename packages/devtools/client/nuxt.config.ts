@@ -51,6 +51,7 @@ export default defineNuxtConfig({
     watcher: 'parcel',
   },
   vite: {
+    warmupEntry: false,
     build: {
       target: 'esnext',
     },
