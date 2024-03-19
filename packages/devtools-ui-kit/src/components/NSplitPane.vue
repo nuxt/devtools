@@ -62,12 +62,12 @@ const size = key
 .splitpanes--vertical > .splitpanes__splitter {
   min-width: 0 !important;
   width: 0 !important;
-  @apply border-r border-base;
+  --at-apply: border-r border-base;
 }
 .splitpanes--horizontal > .splitpanes__splitter {
   min-height: 0 !important;
   height: 0 !important;
-  @apply border-t border-base;
+  --at-apply: border-t border-base;
 }
 .splitpanes--vertical > .splitpanes__splitter:before {
   left: -5px;
