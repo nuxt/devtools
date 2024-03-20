@@ -38,6 +38,9 @@ const responseLang = computed(() => {
 
 const fetching = ref(false)
 const started = ref(false)
+
+const openInEditor = useOpenInEditor()
+
 const activeTab = ref()
 
 const tabInputs = ['json']
@@ -231,17 +234,16 @@ const copy = useCopy()
               n="xs blue"
               icon="carbon:copy"
               :border="false"
-              @click="copy(finalURL, 'server-route-url')"
+              @click="copy(finalURL, 'server-task-url')"
             />
-            <!-- @todo: Get file path when retrieving tasks -->
-            <!-- <NButton
+            <NButton
               v-tooltip="'Open in Editor'"
               title="Open in Editor"
               icon="carbon-launch"
               n="xs blue"
               :border="false"
-              @click="openInEditor(task.filepath)"
-            /> -->
+              @click="openInEditor(task.handler)"
+            />
           </div>
         </div>
         <NButton h-full n="primary solid" @click="fetchData">

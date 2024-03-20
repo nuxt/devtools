@@ -3,7 +3,7 @@ import type { StorageMounts } from 'nitropack'
 import type { StorageValue } from 'unstorage'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ServerRouteInfo } from './integrations'
+import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 import type { AnalyzeBuildsInfo } from './analyze-build'
@@ -23,6 +23,7 @@ export interface ServerFunctions {
   getServerLayouts: () => NuxtLayout[]
   getStaticAssets: () => Promise<AssetInfo[]>
   getServerRoutes: () => ServerRouteInfo[]
+  getServerTasks: () => ScannedNitroTasks | null
   getServerApp: () => NuxtApp | undefined
 
   // Options

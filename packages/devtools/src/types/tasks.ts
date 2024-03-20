@@ -1,12 +1,3 @@
-export interface ScannedNitroTasks {
-  tasks: {
-    [name: string]: {
-      description: string
-    }
-  }
-  scheduledTasks: false | CronCollection[]
-}
-
 export interface CronCollection {
   cron: string
   tasks: string[]
@@ -14,6 +5,7 @@ export interface CronCollection {
 
 export interface ServerTaskInfo {
   name: string
+  handler: string
   description: string
   type: 'collection' | 'task'
   tasks?: ServerTaskInfo[]
