@@ -5,6 +5,7 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 import { useEyeDropper } from '@vueuse/core'
 import { setupClientRPC } from './setup/client-rpc'
+import { setupVueDevTools } from './setup/vue-devtools'
 import { splitScreenAvailable } from '~/composables/storage'
 
 if (process.client)
@@ -27,6 +28,7 @@ useHead({
   ],
 })
 
+setupVueDevTools()
 setupClientRPC()
 
 const client = useClient()
