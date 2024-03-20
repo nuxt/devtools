@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js'
-import type { ServerTaskInfo } from '../../../src/types/tasks'
+import type { ServerTaskInfo } from '~/../../src/types'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
 definePageMeta({
@@ -16,7 +16,6 @@ definePageMeta({
         return false
 
       return Object.keys(serverTasks.value?.tasks ?? {}).length
-        || serverTasks.value?.scheduledTasks !== false
     }
   },
 })
@@ -31,7 +30,9 @@ const tasks = computed<ServerTaskInfo[]>(() => Object.keys(serverTasks.value?.ta
 })))
 
 const scheduledTasks = computed(() => {
-  return serverTasks.value?.scheduledTasks || []
+  return Object
+    .entries(serverTasks.value?.scheduledTasks ?? {})
+    .map(([cron, tasks]) => ({ cron, tasks }))
 })
 
 const currentServerTask = useCurrentServerTask()
@@ -89,6 +90,7 @@ const filterByCollection = computed(() => {
 
     const newCollection: ServerTaskInfo = {
       name: taskName,
+      handler: taskName,
       description: '',
       type: 'collection',
       tasks: [],

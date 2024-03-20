@@ -71,9 +71,22 @@ export interface Payload {
 
 export interface ServerTaskInfo {
   name: string
+  handler: string
   description: string
   type: 'collection' | 'task'
   tasks?: ServerTaskInfo[]
+}
+
+export interface ScannedNitroTasks {
+  tasks: {
+    [name: string]: {
+      handler: string
+      description: string
+    }
+  }
+  scheduledTasks: {
+    [cron: string]: string[]
+  }
 }
 
 export interface PluginInfoWithMetic {
