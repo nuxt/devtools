@@ -17,7 +17,7 @@ export default defineNuxtPlugin(() => {
   }
 
   Object.defineProperty(window, '__NUXT_DEVTOOLS_VIEW__', {
-    value: <typeof window['__NUXT_DEVTOOLS_VIEW__']>{
+    value: {
       setClient(_client) {
         if (client.value === _client)
           return
@@ -33,7 +33,7 @@ export default defineNuxtPlugin(() => {
         // eslint-disable-next-line no-console
         console.log('[nuxt-devtools] Client connected', _client)
       },
-    },
+    } as typeof window['__NUXT_DEVTOOLS_VIEW__'],
     enumerable: false,
     configurable: true,
   })

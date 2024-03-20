@@ -57,10 +57,8 @@ useEventListener(window, 'mousedown', (e: MouseEvent) => {
     state.value.open = false
 })
 
-useEventListener(window, 'mousemove', (e: MouseEvent) => {
-  if (!isResizing.value)
-    return
-  if (!state.value.open)
+function handleResize(e: MouseEvent | TouchEvent) {
+  if (!isResizing.value || !state.value.open)
     return
 
   const iframe = props.client.getIframe()
@@ -69,36 +67,31 @@ useEventListener(window, 'mousemove', (e: MouseEvent) => {
 
   const box = iframe.getBoundingClientRect()
 
+  let widthPx: number, heightPx: number
   if (isResizing.value.right) {
-    const widthPx = Math.abs(e.clientX - (box?.left || 0))
-    const width = widthPx / window.innerWidth * 100
-    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
+    widthPx = Math.abs(e instanceof MouseEvent ? e.clientX : e.touches[0].clientX - (box?.left || 0))
+    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, widthPx / window.innerWidth * 100))
   }
   else if (isResizing.value.left) {
-    const widthPx = Math.abs((box?.right || 0) - e.clientX)
-    const width = widthPx / window.innerWidth * 100
-    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, width))
+    widthPx = Math.abs((box?.right || 0) - (e instanceof MouseEvent ? e.clientX : e.touches[0].clientX))
+    state.value.width = Math.min(PANEL_MAX, Math.max(PANEL_MIN, widthPx / window.innerWidth * 100))
   }
 
   if (isResizing.value.top) {
-    const heightPx = Math.abs((box?.bottom || 0) - e.clientY)
-    const height = heightPx / window.innerHeight * 100
-    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
+    heightPx = Math.abs((box?.bottom || 0) - (e instanceof MouseEvent ? e.clientY : e.touches[0].clientY))
+    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, heightPx / window.innerHeight * 100))
   }
   else if (isResizing.value.bottom) {
-    const heightPx = Math.abs(e.clientY - (box?.top || 0))
-    const height = heightPx / window.innerHeight * 100
-    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, height))
+    heightPx = Math.abs(e instanceof MouseEvent ? e.clientY : e.touches[0].clientY - (box?.top || 0))
+    state.value.height = Math.min(PANEL_MAX, Math.max(PANEL_MIN, heightPx / window.innerHeight * 100))
   }
-})
+}
 
-useEventListener(window, 'mouseup', () => {
-  isResizing.value = false
-})
-
-useEventListener(window, 'mouseleave', () => {
-  isResizing.value = false
-})
+useEventListener(window, 'mousemove', handleResize)
+useEventListener(window, 'touchmove', handleResize)
+useEventListener(window, 'mouseup', () => isResizing.value = false)
+useEventListener(window, 'touchend', () => isResizing.value = false)
+useEventListener(window, 'mouseleave', () => isResizing.value = false)
 </script>
 
 <template>
@@ -112,49 +105,57 @@ useEventListener(window, 'mouseleave', () => {
       v-show="state.position !== 'top'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ top: 0 }"
-      @mousedown.prevent="() => isResizing = { top: true }"
+      @mousedown.prevent="isResizing = { top: true }"
+      @touchstart="() => isResizing = { top: true }"
     />
     <div
       v-show="state.position !== 'bottom'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ bottom: 0 }"
       @mousedown.prevent="() => isResizing = { bottom: true }"
+      @touchstart="() => isResizing = { bottom: true }"
     />
     <div
       v-show="state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ left: 0 }"
       @mousedown.prevent="() => isResizing = { left: true }"
+      @touchstart="() => isResizing = { left: true }"
     />
     <div
       v-show="state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ right: 0 }"
       @mousedown.prevent="() => isResizing = { right: true }"
+      @touchstart="() => isResizing = { right: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, left: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isResizing = { top: true, left: true }"
+      @touchstart="() => isResizing = { top: true, left: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, right: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isResizing = { top: true, right: true }"
+      @touchstart="() => isResizing = { top: true, right: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isResizing = { bottom: true, left: true }"
+      @touchstart="() => isResizing = { bottom: true, left: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isResizing = { bottom: true, right: true }"
+      @touchstart="() => isResizing = { bottom: true, right: true }"
     />
   </div>
 </template>
