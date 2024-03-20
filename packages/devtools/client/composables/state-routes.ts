@@ -12,3 +12,7 @@ export function useCurrentTerminalId() {
 export function useCurrentServeRoute() {
   return useSessionState<string>('server-routes:current', '')
 }
+
+export function useCurrentServerTask() {
+  return useSessionState<string>('server-tasks:current', '')
+}

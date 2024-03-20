@@ -77,8 +77,12 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     },
   })
 
-  // Inject inline script
   nuxt.hook('nitro:config', (config) => {
+    // Check user opted-in for tasks
+    if (config.experimental?.tasks)
+      defaultTabOptions.serverTasks.enabled = true
+
+    // Inject inline script
     config.externals = config.externals || {}
     config.externals.inline = config.externals.inline || []
     config.externals.inline.push(join(runtimeDir, 'nitro'))
