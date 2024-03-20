@@ -1,3 +1,31 @@
+# [1.1.0](https://github.com/nuxt/devtools/compare/v1.0.8...v1.1.0) (2024-03-20)
+
+
+### Bug Fixes
+
+* augment runtime config correctly ([2d199b8](https://github.com/nuxt/devtools/commit/2d199b83d5d3c5f655cd409da1acdf000168a86b))
+* devtools border-radius ([#617](https://github.com/nuxt/devtools/issues/617)) ([36c300a](https://github.com/nuxt/devtools/commit/36c300ab334eeec3266b03c0d50c9a9b68778ddf))
+* floating-vue arrow style ([#578](https://github.com/nuxt/devtools/issues/578)) ([4553d50](https://github.com/nuxt/devtools/commit/4553d5075be2f9636cb4bdb4660221eb972c95c3))
+* floating-vue arrow style in dark ([#582](https://github.com/nuxt/devtools/issues/582)) ([0023611](https://github.com/nuxt/devtools/commit/0023611db455585afc6e73ace86708da6495cc9c))
+* inspect tab when custom buildAssetsDir is configured, fixes [#589](https://github.com/nuxt/devtools/issues/589) ([#588](https://github.com/nuxt/devtools/issues/588)) ([97386b2](https://github.com/nuxt/devtools/commit/97386b24368c18fe00232a189f327b6fa00a6208))
+* override `tsx` dependency to known fixed version (broken on Node v18.19.0+) ([#606](https://github.com/nuxt/devtools/issues/606)) ([1bc2e71](https://github.com/nuxt/devtools/commit/1bc2e71c7423638c92893184d44636772a1e3cba))
+* provide a label for accessbility ([#591](https://github.com/nuxt/devtools/issues/591)) ([6cb9220](https://github.com/nuxt/devtools/commit/6cb9220c82fc22a4a32424b3f571ea97d050ccb8))
+* remove unnecessary line + open devtools calling twice `syncClient` ([#584](https://github.com/nuxt/devtools/issues/584)) ([9a2dbc2](https://github.com/nuxt/devtools/commit/9a2dbc25d9bc681d1eb2b50087e5854e20eb0484))
+* support for resizing window in touch screen ([#616](https://github.com/nuxt/devtools/issues/616)) ([31e01fb](https://github.com/nuxt/devtools/commit/31e01fbb7378ca7150b2762ca8010e436785d329))
+* **ui:** [@apply](https://github.com/apply) conflict with tailwind ([#619](https://github.com/nuxt/devtools/issues/619)) ([4e1d329](https://github.com/nuxt/devtools/commit/4e1d329d319a50f2f456e004a30682bb0cd7f527))
+* **ui:** Added composable to build config ([#579](https://github.com/nuxt/devtools/issues/579)) ([f3c3de1](https://github.com/nuxt/devtools/commit/f3c3de1d95ba5da08dd665c2918500b309adb2af))
+* **ui:** disabled NButton. Also disable NuxtLink when used with `to`. ([#581](https://github.com/nuxt/devtools/issues/581)) ([12dae59](https://github.com/nuxt/devtools/commit/12dae597b1c9e1e77749b3ea5ddde71c60847d2b))
+
+
+### Features
+
+* **assets:** support for layers ([#618](https://github.com/nuxt/devtools/issues/618)) ([b8572b6](https://github.com/nuxt/devtools/commit/b8572b68daad93600900684ca0af032a3366d22b))
+* pinia panel ([#621](https://github.com/nuxt/devtools/issues/621)) ([56be5a7](https://github.com/nuxt/devtools/commit/56be5a73585b9fd0f3169915bc2169dbe96379e7))
+* Server Tasks tab ([#614](https://github.com/nuxt/devtools/issues/614)) ([bee12e8](https://github.com/nuxt/devtools/commit/bee12e88a44b3e7f032942cf884af489448f57b8))
+* **ui:** added autocomplete props to NTextInput component ([#574](https://github.com/nuxt/devtools/issues/574)) ([46cc36f](https://github.com/nuxt/devtools/commit/46cc36fac34f67f2f42d78b9e0aec398fdcff027))
+
+
+
 ## [1.0.8](https://github.com/nuxt/devtools/compare/v1.0.7...v1.0.8) (2024-01-11)
 
 
