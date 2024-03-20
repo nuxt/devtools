@@ -13,7 +13,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
 
   const extensions = options.assets?.uploadExtensions || defaultAllowedExtensions
   const publicDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
-  const layerDirs = [publicDir, ...nuxt.options._layers.map(layer => resolve(layer.cwd, layer.config?.public ?? 'public'))]
+  const layerDirs = [publicDir, ...nuxt.options._layers.map(layer => resolve(layer.cwd, 'public'))]
 
   const refreshDebounced = debounce(() => {
     cache = null
