@@ -1,3 +1,13 @@
+## [1.1.1](https://github.com/nuxt/devtools/compare/v1.1.0...v1.1.1) (2024-03-20)
+
+
+### Bug Fixes
+
+* **client:** pinia panel visible logic ([#624](https://github.com/nuxt/devtools/issues/624)) ([ed599ab](https://github.com/nuxt/devtools/commit/ed599ab1e671aa04c51d5df2c22baf062b5369de))
+* use RPC to get tasks ([#625](https://github.com/nuxt/devtools/issues/625)) ([4f347a2](https://github.com/nuxt/devtools/commit/4f347a2c81b4042903b80df2f9f74fd37a540896))
+
+
+
 # [1.1.0](https://github.com/nuxt/devtools/compare/v1.0.8...v1.1.0) (2024-03-20)
 
 
