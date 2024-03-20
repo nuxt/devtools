@@ -40,6 +40,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:before')
 
+  if (options.iframeProps) {
+    nuxt.options.runtimeConfig.app.devtools ||= {}
+    nuxt.options.runtimeConfig.app.devtools.iframeProps = options.iframeProps
+  }
+
   // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
 
@@ -179,6 +184,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   })
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
+
+  await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
 
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))

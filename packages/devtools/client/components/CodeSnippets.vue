@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BuiltinLanguage } from 'shikiji'
+import type { BuiltinLanguage } from 'shiki'
 import type { CodeSnippet } from '../../types'
 
 const props = defineProps<{

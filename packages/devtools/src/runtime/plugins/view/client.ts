@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, createApp, h, markRaw, nextTick, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { Router } from 'vue-router'
@@ -66,9 +66,6 @@ export async function setupDevToolsClient({
         if (state.value.open)
           return
         state.value.open = true
-        return nextTick(() => {
-          client.syncClient()
-        })
       },
       async navigate(path: string) {
         if (!state.value.open)
@@ -126,25 +123,23 @@ export async function setupDevToolsClient({
       const runtimeConfig = useRuntimeConfig()
       const CLIENT_PATH = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/client`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
-      try {
-        iframe = document.createElement('iframe')
-        iframe.id = 'nuxt-devtools-iframe'
-        iframe.allow = 'cross-origin-isolated'
-        iframe.setAttribute('credentialless', 'true')
-        iframe.src = initialUrl
-        iframe.onload = async () => {
-          try {
-            await waitForClientInjection()
-            client.syncClient()
-          }
-          catch (e) {
-            console.error('Nuxt DevTools client injection failed')
-            console.error(e)
-          }
+      iframe = document.createElement('iframe')
+
+      // custom iframe props
+      for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
+        iframe.setAttribute(key, String(value))
+
+      iframe.id = 'nuxt-devtools-iframe'
+      iframe.src = initialUrl
+      iframe.onload = async () => {
+        try {
+          await waitForClientInjection()
+          client.syncClient()
         }
-      }
-      catch (e) {
-        console.error(e)
+        catch (e) {
+          console.error('Nuxt DevTools client injection failed')
+          console.error(e)
+        }
       }
     }
 
@@ -268,8 +263,6 @@ export async function setupDevToolsClient({
       })
     }
   }
-
-  client.syncClient()
 
   const holder = document.createElement('div')
   holder.id = 'nuxt-devtools-container'

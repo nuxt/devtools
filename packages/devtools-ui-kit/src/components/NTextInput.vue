@@ -8,6 +8,7 @@ const props = withDefaults(
     placeholder?: string
     disabled?: boolean
     autofocus?: boolean
+    autocomplete?: string
     readonly?: boolean
     type?: string
   }>(),

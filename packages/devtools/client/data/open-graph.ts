@@ -133,7 +133,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   },
   {
     name: 'twitter:title',
-    suggestion: 'recommended',
+    suggestion: 'optional',
     head: {
       meta: [
         {
@@ -150,7 +150,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   },
   {
     name: 'twitter:description',
-    suggestion: 'recommended',
+    suggestion: 'optional',
     head: {
       meta: [{
         name: 'twitter:description',
@@ -165,7 +165,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   },
   {
     name: 'twitter:image',
-    suggestion: 'recommended',
+    suggestion: 'optional',
     head: {
       meta: [
         {
@@ -182,7 +182,7 @@ export const ogTags: OpenGraphTagDefine[] = [
   },
   {
     name: 'twitter:card',
-    suggestion: 'recommended',
+    suggestion: 'optional',
     head: {
       meta: [
         {

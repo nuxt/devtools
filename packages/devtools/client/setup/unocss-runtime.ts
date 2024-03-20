@@ -1,4 +1,3 @@
-// @ts-expect-error missin types
 import presetIcons from '@unocss/preset-icons/browser'
 import init from '@unocss/runtime'
 

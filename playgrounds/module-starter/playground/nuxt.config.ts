@@ -1,6 +1,7 @@
-import { resolve } from 'node:path'
-import { defineNuxtModule } from '@nuxt/kit'
+import { createResolver, defineNuxtModule } from 'nuxt/kit'
 import { startSubprocess } from '@nuxt/devtools-kit'
+
+const resolver = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
   modules: [
@@ -23,7 +24,7 @@ export default defineNuxtConfig({
           {
             command: 'npx',
             args: ['nuxi', 'dev', '--port', '3300'],
-            cwd: resolve(__dirname, '../client'),
+            cwd: resolver.resolve('../client'),
           },
           {
             id: 'my-module:client',
