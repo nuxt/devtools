@@ -2,7 +2,7 @@
 const client = useClient()
 
 const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__
-const isHttps = computed(() => window.location.protocol === 'https:')
+const isSecureContext = computed(() => window.isSecureContext)
 
 const showInfo = ref(false)
 const copy = useCopy()
@@ -18,7 +18,7 @@ function popup() {
 
 <template>
   <template v-if="!isInPopup">
-    <NButton v-if="client?.devtools.popup && isHttps" n="sm primary" @click="popup()">
+    <NButton v-if="client?.devtools.popup && isSecureContext" n="sm primary" @click="popup()">
       <div carbon-launch /> Popup
     </NButton>
     <template v-else>
@@ -46,7 +46,7 @@ function popup() {
           </NButton>
           and restart the browser.
         </p>
-        <NTip v-if="!isHttps" class="mb-4" n="orange">
+        <NTip v-if="!isSecureContext" class="mb-4" n="orange">
           Please note that the popup feature only works when your server is running under HTTPS.
           <NuxtLink to="https://nuxt.com/docs/api/nuxt-config#https" target="_blank">
             Learn how to run your server with https on Nuxt's Documentation
