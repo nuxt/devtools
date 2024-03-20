@@ -57,8 +57,17 @@ export default defineNuxtConfig({
     },
     optimizeDeps: {
       include: [
-        'vis-network',
+        '@unocss/preset-icons/browser',
+        '@unocss/runtime',
+        'diff',
+        'error-stack-parser-es',
+        'json-editor-vue',
+        'ohash',
+        'perfect-debounce',
+        'scule',
         'vis-data',
+        'vis-network',
+        'vue-virtual-scroller',
       ],
     },
     server: {
