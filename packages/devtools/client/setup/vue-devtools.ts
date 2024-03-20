@@ -13,19 +13,19 @@ export const activeAppRecord = computed(() => appRecords.value.find(r => r.id ==
 
 export function initVueDevToolsState() {
   getDevToolsState().then((data) => {
-    if (data)
+    if (!data)
       return
-    appConnected.value = data!.connected
-    clientConnected.value = data!.clientConnected
-    appRecords.value = data!.appRecords
-    activeAppRecordId.value = data!.activeAppRecordId
+    appConnected.value = data.connected
+    clientConnected.value = data.clientConnected
+    appRecords.value = data.appRecords
+    activeAppRecordId.value = data.activeAppRecordId
   })
 
   onDevToolsStateUpdated((data) => {
     if (!data)
       return
-    appConnected.value = data!.connected
-    clientConnected.value = data!.clientConnected
+    appConnected.value = data.connected
+    clientConnected.value = data.clientConnected
     appRecords.value = data.appRecords
     activeAppRecordId.value = data.activeAppRecordId
   })
@@ -44,7 +44,6 @@ export function setupVueDevTools() {
   watchEffect(() => {
     if (isInPopup)
       toggleHighPerfMode(false)
-
     else
       toggleHighPerfMode(!state.value?.open)
   })

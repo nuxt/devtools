@@ -8,6 +8,10 @@ definePageMeta({
   icon: 'i-logos-pinia',
   title: 'Pinia',
   layout: 'full',
+  show() {
+    const configs = useServerConfig()
+    return () => configs.value?.modules?.includes('@pinia/nuxt')
+  },
 })
 </script>
 
