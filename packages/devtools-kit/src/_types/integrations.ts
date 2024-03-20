@@ -81,19 +81,6 @@ export interface ScannedNitroTasks {
   }
 }
 
-export interface CronCollection {
-  cron: string
-  tasks: string[]
-}
-
-export interface ServerTaskInfo {
-  name: string
-  handler: string
-  description: string
-  type: 'collection' | 'task'
-  tasks?: ServerTaskInfo[]
-}
-
 export interface PluginInfoWithMetic {
   src: string
   mode?: 'client' | 'server' | 'all'
