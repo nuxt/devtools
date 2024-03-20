@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ServerTaskInfo } from '../../src/types/tasks'
+import type { ServerTaskInfo } from '~/../../src/types'
 
 withDefaults(defineProps<{
   item: ServerTaskInfo

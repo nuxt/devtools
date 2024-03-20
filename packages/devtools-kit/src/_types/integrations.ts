@@ -69,6 +69,14 @@ export interface Payload {
   functions?: Record<string, any>
 }
 
+export interface ServerTaskInfo {
+  name: string
+  handler: string
+  description: string
+  type: 'collection' | 'task'
+  tasks?: ServerTaskInfo[]
+}
+
 export interface ScannedNitroTasks {
   tasks: {
     [name: string]: {
