@@ -10,7 +10,7 @@ definePageMeta({
   layout: 'full',
   show() {
     const configs = useServerConfig()
-    return () => configs.value?.modules?.includes('@pinia/nuxt')
+    return () => configs.value?.modules?.some(item => (item as string | Array<unknown>).includes('@pinia/nuxt'))
   },
 })
 </script>
