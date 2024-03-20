@@ -40,11 +40,13 @@ const { view, selectedTask, inputDefaults } = useDevToolsOptions('serverTasks')
 
 const selected = computed(() => {
   if (!currentServerTask.value && selectedTask.value)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     currentServerTask.value = selectedTask.value.name
 
   const task = tasks.value.find(i => i.name === currentServerTask.value)
 
   if (currentServerTask.value !== selectedTask.value?.name && task)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
     selectedTask.value = task
   return task
 })

@@ -66,8 +66,10 @@ export default defineNuxtConfig({
       include: [
         '@unocss/preset-icons/browser',
         '@unocss/runtime',
+        'cronstrue',
         'diff',
         'error-stack-parser-es',
+        'fuse.js',
         'json-editor-vue',
         'ohash',
         'perfect-debounce',
