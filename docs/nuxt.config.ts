@@ -21,6 +21,10 @@ export default defineNuxtConfig({
     preference: 'dark',
   },
 
+  site: {
+    url: 'https://devtools.nuxt.com',
+  },
+
   ui: {
     icons: ['heroicons', 'simple-icons', 'ph'],
   },
