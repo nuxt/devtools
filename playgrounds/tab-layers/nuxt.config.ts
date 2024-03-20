@@ -5,6 +5,6 @@ export default defineNuxtConfig({
   ],
 
   extends: [
-    'empty',
+    '../empty',
   ],
 })
