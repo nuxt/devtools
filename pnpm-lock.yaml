@@ -563,6 +563,18 @@ importers:
 
   playgrounds/module-starter/test/fixtures/basic: {}
 
+  playgrounds/tab-layers:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.27
+        version: 20.11.30
+      empty:
+        specifier: link:/Users/arash/Developer/projects/Nuxt/devtools/playgrounds/empty
+        version: link:../../../../../arash/Developer/projects/Nuxt/devtools/playgrounds/empty
+      nuxt:
+        specifier: ^3.10.3
+        version: 3.11.1(@parcel/watcher@2.4.1)(@types/node@20.11.30)(eslint@8.57.0)(rollup@3.29.4)(typescript@5.4.2)(vite@5.1.6)(vue-tsc@2.0.6)
+
   playgrounds/tab-pinia:
     dependencies:
       '@pinia/nuxt':

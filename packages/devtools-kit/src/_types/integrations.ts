@@ -192,6 +192,7 @@ export interface AssetInfo {
   filePath: string
   size: number
   mtime: number
+  layer?: string
 }
 
 export interface AssetEntry {

@@ -47,6 +47,7 @@ const icon = computed(() => {
       <div :class="icon" />
       <span :class="{ 'flex items-center': isCollection }" flex-auto text-start text-sm font-mono>
         {{ item.path }}
+        <NIcon v-if="item.layer" icon="i-carbon-layers" bg-primary />
       </span>
       <NIcon v-if="isCollection" icon="carbon:chevron-right" :transform-rotate="open ? 90 : 0" transition />
     </button>
