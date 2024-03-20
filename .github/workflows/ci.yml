@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  # PR CI handled by autofix.yml
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   ci:
@@ -18,7 +19,7 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.18.2
+          node-version: 18
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint
