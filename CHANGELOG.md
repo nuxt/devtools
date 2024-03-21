@@ -1,3 +1,18 @@
+## [1.1.2](https://github.com/nuxt/devtools/compare/v1.1.1...v1.1.2) (2024-03-21)
+
+
+### Bug Fixes
+
+* **pinia:** pinia module searching null safety ([#628](https://github.com/nuxt/devtools/issues/628)) ([8937b78](https://github.com/nuxt/devtools/commit/8937b783cbb8d5e4a480d7b82c32626abaea5c8d))
+* scheduledTasks can be undefined ([#626](https://github.com/nuxt/devtools/issues/626)) ([7044c47](https://github.com/nuxt/devtools/commit/7044c47fad36fe90ebbc2e1bef3d92783a1aa596))
+
+
+### Features
+
+* enable picture in picture for localhost ([#627](https://github.com/nuxt/devtools/issues/627)) ([c43500a](https://github.com/nuxt/devtools/commit/c43500ae2f2cdf30ccf4592e729fbda7c20995e8))
+
+
+
 ## [1.1.1](https://github.com/nuxt/devtools/compare/v1.1.0...v1.1.1) (2024-03-20)
 
 
