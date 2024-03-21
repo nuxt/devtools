@@ -15,11 +15,11 @@ export function setup({ nuxt }: NuxtDevtoolsServerContext) {
         return resolved
       }
     },
-    transform(code, id) {
+    transform(code, id, options) {
       const [filename] = id.split('?', 2)
       const appendTo = /\/entry\.m?js$/
 
-      if (appendTo.test(filename))
+      if (!options?.ssr && appendTo.test(filename))
         code = `import 'virtual:vue-devtools-path:overlay.mjs';\n${code}`
 
       return code
