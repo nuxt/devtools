@@ -1,3 +1,12 @@
+## [1.1.3](https://github.com/nuxt/devtools/compare/v1.1.2...v1.1.3) (2024-03-21)
+
+
+### Bug Fixes
+
+* **devtools:** do not try to overlay on server ([#630](https://github.com/nuxt/devtools/issues/630)) ([9b633cd](https://github.com/nuxt/devtools/commit/9b633cda75377afb4a5b6b26780a1e92012b6063))
+
+
+
 ## [1.1.2](https://github.com/nuxt/devtools/compare/v1.1.1...v1.1.2) (2024-03-21)
 
 
