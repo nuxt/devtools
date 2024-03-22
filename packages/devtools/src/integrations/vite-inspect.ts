@@ -21,7 +21,7 @@ export function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
     category: 'advanced',
     view: {
       type: 'iframe',
-      src: `${nuxt.options.app.baseURL}/${nuxt.options.app.buildAssetsDir}/__inspect/`.replace(/\/\//g, '/'),
+      src: `${nuxt.options.app.baseURL}${nuxt.options.app.buildAssetsDir}/__inspect/`.replace(/\/\//g, '/'),
     },
   }), nuxt)
 
