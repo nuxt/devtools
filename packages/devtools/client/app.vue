@@ -7,7 +7,7 @@ import { useEyeDropper } from '@vueuse/core'
 import { setupClientRPC } from './setup/client-rpc'
 import { splitScreenAvailable } from '~/composables/storage'
 
-if (process.client)
+if (import.meta.client)
   import('./setup/unocss-runtime')
 
 useHead({
