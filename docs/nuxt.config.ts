@@ -54,4 +54,12 @@ export default defineNuxtConfig({
   //     cleanHtml: false,
   //   },
   // },
+
+  $production: {
+    nitro: {
+      experimental: {
+        wasm: true,
+      },
+    },
+  },
 })
