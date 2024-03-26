@@ -16,7 +16,7 @@ function getStacktrace() {
 }
 
 export function initTimelineMetrics(): TimelineMetrics {
-  if (process.server)
+  if (import.meta.server)
     return undefined!
 
   if (window.__NUXT_DEVTOOLS_TIMELINE_METRICS__)
@@ -45,7 +45,7 @@ export function initTimelineMetrics(): TimelineMetrics {
 const wrapperFunctions = new WeakMap<any, any>()
 
 export function __nuxtTimelineWrap(name: string, fn: any) {
-  if (process.server)
+  if (import.meta.server)
     return fn
   if (typeof fn !== 'function')
     return fn

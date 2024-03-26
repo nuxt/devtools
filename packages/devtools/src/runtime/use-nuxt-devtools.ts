@@ -12,7 +12,7 @@ export function useNuxtDevTools(): Ref<NuxtDevtoolsHostClient | undefined> {
   if (!process.dev)
     return r
 
-  if (process.server)
+  if (import.meta.server)
     return r
 
   if (window.__NUXT_DEVTOOLS_HOST__) {
