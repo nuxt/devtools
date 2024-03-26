@@ -1,3 +1,4 @@
+import { relative } from 'node:path'
 import fsp from 'node:fs/promises'
 import { parse } from 'node:path'
 import { join, resolve } from 'pathe'
@@ -21,6 +22,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
   }, 500)
 
   nuxt.hook('builder:watch', (event, key) => {
+    key = relative(nuxt.options.srcDir, resolve(nuxt.options.srcDir, key))
     if (key.startsWith(nuxt.options.dir.public) && (event === 'add' || event === 'unlink'))
       refreshDebounced()
   })
