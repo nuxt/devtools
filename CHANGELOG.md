@@ -1,3 +1,13 @@
+## [1.1.4](https://github.com/nuxt/devtools/compare/v1.1.3...v1.1.4) (2024-03-26)
+
+
+### Bug Fixes
+
+* update vue devtools applet ([5163c0d](https://github.com/nuxt/devtools/commit/5163c0de4cc9ba3e9ad75adb686852d65ffdf29e))
+* vite-inspect iframe url ([#633](https://github.com/nuxt/devtools/issues/633)) ([2c942e5](https://github.com/nuxt/devtools/commit/2c942e59a664204b9a16acfd086c60588f1e3b4a))
+
+
+
 ## [1.1.3](https://github.com/nuxt/devtools/compare/v1.1.2...v1.1.3) (2024-03-21)
 
 
