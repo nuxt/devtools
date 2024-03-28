@@ -1,3 +1,12 @@
+## [1.1.5](https://github.com/nuxt/devtools/compare/v1.1.4...v1.1.5) (2024-03-28)
+
+
+### Features
+
+* update `@vue/devtools-applet`, fix [#640](https://github.com/nuxt/devtools/issues/640) ([cbb711d](https://github.com/nuxt/devtools/commit/cbb711d1d56ff27bb78055945267c05ad8cc7328))
+
+
+
 ## [1.1.4](https://github.com/nuxt/devtools/compare/v1.1.3...v1.1.4) (2024-03-26)
 
 
