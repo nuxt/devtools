@@ -27,7 +27,7 @@ Unleash Nuxt Developer Experience.
 
 ## Installation
 
-> Nuxt DevTools requires **Nuxt v3.1.0 or higher**.
+> Nuxt DevTools requires **Nuxt v3.9.0 or higher**.
 
 Nuxt DevTools is **enabled by default** in Nuxt v3.8.0. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
 
