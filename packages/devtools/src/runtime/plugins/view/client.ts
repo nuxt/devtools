@@ -275,6 +275,18 @@ export async function setupDevToolsClient({
       client.devtools.toggle()
   })
 
+  // disable when printing
+  const isPrinting = window.matchMedia('print')
+  isPrinting.addEventListener('change', (e) => {
+    if (e.matches)
+      client.devtools.close()
+    else
+      client.devtools.open()
+  })
+
+  if (isPrinting.matches)
+    client.devtools.close()
+
   const app = createApp({
     render: () => h(Main, { client }),
     devtools: {
