@@ -8,7 +8,7 @@ import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
 import { splitScreenAvailable } from '~/composables/storage'
 
-if (process.client)
+if (import.meta.client)
   import('./setup/unocss-runtime')
 
 useHead({
