@@ -275,11 +275,6 @@ export async function setupDevToolsClient({
       client.devtools.toggle()
   })
 
-  const isPrinting = useIsPrinting()
-  watch(isPrinting, (value) => {
-    holder.style.display = value ? 'none' : ''
-  }, { immediate: true })
-
   const app = createApp({
     render: () => h(Main, { client }),
     devtools: {
@@ -342,15 +337,6 @@ export function useClientColorMode(): Ref<ColorScheme> {
   getSystemColor()
 
   return computed(() => explicitColor.value || systemColor.value || 'light')
-}
-
-function useIsPrinting() {
-  const isPrinting = ref(false)
-  const mediaQuery = window.matchMedia('print')
-  mediaQuery.addEventListener('change', (e) => {
-    isPrinting.value = e.matches
-  })
-  return isPrinting
 }
 
 function setupRouteTracking(timeline: TimelineMetrics, router: Router) {
