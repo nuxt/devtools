@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.1.5",
   "private": true,
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@9.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -23,22 +23,22 @@
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.12.2",
+    "@antfu/eslint-config": "^2.15.0",
     "@antfu/ni": "^0.21.12",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "^0.5.5",
     "@nuxt/schema": "^3.11.2",
-    "@types/markdown-it": "^14.0.0",
-    "@types/node": "^20.12.5",
+    "@types/markdown-it": "^14.0.1",
+    "@types/node": "^20.12.7",
     "@types/pacote": "^11.1.8",
     "@types/which": "^3.0.3",
     "@types/ws": "^8.5.10",
-    "@unocss/eslint-config": "^0.59.0",
+    "@unocss/eslint-config": "^0.59.4",
     "bumpp": "^9.4.0",
     "conventional-changelog-cli": "^4.1.0",
     "eslint": "^9.0.0",
-    "eslint-plugin-format": "^0.1.0",
+    "eslint-plugin-format": "^0.1.1",
     "esno": "^4.7.0",
     "execa": "^7.2.0",
     "gray-matter": "^4.0.3",
@@ -46,14 +46,14 @@
     "nuxt": "^3.11.2",
     "pathe": "^1.1.2",
     "simple-git-hooks": "^2.11.1",
-    "taze": "^0.13.3",
+    "taze": "^0.13.6",
     "tiged": "^2.12.7",
-    "typescript": "^5.4.4",
+    "typescript": "^5.4.5",
     "ua-parser-js": "^1.0.37",
-    "unocss": "^0.59.0",
+    "unocss": "^0.59.4",
     "vite-hot-client": "^0.2.3",
-    "vue": "^3.4.21",
-    "vue-tsc": "^2.0.11"
+    "vue": "^3.4.23",
+    "vue-tsc": "^2.0.13"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
