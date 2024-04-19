@@ -1,3 +1,13 @@
+# [1.2.0](https://github.com/nuxt/devtools/compare/v1.1.5...v1.2.0) (2024-04-19)
+
+
+### Bug Fixes
+
+* adopt forward-compatible approach to `builder:watch` ([#637](https://github.com/nuxt/devtools/issues/637)) ([800d71f](https://github.com/nuxt/devtools/commit/800d71fd4962a0bf4357484c1fbecc6dec8a743e))
+* opt in to `import.meta.*` properties ([#635](https://github.com/nuxt/devtools/issues/635)) ([ce60ab4](https://github.com/nuxt/devtools/commit/ce60ab426ac9000f5abee741a6e3d3144f868f18))
+
+
+
 ## [1.1.5](https://github.com/nuxt/devtools/compare/v1.1.4...v1.1.5) (2024-03-28)
 
 
