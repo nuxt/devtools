@@ -41,7 +41,7 @@ function visit() {
         <span>Get Started</span>
       </NButton>
     </div>
-    <div flex-basis-6xl p4>
+    <div p4>
       <div flex="~ col gap-2" mxa>
         <NCheckbox v-if="showPanel == null" v-model="enableFloatPanel" n="green6">
           <span op50>Show floating panel from now on</span>
