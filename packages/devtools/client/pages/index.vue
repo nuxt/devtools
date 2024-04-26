@@ -21,27 +21,28 @@ function visit() {
 </script>
 
 <template>
-  <NPanelGrids flex="~ col gap3" relative h-screen w-full items-center justify-center text-center>
-    <p my2 text-3em text-primary font-bold font-stylish>
-      👋 Hi there, welcome to Nuxt DevTools!
-    </p>
-    <p max-w-190 text-lg>
-      <NuxtLogo mr-0.5 inline-block h-5 translate-y--1.1 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
-      development experience with Nuxt. Enjoy!<br>
-    </p>
-    <p mb6 op50>
-      Learn more at
-      <NLink href="https://devtools.nuxt.com/" target="_blank" rel="noopener noreferrer" n="primary">
-        devtools.nuxt.com
-      </NLink>
-    </p>
+  <NPanelGrids flex="~ col" relative h-screen w-full>
+    <div flex="~ auto col gap3" items-center justify-center text-center>
+      <p my2 text-3em text-primary font-bold font-stylish>
+        👋 Hi there, welcome to Nuxt DevTools!
+      </p>
+      <p max-w-190 text-lg>
+        <NuxtLogo mr-0.5 inline-block h-5 translate-y--1.1 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
+        development experience with Nuxt. Enjoy!<br>
+      </p>
+      <p mb6 op50>
+        Learn more at
+        <NLink href="https://devtools.nuxt.com/" target="_blank" rel="noopener noreferrer" n="primary">
+          devtools.nuxt.com
+        </NLink>
+      </p>
 
-    <NButton to="/modules/overview" n="lg primary" @click="visit">
-      <span>Get Started</span>
-    </NButton>
-
-    <div absolute bottom-0 left-0 right-0 p4>
-      <div flex="~ col gap-2" mxa w-max>
+      <NButton to="/modules/overview" n="lg primary" @click="visit">
+        <span>Get Started</span>
+      </NButton>
+    </div>
+    <div flex-basis-6xl p4>
+      <div flex="~ col gap-2" mxa>
         <NCheckbox v-if="showPanel == null" v-model="enableFloatPanel" n="green6">
           <span op50>Show floating panel from now on</span>
         </NCheckbox>
