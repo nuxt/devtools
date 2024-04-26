@@ -1,0 +1,36 @@
+<script setup lang="ts">
+import { Components as VueComponents } from '@vue/devtools-applet'
+import '@vue/devtools-applet/style.css'
+
+const { connected } = useVueDevToolsState()
+const client = useClient()
+const openInEditor = useOpenInEditor()
+
+definePageMeta({
+  icon: 'i-carbon-assembly-cluster',
+  title: 'Vue Components',
+  layout: 'full',
+  show: () => {
+    const client = useClient()
+    return () => !!client.value
+  },
+  order: 1,
+})
+
+function togglePanel(status: boolean) {
+  if (status)
+    client.value.devtools.open()
+
+  else
+    client.value.devtools.close()
+}
+</script>
+
+<template>
+  <div class="h-full w-full">
+    <VueComponents v-if="connected" @on-inspect-component-start="togglePanel(false)" @on-inspect-component-end="togglePanel(true)" @open-in-editor="openInEditor" />
+    <NLoading v-else>
+      Connecting....
+    </NLoading>
+  </div>
+</template>
