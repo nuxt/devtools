@@ -12,7 +12,7 @@ const emit = defineEmits<{
   (event: 'open-default-input'): void
 }>()
 
-const routeInputBodyJSON = ref({ payload: {} })
+const routeInputBodyJSON = ref<any>({ payload: {} })
 const { inputDefaults } = useDevToolsOptions('serverRoutes')
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
