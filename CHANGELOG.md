@@ -1,3 +1,19 @@
+# [1.3.0](https://github.com/nuxt/devtools/compare/v1.2.0...v1.3.0) (2024-05-10)
+
+
+### Bug Fixes
+
+* **devtools:** optimize the home page layout ([#654](https://github.com/nuxt/devtools/issues/654)) ([a1ad266](https://github.com/nuxt/devtools/commit/a1ad26671414c0128aa51d105534298b714cbf93))
+* upgrade `vite-plugin-vue-inspector`, fix [#657](https://github.com/nuxt/devtools/issues/657) ([f67f0f2](https://github.com/nuxt/devtools/commit/f67f0f2069f8675eeb2e8118aa09c04d448ccda9))
+
+
+### Features
+
+* components tree panel ([#655](https://github.com/nuxt/devtools/issues/655)) ([3162269](https://github.com/nuxt/devtools/commit/3162269329b6e4d3b89199143fc551616570edd5))
+* hide devtools when printing ([#648](https://github.com/nuxt/devtools/issues/648)) ([1be7b2d](https://github.com/nuxt/devtools/commit/1be7b2da4015d422f96542602b1b9e106ea7b1b3))
+
+
+
 # [1.2.0](https://github.com/nuxt/devtools/compare/v1.1.5...v1.2.0) (2024-04-19)
 
 
