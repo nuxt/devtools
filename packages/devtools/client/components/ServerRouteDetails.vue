@@ -68,7 +68,7 @@ const routeInputs = reactive({
   body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
   headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
 })
-const routeInputBodyJSON = ref({})
+const routeInputBodyJSON = ref<any>({})
 const {
   inputDefaults,
   sendFrom,

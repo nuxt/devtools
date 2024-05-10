@@ -555,4 +555,10 @@ onMounted(() => {
   background-image: linear-gradient(45deg, #00dc82, #36e4da, #0047e1);
   filter: blur(60px);
 }
+
+@media print {
+  #nuxt-devtools-anchor {
+    display: none;
+  }
+}
 </style>
