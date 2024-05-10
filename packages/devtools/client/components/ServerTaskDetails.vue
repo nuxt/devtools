@@ -312,7 +312,11 @@ const copy = useCopy()
           v-model="routeInputBodyJSON"
           :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
           class="json-editor-vue of-auto text-sm outline-none"
-          v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+          v-bind="$attrs"
+          :mode="('text' as any)"
+          :navigation-bar="false"
+          :indentation="2"
+          :tab-size="2"
         />
       </template>
       <UseDefaultInputs v-else />

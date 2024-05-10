@@ -34,7 +34,7 @@ export interface NuxtDevtoolsClientHooks {
   /**
    * Event emitted when the component inspector is clicked
    */
-  'host:inspector:click': (baseUrl: string, file: string, line: number, column: number) => void
+  'host:inspector:click': (url: URL) => void
   /**
    * Event to close the component inspector
    */

@@ -404,7 +404,11 @@ onMounted(() => {
       </template>
     </div>
 
-    <div ref="frameBox" :style="iframeStyle">
+    <div
+      v-show="!client.inspector?.isEnabled.value"
+      ref="frameBox"
+      :style="iframeStyle"
+    >
       <FrameBox
         :client="client"
         :is-dragging="isDragging"

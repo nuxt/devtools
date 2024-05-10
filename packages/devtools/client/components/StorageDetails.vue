@@ -171,7 +171,11 @@ async function renameCurrentItem() {
           v-model="currentItem.updatedContent"
           :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
           class="json-editor-vue h-full of-auto text-sm outline-none"
-          v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+          v-bind="$attrs"
+          :mode="('text' as any)"
+          :navigation-bar="false"
+          :indentation="2"
+          :tab-size="2"
         />
         <textarea
           v-else v-model="currentItem.updatedContent"

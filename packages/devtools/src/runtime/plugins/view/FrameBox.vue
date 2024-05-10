@@ -21,7 +21,9 @@ watchEffect(() => {
     if (!iframe)
       return
 
-    iframe.style.pointerEvents = isResizing.value || props.isDragging ? 'none' : 'auto'
+    iframe.style.pointerEvents = (isResizing.value || props.isDragging || props.client.inspector?.isEnabled.value)
+      ? 'none'
+      : 'auto'
 
     if (!popupWindow.value) {
       if (Array.from(container.value.children).every(el => el !== iframe))

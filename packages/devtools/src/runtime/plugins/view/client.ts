@@ -192,9 +192,9 @@ export async function setupDevToolsClient({
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
     const componentInspector = window.__VUE_INSPECTOR__
     if (componentInspector) {
-      componentInspector.openInEditor = async (baseUrl, file, line, column) => {
+      componentInspector.openInEditor = async (url) => {
         disableComponentInspector()
-        await client.hooks.callHook('host:inspector:click', baseUrl, file, line, column)
+        await client.hooks.callHook('host:inspector:click', url)
       }
       componentInspector.onUpdated = () => {
         client.hooks.callHook('host:inspector:update', {
@@ -203,11 +203,14 @@ export async function setupDevToolsClient({
         })
       }
     }
+
     return markRaw({
       isEnabled: isInspecting,
       enable: enableComponentInspector,
       disable: disableComponentInspector,
       toggle: () => {
+        if (!state.value.open)
+          client.devtools.open()
         if (window.__VUE_INSPECTOR__?.enabled)
           disableComponentInspector()
         else

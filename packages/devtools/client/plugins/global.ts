@@ -11,9 +11,12 @@ export default defineNuxtPlugin(() => {
     inspectorData.value = data
   }
 
-  function onInspectorClick(_: any, file: string, line: number, column: number) {
-    const url = `./${file}:${line}:${column}`
-    rpc.openInEditor(url)
+  function onInspectorClick(url: URL) {
+    const query = url.searchParams.get('file')
+    if (query)
+      rpc.openInEditor(query)
+    else
+      console.error('[nuxt-devtools] Failed to open file from Vue Inspector', url)
   }
 
   Object.defineProperty(window, '__NUXT_DEVTOOLS_VIEW__', {

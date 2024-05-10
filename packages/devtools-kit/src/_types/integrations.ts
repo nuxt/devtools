@@ -190,7 +190,7 @@ export interface VueInspectorClient {
   enable: () => void
   disable: () => void
   toggleEnabled: () => void
-  openInEditor: (baseUrl: string, file: string, line: number, column: number) => void
+  openInEditor: (url: URL) => void
   onUpdated: () => void
 }
 
