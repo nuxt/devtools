@@ -2,7 +2,7 @@
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
   title: 'Modules',
-  order: 4,
+  order: 5,
 })
 
 const installModuleOpen = ref(false)
