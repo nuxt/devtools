@@ -7,20 +7,19 @@ const client = useClient()
 const openInEditor = useOpenInEditor()
 
 definePageMeta({
-  icon: 'i-carbon-assembly-cluster',
-  title: 'Vue Components',
+  icon: 'i-carbon-category',
+  title: 'Components Tree',
   layout: 'full',
   show: () => {
     const client = useClient()
     return () => !!client.value
   },
-  order: 1,
+  order: 3,
 })
 
 function togglePanel(status: boolean) {
   if (status)
     client.value.devtools.open()
-
   else
     client.value.devtools.close()
 }
@@ -28,7 +27,12 @@ function togglePanel(status: boolean) {
 
 <template>
   <div class="h-full w-full">
-    <VueComponents v-if="connected" @on-inspect-component-start="togglePanel(false)" @on-inspect-component-end="togglePanel(true)" @open-in-editor="openInEditor" />
+    <VueComponents
+      v-if="connected"
+      @on-inspect-component-start="togglePanel(false)"
+      @on-inspect-component-end="togglePanel(true)"
+      @open-in-editor="openInEditor"
+    />
     <NLoading v-else>
       Connecting....
     </NLoading>

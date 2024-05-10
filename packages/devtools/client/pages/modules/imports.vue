@@ -5,7 +5,7 @@ import Fuse from 'fuse.js'
 definePageMeta({
   icon: 'carbon-function',
   title: 'Imports',
-  order: 3,
+  order: 4,
 })
 
 const config = useServerConfig()
