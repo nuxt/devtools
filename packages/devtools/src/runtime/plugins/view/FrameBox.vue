@@ -108,56 +108,56 @@ useEventListener(window, 'mouseleave', () => isResizing.value = false)
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ top: 0 }"
       @mousedown.prevent="isResizing = { top: true }"
-      @touchstart="() => isResizing = { top: true }"
+      @touchstart.passive="() => isResizing = { top: true }"
     />
     <div
       v-show="state.position !== 'bottom'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-horizontal"
       :style="{ bottom: 0 }"
       @mousedown.prevent="() => isResizing = { bottom: true }"
-      @touchstart="() => isResizing = { bottom: true }"
+      @touchstart.passive="() => isResizing = { bottom: true }"
     />
     <div
       v-show="state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ left: 0 }"
       @mousedown.prevent="() => isResizing = { left: true }"
-      @touchstart="() => isResizing = { left: true }"
+      @touchstart.passive="() => isResizing = { left: true }"
     />
     <div
       v-show="state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-vertical"
       :style="{ right: 0 }"
       @mousedown.prevent="() => isResizing = { right: true }"
-      @touchstart="() => isResizing = { right: true }"
+      @touchstart.passive="() => isResizing = { right: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, left: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isResizing = { top: true, left: true }"
-      @touchstart="() => isResizing = { top: true, left: true }"
+      @touchstart.passive="() => isResizing = { top: true, left: true }"
     />
     <div
       v-show="state.position !== 'top' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ top: 0, right: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isResizing = { top: true, right: true }"
-      @touchstart="() => isResizing = { top: true, right: true }"
+      @touchstart.passive="() => isResizing = { top: true, right: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'left'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, left: 0, cursor: 'nesw-resize' }"
       @mousedown.prevent="() => isResizing = { bottom: true, left: true }"
-      @touchstart="() => isResizing = { bottom: true, left: true }"
+      @touchstart.passive="() => isResizing = { bottom: true, left: true }"
     />
     <div
       v-show="state.position !== 'bottom' && state.position !== 'right'"
       class="nuxt-devtools-resize-handle nuxt-devtools-resize-handle-corner"
       :style="{ bottom: 0, right: 0, cursor: 'nwse-resize' }"
       @mousedown.prevent="() => isResizing = { bottom: true, right: true }"
-      @touchstart="() => isResizing = { bottom: true, right: true }"
+      @touchstart.passive="() => isResizing = { bottom: true, right: true }"
     />
   </div>
 </template>
