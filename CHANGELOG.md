@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/nuxt/devtools/compare/v1.3.0...v1.3.1) (2024-05-10)
+
+
+### Bug Fixes
+
+* module builder chunk path patch ([87199a1](https://github.com/nuxt/devtools/commit/87199a174ed662dffc6d1eeaa04116635576fca6))
+
+
+
 # [1.3.0](https://github.com/nuxt/devtools/compare/v1.2.0...v1.3.0) (2024-05-10)
 
 
