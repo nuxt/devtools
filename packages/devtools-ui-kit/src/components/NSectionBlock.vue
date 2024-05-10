@@ -27,8 +27,13 @@ function onToggle(e: any) {
 </script>
 
 <template>
-  <details :open="open" @toggle="onToggle">
-    <summary class="cursor-pointer select-none hover:bg-active p4" :class="collapse ? '' : 'pointer-events-none'">
+  <!-- TODO: Seems something wrong with the DOM type -->
+  <!-- @vue-ignore -->
+  <details :open="open" @toggle="(onToggle as any)">
+    <summary
+      class="cursor-pointer select-none hover:bg-active p4"
+      :class="collapse ? '' : 'pointer-events-none'"
+    >
       <NIconTitle :icon="icon" :text="text" text-xl transition :class="[open ? 'op100' : 'op60', headerClass]">
         <div>
           <div text-base>

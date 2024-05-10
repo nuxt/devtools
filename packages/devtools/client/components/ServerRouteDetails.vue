@@ -540,12 +540,17 @@ const copy = useCopy()
         </div>
 
         <UseDefaultInputs v-if="selectedTabInput === 'input'" />
+        <!-- TODO: Mode does not have correct type, remove when upstream fixes -->
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
           :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
           class="json-editor-vue of-auto text-sm outline-none"
-          v-bind="$attrs" mode="text" :navigation-bar="false" :indentation="2" :tab-size="2"
+          v-bind="$attrs"
+          :mode="('text' as any)"
+          :navigation-bar="false"
+          :indentation="2"
+          :tab-size="2"
         />
       </template>
       <UseDefaultInputs v-else />
