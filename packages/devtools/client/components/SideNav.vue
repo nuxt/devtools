@@ -97,8 +97,9 @@ onClickOutside(
     </div>
 
     <div
-      flex="~ auto col gap-0.5 items-center" w-full p1 class="no-scrollbar"
-      :class="sidebarExpanded ? '' : 'of-x-hidden of-y-auto'"
+      flex="~ auto col gap-0.5 items-center" w-full p1
+      class="no-scrollbar"
+      :class="{ 'of-x-hidden of-y-auto': !!sidebarExpanded }"
     >
       <template v-for="[name, tabs], idx of displayedTabs" :key="name">
         <template v-if="tabs.length">
