@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import 'floating-vue/dist/style.css'
+import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'

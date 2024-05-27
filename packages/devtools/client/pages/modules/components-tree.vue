@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Components as VueComponents } from '@vue/devtools-applet'
-import '@vue/devtools-applet/style.css'
 
 const { connected } = useVueDevToolsState()
 const client = useClient()
