@@ -1,3 +1,14 @@
+## [1.3.2](https://github.com/nuxt/devtools/compare/v1.3.1...v1.3.2) (2024-05-27)
+
+
+### Bug Fixes
+
+* floating-vue style ([7b7dc32](https://github.com/nuxt/devtools/commit/7b7dc32edebb2ea9b1fa5662b588dcbf78ff5726))
+* sidebar scroll ([946f930](https://github.com/nuxt/devtools/commit/946f93093b72114b45f8aa1b70b9fb21005f7042))
+* **timeline:** reduce warning ([#661](https://github.com/nuxt/devtools/issues/661)) ([33fe685](https://github.com/nuxt/devtools/commit/33fe6857dabff26a0cb30fb1b1f170e8a658a96b))
+
+
+
 ## [1.3.1](https://github.com/nuxt/devtools/compare/v1.3.0...v1.3.1) (2024-05-10)
 
 
