@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import type { CSSProperties } from 'vue'
+import { useRuntimeConfig } from 'nuxt/app'
 import type { NuxtDevtoolsHostClient } from '../../../types'
 import { settings } from '../../settings'
 import { state } from './state'
 import { millisecondToHumanreadable, useElementBounding, useEventListener, useScreenSafeArea } from './utils'
 import FrameBox from './FrameBox.vue'
+import type { ColorScheme } from './client'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
@@ -37,13 +39,22 @@ watchEffect(() => {
 
 const SNAP_THRESHOLD = 2
 
+const dark = computed(() => {
+  const defaultColorMode = useRuntimeConfig().public?.colorMode as ColorScheme
+
+  if (defaultColorMode) {
+    return defaultColorMode === 'dark'
+  }
+
+  return props.client.app.colorMode.value === 'dark'
+})
+
 const vars = computed(() => {
-  const dark = props.client.app.colorMode.value === 'dark'
   return {
-    '--nuxt-devtools-widget-bg': dark ? '#111' : '#ffffff',
-    '--nuxt-devtools-widget-fg': dark ? '#F5F5F5' : '#111',
-    '--nuxt-devtools-widget-border': dark ? '#3336' : '#efefef',
-    '--nuxt-devtools-widget-shadow': dark ? 'rgba(0,0,0,0.3)' : 'rgba(128,128,128,0.1)',
+    '--nuxt-devtools-widget-bg': dark.value ? '#111' : '#ffffff',
+    '--nuxt-devtools-widget-fg': dark.value ? '#F5F5F5' : '#111',
+    '--nuxt-devtools-widget-border': dark.value ? '#3336' : '#efefef',
+    '--nuxt-devtools-widget-shadow': dark.value ? 'rgba(0,0,0,0.3)' : 'rgba(128,128,128,0.1)',
   }
 })
 

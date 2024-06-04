@@ -290,6 +290,7 @@ export async function setupDevToolsClient({
 export function useClientColorMode(): Ref<ColorScheme> {
   const explicitColor = ref<ColorScheme>()
   const systemColor = ref<ColorScheme>()
+  const defaultColor = ref<ColorScheme>(useRuntimeConfig().public.devtoolsTheme)
 
   const elements = [
     document.documentElement,
@@ -339,7 +340,7 @@ export function useClientColorMode(): Ref<ColorScheme> {
   getExplicitColor()
   getSystemColor()
 
-  return computed(() => explicitColor.value || systemColor.value || 'light')
+  return computed(() => defaultColor.value || explicitColor.value || systemColor.value || 'light')
 }
 
 function setupRouteTracking(timeline: TimelineMetrics, router: Router) {

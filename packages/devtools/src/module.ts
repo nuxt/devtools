@@ -23,6 +23,9 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.enabled === false)
       return
 
+    const { theme } = options
+    nuxt.options.runtimeConfig.public.colorMode = theme
+
     if (isGlobalInstall()) {
       // @ts-expect-error missing types
       const globalOptions = nuxt.options.devtoolsGlobal || {} as ModuleGlobalOptions
