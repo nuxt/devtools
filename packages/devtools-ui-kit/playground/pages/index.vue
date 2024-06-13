@@ -62,7 +62,7 @@ const radio = ref('a')
             XL Purple
           </NButton>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L44-L58" />
+        <ShowSource src="/playground/pages/index.vue#L44-L66" />
       </NCard>
 
       <NCard class="p4">
@@ -80,7 +80,7 @@ const radio = ref('a')
             XL Disabled
           </NCheckbox>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L68-L76" />
+        <ShowSource src="/playground/pages/index.vue#L68-L84" />
       </NCard>
 
       <NCard class="p4">
@@ -95,7 +95,7 @@ const radio = ref('a')
             nuxt.com
           </NLink>
         </form>
-        <ShowSource src="/playground/pages/index.vue#L86-L91" />
+        <ShowSource src="/playground/pages/index.vue#L86-L99" />
       </NCard>
 
       <NCard class="p4">
@@ -123,7 +123,7 @@ const radio = ref('a')
             Orange
           </NRadio>
         </form>
-        <ShowSource src="/playground/pages/index.vue#L101-L119" />
+        <ShowSource src="/playground/pages/index.vue#L101-L127" />
       </NCard>
 
       <NCard class="p4">
@@ -144,7 +144,7 @@ const radio = ref('a')
             XL
           </NSwitch>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L129-L140" />
+        <ShowSource src="/playground/pages/index.vue#L129-L148" />
       </NCard>
 
       <NCard class="p4">
@@ -162,7 +162,7 @@ const radio = ref('a')
             Error!
           </NTip>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L150-L158" />
+        <ShowSource src="/playground/pages/index.vue#L150-L166" />
       </NCard>
 
       <NCard class="p4">
@@ -184,7 +184,7 @@ const radio = ref('a')
             </div>
           </NDropdown>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L168-L180" />
+        <ShowSource src="/playground/pages/index.vue#L168-L188" />
       </NCard>
 
       <NCard class="p4">
@@ -223,7 +223,7 @@ const radio = ref('a')
             </NButton>
           </div>
         </form>
-        <ShowSource src="/playground/pages/index.vue#L190-L205" />
+        <ShowSource src="/playground/pages/index.vue#L190-L227" />
       </NCard>
 
       <NCard class="p4">
@@ -249,7 +249,7 @@ const radio = ref('a')
             </div>
           </NDialog>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L215-L231" />
+        <ShowSource src="/playground/pages/index.vue#L215-L253" />
       </NCard>
 
       <NCard class="p4">
@@ -259,7 +259,7 @@ const radio = ref('a')
         <div class="flex flex-col gap-2">
           <NLoading />
         </div>
-        <ShowSource src="/playground/pages/index.vue#L246" />
+        <ShowSource src="/playground/pages/index.vue#L255-263" />
       </NCard>
 
       <NCard class="p4">
@@ -279,7 +279,7 @@ const radio = ref('a')
             </option>
           </NSelect>
         </div>
-        <ShowSource src="/playground/pages/index.vue#L263" />
+        <ShowSource src="/playground/pages/index.vue#L265-283" />
       </NCard>
 
       <NCard class="p4">
@@ -297,7 +297,7 @@ const radio = ref('a')
             ]"
           />
         </div>
-        <ShowSource src="/playground/pages/index.vue#L263" />
+        <ShowSource src="/playground/pages/index.vue#L285-301" />
       </NCard>
     </div>
   </div>
