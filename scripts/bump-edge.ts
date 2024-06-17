@@ -98,6 +98,12 @@ async function main() {
   for (const pkg of workspace.packages.filter(p => !p.data.private)) {
     workspace.setVersion(pkg.data.name, `${pkg.data.version}-${date}.${commit}`)
     workspace.rename(pkg.data.name, `${pkg.data.name}-edge`)
+
+    // Relax nuxt version on edge
+    pkg.updateDeps((dep: any) => {
+      if (dep.name === 'nuxt')
+        dep.range = '*'
+    })
   }
 
   await workspace.save()
