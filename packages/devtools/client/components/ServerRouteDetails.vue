@@ -14,6 +14,7 @@ const emit = defineEmits<{
 
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
+const colorMode = useColorMode()
 const config = useServerConfig()
 const client = useClient()
 
@@ -544,7 +545,7 @@ const copy = useCopy()
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
-          :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+          :class="[colorMode === 'dark' ? 'jse-theme-dark' : 'light']"
           class="json-editor-vue of-auto text-sm outline-none"
           v-bind="$attrs"
           :mode="('text' as any)"

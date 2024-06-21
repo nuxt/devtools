@@ -26,6 +26,7 @@ const OnSetup = defineComponent({
   },
 })
 
+const colorMode = useColorMode()
 const copy = useCopy()
 </script>
 
@@ -69,7 +70,7 @@ const copy = useCopy()
             v-bind="$attrs"
             class="json-editor-vue"
             :class="[
-              $colorMode.value === 'dark' ? 'jse-theme-dark' : '',
+              colorMode === 'dark' ? 'jse-theme-dark' : '',
             ]"
             :main-menu-bar="false"
             :navigation-bar="false"
