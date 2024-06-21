@@ -1,3 +1,12 @@
+## [1.3.6](https://github.com/nuxt/devtools/compare/v1.3.5...v1.3.6) (2024-06-21)
+
+
+### Features
+
+* migrate vue-devtools to v7.3 ([#675](https://github.com/nuxt/devtools/issues/675)) ([79e6d35](https://github.com/nuxt/devtools/commit/79e6d3584e3868e46e76c616e089d67e9f24b39e))
+
+
+
 ## [1.3.5](https://github.com/nuxt/devtools/compare/v1.3.4...v1.3.5) (2024-06-21)
 
 
