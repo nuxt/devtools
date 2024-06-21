@@ -311,7 +311,7 @@ const copy = useCopy()
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
-          :class="[colorMode === 'dark' ? 'jse-theme-dark' : 'light']"
+          :class="colorMode === 'dark' ? 'jse-theme-dark' : 'light'"
           class="json-editor-vue of-auto text-sm outline-none"
           v-bind="$attrs"
           :mode="('text' as any)"
