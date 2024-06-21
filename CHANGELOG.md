@@ -1,3 +1,12 @@
+## [1.3.5](https://github.com/nuxt/devtools/compare/v1.3.4...v1.3.5) (2024-06-21)
+
+
+### Bug Fixes
+
+* downgrade module-builder ([de79dc4](https://github.com/nuxt/devtools/commit/de79dc494074bc7bb8e6ccfd711e57a6d533d95a))
+
+
+
 ## [1.3.4](https://github.com/nuxt/devtools/compare/v1.3.3...v1.3.4) (2024-06-21)
 
 
