@@ -27,6 +27,7 @@ const files = await fg(['docs/**/*.md'], {
   onlyFiles: true,
 }).then(r => r.sort())
 
+// eslint-disable-next-line regexp/no-super-linear-backtracking
 const headerMatch = /^#+(.*)$/
 function getTitleMarkdown(text: string) {
   const lines = text.split('\n')

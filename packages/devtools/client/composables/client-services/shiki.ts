@@ -1,5 +1,5 @@
 import type { BuiltinLanguage, HighlighterCore } from 'shiki'
-import { getHighlighterCore } from 'shiki/core'
+import { createHighlighterCore } from 'shiki/core'
 
 export const shiki = shallowRef<HighlighterCore>()
 
@@ -8,7 +8,7 @@ let promise: Promise<any> | null = null
 export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text' = 'text') {
   if (!promise && !shiki.value) {
     // Only loading when needed
-    promise = getHighlighterCore({
+    promise = createHighlighterCore({
       themes: [
         import('shiki/themes/vitesse-dark.mjs'),
         import('shiki/themes/vitesse-light.mjs'),

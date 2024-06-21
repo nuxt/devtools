@@ -154,6 +154,7 @@ export function setupGeneralRPC({
         input = resolve(process.cwd(), input)
 
       // separate line and column syntax
+      // eslint-disable-next-line regexp/no-super-linear-backtracking
       const match = input.match(/^(.*?)(:[:\d]*)$/)
       let suffix = ''
       if (match) {

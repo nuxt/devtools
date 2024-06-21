@@ -29,7 +29,7 @@ export function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
     const modules = (await api?.rpc.list())?.modules || []
     const components = await rpc.functions.getComponents() || []
     const vueModules = modules.filter((m) => {
-      const plainId = m.id.replace(/\?v=[\w\d]+$/, '')
+      const plainId = m.id.replace(/\?v=\w+$/, '')
       if (components.some(c => c.filePath === plainId))
         return true
       return m.id.match(/\.vue($|\?v=)/)

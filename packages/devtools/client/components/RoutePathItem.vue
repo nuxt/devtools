@@ -19,7 +19,7 @@ const parts = computed(() => {
 
 function parseExpressRoute(route: string) {
   return route
-    .split(/(:\w+[\?\*]?(?:\(\))?)/)
+    .split(/(:\w+[?*]?(?:\(\))?)/)
     .filter(Boolean)
     .map(i => i[0] === ':'
       ? i.replace(/\(\)$/, '?')
@@ -73,7 +73,7 @@ function navigate() {
               </template>
             </div>
           </template>
-          <NButton block n="primary">
+          <NButton type="submit" block n="primary">
             Navigate
           </NButton>
         </form>

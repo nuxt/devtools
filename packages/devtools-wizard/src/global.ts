@@ -14,7 +14,7 @@ const moduleName = '@nuxt/devtools'
 
 type RC = ReturnType<typeof readUser>
 export const RC_PATH = '.nuxtrc'
-const pathRegex = /[\\\/]@nuxt[\\\/]devtools[\\\/]/
+const pathRegex = /[\\/]@nuxt[\\/]devtools[\\/]/
 
 export async function enable(cwd: string) {
   const rc = readUser(RC_PATH)

@@ -14,6 +14,7 @@ const emit = defineEmits<{
 
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
+const colorMode = useColorMode()
 const config = useServerConfig()
 const client = useClient()
 
@@ -58,7 +59,7 @@ const started = ref(false)
 
 const openInEditor = useOpenInEditor()
 
-const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/g))
+const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:\w+)/g))
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 
 const routeMethod = ref(props.route.method || 'GET')
@@ -544,7 +545,7 @@ const copy = useCopy()
         <JsonEditorVue
           v-else-if="selectedTabInput === 'json'"
           v-model="routeInputBodyJSON"
-          :class="[$colorMode.value === 'dark' ? 'jse-theme-dark' : 'light']"
+          :class="colorMode === 'dark' ? 'jse-theme-dark' : 'light'"
           class="json-editor-vue of-auto text-sm outline-none"
           v-bind="$attrs"
           :mode="('text' as any)"
