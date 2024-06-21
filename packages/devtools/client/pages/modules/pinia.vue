@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Pinia } from '@vue/devtools-applet'
+import { useDevToolsState as useVueDevToolsState } from '@vue/devtools-core'
 
 const { connected } = useVueDevToolsState()
 

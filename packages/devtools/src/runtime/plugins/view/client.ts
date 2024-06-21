@@ -4,6 +4,7 @@ import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import type { Router } from 'vue-router'
 import type { $Fetch } from 'ofetch'
+import { setIframeServerContext } from '@vue/devtools-kit'
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '../../../types'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
@@ -133,6 +134,7 @@ export async function setupDevToolsClient({
       iframe.src = initialUrl
       iframe.onload = async () => {
         try {
+          setIframeServerContext(iframe!)
           await waitForClientInjection()
           client.syncClient()
         }
