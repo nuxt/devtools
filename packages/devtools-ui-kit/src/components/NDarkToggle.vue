@@ -3,7 +3,9 @@ import { computed, nextTick } from 'vue'
 
 import { useColorMode } from '@vueuse/core'
 
-const mode = useColorMode()
+const mode = useColorMode({
+  storageKey: 'nuxt-devtools-color-mode',
+})
 const isDark = computed<boolean>({
   get() {
     return mode.value === 'dark'
@@ -69,7 +71,7 @@ const context = {
 </script>
 
 <template>
-  <ColorScheme tag="span">
+  <ClientOnly placeholder-tag="span">
     <slot v-bind="context" />
-  </ColorScheme>
+  </ClientOnly>
 </template>

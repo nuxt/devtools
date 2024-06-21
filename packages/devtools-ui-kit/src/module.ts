@@ -45,7 +45,6 @@ export default defineNuxtModule<ModuleOptions>({
     const resolver = createResolver(import.meta.url)
     await installModule(await resolver.resolvePath('@unocss/nuxt'))
     await installModule(await resolver.resolvePath('@vueuse/nuxt'))
-    await installModule(await resolver.resolvePath('@nuxtjs/color-mode'))
     await installModule(await resolver.resolvePath('v-lazy-show/nuxt'))
   },
 })
