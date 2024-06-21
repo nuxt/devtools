@@ -19,7 +19,7 @@ const parts = computed(() => {
 
 function parseExpressRoute(route: string) {
   return route
-    .split(/(:\w+[\?\*]?(?:\(\))?)/)
+    .split(/(:\w+[?*]?(?:\(\))?)/)
     .filter(Boolean)
     .map(i => i[0] === ':'
       ? i.replace(/\(\)$/, '?')

@@ -59,7 +59,7 @@ const data = computed<Data>(() => {
     const page = pages.value?.find(i => i.file === rel.id)
     const layout = layouts.value?.find(i => i.file === rel.id)
 
-    const path = rel.id.replace(/\?.*$/, '').replace(/\#.*$/, '')
+    const path = rel.id.replace(/\?.*$/, '').replace(/#.*$/, '')
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component

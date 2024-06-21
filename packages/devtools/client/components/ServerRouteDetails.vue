@@ -59,7 +59,7 @@ const started = ref(false)
 
 const openInEditor = useOpenInEditor()
 
-const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:[\w_]+)/g))
+const parsedRoute = computed(() => props.route.route?.split(/((?:\*\*)?:\w+)/g))
 const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':') || i.startsWith('**:')) || [])
 
 const routeMethod = ref(props.route.method || 'GET')
