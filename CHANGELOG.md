@@ -1,3 +1,13 @@
+## [1.3.4](https://github.com/nuxt/devtools/compare/v1.3.3...v1.3.4) (2024-06-21)
+
+
+### Bug Fixes
+
+* color mode ([#679](https://github.com/nuxt/devtools/issues/679)) ([d276b31](https://github.com/nuxt/devtools/commit/d276b314255a7601dbc0781527764f20e81e9558))
+* navigate to pages with param ([#678](https://github.com/nuxt/devtools/issues/678)) ([316bcd9](https://github.com/nuxt/devtools/commit/316bcd996b9c2c3ed1b760c1ddd4f83d4fd60a0f))
+
+
+
 ## [1.3.3](https://github.com/nuxt/devtools/compare/v1.3.2...v1.3.3) (2024-06-04)
 
 
