@@ -73,7 +73,7 @@ function navigate() {
               </template>
             </div>
           </template>
-          <NButton block n="primary">
+          <NButton type="submit" block n="primary">
             Navigate
           </NButton>
         </form>
