@@ -88,7 +88,7 @@ async function refresh() {
         v-bind="$attrs"
         class="json-editor-vue"
         :class="[
-          colorMode.value === 'dark' ? 'jse-theme-dark' : '',
+          colorMode === 'dark' ? 'jse-theme-dark' : '',
           name ? '' : '',
         ]"
         :main-menu-bar="false"
