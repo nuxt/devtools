@@ -24,7 +24,7 @@ const card = computed(() => getSocialPreviewCard(props.tags, {
 </script>
 
 <template>
-  <div flex="~ col">
+  <div flex="~ col" w-full>
     <div flex="~ wrap" w-full flex-none>
       <template v-for="name, idx of types" :key="idx">
         <button
