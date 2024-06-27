@@ -71,24 +71,20 @@ export function registerCommands(getter: MaybeRefOrGetter<CommandItem[]>) {
 
 let _nuxtDocsCommands: CommandItem[] | undefined
 
-const docsIcons = [
-  [':components:', 'i-carbon-assembly-cluster'],
-  [':modules:', 'i-carbon-cube'],
-  [':commands:', 'i-carbon-terminal'],
-  [':directory-structure:', 'i-carbon-folder'],
-  [':composables:', 'i-carbon-function'],
-  [':getting-started:', 'i-carbon-idea'],
-  [':api:', 'carbon-api-1'],
-]
-
 export async function getNuxtDocsCommands() {
   if (!_nuxtDocsCommands) {
-    const list = await import('../data/nuxt-docs.json').then(i => i.default)
+    const list = await $fetch<any[]>('https://nuxt.com/api/search.json', {
+      query: {
+        select: '_path,title,description,navigation',
+      },
+    })
     _nuxtDocsCommands = list.map(i => ({
-      ...i,
-      icon: docsIcons.find(([k]) => i.id.includes(k))?.[1] || 'i-carbon-document-multiple-01',
+      id: i._path,
+      title: i.title,
+      description: i.description,
+      icon: i.navigation?.icon ?? 'i-carbon-document-multiple-01',
       action: () => {
-        window.open(i.url, '_blank')
+        window.open(`https://nuxt.com/${i._path}`, '_blank')
       },
     }))
   }
