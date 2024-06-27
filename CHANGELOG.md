@@ -1,3 +1,24 @@
+## [1.3.7](https://github.com/nuxt/devtools/compare/v1.3.6...v1.3.7) (2024-06-27)
+
+
+### Bug Fixes
+
+* OpenGraph layout ([#685](https://github.com/nuxt/devtools/issues/685)) ([760f149](https://github.com/nuxt/devtools/commit/760f14920f5c02d1d88a43671795bef06afafa02))
+* scrollable sidebar ([#682](https://github.com/nuxt/devtools/issues/682)) ([df459f9](https://github.com/nuxt/devtools/commit/df459f9057bd8122c85540c87a53489e5bf9826b))
+* **server-routes:** unable to clear all params ([#684](https://github.com/nuxt/devtools/issues/684)) ([d88b003](https://github.com/nuxt/devtools/commit/d88b003fa244204b3c0c43b0cf250d790e4526f9))
+
+
+### Features
+
+* use nuxt search api for showing docs ([#681](https://github.com/nuxt/devtools/issues/681)) ([52b6468](https://github.com/nuxt/devtools/commit/52b6468df31d65528fbc3f0e58d189265523e11c))
+
+
+### Performance Improvements
+
+* use `npm-registry-fetch` instead of `pacote` to deduce the package size ([a049c52](https://github.com/nuxt/devtools/commit/a049c5204debe7efeb8420cde4cb6b0aa1559b3f))
+
+
+
 ## [1.3.6](https://github.com/nuxt/devtools/compare/v1.3.5...v1.3.6) (2024-06-21)
 
 
