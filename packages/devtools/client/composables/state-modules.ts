@@ -29,7 +29,7 @@ export function useInstalledModules() {
         if (!mod.entryPath)
           return undefined!
 
-        const isPackageModule = mod.entryPath && isNodeModulePath(mod.entryPath)
+        const isPackageModule = !!(mod.entryPath && isNodeModulePath(mod.entryPath))
         const name = mod.meta?.name
           ? mod.meta?.name
           : mod.entryPath
@@ -40,7 +40,7 @@ export function useInstalledModules() {
                 : undefined
             : undefined
 
-        const isUninstallable = config.value?.modules?.includes(name)
+        const isUninstallable = !!config.value?.modules?.includes(name)
         const info = modules.value?.find(m => m.npm === name) || modules.value?.find(m => m.name === name)
 
         return {

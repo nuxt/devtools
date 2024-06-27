@@ -134,7 +134,7 @@ watch(() => params, (items) => {
         <NButton
           v-if="params.length"
           icon="carbon-trash-can" n="sm red"
-          my1 px-3 @click="params = []"
+          my1 px-3 @click="params.splice(0, params.length)"
         >
           Remove All
         </NButton>

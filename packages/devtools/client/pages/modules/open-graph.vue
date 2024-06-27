@@ -93,7 +93,7 @@ until(router).toBeTruthy().then((v) => {
 </script>
 
 <template>
-  <div flex="~ col lg:row" h-full w-full of-hidden>
+  <div grid="~ lg:cols-2" h-full w-full of-hidden>
     <div flex-auto of-auto>
       <NNavbar>
         <template #search>
