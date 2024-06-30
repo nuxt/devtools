@@ -31,7 +31,7 @@ const privateConfig = computed(() => {
       text="App Config"
       :padding="false"
     >
-      <StateEditor :state="client.app.appConfig" />
+      <StateEditor :state="toRef(client.app.appConfig)" />
     </NSectionBlock>
 
     <NSectionBlock
@@ -39,7 +39,7 @@ const privateConfig = computed(() => {
       text="Public Runtime Config"
       :padding="false"
     >
-      <StateEditor :state="payload.config?.public" />
+      <StateEditor :state="toRef(payload.config?.public)" />
     </NSectionBlock>
 
     <NSectionBlock
@@ -49,7 +49,7 @@ const privateConfig = computed(() => {
       :padding="false"
       description="These values are not exposed to the client. Readonly in the DevTools."
     >
-      <StateEditor :state="privateConfig" readonly />
+      <StateEditor :state="toRef(privateConfig)" readonly />
     </NSectionBlock>
   </div>
 

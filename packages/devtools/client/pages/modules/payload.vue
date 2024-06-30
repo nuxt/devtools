@@ -66,7 +66,7 @@ async function refreshData(keys?: string[]) {
     >
       <StateEditor
         ml--6
-        :state="payload.functions"
+        :state="toRef(payload.functions)"
       />
     </NSectionBlock>
   </div>

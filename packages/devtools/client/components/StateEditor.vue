@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
+import type { ToRef } from 'vue'
 
 const props = defineProps<{
   name?: string
   open?: boolean
-  state?: any
+  state?: ToRef<any>
   readonly?: boolean
 }>()
 
@@ -17,16 +18,16 @@ const colorMode = useColorMode()
 const proxy = ref()
 
 const state = useState(props.name)
-if (props.state)
-  proxy.value = JSON.parse(JSON.stringify(props.state))
-else if (typeof props.state === 'number' || typeof props.state !== 'string')
-  proxy.value = props.state
+if (props.state?.value)
+  proxy.value = JSON.parse(JSON.stringify(props.state.value))
+else if (typeof props.state?.value === 'number' || typeof props.state?.value !== 'string')
+  proxy.value = props.state?.value
 
 const watcher = watchPausable(
   proxy,
   (value) => {
     if (typeof value !== 'number' && typeof value !== 'string')
-      deepSync(value, props.state)
+      deepSync(value, props.state?.value)
     else
       state.value = value
   },
@@ -48,7 +49,7 @@ function deepSync(from: any, to: any) {
 
 async function refresh() {
   watcher.pause()
-  proxy.value = JSON.parse(JSON.stringify(props.state))
+  proxy.value = JSON.parse(JSON.stringify(props.state?.value))
   await nextTick()
   watcher.resume()
 }
