@@ -19,6 +19,6 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm lint --fix
-      - uses: autofix-ci/action@ea32e3a12414e6d3183163c3424a7d7a8631ad84
+      - uses: autofix-ci/action@2891949f3779a1cafafae1523058501de3d4e944
       - run: pnpm build
       - run: pnpm typecheck
