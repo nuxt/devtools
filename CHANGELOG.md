@@ -1,3 +1,15 @@
+## [1.3.9](https://github.com/nuxt/devtools/compare/v1.3.8...v1.3.9) (2024-07-02)
+
+
+### Bug Fixes
+
+* capture for circular reference in state editor ([841fd76](https://github.com/nuxt/devtools/commit/841fd76002b3eb82871659ab57fe5ace66cd64d8))
+* introduce `client.revision` to trigger state editor update ([418a22e](https://github.com/nuxt/devtools/commit/418a22ed624584a25eab2ed4880147e6d572eb32))
+* **modules:** update compatibility check for Nuxt 3 and 4 ([#689](https://github.com/nuxt/devtools/issues/689)) ([2354da7](https://github.com/nuxt/devtools/commit/2354da79b77741893d1e35270d7406ae76cc75c7))
+* use `ofetch` for `fast-npm-meta` ([4188f8d](https://github.com/nuxt/devtools/commit/4188f8d3a2323873ef760aa2fe5b7b5faca22959))
+
+
+
 ## [1.3.8](https://github.com/nuxt/devtools/compare/v1.3.7...v1.3.8) (2024-07-02)
 
 
