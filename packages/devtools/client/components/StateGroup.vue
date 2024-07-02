@@ -1,5 +1,7 @@
 <script setup lang="ts">
-withDefaults(
+import type { ToRefs } from 'vue'
+
+const props = withDefaults(
   defineProps<{
     state?: Record<string, any>
     prefix?: string
@@ -8,13 +10,17 @@ withDefaults(
     prefix: '',
   },
 )
+
+let stateRefs: ToRefs<typeof props.state>
+if (props.state)
+  stateRefs = toRefs(props.state)
 </script>
 
 <template>
   <div>
-    <div v-if="state && Object.keys(state).length > 0" flex="~ col gap-1">
+    <div v-if="stateRefs && state && Object.keys(state).length > 0" flex="~ col gap-1">
       <StateEditor
-        v-for="value, key of state"
+        v-for="(value, key) of stateRefs"
         :key="key"
         :state="value"
         :name="key.startsWith(prefix) ? key.slice(prefix.length) : key"
