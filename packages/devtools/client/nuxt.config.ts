@@ -77,6 +77,9 @@ export default defineNuxtConfig({
         'vis-data',
         'vis-network',
         'vue-virtual-scroller',
+        '@vue/devtools-applet',
+        '@xterm/xterm',
+        '@xterm/addon-fit',
       ],
     },
     server: {
