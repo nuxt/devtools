@@ -122,7 +122,8 @@ export async function setupDevToolsClient({
   function getIframe() {
     if (!iframe) {
       const runtimeConfig = useRuntimeConfig()
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/client`.replace(/\/+/g, '/')
+      const CLIENT_BASE = '/__nuxt_devtools__/client'
+      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
       iframe = document.createElement('iframe')
 
