@@ -14,24 +14,41 @@ const emit = defineEmits<{
 
 const isOpen = useVModel(props, 'open', emit, { passive: true })
 const colorMode = useColorMode()
-const proxy = ref()
+const proxy = shallowRef()
+const error = shallowRef()
 
 const state = useState(props.name)
-if (props.state)
-  proxy.value = JSON.parse(JSON.stringify(props.state))
-else if (typeof props.state === 'number' || typeof props.state !== 'string')
-  proxy.value = props.state
 
-const watcher = watchPausable(
-  proxy,
-  (value) => {
-    if (typeof value !== 'number' && typeof value !== 'string')
-      deepSync(value, props.state)
-    else
-      state.value = value
-  },
-  { deep: true },
-)
+function clone() {
+  error.value = undefined
+  try {
+    if (props.state)
+      proxy.value = JSON.parse(JSON.stringify(props.state))
+    else if (typeof props.state === 'number' || typeof props.state !== 'string')
+      proxy.value = props.state
+  }
+  catch (e) {
+    console.error(e)
+    error.value = e
+  }
+}
+
+let watcher: ReturnType<typeof watchPausable> | undefined
+
+onMounted(() => {
+  clone()
+
+  watcher = watchPausable(
+    proxy,
+    (value) => {
+      if (typeof value !== 'number' && typeof value !== 'string')
+        deepSync(value, props.state)
+      else
+        state.value = value
+    },
+    { deep: true },
+  )
+})
 
 function deepSync(from: any, to: any) {
   for (const key in from) {
@@ -47,10 +64,10 @@ function deepSync(from: any, to: any) {
 }
 
 async function refresh() {
-  watcher.pause()
-  proxy.value = JSON.parse(JSON.stringify(props.state))
+  watcher?.pause()
+  clone()
   await nextTick()
-  watcher.resume()
+  watcher?.resume()
 }
 </script>
 
@@ -75,13 +92,17 @@ async function refresh() {
       <template v-if="isOpen">
         <NButton v-tooltip.bottom="'Refresh View'" title="Refresh View" icon="carbon-renew" :border="false" @click="refresh" />
         <DataSchemaButton
-          v-if="proxy"
+          v-if="proxy && !error"
           :getter="() => ({ name, input: JSON.stringify(proxy) })"
         />
       </template>
     </div>
     <template v-if="isOpen || !name">
+      <div v-if="error" class="bg-red:10 px5 py3 text-red">
+        Error: {{ error }}
+      </div>
       <JsonEditorVue
+        v-else
         v-model="proxy"
         v-bind="$attrs"
         class="json-editor-vue"
