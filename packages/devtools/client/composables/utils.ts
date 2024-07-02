@@ -170,6 +170,7 @@ export function refreshData() {
 
   nuxt.hooks.callHookParallel('app:data:refresh', Object.keys(nuxt.payload.data))
   triggerRef(client)
+  client.value.revision.value += 1
 }
 
 export function reloadPage() {

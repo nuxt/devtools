@@ -2,6 +2,7 @@
 withDefaults(
   defineProps<{
     state?: Record<string, any>
+    revision?: number
     prefix?: string
   }>(),
   {
@@ -16,6 +17,7 @@ withDefaults(
       <StateEditor
         v-for="value, key of state"
         :key="key"
+        :revision="revision"
         :state="value"
         :name="key.startsWith(prefix) ? key.slice(prefix.length) : key"
       >

@@ -47,7 +47,9 @@ export function useDevtoolsClient() {
   }
 
   function onUpdateReactivity() {
-    triggerRef(clientRef!)
+    if (clientRef) {
+      triggerRef(clientRef)
+    }
   }
 
   function setup(client: NuxtDevtoolsIframeClient) {

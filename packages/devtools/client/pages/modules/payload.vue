@@ -12,6 +12,7 @@ definePageMeta({
 
 const client = useClient()
 const payload = computed(() => client.value?.nuxt.payload)
+const revision = computed(() => client.value?.revision.value)
 
 async function refreshData(keys?: string[]) {
   await client.value?.nuxt.hooks.callHookParallel('app:data:refresh', keys)
@@ -27,7 +28,9 @@ async function refreshData(keys?: string[]) {
       :padding="false"
     >
       <StateGroup
-        :state="payload.state" prefix="$s"
+        :state="payload.state"
+        :revision="revision"
+        prefix="$s"
       />
     </NSectionBlock>
     <NSectionBlock
@@ -45,7 +48,10 @@ async function refreshData(keys?: string[]) {
           Re-fetch all data
         </NButton>
       </template>
-      <StateGroup :state="payload.data">
+      <StateGroup
+        :state="payload.data"
+        :revision="revision"
+      >
         <template #actions="{ isOpen, name }">
           <NButton
             v-if="isOpen && name"
@@ -67,6 +73,7 @@ async function refreshData(keys?: string[]) {
       <StateEditor
         ml--6
         :state="payload.functions"
+        :revision="revision"
       />
     </NSectionBlock>
   </div>

@@ -100,6 +100,8 @@ export async function setupDevToolsClient({
       clientTimeline: () => timeline,
       loading: () => timeMetric,
     },
+
+    revision: ref(0),
   })
 
   window.__NUXT_DEVTOOLS_HOST__ = client

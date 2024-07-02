@@ -106,6 +106,11 @@ export interface NuxtDevtoolsHostClient {
   }
 
   /**
+   * A counter to trigger reactivity updates
+   */
+  revision: Ref<number>
+
+  /**
    * Update client
    * @internal
    */

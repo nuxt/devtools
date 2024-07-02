@@ -4,6 +4,7 @@ import JsonEditorVue from 'json-editor-vue'
 const props = defineProps<{
   name?: string
   open?: boolean
+  revision?: number
   state?: any
   readonly?: boolean
 }>()
@@ -16,8 +17,6 @@ const isOpen = useVModel(props, 'open', emit, { passive: true })
 const colorMode = useColorMode()
 const proxy = shallowRef()
 const error = shallowRef()
-
-const state = useState(props.name)
 
 function clone() {
   error.value = undefined
@@ -38,13 +37,13 @@ let watcher: ReturnType<typeof watchPausable> | undefined
 onMounted(() => {
   clone()
 
-  watcher = watchPausable(
-    proxy,
+  watch(
+    () => [props.revision, props.state],
     (value) => {
       if (typeof value !== 'number' && typeof value !== 'string')
         deepSync(value, props.state)
       else
-        state.value = value
+        proxy.value = props.state
     },
     { deep: true },
   )

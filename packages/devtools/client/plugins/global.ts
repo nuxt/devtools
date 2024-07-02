@@ -5,6 +5,7 @@ export default defineNuxtPlugin(() => {
 
   function onUpdateReactivity() {
     triggerRef(client)
+    client.value.revision.value += 1
   }
 
   function onInspectorUpdate(data: any) {

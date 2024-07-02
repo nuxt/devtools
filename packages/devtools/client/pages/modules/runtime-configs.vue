@@ -13,6 +13,7 @@ definePageMeta({
 const client = useClient()
 const runtimeConfig = useServerRuntimeConfig()
 const payload = computed(() => client.value?.nuxt.payload)
+const revision = computed(() => client.value?.revision.value)
 
 const privateConfig = computed(() => {
   const clone = {
@@ -31,7 +32,10 @@ const privateConfig = computed(() => {
       text="App Config"
       :padding="false"
     >
-      <StateEditor :state="client.app.appConfig" />
+      <StateEditor
+        :state="client.app.appConfig"
+        :revision="revision"
+      />
     </NSectionBlock>
 
     <NSectionBlock
@@ -39,7 +43,10 @@ const privateConfig = computed(() => {
       text="Public Runtime Config"
       :padding="false"
     >
-      <StateEditor :state="payload.config?.public" />
+      <StateEditor
+        :state="payload.config?.public"
+        :revision="revision"
+      />
     </NSectionBlock>
 
     <NSectionBlock
@@ -49,7 +56,11 @@ const privateConfig = computed(() => {
       :padding="false"
       description="These values are not exposed to the client. Readonly in the DevTools."
     >
-      <StateEditor :state="privateConfig" readonly />
+      <StateEditor
+        :state="privateConfig"
+        :revision="revision"
+        readonly
+      />
     </NSectionBlock>
   </div>
 
