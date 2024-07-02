@@ -47,7 +47,7 @@ watch(
   { immediate: true },
 )
 
-addEventListener('keydown', (e) => {
+useEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
     client.value?.devtools.close()
     e.preventDefault()

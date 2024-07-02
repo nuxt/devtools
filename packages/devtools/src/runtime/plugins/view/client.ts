@@ -278,7 +278,7 @@ export async function setupDevToolsClient({
   document.body.appendChild(holder)
 
   // Shortcut to toggle devtools
-  addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
