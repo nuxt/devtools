@@ -2,7 +2,6 @@ import { createRequire } from 'node:module'
 import { logger, useNuxt } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
-import { joinURL } from 'ufo'
 import { getPackageInfo } from 'local-pkg'
 import type { PackageUpdateInfo } from '../types'
 
@@ -45,23 +44,15 @@ export async function checkForUpdateOf(name: string, current?: string, nuxt = us
     if (!current)
       return
 
-    const { pickRegistry, json: fetchMeta } = await import('npm-registry-fetch')
-    const reg = pickRegistry(name)
-    const manifest = await fetchMeta(joinURL(reg, name), {
-      headers: {
-        'user-agent': `npm node/${process.version}`,
-        'accept': 'application/json',
-      },
-      spec: name,
-    }) as unknown as Packument
+    const { getLatestVersion } = await import('fast-npm-meta')
+    const { version: latest } = await getLatestVersion(name)
 
-    const latest = manifest?.['dist-tags']?.latest
     const needsUpdate = !!latest && latest !== current && semver.lt(current, latest)
 
     return {
       name,
       current,
-      latest,
+      latest: latest || current,
       needsUpdate,
     }
   }
