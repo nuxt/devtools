@@ -1,3 +1,12 @@
+## [1.3.8](https://github.com/nuxt/devtools/compare/v1.3.7...v1.3.8) (2024-07-02)
+
+
+### Performance Improvements
+
+* avoid deps on `npm-registry-fetch`, save install size ([3d74691](https://github.com/nuxt/devtools/commit/3d74691d4daae3ef1fba14cff01b160c1409ebd3))
+
+
+
 ## [1.3.7](https://github.com/nuxt/devtools/compare/v1.3.6...v1.3.7) (2024-06-27)
 
 
