@@ -2,6 +2,8 @@
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
 import { Network } from 'vis-network'
+import { useColorMode } from '@vueuse/core'
+import { COLOR_MODE_KEY } from '../constants'
 import type { ComponentRelationship } from '~/../src/types'
 
 const props = defineProps<{
@@ -11,7 +13,7 @@ const props = defineProps<{
 
 const container = ref<HTMLElement>()
 const navbar = ref<HTMLElement>()
-const colorMode = useColorMode()
+const colorMode = useColorMode({ storageKey: COLOR_MODE_KEY })
 
 const selected = ref<{
   id: string

@@ -1,16 +1,18 @@
 <script lang="ts">
-const iframeCacheMap = new Map<string, HTMLIFrameElement>()
 </script>
 
 <script setup lang="ts">
-// eslint-disable-next-line import/first
+import { useColorMode } from '@vueuse/core'
+import { COLOR_MODE_KEY } from '../constants'
 import type { ModuleCustomTab, ModuleIframeView } from '~/../src/types'
 
 const props = defineProps<{
   tab: ModuleCustomTab
 }>()
 
-const colorMode = useColorMode()
+const iframeCacheMap = new Map<string, HTMLIFrameElement>()
+
+const colorMode = useColorMode({ storageKey: COLOR_MODE_KEY })
 const anchor = ref<HTMLDivElement>()
 const key = computed(() => props.tab.name)
 const iframeEl = ref<HTMLIFrameElement>()

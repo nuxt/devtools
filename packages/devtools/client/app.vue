@@ -4,7 +4,8 @@ import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
-import { useEyeDropper } from '@vueuse/core'
+import { useColorMode, useEyeDropper } from '@vueuse/core'
+import { COLOR_MODE_KEY } from './constants'
 import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
 import { splitScreenAvailable } from '~/composables/storage'
@@ -34,13 +35,20 @@ setupClientRPC()
 
 const client = useClient()
 const route = useRoute()
-const colorMode = useColorMode()
+const defaultColorMode = computed<any>(() => {
+  return client.value?.nuxt?.payload?.config?.public?.colorMode || useRuntimeConfig().public.colorMode
+})
+const colorMode = useColorMode({ initialValue: defaultColorMode.value, storageKey: COLOR_MODE_KEY })
 const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 
 watch(
   () => client.value?.app.colorMode.value,
   (mode) => {
+    if (defaultColorMode.value) {
+      colorMode.value = defaultColorMode.value
+      return
+    }
     if (mode)
       colorMode.value = mode
   },

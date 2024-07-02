@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
+import { useColorMode } from '@vueuse/core'
+import { COLOR_MODE_KEY } from '../constants'
 
 const props = defineProps<{
   name?: string
@@ -13,7 +15,7 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = useVModel(props, 'open', emit, { passive: true })
-const colorMode = useColorMode()
+const colorMode = useColorMode({ storageKey: COLOR_MODE_KEY })
 const proxy = ref()
 
 const state = useState(props.name)
