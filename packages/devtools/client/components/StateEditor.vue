@@ -14,7 +14,7 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = useVModel(props, 'open', emit, { passive: true })
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const proxy = shallowRef()
 const error = shallowRef()
 

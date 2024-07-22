@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const container = ref<HTMLElement>()
 const navbar = ref<HTMLElement>()
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 
 const selected = ref<{
   id: string

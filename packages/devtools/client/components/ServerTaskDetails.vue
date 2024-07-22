@@ -16,7 +16,7 @@ const routeInputBodyJSON = ref<any>({ payload: {} })
 const { inputDefaults } = useDevToolsOptions('serverRoutes')
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const config = useServerConfig()
 
 const response = reactive({

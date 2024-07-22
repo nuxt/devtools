@@ -10,7 +10,7 @@ const props = defineProps<{
   tab: ModuleCustomTab
 }>()
 
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const anchor = ref<HTMLDivElement>()
 const key = computed(() => props.tab.name)
 const iframeEl = ref<HTMLIFrameElement>()

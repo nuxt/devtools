@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
 
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const nuxtApp = useNuxtApp()
 const router = useRouter()
 const searchString = ref('')

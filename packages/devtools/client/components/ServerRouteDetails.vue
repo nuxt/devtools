@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
 
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const config = useServerConfig()
 const client = useClient()
 

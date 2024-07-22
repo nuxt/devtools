@@ -36,9 +36,15 @@ export const showConnectionWarning = computed(() => {
   return connectionTimeout.value && !useClient().value
 })
 
+export function getColorMode() {
+  return useColorMode({
+    storageKey: 'nuxt-devtools-color-mode',
+  })
+}
+
 export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
   const client = useClient()
-  const mode = useColorMode()
+  const mode = getColorMode()
 
   return computed(() => ({
     host: client.value,

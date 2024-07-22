@@ -26,7 +26,7 @@ const OnSetup = defineComponent({
   },
 })
 
-const colorMode = useColorMode()
+const colorMode = getColorMode()
 const copy = useCopy()
 </script>
 
