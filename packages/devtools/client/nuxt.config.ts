@@ -11,7 +11,9 @@ export default defineNuxtConfig({
     DevToolsUiKit,
     DevTools,
   ],
+
   ssr: false,
+
   nitro: {
     output: {
       publicDir: resolver.resolve('../dist/client'),
@@ -36,14 +38,17 @@ export default defineNuxtConfig({
       '*/30 * * * *': ['ping'],
     },
   },
+
   alias: {
     '@nuxt/devtools-kit/iframe-client': resolver.resolve('../../devtools-kit/src/runtime/iframe-client'),
     '@nuxt/devtools-kit/types': resolver.resolve('../../devtools-kit/src/types'),
     '@nuxt/devtools-kit': resolver.resolve('../../devtools-kit/src/index'),
   },
+
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },
+
   runtimeConfig: {
     'fixture3': 'private runtime config from nuxt.config.ts',
     'api-key': 'null',
@@ -51,12 +56,15 @@ export default defineNuxtConfig({
       fixture4: 'public runtime config from nuxt.config.ts',
     },
   },
+
   app: {
     baseURL: '/__nuxt_devtools__/client/',
   },
+
   experimental: {
     watcher: 'parcel',
   },
+
   vite: {
     warmupEntry: false,
     build: {
@@ -88,9 +96,11 @@ export default defineNuxtConfig({
       },
     },
   },
+
   typescript: {
     includeWorkspace: true,
   },
+
   // Production Overrides
   $production: {
     app: {
@@ -98,4 +108,6 @@ export default defineNuxtConfig({
       baseURL: '/__NUXT_DEVTOOLS_BASE__/',
     },
   },
+
+  compatibilityDate: '2024-07-22',
 })
