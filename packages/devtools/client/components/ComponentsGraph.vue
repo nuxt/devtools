@@ -11,9 +11,7 @@ const props = defineProps<{
 
 const container = ref<HTMLElement>()
 const navbar = ref<HTMLElement>()
-const colorMode = useColorMode({
-  storageKey: 'nuxt-devtools-color-mode',
-})
+const colorMode = getColorMode()
 
 const selected = ref<{
   id: string
@@ -93,7 +91,7 @@ const data = computed<Data>(() => {
         ? 'square'
         : 'dot'
 
-    const isHighlighted = search.value && rel.id.toLowerCase().includes(search.value.toLowerCase())
+    const isGrayedOut = search.value && !rel.id.toLowerCase().includes(search.value.toLowerCase())
 
     return {
       id: rel.id,
@@ -102,9 +100,9 @@ const data = computed<Data>(() => {
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
       font: {
-        color: isHighlighted ? 'purple' : (colorMode.value === 'dark' ? 'white' : 'black'),
+        color: isGrayedOut ? 'gray' : (colorMode.value === 'dark' ? 'white' : 'black'),
       },
-      color: isHighlighted ? 'purple' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
+      color: isGrayedOut ? 'gray' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,
