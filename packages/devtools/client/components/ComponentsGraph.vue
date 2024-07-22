@@ -102,9 +102,9 @@ const data = computed<Data>(() => {
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
       font: {
-        color: isHighlighted ? (colorMode.value === 'dark' ? 'yellow' : 'purple') : (colorMode.value === 'dark' ? 'white' : 'black'),
+        color: isHighlighted ? 'purple' : (colorMode.value === 'dark' ? 'white' : 'black'),
       },
-      color: isHighlighted ? (colorMode.value === 'dark' ? 'yellow' : 'purple') : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
+      color: isHighlighted ? 'purple' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,
