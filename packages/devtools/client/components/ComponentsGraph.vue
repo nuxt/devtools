@@ -36,6 +36,7 @@ const {
 const selectedFilter = ref<ComponentRelationship>()
 
 const search = ref('')
+const searchDebounced = useDebounce(search, 300)
 
 const entries = computed(() => {
   const relations = (props.relationships || [])
@@ -91,7 +92,7 @@ const data = computed<Data>(() => {
         ? 'square'
         : 'dot'
 
-    const isGrayedOut = search.value && !rel.id.toLowerCase().includes(search.value.toLowerCase())
+    const isGrayedOut = searchDebounced.value && !rel.id.toLowerCase().includes(searchDebounced.value.toLowerCase())
 
     return {
       id: rel.id,
@@ -100,9 +101,9 @@ const data = computed<Data>(() => {
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
       font: {
-        color: isGrayedOut ? 'gray' : (colorMode.value === 'dark' ? 'white' : 'black'),
+        color: isGrayedOut ? '#8885' : (colorMode.value === 'dark' ? 'white' : 'black'),
       },
-      color: isGrayedOut ? 'gray' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
+      color: isGrayedOut ? '#8885' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,
