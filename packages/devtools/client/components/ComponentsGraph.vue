@@ -35,6 +35,9 @@ const {
 
 const selectedFilter = ref<ComponentRelationship>()
 
+const search = ref('')
+const searchDebounced = useDebounce(search, 300)
+
 const entries = computed(() => {
   const relations = (props.relationships || [])
   if (selectedFilter.value) {
@@ -89,6 +92,8 @@ const data = computed<Data>(() => {
         ? 'square'
         : 'dot'
 
+    const isGrayedOut = searchDebounced.value && !rel.id.toLowerCase().includes(searchDebounced.value.toLowerCase())
+
     return {
       id: rel.id,
       label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
@@ -96,9 +101,9 @@ const data = computed<Data>(() => {
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
       font: {
-        color: colorMode.value === 'dark' ? 'white' : 'black',
+        color: isGrayedOut ? '#8885' : (colorMode.value === 'dark' ? 'white' : 'black'),
       },
-      color: selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
+      color: isGrayedOut ? '#8885' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,
@@ -200,8 +205,8 @@ function setFilter() {
 </script>
 
 <template>
-  <NNavbar ref="navbar" absolute left-0 right-0 top-0>
-    <template #search>
+  <NNavbar ref="navbar" v-model:search="search" absolute left-0 right-0 top-0>
+    <template #actions>
       <div flex="~ gap-4 wrap" w-full>
         <NCheckbox v-model="showPages" n="primary sm">
           <span op75>Show pages</span>
