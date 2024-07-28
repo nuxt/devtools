@@ -140,9 +140,7 @@ async function fetchData() {
       },
     })
   }
-  catch (err: any) {
-
-  }
+  catch {}
 
   fetching.value = false
   response.fetchTime = Date.now() - start

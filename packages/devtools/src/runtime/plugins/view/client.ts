@@ -10,7 +10,7 @@ import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
 
-// eslint-disable-next-line ts/prefer-ts-expect-error
+// eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
 
@@ -58,7 +58,7 @@ export async function setupDevToolsClient({
           try {
             popupWindow.value.close()
           }
-          catch (e) {
+          catch {
           }
           popupWindow.value = null
         }
@@ -115,7 +115,7 @@ export async function setupDevToolsClient({
     try {
       iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
     }
-    catch (e) {
+    catch {
       // cross-origin
     }
     return client
@@ -257,6 +257,8 @@ export async function setupDevToolsClient({
       `
       pip.__NUXT_DEVTOOLS_DISABLE__ = true
       pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
+      // eslint-disable-next-line ts/ban-ts-comment
+      // @ts-ignore Missing types
       pip.__NUXT__ = window.parent?.__NUXT__ || window.__NUXT__
       pip.document.title = 'Nuxt DevTools'
       pip.document.head.appendChild(style)

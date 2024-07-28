@@ -73,7 +73,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
         return `${branchName}#${sha}`
       return `${branchName}#${sha}-dirty`
     }
-    catch (e) {
+    catch {
       // if the git is not available, fallback to iso string
       return new Date().toISOString().replace(/:/g, '-')
     }

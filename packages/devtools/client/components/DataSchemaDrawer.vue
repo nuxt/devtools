@@ -14,7 +14,7 @@ const language = computed(() => languages.find(l => l.displayName === selectedLa
 const options = ref(language.value?.optionDefinitions.filter(o => typeof o.defaultValue === 'boolean'))
 
 const generatedJson = computedAsync(async () => {
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-next-line ts/no-unused-expressions
   counter.value
 
   if (!input.value)

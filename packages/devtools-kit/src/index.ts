@@ -95,8 +95,7 @@ export function startSubprocess(
     try {
       process?.kill()
     }
-    catch (e) {
-    }
+    catch {}
     nuxt.callHook('devtools:terminal:remove', { id })
   }
 

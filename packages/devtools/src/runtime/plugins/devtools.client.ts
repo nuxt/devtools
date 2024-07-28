@@ -1,11 +1,11 @@
 import { shallowReactive, watchEffect } from 'vue'
 
 import type { Router } from 'vue-router'
-import { setupHooksDebug } from '../shared/hooks'
-
-// eslint-disable-next-line ts/prefer-ts-expect-error
-// @ts-ignore tsconfig
 import type { TimelineServerState } from '../../types'
+
+import { setupHooksDebug } from '../shared/hooks'
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-ignore tsconfig
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 
 export default defineNuxtPlugin((nuxt: any) => {

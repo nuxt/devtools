@@ -85,7 +85,7 @@ export function __nuxtTimelineWrap(name: string, fn: any) {
         return result
       }
     }
-    catch (e) {}
+    catch {}
     event.end = Date.now()
     return result
   }

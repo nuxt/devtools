@@ -74,7 +74,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
       await fsp.writeFile(nuxtConfig, `${generated.trimEnd()}\n`, 'utf-8')
     }
   }
-  catch (err) {
+  catch {
     consola.error(colors.red('Unable to update Nuxt config file automatically'))
     process.exitCode = 1
     printOutManual(true)

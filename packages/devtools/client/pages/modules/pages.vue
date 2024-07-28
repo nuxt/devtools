@@ -24,7 +24,7 @@ const count = ref(0)
 
 const currentRoute = computed(() => {
   // Additionall reactivity tracker
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-next-line ts/no-unused-expressions
   (middleware.value, routeInput.value, layouts.value, count.value)
   return router.value?.currentRoute?.value?.path
 })

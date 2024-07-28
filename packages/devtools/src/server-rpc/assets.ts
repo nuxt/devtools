@@ -125,7 +125,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
                 i++
               finalPath = `${base}-${i}.${ext}`
             }
-            catch (err) {
+            catch {
               // Ignore error if file doesn't exist
             }
           }

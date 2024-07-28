@@ -22,7 +22,7 @@ const textContent = computedAsync(async () => {
   if (asset.value.type !== 'text')
     return undefined
 
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-next-line ts/no-unused-expressions
   textContentCounter.value
 
   const content = await rpc.getTextAssetContent(await ensureDevAuthToken(), asset.value.filePath)
@@ -47,6 +47,7 @@ async function saveTextContent() {
       })
     }
     catch (error) {
+      console.error(error)
       devtoolsUiShowNotification({
         message: 'Something went wrong!',
         icon: 'i-carbon-warning',
@@ -71,10 +72,12 @@ const codeSnippets = computed(() => {
     items.push(
       { lang: 'vue-html', code: `<img${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Plain Image' },
     )
-    hasNuxtImage.value && items.push(
-      { lang: 'vue-html', code: `<NuxtImg${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Img', docs: 'https://image.nuxt.com/usage/nuxt-img' },
-      { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxt.com/usage/nuxt-picture' },
-    )
+    if (hasNuxtImage.value) {
+      items.push(
+        { lang: 'vue-html', code: `<NuxtImg${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Img', docs: 'https://image.nuxt.com/usage/nuxt-img' },
+        { lang: 'vue-html', code: `<NuxtPicture${attrs}\n  src="${asset.value.publicPath}"\n/>`, name: 'Nuxt Picture', docs: 'https://image.nuxt.com/usage/nuxt-picture' },
+      )
+    }
     return items
   }
 
@@ -135,6 +138,7 @@ async function deleteAsset() {
     })
   }
   catch (error) {
+    console.error(error)
     devtoolsUiShowNotification({
       message: 'Something went wrong!',
       icon: 'i-carbon-warning',
@@ -170,6 +174,7 @@ async function renameAsset() {
     })
   }
   catch (error) {
+    console.error(error)
     devtoolsUiShowNotification({
       message: 'Something went wrong!',
       icon: 'i-carbon-warning',

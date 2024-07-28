@@ -17,7 +17,7 @@ const counter = ref(0)
 const head = useClientHead()
 
 const headTags = computedAsync(async () => {
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-next-line ts/no-unused-expressions
   counter.value // for force refresh
   const tags = await head.value?.resolveTags()
   return tags.map((tag): NormalizedHeadTag => {

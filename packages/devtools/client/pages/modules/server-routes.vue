@@ -96,7 +96,8 @@ const filterByCollection = computed(() => {
       const indexOfDist = filepathParts.indexOf('dist')
       if (indexOfDist !== -1) {
         prefix = filepathParts[indexOfDist - 1]
-        prefix && collectionNames.splice(1, 0, prefix)
+        if (prefix)
+          collectionNames.splice(1, 0, prefix)
       }
     }
 

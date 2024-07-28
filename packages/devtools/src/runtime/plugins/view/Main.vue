@@ -240,7 +240,7 @@ const panelStyle = computed(() => {
 const { width: frameWidth, height: frameHeight } = useElementBounding(frameBox)
 
 const iframeStyle = computed(() => {
-  // eslint-disable-next-line no-unused-expressions, no-sequences
+  // eslint-disable-next-line no-sequences, ts/no-unused-expressions
   mousePosition.x, mousePosition.y
 
   const halfHeight = (panelEl.value?.clientHeight || 0) / 2

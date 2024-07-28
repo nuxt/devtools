@@ -21,7 +21,7 @@ const scale = ref(1.5)
 const segments = computed(() => segmentTimelineEvents(props.data.events))
 
 const scrollWidth = computed(() => {
-  // eslint-disable-next-line no-unused-expressions
+  // eslint-disable-next-line ts/no-unused-expressions
   props.data.events.length
   return scroller.value?.scrollWidth || window.innerWidth
 })

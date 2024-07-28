@@ -18,7 +18,7 @@ function urlToFilepath(url: string) {
       return `/${pathname.split('/@fs/')[1]}`
     return (config.value?.rootDir || '') + pathname
   }
-  catch (e) {
+  catch {
     return url
   }
 }
