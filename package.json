@@ -23,20 +23,20 @@
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.23.2",
+    "@antfu/eslint-config": "^2.24.0",
     "@antfu/ni": "^0.22.0",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "~0.6.0",
     "@nuxt/schema": "^3.12.4",
-    "@types/markdown-it": "^14.1.1",
-    "@types/node": "^20.14.11",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.0.0",
     "@types/which": "^3.0.4",
     "@types/ws": "^8.5.11",
-    "@unocss/eslint-config": "^0.61.5",
+    "@unocss/eslint-config": "^0.61.6",
     "bumpp": "^9.4.1",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.7.0",
+    "eslint": "^9.8.0",
     "eslint-plugin-format": "^0.1.2",
     "esno": "^4.7.0",
     "execa": "^7.2.0",
@@ -46,12 +46,12 @@
     "simple-git-hooks": "^2.11.1",
     "taze": "^0.16.1",
     "tiged": "^2.12.7",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "ua-parser-js": "^1.0.38",
-    "unocss": "^0.61.5",
+    "unocss": "^0.61.6",
     "vite-hot-client": "^0.2.3",
-    "vue": "^3.4.33",
-    "vue-tsc": "^2.0.28"
+    "vue": "^3.4.34",
+    "vue-tsc": "^2.0.29"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
