@@ -39,11 +39,11 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(magicast@0.3.4)(rollup@4.19.0)
       '@vueuse/core':
-        specifier: ^10.11.1
-        version: 10.11.1(vue@3.4.33(typescript@5.4.3))
+        specifier: ^11.0.1
+        version: 11.0.1(vue@3.4.33(typescript@5.4.3))
       '@vueuse/nuxt':
-        specifier: ^10.11.1
-        version: 10.11.1(magicast@0.3.4)(nuxt@3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2)))(rollup@4.19.0)(vue@3.4.33(typescript@5.4.3))
+        specifier: ^11.0.1
+        version: 11.0.1(magicast@0.3.4)(nuxt@3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2)))(rollup@4.19.0)(vue@3.4.33(typescript@5.4.3))
       nuxt:
         specifier: ^3.12.4
         version: 3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2))
@@ -1958,6 +1958,9 @@ packages:
   '@vueuse/core@10.9.0':
     resolution: {integrity: sha512-/1vjTol8SXnx6xewDEKfS0Ra//ncg4Hb0DaZiwKf7drgfMsKFExQ+FnnENcN6efPen+1kIzhLQoGSy0eDUVOMg==}
 
+  '@vueuse/core@11.0.1':
+    resolution: {integrity: sha512-YTrekI18WwEyP3h168Fir94G/HNC27wvXJI21Alm0sPOwvhihfkrvHIe+5PNJq+MpgWdRcsjvE/38JaoKrgZhQ==}
+
   '@vueuse/head@2.0.0':
     resolution: {integrity: sha512-ykdOxTGs95xjD4WXE4na/umxZea2Itl0GWBILas+O4oqS7eXIods38INvk3XkJKjqMdWPcpCyLX/DioLQxU1KA==}
     peerDependencies:
@@ -2016,8 +2019,16 @@ packages:
   '@vueuse/metadata@10.9.0':
     resolution: {integrity: sha512-iddNbg3yZM0X7qFY2sAotomgdHK7YJ6sKUvQqbvwnf7TmaVPxS4EJydcNsVejNdS8iWCtDk+fYXr7E32nyTnGA==}
 
+  '@vueuse/metadata@11.0.1':
+    resolution: {integrity: sha512-dTFvuHFAjLYOiSd+t9Sk7xUiuL6jbfay/eX+g+jaipXXlwKur2VCqBCZX+jfu+2vROUGcUsdn3fJR9KkpadIOg==}
+
   '@vueuse/nuxt@10.11.1':
     resolution: {integrity: sha512-UiaYSIwOkmUVn8Gl1AqtLWYR12flO+8sEu9X0Y1fNjSR7EWy9jMuiCvOGqwtoeTsqfHrivl0d5HfMzr11GFnMA==}
+    peerDependencies:
+      nuxt: ^3.0.0
+
+  '@vueuse/nuxt@11.0.1':
+    resolution: {integrity: sha512-2utGiRItdFV6/ED39YMyVl/mWFg/Hfx21sVTpo/uv+ZVwg38bLP79Ziqy21WXow18t1E9NEOirU9KhB655ERug==}
     peerDependencies:
       nuxt: ^3.0.0
 
@@ -2029,6 +2040,9 @@ packages:
 
   '@vueuse/shared@10.9.0':
     resolution: {integrity: sha512-Uud2IWncmAfJvRaFYzv5OHDli+FbOzxiVEQdLCKQKLyhz94PIyFC3CHcH7EDMwIn8NPtD06+PNbC/PiO0LGLtw==}
+
+  '@vueuse/shared@11.0.1':
+    resolution: {integrity: sha512-eAPf5CQB3HR0S76HqrhjBqFYstZfiHWZq8xF9EQmobGBkrhPfErJEhr8aMNQMqd6MkENIx2pblIEfJGlHpClug==}
 
   '@webassemblyjs/ast@1.12.1':
     resolution: {integrity: sha512-EKfMUOPRRUTy5UII4qJDGPpqfwjOmZ5jeGFwid9mnoqIFK+e0vqoi1qH56JpmZSzEL53jKnNzScdmftJyG5xWg==}
@@ -5638,8 +5652,8 @@ packages:
   vue-component-type-helpers@1.8.27:
     resolution: {integrity: sha512-0vOfAtI67UjeO1G6UiX5Kd76CqaQ67wrRZiOe7UAb9Jm6GzlUr/fC7CV90XfwapJRjpCMaZFhv1V0ajWRmE9Dg==}
 
-  vue-demi@0.14.8:
-    resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
     hasBin: true
     peerDependencies:
@@ -8570,7 +8584,7 @@ snapshots:
     dependencies:
       '@vueuse/core': 10.9.0(vue@3.4.33(typescript@5.4.3))
       '@vueuse/shared': 10.9.0(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -8580,7 +8594,7 @@ snapshots:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.11.0
       '@vueuse/shared': 10.11.0(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -8590,7 +8604,7 @@ snapshots:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.11.1
       '@vueuse/shared': 10.11.1(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -8600,7 +8614,17 @@ snapshots:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.9.0
       '@vueuse/shared': 10.9.0(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
+  '@vueuse/core@11.0.1(vue@3.4.33(typescript@5.4.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.20
+      '@vueuse/metadata': 11.0.1
+      '@vueuse/shared': 11.0.1(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -8617,7 +8641,7 @@ snapshots:
     dependencies:
       '@vueuse/core': 10.11.0(vue@3.4.33(typescript@5.4.3))
       '@vueuse/shared': 10.11.0(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     optionalDependencies:
       focus-trap: 7.5.4
       fuse.js: 6.6.2
@@ -8628,7 +8652,7 @@ snapshots:
   '@vueuse/math@10.9.0(vue@3.4.33(typescript@5.4.3))':
     dependencies:
       '@vueuse/shared': 10.9.0(vue@3.4.33(typescript@5.4.3))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -8639,6 +8663,8 @@ snapshots:
 
   '@vueuse/metadata@10.9.0': {}
 
+  '@vueuse/metadata@11.0.1': {}
+
   '@vueuse/nuxt@10.11.1(magicast@0.3.4)(nuxt@3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2)))(rollup@4.19.0)(vue@3.4.33(typescript@5.4.3))':
     dependencies:
       '@nuxt/kit': 3.12.4(magicast@0.3.4)(rollup@4.19.0)
@@ -8646,7 +8672,22 @@ snapshots:
       '@vueuse/metadata': 10.11.1
       local-pkg: 0.5.0
       nuxt: 3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2))
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - magicast
+      - rollup
+      - supports-color
+      - vue
+
+  '@vueuse/nuxt@11.0.1(magicast@0.3.4)(nuxt@3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2)))(rollup@4.19.0)(vue@3.4.33(typescript@5.4.3))':
+    dependencies:
+      '@nuxt/kit': 3.12.4(magicast@0.3.4)(rollup@4.19.0)
+      '@vueuse/core': 11.0.1(vue@3.4.33(typescript@5.4.3))
+      '@vueuse/metadata': 11.0.1
+      local-pkg: 0.5.0
+      nuxt: 3.12.4(@opentelemetry/api@1.9.0)(@parcel/watcher@2.4.1)(@types/node@20.11.30)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.19.0)(sass@1.77.4)(terser@5.29.2)(typescript@5.4.3)(vite@5.3.4(@types/node@20.11.30)(sass@1.77.4)(terser@5.29.2))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - magicast
@@ -8656,21 +8697,28 @@ snapshots:
 
   '@vueuse/shared@10.11.0(vue@3.4.33(typescript@5.4.3))':
     dependencies:
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
 
   '@vueuse/shared@10.11.1(vue@3.4.33(typescript@5.4.3))':
     dependencies:
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
 
   '@vueuse/shared@10.9.0(vue@3.4.33(typescript@5.4.3))':
     dependencies:
-      vue-demi: 0.14.8(vue@3.4.33(typescript@5.4.3))
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
+  '@vueuse/shared@11.0.1(vue@3.4.33(typescript@5.4.3))':
+    dependencies:
+      vue-demi: 0.14.10(vue@3.4.33(typescript@5.4.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -13240,7 +13288,7 @@ snapshots:
 
   vue-component-type-helpers@1.8.27: {}
 
-  vue-demi@0.14.8(vue@3.4.33(typescript@5.4.3)):
+  vue-demi@0.14.10(vue@3.4.33(typescript@5.4.3)):
     dependencies:
       vue: 3.4.33(typescript@5.4.3)
 
