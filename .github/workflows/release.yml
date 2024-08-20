@@ -33,7 +33,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm i
 
-      - run: pnpm publish -r --access public
+      - run: pnpm publish -r --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
           NPM_CONFIG_PROVENANCE: true
