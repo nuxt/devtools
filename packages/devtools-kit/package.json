@@ -37,7 +37,7 @@
     "build": "unbuild",
     "stub": "unbuild --stub",
     "dev:prepare": "nr stub",
-    "prepublishOnly": "pnpm build"
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "vite": "*"

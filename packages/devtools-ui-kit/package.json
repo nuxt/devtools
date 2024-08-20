@@ -31,7 +31,7 @@
     "build": "nuxt-build-module build",
     "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev playground",
-    "prepublishOnly": "npm run build",
+    "prepack": "pnpm build",
     "playground:build": "nuxi generate playground"
   },
   "peerDependencies": {

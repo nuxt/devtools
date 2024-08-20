@@ -14,7 +14,7 @@
     "dev": "pnpm run stub && pnpm -C packages/devtools dev",
     "lint": "eslint .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all && pnpm -r publish",
+    "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all",
     "test": "pnpm lint",
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
@@ -52,6 +52,9 @@
     "vite-hot-client": "^0.2.3",
     "vue": "^3.4.38",
     "vue-tsc": "^2.0.29"
+  },
+  "resolutions": {
+    "esbuild": "^0.21.5"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
