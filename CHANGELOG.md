@@ -1,3 +1,7 @@
+## [1.3.14](https://github.com/nuxt/devtools/compare/v1.3.13...v1.3.14) (2024-08-20)
+
+
+
 ## [1.3.13](https://github.com/nuxt/devtools/compare/v1.3.12...v1.3.13) (2024-08-20)
 
 
