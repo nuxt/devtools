@@ -1,3 +1,17 @@
+## [1.3.10](https://github.com/nuxt/devtools/compare/v1.3.9...v1.3.10) (2024-08-20)
+
+
+### Bug Fixes
+
+* color mode ([19ac073](https://github.com/nuxt/devtools/commit/19ac0734e83a54a90626675d14dcc82e22de876b))
+
+
+### Features
+
+* add search functionality to components graph ([#696](https://github.com/nuxt/devtools/issues/696)) ([1a0f81a](https://github.com/nuxt/devtools/commit/1a0f81ad84719cbdcf90a889aa1f33ee225750c3))
+
+
+
 ## [1.3.9](https://github.com/nuxt/devtools/compare/v1.3.8...v1.3.9) (2024-07-02)
 
 
