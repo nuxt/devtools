@@ -22,7 +22,7 @@ function clone() {
   error.value = undefined
   try {
     if (props.state)
-      proxy.value = JSON.parse(JSON.stringify(props.state))
+      proxy.value = JSON.parse(JSON.stringify(props.state || {}))
     else if (typeof props.state === 'number' || typeof props.state !== 'string')
       proxy.value = props.state
   }
