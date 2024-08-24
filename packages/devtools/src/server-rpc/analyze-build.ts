@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises'
 import fs from 'node:fs'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
-import fg from 'fast-glob'
+import { glob } from 'tinyglobby'
 import Git from 'simple-git'
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -46,7 +46,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
   }
 
   async function readBuildInfo() {
-    const files = await fg('*/meta.json', { cwd: analyzeDir, onlyFiles: true, absolute: true })
+    const files = await glob(['*/meta.json'], { cwd: analyzeDir, onlyFiles: true, absolute: true })
     builds = await Promise.all(files.map(async (file) => {
       const dir = dirname(file)
       const json = JSON.parse(await fsp.readFile(file, 'utf-8')) as NuxtAnalyzeMeta

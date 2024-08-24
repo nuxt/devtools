@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises'
 import { join, resolve } from 'pathe'
 import { imageMeta } from 'image-meta'
 import { debounce } from 'perfect-debounce'
-import fg from 'fast-glob'
+import { glob } from 'tinyglobby'
 import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { defaultAllowedExtensions } from '../constant'
 
@@ -34,7 +34,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
     const dirs: { layerDir: string, files: string[] }[] = []
 
     for (const layerDir of layerDirs) {
-      const files = await fg(['**/*'], {
+      const files = await glob(['**/*'], {
         cwd: layerDir,
         onlyFiles: true,
       })
