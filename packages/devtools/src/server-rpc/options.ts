@@ -48,7 +48,7 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
       )
       nuxt.callHook('builder:generateApp', {
         filter(template) {
-          return template.filename.includes('devtools/settings.mjs')
+          return template.filename.includes('devtools/settings.js')
         },
       })
     },
