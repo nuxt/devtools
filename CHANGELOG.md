@@ -1,3 +1,13 @@
+## [1.4.1](https://github.com/nuxt/devtools/compare/v1.4.0...v1.4.1) (2024-08-26)
+
+
+### Bug Fixes
+
+* devtools-kit re-export ([d16cafc](https://github.com/nuxt/devtools/commit/d16cafc1b9b39bcf6099b066016079040f69e6ca))
+* **state-editor:** update deepSync function ([#713](https://github.com/nuxt/devtools/issues/713)) ([a7b9efb](https://github.com/nuxt/devtools/commit/a7b9efbd293484acdbf027193cf18515a0756992))
+
+
+
 # [1.4.0](https://github.com/nuxt/devtools/compare/v1.3.14...v1.4.0) (2024-08-26)
 
 
