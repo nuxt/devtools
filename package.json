@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.4.0",
   "private": true,
-  "packageManager": "pnpm@9.8.0",
+  "packageManager": "pnpm@9.9.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -23,7 +23,7 @@
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.27.0",
+    "@antfu/eslint-config": "^2.27.2",
     "@antfu/ni": "^0.22.4",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
@@ -33,10 +33,10 @@
     "@types/node": "^22.5.0",
     "@types/which": "^3.0.4",
     "@types/ws": "^8.5.12",
-    "@unocss/eslint-config": "^0.62.2",
+    "@unocss/eslint-config": "^0.62.3",
     "bumpp": "^9.5.2",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.9.0",
+    "eslint": "^9.9.1",
     "eslint-plugin-format": "^0.1.2",
     "esno": "^4.7.0",
     "execa": "^7.2.0",
@@ -48,7 +48,7 @@
     "tiged": "^2.12.7",
     "typescript": "^5.5.4",
     "ua-parser-js": "^1.0.38",
-    "unocss": "^0.62.2",
+    "unocss": "^0.62.3",
     "vite-hot-client": "^0.2.3",
     "vue": "^3.4.38",
     "vue-tsc": "^2.0.29"

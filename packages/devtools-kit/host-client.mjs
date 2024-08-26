@@ -1,1 +1,1 @@
-export * from './dist/runtime/host-client.js'
+export * from './dist/runtime/host-client.mjs'
