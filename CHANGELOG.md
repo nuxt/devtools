@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/nuxt/devtools/compare/v1.3.14...v1.4.0) (2024-08-26)
+
+
+### Features
+
+* **kit:** introduce `host-client` utility ([167373c](https://github.com/nuxt/devtools/commit/167373c0770180680c497f8dbba175b0e4b1563e))
+
+
+
 ## [1.3.14](https://github.com/nuxt/devtools/compare/v1.3.13...v1.3.14) (2024-08-20)
 
 
