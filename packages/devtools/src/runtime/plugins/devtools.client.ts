@@ -1,7 +1,7 @@
 import { shallowReactive, watchEffect } from 'vue'
 
 import type { Router } from 'vue-router'
-import type { TimelineServerState } from '../../types'
+import type { TimelineServerState } from '@nuxt/devtools/types'
 
 import { setupHooksDebug } from '../shared/hooks'
 // eslint-disable-next-line ts/ban-ts-comment

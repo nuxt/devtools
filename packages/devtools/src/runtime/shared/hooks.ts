@@ -1,5 +1,5 @@
 import type { Hookable } from 'hookable'
-import type { HookInfo } from '../../types'
+import type { HookInfo } from '@nuxt/devtools/types'
 
 export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
   const serverHooks: Record<string, HookInfo> = {}

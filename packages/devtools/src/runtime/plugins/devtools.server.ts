@@ -1,4 +1,4 @@
-import type { TimelineServerState } from '../../types'
+import type { TimelineServerState } from '@nuxt/devtools/types'
 import { defineNuxtPlugin, useState } from '#imports'
 
 export default defineNuxtPlugin(() => {
