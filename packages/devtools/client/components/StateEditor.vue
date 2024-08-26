@@ -22,7 +22,7 @@ function clone() {
   error.value = undefined
   try {
     if (props.state)
-      proxy.value = JSON.parse(JSON.stringify(props.state))
+      proxy.value = JSON.parse(JSON.stringify(props.state || {}))
     else if (typeof props.state === 'number' || typeof props.state !== 'string')
       proxy.value = props.state
   }
@@ -50,15 +50,15 @@ onMounted(() => {
 })
 
 function deepSync(from: any, to: any) {
-  for (const key in from) {
-    if (from[key] === null)
-      to[key] = null
-    else if (Array.isArray(from[key]))
-      to[key] = from[key].slice()
-    else if (typeof from[key] === 'object')
-      deepSync(from[key], to[key])
+  // const fromRevision = from[0]
+  const fromValue = from[1]
+  for (const key in fromValue) {
+    if (Array.isArray(fromValue[key]))
+      to[key] = fromValue[key].slice()
+    else if (typeof fromValue[key] === 'object')
+      deepSync(fromValue[key], to[key])
     else
-      to[key] = from[key]
+      to[key] = fromValue[key]
   }
 }
 
