@@ -1,6 +1,6 @@
-import type { RouteRecordNormalized } from 'vue-router'
-import type { Import, UnimportMeta } from 'unimport'
 import type { Component } from 'nuxt/schema'
+import type { Import, UnimportMeta } from 'unimport'
+import type { RouteRecordNormalized } from 'vue-router'
 
 export interface HookInfo {
   name: string

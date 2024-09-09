@@ -1,7 +1,7 @@
-import { join } from 'pathe'
-import type { Nuxt } from 'nuxt/schema'
 import { addVitePlugin } from '@nuxt/kit'
+import { join } from 'pathe'
 import Inspect from 'vite-plugin-inspect'
+import type { Nuxt } from 'nuxt/schema'
 import { getFolderSize } from '../utils/fs'
 import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
 

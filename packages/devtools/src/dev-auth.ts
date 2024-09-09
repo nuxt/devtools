@@ -1,6 +1,6 @@
-import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
+import { join } from 'node:path'
 import { randomStr } from '@antfu/utils'
 import { getHomeDir } from './utils/local-options'
 

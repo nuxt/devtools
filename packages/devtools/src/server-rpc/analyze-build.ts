@@ -1,9 +1,9 @@
-import fsp from 'node:fs/promises'
 import fs from 'node:fs'
+import fsp from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
-import { glob } from 'tinyglobby'
 import Git from 'simple-git'
+import { glob } from 'tinyglobby'
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 

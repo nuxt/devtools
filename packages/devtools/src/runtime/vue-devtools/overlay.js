@@ -1,5 +1,5 @@
-import { createRpcServer, devtools } from '@vue/devtools-kit'
 import { functions } from '@vue/devtools-core'
+import { createRpcServer, devtools } from '@vue/devtools-kit'
 
 devtools.init()
 

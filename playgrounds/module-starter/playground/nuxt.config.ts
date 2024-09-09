@@ -1,5 +1,5 @@
-import { createResolver, defineNuxtModule } from 'nuxt/kit'
 import { startSubprocess } from '@nuxt/devtools-kit'
+import { createResolver, defineNuxtModule } from 'nuxt/kit'
 
 const resolver = createResolver(import.meta.url)
 

@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
 import { computed, getCurrentInstance, getCurrentScope, onMounted, onScopeDispose, ref, toValue, watch } from 'vue'
+import type { Ref } from 'vue'
 
 export function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Ref<T> {
   const raw = localStorage.getItem(key)

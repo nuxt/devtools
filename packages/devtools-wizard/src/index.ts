@@ -1,6 +1,6 @@
 import { consola } from 'consola'
-import { readPackageJSON } from 'pkg-types'
 import { colors } from 'consola/utils'
+import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
 import { name as moduleName, version } from '../package.json'
 

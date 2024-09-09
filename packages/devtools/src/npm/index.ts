@@ -1,9 +1,9 @@
 import { createRequire } from 'node:module'
 import { logger, useNuxt } from '@nuxt/kit'
+import { getPackageInfo } from 'local-pkg'
+import { fetch } from 'ofetch'
 import { readPackageJSON } from 'pkg-types'
 import semver from 'semver'
-import { fetch } from 'ofetch'
-import { getPackageInfo } from 'local-pkg'
 import type { PackageUpdateInfo } from '../types'
 
 export async function getMainPackageJSON(nuxt = useNuxt()) {

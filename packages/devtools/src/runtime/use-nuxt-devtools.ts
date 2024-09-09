@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
 import { shallowRef } from 'vue'
+import type { Ref } from 'vue'
 import type { NuxtDevtoolsHostClient } from '../types'
 
 /**

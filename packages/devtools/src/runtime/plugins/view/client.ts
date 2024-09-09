@@ -1,14 +1,14 @@
-import type { Ref } from 'vue'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
-import type { Router } from 'vue-router'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import type { $Fetch } from 'ofetch'
-import { setIframeServerContext } from '@vue/devtools-kit'
-import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '../../../types'
+import type { Ref } from 'vue'
+import type { Router } from 'vue-router'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 import { popupWindow, state } from './state'
+import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '../../../types'
 
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig

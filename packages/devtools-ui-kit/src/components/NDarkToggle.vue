@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, nextTick } from 'vue'
-
 import { useColorMode } from '@vueuse/core'
+
+import { computed, nextTick } from 'vue'
 
 const mode = useColorMode({
   storageKey: 'nuxt-devtools-color-mode',

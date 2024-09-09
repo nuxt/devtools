@@ -189,7 +189,7 @@ useEventListener('drop', onDrop)
               n="xs"
               h-full flex-auto
               :model-value="file.name"
-              @update:model-value="changeName(file, ($event.target as HTMLInputElement).value)"
+              @update:model-value="changeName(file, (($event as any).target as HTMLInputElement).value)"
             />
             <NButton
               n="red"

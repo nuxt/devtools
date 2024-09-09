@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watchEffect } from 'vue'
 import { onClickOutside, useVModel } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 
 const props = withDefaults(
   defineProps<{

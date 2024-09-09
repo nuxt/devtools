@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import JsonEditorVue from 'json-editor-vue'
 import { createReusableTemplate, watchDebounced } from '@vueuse/core'
-import type { $Fetch } from 'ofetch'
+import JsonEditorVue from 'json-editor-vue'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
+import type { $Fetch } from 'ofetch'
 
 const props = defineProps<{
   route: ServerRouteInfo
@@ -203,7 +203,8 @@ const codeSnippets = computed(() => {
   const items: string[] = []
   const headers = Object.entries(parsedHeader.value)
     .filter(([key, value]) => key && value && !(key === 'Content-Type' && value === 'application/json'))
-    .map(([key, value]) => `  '${key}': '${value}'`).join(',\n')
+    .map(([key, value]) => `  '${key}': '${value}'`)
+    .join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)
@@ -473,7 +474,7 @@ const copy = useCopy()
           placeholder="Value..."
           :model-value="cookie.value"
           flex-1 n="primary"
-          @input="updateCookie(cookie.key, $event.target?.value)"
+          @input="updateCookie(cookie.key, ($event as any).target?.value)"
         />
         <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
           <NIcon icon="i-carbon-trash-can" />

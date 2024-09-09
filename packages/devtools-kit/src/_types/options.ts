@@ -1,5 +1,5 @@
-import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { Import } from 'unimport'
+import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo, ServerRouteInput, ServerTaskInfo } from './integrations'
 

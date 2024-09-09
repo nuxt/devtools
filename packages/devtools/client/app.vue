@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { useEyeDropper } from '@vueuse/core'
+import { splitScreenAvailable } from '~/composables/storage'
+import { setupClientRPC } from './setup/client-rpc'
+import { setupVueDevTools } from './setup/vue-devtools'
+
 import 'floating-vue/dist/style.css'
 import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
-import { useEyeDropper } from '@vueuse/core'
-import { setupClientRPC } from './setup/client-rpc'
-import { setupVueDevTools } from './setup/vue-devtools'
-import { splitScreenAvailable } from '~/composables/storage'
 
 if (import.meta.client)
   import('./setup/unocss-runtime')

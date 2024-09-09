@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { NuxtLayout } from 'nuxt/schema'
 import type { RouteInfo } from '~/../src/types'
+import type { NuxtLayout } from 'nuxt/schema'
 
 const props = defineProps<{
   pages: RouteInfo[]

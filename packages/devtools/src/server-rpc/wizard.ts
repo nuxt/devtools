@@ -1,8 +1,8 @@
-import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
+import { colors } from 'consola/utils'
 import type { NuxtDevtoolsServerContext, ServerFunctions, WizardActions } from '@nuxt/devtools-kit/types'
-import { wizard } from '../wizard'
 import { LOG_PREFIX } from '../logger'
+import { wizard } from '../wizard'
 
 export function setupWizardRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   return {

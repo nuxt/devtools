@@ -1,8 +1,8 @@
 // @unimport-disable
-import { markRaw, reactive } from 'vue'
 import { parse as parseStrackTrace } from 'error-stack-parser-es'
-import type { TimelineEventFunction, TimelineMetrics } from '../types'
+import { markRaw, reactive } from 'vue'
 import { useObjectStorage } from './plugins/view/utils'
+import type { TimelineEventFunction, TimelineMetrics } from '../types'
 
 const nonLiteralSymbol = Symbol('nuxt-devtools-fn-metrics-non-literal')
 

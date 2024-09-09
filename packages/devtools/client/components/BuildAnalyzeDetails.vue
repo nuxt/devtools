@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useRuntimeConfig } from '#imports'
 import { formatTimeAgo } from '@vueuse/core'
 import type { AnalyzeBuildMeta } from '../../src/types'
-import { useRuntimeConfig } from '#imports'
 
 const props = defineProps<{
   current: AnalyzeBuildMeta

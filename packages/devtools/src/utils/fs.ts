@@ -1,6 +1,6 @@
-import type { Dirent } from 'node:fs'
 import { lstat, readdir } from 'node:fs/promises'
 import { resolve } from 'pathe'
+import type { Dirent } from 'node:fs'
 
 export async function getFolderSize(
   dir: string,

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
-import '@xterm/xterm/css/xterm.css'
+import { Terminal } from '@xterm/xterm'
 import type { TerminalInfo } from '../../src/types'
+import '@xterm/xterm/css/xterm.css'
 
 const props = defineProps<{
   id: string

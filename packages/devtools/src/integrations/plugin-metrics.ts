@@ -8,7 +8,8 @@ export function setup({ nuxt }: NuxtDevtoolsServerContext) {
    * Wrap plugins with performance metrics
    */
   nuxt.hook('app:templates', (app) => {
-    app.templates.filter(i => i.filename?.startsWith('plugins/'))
+    app.templates
+      .filter(i => i.filename?.startsWith('plugins/'))
       .forEach((i) => {
         if (!i.getContents)
           return
@@ -56,7 +57,9 @@ function ${WRAPPER_KEY} (plugin, src) {
             .map(([, name, path]) => ({ name, path }))
 
           content = content.replace(/\nexport default\s*\[([\s\S]*)\]/, (_, itemsRaw: string) => {
-            const items = itemsRaw.split(',').map(i => i.trim())
+            const items = itemsRaw
+              .split(',')
+              .map(i => i.trim())
               .map((i) => {
                 const importItem = imports.find(({ name }) => name === i)
                 if (!importItem)

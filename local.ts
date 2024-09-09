@@ -18,14 +18,14 @@
  * ```
  */
 import { defineNuxtModule, logger } from '@nuxt/kit'
-import { resolve } from 'pathe'
 import { getPort } from 'get-port-please'
+import { resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
 import { defaultOptions } from './packages/devtools/src/constant'
-import type { ModuleOptions } from './packages/devtools/src/types'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
 import { startSubprocess } from './packages/devtools-kit/src/index'
+import type { ModuleOptions } from './packages/devtools/src/types'
 
 export type { ModuleOptions }
 

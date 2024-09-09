@@ -1,9 +1,9 @@
 import { shallowReactive, watchEffect } from 'vue'
 
 import type { Router } from 'vue-router'
-import type { TimelineServerState } from '../../types'
-
 import { setupHooksDebug } from '../shared/hooks'
+
+import type { TimelineServerState } from '../../types'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { defineNuxtPlugin, useRouter, useState } from '#imports'

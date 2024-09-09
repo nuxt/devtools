@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.4.1",
   "private": true,
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@9.10.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -29,6 +29,7 @@
     "@nuxt/devtools-ui-kit": "workspace:*",
     "@nuxt/module-builder": "catalog:",
     "@nuxt/schema": "catalog:",
+    "@opentelemetry/api": "catalog:",
     "@types/markdown-it": "catalog:",
     "@types/node": "catalog:",
     "@types/which": "catalog:",
@@ -54,7 +55,7 @@
     "vue-tsc": "catalog:"
   },
   "resolutions": {
-    "esbuild": "^0.21.5"
+    "esbuild": "^0.23.1"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"

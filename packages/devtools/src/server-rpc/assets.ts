@@ -1,11 +1,11 @@
-import { parse, relative } from 'node:path'
 import fsp from 'node:fs/promises'
-import { join, resolve } from 'pathe'
+import { parse, relative } from 'node:path'
 import { imageMeta } from 'image-meta'
+import { join, resolve } from 'pathe'
 import { debounce } from 'perfect-debounce'
 import { glob } from 'tinyglobby'
-import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { defaultAllowedExtensions } from '../constant'
+import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()

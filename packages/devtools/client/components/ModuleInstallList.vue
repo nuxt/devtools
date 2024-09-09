@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import Fuse from 'fuse.js'
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
-import Fuse from 'fuse.js'
 import type { ModuleStaticInfo } from '../../src/types'
 
 type SortingFunction<T> = (a: T, b: T) => number
