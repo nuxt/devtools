@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/nuxt/devtools/compare/v1.4.1...v1.4.2) (2024-09-10)
+
+
+### Bug Fixes
+
+* use explicit imports of types ([#715](https://github.com/nuxt/devtools/issues/715)) ([4c54247](https://github.com/nuxt/devtools/commit/4c54247a88641906a8a8a2fe4bbc3907bd7a039e))
+
+
+
 ## [1.4.1](https://github.com/nuxt/devtools/compare/v1.4.0...v1.4.1) (2024-08-26)
 
 
