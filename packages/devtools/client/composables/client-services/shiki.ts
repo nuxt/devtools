@@ -1,5 +1,5 @@
-import type { BuiltinLanguage, HighlighterCore } from 'shiki'
 import { createHighlighterCore } from 'shiki/core'
+import type { BuiltinLanguage, HighlighterCore } from 'shiki'
 
 export const shiki = shallowRef<HighlighterCore>()
 

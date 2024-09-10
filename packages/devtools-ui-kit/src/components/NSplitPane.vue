@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { Pane, Splitpanes } from 'splitpanes'
+import { computed, ref } from 'vue'
 
 import 'splitpanes/dist/splitpanes.css'
 

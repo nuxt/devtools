@@ -1,6 +1,6 @@
 import { createResolver } from 'nuxt/kit'
-import DevTools from '../src/module'
 import DevToolsUiKit from '../../devtools-ui-kit/src/module'
+import DevTools from '../src/module'
 
 const resolver = createResolver(import.meta.url)
 

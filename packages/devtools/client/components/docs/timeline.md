@@ -14,8 +14,8 @@ Nuxt DevTools tracks function calls by wrapping them in the build time. It works
 
 ```vue
 <script setup>
-import { useMouse } from '@vueuse/core'
 import { useNuxtApp } from '#imports'
+import { useMouse } from '@vueuse/core'
 
 const route = useRoute() // tracked
 const app = useNuxtApp() // tracked

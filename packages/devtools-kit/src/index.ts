@@ -1,6 +1,6 @@
 import { useNuxt } from '@nuxt/kit'
-import type { BirpcGroup } from 'birpc'
 import { execa } from 'execa'
+import type { BirpcGroup } from 'birpc'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 
 /**

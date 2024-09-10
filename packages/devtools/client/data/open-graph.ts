@@ -1,5 +1,5 @@
-import type { ReactiveHead } from '@unhead/vue'
 import type { MetaFlatInput } from '@unhead/schema'
+import type { ReactiveHead } from '@unhead/vue'
 
 export interface OpenGraphTagDefine {
   name: string

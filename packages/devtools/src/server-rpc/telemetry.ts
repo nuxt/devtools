@@ -1,8 +1,8 @@
-import type { } from '@nuxt/telemetry'
 import type { NuxtHooks } from '@nuxt/schema'
-import type { NuxtDevtoolsServerContext } from '../types'
+import type { } from '@nuxt/telemetry'
 import { version } from '../../package.json'
 import { getOptions } from './options'
+import type { NuxtDevtoolsServerContext } from '../types'
 
 const SEND_DELAY = 5_000
 

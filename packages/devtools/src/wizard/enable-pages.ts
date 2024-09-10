@@ -1,8 +1,8 @@
-import fsp from 'node:fs/promises'
 import fs from 'node:fs'
-import type { Nuxt } from 'nuxt/schema'
-import { dirname, join } from 'pathe'
+import fsp from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
+import { dirname, join } from 'pathe'
+import type { Nuxt } from 'nuxt/schema'
 
 const pagesIndexTemplate = `<script setup lang="ts">
 const route = useRoute()

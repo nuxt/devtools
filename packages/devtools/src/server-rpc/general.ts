@@ -1,17 +1,17 @@
 import { existsSync } from 'node:fs'
-import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
-import type { Import, Unimport } from 'unimport'
-import { resolveBuiltinPresets } from 'unimport'
-import { resolve } from 'pathe'
-import { colors } from 'consola/utils'
 import { logger } from '@nuxt/kit'
+import { colors } from 'consola/utils'
 import destr from 'destr'
+import { resolve } from 'pathe'
 import { snakeCase } from 'scule'
-
+import { resolveBuiltinPresets } from 'unimport'
 import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
-import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { setupHooksDebug } from '../runtime/shared/hooks'
+import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
+
+import type { Import, Unimport } from 'unimport'
 import { getDevAuthToken } from '../dev-auth'
+import { setupHooksDebug } from '../runtime/shared/hooks'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupGeneralRPC({
   nuxt,

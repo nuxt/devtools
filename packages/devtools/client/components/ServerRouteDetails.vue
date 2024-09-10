@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import JsonEditorVue from 'json-editor-vue'
 import { createReusableTemplate, watchDebounced } from '@vueuse/core'
-import type { $Fetch } from 'ofetch'
+import JsonEditorVue from 'json-editor-vue'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
+import type { $Fetch } from 'ofetch'
 
 const props = defineProps<{
   route: ServerRouteInfo
@@ -203,7 +203,8 @@ const codeSnippets = computed(() => {
   const items: string[] = []
   const headers = Object.entries(parsedHeader.value)
     .filter(([key, value]) => key && value && !(key === 'Content-Type' && value === 'application/json'))
-    .map(([key, value]) => `  '${key}': '${value}'`).join(',\n')
+    .map(([key, value]) => `  '${key}': '${value}'`)
+    .join(',\n')
 
   if (routeMethod.value.toUpperCase() !== 'GET')
     items.push(`method: '${routeMethod.value.toUpperCase()}'`)

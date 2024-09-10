@@ -1,5 +1,5 @@
-import type { Nitro } from 'nitropack'
 import { debounce } from 'perfect-debounce'
+import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ScannedNitroTasks, ServerFunctions } from '../types'
 
 export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {

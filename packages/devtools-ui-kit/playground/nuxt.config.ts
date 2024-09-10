@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { createResolver } from 'nuxt/kit'
-import '@unocss/nuxt'
 import DevtoolsUIKit from '../src/module'
+import '@unocss/nuxt'
 
 const resolver = createResolver(import.meta.url)
 

@@ -40,10 +40,7 @@ function toShortPath(path: string) {
 const files = computed(() => {
   if (!data.value)
     return []
-  return data.value.entries
-    // Hide Nuxt dist files, as they are aliased as `#build`
-    .filter(i => !i.id.startsWith(`${data.value?.rootDir || ''}/.nuxt/`))
-    .sort((a, b) => a.id.localeCompare(b.id))
+  return data.value.entries.filter(i => !i.id.startsWith(`${data.value?.rootDir || ''}/.nuxt/`)).sort((a, b) => a.id.localeCompare(b.id))
 })
 
 const fuse = computed(() => new Fuse(files.value, {

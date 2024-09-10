@@ -1,6 +1,6 @@
 // @unimport-disable
-import { markRaw, reactive } from 'vue'
 import { parse as parseStrackTrace } from 'error-stack-parser-es'
+import { markRaw, reactive } from 'vue'
 import type { TimelineEventFunction, TimelineMetrics } from '@nuxt/devtools/types'
 import { useObjectStorage } from './plugins/view/utils'
 

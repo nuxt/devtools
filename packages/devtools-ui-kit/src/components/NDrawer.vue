@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { onClickOutside, useElementSize } from '@vueuse/core'
+import { ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   modelValue?: boolean

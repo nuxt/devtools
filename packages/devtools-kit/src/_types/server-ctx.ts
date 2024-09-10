@@ -1,7 +1,7 @@
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt } from 'nuxt/schema'
-import type { ClientFunctions, ServerFunctions } from './rpc'
 import type { ModuleOptions } from './options'
+import type { ClientFunctions, ServerFunctions } from './rpc'
 
 /**
  * @internal

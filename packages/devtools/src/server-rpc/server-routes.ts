@@ -1,5 +1,5 @@
-import type { Nitro } from 'nitropack'
 import { debounce } from 'perfect-debounce'
+import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
@@ -41,14 +41,12 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
             method: item.method,
             type: item.route?.startsWith('/api') ? 'api' : 'route',
           })),
-        ...nitro.options.handlers
-          .filter(item => !item.route?.startsWith('/_nitro') && !item.route?.startsWith('/__nuxt') && !item.middleware)
-          .map(item => ({
-            route: item.route,
-            filepath: item.handler,
-            method: item.method,
-            type: 'runtime',
-          })),
+        ...nitro.options.handlers.filter(item => !item.route?.startsWith('/_nitro') && !item.route?.startsWith('/__nuxt') && !item.middleware).map(item => ({
+          route: item.route,
+          filepath: item.handler,
+          method: item.method,
+          type: 'runtime',
+        })),
       ] as ServerRouteInfo[]
     })()
 

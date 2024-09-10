@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
 import { objectPick } from '@antfu/utils'
+import type { Ref } from 'vue'
 import type { HookInfo, RouteInfo } from '../../src/types'
 
 export function useServerPages() {

@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises'
 import { parseModule } from 'magicast'
 import { getDefaultExportOptions } from 'magicast/helpers'
-import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { magicastGuard } from '../utils/magicast'
+import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupTimelineRPC({ nuxt }: NuxtDevtoolsServerContext) {
   return {

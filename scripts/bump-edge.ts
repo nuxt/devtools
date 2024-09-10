@@ -1,7 +1,7 @@
-import { promises as fsp } from 'node:fs'
 import { execSync } from 'node:child_process'
-import { resolve } from 'pathe'
+import { promises as fsp } from 'node:fs'
 import { globby } from 'globby'
+import { resolve } from 'pathe'
 
 // Temporary forked from nuxt/framework
 
