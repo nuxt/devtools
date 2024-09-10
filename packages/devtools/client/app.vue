@@ -3,6 +3,7 @@ import { useEyeDropper } from '@vueuse/core'
 import { splitScreenAvailable } from '~/composables/storage'
 import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
+
 import 'floating-vue/dist/style.css'
 import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'

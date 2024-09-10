@@ -474,7 +474,7 @@ const copy = useCopy()
           placeholder="Value..."
           :model-value="cookie.value"
           flex-1 n="primary"
-          @input="updateCookie(cookie.key, $event.target?.value)"
+          @input="updateCookie(cookie.key, ($event as any).target?.value)"
         />
         <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
           <NIcon icon="i-carbon-trash-can" />
