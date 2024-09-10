@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
 import type { CSSProperties } from 'vue'
 import { settings } from '../../settings'
 import FrameBox from './FrameBox.vue'
 import { state } from './state'
 import { millisecondToHumanreadable, useElementBounding, useEventListener, useScreenSafeArea } from './utils'
-import type { NuxtDevtoolsHostClient } from '../../../types'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient

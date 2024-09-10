@@ -57,15 +57,12 @@ function ${WRAPPER_KEY} (plugin, src) {
             .map(([, name, path]) => ({ name, path }))
 
           content = content.replace(/\nexport default\s*\[([\s\S]*)\]/, (_, itemsRaw: string) => {
-            const items = itemsRaw
-              .split(',')
-              .map(i => i.trim())
-              .map((i) => {
-                const importItem = imports.find(({ name }) => name === i)
-                if (!importItem)
-                  return i
-                return `${WRAPPER_KEY}(${i}, ${JSON.stringify(importItem.path)})`
-              })
+            const items = itemsRaw.split(',').map(i => i.trim()).map((i) => {
+              const importItem = imports.find(({ name }) => name === i)
+              if (!importItem)
+                return i
+              return `${WRAPPER_KEY}(${i}, ${JSON.stringify(importItem.path)})`
+            })
             return `\n${snippets}\nexport default [\n${items.join(',\n')}\n]\n`
           })
 

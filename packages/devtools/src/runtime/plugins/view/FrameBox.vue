@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
 import { PANEL_MAX, PANEL_MIN, popupWindow, state } from './state'
 import { useEventListener } from './utils'
-import type { NuxtDevtoolsHostClient } from '../../../types'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient

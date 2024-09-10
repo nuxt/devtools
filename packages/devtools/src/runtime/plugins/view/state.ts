@@ -1,6 +1,6 @@
 import { shallowRef } from 'vue'
+import type { DevToolsFrameState } from '@nuxt/devtools/types'
 import { useObjectStorage } from './utils'
-import type { DevToolsFrameState } from '../../../types'
 
 export const PANEL_PADDING = 10
 export const PANEL_MIN = 20
