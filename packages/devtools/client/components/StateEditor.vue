@@ -55,7 +55,7 @@ function deepSync(from: any, to: any) {
   for (const key in fromValue) {
     if (Array.isArray(fromValue[key]))
       to[key] = fromValue[key].slice()
-    else if (typeof fromValue[key] === 'object')
+    else if (typeof fromValue[key] === 'object' && fromValue[key] !== null)
       deepSync(fromValue[key], to[key])
     else
       to[key] = fromValue[key]
