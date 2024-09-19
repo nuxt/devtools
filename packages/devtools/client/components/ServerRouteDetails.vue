@@ -578,10 +578,11 @@ const copy = useCopy()
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
-        <DataSchemaButton
+        <!-- TODO: quicktype has some problem of bundling (it's in CJS), we remove this temporary -->
+        <!-- <DataSchemaButton
           v-if="response.contentType === 'application/json'"
           :getter="() => ({ input: responseContent })"
-        />
+        /> -->
         <div flex-auto />
         <div op50>
           Request finished in

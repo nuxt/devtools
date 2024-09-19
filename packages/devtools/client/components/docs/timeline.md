@@ -1,10 +1,8 @@
 # Timeline
 
-<p>
 <blockquote text-orange bg-orange:10 py1>
 This is an experimental feature
 </blockquote>
-</p>
 
 Timeline tracks your route navigations and functions calls in your Nuxt application. It can be used to debug performance issues and to understand how your application works.
 
