@@ -1,3 +1,6 @@
+import type { Preset, RuleContext } from '@unocss/core'
+import type { UnocssNuxtOptions } from '@unocss/nuxt'
+import type { Theme } from '@unocss/preset-uno'
 import { theme as unoTheme } from '@unocss/preset-mini'
 import { fonts } from '@unocss/preset-mini/rules'
 import { parseColor } from '@unocss/preset-mini/utils'
@@ -11,9 +14,6 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
-import type { Preset, RuleContext } from '@unocss/core'
-import type { UnocssNuxtOptions } from '@unocss/nuxt'
-import type { Theme } from '@unocss/preset-uno'
 
 // @unocss-include
 

@@ -1,36 +1,58 @@
+import type { NuxtDevToolsOptions } from '../../types'
 import { toRefs, watchDebounced } from '@vueuse/core'
+import { ref } from 'vue'
+import { defaultTabOptions } from '../../src/constant'
+import { rpc } from './rpc'
 
-// Assets
-const assetsOptions = ref(await rpc.getOptions('assets'))
-const assets = toRefs(assetsOptions)
+let instance: ReturnType<typeof init> | null = null
 
-watchDebounced(assetsOptions, async (options) => {
-  rpc.updateOptions('assets', options)
-}, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
+function init() {
+  // Assets
+  const assetsOptions = ref<NuxtDevToolsOptions['assets']>(defaultTabOptions.assets)
+  rpc.getOptions('assets').then((options) => {
+    assetsOptions.value = options
+  })
+  const assets = toRefs(assetsOptions)
 
-// Server Routes
-const serverRouteOptions = ref(await rpc.getOptions('serverRoutes'))
-const serverRoutes = toRefs(serverRouteOptions)
+  watchDebounced(assetsOptions, async (options) => {
+    rpc.updateOptions('assets', options)
+  }, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
 
-watchDebounced(serverRouteOptions, async (options) => {
-  rpc.updateOptions('serverRoutes', options)
-}, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
+  // Server Routes
+  const serverRouteOptions = ref<NuxtDevToolsOptions['serverRoutes']>(defaultTabOptions.serverRoutes)
+  rpc.getOptions('serverRoutes').then((options) => {
+    serverRouteOptions.value = options
+  })
+  const serverRoutes = toRefs(serverRouteOptions)
 
-// Server Tasks
-const serverTasksOptions = ref(await rpc.getOptions('serverTasks'))
-const serverTasks = toRefs(serverTasksOptions)
+  watchDebounced(serverRouteOptions, async (options) => {
+    rpc.updateOptions('serverRoutes', options)
+  }, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
 
-watchDebounced(serverTasksOptions, async (options) => {
-  rpc.updateOptions('serverTasks', options)
-}, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
+  // Server Tasks
+  const serverTasksOptions = ref<NuxtDevToolsOptions['serverTasks']>(defaultTabOptions.serverTasks)
+  rpc.getOptions('serverTasks').then((options) => {
+    serverTasksOptions.value = options
+  })
+  const serverTasks = toRefs(serverTasksOptions)
 
-// Options List
-const list = {
-  serverRoutes,
-  serverTasks,
-  assets,
+  watchDebounced(serverTasksOptions, async (options) => {
+    rpc.updateOptions('serverTasks', options)
+  }, { deep: true, flush: 'post', debounce: 500, maxWait: 1000 })
+
+  // Options List
+  const list = {
+    serverRoutes,
+    serverTasks,
+    assets,
+  }
+
+  return list
 }
 
-export function useDevToolsOptions<T extends keyof typeof list>(tab: T) {
-  return list[tab]
+export function useDevToolsOptions<T extends keyof ReturnType<typeof init>>(tab: T) {
+  if (!instance) {
+    instance = init()
+  }
+  return instance[tab]
 }

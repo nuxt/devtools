@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
 import type { ServerTaskInfo } from '~/../../src/types'
+import Fuse from 'fuse.js'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
 
 definePageMeta({

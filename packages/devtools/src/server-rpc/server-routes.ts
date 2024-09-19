@@ -1,6 +1,6 @@
-import { debounce } from 'perfect-debounce'
 import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
+import { debounce } from 'perfect-debounce'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   let nitro: Nitro

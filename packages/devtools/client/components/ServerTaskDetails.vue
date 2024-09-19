@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { createReusableTemplate } from '@vueuse/core'
-import JsonEditorVue from 'json-editor-vue'
 import type { ServerRouteInput, ServerTaskInfo } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import { createReusableTemplate } from '@vueuse/core'
+import JsonEditorVue from 'json-editor-vue'
 
 const props = defineProps<{
   task: ServerTaskInfo

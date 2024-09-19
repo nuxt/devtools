@@ -1,5 +1,5 @@
-import semver from 'semver'
 import type { NpmCommandOptions } from '../../src/types'
+import semver from 'semver'
 
 export type PackageUpdateState = 'idle' | 'running' | 'updated'
 

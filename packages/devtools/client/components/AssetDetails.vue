@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useTimeAgo } from '@vueuse/core'
 import type { AssetInfo, CodeSnippet } from '~/../src/types'
+import { useTimeAgo } from '@vueuse/core'
 
 const props = defineProps<{
   modelValue: AssetInfo

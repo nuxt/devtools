@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { createReusableTemplate, watchDebounced } from '@vueuse/core'
-import JsonEditorVue from 'json-editor-vue'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import { createReusableTemplate, watchDebounced } from '@vueuse/core'
+import JsonEditorVue from 'json-editor-vue'
 
 const props = defineProps<{
   route: ServerRouteInfo

@@ -1,17 +1,17 @@
+import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
+import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
+import type { Import, Unimport } from 'unimport'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import destr from 'destr'
 import { resolve } from 'pathe'
+
 import { snakeCase } from 'scule'
 import { resolveBuiltinPresets } from 'unimport'
-import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
-import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
-
-import type { Import, Unimport } from 'unimport'
 import { getDevAuthToken } from '../dev-auth'
 import { setupHooksDebug } from '../runtime/shared/hooks'
-import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupGeneralRPC({
   nuxt,

@@ -1,3 +1,4 @@
+import type { ModuleOptions } from './packages/devtools/src/types'
 /**
  * Local development module entry
  *
@@ -25,7 +26,6 @@ import { defaultOptions } from './packages/devtools/src/constant'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
 import { startSubprocess } from './packages/devtools-kit/src/index'
-import type { ModuleOptions } from './packages/devtools/src/types'
 
 export type { ModuleOptions }
 

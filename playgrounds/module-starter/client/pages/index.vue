@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onDevtoolsClientConnected, useDevtoolsClient } from '@nuxt/devtools-kit/iframe-client'
 import type { ClientFunctions, ServerFunctions } from '../../types'
+import { onDevtoolsClientConnected, useDevtoolsClient } from '@nuxt/devtools-kit/iframe-client'
 
 const client = useDevtoolsClient()
 

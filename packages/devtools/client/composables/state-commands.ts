@@ -1,5 +1,5 @@
-import { randomStr } from '@antfu/utils'
 import type { MaybeRefOrGetter } from 'vue'
+import { randomStr } from '@antfu/utils'
 
 export interface CommandItem {
   id: string

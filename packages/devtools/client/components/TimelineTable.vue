@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { TimelineEvent, TimelineEventNormalized, TimelineMetrics } from '../../types'
 import { clamp } from '@antfu/utils'
 import { segmentTimelineEvents } from '~/composables/timeline'
-import type { TimelineEvent, TimelineEventNormalized, TimelineMetrics } from '../../types'
 
 const props = defineProps<{
   data: TimelineMetrics

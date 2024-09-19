@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
 import type { ServerRouteInfo } from '~/../../src/types'
+import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-cloud',

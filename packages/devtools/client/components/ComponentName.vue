@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { pascalCase } from 'scule'
 import type { Component } from 'nuxt/schema'
+import { pascalCase } from 'scule'
 
 const props = defineProps<{
   component: Component

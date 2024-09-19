@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { defu } from 'defu'
 import type { MetaFlatInput } from '@unhead/schema'
 import type { ReactiveHead } from '@unhead/vue'
-import { ogTags } from '../data/open-graph'
 import type { NormalizedHeadTag } from '../../src/types'
+import { defu } from 'defu'
+import { ogTags } from '../data/open-graph'
 
 const props = defineProps<{
   tags: NormalizedHeadTag[]

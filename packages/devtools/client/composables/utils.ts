@@ -1,8 +1,8 @@
-import { relative } from 'pathe'
 import type { AsyncDataOptions } from '#app'
 import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import type { Component } from 'nuxt/schema'
 import type { Ref } from 'vue'
+import { relative } from 'pathe'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)

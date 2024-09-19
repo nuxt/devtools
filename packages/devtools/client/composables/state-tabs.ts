@@ -1,6 +1,6 @@
-import { objectPick } from '@antfu/utils'
 import type { MaybeRef } from 'vue'
 import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import { objectPick } from '@antfu/utils'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()

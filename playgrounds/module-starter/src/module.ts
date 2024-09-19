@@ -1,7 +1,7 @@
+import type { ClientFunctions, ServerFunctions } from '../types'
 import { extendServerRpc, onDevToolsInitialized } from '@nuxt/devtools-kit'
 import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { setupDevToolsUI } from './devtools'
-import type { ClientFunctions, ServerFunctions } from '../types'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {

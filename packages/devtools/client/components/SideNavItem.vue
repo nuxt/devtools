@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { NuxtLink } from '#components'
 import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
+import { NuxtLink } from '#components'
 
 const props = withDefaults(
   defineProps<{

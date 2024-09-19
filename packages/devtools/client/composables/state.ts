@@ -1,6 +1,6 @@
-import { objectPick } from '@antfu/utils'
 import type { Ref } from 'vue'
 import type { HookInfo, RouteInfo } from '../../src/types'
+import { objectPick } from '@antfu/utils'
 
 export function useServerPages() {
   return useAsyncState('getServerPages', () => rpc.getServerPages())

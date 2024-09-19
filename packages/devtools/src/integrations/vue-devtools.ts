@@ -1,7 +1,7 @@
+import type { NuxtDevtoolsServerContext } from '../types'
 import { addVitePlugin } from '@nuxt/kit'
 import { join } from 'pathe'
 import { runtimeDir } from '../dirs'
-import type { NuxtDevtoolsServerContext } from '../types'
 
 export function setup({ nuxt }: NuxtDevtoolsServerContext) {
   if (!nuxt.options.dev || nuxt.options.test)

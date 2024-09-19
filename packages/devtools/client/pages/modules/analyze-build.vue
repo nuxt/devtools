@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { formatTimeAgo } from '@vueuse/core'
 import type { AnalyzeBuildMeta } from '~/../src/types'
+import { formatTimeAgo } from '@vueuse/core'
 import { satisfyNuxtVersion } from '~/composables/npm'
 import { telemetry } from '~/composables/telemetry'
 

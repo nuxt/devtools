@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
+import { ref, watchEffect } from 'vue'
 import { PANEL_MAX, PANEL_MIN, popupWindow, state } from './state'
 import { useEventListener } from './utils'
 

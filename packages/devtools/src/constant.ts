@@ -1,5 +1,5 @@
-import { provider } from 'std-env'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
+import { provider } from 'std-env'
 
 export const WS_EVENT_NAME = 'nuxt:devtools:rpc'
 

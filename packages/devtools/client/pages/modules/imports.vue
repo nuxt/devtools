@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
 import type { Import } from 'unimport'
+import Fuse from 'fuse.js'
 
 definePageMeta({
   icon: 'carbon-function',

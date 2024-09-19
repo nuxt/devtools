@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import cronstrue from 'cronstrue'
 import type { CronCollection } from '../../src/types/tasks'
+import cronstrue from 'cronstrue'
 
 const props = defineProps<{
   collection: CronCollection

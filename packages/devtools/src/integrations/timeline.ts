@@ -1,8 +1,8 @@
+import type { Import } from 'unimport'
+import type { NuxtDevtoolsServerContext } from '../types'
 import { resolve } from 'pathe'
 import semver from 'semver'
-import type { Import } from 'unimport'
 import { runtimeDir } from '../dirs'
-import type { NuxtDevtoolsServerContext } from '../types'
 
 export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const helperPath = resolve(runtimeDir, 'function-metrics-helpers')

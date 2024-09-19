@@ -1,12 +1,12 @@
-import { setIframeServerContext } from '@vue/devtools-kit'
-import { createHooks } from 'hookable'
-import { debounce } from 'perfect-debounce'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
-
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '@nuxt/devtools/types'
 import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
+
+import { setIframeServerContext } from '@vue/devtools-kit'
+import { createHooks } from 'hookable'
+import { debounce } from 'perfect-debounce'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'

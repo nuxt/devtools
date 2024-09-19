@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
 import type { CSSProperties } from 'vue'
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import { settings } from '../../settings'
 import FrameBox from './FrameBox.vue'
 import { state } from './state'

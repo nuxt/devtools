@@ -1,7 +1,7 @@
-import { useNuxt } from '@nuxt/kit'
-import { execa } from 'execa'
 import type { BirpcGroup } from 'birpc'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
+import { useNuxt } from '@nuxt/kit'
+import { execa } from 'execa'
 
 /**
  * Hooks to extend a custom tab in devtools.

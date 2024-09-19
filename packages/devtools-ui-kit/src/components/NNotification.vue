@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
-
-import { devtoolsUiProvideNotificationFn } from '../composables/notification'
 import type { DevtoolsUiShowNotificationPosition } from '../composables/notification'
+
+import { ref } from 'vue'
+import { devtoolsUiProvideNotificationFn } from '../composables/notification'
 
 const show = ref(false)
 const icon = ref<string>()

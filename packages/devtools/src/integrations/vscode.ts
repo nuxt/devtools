@@ -1,3 +1,4 @@
+import type { NuxtDevtoolsServerContext } from '../types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { hostname } from 'node:os'
@@ -8,7 +9,6 @@ import { execa } from 'execa'
 import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import { LOG_PREFIX } from '../logger'
-import type { NuxtDevtoolsServerContext } from '../types'
 
 export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {
   const installed = !!await which('code-server').catch(() => null)

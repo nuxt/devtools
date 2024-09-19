@@ -1,12 +1,13 @@
-import { logger } from '@nuxt/kit'
-import { createBirpcGroup } from 'birpc'
-import { colors } from 'consola/utils'
-
-import { parse, stringify } from 'flatted'
 import type { ChannelOptions } from 'birpc'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
+
 import type { WebSocket } from 'ws'
+import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { logger } from '@nuxt/kit'
+import { createBirpcGroup } from 'birpc'
+import { colors } from 'consola/utils'
+import { parse, stringify } from 'flatted'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
 import { setupAnalyzeBuildRPC } from './analyze-build'
@@ -22,7 +23,6 @@ import { setupTelemetryRPC } from './telemetry'
 import { setupTerminalRPC } from './terminals'
 import { setupTimelineRPC } from './timeline'
 import { setupWizardRPC } from './wizard'
-import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions

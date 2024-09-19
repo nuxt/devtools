@@ -1,9 +1,9 @@
+import type { BuiltinLanguage } from 'shiki'
 import { defineNuxtModule } from '@nuxt/kit'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { createHighlighter } from 'shiki'
 import { bundledLanguages } from 'shiki/langs'
 import Markdown from 'unplugin-vue-markdown/vite'
-import type { BuiltinLanguage } from 'shiki'
 
 export default defineNuxtModule({
   async setup(_, nuxt) {

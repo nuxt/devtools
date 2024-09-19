@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
 import type { Component } from 'nuxt/schema'
 import type { ComponentRelationship, ComponentWithRelationships } from '../../types'
+import Fuse from 'fuse.js'
 
 const props = defineProps<{
   components: Component[]

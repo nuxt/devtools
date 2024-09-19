@@ -1,5 +1,5 @@
-import { toRefs } from '@vueuse/core'
 import type { DevToolsFrameState } from '~~/../src/types'
+import { toRefs } from '@vueuse/core'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 

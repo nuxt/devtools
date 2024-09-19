@@ -1,7 +1,7 @@
+import type { ModuleGlobalOptions, ModuleOptions } from './types'
 import { defineNuxtModule } from '@nuxt/kit'
 import { defaultOptions } from './constant'
 import { isGlobalInstall } from './dirs'
-import type { ModuleGlobalOptions, ModuleOptions } from './types'
 
 export type { ModuleOptions }
 

@@ -1,13 +1,13 @@
+import type { PackageManager } from 'nypm'
+import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import isInstalledGlobally from 'is-installed-globally'
 import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { detectPackageManager } from 'nypm'
-import type { PackageManager } from 'nypm'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
-import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 
 export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   let detectPromise: Promise<PackageManager | undefined> | undefined

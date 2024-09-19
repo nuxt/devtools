@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { AssetInfo } from '~/../src/types'
 import { onKeyDown } from '@vueuse/core'
 import Fuse from 'fuse.js'
-import type { AssetInfo } from '~/../src/types'
 
 definePageMeta({
   icon: 'carbon-image-copy',
