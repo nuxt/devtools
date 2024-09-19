@@ -1,5 +1,5 @@
-import { createHighlighterCore } from 'shiki/core'
 import type { BuiltinLanguage, HighlighterCore } from 'shiki'
+import { createHighlighterCore, createJavaScriptRegexEngine } from 'shiki/core'
 
 export const shiki = shallowRef<HighlighterCore>()
 
@@ -25,7 +25,7 @@ export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text'
         import('shiki/langs/diff.mjs'),
         import('shiki/langs/shellscript.mjs'),
       ],
-      loadWasm: import('shiki/wasm'),
+      engine: createJavaScriptRegexEngine({ forgiving: true }),
     }).then((i) => {
       shiki.value = i
     })
