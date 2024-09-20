@@ -4,10 +4,15 @@ import DevTools from '../src/module'
 
 const resolver = createResolver(import.meta.url)
 
-const packageBundles = [
-  'quicktype-core',
-  'shiki',
-]
+const packageBundles = {
+  'shiki': ['shiki', '@shikijs'],
+  'quicktype-core': ['quicktype-core'],
+  'json-editor-vue': ['json-editor-vue', 'ajv', 'vanilla-picker', 'vanilla-jsoneditor'],
+  'xterm': ['xterm', '@xterm'],
+  'vis': ['vis-data', 'vis-network'],
+  'unocss': ['@unocss', 'unocss'],
+  'markdown-it': ['markdown-it'],
+}
 
 export default defineNuxtConfig({
   modules: [
@@ -84,18 +89,21 @@ export default defineNuxtConfig({
       target: 'esnext',
       rollupOptions: {
         output: {
-          manualChunks(id) {
-            const pkg = packageBundles.find(pkg => id.includes(`node_modules/${pkg}`))
-            if (pkg) {
-              return pkg
-            }
-
-            // if (id.includes('.nuxt/routes'))
-            //   return 'routes'
-
-            // if (id.includes('.nuxt'))
-            //   console.log(id)
+          chunkFileNames(chunkInfo) {
+            const kebabName = chunkInfo.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+            return `_nuxt/${kebabName}-[hash].js`
           },
+          assetFileNames(assetInfo) {
+            const kebabName = (assetInfo.name || '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+            return `_nuxt/${kebabName}-[hash][extname]`
+          },
+          manualChunks(id) {
+            for (const bundle of Object.entries(packageBundles)) {
+              if (bundle[1].some(pkg => id.includes(`node_modules/${pkg}/`)))
+                return `vendor/${bundle[0]}`
+            }
+          },
+          hashCharacters: 'base36',
         },
       },
     },

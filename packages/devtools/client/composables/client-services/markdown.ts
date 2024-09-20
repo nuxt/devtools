@@ -1,6 +1,6 @@
 import type MarkdownIt from 'markdown-it'
 
-const md = ref<MarkdownIt>()
+const md = shallowRef<MarkdownIt>()
 
 let promise: Promise<void> | undefined
 
