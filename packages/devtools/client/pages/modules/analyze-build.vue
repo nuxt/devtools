@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { AnalyzeBuildMeta } from '~/../src/types'
 import { useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
 import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
@@ -11,7 +12,7 @@ import { registerCommands } from '~/composables/state-commands'
 import { useCurrentTerminalId } from '~/composables/state-routes'
 import { processAnalyzeBuildInfo } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
-import { formatDuration, useSessionState } from '~/composables/utils'
+import { useSessionState } from '~/composables/utils'
 
 definePageMeta({
   icon: 'carbon-edge-node',
@@ -53,6 +54,10 @@ async function start() {
 
 const terminalId = useCurrentTerminalId()
 
+function getDuration(build: AnalyzeBuildMeta) {
+  return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
+}
+
 function gotoTerminal() {
   if (processAnalyzeBuildInfo.value?.processId) {
     terminalId.value = processAnalyzeBuildInfo.value.processId
@@ -83,7 +88,7 @@ registerCommands(() => [
             <code>{{ build.name }}</code>
             <div flex="~ gap-1 items-center wrap" w-full text-sm op60>
               <div i-carbon-time />
-              <span>{{ formatDuration(build) }}</span>
+              <span>{{ getDuration(build) }}</span>
               <div flex-auto />
               <span>{{ formatTimeAgo(new Date(build.endTime)) }}</span>
             </div>

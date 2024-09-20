@@ -5,7 +5,6 @@ import { formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
-import { formatDuration } from '~/composables/utils'
 
 const props = defineProps<{
   current: AnalyzeBuildMeta
@@ -30,6 +29,10 @@ const tabs = computed(() => {
 })
 
 const selectedTab = ref(tabs.value[0])
+
+function getDuration(build: AnalyzeBuildMeta) {
+  return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
+}
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024)
@@ -81,7 +84,7 @@ async function clear(name: string) {
           <div text-sm op50>
             Build duration
           </div>
-          <div>{{ formatDuration(current) }}</div>
+          <div>{{ getDuration(current) }}</div>
         </div>
         <template v-if="current.size?.clientBundle">
           <div i-carbon-cics-program text-xl />

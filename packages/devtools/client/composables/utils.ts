@@ -117,7 +117,8 @@ export function getSocialPreviewCard(
   }
 }
 
-export function formatDuration(ms: number) {
+export function formatDuration(ms: number | string) {
+  ms = Number(ms)
   if (Number.isNaN(ms) || ms < 0)
     return '-'
   if (ms < 1)

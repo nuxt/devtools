@@ -17,7 +17,7 @@ const language = computed(() => languages.find(l => l.displayName === selectedLa
 // TODO: use localStorage
 const options = ref(language.value?.optionDefinitions.filter(o => typeof o.defaultValue === 'boolean'))
 
-const generatedJson = computedAsync(async () => {
+const generatedJson = computedAsync<string>(async () => {
   // eslint-disable-next-line ts/no-unused-expressions
   counter.value
 
@@ -70,7 +70,7 @@ watch(selectedLang, () => {
 const copy = useCopy()
 
 function copyToClipboard() {
-  copy(generatedJson.value)
+  copy(generatedJson.value || '')
 }
 </script>
 

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { useVModel, watchPausable } from '@vueuse/core'
+import type { watchPausable } from '@vueuse/core'
+import { useVModel } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
-import { nextTick, onMounted, readonly, shallowRef, watch } from 'vue'
+import { nextTick, onMounted, shallowRef, watch } from 'vue'
 import { getColorMode } from '~/composables/client'
 
 const props = defineProps<{
@@ -116,7 +117,7 @@ async function refresh() {
         :main-menu-bar="false"
         :navigation-bar="false"
         :status-bar="false"
-        :read-only="readonly"
+        :read-only="props.readonly"
         :indentation="2"
         :tab-size="2"
       />
