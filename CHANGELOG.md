@@ -1,3 +1,14 @@
+# [1.5.0](https://github.com/nuxt/devtools/compare/v1.4.2...v1.5.0) (2024-09-20)
+
+
+### Bug Fixes
+
+* avoid using top-level await, fix [#723](https://github.com/nuxt/devtools/issues/723) ([29b0e39](https://github.com/nuxt/devtools/commit/29b0e39266e177a552a68dddf76b4e963a7c0249))
+* disable `quicktype` schema generation temporary ([c1554a3](https://github.com/nuxt/devtools/commit/c1554a39036d065e05fdbc1635287e5f52a07a14))
+* handle null in deepSync ([#729](https://github.com/nuxt/devtools/issues/729)) ([8c0efdb](https://github.com/nuxt/devtools/commit/8c0efdb382f3fd10afc30a6c75ebbb0fe34578dc))
+
+
+
 ## [1.4.2](https://github.com/nuxt/devtools/compare/v1.4.1...v1.4.2) (2024-09-10)
 
 
