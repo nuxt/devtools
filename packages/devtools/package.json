@@ -30,9 +30,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client && esno scripts/prepare.ts",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module build",
+    "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery --embed enable",
+    "dev:discovery": "discovery -c .discoveryrc.cjs",
     "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "nuxi prepare client",
@@ -81,6 +83,8 @@
     "ws": "catalog:"
   },
   "devDependencies": {
+    "@discoveryjs/cli": "^2.9.1",
+    "@discoveryjs/discovery": "1.0.0-beta.85",
     "@iconify-json/bxl": "catalog:",
     "@iconify-json/carbon": "catalog:",
     "@iconify-json/logos": "catalog:",

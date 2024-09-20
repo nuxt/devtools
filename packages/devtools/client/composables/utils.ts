@@ -177,3 +177,19 @@ export function refreshData() {
 export function reloadPage() {
   location.reload()
 }
+
+export function jsonStringifyCircular(params: any) {
+  const seen = new Set<any>()
+  return JSON.stringify(params, (key, value) => {
+    if (typeof value === 'function')
+      return value.toString()
+    if (isRef(value))
+      value = value.value
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value))
+        return '[Circular]'
+      seen.add(value)
+    }
+    return value
+  })
+}
