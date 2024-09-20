@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ServerTaskInfo } from '~/../../src/types'
+import { ref } from 'vue'
+import { useCurrentServerTask } from '~/composables/state-routes'
 
 withDefaults(defineProps<{
   item: ServerTaskInfo

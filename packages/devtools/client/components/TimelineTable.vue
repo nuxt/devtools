@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TimelineEvent, TimelineEventNormalized, TimelineMetrics } from '../../types'
 import { clamp } from '@antfu/utils'
+import { useEventListener } from '@vueuse/core'
+import { computed, nextTick, ref, watch } from 'vue'
 import { segmentTimelineEvents } from '~/composables/timeline'
 
 const props = defineProps<{

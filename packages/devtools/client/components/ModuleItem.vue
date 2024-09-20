@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { InstalledModuleInfo } from '../../src/types'
+import { computed } from 'vue'
+import { useCurrentTerminalId } from '~/composables/state-routes'
 
 const props = defineProps<{
   mod: InstalledModuleInfo

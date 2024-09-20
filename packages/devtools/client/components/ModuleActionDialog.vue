@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ModuleDialog } from '../composables/dialog'
+import { ModuleDialog } from '~/composables/dialog'
+import { useOpenInEditor } from '~/composables/editor'
+import { useServerConfig } from '~/composables/state'
 
 const config = useServerConfig()
 const openInEditor = useOpenInEditor()

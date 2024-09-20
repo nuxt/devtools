@@ -9,7 +9,7 @@ import { shallowRef } from 'vue'
  */
 export function useNuxtDevTools(): Ref<NuxtDevtoolsHostClient | undefined> {
   const r = shallowRef()
-  if (!process.dev)
+  if (!import.meta.dev)
     return r
 
   if (import.meta.server)

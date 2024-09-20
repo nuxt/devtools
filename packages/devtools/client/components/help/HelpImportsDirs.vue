@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAutoImports } from '~/composables/state'
+
 const imports = useAutoImports()
 </script>
 

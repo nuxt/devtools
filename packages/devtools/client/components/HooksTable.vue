@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HookInfo } from '~/../src/types'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   hooks: HookInfo[]

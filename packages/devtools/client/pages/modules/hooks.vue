@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
+import { useServerHooks } from '~/composables/state'
+
 definePageMeta({
   icon: 'carbon-ibm-cloud-direct-link-2-connect',
   title: 'Hooks',

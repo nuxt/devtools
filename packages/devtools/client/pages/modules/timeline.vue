@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { definePageMeta, devtoolsUiShowNotification } from '#imports'
+import { createTemplatePromise } from '@vueuse/core'
+import { useOpenInEditor } from '~/composables/editor'
+import { rpc } from '~/composables/rpc'
+import { useModuleOptions, useServerConfig } from '~/composables/state'
+
 definePageMeta({
   icon: 'i-carbon-roadmap',
   title: 'Timeline',
@@ -54,7 +60,11 @@ async function showPopup() {
           </h2>
 
           <p op50>
-            Your <NLink role="button" n="primary" underline @click="openInEditor(config?._nuxtConfigFile)" v-text="'Nuxt config'" /> will be updated as:
+            Your <NLink
+              role="button" n="primary" underline
+              @click="openInEditor(config?._nuxtConfigFile)"
+              v-text="'Nuxt config'"
+            /> will be updated as:
           </p>
 
           <CodeDiff

@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useEventListener } from '@vueuse/core'
 import Fuse from 'fuse.js'
+import { computed, ref, watch } from 'vue'
+import { useCommands } from '~/composables/state-commands'
 import type { CommandItem } from '~/composables/state-commands'
 
 const show = ref(false)

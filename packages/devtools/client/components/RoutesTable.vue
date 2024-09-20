@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { RouteInfo } from '~/../src/types'
 import type { NuxtLayout } from 'nuxt/schema'
+import { computed } from 'vue'
+import { useOpenInEditor } from '~/composables/editor'
+import { useServerApp } from '~/composables/state'
 
 const props = defineProps<{
   pages: RouteInfo[]

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { watchEffect } from 'vue'
+import { useClient } from '~/composables/client'
+import { rpc } from '~/composables/rpc'
+import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
+import { useDevToolsUIOptions } from '~/composables/storage'
 import { telemetryEnabled } from '~/composables/telemetry'
 
 definePageMeta({

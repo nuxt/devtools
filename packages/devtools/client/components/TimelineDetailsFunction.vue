@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { TimelineEventFunction } from '../../types'
+import { useTimeAgo } from '@vueuse/core'
+import { computed } from 'vue'
+import { useAutoImports } from '~/composables/state'
 
 const props = defineProps<{
   record: TimelineEventFunction

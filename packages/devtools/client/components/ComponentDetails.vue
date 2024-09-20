@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Component } from 'nuxt/schema'
 import { pascalCase } from 'scule'
+import { computed } from 'vue'
+import { useCopy } from '~/composables/editor'
 
 const props = defineProps<{
   component: Component

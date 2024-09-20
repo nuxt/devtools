@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useSchemaInput } from '~/composables/state-schema'
+
 defineProps<{
   getter: () => { name?: string, input: string }
 }>()

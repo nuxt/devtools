@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
+
 definePageMeta({
   icon: 'carbon-data-set',
   title: 'Payload',

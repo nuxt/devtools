@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import type { useVModel, watchPausable } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
+import { nextTick, onMounted, readonly, shallowRef, watch } from 'vue'
+import { getColorMode } from '~/composables/client'
 
 const props = defineProps<{
   name?: string

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useAutoImports } from '~/composables/state'
+import { getModuleNameFromPath, isBuiltInModule } from '~/composables/utils'
+
 const config = useAutoImports()
 
 const modules = computed(() => {

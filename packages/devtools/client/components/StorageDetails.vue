@@ -1,5 +1,14 @@
 <script setup lang="ts">
+import { useAsyncData } from '#app/composables/asyncData'
+import { useRouter } from '#app/composables/router'
+import { useNuxtApp } from '#app/nuxt'
+import { useEventListener } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
+import { computed, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { getColorMode } from '~/composables/client'
+import { rpc } from '~/composables/rpc'
+import { useSessionState } from '~/composables/utils'
+import { ensureDevAuthToken } from '../composables/dev-auth'
 
 const colorMode = getColorMode()
 const nuxtApp = useNuxtApp()

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { computed, watchEffect } from 'vue'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
+import { rpc } from '~/composables/rpc'
+import { useTerminals } from '~/composables/state'
+import { useCurrentTerminalId } from '~/composables/state-routes'
+
 const terminals = useTerminals()
 const terminalId = useCurrentTerminalId()
 const selected = computed(() => terminals.value?.find(t => t.id === terminalId.value))

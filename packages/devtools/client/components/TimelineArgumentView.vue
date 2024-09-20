@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
+import { defineComponent, ref } from 'vue'
+import { getColorMode } from '~/composables/client'
+import { useCopy } from '~/composables/editor'
 
 const props = defineProps<{
   value: any

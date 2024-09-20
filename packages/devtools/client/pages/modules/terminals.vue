@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { useTerminals } from '~/composables/state'
+
 definePageMeta({
   icon: 'carbon-terminal',
   title: 'Terminals',

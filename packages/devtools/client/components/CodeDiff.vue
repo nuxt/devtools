@@ -2,6 +2,7 @@
 import type { BuiltinLanguage } from 'shiki'
 import { unrefElement } from '@vueuse/core'
 import { diffLines } from 'diff'
+import { computed, onMounted, ref } from 'vue'
 
 const props = defineProps<{
   from: string

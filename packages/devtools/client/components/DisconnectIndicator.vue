@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { wsConnectingDebounced } from '~/composables/rpc'
+
 function reload() {
   window.location.reload()
 }

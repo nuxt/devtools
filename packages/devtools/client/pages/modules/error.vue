@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
 import { parse as parseStrackTrace } from 'error-stack-parser-es'
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
 
 definePageMeta({
   icon: 'i-carbon-warning-alt-filled text-red',

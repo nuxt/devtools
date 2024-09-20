@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
 import ComponentsGraph from '~/components/ComponentsGraph.vue'
 import ComponentsList from '~/components/ComponentsList.vue'
+import { useClient } from '~/composables/client'
+import { useComponents, useComponentsRelationships } from '~/composables/state-components'
+import { useDevToolsUIOptions } from '~/composables/storage'
 
 definePageMeta({
   icon: 'i-carbon-assembly-cluster',

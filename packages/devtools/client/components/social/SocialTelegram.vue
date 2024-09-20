@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SocialPreviewResolved } from '~/../src/types'
+import { useBrowserLocation, useDateFormat, useNow } from '@vueuse/core'
 
 defineProps<{
   card: SocialPreviewResolved

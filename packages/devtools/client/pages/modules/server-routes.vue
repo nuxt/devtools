@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { ServerRouteInfo } from '~/../../src/types'
+import { definePageMeta } from '#imports'
 import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
+import { ServerRouteTabIcons } from '~/composables/constants'
+import { useServerRoutes } from '~/composables/state'
+import { useCurrentServeRoute } from '~/composables/state-routes'
+import { useDevToolsOptions } from '~/composables/storage-options'
 
 definePageMeta({
   icon: 'carbon-cloud',

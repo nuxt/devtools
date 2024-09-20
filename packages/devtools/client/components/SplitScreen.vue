@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { useRoute, useRouter } from '#app/composables/router'
+import { onClickOutside } from '@vueuse/core'
+import { computed, defineAsyncComponent, ref, shallowRef, watch } from 'vue'
+import { getCategorizedTabs, useEnabledTabs } from '~/composables/state-tabs'
+import { splitScreenEnabled, splitScreenView } from '~/composables/storage'
+
 const allTabs = useEnabledTabs()
 
 const PageComponent = shallowRef()

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { computed, ref } from 'vue'
+import { registerCommands } from '~/composables/state-commands'
+import { useInstalledModules } from '~/composables/state-modules'
+import { useCurrentTerminalId } from '~/composables/state-routes'
+
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
   title: 'Modules',

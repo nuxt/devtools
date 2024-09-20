@@ -4,12 +4,19 @@ import DevTools from '../src/module'
 
 const resolver = createResolver(import.meta.url)
 
+const packageBundles = [
+  'quicktype-core',
+  'shiki',
+]
+
 export default defineNuxtConfig({
   modules: [
     '@nuxt/test-utils/module',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
+    '@nuxt/eslint',
+    'nuxt-eslint-auto-explicit-import',
   ],
 
   ssr: false,
@@ -45,6 +52,12 @@ export default defineNuxtConfig({
     '@nuxt/devtools-kit': resolver.resolve('../../devtools-kit/src/index'),
   },
 
+  eslint: {
+    config: {
+      standalone: false,
+    },
+  },
+
   appConfig: {
     fixture2: 'from nuxt.config.ts',
   },
@@ -69,6 +82,22 @@ export default defineNuxtConfig({
     warmupEntry: false,
     build: {
       target: 'esnext',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const pkg = packageBundles.find(pkg => id.includes(`node_modules/${pkg}`))
+            if (pkg) {
+              return pkg
+            }
+
+            // if (id.includes('.nuxt/routes'))
+            //   return 'routes'
+
+            // if (id.includes('.nuxt'))
+            //   console.log(id)
+          },
+        },
+      },
     },
     optimizeDeps: {
       include: [

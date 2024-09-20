@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import type { AnalyzeBuildMeta } from '~/../src/types'
-import { formatTimeAgo } from '@vueuse/core'
+import { useRouter } from '#app/composables/router'
+import { definePageMeta } from '#imports'
+import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { satisfyNuxtVersion } from '~/composables/npm'
+import { rpc } from '~/composables/rpc'
+import { useAnalyzeBuildInfo } from '~/composables/state'
+import { registerCommands } from '~/composables/state-commands'
+import { useCurrentTerminalId } from '~/composables/state-routes'
+import { processAnalyzeBuildInfo } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
+import { formatDuration, useSessionState } from '~/composables/utils'
 
 definePageMeta({
   icon: 'carbon-edge-node',
@@ -49,10 +58,6 @@ function gotoTerminal() {
     terminalId.value = processAnalyzeBuildInfo.value.processId
     router.push('/modules/terminals')
   }
-}
-
-function formatDuration(build: AnalyzeBuildMeta) {
-  return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
 
 registerCommands(() => [

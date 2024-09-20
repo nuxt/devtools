@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
+import { computed } from 'vue'
 
 const props = defineProps<{
   asset: AssetInfo

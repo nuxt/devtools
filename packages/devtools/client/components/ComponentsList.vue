@@ -2,6 +2,9 @@
 import type { Component } from 'nuxt/schema'
 import type { ComponentRelationship, ComponentWithRelationships } from '../../types'
 import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
+import { DETAILS_MAX_ITEMS } from '~/composables/constants'
+import { getComponentRelationships, getModuleNameFromPath, isNodeModulePath } from '~/composables/utils'
 
 const props = defineProps<{
   components: Component[]

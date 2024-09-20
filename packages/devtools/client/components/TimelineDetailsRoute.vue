@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TimelineEventRoute } from '../../types'
+import { useTimeAgo } from '@vueuse/core'
 
 const props = defineProps<{
   record: TimelineEventRoute

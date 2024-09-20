@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
 import { Pinia } from '@vue/devtools-applet'
 import { useDevToolsState as useVueDevToolsState } from '@vue/devtools-core'
+import { useServerConfig } from '~/composables/state'
 
 const { connected } = useVueDevToolsState()
 

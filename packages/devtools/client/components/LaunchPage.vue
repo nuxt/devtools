@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ModuleLaunchAction } from '~~/../src/types'
+import { telemetry } from '~/composables/telemetry'
 
 const props = defineProps<{
   name?: string

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
+
 const client = useClient()
 
 const path = computed(() => client.value?.nuxt?.vueApp.config.globalProperties.$route.path)

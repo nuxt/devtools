@@ -2,6 +2,10 @@
 import type { AnalyzeBuildMeta } from '../../src/types'
 import { useRuntimeConfig } from '#imports'
 import { formatTimeAgo } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
+import { rpc } from '~/composables/rpc'
+import { formatDuration } from '~/composables/utils'
 
 const props = defineProps<{
   current: AnalyzeBuildMeta
@@ -35,10 +39,6 @@ function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024 * 1024)
     return `${(bytes / 1024 / 1024).toFixed(1)}MB`
   return `${(bytes / 1024 / 1024 / 1024).toFixed(1)}GB`
-}
-
-function formatDuration(build: AnalyzeBuildMeta) {
-  return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
 
 async function clear(name: string) {

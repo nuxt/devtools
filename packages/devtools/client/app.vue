@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { useEyeDropper } from '@vueuse/core'
-import { splitScreenAvailable } from '~/composables/storage'
+import { useRoute } from '#app/composables/router'
+import { useHead } from '@unhead/vue'
+import { useEventListener, useEyeDropper } from '@vueuse/core'
+import { computed, onMounted, watch, watchEffect } from 'vue'
+import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
+import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
+import { useCopy } from '~/composables/editor'
+import { rpc } from '~/composables/rpc'
+import { registerCommands } from '~/composables/state-commands'
+import { splitScreenAvailable, splitScreenEnabled, useDevToolsUIOptions } from '~/composables/storage'
 import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
 

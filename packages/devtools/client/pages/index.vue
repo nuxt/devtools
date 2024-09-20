@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { ref } from 'vue'
+import { isFirstVisit, useDevToolsUIOptions } from '~/composables/storage'
 import { telemetryEnabled } from '~/composables/telemetry'
 
 definePageMeta({
   layout: 'none',
 })
 
-const telemetry = ref(true)
+const telemetryModel = ref(true)
 const enableFloatPanel = ref(true)
 
 const {
@@ -13,7 +16,7 @@ const {
 } = useDevToolsUIOptions()
 
 function visit() {
-  telemetryEnabled.value = telemetry.value
+  telemetryEnabled.value = telemetryModel.value
   if (showPanel.value == null && enableFloatPanel.value)
     showPanel.value = true
   isFirstVisit.value = false
@@ -46,7 +49,7 @@ function visit() {
         <NCheckbox v-if="showPanel == null" v-model="enableFloatPanel" n="green6">
           <span op50>Show floating panel from now on</span>
         </NCheckbox>
-        <NCheckbox v-model="telemetry" n="green6">
+        <NCheckbox v-model="telemetryModel" n="green6">
           <span op50>Send anonymous statistics, help us improving DevTools</span>
           <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op35 v-text="'Learn more'" />
         </NCheckbox>

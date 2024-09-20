@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ServerTaskInfo } from '~/../../src/types'
+import { definePageMeta } from '#imports'
 import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
 import ServerTaskListItem from '~/components/ServerTaskListItem.vue'
+import { ServerRouteTabIcons } from '~/composables/constants'
+import { useServerTasks } from '~/composables/state'
+import { useCurrentServerTask } from '~/composables/state-routes'
+import { useDevToolsOptions } from '~/composables/storage-options'
 
 definePageMeta({
   icon: 'codicon-run-all',

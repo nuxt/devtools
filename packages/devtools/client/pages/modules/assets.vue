@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
-import { onKeyDown } from '@vueuse/core'
+import { definePageMeta } from '#imports'
+import { onKeyDown, reactiveComputed } from '@vueuse/core'
 import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
+import { DETAILS_MAX_ITEMS } from '~/composables/constants'
+import { useStaticAssets } from '~/composables/state'
+import { useDevToolsOptions } from '~/composables/storage-options'
 
 definePageMeta({
   icon: 'carbon-image-copy',

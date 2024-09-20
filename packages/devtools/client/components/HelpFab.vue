@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useDevToolsUIOptions } from '~/composables/storage'
+
 const open = ref(false)
 const { showHelpButtons } = useDevToolsUIOptions()
 </script>

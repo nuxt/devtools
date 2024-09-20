@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { TimelineEventFunction } from '../../types'
+import { computed } from 'vue'
+import { getHashColorFromString } from '~/composables/utils'
 
 const props = defineProps<{
   item: TimelineEventFunction

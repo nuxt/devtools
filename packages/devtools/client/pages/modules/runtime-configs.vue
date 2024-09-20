@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
+import { useServerRuntimeConfig } from '~/composables/state'
+
 definePageMeta({
   icon: 'carbon-settings-services',
   title: 'Runtime Configs',

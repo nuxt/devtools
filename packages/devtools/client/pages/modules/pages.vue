@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
+import { computed, onMounted, ref } from 'vue'
+import { useClient, useClientRoute, useClientRouter } from '~/composables/client'
+import { useLayouts, useMergedRouteList, useServerApp, useServerConfig } from '~/composables/state'
+
 definePageMeta({
   icon: 'carbon-tree-view-alt',
   title: 'Pages',

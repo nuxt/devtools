@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
+import { useRoute } from '#app/composables/router'
 import { NuxtLink } from '#components'
+import { computed, toValue } from 'vue'
+import { splitScreenView } from '~/composables/storage'
+import { telemetry } from '~/composables/telemetry'
 
 const props = withDefaults(
   defineProps<{

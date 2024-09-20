@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { InstalledModuleInfo, ModuleStaticInfo } from '../../src/types'
+import { computed } from 'vue'
+import { useOpenInEditor } from '~/composables/editor'
 
 const props = withDefaults(
   defineProps<{

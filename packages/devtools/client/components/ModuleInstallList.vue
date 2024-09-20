@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { ModuleStaticInfo } from '../../src/types'
 import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
+import { useModulesList } from '~/composables/state-modules'
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
 

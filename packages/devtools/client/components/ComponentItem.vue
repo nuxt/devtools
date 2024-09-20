@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Component } from 'nuxt/schema'
+import { computed } from 'vue'
 
 const props = defineProps<{
   component: Component

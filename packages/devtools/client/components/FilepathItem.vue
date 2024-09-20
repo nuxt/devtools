@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useOpenInEditor } from '~/composables/editor'
+import { useServerConfig } from '~/composables/state'
+import { parseReadablePath } from '~/composables/utils'
+
 const props = defineProps<{
   filepath?: string
   lineBreak?: boolean

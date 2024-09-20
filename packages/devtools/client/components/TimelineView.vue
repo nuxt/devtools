@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { TimelineEvent } from '../../types'
+import { computed, ref } from 'vue'
+import { useClient } from '~/composables/client'
 
 const client = useClient()
 

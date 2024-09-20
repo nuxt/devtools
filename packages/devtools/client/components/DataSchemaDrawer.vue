@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { BuiltinLanguage } from 'shiki'
+import { computedAsync } from '@vueuse/core'
 import { InputData, jsonInputForTargetLanguage, quicktype } from 'quicktype-core'
 import { all as languages } from 'quicktype-core/dist/language/All'
+import { computed, ref, watch } from 'vue'
+import { useCopy } from '~/composables/editor'
+import { useSchemaInput } from '~/composables/state-schema'
 
 const input = useSchemaInput()
 

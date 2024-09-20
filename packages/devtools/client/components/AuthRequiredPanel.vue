@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { devAuthToken, isDevAuthed, requestForAuth, updateDevAuthToken } from '~/composables/dev-auth'
+import { rpc } from '~/composables/rpc'
+
 onMounted(async () => {
   if (!isDevAuthed.value) {
     if (devAuthToken.value) {

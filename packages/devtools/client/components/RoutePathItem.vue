@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteInfo } from '~~/../src/types'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   route: RouteInfo

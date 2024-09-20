@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
-import { ComposablesDocs } from '../composables/constants'
+import { computed } from 'vue'
+import { ComposablesDocs } from '~/composables/constants'
+import { useCopy, useOpenInEditor } from '~/composables/editor'
 
 const props = withDefaults(
   defineProps<{

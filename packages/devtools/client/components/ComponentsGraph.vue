@@ -2,7 +2,12 @@
 import type { ComponentRelationship } from '~/../src/types'
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
+import { useDebounce } from '@vueuse/core'
 import { Network } from 'vis-network'
+import { computed, onMounted, ref, watch } from 'vue'
+import { getColorMode } from '~/composables/client'
+import { useLayouts, useServerConfig, useServerPages } from '~/composables/state'
+import { useDevToolsUIOptions } from '~/composables/storage'
 
 const props = defineProps<{
   components: Component[]

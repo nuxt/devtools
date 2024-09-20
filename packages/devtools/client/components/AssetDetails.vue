@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { AssetInfo, CodeSnippet } from '~/../src/types'
-import { useTimeAgo } from '@vueuse/core'
+import { devtoolsUiShowNotification } from '#imports'
+import { computedAsync, useTimeAgo, useVModel } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
+import { useCopy, useOpenInEditor } from '~/composables/editor'
+import { rpc } from '~/composables/rpc'
+import { useServerConfig } from '~/composables/state'
 
 const props = defineProps<{
   modelValue: AssetInfo

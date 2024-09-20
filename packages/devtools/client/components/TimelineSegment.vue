@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { UseTimeAgoOptions } from '@vueuse/core'
 import type { TimelineEvent, TimelineEventNormalized, TimelineEventsSegment } from '../../types'
+import { useTimeAgo } from '@vueuse/core'
 
 const props = defineProps<{
   segment: TimelineEventsSegment

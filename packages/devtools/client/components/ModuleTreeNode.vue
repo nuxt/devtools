@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRoute } from '#app/composables/router'
 import type { TreeNode } from '~/composables/tree'
 
 withDefaults(defineProps<{

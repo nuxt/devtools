@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import type { ModuleActionType, ModuleStaticInfo } from '../../src/types'
+import { computed } from 'vue'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
+import { ModuleDialog } from '~/composables/dialog'
+import { rpc } from '~/composables/rpc'
+import { useInstalledModules } from '~/composables/state-modules'
+import { processInstallingModules } from '~/composables/state-subprocess'
+import { telemetry } from '~/composables/telemetry'
 
 const props = defineProps<{
   item: ModuleStaticInfo

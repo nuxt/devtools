@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { NormalizedHeadTag } from '../../../src/types'
+import { useLocalStorage } from '@vueuse/core'
+import { computed } from 'vue'
+import { getSocialPreviewCard } from '~/composables/utils'
 
 const props = defineProps<{
   tags: NormalizedHeadTag[]

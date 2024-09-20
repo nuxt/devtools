@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
 import { Components as VueComponents } from '@vue/devtools-applet'
 import { useDevToolsState as useVueDevToolsState } from '@vue/devtools-core'
+import { useClient } from '~/composables/client'
+import { useOpenInEditor } from '~/composables/editor'
 
 const { connected } = useVueDevToolsState()
 const client = useClient()

@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
-import { createReusableTemplate, watchDebounced } from '@vueuse/core'
+import { useCookie } from '#app/composables/cookie'
+import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
+import { getColorMode, useClient } from '~/composables/client'
+import { ComposablesDocs } from '~/composables/constants'
+import { useOpenInEditor } from '~/composables/editor'
+import { useServerConfig } from '~/composables/state'
+import { useDevToolsOptions } from '~/composables/storage-options'
+import { telemetry } from '~/composables/telemetry'
+import { ServerRouteTabIcons } from '../composables/constants'
+import { useCopy } from '../composables/editor'
+import { getRequestMethodClass } from '../composables/utils'
 
 const props = defineProps<{
   route: ServerRouteInfo

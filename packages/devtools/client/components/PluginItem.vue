@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { PluginInfoWithMetic } from '@nuxt/devtools-kit/types'
+import { computed } from 'vue'
+import { useServerConfig } from '~/composables/state'
+import { parseReadablePath } from '~/composables/utils'
 
 const props = defineProps<{
   plugin: PluginInfoWithMetic

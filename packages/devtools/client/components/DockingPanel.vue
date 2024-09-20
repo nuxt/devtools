@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { splitScreenAvailable, splitScreenEnabled, useDevToolsUIOptions } from '~/composables/storage'
+import { refreshData, reloadPage } from '~/composables/utils'
+
 const { sidebarExpanded } = useDevToolsUIOptions()
 
 function toggleSplitScreen() {

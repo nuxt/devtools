@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
+import { useVModel } from '@vueuse/core'
+import { computed, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   item: any

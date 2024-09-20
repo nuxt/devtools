@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useClient } from '~/composables/client'
+import { useCopy } from '~/composables/editor'
+import { telemetry } from '~/composables/telemetry'
+
 const client = useClient()
 
 const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__

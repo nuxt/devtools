@@ -1,5 +1,18 @@
 <script setup lang="ts">
+import { useRouter } from '#app/composables/router'
+import { definePageMeta } from '#imports'
+import { computed } from 'vue'
+import { useClient } from '~/composables/client'
+import { useAutoImports, useServerConfig } from '~/composables/state'
+import { useComponents } from '~/composables/state-components'
+import { useInstalledModules } from '~/composables/state-modules'
+import { useAllRoutes } from '~/composables/state-tabs'
+import { isFirstVisit } from '~/composables/storage'
+import { getIsMacOS } from '~/composables/utils'
 import { version } from '../../../package.json'
+import { showConnectionWarning } from '../../composables/client'
+import { ensureDevAuthToken } from '../../composables/dev-auth'
+import { formatDuration, pluralizeByCount } from '../../composables/utils'
 
 definePageMeta({
   icon: 'carbon-information',

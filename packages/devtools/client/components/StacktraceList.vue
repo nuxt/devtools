@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { StackFrame } from 'error-stack-parser-es'
+import { useServerConfig } from '~/composables/state'
 
 defineProps<{
   stacktrace: StackFrame[]

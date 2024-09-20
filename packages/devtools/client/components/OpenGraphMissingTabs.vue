@@ -3,6 +3,8 @@ import type { MetaFlatInput } from '@unhead/schema'
 import type { ReactiveHead } from '@unhead/vue'
 import type { NormalizedHeadTag } from '../../src/types'
 import { defu } from 'defu'
+import { computed, ref } from 'vue'
+import { useCopy, useOpenInEditor } from '~/composables/editor'
 import { ogTags } from '../data/open-graph'
 
 const props = defineProps<{
