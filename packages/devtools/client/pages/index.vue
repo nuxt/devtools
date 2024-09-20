@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
 import { ref } from 'vue'
-import { isFirstVisit, useDevToolsUIOptions } from '~/composables/storage'
+import { isFirstVisit } from '~/composables/storage'
 import { telemetryEnabled } from '~/composables/telemetry'
+import { useDevToolsOptions } from '../composables/storage-options'
 
 definePageMeta({
   layout: 'none',
@@ -13,7 +14,7 @@ const enableFloatPanel = ref(true)
 
 const {
   showPanel,
-} = useDevToolsUIOptions()
+} = useDevToolsOptions('ui')
 
 function visit() {
   telemetryEnabled.value = telemetryModel.value

@@ -8,7 +8,8 @@ import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
-import { splitScreenAvailable, splitScreenEnabled, useDevToolsUIOptions } from '~/composables/storage'
+import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
+import { useDevToolsOptions } from './composables/storage-options'
 import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
 
@@ -63,7 +64,7 @@ useEventListener('keydown', (e) => {
   }
 })
 
-const { scale, sidebarExpanded } = useDevToolsUIOptions()
+const { scale, sidebarExpanded } = useDevToolsOptions('ui')
 // const dataSchema = useSchemaInput()
 
 onMounted(async () => {

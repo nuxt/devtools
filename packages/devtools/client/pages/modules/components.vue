@@ -4,7 +4,7 @@ import ComponentsGraph from '~/components/ComponentsGraph.vue'
 import ComponentsList from '~/components/ComponentsList.vue'
 import { useClient } from '~/composables/client'
 import { useComponents, useComponentsRelationships } from '~/composables/state-components'
-import { useDevToolsUIOptions } from '~/composables/storage'
+import { useDevToolsOptions } from '../../composables/storage-options'
 
 definePageMeta({
   icon: 'i-carbon-assembly-cluster',
@@ -16,7 +16,7 @@ const client = useClient()
 const components = useComponents()
 const relationships = useComponentsRelationships()
 
-const { componentsView: view } = useDevToolsUIOptions()
+const { componentsView: view } = useDevToolsOptions('ui')
 
 function openComponentInspector() {
   if (!client.value?.inspector?.instance)

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useDevToolsUIOptions } from '~/composables/storage'
+import { useDevToolsOptions } from '../composables/storage-options'
 
 const open = ref(false)
-const { showHelpButtons } = useDevToolsUIOptions()
+const { showHelpButtons } = useDevToolsOptions('ui')
 </script>
 
 <template>

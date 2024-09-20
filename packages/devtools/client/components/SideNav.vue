@@ -3,12 +3,12 @@ import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useClient } from '~/composables/client'
 import { getCategorizedTabs, useEnabledTabs } from '~/composables/state-tabs'
-import { useDevToolsUIOptions } from '~/composables/storage'
+import { useDevToolsOptions } from '../composables/storage-options'
 import TabsGrid from './TabsGrid.vue'
 
 const client = useClient()
 const allTabs = useEnabledTabs()
-const { sidebarExpanded, sidebarScrollable } = useDevToolsUIOptions()
+const { sidebarExpanded, sidebarScrollable } = useDevToolsOptions('ui')
 
 const showDocking = ref(false)
 const showMoreTabs = ref(false)

@@ -7,7 +7,7 @@ import { Network } from 'vis-network'
 import { computed, onMounted, ref, watch } from 'vue'
 import { getColorMode } from '~/composables/client'
 import { useLayouts, useServerConfig, useServerPages } from '~/composables/state'
-import { useDevToolsUIOptions } from '~/composables/storage'
+import { useDevToolsOptions } from '../composables/storage-options'
 
 const props = defineProps<{
   components: Component[]
@@ -36,7 +36,7 @@ const {
   componentsGraphShowPages: showPages,
   componentsGraphShowLayouts: showLayouts,
   componentsGraphShowWorkspace: showWorkspace,
-} = useDevToolsUIOptions()
+} = useDevToolsOptions('ui')
 
 const selectedFilter = ref<ComponentRelationship>()
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div relative w-full>
     <slot />
   </div>
 </template>

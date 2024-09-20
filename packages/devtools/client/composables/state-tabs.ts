@@ -4,14 +4,14 @@ import { objectPick } from '@antfu/utils'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
-  const settings = useDevToolsUIOptions()
+  const settings = useDevToolsOptions('ui')
   const router = useRouter()
 
   const builtin = computed(() => [
     ...router.getRoutes()
       .filter(route => route.path.startsWith('/modules/') && route.meta.title && !route.meta.wip)
       .filter(route => !route.meta.experimental || (route.meta.experimental && settings.showExperimentalFeatures.value))
-      .sort((a, b) => (a.meta.order || 100) - (b.meta.order || 100))
+      .sort((a, b) => (a.meta.order as number || 100) - (b.meta.order as number || 100))
       .map((i): ModuleBuiltinTab => {
         return {
           name: i.name as string,
@@ -60,7 +60,7 @@ function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBu
 export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>): ComputedRef<CategorizedTabs> {
   const {
     pinnedTabs,
-  } = useDevToolsUIOptions()
+  } = useDevToolsOptions('ui')
 
   return computed(() => {
     const categories = getCategorizedRecord()
@@ -88,7 +88,7 @@ export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuilt
 
 export function useEnabledTabs() {
   const tabs = useAllTabs()
-  const settings = useDevToolsUIOptions()
+  const settings = useDevToolsOptions('ui')
   const categoryOrder = Object.keys(getCategorizedRecord())
   const tabShows = tabs.value.map(tab => (tab as ModuleBuiltinTab)?.show?.())
 

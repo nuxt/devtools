@@ -47,7 +47,7 @@ export function setupClientRPC() {
   const {
     hiddenTabs,
     pinnedTabs,
-  } = useDevToolsUIOptions()
+  } = useDevToolsOptions('ui')
 
   telemetry('open', {
     hiddenTabs: hiddenTabs.value.join(','),

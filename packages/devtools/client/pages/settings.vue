@@ -4,8 +4,8 @@ import { watchEffect } from 'vue'
 import { useClient } from '~/composables/client'
 import { rpc } from '~/composables/rpc'
 import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
-import { useDevToolsUIOptions } from '~/composables/storage'
 import { telemetryEnabled } from '~/composables/telemetry'
+import { useDevToolsOptions } from '../composables/storage-options'
 
 definePageMeta({
   layout: 'full',
@@ -22,7 +22,7 @@ const {
   minimizePanelInactive,
   sidebarExpanded,
   sidebarScrollable,
-} = useDevToolsUIOptions()
+} = useDevToolsOptions('ui')
 
 const client = useClient()
 

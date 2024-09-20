@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { splitScreenAvailable, splitScreenEnabled, useDevToolsUIOptions } from '~/composables/storage'
+import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
 import { refreshData, reloadPage } from '~/composables/utils'
+import { useDevToolsOptions } from '../composables/storage-options'
 
-const { sidebarExpanded } = useDevToolsUIOptions()
+const { sidebarExpanded } = useDevToolsOptions('ui')
 
 function toggleSplitScreen() {
   splitScreenEnabled.value = !splitScreenEnabled.value

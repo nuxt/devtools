@@ -1,8 +1,4 @@
-export const telemetryEnabled = ref(await rpc.getOptions('behavior').then(options => options.telemetry))
-
-watch(telemetryEnabled, async (value) => {
-  await rpc.updateOptions('behavior', { telemetry: value })
-})
+export const telemetryEnabled = useDevToolsOptions('behavior').telemetry
 
 export function telemetry(event: string, payload?: object, immediate = false) {
   if (telemetryEnabled.value === false)
