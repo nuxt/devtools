@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/nuxt/devtools/compare/v1.5.0...v1.5.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* welcome page condition ([#736](https://github.com/nuxt/devtools/issues/736)) ([d23ce09](https://github.com/nuxt/devtools/commit/d23ce0993d1baa0cdd119a86429d2f6271410887))
+
+
+
 # [1.5.0](https://github.com/nuxt/devtools/compare/v1.4.2...v1.5.0) (2024-09-20)
 
 
