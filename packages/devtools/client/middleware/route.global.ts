@@ -1,9 +1,11 @@
 import { isFirstVisit } from '~/composables/storage'
-import { telemetryEnabled } from '~/composables/telemetry'
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (to.path === '/' && !(isFirstVisit.value || telemetryEnabled.value == null))
-    return navigateTo('/modules/overview')
-  else if (to.path !== '/' && isFirstVisit.value)
-    return navigateTo('/')
+  if (isFirstVisit.value) {
+    if (to.path !== '/')
+      navigateTo('/')
+  }
+  else if (to.path === '/') {
+    navigateTo('/modules/overview')
+  }
 })
