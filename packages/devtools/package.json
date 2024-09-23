@@ -33,7 +33,7 @@
     "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client && esno scripts/prepare.ts",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module build",
-    "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery --embed enable",
+    "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
     "dev:discovery": "discovery -c .discoveryrc.cjs",
     "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",

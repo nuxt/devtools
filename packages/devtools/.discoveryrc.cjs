@@ -1,6 +1,13 @@
+const { join } = require('node:path')
+
 module.exports = {
-  name: 'Node modules structure',
-  data() {
-    return { hello: 'world' }
+  name: 'Nuxt Server Data',
+  basedir: join(__dirname, 'discovery'),
+  embed: true,
+  view: {
+    assets: [
+      './pages/common.css',
+      './pages/default.js',
+    ],
   },
 }

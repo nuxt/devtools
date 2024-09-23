@@ -179,17 +179,22 @@ export function reloadPage() {
 }
 
 export function jsonStringifyCircular(params: any) {
-  const seen = new Set<any>()
-  return JSON.stringify(params, (key, value) => {
+  const seen: any[] = []
+  const result = JSON.stringify(params, (key, value) => {
     if (typeof value === 'function')
       return value.toString()
     if (isRef(value))
       value = value.value
     if (typeof value === 'object' && value !== null) {
-      if (seen.has(value))
-        return '[Circular]'
-      seen.add(value)
+      if (key === 'devServer') // TODO: do this better
+        return undefined
+      const index = seen.indexOf(value)
+      if (index >= 0)
+        // return structuredClone(seen[index])
+        return `<Circular #${index}>`
+      seen.push(value)
     }
     return value
   })
+  return result
 }
