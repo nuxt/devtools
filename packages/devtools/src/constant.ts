@@ -5,6 +5,8 @@ export const WS_EVENT_NAME = 'nuxt:devtools:rpc'
 
 const isSandboxed = provider === 'stackblitz' || provider === 'codesandbox'
 
+export const CLIENT_BASE = '__nuxt_devtools__/client'
+
 export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
   componentInspector: true,
