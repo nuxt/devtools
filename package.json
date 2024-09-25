@@ -16,6 +16,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all",
     "test": "pnpm lint",
+    "test:e2e": "pnpm playwright test",
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
