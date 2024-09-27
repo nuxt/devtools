@@ -8,9 +8,8 @@ import { useAutoImports, useServerConfig } from '~/composables/state'
 import { getModuleNameFromPath, isBuiltInModule, isNodeModulePath } from '~/composables/utils'
 
 definePageMeta({
-  icon: 'carbon-function',
-  title: 'Imports',
-  order: 4,
+  icon: 'tabler:hexagon-letter-d',
+  title: 'Directives',
 })
 
 const config = useServerConfig()
@@ -39,7 +38,7 @@ const filtered = computed(() => {
     ? fuse.value.search(search.value).map(i => i.item)
     : functions.value
 
-  result = result.filter(i => !(i.meta?.vueDirective === true))
+  result = result.filter(i => i.meta?.vueDirective === true)
 
   if (filterMode.value === 'using' && importsMetadata.value) {
     result = result
@@ -95,35 +94,35 @@ const filtered = computed(() => {
       </div>
     </NNavbar>
     <NSectionBlock
-      v-if="filtered.user.size"
-      :open="filtered.count.user <= DETAILS_MAX_ITEMS"
-      icon="carbon-function"
-      text="User composables"
-      :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
+      :open="filtered.user.size > 0 && filtered.count.user <= DETAILS_MAX_ITEMS"
+      :expandable="filtered.user.size > 0"
+      icon="tabler:hexagon-letter-d"
+      text="User directives"
+      :description="`${filtered.count.user} directives from ${filtered.user.size} modules`"
     >
       <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
     <NSectionBlock
-      v-if="filtered.builtin.size"
-      :open="filtered.count.builtin <= DETAILS_MAX_ITEMS"
+      :open="filtered.builtin.size > 0 && filtered.count.builtin <= DETAILS_MAX_ITEMS"
+      :expandable="filtered.builtin.size > 0"
       icon="simple-icons-nuxtdotjs"
-      text="Built-in composables"
-      :description="`${filtered.count.builtin} composables`"
+      text="Built-in directives"
+      :description="`${filtered.count.builtin} directives`"
     >
       <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
     <NSectionBlock
-      v-if="filtered.lib.size"
-      :open="filtered.count.lib <= DETAILS_MAX_ITEMS"
+      :open="filtered.lib.size > 0 && filtered.count.lib <= DETAILS_MAX_ITEMS"
+      :expandable="filtered.lib.size > 0"
       icon="carbon-3d-mpr-toggle"
-      text="Composables from libraries"
-      :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
+      text="Directives from libraries"
+      :description="`${filtered.count.lib} directives from ${filtered.lib.size} packages`"
     >
       <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
   </div>
 
   <HelpFab>
-    <DocsImports />
+    <DocsDirectives />
   </HelpFab>
 </template>

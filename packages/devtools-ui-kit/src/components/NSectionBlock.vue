@@ -11,18 +11,21 @@ const props = withDefaults(
     collapse?: boolean
     open?: boolean
     padding?: boolean | string
+    expandable?: boolean
   }>(),
   {
     containerClass: '',
     open: true,
     padding: true,
     collapse: true,
+    expandable: true,
   },
 )
 
 const open = useVModel(props, 'open', undefined, { passive: true })
 function onToggle(e: any) {
-  open.value = e.target.open
+  if (props.expandable)
+    open.value = e.target.open
 }
 </script>
 
@@ -31,8 +34,8 @@ function onToggle(e: any) {
   <!-- @vue-ignore -->
   <details :open="open" @toggle="(onToggle as any)">
     <summary
-      class="cursor-pointer select-none hover:bg-active p4"
-      :class="collapse ? '' : 'pointer-events-none'"
+      class="select-none hover:bg-active p4"
+      :class="[collapse ? '' : 'pointer-events-none', expandable ? 'cursor-pointer' : ''].filter(Boolean).join(' ')"
     >
       <NIconTitle :icon="icon" :text="text" text-xl transition :class="[open ? 'op100' : 'op60', headerClass]">
         <div>
@@ -50,7 +53,7 @@ function onToggle(e: any) {
         <div class="flex-auto" />
         <slot name="actions" />
         <NIcon
-          v-if="collapse"
+          v-if="expandable && collapse"
           icon="carbon-chevron-down"
           class="chevron"
           cursor-pointer place-self-start text-base op75 transition duration-500
