@@ -27,7 +27,7 @@ const openInEditor = useOpenInEditor()
 const name = computed(() => props.item.as || props.item.name)
 const copyName = computed(() => {
   let n = name.value
-  if (props.item.meta?.vueDirective === true) {
+  if (props.isDirective) {
     if (n[0] !== 'v') {
       n = `v${n}`
     }
