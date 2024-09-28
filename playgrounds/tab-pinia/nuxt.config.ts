@@ -20,6 +20,8 @@ export default defineNuxtConfig({
         name: 'Focus',
         meta: {
           vueDirective: true,
+          docsUrl: 'https://vuetifyjs.com/en/directives/click-outside/#usage',
+          description: 'The v-focus directive focus the element once mounted.',
         },
       }],
     }],
