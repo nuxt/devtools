@@ -7,12 +7,14 @@ import { useCopy, useOpenInEditor } from '~/composables/editor'
 const props = withDefaults(
   defineProps<{
     item: Import
+    isDirective?: boolean
     metadata?: UnimportMeta
     filepath?: string
     counter?: boolean
     classes?: string
   }>(),
   {
+    isDirective: false,
     counter: true,
     classes: 'px2 py1 text-sm bg-gray:5 ',
   },
@@ -40,14 +42,18 @@ const docsUrl = computed(() => {
 
 <template>
   <VDropdown :disabled="!props.metadata">
-    <button hover:text-primary>
-      <code
-        rounded font-mono
-        :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]"
-      >
+    <button hover:text-primary :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]">
+      <code rounded font-mono>
         {{ name }}
         <sup v-if="usageCount && counter" text-primary>x{{ usageCount }}</sup>
       </code>
+      <sup v-if="isDirective">
+        <abbr title="Vue Directive">
+          <NIcon
+            icon="tabler:hexagon-letter-d"
+          />
+        </abbr>
+      </sup>
     </button>
     <template #popper>
       <div max-w-100>

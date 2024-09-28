@@ -15,6 +15,7 @@ definePageMeta({
 
 const config = useServerConfig()
 const filterMode = ref<'all' | 'using' | 'not-used'>('all')
+const filterEntries = ref<'all' | 'composables' | 'directives'>('all')
 
 const search = ref('')
 const autoImports = useAutoImports()
@@ -39,7 +40,14 @@ const filtered = computed(() => {
     ? fuse.value.search(search.value).map(i => i.item)
     : functions.value
 
-  result = result.filter(i => !(i.meta?.vueDirective === true))
+  const filter = filterEntries.value
+
+  if (filter === 'composables') {
+    result = result.filter(i => !(i.meta?.vueDirective === true))
+  }
+  else if (filter === 'directives') {
+    result = result.filter(i => i.meta?.vueDirective === true)
+  }
 
   if (filterMode.value === 'using' && importsMetadata.value) {
     result = result
@@ -90,6 +98,15 @@ const filtered = computed(() => {
             { label: 'All', value: 'all' },
             { label: 'Using', value: 'using' },
             { label: 'Not used', value: 'not-used' },
+          ]"
+        />
+        <NSelectTabs
+          v-model="filterEntries"
+          n="primary sm"
+          :options="[
+            { label: 'All', value: 'all' },
+            { label: 'Composables', value: 'composables' },
+            { label: 'Directives', value: 'directives' },
           ]"
         />
       </div>
