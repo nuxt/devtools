@@ -105,7 +105,7 @@ const filteredLibTitle = computed(() => {
 <template>
   <div v-if="config" relative h-full of-auto>
     <NNavbar v-model:search="search" pb3>
-      <div v-if="importsMetadata" class="filter" flex="~ gap-2 items-center">
+      <div v-if="importsMetadata" flex="~ gap-2 items-center lt-sm:col lt-sm:items-start">
         <NIcon icon="carbon-filter" op50 />
         <NSelectTabs
           v-model="filterMode"
@@ -160,11 +160,3 @@ const filteredLibTitle = computed(() => {
     <DocsImports />
   </HelpFab>
 </template>
-
-<style scoped>
-@screen lt-sm {
-  .filter {
-    --uno: flex-col flex-items-start;
-  }
-}
-</style>
