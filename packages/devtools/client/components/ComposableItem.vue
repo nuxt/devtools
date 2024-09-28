@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
+import { kebabCase } from 'scule'
 import { computed } from 'vue'
 import { ComposablesDocs } from '~/composables/constants'
 import { useCopy, useOpenInEditor } from '~/composables/editor'
@@ -24,6 +25,16 @@ const copy = useCopy()
 const openInEditor = useOpenInEditor()
 
 const name = computed(() => props.item.as || props.item.name)
+const copyName = computed(() => {
+  let n = name.value
+  if (props.item.meta?.vueDirective === true) {
+    if (n[0] !== 'v') {
+      n = `v${n}`
+    }
+    n = kebabCase(n)
+  }
+  return n
+})
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
 const modules = computed(() =>
   (props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
@@ -65,7 +76,7 @@ const docsUrl = computed(() => {
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
-            <NButton icon="carbon-copy" @click="copy(name, 'imports-name')">
+            <NButton icon="carbon-copy" @click="copy(copyName, 'imports-name')">
               Copy
             </NButton>
             <NButton v-if="filepath" icon="carbon-code" @click="filepath && openInEditor(filepath)">
