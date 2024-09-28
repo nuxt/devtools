@@ -1,3 +1,7 @@
+import { createResolver } from '@nuxt/kit'
+
+const resolver = createResolver(import.meta.url)
+
 export default defineNuxtConfig({
   css: ['~/assets/main.css'],
 
@@ -9,6 +13,20 @@ export default defineNuxtConfig({
 
   imports: {
     dirs: ['./stores'],
+    // TODO: remove this once repo update to use nuxt version with directives folder support
+    presets: [{
+      from: resolver.resolve('directives/focus.ts'),
+      imports: [{
+        name: 'Focus',
+        meta: {
+          vueDirective: true,
+        },
+      }],
+    }],
+    // TODO: remove this once repo update to use nuxt version with directives folder support
+    addons: {
+      vueDirectives: true,
+    },
   },
 
   pinia: {
