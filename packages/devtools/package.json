@@ -13,16 +13,14 @@
   "exports": {
     ".": {
       "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
+      "import": "./dist/module.mjs"
     },
     "./types": {
       "types": "./dist/types.d.ts"
     },
     "./*": "./*"
   },
-  "main": "./module.cjs",
-  "types": "./dist/module.d.ts",
+  "types": "./dist/module.d.mts",
   "bin": "./cli.mjs",
   "files": [
     "*.cjs",
