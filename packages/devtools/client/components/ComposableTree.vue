@@ -17,6 +17,7 @@ defineProps<{
           v-for="i of value" :key="i.as"
           :item="i"
           :metadata="metadata"
+          :is-directive="i.meta?.vueDirective === true"
           :filepath="key.match(/^[\w@]/) ? undefined : key"
         />
       </div>

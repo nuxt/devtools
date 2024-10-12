@@ -10,7 +10,7 @@ const counter = useCounter()
 
 <template>
   <div>
-    <div style="margin: 1rem 0">
+    <div v-focus style="margin: 1rem 0">
       <PiniaLogo />
     </div>
 
