@@ -19,6 +19,7 @@
     "test:e2e": "pnpm playwright test",
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
+    "fixture:empty": "pnpm -C playgrounds/empty run dev",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks && pnpm -C docs install",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
