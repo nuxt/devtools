@@ -15,6 +15,7 @@ import { popupWindow, state } from './state'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
+import { CLIENT_BASE } from '../../../constant'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
@@ -126,8 +127,7 @@ export async function setupDevToolsClient({
   function getIframe() {
     if (!iframe) {
       const runtimeConfig = useRuntimeConfig()
-      const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
+      const CLIENT_PATH = `/${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
       iframe = document.createElement('iframe')
 

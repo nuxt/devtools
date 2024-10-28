@@ -22,13 +22,14 @@ import { defineNuxtModule, logger } from '@nuxt/kit'
 import { getPort } from 'get-port-please'
 import { resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
-import { defaultOptions } from './packages/devtools/src/constant'
+import { CLIENT_BASE, defaultOptions } from './packages/devtools/src/constant'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
 import { startSubprocess } from './packages/devtools-kit/src/index'
 
 export type { ModuleOptions }
 
+export const clientRouteName = '/__nuxt_devtools__/client'
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@nuxt/devtools',
@@ -45,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
       // add proxy to client
       config.server.proxy ||= {}
       // TODO: ws proxy is not working
-      config.server.proxy['/__nuxt_devtools__/client'] = {
+      config.server.proxy[CLIENT_BASE] = {
         target: `http://localhost:${PORT}`,
         changeOrigin: true,
         followRedirects: true,
