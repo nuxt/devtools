@@ -1,5 +1,8 @@
 import type { MaybeRefOrGetter } from 'vue'
+import { useRouter } from '#app/composables/router'
 import { randomStr } from '@antfu/utils'
+import { computed, onUnmounted, reactive, toValue } from 'vue'
+import { useEnabledTabs } from './state-tabs'
 
 export interface CommandItem {
   id: string

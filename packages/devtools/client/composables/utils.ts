@@ -2,7 +2,13 @@ import type { AsyncDataOptions } from '#app'
 import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import type { Component } from 'nuxt/schema'
 import type { Ref } from 'vue'
+import { useAsyncData } from '#app/composables/asyncData'
+import { useNuxtApp } from '#app/nuxt'
+import { useState } from '#imports'
+import { useSessionStorage } from '@vueuse/core'
 import { relative } from 'pathe'
+import { triggerRef } from 'vue'
+import { useClient } from './client'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)

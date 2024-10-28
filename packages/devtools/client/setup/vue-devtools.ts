@@ -1,5 +1,7 @@
 import { functions, onRpcConnected, rpc } from '@vue/devtools-core'
 import { createRpcClient, toggleHighPerfMode } from '@vue/devtools-kit'
+import { watchEffect } from 'vue'
+import { useDevToolsFrameState } from '../composables/storage'
 
 export function setupVueDevTools() {
   const state = useDevToolsFrameState()

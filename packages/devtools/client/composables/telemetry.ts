@@ -1,3 +1,7 @@
+import { userAgentInfo } from './dev-auth'
+import { rpc } from './rpc'
+import { useDevToolsOptions } from './storage-options'
+
 export const telemetryEnabled = useDevToolsOptions('behavior').telemetry
 
 export function telemetry(event: string, payload?: object, immediate = false) {

@@ -1,6 +1,11 @@
-import type { MaybeRef } from 'vue'
+import type { computed, ComputedRef, MaybeRef } from 'vue'
 import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import { useRouter } from '#app/composables/router'
 import { objectPick } from '@antfu/utils'
+import { toValue, unref } from 'vue'
+import { useClientRouter } from './client'
+import { useCustomTabs, useServerPages } from './state'
+import { useDevToolsOptions } from './storage-options'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()

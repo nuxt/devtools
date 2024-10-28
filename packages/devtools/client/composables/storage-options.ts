@@ -1,7 +1,7 @@
 import type { ToRefs } from 'vue'
 import type { NuxtDevToolsOptions } from '../../types'
 import { watchDebounced } from '@vueuse/core'
-import { toRefs } from 'vue'
+import { reactive, toRefs } from 'vue'
 import { defaultTabOptions } from '../../src/constant'
 import { rpc } from './rpc'
 

@@ -24,31 +24,49 @@ export default defineNuxtConfig({
     'nuxt-eslint-auto-explicit-import',
   ],
 
+  // For dogfooding purposes
+  $development: {
+    appConfig: {
+      fixture2: 'from nuxt.config.ts',
+    },
+
+    runtimeConfig: {
+      'fixture3': 'private runtime config from nuxt.config.ts',
+      'api-key': 'null',
+      'public': {
+        fixture4: 'public runtime config from nuxt.config.ts',
+      },
+    },
+
+    nitro: {
+      devStorage: {
+        test: {
+          driver: 'fs',
+          base: resolver.resolve('./.data/test'),
+        },
+      },
+      experimental: {
+        tasks: true,
+      },
+      scheduledTasks: {
+        '*/5 * * * *': ['collection:1', 'collection:2'],
+        '*/30 * * * *': ['ping'],
+      },
+    },
+  },
+
+  // Production Overrides
+  $production: {
+    app: {
+      // We set a placeholder for the middleware to be replaced with the correct base URL
+      baseURL: '/__NUXT_DEVTOOLS_BASE__/',
+    },
+  },
+
   ssr: false,
 
-  nitro: {
-    output: {
-      publicDir: resolver.resolve('../dist/client'),
-    },
-    devStorage: {
-      test: {
-        driver: 'fs',
-        base: resolver.resolve('./.data/test'),
-      },
-    },
-    hooks: {
-      'prerender:routes': function (routes) {
-        // Disable prerendering as it's an SPA
-        routes.clear()
-      },
-    },
-    experimental: {
-      tasks: true,
-    },
-    scheduledTasks: {
-      '*/5 * * * *': ['collection:1', 'collection:2'],
-      '*/30 * * * *': ['ping'],
-    },
+  app: {
+    baseURL: '/__nuxt_devtools__/client/',
   },
 
   alias: {
@@ -57,30 +75,23 @@ export default defineNuxtConfig({
     '@nuxt/devtools-kit': resolver.resolve('../../devtools-kit/src/index'),
   },
 
-  eslint: {
-    config: {
-      standalone: false,
-    },
-  },
-
-  appConfig: {
-    fixture2: 'from nuxt.config.ts',
-  },
-
-  runtimeConfig: {
-    'fixture3': 'private runtime config from nuxt.config.ts',
-    'api-key': 'null',
-    'public': {
-      fixture4: 'public runtime config from nuxt.config.ts',
-    },
-  },
-
-  app: {
-    baseURL: '/__nuxt_devtools__/client/',
-  },
-
   experimental: {
     watcher: 'parcel',
+  },
+
+  compatibilityDate: '2024-07-22',
+
+  nitro: {
+    output: {
+      publicDir: resolver.resolve('../dist/client'),
+    },
+
+    hooks: {
+      'prerender:routes': function (routes) {
+        // Disable prerendering as it's an SPA
+        routes.clear()
+      },
+    },
   },
 
   vite: {
@@ -138,13 +149,12 @@ export default defineNuxtConfig({
     includeWorkspace: true,
   },
 
-  // Production Overrides
-  $production: {
-    app: {
-      // We set a placeholder for the middleware to be replaced with the correct base URL
-      baseURL: '/__NUXT_DEVTOOLS_BASE__/',
+  eslint: {
+    config: {
+      standalone: false,
+      nuxt: {
+        sortConfigKeys: true,
+      },
     },
   },
-
-  compatibilityDate: '2024-07-22',
 })
