@@ -20,7 +20,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'open-default-input'): void
+  (event: 'openDefaultInput'): void
 }>()
 
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
@@ -518,7 +518,7 @@ const copy = useCopy()
             <NButton
               icon="i-carbon-edit"
               :border="false"
-              @click="emit('open-default-input')"
+              @click="emit('openDefaultInput')"
             />
             <div x-divider />
           </div>
