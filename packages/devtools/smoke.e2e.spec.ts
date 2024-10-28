@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test'
 test('DevTools renders', async ({ page }) => {
   await page.goto('./', { waitUntil: 'networkidle' })
 
+  expect(new URL(page.url()).pathname).toBe('/__nuxt_devtools__/client')
+
   await page.waitForTimeout(2000) // TODO: A smarter wait for loading state
 
   // Expect a heading to be visible (using this as a smoke test)
