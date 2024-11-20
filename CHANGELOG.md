@@ -1,3 +1,17 @@
+## [1.6.1](https://github.com/nuxt/devtools/compare/v1.6.0...v1.6.1) (2024-11-20)
+
+
+### Bug Fixes
+
+* missing pinia store modules ([#751](https://github.com/nuxt/devtools/issues/751)) ([be243e4](https://github.com/nuxt/devtools/commit/be243e42e0db1fa9694b9f9c7aa69760e0898cff))
+
+
+### Features
+
+* apply lint, use explict import ([2c6d2d3](https://github.com/nuxt/devtools/commit/2c6d2d37199ab8419b51c8a56c5eb7d647192787))
+
+
+
 # [1.6.0](https://github.com/nuxt/devtools/compare/v1.5.2...v1.6.0) (2024-10-12)
 
 
