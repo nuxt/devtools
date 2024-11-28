@@ -58,7 +58,9 @@
     "vue-tsc": "catalog:"
   },
   "resolutions": {
-    "esbuild": "^0.23.1"
+    "esbuild": "^0.23.1",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"

@@ -18,7 +18,11 @@ const props = withDefaults(
   },
 )
 
-const emit = defineEmits<{ (...args: any): void }>()
+const emit = defineEmits<{
+  (name: 'keydown', event: KeyboardEvent): void
+  (name: 'keyup', event: KeyboardEvent): void
+  (name: 'change', event: Event): void
+}>()
 const input = useVModel(props, 'modelValue', emit, { passive: true })
 </script>
 
