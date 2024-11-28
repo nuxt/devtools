@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { ComponentRelationship } from '~/../src/types'
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
 import type { Data, Node, Options } from 'vis-network'
+import type { ComponentRelationship } from '~/../src/types'
 import { useDebounce } from '@vueuse/core'
 import { Network } from 'vis-network'
 import { computed, onMounted, ref, watch } from 'vue'

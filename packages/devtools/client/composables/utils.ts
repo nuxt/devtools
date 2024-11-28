@@ -1,7 +1,7 @@
 import type { AsyncDataOptions } from '#app'
-import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import type { Component } from 'nuxt/schema'
 import type { Ref } from 'vue'
+import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useNuxtApp } from '#app/nuxt'
 import { useState } from '#imports'

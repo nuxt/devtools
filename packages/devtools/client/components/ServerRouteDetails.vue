@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import { useCookie } from '#app/composables/cookie'
 import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'

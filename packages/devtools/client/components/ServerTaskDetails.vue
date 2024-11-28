@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ServerRouteInput, ServerTaskInfo } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import type { ServerRouteInput, ServerTaskInfo } from '~/../src/types'
 import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 import { computed, reactive, ref, watchEffect } from 'vue'
