@@ -130,6 +130,7 @@ export default defineNuxtConfig({
         'ohash',
         'perfect-debounce',
         'scule',
+        'vue-virtual-scroller',
         'vis-data',
         'vis-network',
         '@xterm/xterm',
