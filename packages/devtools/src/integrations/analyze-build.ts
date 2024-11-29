@@ -2,13 +2,13 @@ import type { Nuxt } from 'nuxt/schema'
 import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
 import { addVitePlugin } from '@nuxt/kit'
 import { join } from 'pathe'
-import Inspect from 'vite-plugin-inspect'
 import { getFolderSize } from '../utils/fs'
+import { createVitePluginInspect } from './vite-inspect'
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
   if (options.viteInspect !== false) {
     addVitePlugin(
-      Inspect({
+      await createVitePluginInspect({
         build: true,
         outputDir: join(nuxt.options.analyzeDir, '.vite-inspect'),
       }),
