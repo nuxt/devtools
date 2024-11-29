@@ -1,9 +1,10 @@
-import type { Options, ViteInspectAPI } from 'vite-plugin-inspect'
+import type { Plugin } from 'vite'
+import type { ViteInspectAPI, ViteInspectOptions } from 'vite-plugin-inspect'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { addVitePlugin } from '@nuxt/kit'
 
-export async function createVitePluginInspect(options?: Options) {
+export async function createVitePluginInspect(options?: ViteInspectOptions): Promise<Plugin> {
   const { version } = await import('vite')
   const major = Number.parseInt(version.split('.')[0], 10)
 
