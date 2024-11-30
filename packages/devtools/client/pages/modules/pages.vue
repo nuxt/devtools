@@ -3,6 +3,7 @@ import { definePageMeta } from '#imports'
 import { computed, onMounted, ref } from 'vue'
 import { useClient, useClientRoute, useClientRouter } from '~/composables/client'
 import { useLayouts, useMergedRouteList, useServerApp, useServerConfig } from '~/composables/state'
+import { useNuxtCompatibilityVersion } from '../../composables/utils'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
@@ -59,6 +60,10 @@ function navigateToRoute(path: string) {
   router.value.push(path)
   routeInput.value = path
 }
+
+const compatibilityVersion = useNuxtCompatibilityVersion()
+
+const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}pages/index.vue`)
 </script>
 
 <template>
@@ -164,7 +169,7 @@ function navigateToRoute(path: string) {
     icon="carbon-tree-view-alt"
     name="wizard-pages"
     title="Nuxt Routing"
-    description="Create `./pages/index.vue` to enable routing"
+    :description="`Create ${pagesPath} to enable routing`"
     :actions="[
       {
         label: 'Learn more',

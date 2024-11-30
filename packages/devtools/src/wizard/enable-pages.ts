@@ -18,8 +18,9 @@ const route = useRoute()
 `
 
 export async function enablePages(nuxt: Nuxt) {
-  const pathApp = join(nuxt.options.srcDir, 'app.vue')
-  const pathPageIndex = join(nuxt.options.srcDir, 'pages/index.vue')
+  const baseDir = nuxt.options.future.compatibilityVersion === 4 ? nuxt.options.dir.app : nuxt.options.srcDir
+  const pathApp = join(baseDir, 'app.vue')
+  const pathPageIndex = join(baseDir, 'pages/index.vue')
 
   if (fs.existsSync(pathPageIndex)) {
     logger.warn('pages/index.vue already exists, skipping')
