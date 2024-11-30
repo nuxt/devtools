@@ -3,7 +3,7 @@ import { definePageMeta } from '#imports'
 import { computed, onMounted, ref } from 'vue'
 import { useClient, useClientRoute, useClientRouter } from '~/composables/client'
 import { useLayouts, useMergedRouteList, useServerApp, useServerConfig } from '~/composables/state'
-import { useNuxtCompatibilityVersion } from '../../composables/utils'
+import { useNuxtCompatibilityVersion } from '~/composables/utils'
 
 definePageMeta({
   icon: 'carbon-tree-view-alt',
