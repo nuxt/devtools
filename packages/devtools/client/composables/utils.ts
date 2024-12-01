@@ -9,6 +9,7 @@ import { useSessionStorage } from '@vueuse/core'
 import { relative } from 'pathe'
 import { triggerRef } from 'vue'
 import { useClient } from './client'
+import { useServerConfig } from './state'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -182,4 +183,9 @@ export function refreshData() {
 
 export function reloadPage() {
   location.reload()
+}
+
+export function useNuxtCompatibilityVersion() {
+  const config = useServerConfig()
+  return config.value?.future.compatibilityVersion
 }
