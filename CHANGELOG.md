@@ -1,3 +1,17 @@
+## [1.6.2](https://github.com/nuxt/devtools/compare/v1.6.1...v1.6.2) (2024-12-03)
+
+
+### Bug Fixes
+
+* add v4 compatibility version handeling for pages tab ([#758](https://github.com/nuxt/devtools/issues/758)) ([bd8651c](https://github.com/nuxt/devtools/commit/bd8651cc66d21314f101334527332759f4940035))
+
+
+### Features
+
+* support `vite-plugin-inspect` for both Vite 5 and 6 ([#757](https://github.com/nuxt/devtools/issues/757)) ([cfcbc24](https://github.com/nuxt/devtools/commit/cfcbc244bfaa3d2d0a647504b422cb35e2419026))
+
+
+
 ## [1.6.1](https://github.com/nuxt/devtools/compare/v1.6.0...v1.6.1) (2024-11-20)
 
 
