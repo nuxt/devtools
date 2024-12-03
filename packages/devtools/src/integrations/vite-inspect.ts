@@ -1,19 +1,19 @@
 import type { Plugin } from 'vite'
-import type { ViteInspectAPI, ViteInspectOptions } from 'vite-plugin-inspect'
+import type { ViteInspectAPI, Options as ViteInspectOptions } from 'vite-plugin-inspect'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { addVitePlugin } from '@nuxt/kit'
 
 export async function createVitePluginInspect(options?: ViteInspectOptions): Promise<Plugin> {
-  const { version } = await import('vite')
-  const major = Number.parseInt(version.split('.')[0], 10)
+  // const { version } = await import('vite')
+  // const major = Number.parseInt(version.split('.')[0], 10)
 
-  if (major < 6) {
-    return await import('vite-plugin-inspect-legacy').then(r => r.default(options))
-  }
-  else {
-    return await import('vite-plugin-inspect').then(r => r.default(options))
-  }
+  // if (major < 6) {
+  //   return await import('vite-plugin-inspect-legacy').then(r => r.default(options))
+  // }
+  // else {
+  return await import('vite-plugin-inspect').then(r => r.default(options))
+  // }
 }
 
 export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
