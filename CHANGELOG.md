@@ -1,3 +1,12 @@
+## [1.6.3](https://github.com/nuxt/devtools/compare/v1.6.2...v1.6.3) (2024-12-03)
+
+
+### Bug Fixes
+
+* revert [#757](https://github.com/nuxt/devtools/issues/757), pin `vite-plugin-inspect` version ([a399082](https://github.com/nuxt/devtools/commit/a39908296345d8e5941dca320b3dff2244f34532))
+
+
+
 ## [1.6.2](https://github.com/nuxt/devtools/compare/v1.6.1...v1.6.2) (2024-12-03)
 
 
