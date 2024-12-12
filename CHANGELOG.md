@@ -1,3 +1,12 @@
+## [1.6.4](https://github.com/nuxt/devtools/compare/v1.6.3...v1.6.4) (2024-12-12)
+
+
+### Bug Fixes
+
+* upgrade `@vue/devtools` ([8485fcb](https://github.com/nuxt/devtools/commit/8485fcbea2e841c15cdfc4018def83108b49143f))
+
+
+
 ## [1.6.3](https://github.com/nuxt/devtools/compare/v1.6.2...v1.6.3) (2024-12-03)
 
 
