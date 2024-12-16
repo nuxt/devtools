@@ -32,7 +32,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
     // we can open files in VS Code Server
     try {
       const { port } = JSON.parse(await fs.readFile(vscodeServerControllerFile, 'utf-8')) as any
-      const url = `http://localhost:${port}/open?path=${encodeURIComponent(file)}`
+      const url = `http://localhost:${port}/open?path=${encodeURIComponent(root + "/" + file)}`
       await fetch(url)
       rpc.broadcast.navigateTo('/modules/custom-builtin-vscode')
       return true
