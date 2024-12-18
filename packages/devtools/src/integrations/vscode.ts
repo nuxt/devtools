@@ -69,6 +69,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       '--accept-server-license-terms',
       '--install-extension',
       'antfu.vscode-server-controller',
+      '--host=0.0.0.0'
     ], { stderr: 'inherit', stdout: 'ignore', reject: false })
 
     startSubprocess(
@@ -79,6 +80,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
           '--accept-server-license-terms',
           '--without-connection-token',
           `--port=${port}`,
+          '--host=0.0.0.0'
         ],
       },
       {
