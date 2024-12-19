@@ -10,8 +10,41 @@ import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import { LOG_PREFIX } from '../logger'
 
+type CodeServerType = 'vscode' | 'code-server'
+type CodeServerOptions = {
+  codeBinary: string
+  launchArg: string
+  licenseTermsArg: string
+  connectionTokenArg: string
+}
+
 export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {
-  const installed = !!await which('code-server').catch(() => null)
+  let installed = true;
+  let codeServer: CodeServerType = 'vscode'
+  let alternateCodeServer: CodeServerType = 'code-server'
+  const codeBinaryOptions: Record<CodeServerType, CodeServerOptions> = {
+    'vscode': {
+      codeBinary: 'code',
+      launchArg: 'serve-web',
+      licenseTermsArg: '--accept-server-license-terms',
+      connectionTokenArg: '--without-connection-token'
+    },
+    'code-server': {
+      codeBinary: 'code-server',
+      launchArg: 'serve-local',
+      licenseTermsArg: '',
+      connectionTokenArg: ''
+    }
+  }
+  
+  if (!await which(codeBinaryOptions[codeServer].codeBinary).catch(() => null)) {
+    codeServer = alternateCodeServer
+    if (!await which(codeBinaryOptions[codeServer].codeBinary).catch(() => null)) {
+      installed = false
+    }
+  }
+
+  let { codeBinary, launchArg, licenseTermsArg, connectionTokenArg } = codeBinaryOptions[codeServer];
 
   const vsOptions = options?.vscode || {}
 
@@ -32,7 +65,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
     // we can open files in VS Code Server
     try {
       const { port } = JSON.parse(await fs.readFile(vscodeServerControllerFile, 'utf-8')) as any
-      const url = `http://localhost:${port}/open?path=${encodeURIComponent(root + "/" + file)}`
+      const url = `http://localhost:${port}/open?path=${encodeURIComponent(root + '/' + file)}`
       await fetch(url)
       rpc.broadcast.navigateTo('/modules/custom-builtin-vscode')
       return true
@@ -64,9 +97,9 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
 
     // Install VS Code Server Controller
     // https://github.com/antfu/vscode-server-controller
-    execa('code-server', [
-      'serve-local',
-      '--accept-server-license-terms',
+    execa(codeBinary, [
+      launchArg,
+      licenseTermsArg,
       '--install-extension',
       'antfu.vscode-server-controller',
       '--host=0.0.0.0'
@@ -74,11 +107,11 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
 
     startSubprocess(
       {
-        command: 'code-server',
+        command: codeBinary,
         args: [
-          'serve-local',
-          '--accept-server-license-terms',
-          '--without-connection-token',
+          launchArg,
+          licenseTermsArg,
+          connectionTokenArg,
           `--port=${port}`,
           '--host=0.0.0.0'
         ],
@@ -146,7 +179,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       icon: 'bxl-visual-studio',
       category: 'modules',
       requireAuth: true,
-      view: !installed
+      view: !installed && !(vsOptions?.mode === 'tunnel') 
         ? {
             type: 'launch',
             title: 'Install VS Code Server',
