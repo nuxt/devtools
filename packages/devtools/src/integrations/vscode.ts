@@ -1,4 +1,4 @@
-import type { NuxtDevtoolsServerContext } from '../types'
+import type { NuxtDevtoolsServerContext, CodeServerType } from '../types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { hostname } from 'node:os'
@@ -10,44 +10,39 @@ import { checkPort, getPort } from 'get-port-please'
 import which from 'which'
 import { LOG_PREFIX } from '../logger'
 
-type CodeServerType = 'vscode' | 'code-server'
+
 type CodeServerOptions = {
   codeBinary: string
   launchArg: string
   licenseTermsArg: string
   connectionTokenArg: string
 }
-
-export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {
-  let installed = true;
-  let codeServer: CodeServerType = 'vscode'
-  let alternateCodeServer: CodeServerType = 'code-server'
-  const codeBinaryOptions: Record<CodeServerType, CodeServerOptions> = {
-    'vscode': {
-      codeBinary: 'code',
-      launchArg: 'serve-web',
-      licenseTermsArg: '--accept-server-license-terms',
-      connectionTokenArg: '--without-connection-token'
-    },
-    'code-server': {
-      codeBinary: 'code-server',
-      launchArg: 'serve-local',
-      licenseTermsArg: '',
-      connectionTokenArg: ''
-    }
+const codeBinaryOptions: Record<CodeServerType, CodeServerOptions> = {
+  'ms-code-cli': {
+    codeBinary: 'code',
+    launchArg: 'serve-web',
+    licenseTermsArg: '--accept-server-license-terms',
+    connectionTokenArg: '--without-connection-token'
+  },
+  "ms-code-server": {
+    codeBinary: "code-server",
+    launchArg: "serve-local",
+    licenseTermsArg: "--accept-server-license-terms",
+    connectionTokenArg: "--without-connection-token"
+  },
+  'coder-code-server': {
+    codeBinary: 'code-server',
+    launchArg: 'serve-local',
+    licenseTermsArg: '',
+    connectionTokenArg: ''
   }
-  
-  if (!await which(codeBinaryOptions[codeServer].codeBinary).catch(() => null)) {
-    codeServer = alternateCodeServer
-    if (!await which(codeBinaryOptions[codeServer].codeBinary).catch(() => null)) {
-      installed = false
-    }
-  }
+}
 
-  let { codeBinary, launchArg, licenseTermsArg, connectionTokenArg } = codeBinaryOptions[codeServer];
-
+export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {  
   const vsOptions = options?.vscode || {}
-
+  let codeServer: CodeServerType = vsOptions?.codeServer || 'ms-code-server';
+  let { codeBinary, launchArg, licenseTermsArg, connectionTokenArg } = codeBinaryOptions[codeServer];
+  const installed = !!await which(codeBinary).catch(() => null)
   let port = vsOptions?.port || 3080
   let url = `http://localhost:${port}`
   let loaded = false
