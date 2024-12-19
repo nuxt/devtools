@@ -3,6 +3,7 @@ import type { VitePluginInspectorOptions } from 'vite-plugin-vue-inspector'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo, ServerRouteInput, ServerTaskInfo } from './integrations'
 
+export type CodeServerType = 'ms-code-cli' | 'ms-code-server' | 'coder-code-server'
 export interface ModuleOptions {
   /**
    * Enable DevTools
@@ -153,6 +154,16 @@ export interface VSCodeIntegrationOptions {
    * Options for VS Code tunnel
    */
   tunnel?: VSCodeTunnelOptions
+
+
+  /**
+   * Determines which binary and arguments to use for VS Code.
+   * 
+   * By default, uses the MS Code Server (ms-code-server). 
+   * Can alternatively use the open source Coder code-server (coder-code-server), 
+   * or the MS VS Code CLI (ms-code-cli)
+   */
+  codeServer?: CodeServerType
 }
 
 export interface VSCodeTunnelOptions {
