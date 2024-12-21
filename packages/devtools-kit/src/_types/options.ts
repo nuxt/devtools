@@ -155,15 +155,20 @@ export interface VSCodeIntegrationOptions {
    */
   tunnel?: VSCodeTunnelOptions
 
-
   /**
    * Determines which binary and arguments to use for VS Code.
-   * 
-   * By default, uses the MS Code Server (ms-code-server). 
-   * Can alternatively use the open source Coder code-server (coder-code-server), 
+   *
+   * By default, uses the MS Code Server (ms-code-server).
+   * Can alternatively use the open source Coder code-server (coder-code-server),
    * or the MS VS Code CLI (ms-code-cli)
+   *  @default 'ms-code-server'
    */
   codeServer?: CodeServerType
+
+  /**
+   * Host address to listen on. Unspecified by default.
+   */
+  host?: string
 }
 
 export interface VSCodeTunnelOptions {
