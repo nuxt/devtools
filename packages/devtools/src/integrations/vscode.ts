@@ -87,11 +87,8 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
     // Install VS Code Server Controller
     // https://github.com/antfu/vscode-server-controller
     execa(codeBinary, [
-      launchArg,
-      licenseTermsArg,
       '--install-extension',
       'antfu.vscode-server-controller',
-      host,
     ], { stderr: 'inherit', stdout: 'ignore', reject: false })
 
     startSubprocess(
