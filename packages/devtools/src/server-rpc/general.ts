@@ -177,7 +177,7 @@ export function setupGeneralRPC({
 
       try {
         for (const hook of openInEditorHooks) {
-          const result = await hook(path)
+          const result = await hook(path + suffix)
           if (result)
             return true
         }

@@ -232,3 +232,10 @@ export interface ComponentWithRelationships {
   dependencies?: string[]
   dependents?: string[]
 }
+
+export interface CodeServerOptions {
+  codeBinary: string
+  launchArg: string
+  licenseTermsArg: string
+  connectionTokenArg: string
+}
