@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.6.4",
   "private": true,
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@9.15.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -61,7 +61,8 @@
   "resolutions": {
     "esbuild": "^0.23.1",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vue-tsc": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
