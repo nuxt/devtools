@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/nuxt/devtools/compare/v1.6.4...v1.7.0) (2024-12-26)
+
+
+### Features
+
+* improves vscode integration, support multiple backends ([#763](https://github.com/nuxt/devtools/issues/763)) ([463f6ad](https://github.com/nuxt/devtools/commit/463f6adef61f94c0a82495889f06b16ad2d2d55f))
+
+
+
 ## [1.6.4](https://github.com/nuxt/devtools/compare/v1.6.3...v1.6.4) (2024-12-12)
 
 
