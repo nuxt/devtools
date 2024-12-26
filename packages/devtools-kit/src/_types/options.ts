@@ -4,6 +4,7 @@ import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo, ServerRouteInput, ServerTaskInfo } from './integrations'
 
 export type CodeServerType = 'ms-code-cli' | 'ms-code-server' | 'coder-code-server'
+
 export interface ModuleOptions {
   /**
    * Enable DevTools
