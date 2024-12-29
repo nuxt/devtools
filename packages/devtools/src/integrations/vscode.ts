@@ -38,7 +38,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
   const installed = !!await which(codeBinary).catch(() => null)
   let port = vsOptions?.port || 3080
   let url = `http://localhost:${port}`
-  const host = vsOptions?.host ? `--host=${vsOptions.host}` : ''
+  const host = vsOptions?.host ? `--host=${vsOptions.host}` : '--host=127.0.0.1'
   let loaded = false
   let promise: Promise<void> | null = null
   const mode = vsOptions?.mode || 'local-serve'
