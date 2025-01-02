@@ -14,7 +14,11 @@ export async function checkForUpdateOf(name: string, current?: string, nuxt = us
   try {
     if (!current) {
       const require = createRequire(nuxt.options.rootDir)
-      const info = await getPackageInfo(name, { paths: require.resolve.paths(name) || undefined })
+      const modulePaths = [
+        ...nuxt.options.modulesDir,
+        ...require.resolve.paths(name) || [],
+      ]
+      const info = await getPackageInfo(name, { paths: modulePaths })
       if (!info)
         return
       current = info.packageJson.version
