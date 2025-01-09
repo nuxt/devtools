@@ -25,6 +25,9 @@ Unleash Nuxt Developer Experience.
 
 <br>
 
+> [!NOTE]
+> You are viewing the v2.x branch which are in active development. For the latest stable version, please refer to the [v1.x branch](https://github.com/nuxt/devtools/tree/v1)
+
 ## Installation
 
 > Nuxt DevTools v2 requires **Nuxt v3.15.0 or higher**.
