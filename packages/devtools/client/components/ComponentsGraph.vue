@@ -4,7 +4,7 @@ import type { Data, Node, Options } from 'vis-network'
 import type { ComponentRelationship } from '~/../src/types'
 import { useDebounce } from '@vueuse/core'
 import { Network } from 'vis-network'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { getColorMode } from '~/composables/client'
 import { useLayouts, useServerConfig, useServerPages } from '~/composables/state'
 import { useDevToolsOptions } from '../composables/storage-options'
@@ -18,7 +18,7 @@ const container = ref<HTMLElement>()
 const navbar = ref<HTMLElement>()
 const colorMode = getColorMode()
 
-const selected = ref<{
+const selected = shallowRef<{
   id: string
   component?: Component
   page?: NuxtPage
@@ -212,7 +212,7 @@ function setFilter() {
 <template>
   <NNavbar ref="navbar" v-model:search="search" absolute left-0 right-0 top-0>
     <template #actions>
-      <div flex="~ gap-4 wrap" w-full>
+      <div flex="~ gap-x-3 gap-y-1 wrap" w-full>
         <NCheckbox v-model="showPages" n="primary sm">
           <span op75>Show pages</span>
         </NCheckbox>
