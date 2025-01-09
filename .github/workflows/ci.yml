@@ -26,9 +26,9 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm typecheck
-      - name: Release Edge
+      - name: Release Nightly
         if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-release]')
-        run: ./scripts/release-edge.sh
+        run: ./scripts/release-nightly.sh
         env:
           NPM_CONFIG_PROVENANCE: true
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN_NIGHTLY}}

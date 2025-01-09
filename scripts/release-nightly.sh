@@ -5,8 +5,8 @@ set -xe
 # Restore all git changes
 git restore -s@ -SW  -- packages
 
-# Bump versions to edge
-pnpm jiti ./scripts/bump-edge
+# Bump versions to nightly
+pnpm jiti ./scripts/bump-nightly
 
 # Update token
 if [[ ! -z ${NODE_AUTH_TOKEN} ]] ; then
