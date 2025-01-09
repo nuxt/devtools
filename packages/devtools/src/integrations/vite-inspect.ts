@@ -30,7 +30,16 @@ export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
   }), nuxt)
 
   async function getComponentsRelationships() {
-    const modules = (await api?.rpc.list())?.modules || []
+    const meta = await api?.rpc.getMetadata()
+    const modules = (
+      meta
+        ? await api?.rpc.getModulesList({
+          vite: meta?.instances[0].vite,
+          env: meta?.instances[0].environments[0],
+        })
+        : null
+    ) || []
+
     const components = await rpc.functions.getComponents() || []
     const vueModules = modules.filter((m) => {
       const plainId = m.id.replace(/\?v=\w+$/, '')

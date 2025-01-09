@@ -3,11 +3,11 @@ import { useDebounce } from '@vueuse/core'
 import { createBirpc } from 'birpc'
 import { parse, stringify } from 'flatted'
 import { tryCreateHotContext } from 'vite-hot-client'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { WS_EVENT_NAME } from '../../src/constant'
 
 export const wsConnecting = ref(false)
-export const wsError = ref<any>()
+export const wsError = shallowRef<any>()
 export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
 
 const connectPromise = connectVite()
