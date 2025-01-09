@@ -52,13 +52,14 @@ export function useAllTabs() {
 
 function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
   return {
-    pinned: [],
-    app: [],
-    analyze: [],
-    server: [],
-    modules: [],
-    documentation: [],
-    advanced: [],
+    'pinned': [],
+    'app': [],
+    'vue-devtools': [],
+    'analyze': [],
+    'server': [],
+    'modules': [],
+    'documentation': [],
+    'advanced': [],
   }
 }
 

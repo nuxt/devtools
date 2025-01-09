@@ -113,7 +113,7 @@ watchEffect(() => {
       icon="i-carbon-settings-adjust"
       text="DevTools Settings"
     />
-    <div grid="~ md:cols-2 gap-x-10 gap-y-3" max-w-300>
+    <div grid="~ lg:cols-2 gap-x-10 gap-y-3" max-w-300>
       <div flex="~ col gap-2">
         <h3 text-lg>
           Tabs
@@ -141,10 +141,9 @@ watchEffect(() => {
                 :model-value="!hiddenTabs.includes(tab.name)"
                 @update:model-value="(v: boolean) => toggleTab(tab.name, v)"
               >
-                <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                <div flex="~ gap-2" flex-auto items-center justify-start of-hidden pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
                   <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-                  <span>{{ tab.title }}</span>
-                  <div flex-auto />
+                  <span flex-auto overflow-hidden text-ellipsis ws-nowrap>{{ tab.title }}</span>
                   <template v-if="pinnedTabs.includes(tab.name)">
                     <NButton
                       icon="i-carbon-caret-up"
