@@ -4,6 +4,7 @@ import type { RouteInfo } from '~/../src/types'
 import { computed } from 'vue'
 import { useOpenInEditor } from '~/composables/editor'
 import { useServerApp } from '~/composables/state'
+import { useCopy } from '../composables/editor'
 
 const props = defineProps<{
   pages: RouteInfo[]
@@ -18,6 +19,7 @@ defineEmits<{
 
 const openInEditor = useOpenInEditor()
 const serverApp = useServerApp()
+const copy = useCopy()
 
 const sorted = computed(() => {
   return [...props.pages].sort((a, b) => a.path.localeCompare(b.path))
@@ -37,7 +39,7 @@ function getMiddlewarePath(name: any) {
 </script>
 
 <template>
-  <div>
+  <div max-w-full of-auto>
     <table w-full>
       <thead border="b base">
         <tr>
@@ -79,9 +81,10 @@ function getMiddlewarePath(name: any) {
               <RoutePathItem
                 :route="item"
                 :class="matched.find(m => m.name === item.name) ? 'text-primary' : matchedPending.find(m => m.name === item.name) ? 'text-teal' : ''"
+                ws-nowrap
                 @navigate="path => $emit('navigate', path)"
               />
-              <div op0 group-hover:op100 flex="~ gap1">
+              <div flex="~ gap1" pr2 op0 group-hover:op100>
                 <button
                   v-if="item.file || item.meta?.file"
                   text-sm op40 hover="op100 text-primary"
@@ -89,6 +92,14 @@ function getMiddlewarePath(name: any) {
                   @click="openInEditor((item.file || item.meta?.file) as string)"
                 >
                   <div i-carbon-script-reference />
+                </button>
+                <button
+                  v-if="item.file || item.meta?.file"
+                  text-sm op40 hover="op100 text-primary"
+                  title="Copy path"
+                  @click="copy((item.file || item.meta?.file) as string)"
+                >
+                  <div i-carbon-copy />
                 </button>
               </div>
             </div>
