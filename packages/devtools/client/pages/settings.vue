@@ -24,7 +24,22 @@ const {
   sidebarScrollable,
 } = useDevToolsOptions('ui')
 
+const {
+  openInEditor,
+} = useDevToolsOptions('behavior')
+
 const client = useClient()
+
+const editorOptions = [
+  ['Auto', undefined],
+  ['VS Code', 'vscode'],
+  ['VS Code Insider', 'vscode-insider'],
+  ['Cursor', 'cursor'],
+  ['Zed', 'zed'],
+  ['WebStorm', 'webstorm'],
+  ['Sublime Text', 'sublime'],
+  ['Atom', 'atom'],
+]
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -224,6 +239,15 @@ watchEffect(() => {
           <p>Minimize floating panel on inactive</p>
           <NSelect v-model.number="minimizePanelInactive" n-primary>
             <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
+
+          <div mx--2 my1 h-1px border="b base" op75 />
+
+          <p>Open In Editor</p>
+          <NSelect v-model="openInEditor" n-primary>
+            <option v-for="i of editorOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
           </NSelect>

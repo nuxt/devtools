@@ -21,6 +21,7 @@ export const defaultOptions: ModuleOptions = {
 export const defaultTabOptions: NuxtDevToolsOptions = {
   behavior: {
     telemetry: null,
+    openInEditor: undefined,
   },
   ui: {
     componentsView: 'list',

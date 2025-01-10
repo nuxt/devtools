@@ -184,6 +184,7 @@ export interface VSCodeTunnelOptions {
 export interface NuxtDevToolsOptions {
   behavior: {
     telemetry: boolean | null
+    openInEditor: string | undefined
   }
   ui: {
     componentsGraphShowGlobalComponents: boolean
