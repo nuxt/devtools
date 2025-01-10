@@ -41,6 +41,7 @@ const parsed = computed(() => (props.filepath && config.value)
         {{ parsed.path }}
       </template>
     </span>
+    <slot />
     <div v-if="filepath" flex="~ gap1" pr2 op0 group-hover:op100>
       <button
         text-sm op40 hover="op100 text-primary"
