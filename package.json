@@ -59,7 +59,10 @@
   },
   "resolutions": {
     "@nuxt/devtools": "workspace:*",
+    "@nuxt/kit": "link:../nuxt/packages/kit",
+    "@nuxt/schema": "link:../nuxt/packages/schema",
     "esbuild": "catalog:",
+    "nuxt": "link:../nuxt/packages/nuxt",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vue-tsc": "catalog:"

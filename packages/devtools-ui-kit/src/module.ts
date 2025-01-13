@@ -16,7 +16,7 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'devtools-ui-kit',
+    name: '@nuxt/devtools-ui-kit',
     configKey: 'devtoolsUIKit',
   },
   defaults: {

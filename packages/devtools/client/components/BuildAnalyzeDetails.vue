@@ -56,10 +56,10 @@ async function clear(name: string) {
         <button
           px4 py2 border="r base"
           hover="bg-active"
-          :class="tab.id === selectedTab.id ? '' : 'border-b'"
+          :class="tab.id === selectedTab?.id ? '' : 'border-b'"
           @click="selectedTab = tab"
         >
-          <div :class="tab.id === selectedTab.id ? '' : 'op30' ">
+          <div :class="tab.id === selectedTab?.id ? '' : 'op30' ">
             {{ tab.name }}
           </div>
         </button>
@@ -67,7 +67,7 @@ async function clear(name: string) {
       <div border="b base" flex-auto />
     </div>
     <div
-      v-if="selectedTab.id === 'overview'"
+      v-if="selectedTab?.id === 'overview'"
       flex="~ col gap-4 items-center justify-center" p4
     >
       <div flex-auto />
@@ -125,17 +125,17 @@ async function clear(name: string) {
       </NButton>
     </div>
     <iframe
-      v-lazy-show="selectedTab.id === 'bundle-client'"
+      v-lazy-show="selectedTab?.id === 'bundle-client'"
       :src="`${ROUTE_ANALYZE}${current.slug}/client.html`"
       h-full w-full
     />
     <iframe
-      v-lazy-show="selectedTab.id === 'bundle-nitro'"
+      v-lazy-show="selectedTab?.id === 'bundle-nitro'"
       :src="`${ROUTE_ANALYZE}${current.slug}/nitro.html`"
       h-full w-full
     />
     <iframe
-      v-lazy-show="selectedTab.id === 'vite-inspect'"
+      v-lazy-show="selectedTab?.id === 'vite-inspect'"
       :src="`${ROUTE_ANALYZE}${current.slug}/.vite-inspect/`"
       h-full w-full
     />

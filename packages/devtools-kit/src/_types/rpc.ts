@@ -1,5 +1,5 @@
 import type { StorageMounts } from 'nitropack'
-import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
+import type { Component, NuxtApp, NuxtDebugContext, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageValue } from 'unstorage'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
@@ -12,6 +12,7 @@ import type { GetWizardArgs, WizardActions } from './wizard'
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig: () => NuxtOptions
+  getServerDebugContext: () => NuxtDebugContext | undefined
   getServerRuntimeConfig: () => Record<string, any>
   getModuleOptions: () => ModuleOptions
   getComponents: () => Component[]

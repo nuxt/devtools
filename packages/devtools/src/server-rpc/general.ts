@@ -83,6 +83,32 @@ export function setupGeneralRPC({
     getServerConfig() {
       return nuxt.options
     },
+    getServerDebugContext() {
+      if (!nuxt._debug)
+        return
+
+      return {
+        ...nuxt._debug,
+        moduleMutationRecords: nuxt._debug.moduleMutationRecords?.map((i) => {
+          let value = i.value
+          try {
+            const json = JSON.stringify(value)
+            if (json.length > 200)
+              value = `${json.slice(0, 200)}...`
+            else
+              value = json
+          }
+          catch {
+            value = '[Circular]'
+          }
+
+          return {
+            ...i,
+            value,
+          }
+        }),
+      }
+    },
     getServerRuntimeConfig(): Record<string, any> {
       // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
       // Since this operation happends on the Nitro runtime
