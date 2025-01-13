@@ -1,3 +1,8 @@
+import { defineNuxtPlugin, useRouter } from '#imports'
+import { triggerRef } from 'vue'
+import { useClient, useComponentInspectorData } from '../composables/client'
+import { rpc } from '../composables/rpc'
+
 export default defineNuxtPlugin(() => {
   const client = useClient()
   const inspectorData = useComponentInspectorData()

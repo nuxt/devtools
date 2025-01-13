@@ -1,4 +1,6 @@
 import type { DevToolsFrameState } from '~~/../src/types'
+import { useLocalStorage, useWindowSize } from '@vueuse/core'
+import { computed } from 'vue'
 
 export const isFirstVisit = useLocalStorage('nuxt-devtools-first-visit', true)
 

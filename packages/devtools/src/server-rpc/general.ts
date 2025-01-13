@@ -7,11 +7,12 @@ import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import destr from 'destr'
 import { resolve } from 'pathe'
-
 import { snakeCase } from 'scule'
+
 import { resolveBuiltinPresets } from 'unimport'
 import { getDevAuthToken } from '../dev-auth'
 import { setupHooksDebug } from '../runtime/shared/hooks'
+import { getOptions } from './options'
 
 export function setupGeneralRPC({
   nuxt,
@@ -174,12 +175,15 @@ export function setupGeneralRPC({
 
       try {
         for (const hook of openInEditorHooks) {
-          const result = await hook(path)
+          const result = await hook(path + suffix)
           if (result)
             return true
         }
+        let editor = getOptions()?.behavior.openInEditor ?? undefined
+        if (editor === 'auto')
+          editor = undefined
         // @ts-expect-error missin types
-        await import('launch-editor').then(r => (r.default || r)(path + suffix))
+        await import('launch-editor').then(r => (r.default || r)(path + suffix, editor))
         return true
       }
       catch (e) {

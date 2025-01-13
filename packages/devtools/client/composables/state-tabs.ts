@@ -1,6 +1,11 @@
-import type { MaybeRef } from 'vue'
+import type { ComputedRef, MaybeRef } from 'vue'
 import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import { useRouter } from '#app/composables/router'
 import { objectPick } from '@antfu/utils'
+import { computed, toValue, unref } from 'vue'
+import { useClientRouter } from './client'
+import { useCustomTabs, useServerPages } from './state'
+import { useDevToolsOptions } from './storage-options'
 
 export function useAllTabs() {
   const customTabs = useCustomTabs()
@@ -47,13 +52,14 @@ export function useAllTabs() {
 
 function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
   return {
-    pinned: [],
-    app: [],
-    analyze: [],
-    server: [],
-    modules: [],
-    documentation: [],
-    advanced: [],
+    'pinned': [],
+    'app': [],
+    'vue-devtools': [],
+    'analyze': [],
+    'server': [],
+    'modules': [],
+    'documentation': [],
+    'advanced': [],
   }
 }
 

@@ -14,15 +14,15 @@ function update(event: any) {
 </script>
 
 <template>
-  <div flex="~ col gap2" border="b base" flex-1 n-navbar-glass :class="[{ p4: !noPadding }]">
-    <div flex="~ gap4" items-center>
+  <div flex="~ col gap2 wrap" border="b base" flex-1 n-navbar-glass :class="[{ p4: !noPadding }]">
+    <div flex="~ gap4 wrap" items-center>
       <slot name="search">
         <NTextInput
           v-if="search !== undefined"
           placeholder="Search..."
           icon="carbon-search"
           n="primary" flex-auto
-          :class="{ 'px-5 py-2': !noPadding }"
+          :class="{ 'px-3 py-2': !noPadding }"
           :value="search"
           @input="update"
         />

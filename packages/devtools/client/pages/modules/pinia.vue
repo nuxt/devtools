@@ -10,6 +10,7 @@ definePageMeta({
   icon: 'i-logos-pinia',
   title: 'Pinia',
   layout: 'full',
+  category: 'vue-devtools',
   show() {
     const configs = useServerConfig()
     return () => configs.value?.modules?.some(item => (item as string | Array<unknown>)?.includes('@pinia/nuxt'))

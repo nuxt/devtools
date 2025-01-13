@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ServerRouteInput, ServerTaskInfo } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import type { ServerRouteInput, ServerTaskInfo } from '~/../src/types'
 import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 import { computed, reactive, ref, watchEffect } from 'vue'
@@ -18,7 +18,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'open-default-input'): void
+  (event: 'openDefaultInput'): void
 }>()
 
 const routeInputBodyJSON = ref<any>({ payload: {} })
@@ -288,7 +288,7 @@ const copy = useCopy()
             <NButton
               icon="i-carbon-edit"
               :border="false"
-              @click="emit('open-default-input')"
+              @click="emit('openDefaultInput')"
             />
             <div x-divider />
           </div>

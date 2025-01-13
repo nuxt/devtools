@@ -1,3 +1,106 @@
+# [2.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.7.0...v2.0.0-beta.1) (2025-01-13)
+
+
+### Bug Fixes
+
+* component tree format ([f4017f3](https://github.com/nuxt/devtools/commit/f4017f35cd9a959e3cdf3c573db4223d995d372f))
+* components graph ([1bae95a](https://github.com/nuxt/devtools/commit/1bae95acec9aef8c3be8035a3675de56abdd446d))
+* improve filepath item ui ([8f4ff4a](https://github.com/nuxt/devtools/commit/8f4ff4a0bd96b55692ffceee047c2b45edf04d79))
+* **vscode:** set a default value for the vscode host parameter ([#766](https://github.com/nuxt/devtools/issues/766)) ([2e6b4e4](https://github.com/nuxt/devtools/commit/2e6b4e4f7da8f8dc926cc0a9f13cbf6dd1562bac))
+
+
+### Features
+
+* add copy button for filepath item ([94b3822](https://github.com/nuxt/devtools/commit/94b3822c901ebd1159ba22a4011e1b8c9ef381db))
+* allow to customize editor to open, fix [#748](https://github.com/nuxt/devtools/issues/748) ([fe98c80](https://github.com/nuxt/devtools/commit/fe98c8046e88f4bb1ca979c5e8071743286f4ab1))
+* enhance module resolution paths for getPackageInfo ([#767](https://github.com/nuxt/devtools/issues/767)) ([04269d0](https://github.com/nuxt/devtools/commit/04269d03b5ce89388528b42f3de8a40a3ddc8bf5))
+* migrate to `my-ua-parser` ([a290648](https://github.com/nuxt/devtools/commit/a2906483a42978269e8f831b6e1612cf7821a6a0))
+* put vue devtools ui in a separate category ([5b566fb](https://github.com/nuxt/devtools/commit/5b566fbae4da751e044a8aec198cddd82aeacbc1))
+
+
+
+# [1.7.0](https://github.com/nuxt/devtools/compare/v1.6.4...v1.7.0) (2024-12-26)
+
+
+### Features
+
+* improves vscode integration, support multiple backends ([#763](https://github.com/nuxt/devtools/issues/763)) ([463f6ad](https://github.com/nuxt/devtools/commit/463f6adef61f94c0a82495889f06b16ad2d2d55f))
+
+
+
+## [1.6.4](https://github.com/nuxt/devtools/compare/v1.6.3...v1.6.4) (2024-12-12)
+
+
+### Bug Fixes
+
+* upgrade `@vue/devtools` ([8485fcb](https://github.com/nuxt/devtools/commit/8485fcbea2e841c15cdfc4018def83108b49143f))
+
+
+
+## [1.6.3](https://github.com/nuxt/devtools/compare/v1.6.2...v1.6.3) (2024-12-03)
+
+
+### Bug Fixes
+
+* revert [#757](https://github.com/nuxt/devtools/issues/757), pin `vite-plugin-inspect` version ([a399082](https://github.com/nuxt/devtools/commit/a39908296345d8e5941dca320b3dff2244f34532))
+
+
+
+## [1.6.2](https://github.com/nuxt/devtools/compare/v1.6.1...v1.6.2) (2024-12-03)
+
+
+### Bug Fixes
+
+* add v4 compatibility version handeling for pages tab ([#758](https://github.com/nuxt/devtools/issues/758)) ([bd8651c](https://github.com/nuxt/devtools/commit/bd8651cc66d21314f101334527332759f4940035))
+
+
+### Features
+
+* support `vite-plugin-inspect` for both Vite 5 and 6 ([#757](https://github.com/nuxt/devtools/issues/757)) ([cfcbc24](https://github.com/nuxt/devtools/commit/cfcbc244bfaa3d2d0a647504b422cb35e2419026))
+
+
+
+## [1.6.1](https://github.com/nuxt/devtools/compare/v1.6.0...v1.6.1) (2024-11-20)
+
+
+### Bug Fixes
+
+* missing pinia store modules ([#751](https://github.com/nuxt/devtools/issues/751)) ([be243e4](https://github.com/nuxt/devtools/commit/be243e42e0db1fa9694b9f9c7aa69760e0898cff))
+
+
+### Features
+
+* apply lint, use explict import ([2c6d2d3](https://github.com/nuxt/devtools/commit/2c6d2d37199ab8419b51c8a56c5eb7d647192787))
+
+
+
+# [1.6.0](https://github.com/nuxt/devtools/compare/v1.5.2...v1.6.0) (2024-10-12)
+
+
+### Bug Fixes
+
+* **devtools:** remove cjs entrypoint ([#746](https://github.com/nuxt/devtools/issues/746)) ([9e4a22e](https://github.com/nuxt/devtools/commit/9e4a22ec73cdde89713e3b046275f4484f62b100))
+
+
+
+## [1.5.2](https://github.com/nuxt/devtools/compare/v1.5.1...v1.5.2) (2024-10-02)
+
+
+### Bug Fixes
+
+* try downgrade `vite-plugin-vue-inspector` ([572a0d6](https://github.com/nuxt/devtools/commit/572a0d60dcc771f820aaa75568269d5e46d997ce))
+
+
+
+## [1.5.1](https://github.com/nuxt/devtools/compare/v1.5.0...v1.5.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* welcome page condition ([#736](https://github.com/nuxt/devtools/issues/736)) ([d23ce09](https://github.com/nuxt/devtools/commit/d23ce0993d1baa0cdd119a86429d2f6271410887))
+
+
+
 # [1.5.0](https://github.com/nuxt/devtools/compare/v1.4.2...v1.5.0) (2024-09-20)
 
 

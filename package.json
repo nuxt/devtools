@@ -1,9 +1,9 @@
 {
   "name": "@nuxt-devtools/monorepo",
   "type": "module",
-  "version": "1.5.0",
+  "version": "2.0.0-beta.1",
   "private": true,
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.15.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -51,14 +51,18 @@
     "simple-git-hooks": "catalog:",
     "taze": "catalog:",
     "typescript": "catalog:",
-    "ua-parser-js": "catalog:",
+    "unimport": "catalog:",
     "unocss": "catalog:",
     "vite-hot-client": "catalog:",
     "vue": "catalog:",
     "vue-tsc": "catalog:"
   },
   "resolutions": {
-    "esbuild": "^0.23.1"
+    "@nuxt/devtools": "workspace:*",
+    "esbuild": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vue-tsc": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"

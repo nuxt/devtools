@@ -1,11 +1,15 @@
-import type { ViteInspectAPI } from 'vite-plugin-inspect'
+import type { Plugin } from 'vite'
+import type { ViteInspectAPI, ViteInspectOptions } from 'vite-plugin-inspect'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import { addVitePlugin } from '@nuxt/kit'
-import Inspect from 'vite-plugin-inspect'
 
-export function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
-  const plugin = Inspect()
+export async function createVitePluginInspect(options?: ViteInspectOptions): Promise<Plugin> {
+  return await import('vite-plugin-inspect').then(r => r.default(options))
+}
+
+export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
+  const plugin = await createVitePluginInspect()
   addVitePlugin(plugin)
 
   let api: ViteInspectAPI | undefined
@@ -26,7 +30,16 @@ export function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
   }), nuxt)
 
   async function getComponentsRelationships() {
-    const modules = (await api?.rpc.list())?.modules || []
+    const meta = await api?.rpc.getMetadata()
+    const modules = (
+      meta
+        ? await api?.rpc.getModulesList({
+          vite: meta?.instances[0].vite,
+          env: meta?.instances[0].environments[0],
+        })
+        : null
+    ) || []
+
     const components = await rpc.functions.getComponents() || []
     const vueModules = modules.filter((m) => {
       const plainId = m.id.replace(/\?v=\w+$/, '')

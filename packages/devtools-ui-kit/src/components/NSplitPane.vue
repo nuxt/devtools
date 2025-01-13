@@ -25,9 +25,9 @@ const DEFAULT = 30
 const key = props.storageKey
 const size = key
   ? computed({
-    get: () => state.value[key] || props.leftSize || DEFAULT,
-    set: (v) => { state.value[key] = v },
-  })
+      get: () => state.value[key] || props.leftSize || DEFAULT,
+      set: (v) => { state.value[key] = v },
+    })
   : ref(props.leftSize || DEFAULT)
 </script>
 

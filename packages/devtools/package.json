@@ -1,7 +1,8 @@
 {
   "name": "@nuxt/devtools",
   "type": "module",
-  "version": "1.5.0",
+  "version": "2.0.0-beta.1",
+  "description": "The Nuxt DevTools gives you insights and transparency about your Nuxt App.",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com",
   "repository": {
@@ -12,16 +13,14 @@
   "exports": {
     ".": {
       "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
+      "import": "./dist/module.mjs"
     },
     "./types": {
       "types": "./dist/types.d.ts"
     },
     "./*": "./*"
   },
-  "main": "./module.cjs",
-  "types": "./dist/module.d.ts",
+  "types": "./dist/module.d.mts",
   "bin": "./cli.mjs",
   "files": [
     "*.cjs",
@@ -35,13 +34,14 @@
     "build:module": "nuxt-build-module build",
     "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
     "dev:discovery": "discovery -c .discoveryrc.cjs",
+    "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
-    "dev:prepare": "nuxi prepare client",
+    "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "vite": "*"
+    "vite": ">=6.0"
   },
   "dependencies": {
     "@antfu/utils": "catalog:",
@@ -96,7 +96,6 @@
     "@nuxt/test-utils": "catalog:",
     "@parcel/watcher": "catalog:",
     "@types/markdown-it-link-attributes": "catalog:",
-    "@types/ua-parser-js": "catalog:",
     "@unocss/nuxt": "catalog:",
     "@unocss/preset-icons": "catalog:",
     "@unocss/preset-uno": "catalog:",
@@ -112,6 +111,7 @@
     "json-editor-vue": "catalog:",
     "markdown-it": "catalog:",
     "markdown-it-link-attributes": "catalog:",
+    "my-ua-parser": "catalog:",
     "nanoid": "catalog:",
     "nitropack": "catalog:",
     "nuxt": "catalog:",
@@ -119,7 +119,6 @@
     "quicktype-core": "catalog:",
     "shiki": "catalog:",
     "theme-vitesse": "catalog:",
-    "ua-parser-js": "catalog:",
     "unocss": "catalog:",
     "unplugin-vue-markdown": "catalog:",
     "vanilla-jsoneditor": "catalog:",

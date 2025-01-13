@@ -1,5 +1,6 @@
 import type { BuiltinLanguage, HighlighterCore } from 'shiki'
 import { createHighlighterCore, createJavaScriptRegexEngine } from 'shiki/core'
+import { shallowRef } from 'vue'
 
 export const shiki = shallowRef<HighlighterCore>()
 
