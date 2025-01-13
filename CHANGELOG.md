@@ -1,3 +1,24 @@
+# [2.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.7.0...v2.0.0-beta.1) (2025-01-13)
+
+
+### Bug Fixes
+
+* component tree format ([f4017f3](https://github.com/nuxt/devtools/commit/f4017f35cd9a959e3cdf3c573db4223d995d372f))
+* components graph ([1bae95a](https://github.com/nuxt/devtools/commit/1bae95acec9aef8c3be8035a3675de56abdd446d))
+* improve filepath item ui ([8f4ff4a](https://github.com/nuxt/devtools/commit/8f4ff4a0bd96b55692ffceee047c2b45edf04d79))
+* **vscode:** set a default value for the vscode host parameter ([#766](https://github.com/nuxt/devtools/issues/766)) ([2e6b4e4](https://github.com/nuxt/devtools/commit/2e6b4e4f7da8f8dc926cc0a9f13cbf6dd1562bac))
+
+
+### Features
+
+* add copy button for filepath item ([94b3822](https://github.com/nuxt/devtools/commit/94b3822c901ebd1159ba22a4011e1b8c9ef381db))
+* allow to customize editor to open, fix [#748](https://github.com/nuxt/devtools/issues/748) ([fe98c80](https://github.com/nuxt/devtools/commit/fe98c8046e88f4bb1ca979c5e8071743286f4ab1))
+* enhance module resolution paths for getPackageInfo ([#767](https://github.com/nuxt/devtools/issues/767)) ([04269d0](https://github.com/nuxt/devtools/commit/04269d03b5ce89388528b42f3de8a40a3ddc8bf5))
+* migrate to `my-ua-parser` ([a290648](https://github.com/nuxt/devtools/commit/a2906483a42978269e8f831b6e1612cf7821a6a0))
+* put vue devtools ui in a separate category ([5b566fb](https://github.com/nuxt/devtools/commit/5b566fbae4da751e044a8aec198cddd82aeacbc1))
+
+
+
 # [1.7.0](https://github.com/nuxt/devtools/compare/v1.6.4...v1.7.0) (2024-12-26)
 
 
