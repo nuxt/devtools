@@ -46,8 +46,10 @@ export function setupServerDataRPC({
       return {
         nuxt: nuxt.options,
         nitro: nitro?.options,
-        viteServer,
-        viteClient,
+        vite: {
+          server: viteServer,
+          client: viteClient,
+        },
       }
     },
   } satisfies Partial<ServerFunctions>

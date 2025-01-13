@@ -90,8 +90,10 @@ export interface ClientFunctions {
 export interface NuxtServerData {
   nuxt: NuxtOptions
   nitro?: Nitro['options']
-  viteServer?: ResolvedConfig
-  viteClient?: ResolvedConfig
+  vite: {
+    server?: ResolvedConfig
+    client?: ResolvedConfig
+  }
 }
 
 export type ClientUpdateEvent = keyof ServerFunctions

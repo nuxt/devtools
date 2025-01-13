@@ -593,11 +593,11 @@ importers:
         version: 8.18.0
     devDependencies:
       '@discoveryjs/cli':
-        specifier: ^2.9.1
-        version: 2.12.1(@discoveryjs/discovery@1.0.0-beta.85)
+        specifier: ^2.12.1
+        version: 2.12.1(@discoveryjs/discovery@1.0.0-beta.92)
       '@discoveryjs/discovery':
-        specifier: 1.0.0-beta.85
-        version: 1.0.0-beta.85
+        specifier: 1.0.0-beta.92
+        version: 1.0.0-beta.92
       '@iconify-json/bxl':
         specifier: 'catalog:'
         version: 1.2.2
@@ -1276,8 +1276,8 @@ packages:
     peerDependencies:
       '@discoveryjs/discovery': ^1.0.0-beta.74
 
-  '@discoveryjs/discovery@1.0.0-beta.85':
-    resolution: {integrity: sha512-TLtBSChvCFqptaM7RF1hT/t+p73m1DVUwkG0YCxMHEzzGxIsEZ9rtGiuc2ThQrAreHYkXJLYluMexfSm085/Fw==}
+  '@discoveryjs/discovery@1.0.0-beta.92':
+    resolution: {integrity: sha512-oFwrn+Ywyu2HFelmgosiW9eqYbWGTHdG1ox6qDciu/1xLcXjQ/SbYIJR3jJqUMr61/FVRvR7Bh0wsQ+beblC9g==}
     engines: {node: '>=8.0.0'}
 
   '@discoveryjs/json-ext@0.6.3':
@@ -5276,9 +5276,9 @@ packages:
   markdown-table@3.0.3:
     resolution: {integrity: sha512-Z1NL3Tb1M9wH4XESsCDEksWoKTdlUafKc4pt0GRwjUyXaCFZ+dc3g2erqB6zm3szA2IUSi7VnPI+o/9jnxh9hw==}
 
-  marked@4.3.0:
-    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
-    engines: {node: '>= 12'}
+  marked@14.1.4:
+    resolution: {integrity: sha512-vkVZ8ONmUdPnjCKc5uTRvmkRbx4EAi2OkTOXmfTDhZz3OFqMNBM1oTTWwTr4HY4uAEojhzPf+Fy8F1DWa3Sndg==}
+    engines: {node: '>= 18'}
     hasBin: true
 
   mdast-util-find-and-replace@3.0.1:
@@ -8037,9 +8037,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@discoveryjs/cli@2.12.1(@discoveryjs/discovery@1.0.0-beta.85)':
+  '@discoveryjs/cli@2.12.1(@discoveryjs/discovery@1.0.0-beta.92)':
     dependencies:
-      '@discoveryjs/discovery': 1.0.0-beta.85
+      '@discoveryjs/discovery': 1.0.0-beta.92
       '@discoveryjs/json-ext': 0.6.3
       archiver: 5.3.2
       chalk: 4.1.2
@@ -8056,13 +8056,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@discoveryjs/discovery@1.0.0-beta.85':
+  '@discoveryjs/discovery@1.0.0-beta.92':
     dependencies:
       '@discoveryjs/json-ext': 0.6.3
       codemirror: 5.65.18
+      github-slugger: 2.0.0
       hitext: 1.0.0-beta.1
       jora: 1.0.0-beta.13
-      marked: 4.3.0
+      marked: 14.1.4
 
   '@discoveryjs/json-ext@0.6.3': {}
 
@@ -13401,7 +13402,7 @@ snapshots:
 
   markdown-table@3.0.3: {}
 
-  marked@4.3.0: {}
+  marked@14.1.4: {}
 
   mdast-util-find-and-replace@3.0.1:
     dependencies:

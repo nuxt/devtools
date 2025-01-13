@@ -2,9 +2,7 @@
 import { useRuntimeConfig } from '#app/nuxt'
 import { definePageMeta } from '#imports'
 import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js'
-import { ensureDependencyInstalled } from 'nypm'
 import { onMounted, onUnmounted, useTemplateRef } from 'vue'
-import { useServerConfig } from '~/composables/state'
 import { ensureDevAuthToken } from '../../composables/dev-auth'
 import { rpc } from '../../composables/rpc'
 import { jsonStringifyCircular } from '../../composables/utils'
@@ -13,6 +11,7 @@ definePageMeta({
   icon: 'i-carbon-settings-view',
   title: 'Nuxt Options Viewer',
   layout: 'full',
+  category: 'advanced',
   requireAuth: true,
 })
 
