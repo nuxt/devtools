@@ -15,6 +15,7 @@ const showBuiltin = ref(false)
 const showTemplates = ref(false)
 const showTranspile = ref(false)
 const showPlugins = ref(false)
+const showEmptyInitial = ref(false)
 const moduleFilter = ref('')
 
 const items = computed(() => {
@@ -30,6 +31,9 @@ const items = computed(() => {
   }
   if (!showPlugins.value) {
     arr = arr.filter(i => i.keys.join('.') !== 'plugins')
+  }
+  if (!showEmptyInitial.value) {
+    arr = arr.filter(i => i.method || (i.value !== '[]' && i.value !== '{}'))
   }
   if (moduleFilter.value) {
     arr = arr.filter(i => i.name === moduleFilter.value)
@@ -53,6 +57,9 @@ const items = computed(() => {
       </NCheckbox>
       <NCheckbox v-model="showPlugins" n="primary">
         <span ws-nowrap op75>Plugins</span>
+      </NCheckbox>
+      <NCheckbox v-model="showEmptyInitial" n="primary">
+        <span ws-nowrap op75>Empty Initial</span>
       </NCheckbox>
       <div v-if="moduleFilter" flex="~ gap-1" items-center p1 border="~ base rounded">
         <NBadgeHashed font-mono :text="moduleFilter" />
@@ -114,7 +121,8 @@ const items = computed(() => {
         <td of-auto>
           <NCodeBlock
             :code="String(record.value)"
-            lang="json"
+            lang="ts"
+            grammar-context-code="let a = "
             ws-normal break-all py1
             :lines="false" :inline="true"
           />

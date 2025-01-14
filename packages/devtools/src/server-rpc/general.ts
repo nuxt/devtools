@@ -12,6 +12,7 @@ import { snakeCase } from 'scule'
 import { resolveBuiltinPresets } from 'unimport'
 import { getDevAuthToken } from '../dev-auth'
 import { setupHooksDebug } from '../runtime/shared/hooks'
+import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
 
 export function setupGeneralRPC({
@@ -93,7 +94,7 @@ export function setupGeneralRPC({
           nuxt._debug.moduleMutationRecords?.map(async (i) => {
             let value = i.value
             try {
-              const json = JSON.stringify(value)
+              const json = toJsLiteral(value)
               if (json.length > 200)
                 value = `${json.slice(0, 200)}...`
               else
