@@ -19,14 +19,7 @@ const panelMargins = reactive({
 })
 
 const safeArea = useScreenSafeArea()
-
 const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
-let isInit = true
-
-watchEffect(() => {
-  if (state.value.open)
-    isInit = false
-})
 
 watchEffect(() => {
   panelMargins.left = safeArea.left.value + 10
@@ -182,8 +175,8 @@ const isHidden = computed(() => {
     return false
   if (settings.ui.showPanel === false)
     return true
-  // If not explicitly set, hide the panel on first load
-  return isInit
+  // If not explicitly set, show the panel
+  return false
 })
 
 const isMinimized = computed(() => {

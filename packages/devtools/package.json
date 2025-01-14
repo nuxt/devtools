@@ -29,12 +29,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client && esno scripts/prepare.ts",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module build",
-    "dev": "nuxi dev client",
+    "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
+    "dev:discovery": "discovery -c .discoveryrc.cjs",
+    "stub": "nuxt-build-module build --stub",
+    "dev": "pnpm build:discovery && nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
-    "dev:prepare": "nuxi prepare client",
+    "dev:prepare": "pnpm run stub && nuxi prepare client",
+    "prepare": "esno scripts/prepare.ts",
     "prepack": "pnpm build"
   },
   "peerDependencies": {
@@ -80,6 +84,8 @@
     "ws": "catalog:"
   },
   "devDependencies": {
+    "@discoveryjs/cli": "^2.12.1",
+    "@discoveryjs/discovery": "1.0.0-beta.92",
     "@iconify-json/bxl": "catalog:",
     "@iconify-json/carbon": "catalog:",
     "@iconify-json/logos": "catalog:",
@@ -113,6 +119,7 @@
     "ofetch": "catalog:",
     "quicktype-core": "catalog:",
     "shiki": "catalog:",
+    "shiki-codegen": "^1.27.0",
     "theme-vitesse": "catalog:",
     "unocss": "catalog:",
     "unplugin-vue-markdown": "catalog:",

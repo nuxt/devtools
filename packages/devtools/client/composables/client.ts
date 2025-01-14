@@ -57,7 +57,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
       rpc,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {
-        return renderCodeHighlight(code, lang)
+        return renderCodeHighlight(code, lang as any)
       },
       renderMarkdown(code) {
         return renderMarkdown(code)

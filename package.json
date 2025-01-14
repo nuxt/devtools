@@ -59,11 +59,12 @@
   },
   "resolutions": {
     "@nuxt/devtools": "workspace:*",
-    "@nuxt/kit": "link:../nuxt/packages/kit",
-    "@nuxt/schema": "link:../nuxt/packages/schema",
+    "@nuxt/kit": "file:../nuxt/packages/kit",
+    "@nuxt/schema": "file:../nuxt/packages/schema",
+    "@nuxt/vite-builder": "file:../nuxt/packages/vite",
     "esbuild": "catalog:",
     "jiti": "catalog:",
-    "nuxt": "link:../nuxt/packages/nuxt",
+    "nuxt": "file:../nuxt/packages/nuxt",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vue-tsc": "catalog:"

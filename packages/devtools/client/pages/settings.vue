@@ -231,7 +231,7 @@ watchEffect(() => {
           </NCheckbox>
 
           <NCheckbox v-model="showPanel" n-primary>
-            <span>Always show the floating panel</span>
+            <span>Show the floating panel</span>
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />

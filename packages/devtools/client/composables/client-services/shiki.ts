@@ -1,32 +1,17 @@
-import type { BuiltinLanguage, HighlighterCore } from 'shiki'
-import { createHighlighterCore, createJavaScriptRegexEngine } from 'shiki/core'
+import type { BundledLanguage, BundledTheme, Highlighter } from './shiki.bundle'
 import { shallowRef } from 'vue'
+import { bundledLanguages, bundledThemes, createHighlighter } from './shiki.bundle'
 
-export const shiki = shallowRef<HighlighterCore>()
+export const shiki = shallowRef<Highlighter>()
 
 let promise: Promise<any> | null = null
 
-export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text' = 'text') {
+export function renderCodeHighlight(code: string, lang: BundledLanguage | 'text' = 'text') {
   if (!promise && !shiki.value) {
     // Only loading when needed
-    promise = createHighlighterCore({
-      themes: [
-        import('shiki/themes/vitesse-dark.mjs'),
-        import('shiki/themes/vitesse-light.mjs'),
-      ],
-      langs: [
-        import('shiki/langs/json.mjs'),
-        import('shiki/langs/yaml.mjs'),
-        import('shiki/langs/css.mjs'),
-        import('shiki/langs/javascript.mjs'),
-        import('shiki/langs/typescript.mjs'),
-        import('shiki/langs/vue.mjs'),
-        import('shiki/langs/vue-html.mjs'),
-        import('shiki/langs/html.mjs'),
-        import('shiki/langs/diff.mjs'),
-        import('shiki/langs/shellscript.mjs'),
-      ],
-      engine: createJavaScriptRegexEngine({ forgiving: true }),
+    promise = createHighlighter({
+      langs: Object.keys(bundledLanguages) as BundledLanguage[],
+      themes: Object.keys(bundledThemes) as BundledTheme[],
     }).then((i) => {
       shiki.value = i
     })
@@ -47,6 +32,17 @@ export function renderCodeHighlight(code: string, lang: BuiltinLanguage | 'text'
         dark: 'vitesse-dark',
         light: 'vitesse-light',
       },
+      transformers: [
+        {
+          root(hast) {
+            return {
+              type: 'root',
+              // @ts-expect-error hast casting
+              children: hast.children[0].children[0].children,
+            }
+          },
+        },
+      ],
     }),
     supported: true,
   }
