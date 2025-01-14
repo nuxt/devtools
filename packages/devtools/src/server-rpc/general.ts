@@ -80,9 +80,6 @@ export function setupGeneralRPC({
   })
 
   return {
-    getServerConfig() {
-      return nuxt.options
-    },
     getServerRuntimeConfig(): Record<string, any> {
       // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
       // Since this operation happends on the Nitro runtime
