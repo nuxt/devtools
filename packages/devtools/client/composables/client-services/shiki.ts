@@ -32,6 +32,17 @@ export function renderCodeHighlight(code: string, lang: BundledLanguage | 'text'
         dark: 'vitesse-dark',
         light: 'vitesse-light',
       },
+      transformers: [
+        {
+          root(hast) {
+            return {
+              type: 'root',
+              // @ts-expect-error hast casting
+              children: hast.children[0].children[0].children,
+            }
+          },
+        },
+      ],
     }),
     supported: true,
   }

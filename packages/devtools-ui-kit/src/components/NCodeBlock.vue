@@ -9,6 +9,7 @@ const props = withDefaults(
     code: string
     lang?: BuiltinLanguage | 'text'
     lines?: boolean
+    inline?: boolean
     transformRendered?: (code: string) => string
   }>(),
   {
@@ -28,30 +29,28 @@ const rendered = computed(() => {
     nextTick(() => emit('loaded'))
   return result
 })
+
+const classes = computed(() => [
+  'n-code-block shiki',
+  (props.lines && !props.inline) ? 'n-code-block-lines' : '',
+])
 </script>
 
 <template>
   <template v-if="lang && rendered.supported">
-    <pre
-      class="n-code-block"
-      :class="lines ? 'n-code-block-lines' : ''"
-      v-html="rendered.code"
-    />
+    <pre :class="classes"><code v-html="rendered.code" /></pre>
   </template>
   <template v-else>
-    <pre
-      class="n-code-block"
-      :class="lines ? 'n-code-block-lines' : ''"
-    ><pre class="shiki"><code><template v-for="line, _idx in code.split('\n')" :key="_idx"><span class="line" v-text="line" /><br></template></code></pre></pre>
+    <pre :class="classes"><code><template v-for="line, _idx in code.split('\n')" :key="_idx"><span class="line" v-text="line" /><br></template></code></pre>
   </template>
 </template>
 
 <style>
-.n-code-block-lines .shiki code {
+.n-code-block-lines code {
   counter-reset: step;
   counter-increment: step calc(var(--start, 1) - 1);
 }
-.n-code-block-lines .shiki code .line::before {
+.n-code-block-lines code .line::before {
   content: counter(step);
   counter-increment: step;
   width: 2.5rem;
@@ -59,6 +58,6 @@ const rendered = computed(() => {
   margin-right: 0.5rem;
   display: inline-block;
   text-align: right;
-  --at-apply: text-truegray: 50;
+  --uno: text-truegray/50;
 }
 </style>
