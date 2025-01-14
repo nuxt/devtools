@@ -25,7 +25,7 @@ const emit = defineEmits<{
           font-mono
           :style="{
             color: event.type === 'function'
-              ? getHashColorFromString(event.name, 50, 60)
+              ? getHslColorFromStringHash(event.name, 50, 60)
               : '',
           }"
         >

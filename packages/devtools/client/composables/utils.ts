@@ -137,14 +137,6 @@ export function formatDuration(ms: number | string) {
   return `${(ms / 1000 / 60).toFixed(2)}min`
 }
 
-export function getHashColorFromString(name: string, saturation = 65, lightness = 50, opacity: number | string = 1) {
-  let hash = 0
-  for (let i = 0; i < name.length; i++)
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  const h = hash % 360
-  return `hsla(${h}, ${saturation}%, ${lightness}%, ${opacity})`
-}
-
 export function useSessionState<T>(name: string, initialValue: T) {
   return useState(name, () => {
     return useSessionStorage(name, initialValue, { listenToStorageChanges: false })

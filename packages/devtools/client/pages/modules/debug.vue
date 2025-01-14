@@ -6,7 +6,7 @@ import { useServerDebugContext } from '~/composables/state'
 definePageMeta({
   icon: 'i-carbon-debug',
   title: 'Debug',
-  category: 'app',
+  category: 'advanced',
 })
 
 const context = useServerDebugContext()

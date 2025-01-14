@@ -1,7 +1,7 @@
 import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
 import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
-import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerDebugContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
@@ -83,30 +83,39 @@ export function setupGeneralRPC({
     getServerConfig() {
       return nuxt.options
     },
-    getServerDebugContext() {
+    async getServerDebugContext() {
       if (!nuxt._debug)
         return
 
-      return {
+      return <ServerDebugContext>{
         ...nuxt._debug,
-        moduleMutationRecords: nuxt._debug.moduleMutationRecords?.map((i) => {
-          let value = i.value
-          try {
-            const json = JSON.stringify(value)
-            if (json.length > 200)
-              value = `${json.slice(0, 200)}...`
-            else
-              value = json
-          }
-          catch {
-            value = '[Circular]'
-          }
+        moduleMutationRecords: await Promise.all(
+          nuxt._debug.moduleMutationRecords?.map(async (i) => {
+            let value = i.value
+            try {
+              const json = JSON.stringify(value)
+              if (json.length > 200)
+                value = `${json.slice(0, 200)}...`
+              else
+                value = json
+            }
+            catch {
+              value = '[Circular]'
+            }
+            let name = (await i.module.getMeta?.())?.name
+            if (!name) {
+              const installedModule = nuxt.options._installedModules.find(m => m.module === i.module)
+              name = installedModule?.meta.name || installedModule?.entryPath
+            }
 
-          return {
-            ...i,
-            value,
-          }
-        }),
+            return {
+              ...i,
+              module: undefined,
+              name: name || '(unknown)',
+              value,
+            }
+          }) || [],
+        ),
       }
     },
     getServerRuntimeConfig(): Record<string, any> {

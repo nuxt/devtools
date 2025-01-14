@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { NuxtDebugModuleMutationRecord } from '@nuxt/schema'
+import type { ServerDebugModuleMutationRecord } from '@nuxt/devtools-kit/types'
 
 defineProps<{
-  moduleMutationRecords: NuxtDebugModuleMutationRecord[]
+  moduleMutationRecords: ServerDebugModuleMutationRecord[]
 }>()
 
 function isPath(path: string) {
@@ -21,6 +21,9 @@ function isPath(path: string) {
           Key Path
         </th>
         <th ws-nowrap p1 text-center font-bold>
+          Method
+        </th>
+        <th ws-nowrap p1 text-center font-bold>
           Value
         </th>
       </tr>
@@ -28,8 +31,8 @@ function isPath(path: string) {
     <tbody>
       <tr v-for="record, idx of moduleMutationRecords" :key="idx" border="b dashed transparent hover:base">
         <td>
-          <FilepathItem v-if="record.module && isPath(record.module)" :filepath="record.module" />
-          <NBadge v-else n="sm" v-text="record.module" />
+          <FilepathItem v-if="record.name && isPath(record.name)" :filepath="record.name" />
+          <NBadgeHashed v-else font-mono :text="record.name" />
         </td>
         <td>
           <code flex="~" px4>
@@ -41,8 +44,11 @@ function isPath(path: string) {
             </template>
           </code>
         </td>
+        <td text-center>
+          <NBadgeHashed v-if="record.method" font-mono :text="record.method" />
+        </td>
         <td max-h-20 max-w-200 of-auto>
-          <NCodeBlock :code="String(record.value)" lang="json" :lines="false" />
+          <NCodeBlock :code="String(record.value)" lang="json" :lines="false" :inline="true" />
         </td>
       </tr>
     </tbody>
