@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const color = computed(() => {
   const foreground = getHslColorFromStringHash(props.text, 50, 60)
-  const background = getHslColorFromStringHash(props.text, 50, 60, 0.1)
+  const background = getHslColorFromStringHash(props.text, 50, 60, 0.05)
   return { color: foreground, background }
 })
 </script>

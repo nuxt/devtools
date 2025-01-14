@@ -37,9 +37,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     // eslint-disable-next-line ts/ban-ts-comment
     // @ts-ignore - module options
-    nuxt.options.vueuse = nuxt.options.vueuse || {}
-    // eslint-disable-next-line ts/ban-ts-comment
-    // @ts-ignore - module options
     nuxt.options.colorMode = defu(nuxt.options.colorMode, { classSuffix: '' })
 
     const resolver = createResolver(import.meta.url)
