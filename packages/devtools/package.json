@@ -38,6 +38,7 @@
     "dev": "pnpm build:discovery && nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
+    "prepare": "esno scripts/prepare.ts",
     "prepack": "pnpm build"
   },
   "peerDependencies": {
@@ -118,6 +119,7 @@
     "ofetch": "catalog:",
     "quicktype-core": "catalog:",
     "shiki": "catalog:",
+    "shiki-codegen": "^1.27.0",
     "theme-vitesse": "catalog:",
     "unocss": "catalog:",
     "unplugin-vue-markdown": "catalog:",
