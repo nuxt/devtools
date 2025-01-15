@@ -43,8 +43,11 @@ export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions
 })
 
 async function connectVite() {
-  let base = window.parent?.__NUXT__?.config?.app?.baseURL ?? '/'
-  const buildAssetsDir = window.parent?.__NUXT__?.config?.app.buildAssetsDir.replace(/^\/|\/$/g, '') ?? '_nuxt'
+  const appConfig = window.parent?.__NUXT__?.config?.app
+    ?? window.parent?.useNuxtApp?.()?.payload?.config?.app // Nuxt 4 removes __NUXT__
+
+  let base = appConfig?.baseURL ?? '/'
+  const buildAssetsDir = appConfig?.buildAssetsDir?.replace(/^\/|\/$/g, '') ?? '_nuxt'
   if (base && !base.endsWith('/'))
     base += '/'
   const current = window.location.href.replace(/\/__nuxt_devtools__\/client\/.*$/, '/')
