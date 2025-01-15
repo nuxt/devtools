@@ -30,8 +30,8 @@ importers:
         specifier: 1.8.0
         version: 1.8.0(db0@0.2.1)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)
       '@nuxt/ui-pro':
-        specifier: ^1.6.0
-        version: 1.6.0(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vite@6.0.7(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))
+        specifier: ^1.7.0
+        version: 1.7.0(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vite@6.0.7(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))
       '@nuxthq/studio':
         specifier: ^2.2.1
         version: 2.2.1(magicast@0.3.5)(rollup@4.27.4)
@@ -558,8 +558,8 @@ packages:
   '@iconify-json/simple-icons@1.2.20':
     resolution: {integrity: sha512-WlQ95zrdxxizrFt2HtkfYjyWatLfE8Z7BKOkew9quG5S5AKYVxF1PkTtOs8LDWShce1DpvxKWQne4W5DQyEGZg==}
 
-  '@iconify-json/vscode-icons@1.2.6':
-    resolution: {integrity: sha512-uYlPqhIs2IyPL9J7KnX8tvWp9eU1jiv8DLzoLICzuG3UKYj921VmvnA1bicAAD24QYIjS/YSgavMwFFLrF2mKg==}
+  '@iconify-json/vscode-icons@1.2.10':
+    resolution: {integrity: sha512-qjp/j2RcHEZkesuAT6RP8BfcuHa+oERr7K1twfsulrIHrKZlpxxBeEyFm+3evZSAOgD+sjgU5CuTYS3RfCL+Pg==}
 
   '@iconify/collections@1.0.406':
     resolution: {integrity: sha512-HxrFXx1OgAbnh730KvLq59n0JiuHsLzEf+u0ynFNbheR8XGi7yvZGFyKOwHdUT7o2ATRqLbg0dOEabxWEKyfMA==}
@@ -691,8 +691,8 @@ packages:
     engines: {node: ^14.18.0 || >=16.10.0}
     hasBin: true
 
-  '@nuxt/ui-pro@1.6.0':
-    resolution: {integrity: sha512-+5xF90x6hAgUowYmXQtDX1mIabk+G5qSzA3TsO5w/yo4LotUXA6SYxqSK/LqyfXWh2WNGvEdlHM6/UARbCcK0Q==}
+  '@nuxt/ui-pro@1.7.0':
+    resolution: {integrity: sha512-a7Vqi75wzxgyx5CI5vKyUEv3pewZUBWuO8Pw1J6U9teyeJ+apKHYfZvRWi0qvoUPSf19y1bin+puCD4vseeTlg==}
 
   '@nuxt/ui@2.15.2':
     resolution: {integrity: sha512-3NxFcC0KN4bdTePNKKEVp4tj2BgeuGlucnnOFLVYSdhw60xU0LpFq9wDGeP7BBUl622xF9FnPNiXW5/6RS4i6w==}
@@ -4238,8 +4238,8 @@ packages:
     peerDependencies:
       tailwindcss: 1 || 2 || 2.0.1-compat || 3
 
-  tailwind-merge@2.5.5:
-    resolution: {integrity: sha512-0LXunzzAZzo0tEPxV3I297ffKZPlKDrjj7NXphC8V5ak9yHC5zRmxnOe2m/Rd/7ivsOMJe3JZ2JVocoDdQTRBA==}
+  tailwind-merge@2.6.0:
+    resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
@@ -5327,7 +5327,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/vscode-icons@1.2.6':
+  '@iconify-json/vscode-icons@1.2.10':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -5754,18 +5754,18 @@ snapshots:
       - rollup
       - supports-color
 
-  '@nuxt/ui-pro@1.6.0(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vite@6.0.7(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))':
+  '@nuxt/ui-pro@1.7.0(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vite@6.0.7(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))':
     dependencies:
-      '@iconify-json/vscode-icons': 1.2.6
+      '@iconify-json/vscode-icons': 1.2.10
       '@nuxt/ui': 2.15.2(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(vite@6.0.7(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))
       '@vueuse/core': 12.4.0(typescript@5.7.2)
       defu: 6.1.4
       git-url-parse: 16.0.0
       ofetch: 1.4.1
       parse-git-config: 3.0.0
-      pathe: 1.1.2
+      pathe: 2.0.1
       pkg-types: 1.3.0
-      tailwind-merge: 2.5.5
+      tailwind-merge: 2.6.0
       vue3-smooth-dnd: 0.0.6(vue@3.5.13(typescript@5.7.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5811,7 +5811,7 @@ snapshots:
       ohash: 1.1.4
       pathe: 1.1.2
       scule: 1.3.0
-      tailwind-merge: 2.5.5
+      tailwind-merge: 2.6.0
       tailwindcss: 3.4.3
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5978,7 +5978,7 @@ snapshots:
     dependencies:
       '@nuxt/kit': 3.15.1(magicast@0.3.5)(rollup@4.27.4)
       autoprefixer: 10.4.20(postcss@8.4.49)
-      consola: 3.3.3
+      consola: 3.4.0
       defu: 6.1.4
       h3: 1.13.0
       pathe: 1.1.2
@@ -10277,7 +10277,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  tailwind-merge@2.5.5: {}
+  tailwind-merge@2.6.0: {}
 
   tailwindcss@3.4.3:
     dependencies:
