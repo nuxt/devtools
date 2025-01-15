@@ -127,6 +127,7 @@ export interface InstalledModuleInfo {
   isUninstallable: boolean
   info?: ModuleStaticInfo
   entryPath?: string
+  timings?: Record<string, number | undefined>
   meta?: {
     name?: string
   }

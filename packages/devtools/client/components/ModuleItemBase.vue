@@ -93,18 +93,31 @@ const openInEditor = useOpenInEditor()
       <slot name="items" />
 
       <div v-if="data.stats" flex="~ gap-4 items-center">
-        <div flex="~ gap-1 items-center" op50>
+        <div flex="~ gap-2 items-center" op50>
           <NIcon icon="carbon-star" text-lg />
           <span>
             {{ data.stats.stars }}
           </span>
         </div>
-        <div flex="~ gap-1 items-center" op50>
+        <div flex="~ gap-2 items-center" op50>
           <NIcon icon="carbon-download" text-lg />
           <span>
             {{ data.stats.downloads }}
           </span>
         </div>
+      </div>
+
+      <div v-if="mod.timings?.setup">
+        <DurationDisplay
+          title="Module Setup Time"
+          flex="~ items-center"
+          :duration="mod.timings.setup * 1000"
+          :factor="0.5"
+        >
+          <template #before>
+            <NIcon icon="carbon-time" mr2 text-lg op50 />
+          </template>
+        </DurationDisplay>
       </div>
     </div>
     <div flex="~ col" items-end>

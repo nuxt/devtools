@@ -33,7 +33,7 @@ export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions
       return fn
     if (!name.includes(':'))
       return
-    const [namespace, fnName] = name.split(':')
+    const [namespace, fnName] = name.split(':') as [string, string]
     return extendedRpcMap.get(namespace)?.[fnName]
   },
   onError(error, name) {
