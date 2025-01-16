@@ -1,5 +1,5 @@
 import type { BirpcGroup } from 'birpc'
-import type { Nuxt } from 'nuxt/schema'
+import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
 import type { ModuleOptions } from './options'
 import type { ClientFunctions, ServerFunctions } from './rpc'
 
@@ -41,4 +41,10 @@ export interface InstallModuleReturn {
   configGenerated: string
   commands: string[]
   processId: string
+}
+
+export type ServerDebugModuleMutationRecord = (Omit<NuxtDebugModuleMutationRecord, 'module'> & { name: string })
+
+export interface ServerDebugContext {
+  moduleMutationRecords: ServerDebugModuleMutationRecord[]
 }

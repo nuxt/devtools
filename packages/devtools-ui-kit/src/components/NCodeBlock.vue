@@ -10,6 +10,7 @@ const props = withDefaults(
     lang?: BuiltinLanguage | 'text'
     lines?: boolean
     inline?: boolean
+    grammarContextCode?: string
     transformRendered?: (code: string) => string
   }>(),
   {
@@ -22,7 +23,7 @@ const emit = defineEmits(['loaded'])
 const rendered = computed(() => {
   const result = props.lang === 'text'
     ? { code: props.code, supported: false }
-    : devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang) || { code: props.code, supported: false }
+    : devToolsClient.value?.devtools.renderCodeHighlight(props.code, props.lang, { grammarContextCode: props.grammarContextCode }) || { code: props.code, supported: false }
   if (result.supported && props.transformRendered)
     result.code = props.transformRendered(result.code)
   if (result.supported)

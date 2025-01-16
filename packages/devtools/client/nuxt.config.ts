@@ -149,6 +149,8 @@ export default defineNuxtConfig({
     includeWorkspace: true,
   },
 
+  debug: true,
+
   eslint: {
     config: {
       standalone: false,

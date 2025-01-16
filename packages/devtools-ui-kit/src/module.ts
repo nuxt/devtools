@@ -16,7 +16,7 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'devtools-ui-kit',
+    name: '@nuxt/devtools-ui-kit',
     configKey: 'devtoolsUIKit',
   },
   defaults: {
@@ -35,9 +35,6 @@ export default defineNuxtModule<ModuleOptions>({
     if (!options.dev)
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
 
-    // eslint-disable-next-line ts/ban-ts-comment
-    // @ts-ignore - module options
-    nuxt.options.vueuse = nuxt.options.vueuse || {}
     // eslint-disable-next-line ts/ban-ts-comment
     // @ts-ignore - module options
     nuxt.options.colorMode = defu(nuxt.options.colorMode, { classSuffix: '' })

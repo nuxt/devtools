@@ -103,7 +103,7 @@ useEventListener(scroller, 'wheel', (e: WheelEvent) => {
             position: 'absolute',
             top: `${item.layer * 4}px`,
             left: `${item.relativeStart * 100}%`,
-            backgroundColor: getHashColorFromString(item.event.name, 50, 60),
+            backgroundColor: getHslColorFromStringHash(item.event.name, 50, 60),
           }"
         />
         <template v-if="segment.route">

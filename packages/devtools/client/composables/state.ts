@@ -39,6 +39,10 @@ export function useServerConfig() {
   return useAsyncState('getServerConfig', () => rpc.getServerConfig())
 }
 
+export function useServerDebugContext() {
+  return useAsyncState('getServerDebugContext', () => rpc.getServerDebugContext())
+}
+
 export function useServerRuntimeConfig() {
   return useAsyncState('getServerRuntimeConfig', () => rpc.getServerRuntimeConfig())
 }

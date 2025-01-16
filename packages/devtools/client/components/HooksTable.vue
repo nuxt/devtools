@@ -92,7 +92,7 @@ function toggleSortedBy(by: SortBy) {
         <td w-0 ws-nowrap text-center text-sm op25>
           {{ startTimes.indexOf(item.start) }}
         </td>
-        <td w-0 ws-nowrap text-right :style="{ color: getHashColorFromString(getNamePrefix(item.name)) }">
+        <td w-0 ws-nowrap text-right :style="{ color: getHslColorFromStringHash(getNamePrefix(item.name)) }">
           <code text-sm>{{ getNamePrefix(item.name) }}</code>
         </td>
         <td ws-nowrap>

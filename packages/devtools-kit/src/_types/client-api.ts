@@ -117,9 +117,13 @@ export interface NuxtDevtoolsHostClient {
   syncClient: () => NuxtDevtoolsHostClient
 }
 
+export interface CodeHighlightOptions {
+  grammarContextCode?: string
+}
+
 export interface NuxtDevtoolsClient {
   rpc: BirpcReturn<ServerFunctions, ClientFunctions>
-  renderCodeHighlight: (code: string, lang?: BuiltinLanguage) => {
+  renderCodeHighlight: (code: string, lang?: BuiltinLanguage, options?: CodeHighlightOptions) => {
     code: string
     supported: boolean
   }
