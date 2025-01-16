@@ -1,3 +1,20 @@
+# [2.0.0-beta.2](https://github.com/nuxt/devtools/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2025-01-16)
+
+
+### Bug Fixes
+
+* support Nuxt 4 window context format ([0459d44](https://github.com/nuxt/devtools/commit/0459d4459348f25188ebe75f0a5dbce96759fbc5))
+
+
+### Features
+
+* show module setup time ([a81055d](https://github.com/nuxt/devtools/commit/a81055dfe297fd08ffb1ce9ada3f24220255ce08))
+* show the floating panel by default, close [#717](https://github.com/nuxt/devtools/issues/717) ([6108b17](https://github.com/nuxt/devtools/commit/6108b173a7e555e959b9cd70f5676fe774b83053))
+* support basic view of resolved options with Discovery.js ([#771](https://github.com/nuxt/devtools/issues/771)) ([59b738c](https://github.com/nuxt/devtools/commit/59b738cead5815a0f677f19bb2e6918bd017c260))
+* use slimmer shiki bundle ([91bc060](https://github.com/nuxt/devtools/commit/91bc06030a723e705551806f4f9820fc28145cfd))
+
+
+
 # [2.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.7.0...v2.0.0-beta.1) (2025-01-13)
 
 
