@@ -352,8 +352,8 @@ catalogs:
       specifier: ^2.0.4
       version: 2.0.4
     vite-plugin-inspect:
-      specifier: ^10.0.6
-      version: 10.0.6
+      specifier: ^10.0.7
+      version: 10.0.7
     vite-plugin-vue-inspector:
       specifier: ^5.3.1
       version: 5.3.1
@@ -489,9 +489,6 @@ importers:
 
   packages/devtools:
     dependencies:
-      '@antfu/utils':
-        specifier: 'catalog:'
-        version: 8.1.0
       '@nuxt/devtools-kit':
         specifier: workspace:*
         version: link:../devtools-kit
@@ -501,21 +498,12 @@ importers:
       '@nuxt/kit':
         specifier: 'catalog:'
         version: 3.15.1(magicast@0.3.5)(rollup@4.30.1)
-      '@vue/devtools-core':
-        specifier: 'catalog:'
-        version: 7.7.0(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.3))
-      '@vue/devtools-kit':
-        specifier: 'catalog:'
-        version: 7.7.0
       birpc:
         specifier: 'catalog:'
         version: 2.0.19
       consola:
         specifier: 'catalog:'
         version: 3.4.0
-      cronstrue:
-        specifier: 'catalog:'
-        version: 2.52.0
       destr:
         specifier: 'catalog:'
         version: 2.0.3
@@ -567,12 +555,6 @@ importers:
       pkg-types:
         specifier: 'catalog:'
         version: 1.3.0
-      rc9:
-        specifier: 'catalog:'
-        version: 2.1.2
-      scule:
-        specifier: 'catalog:'
-        version: 1.3.0
       semver:
         specifier: 'catalog:'
         version: 7.6.3
@@ -585,15 +567,12 @@ importers:
       tinyglobby:
         specifier: 'catalog:'
         version: 0.2.10
-      unimport:
-        specifier: 'catalog:'
-        version: 3.14.5(rollup@4.30.1)
       vite:
         specifier: ^6.0.7
         version: 6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1)
       vite-plugin-inspect:
         specifier: 'catalog:'
-        version: 10.0.6(@nuxt/kit@3.15.1(magicast@0.3.5)(rollup@4.30.1))(rollup@4.30.1)(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))
+        version: 10.0.7(@nuxt/kit@3.15.1(magicast@0.3.5)(rollup@4.30.1))(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))
       vite-plugin-vue-inspector:
         specifier: 'catalog:'
         version: 5.3.1(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))
@@ -604,6 +583,9 @@ importers:
         specifier: 'catalog:'
         version: 8.18.0
     devDependencies:
+      '@antfu/utils':
+        specifier: 'catalog:'
+        version: 8.1.0
       '@discoveryjs/cli':
         specifier: 'catalog:'
         version: 2.12.1(@discoveryjs/discovery@1.0.0-beta.92)
@@ -664,6 +646,12 @@ importers:
       '@vue/devtools-applet':
         specifier: 'catalog:'
         version: 7.7.0(@unocss/reset@65.4.0)(change-case@5.4.4)(floating-vue@5.2.2(@nuxt/kit@3.15.1(magicast@0.3.5)(rollup@4.30.1))(vue@3.5.13(typescript@5.7.3)))(fuse.js@7.0.0)(typescript@5.7.3)(unocss@65.4.0(@unocss/webpack@65.4.0(rollup@4.30.1)(webpack@5.88.2(esbuild@0.24.2)))(postcss@8.4.49)(rollup@4.30.1)(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.3)))(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.3))
+      '@vue/devtools-core':
+        specifier: 'catalog:'
+        version: 7.7.0(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.3))
+      '@vue/devtools-kit':
+        specifier: 'catalog:'
+        version: 7.7.0
       '@vueuse/nuxt':
         specifier: 'catalog:'
         version: 12.4.0(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.5.0)(@types/node@22.10.6)(db0@0.2.1)(encoding@0.1.13)(eslint@9.18.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.30.1)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.6.1))(rollup@4.30.1)(typescript@5.7.3)
@@ -673,6 +661,9 @@ importers:
       '@xterm/xterm':
         specifier: 'catalog:'
         version: 5.5.0
+      cronstrue:
+        specifier: 'catalog:'
+        version: 2.52.0
       esno:
         specifier: 'catalog:'
         version: 4.8.0
@@ -709,6 +700,9 @@ importers:
       quicktype-core:
         specifier: 'catalog:'
         version: 23.0.170(encoding@0.1.13)
+      scule:
+        specifier: 'catalog:'
+        version: 1.3.0
       shiki:
         specifier: 'catalog:'
         version: 1.27.0
@@ -718,6 +712,9 @@ importers:
       theme-vitesse:
         specifier: 'catalog:'
         version: 0.8.3
+      unimport:
+        specifier: 'catalog:'
+        version: 3.14.5(rollup@4.30.1)
       unocss:
         specifier: 'catalog:'
         version: 65.4.0(@unocss/webpack@65.4.0(rollup@4.30.1)(webpack@5.88.2(esbuild@0.24.2)))(postcss@8.4.49)(rollup@4.30.1)(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.3))
@@ -7199,8 +7196,8 @@ packages:
       vue-tsc:
         optional: true
 
-  vite-plugin-inspect@10.0.6:
-    resolution: {integrity: sha512-24iFdPyYY+zMPFRzyIz74h/K27PVf7NFKdebPHbohAAF1gzM60jsWxhxlmpmaa7V7XxHGp8U0+2Kd0L21DGn3Q==}
+  vite-plugin-inspect@10.0.7:
+    resolution: {integrity: sha512-ukocfUNiAgu0R0RF4E5XN4krAckqAbd+qjPW2nv8hIOx03W/erLNfQHypkrsRqlp1PrQmTQ4qu6DCbu4oxEzrQ==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
@@ -15835,22 +15832,17 @@ snapshots:
       typescript: 5.7.3
       vue-tsc: 2.2.0(typescript@5.7.3)
 
-  vite-plugin-inspect@10.0.6(@nuxt/kit@3.15.1(magicast@0.3.5)(rollup@4.30.1))(rollup@4.30.1)(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1)):
+  vite-plugin-inspect@10.0.7(@nuxt/kit@3.15.1(magicast@0.3.5)(rollup@4.30.1))(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1)):
     dependencies:
-      '@antfu/utils': 8.1.0
-      '@rollup/pluginutils': 5.1.4(rollup@4.30.1)
       debug: 4.4.0(supports-color@8.1.1)
       error-stack-parser-es: 1.0.5
-      fs-extra: 11.2.0
       open: 10.1.0
-      perfect-debounce: 1.0.0
       picocolors: 1.1.1
       sirv: 3.0.0
       vite: 6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1)
     optionalDependencies:
       '@nuxt/kit': 3.15.1(magicast@0.3.5)(rollup@4.30.1)
     transitivePeerDependencies:
-      - rollup
       - supports-color
 
   vite-plugin-vue-inspector@5.3.1(vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.6.1)):
