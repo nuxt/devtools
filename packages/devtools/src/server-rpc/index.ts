@@ -7,7 +7,7 @@ import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerF
 import { logger } from '@nuxt/kit'
 import { createBirpcGroup } from 'birpc'
 import { colors } from 'consola/utils'
-import { parse, stringify } from 'flatted'
+import { parse, stringify } from 'structured-clone-es'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
 import { setupAnalyzeBuildRPC } from './analyze-build'

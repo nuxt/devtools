@@ -1,7 +1,7 @@
 import type { ClientFunctions, ServerFunctions } from '../../src/types'
 import { useDebounce } from '@vueuse/core'
 import { createBirpc } from 'birpc'
-import { parse, stringify } from 'flatted'
+import { parse, stringify } from 'structured-clone-es'
 import { tryCreateHotContext } from 'vite-hot-client'
 import { ref, shallowRef } from 'vue'
 import { WS_EVENT_NAME } from '../../src/constant'
