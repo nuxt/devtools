@@ -9,6 +9,7 @@ import { useCopy } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
+import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
 import { setupClientRPC } from './setup/client-rpc'
 import { setupVueDevTools } from './setup/vue-devtools'
@@ -65,7 +66,7 @@ useEventListener('keydown', (e) => {
 })
 
 const { scale, sidebarExpanded } = useDevToolsOptions('ui')
-// const dataSchema = useSchemaInput()
+const dataSchema = useSchemaInput()
 
 onMounted(async () => {
   const injectClient = useInjectionClient()
@@ -157,8 +158,8 @@ registerCommands(() => [
     </div>
     <DisconnectIndicator />
     <RestartDialogs />
-    <!-- <div v-lazy-show="dataSchema">
+    <div v-lazy-show="dataSchema">
       <LazyDataSchemaDrawer />
-    </div> -->
+    </div>
   </div>
 </template>
