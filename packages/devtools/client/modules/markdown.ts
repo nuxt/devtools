@@ -1,5 +1,6 @@
 import type { BuiltinLanguage } from 'shiki'
-import { defineNuxtModule } from '@nuxt/kit'
+import { defineNuxtModule, logger } from '@nuxt/kit'
+import { consola } from 'consola'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { createHighlighter } from 'shiki'
 import { bundledLanguages } from 'shiki/langs'
@@ -7,6 +8,9 @@ import Markdown from 'unplugin-vue-markdown/vite'
 
 export default defineNuxtModule({
   async setup(_, nuxt) {
+    logger.restoreAll()
+    consola.restoreAll()
+
     nuxt.options.imports.transform ||= {}
     nuxt.options.imports.transform.include = [/\.vue$/, /\.md$/]
 

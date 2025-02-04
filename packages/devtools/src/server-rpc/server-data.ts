@@ -10,6 +10,24 @@ export function setupServerDataRPC({
   let viteServer: ResolvedConfig | undefined
   let viteClient: ResolvedConfig | undefined
 
+  // Avoid sending the Vite instance to the client
+  function normalizeViteConfig(config: ResolvedConfig) {
+    return {
+      ...config,
+      environments: Object.fromEntries(
+        Object.entries(config.env).map(([key, _]) => {
+          return [key, null]
+        }),
+      ),
+      plugins: config.plugins.map((i) => {
+        const clone = { ...i }
+        delete clone.api
+        return clone
+      }),
+      inlineConfig: null,
+    } as any as ResolvedConfig
+  }
+
   nuxt.hook('nitro:build:before', (_nitro) => {
     nitro = _nitro
   })
@@ -21,7 +39,7 @@ export function setupServerDataRPC({
         name: 'nuxt:devtools:config-retriever',
         enforce: 'post',
         configResolved(config) {
-          viteServer = config
+          viteServer = normalizeViteConfig(config)
         },
       })
     }
@@ -31,7 +49,7 @@ export function setupServerDataRPC({
         name: 'nuxt:devtools:config-retriever',
         enforce: 'post',
         configResolved(config) {
-          viteClient = config
+          viteClient = normalizeViteConfig(config)
         },
       })
     }

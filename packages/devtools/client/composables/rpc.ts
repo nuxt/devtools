@@ -36,8 +36,15 @@ export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions
     const [namespace, fnName] = name.split(':') as [string, string]
     return extendedRpcMap.get(namespace)?.[fnName]
   },
-  onError(error, name) {
-    console.error(`[nuxt-devtools] RPC error on executing "${name}":`, error)
+  onFunctionError(error, name) {
+    console.error(`[nuxt-devtools] RPC error on executing "${name}":`)
+    console.error(error)
+    return true
+  },
+  onGeneralError(error) {
+    console.error(`[nuxt-devtools] RPC error:`)
+    console.error(error)
+    return true
   },
   timeout: 120_000,
 })
