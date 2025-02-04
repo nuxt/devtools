@@ -1,3 +1,13 @@
+# [2.0.0-beta.5](https://github.com/nuxt/devtools/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2025-02-04)
+
+
+### Bug Fixes
+
+* downgrade quicktype, bring back schema generator, fix [#753](https://github.com/nuxt/devtools/issues/753) ([7b9dd87](https://github.com/nuxt/devtools/commit/7b9dd8796d7a4629af57baf0432450b03bb209df))
+* rpc serialization error with Vite configs ([9033ce2](https://github.com/nuxt/devtools/commit/9033ce2cd5b0aa6ef54b53e29ce0a26139ec6bb6))
+
+
+
 # [2.0.0-beta.4](https://github.com/nuxt/devtools/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2025-01-31)
 
 
