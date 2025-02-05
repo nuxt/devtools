@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client && esno scripts/prepare.ts",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module build",
     "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
@@ -48,6 +48,8 @@
     "@nuxt/devtools-kit": "workspace:*",
     "@nuxt/devtools-wizard": "workspace:*",
     "@nuxt/kit": "catalog:",
+    "@vue/devtools-core": "catalog:",
+    "@vue/devtools-kit": "catalog:",
     "birpc": "catalog:",
     "consola": "catalog:",
     "destr": "catalog:",
@@ -98,8 +100,6 @@
     "@unocss/runtime": "catalog:",
     "@vitest/ui": "catalog:",
     "@vue/devtools-applet": "catalog:",
-    "@vue/devtools-core": "catalog:",
-    "@vue/devtools-kit": "catalog:",
     "@vueuse/nuxt": "catalog:",
     "@xterm/addon-fit": "catalog:",
     "@xterm/xterm": "catalog:",
