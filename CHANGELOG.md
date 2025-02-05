@@ -1,3 +1,12 @@
+# [2.0.0-beta.6](https://github.com/nuxt/devtools/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2025-02-05)
+
+
+### Bug Fixes
+
+* vue-devtools runtime injection, close [#667](https://github.com/nuxt/devtools/issues/667) ([1888974](https://github.com/nuxt/devtools/commit/1888974aa0dd00fa72f7884dfc605f66657823d4))
+
+
+
 # [2.0.0-beta.5](https://github.com/nuxt/devtools/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2025-02-04)
 
 
