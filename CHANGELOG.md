@@ -1,3 +1,12 @@
+# [2.0.0-beta.7](https://github.com/nuxt/devtools/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2025-02-05)
+
+
+### Bug Fixes
+
+* build analyzer, close [#701](https://github.com/nuxt/devtools/issues/701) ([5ace123](https://github.com/nuxt/devtools/commit/5ace1235dca5086f6d85398f34bb38237048d7f0))
+
+
+
 # [2.0.0-beta.6](https://github.com/nuxt/devtools/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2025-02-05)
 
 
