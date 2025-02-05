@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: lts/*
           cache: pnpm
+      - run: npm install -g corepack@latest
       - run: corepack enable
       - run: pnpm install
       - run: pnpm lint --fix
