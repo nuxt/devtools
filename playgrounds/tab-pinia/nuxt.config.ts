@@ -13,7 +13,6 @@ export default defineNuxtConfig({
 
   imports: {
     dirs: ['./stores'],
-    // TODO: remove this once repo update to use nuxt version with directives folder support
     presets: [{
       from: resolver.resolve('directives/focus.ts'),
       imports: [{
@@ -25,7 +24,6 @@ export default defineNuxtConfig({
         },
       }],
     }],
-    // TODO: remove this once repo update to use nuxt version with directives folder support
     addons: {
       vueDirectives: true,
     },
