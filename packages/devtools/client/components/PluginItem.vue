@@ -18,29 +18,31 @@ const shortPath = computed(() => parseReadablePath(props.plugin.src, config.valu
     <div w8 text-right text-sm op25>
       {{ index }}
     </div>
-    <FilepathItem :filepath="props.plugin.src" :subpath="true" />
-    <div>
-      <NBadge
-        v-if="shortPath.startsWith('#')"
-        n="rose"
-        v-text="'virtual'"
-      />
-      <NBadge
-        v-else-if="!shortPath.startsWith('.')"
-        n="gray"
-        v-text="'module'"
-      />
-      <NBadge
-        v-if="plugin.mode === 'server'"
-        n="teal"
-        v-text="'server'"
-      />
-      <NBadge
-        v-if="plugin.mode === 'client'"
-        n="orange"
-        v-text="'client'"
-      />
-    </div>
+    <FilepathItem :filepath="props.plugin.src" :subpath="true">
+      <div>
+        <NBadge
+          v-if="shortPath.startsWith('#')"
+          n="rose"
+          v-text="'virtual'"
+        />
+        <NBadge
+          v-else-if="!shortPath.startsWith('.')"
+          n="gray"
+          v-text="'module'"
+        />
+        <NBadge
+          v-if="plugin.mode === 'server'"
+          n="teal"
+          v-text="'server'"
+        />
+        <NBadge
+          v-if="plugin.mode === 'client'"
+          n="orange"
+          v-text="'client'"
+        />
+      </div>
+    </FilepathItem>
+
     <div v-if="plugin.metric?.duration != null" flex-auto text-right>
       <DurationDisplay :duration="plugin.metric?.duration" :factor="10" />
     </div>

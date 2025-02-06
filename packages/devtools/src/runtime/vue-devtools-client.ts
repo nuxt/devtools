@@ -1,8 +1,10 @@
 import { functions } from '@vue/devtools-core'
 import { createRpcServer, devtools } from '@vue/devtools-kit'
 
-devtools.init()
+export default () => {
+  devtools.init()
 
-createRpcServer(functions, {
-  preset: 'iframe',
-})
+  createRpcServer(functions, {
+    preset: 'iframe',
+  })
+}

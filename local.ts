@@ -22,10 +22,10 @@ import { defineNuxtModule, logger } from '@nuxt/kit'
 import { getPort } from 'get-port-please'
 import { resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
+import { startSubprocess } from './packages/devtools-kit/src/index'
 import { CLIENT_BASE, defaultOptions } from './packages/devtools/src/constant'
 import { packageDir } from './packages/devtools/src/dirs'
 import { enableModule } from './packages/devtools/src/module-main'
-import { startSubprocess } from './packages/devtools-kit/src/index'
 
 export type { ModuleOptions }
 

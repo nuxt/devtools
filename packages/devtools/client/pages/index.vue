@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
 import { ref } from 'vue'
+import { useClient } from '~/composables/client'
 import { isFirstVisit } from '~/composables/storage'
+import { useDevToolsOptions } from '~/composables/storage-options'
 import { telemetryEnabled } from '~/composables/telemetry'
-import { useDevToolsOptions } from '../composables/storage-options'
 
 definePageMeta({
   layout: 'none',
 })
 
+const client = useClient()
 const telemetryModel = ref(true)
-const enableFloatPanel = ref(true)
 
 const {
   showPanel,
@@ -18,9 +19,12 @@ const {
 
 function visit() {
   telemetryEnabled.value = telemetryModel.value
-  if (showPanel.value == null && enableFloatPanel.value)
-    showPanel.value = true
   isFirstVisit.value = false
+}
+
+function hideFloatingPanel() {
+  showPanel.value = false
+  client.value.devtools.close()
 }
 </script>
 
@@ -44,12 +48,12 @@ function visit() {
       <NButton to="/modules/overview" n="lg primary" aria-label="Get Started" @click="visit">
         <span>Get Started</span>
       </NButton>
+      <NButton v-if="showPanel !== false" n="borderless orange" @click="hideFloatingPanel">
+        <span>Always hide the floating panel</span>
+      </NButton>
     </div>
     <div p4>
       <div flex="~ col gap-2" mxa>
-        <NCheckbox v-if="showPanel == null" v-model="enableFloatPanel" n="green6">
-          <span op50>Show floating panel from now on</span>
-        </NCheckbox>
         <NCheckbox v-model="telemetryModel" n="green6">
           <span op50>Send anonymous statistics, help us improving DevTools</span>
           <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op35 v-text="'Learn more'" />

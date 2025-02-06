@@ -21,7 +21,9 @@ const globalInstallMatch = [
 ]
 
 export function isGlobalInstall() {
-  if (isInstalledGlobally)
+  // @ts-expect-error jiti v2 has a bug with default export with is-installed-globally
+  // @see https://github.com/unjs/jiti/issues/342
+  if (isInstalledGlobally === true || isInstalledGlobally.default === true)
     return true
   const dir = packageDir.replace(/\\/g, '/')
   return globalInstallMatch.some(i => dir.includes(i))

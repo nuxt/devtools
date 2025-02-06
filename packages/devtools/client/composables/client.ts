@@ -1,5 +1,10 @@
+import type { useRoute, useRouter } from '#imports'
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '@nuxt/devtools-kit/types'
 import type { Unhead } from '@unhead/schema'
+import type { ComputedRef } from 'vue'
+import { useState } from '#imports'
+import { useColorMode } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
 import { extendedRpcMap, rpc } from './rpc'
@@ -52,7 +57,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
       rpc,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {
-        return renderCodeHighlight(code, lang)
+        return renderCodeHighlight(code, lang as any)
       },
       renderMarkdown(code) {
         return renderMarkdown(code)

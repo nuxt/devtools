@@ -1,7 +1,8 @@
 {
   "name": "@nuxt/devtools",
   "type": "module",
-  "version": "1.5.1",
+  "version": "2.0.0-beta.7",
+  "description": "The Nuxt DevTools gives you insights and transparency about your Nuxt App.",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com",
   "repository": {
@@ -12,16 +13,14 @@
   "exports": {
     ".": {
       "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
+      "import": "./dist/module.mjs"
     },
     "./types": {
       "types": "./dist/types.d.ts"
     },
     "./*": "./*"
   },
-  "main": "./module.cjs",
-  "types": "./dist/module.d.ts",
+  "types": "./dist/module.d.mts",
   "bin": "./cli.mjs",
   "files": [
     "*.cjs",
@@ -30,19 +29,22 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client && esno scripts/prepare.ts",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client",
     "build:client": "nuxi generate client",
     "build:module": "nuxt-build-module build",
-    "dev": "nuxi dev client",
+    "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
+    "dev:discovery": "discovery -c .discoveryrc.cjs",
+    "stub": "nuxt-build-module build --stub",
+    "dev": "pnpm build:discovery && nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
-    "dev:prepare": "nuxi prepare client",
+    "dev:prepare": "pnpm run stub && nuxi prepare client",
+    "prepare": "esno scripts/prepare.ts",
     "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "vite": "*"
+    "vite": ">=6.0"
   },
   "dependencies": {
-    "@antfu/utils": "catalog:",
     "@nuxt/devtools-kit": "workspace:*",
     "@nuxt/devtools-wizard": "workspace:*",
     "@nuxt/kit": "catalog:",
@@ -50,12 +52,10 @@
     "@vue/devtools-kit": "catalog:",
     "birpc": "catalog:",
     "consola": "catalog:",
-    "cronstrue": "catalog:",
     "destr": "catalog:",
     "error-stack-parser-es": "catalog:",
     "execa": "catalog:",
     "fast-npm-meta": "catalog:",
-    "flatted": "catalog:",
     "get-port-please": "catalog:",
     "hookable": "catalog:",
     "image-meta": "catalog:",
@@ -68,19 +68,20 @@
     "pathe": "catalog:",
     "perfect-debounce": "catalog:",
     "pkg-types": "catalog:",
-    "rc9": "catalog:",
-    "scule": "catalog:",
     "semver": "catalog:",
     "simple-git": "catalog:",
     "sirv": "catalog:",
+    "structured-clone-es": "catalog:",
     "tinyglobby": "catalog:",
-    "unimport": "catalog:",
     "vite-plugin-inspect": "catalog:",
     "vite-plugin-vue-inspector": "catalog:",
     "which": "catalog:",
     "ws": "catalog:"
   },
   "devDependencies": {
+    "@antfu/utils": "catalog:",
+    "@discoveryjs/cli": "catalog:",
+    "@discoveryjs/discovery": "catalog:",
     "@iconify-json/bxl": "catalog:",
     "@iconify-json/carbon": "catalog:",
     "@iconify-json/logos": "catalog:",
@@ -91,8 +92,8 @@
     "@nuxt/devtools": "workspace:*",
     "@nuxt/test-utils": "catalog:",
     "@parcel/watcher": "catalog:",
+    "@shikijs/langs-precompiled": "catalog:",
     "@types/markdown-it-link-attributes": "catalog:",
-    "@types/ua-parser-js": "catalog:",
     "@unocss/nuxt": "catalog:",
     "@unocss/preset-icons": "catalog:",
     "@unocss/preset-uno": "catalog:",
@@ -102,20 +103,24 @@
     "@vueuse/nuxt": "catalog:",
     "@xterm/addon-fit": "catalog:",
     "@xterm/xterm": "catalog:",
+    "cronstrue": "catalog:",
     "esno": "catalog:",
     "floating-vue": "catalog:",
     "fuse.js": "catalog:",
     "json-editor-vue": "catalog:",
     "markdown-it": "catalog:",
     "markdown-it-link-attributes": "catalog:",
+    "my-ua-parser": "catalog:",
     "nanoid": "catalog:",
     "nitropack": "catalog:",
     "nuxt": "catalog:",
     "ofetch": "catalog:",
     "quicktype-core": "catalog:",
+    "scule": "catalog:",
     "shiki": "catalog:",
+    "shiki-codegen": "catalog:",
     "theme-vitesse": "catalog:",
-    "ua-parser-js": "catalog:",
+    "unimport": "catalog:",
     "unocss": "catalog:",
     "unplugin-vue-markdown": "catalog:",
     "vanilla-jsoneditor": "catalog:",

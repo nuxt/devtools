@@ -36,7 +36,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Determine if user aware devtools, by checking the presentation in the config
   const enabledExplicitly = (nuxt.options.devtools === true as unknown)
     || (nuxt.options.devtools && nuxt.options.devtools.enabled)
-    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge')
+    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge' || m === '@nuxt/devtools-nightly')
 
   await nuxt.callHook('devtools:before')
 
@@ -109,7 +109,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   addVitePlugin(vitePlugin)
 
   const clientDirExists = existsSync(clientDir)
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   nuxt.hook('vite:extendConfig', (config) => {
     config.server ||= {}
@@ -124,6 +123,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     if (!Array.isArray(config.server.watch.ignored))
       config.server.watch.ignored = [config.server.watch.ignored]
     config.server.watch.ignored.push('**/.nuxt/analyze/**')
+    config.server.watch.ignored.push('**/.cache/nuxt-devtools/**')
   })
 
   nuxt.hook('imports:extend', (imports) => {
@@ -141,7 +141,10 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
-    server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
+    const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
+
+    server.middlewares.use(ROUTE_ANALYZE, sirv(devtoolsAnalyzeDir, { single: false, dev: true, dotfiles: true, ignores: false }))
+
     // Serve the front end in production
     if (clientDirExists) {
       const indexHtmlPath = join(clientDir, 'index.html')

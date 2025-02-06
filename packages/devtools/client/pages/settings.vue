@@ -24,7 +24,22 @@ const {
   sidebarScrollable,
 } = useDevToolsOptions('ui')
 
+const {
+  openInEditor,
+} = useDevToolsOptions('behavior')
+
 const client = useClient()
+
+const editorOptions = [
+  ['Auto', undefined],
+  ['VS Code', 'vscode'],
+  ['VS Code Insider', 'vscode-insider'],
+  ['Cursor', 'cursor'],
+  ['Zed', 'zed'],
+  ['WebStorm', 'webstorm'],
+  ['Sublime Text', 'sublime'],
+  ['Atom', 'atom'],
+]
 
 const scaleOptions = [
   ['Tiny', 12 / 15],
@@ -113,7 +128,7 @@ watchEffect(() => {
       icon="i-carbon-settings-adjust"
       text="DevTools Settings"
     />
-    <div grid="~ md:cols-2 gap-x-10 gap-y-3" max-w-300>
+    <div grid="~ lg:cols-2 gap-x-10 gap-y-3" max-w-300>
       <div flex="~ col gap-2">
         <h3 text-lg>
           Tabs
@@ -141,10 +156,9 @@ watchEffect(() => {
                 :model-value="!hiddenTabs.includes(tab.name)"
                 @update:model-value="(v: boolean) => toggleTab(tab.name, v)"
               >
-                <div flex="~ gap-2" flex-auto items-center justify-start pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
+                <div flex="~ gap-2" flex-auto items-center justify-start of-hidden pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
                   <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-                  <span>{{ tab.title }}</span>
-                  <div flex-auto />
+                  <span flex-auto overflow-hidden text-ellipsis ws-nowrap>{{ tab.title }}</span>
                   <template v-if="pinnedTabs.includes(tab.name)">
                     <NButton
                       icon="i-carbon-caret-up"
@@ -217,7 +231,7 @@ watchEffect(() => {
           </NCheckbox>
 
           <NCheckbox v-model="showPanel" n-primary>
-            <span>Always show the floating panel</span>
+            <span>Show the floating panel</span>
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />
@@ -225,6 +239,15 @@ watchEffect(() => {
           <p>Minimize floating panel on inactive</p>
           <NSelect v-model.number="minimizePanelInactive" n-primary>
             <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
+              {{ i[0] }}
+            </option>
+          </NSelect>
+
+          <div mx--2 my1 h-1px border="b base" op75 />
+
+          <p>Open In Editor</p>
+          <NSelect v-model="openInEditor" n-primary>
+            <option v-for="i of editorOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
           </NSelect>

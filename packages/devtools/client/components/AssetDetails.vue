@@ -66,7 +66,7 @@ async function saveTextContent() {
 const config = useServerConfig()
 const hasNuxtImage = computed(() => {
   const modules = config.value?._installedModules || []
-  return modules.some(m => m.meta?.name === '@nuxt/image' || m.meta?.name === '@nuxt/image-edge')
+  return modules.some(m => m.meta?.name === '@nuxt/image' || m.meta?.name === '@nuxt/image-edge' || m.meta?.name === '@nuxt/image-nightly')
 })
 
 const codeSnippets = computed(() => {

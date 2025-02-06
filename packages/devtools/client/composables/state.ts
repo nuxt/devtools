@@ -1,6 +1,11 @@
 import type { Ref } from 'vue'
 import type { HookInfo, RouteInfo } from '../../src/types'
+import { useFetch } from '#app/composables/fetch'
 import { objectPick } from '@antfu/utils'
+import { computed } from 'vue'
+import { useClientRouter } from './client'
+import { rpc } from './rpc'
+import { useAsyncState } from './utils'
 
 export function useServerPages() {
   return useAsyncState('getServerPages', () => rpc.getServerPages())

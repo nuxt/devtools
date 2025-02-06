@@ -1,5 +1,9 @@
+import { devtoolsUiShowNotification } from '#imports'
 import { until } from '@vueuse/core'
-import { UAParser } from 'ua-parser-js'
+import { UAParser } from 'my-ua-parser'
+import { ref } from 'vue'
+import { AuthConfirm } from './dialog'
+import { rpc } from './rpc'
 
 export const devAuthToken = ref<string | null>(localStorage.getItem('__nuxt_dev_token__'))
 

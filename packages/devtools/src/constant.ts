@@ -23,6 +23,7 @@ export const defaultOptions: ModuleOptions = {
 export const defaultTabOptions: NuxtDevToolsOptions = {
   behavior: {
     telemetry: null,
+    openInEditor: undefined,
   },
   ui: {
     componentsView: 'list',
@@ -34,7 +35,7 @@ export const defaultTabOptions: NuxtDevToolsOptions = {
     interactionCloseOnOutsideClick: false,
     showExperimentalFeatures: false,
     showHelpButtons: true,
-    showPanel: null,
+    showPanel: true,
     scale: 1,
     minimizePanelInactive: 5000,
     hiddenTabs: [],

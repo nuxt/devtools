@@ -43,6 +43,8 @@ const units = computed(() => {
 
 <template>
   <div :class="getLatencyColor(duration)">
+    <slot name="before" />
     {{ units[0] }}<span ml-1 text-xs op50>{{ units[1] }}</span>
+    <slot name="after" />
   </div>
 </template>

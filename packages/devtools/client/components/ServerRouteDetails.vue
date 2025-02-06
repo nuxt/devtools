@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import type { $Fetch } from 'ofetch'
+import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
 import { useCookie } from '#app/composables/cookie'
 import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
@@ -20,7 +20,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'open-default-input'): void
+  (event: 'openDefaultInput'): void
 }>()
 
 const [DefineDefaultInputs, UseDefaultInputs] = createReusableTemplate()
@@ -518,7 +518,7 @@ const copy = useCopy()
             <NButton
               icon="i-carbon-edit"
               :border="false"
-              @click="emit('open-default-input')"
+              @click="emit('openDefaultInput')"
             />
             <div x-divider />
           </div>
@@ -589,11 +589,10 @@ const copy = useCopy()
         <code v-if="response.contentType" text-xs op50>
           {{ response.contentType }}
         </code>
-        <!-- TODO: quicktype has some problem of bundling (it's in CJS), we remove this temporary -->
-        <!-- <DataSchemaButton
+        <DataSchemaButton
           v-if="response.contentType === 'application/json'"
           :getter="() => ({ input: responseContent })"
-        /> -->
+        />
         <div flex-auto />
         <div op50>
           Request finished in
