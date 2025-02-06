@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Import, UnimportMeta } from 'unimport'
+import { kebabCase } from 'scule'
 import { computed } from 'vue'
 import { ComposablesDocs } from '~/composables/constants'
 import { useCopy, useOpenInEditor } from '~/composables/editor'
@@ -7,12 +8,14 @@ import { useCopy, useOpenInEditor } from '~/composables/editor'
 const props = withDefaults(
   defineProps<{
     item: Import
+    isDirective?: boolean
     metadata?: UnimportMeta
     filepath?: string
     counter?: boolean
     classes?: string
   }>(),
   {
+    isDirective: false,
     counter: true,
     classes: 'px2 py1 text-sm bg-gray:5 ',
   },
@@ -22,6 +25,16 @@ const copy = useCopy()
 const openInEditor = useOpenInEditor()
 
 const name = computed(() => props.item.as || props.item.name)
+const copyName = computed(() => {
+  let n = name.value
+  if (props.isDirective) {
+    if (n[0] !== 'v') {
+      n = `v${n}`
+    }
+    n = kebabCase(n)
+  }
+  return n
+})
 const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
 const modules = computed(() =>
   (props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
@@ -40,14 +53,18 @@ const docsUrl = computed(() => {
 
 <template>
   <VDropdown :disabled="!props.metadata">
-    <button hover:text-primary>
-      <code
-        rounded font-mono
-        :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]"
-      >
+    <button hover:text-primary :class="[metadata && !usageCount ? 'op30 hover:op100' : '', classes]">
+      <code rounded font-mono>
         {{ name }}
         <sup v-if="usageCount && counter" text-primary>x{{ usageCount }}</sup>
       </code>
+      <sup v-if="isDirective">
+        <abbr title="Vue Directive">
+          <NIcon
+            icon="tabler:hexagon-letter-d"
+          />
+        </abbr>
+      </sup>
     </button>
     <template #popper>
       <div max-w-100>
@@ -59,7 +76,7 @@ const docsUrl = computed(() => {
             :markdown="item.meta.description"
           />
           <div flex="~ gap2" n="primary xs">
-            <NButton icon="carbon-copy" @click="copy(name, 'imports-name')">
+            <NButton icon="carbon-copy" @click="copy(copyName, 'imports-name')">
               Copy
             </NButton>
             <NButton v-if="filepath" icon="carbon-code" @click="filepath && openInEditor(filepath)">
