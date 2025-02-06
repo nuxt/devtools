@@ -52,12 +52,11 @@ function authorize() {
 
       <!-- Banner -->
       <div flex="~ col" mt-5 items-center md:mt-20>
-        <NuxtLink
-          flex="~" mt--10 items-center justify-center
-          to="https://devtools.nuxt.com/" target="_blank"
-        >
-          <NuxtLogo h-10 />
-        </NuxtLink>
+        <h1 aria-label="Nuxt DevTools">
+          <NuxtLink flex="~" mt--10 items-center justify-center to="https://devtools.nuxt.com/" target="_blank">
+            <NuxtLogo h-10 />
+          </NuxtLink>
+        </h1>
         <button mb6 mt3 text-center text-sm flex="~ gap-1 wrap" @click="goIntro">
           <span op40>
             Nuxt DevTools
@@ -147,8 +146,8 @@ function authorize() {
       </div>
       <div flex="~ gap-6 wrap" mt-5 items-center justify-center>
         <a
-          href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50 hover="op100 text-blue"
-          transition
+          href="https://github.com/nuxt/devtools" target="_blank" flex="~ gap1" items-center op50
+          hover="op100 text-blue" transition
         >
           <div i-carbon-star />
           Star on GitHub

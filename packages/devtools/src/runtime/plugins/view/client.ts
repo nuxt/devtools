@@ -9,11 +9,11 @@ import { useAppConfig, useRuntimeConfig } from '#imports'
 import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
-
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+
+import { CLIENT_BASE } from '../../../constant'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
-
 import { popupWindow, state } from './state'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -126,8 +126,7 @@ export async function setupDevToolsClient({
   function getIframe() {
     if (!iframe) {
       const runtimeConfig = useRuntimeConfig()
-      const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
+      const CLIENT_PATH = `/${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
       const initialUrl = CLIENT_PATH + state.value.route
       iframe = document.createElement('iframe')
 

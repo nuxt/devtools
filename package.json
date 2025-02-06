@@ -16,8 +16,10 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all",
     "test": "pnpm lint",
+    "test:e2e": "pnpm playwright test",
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
+    "fixture:empty": "pnpm -C playgrounds/empty run dev",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks && pnpm -C docs install",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
@@ -31,6 +33,7 @@
     "@nuxt/module-builder": "catalog:",
     "@nuxt/schema": "catalog:",
     "@opentelemetry/api": "catalog:",
+    "@playwright/test": "catalog:",
     "@types/markdown-it": "catalog:",
     "@types/node": "catalog:",
     "@types/which": "catalog:",

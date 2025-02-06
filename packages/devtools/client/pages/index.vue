@@ -31,9 +31,9 @@ function hideFloatingPanel() {
 <template>
   <NPanelGrids flex="~ col" relative h-screen w-full>
     <div flex="~ auto col gap3" items-center justify-center text-center>
-      <p my2 text-3em text-primary font-bold font-stylish>
+      <h1 my2 text-3em text-primary font-bold font-stylish aria-label="Nuxt DevTools Welcome">
         👋 Hi there, welcome to Nuxt DevTools!
-      </p>
+      </h1>
       <p max-w-190 text-lg>
         <NuxtLogo mr-0.5 inline-block h-5 translate-y--1.1 align-mid /> is a set of visual tools that help you to know your Nuxt app better, and enhance your
         development experience with Nuxt. Enjoy!<br>
@@ -45,7 +45,7 @@ function hideFloatingPanel() {
         </NLink>
       </p>
 
-      <NButton to="/modules/overview" n="lg primary" @click="visit">
+      <NButton to="/modules/overview" n="lg primary" aria-label="Get Started" @click="visit">
         <span>Get Started</span>
       </NButton>
       <NButton v-if="showPanel !== false" n="borderless orange" @click="hideFloatingPanel">
