@@ -2,9 +2,9 @@
 import type { ModuleStaticInfo } from '../../src/types'
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
-import { useModulesList } from '~/composables/state-modules'
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
+import { useModulesList } from '~/composables/state-modules'
 
 type SortingFunction<T> = (a: T, b: T) => number
 

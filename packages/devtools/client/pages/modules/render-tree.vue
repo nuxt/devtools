@@ -11,13 +11,14 @@ const openInEditor = useOpenInEditor()
 
 definePageMeta({
   icon: 'i-carbon-category',
-  title: 'Components Tree',
+  title: 'Render Tree',
   layout: 'full',
   show: () => {
     const client = useClient()
     return () => !!client.value
   },
-  order: 3,
+  order: 1,
+  category: 'vue-devtools',
 })
 
 function togglePanel(status: boolean) {

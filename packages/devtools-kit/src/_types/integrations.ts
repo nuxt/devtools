@@ -127,6 +127,7 @@ export interface InstalledModuleInfo {
   isUninstallable: boolean
   info?: ModuleStaticInfo
   entryPath?: string
+  timings?: Record<string, number | undefined>
   meta?: {
     name?: string
   }
@@ -231,4 +232,11 @@ export interface ComponentWithRelationships {
   component: Component
   dependencies?: string[]
   dependents?: string[]
+}
+
+export interface CodeServerOptions {
+  codeBinary: string
+  launchArg: string
+  licenseTermsArg: string
+  connectionTokenArg: string
 }

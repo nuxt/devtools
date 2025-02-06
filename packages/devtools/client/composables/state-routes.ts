@@ -1,4 +1,6 @@
 // virtual-files Tab
+import { useSessionState } from './utils'
+
 export function useCurrentVirtualFile() {
   return useSessionState<string>('virtual-files:current', '')
 }

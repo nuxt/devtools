@@ -7,7 +7,7 @@ import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerF
 import { logger } from '@nuxt/kit'
 import { createBirpcGroup } from 'birpc'
 import { colors } from 'consola/utils'
-import { parse, stringify } from 'flatted'
+import { parse, stringify } from 'structured-clone-es'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
 import { setupAnalyzeBuildRPC } from './analyze-build'
@@ -16,6 +16,7 @@ import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupNpmRPC } from './npm'
 import { setupOptionsRPC } from './options'
+import { setupServerDataRPC } from './server-data'
 import { setupServerRoutesRPC } from './server-routes'
 import { setupServerTasksRPC } from './server-tasks'
 import { setupStorageRPC } from './storage'
@@ -101,6 +102,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupOptionsRPC(ctx),
     ...setupTimelineRPC(ctx),
     ...setupTelemetryRPC(ctx),
+    ...setupServerDataRPC(ctx),
   } satisfies ServerFunctions)
 
   const wsClients = new Set<WebSocket>()

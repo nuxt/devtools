@@ -3,18 +3,18 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 
-import { setIframeServerContext } from '@vue/devtools-kit'
-import { createHooks } from 'hookable'
-import { debounce } from 'perfect-debounce'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
-
-import { initTimelineMetrics } from '../../function-metrics-helpers'
-import Main from './Main.vue'
-import { popupWindow, state } from './state'
-
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
+import { setIframeServerContext } from '@vue/devtools-kit'
+import { createHooks } from 'hookable'
+import { debounce } from 'perfect-debounce'
+
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { initTimelineMetrics } from '../../function-metrics-helpers'
+import Main from './Main.vue'
+
+import { popupWindow, state } from './state'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 

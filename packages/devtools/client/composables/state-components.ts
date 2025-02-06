@@ -1,4 +1,8 @@
 import type { Component } from 'nuxt/schema'
+import { computed } from 'vue'
+import { useClient } from './client'
+import { rpc } from './rpc'
+import { useAsyncState } from './utils'
 
 export function useComponents() {
   const client = useClient()

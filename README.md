@@ -25,9 +25,12 @@ Unleash Nuxt Developer Experience.
 
 <br>
 
+> [!NOTE]
+> You are viewing the v2.x branch which are in active development. For the latest stable version, please refer to the [v1.x branch](https://github.com/nuxt/devtools/tree/v1)
+
 ## Installation
 
-> Nuxt DevTools requires **Nuxt v3.9.0 or higher**.
+> Nuxt DevTools v2 requires **Nuxt v3.15.0 or higher**.
 
 Nuxt DevTools is **enabled by default** in Nuxt v3.8.0. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
 
@@ -41,17 +44,17 @@ export default defineNuxtConfig({
 })
 ```
 
-### Edge Release Channel
+### Nightly Release Channel
 
-Similar to [Nuxt's Nightly Channel](https://nuxt.com/docs/guide/going-further/nightly-release-channel#opting-into-the-edge-channel), DevTools also offers an edge release channel, that automatically releases for every commit to `main` branch.
+Similar to [Nuxt's Nightly Channel](https://nuxt.com/docs/guide/going-further/nightly-release-channel), DevTools also offers a nightly release channel, that automatically releases for every commit to `main` branch.
 
-You can opt-in to the edge release channel by running:
+You can opt-in to the nightly release channel by running:
 
 ```diff
 {
   "devDependencies": {
 --    "@nuxt/devtools": "^0.1.0"
-++    "@nuxt/devtools": "npm:@nuxt/devtools-edge@latest"
+++    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
   }
 }
 ```
@@ -117,7 +120,7 @@ On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#
 [npm-version-src]: https://img.shields.io/npm/v/@nuxt/devtools/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/@nuxt/devtools
 [npm-downloads-src]: https://img.shields.io/npm/dm/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://npmjs.com/package/@nuxt/devtools
+[npm-downloads-href]: https://npm.chart.dev/@nuxt/devtools
 [license-src]: https://img.shields.io/npm/l/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://npmjs.com/package/@nuxt/devtools
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js

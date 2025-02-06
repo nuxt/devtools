@@ -13,7 +13,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
   let initalized: Promise<any> | undefined
 
   const processId = 'devtools:analyze-build'
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
+  const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
   async function startAnalyzeBuild(name: string) {
     if (promise)
@@ -31,6 +31,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
 
     refresh('getAnalyzeBuildInfo')
 
+    initalized = undefined
     promise = result.getProcess()
       .then(() => {
         refresh('getAnalyzeBuildInfo')
@@ -46,7 +47,29 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
   }
 
   async function readBuildInfo() {
-    const files = await glob(['*/meta.json'], { cwd: analyzeDir, onlyFiles: true, absolute: true })
+    for (const dir of new Set([
+      join(nuxt.options.rootDir, '.nuxt/analyze'),
+      join(nuxt.options.rootDir, 'node_modules/.cache/nuxt/.nuxt/analyze'),
+      nuxt.options.analyzeDir,
+    ])) {
+      const files = await glob(['**/meta.json', 'meta.json'], {
+        cwd: dir,
+        onlyFiles: true,
+        absolute: true,
+      })
+      for (const file of files) {
+        const slug = JSON.parse(await fsp.readFile(file, 'utf-8')).slug
+        const dir = dirname(file)
+        await fsp.mkdir(devtoolsAnalyzeDir, { recursive: true })
+        await fsp.rename(dir, join(devtoolsAnalyzeDir, slug))
+      }
+    }
+
+    const files = await glob(['**/meta.json'], {
+      cwd: devtoolsAnalyzeDir,
+      onlyFiles: true,
+      absolute: true,
+    })
     builds = await Promise.all(files.map(async (file) => {
       const dir = dirname(file)
       const json = JSON.parse(await fsp.readFile(file, 'utf-8')) as NuxtAnalyzeMeta
@@ -93,11 +116,11 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
       await ensureDevAuthToken(token)
 
       if (!names) {
-        await fsp.rm(analyzeDir, { recursive: true, force: true })
+        await fsp.rm(devtoolsAnalyzeDir, { recursive: true, force: true })
       }
       else {
         const targets = builds.filter(build => names.includes(build.name))
-        await Promise.all(targets.map(target => fsp.rm(join(analyzeDir, target.slug), { recursive: true, force: true })))
+        await Promise.all(targets.map(target => fsp.rm(join(devtoolsAnalyzeDir, target.slug), { recursive: true, force: true })))
       }
       initalized = readBuildInfo()
       refresh('getAnalyzeBuildInfo')
