@@ -1,3 +1,12 @@
+# [2.0.0](https://github.com/nuxt/devtools/compare/v2.0.0-beta.7...v2.0.0) (2025-02-06)
+
+
+### Features
+
+* add directives page ([#740](https://github.com/nuxt/devtools/issues/740)) ([c20c724](https://github.com/nuxt/devtools/commit/c20c724db0b3537132e2ea6156156b5c2ad6d53c))
+
+
+
 # [2.0.0-beta.7](https://github.com/nuxt/devtools/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2025-02-05)
 
 
