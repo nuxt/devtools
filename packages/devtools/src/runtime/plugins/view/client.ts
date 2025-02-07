@@ -3,11 +3,11 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-ignore tsconfig
-import { useAppConfig, useRuntimeConfig } from '#imports'
 import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-ignore tsconfig
+import { useAppConfig, useRuntimeConfig } from 'nuxt/app'
 import { debounce } from 'perfect-debounce'
 
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'

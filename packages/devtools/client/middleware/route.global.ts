@@ -1,4 +1,4 @@
-import { defineNuxtRouteMiddleware, navigateTo } from '#imports'
+import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app'
 import { isFirstVisit } from '~/composables/storage'
 
 export default defineNuxtRouteMiddleware((to) => {

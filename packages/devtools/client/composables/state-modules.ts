@@ -1,5 +1,5 @@
 import type { InstalledModuleInfo, ModuleStaticInfo } from '../../src/types'
-import { useState } from '#imports'
+import { useState } from 'nuxt/app'
 import { computed } from 'vue'
 import { useServerConfig } from './state'
 import { getModuleNameFromPath, isNodeModulePath, parseReadablePath, useAsyncState } from './utils'

@@ -1,5 +1,5 @@
 import type { ClientFunctions } from '../../src/types'
-import { useNuxtApp, useRouter } from '#imports'
+import { useNuxtApp, useRouter } from 'nuxt/app'
 import { useClient } from '../composables/client'
 import { devAuthToken, isDevAuthed } from '../composables/dev-auth'
 import { clientFunctions, rpc } from '../composables/rpc'
