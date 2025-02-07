@@ -1,5 +1,5 @@
 import type { TimelineServerState } from '@nuxt/devtools/types'
-import { defineNuxtPlugin, useState } from '#imports'
+import { defineNuxtPlugin, useState } from 'nuxt/app'
 
 export default defineNuxtPlugin(() => {
   // record ssr start time
