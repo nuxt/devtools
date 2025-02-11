@@ -100,11 +100,15 @@ const items = computed(() => {
               </span>
             </NButton>
           </div>
-        </NDropdown> {{ items?.length }}/{{ collection?.length }}
+        </NDropdown>
       </template>
       <NCheckbox v-model="installedFilter" n="primary md">
         <span op75>Filter installed</span>
       </NCheckbox>
+      <div flex="~ gap1" text-sm op50>
+        <span v-if="search || installedFilter">{{ items.length }} matched · </span>
+        <span>{{ collection?.length }} modules in total</span>
+      </div>
     </NNavbar>
 
     <div flex-auto of-auto flex="~ col gap-2" pl6 pr4>
