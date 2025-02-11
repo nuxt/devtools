@@ -106,7 +106,7 @@ const items = computed(() => {
         <span op75>Filter installed</span>
       </NCheckbox>
       <div flex="~ gap1" text-sm op50>
-        <span v-if="search || installedFilter">{{ items.length }} matched · </span>
+        <span v-if="search || installedFilter">{{ items?.length }} matched · </span>
         <span>{{ collection?.length }} modules in total</span>
       </div>
     </NNavbar>
