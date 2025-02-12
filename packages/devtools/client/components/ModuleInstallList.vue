@@ -103,7 +103,7 @@ const items = computed(() => {
         </NDropdown>
       </template>
       <NCheckbox v-model="installedFilter" n="primary md">
-        <span op75>Filter installed</span>
+        <span op75>Hide installed modules</span>
       </NCheckbox>
       <div flex="~ gap1" text-sm op50>
         <span v-if="search || installedFilter">{{ items?.length }} matched · </span>
