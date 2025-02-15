@@ -13,8 +13,8 @@ catalogs:
       specifier: ^23.3.1
       version: 23.3.1
     '@antfu/utils':
-      specifier: ^8.1.0
-      version: 8.1.0
+      specifier: ^9.0.0
+      version: 9.0.0
     '@discoveryjs/cli':
       specifier: ^2.13.1
       version: 2.13.1
@@ -585,7 +585,7 @@ importers:
     devDependencies:
       '@antfu/utils':
         specifier: 'catalog:'
-        version: 8.1.0
+        version: 9.0.0
       '@discoveryjs/cli':
         specifier: 'catalog:'
         version: 2.13.1(@discoveryjs/discovery@1.0.0-beta.92)
@@ -1057,6 +1057,9 @@ packages:
 
   '@antfu/utils@8.1.0':
     resolution: {integrity: sha512-XPR7Jfwp0FFl/dFYPX8ZjpmU4/1mIXTjnZ1ba48BLMyKOV62/tiRjdsFcPs2hsYcSud4tzk7w3a3LjX8Fu3huA==}
+
+  '@antfu/utils@9.0.0':
+    resolution: {integrity: sha512-0+y1FiFZgAGntZvD1e3fdOKDC1N3RzzX+ILRJu+v1tQUsJxJDQwzenwgv6oqclI6u/Eyh26SnXZHrA/rWZF2TQ==}
 
   '@apidevtools/json-schema-ref-parser@11.7.0':
     resolution: {integrity: sha512-pRrmXMCwnmrkS3MLgAIW5dXRzeTv6GLjkjb4HmxNnvAKXN1Nfzp4KmGADBQvlVUcqi+a5D+hfGDLLnd5NnYxog==}
@@ -5087,6 +5090,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
@@ -7660,6 +7664,8 @@ snapshots:
   '@antfu/utils@0.7.10': {}
 
   '@antfu/utils@8.1.0': {}
+
+  '@antfu/utils@9.0.0': {}
 
   '@apidevtools/json-schema-ref-parser@11.7.0':
     dependencies:
