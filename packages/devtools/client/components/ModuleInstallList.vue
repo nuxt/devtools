@@ -16,7 +16,7 @@ const installedModules = useInstalledModules()
 const sortingOptions = ['downloads', 'stars', 'updated', 'created'] as const
 const ascendingOrder = ref(false)
 const selectedSortingOption = ref<typeof sortingOptions[number]>(sortingOptions[0])
-const installedFilter = ref(false)
+const excludeInstalled = ref(true)
 
 const sortingFactors: Record<typeof sortingOptions[number], SortingFunction<ModuleStaticInfo>> = {
   downloads: (a, b) => a.stats.downloads - b.stats.downloads,
@@ -48,7 +48,7 @@ const fuse = computed(() => new Fuse(collection.value || [], {
 
 const items = computed(() => {
   let filteredItems = sortedItems.value
-  if (installedFilter.value) {
+  if (excludeInstalled.value) {
     filteredItems = (filteredItems || []).filter(item => !installedModules.value.some(installed => installed.name === item.name))
   }
   if (!search.value)
@@ -102,12 +102,14 @@ const items = computed(() => {
           </div>
         </NDropdown>
       </template>
-      <NCheckbox v-model="installedFilter" n="primary md">
-        <span op75>Hide installed modules</span>
-      </NCheckbox>
-      <div flex="~ gap1" text-sm op50>
-        <span v-if="search || installedFilter">{{ items?.length }} matched · </span>
-        <span>{{ collection?.length }} modules in total</span>
+      <div flex="~ items-center gap-2">
+        <NCheckbox v-model="excludeInstalled" n="primary md">
+          <span op75>Exclude installed modules</span>
+        </NCheckbox>
+        <div flex="~ gap1" text-sm op50>
+          <span v-if="search || excludeInstalled">{{ items?.length }} matched · </span>
+          <span>{{ collection?.length }} modules in total</span>
+        </div>
       </div>
     </NNavbar>
 
