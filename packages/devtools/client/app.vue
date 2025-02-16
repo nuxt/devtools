@@ -12,7 +12,6 @@ import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
 import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
 import { setupClientRPC } from './setup/client-rpc'
-import { setupVueDevTools } from './setup/vue-devtools'
 
 import 'floating-vue/dist/style.css'
 import '@vue/devtools-applet/style.css'
@@ -39,8 +38,6 @@ useHead({
     },
   ],
 })
-
-setupVueDevTools()
 setupClientRPC()
 
 const client = useClient()
