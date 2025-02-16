@@ -1,3 +1,19 @@
+# [2.1.0](https://github.com/nuxt/devtools/compare/v2.0.0...v2.1.0) (2025-02-16)
+
+
+### Bug Fixes
+
+* hide inspector button when not available ([684897f](https://github.com/nuxt/devtools/commit/684897f306a89d398343ccce95089becedf85147))
+
+
+### Features
+
+* allow override component inspector with `__NUXT_INSPECTOR__` ([9f3c8bf](https://github.com/nuxt/devtools/commit/9f3c8bf147355b5b1c7435e8047432a0a47db4fb))
+* filter out installed modules in search result, closes [#780](https://github.com/nuxt/devtools/issues/780) ([#786](https://github.com/nuxt/devtools/issues/786)) ([fc8ced3](https://github.com/nuxt/devtools/commit/fc8ced33f4868b3ce28e84fcf18b30b4737105b7))
+* option to disable `vueDevTools` ([3e5251c](https://github.com/nuxt/devtools/commit/3e5251cb1be4c4adf6cc4affacab390fa4a3eaef))
+
+
+
 # [2.0.0](https://github.com/nuxt/devtools/compare/v2.0.0-beta.7...v2.0.0) (2025-02-06)
 
 
