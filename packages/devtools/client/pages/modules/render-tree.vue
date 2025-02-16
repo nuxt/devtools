@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
 import { Components as VueComponents } from '@vue/devtools-applet'
-import { useDevToolsState as useVueDevToolsState } from '@vue/devtools-core'
 import { useClient } from '~/composables/client'
 import { useOpenInEditor } from '~/composables/editor'
-
-const { connected } = useVueDevToolsState()
-const client = useClient()
-const openInEditor = useOpenInEditor()
+import { useModuleOptions } from '~/composables/state'
+import { useVueDevToolsState } from '~/setup/vue-devtools'
 
 definePageMeta({
   icon: 'i-carbon-category',
@@ -15,11 +12,16 @@ definePageMeta({
   layout: 'full',
   show: () => {
     const client = useClient()
-    return () => !!client.value
+    const options = useModuleOptions()
+    return () => options.value?.vueDevTools !== false && !!client.value
   },
   order: 1,
   category: 'vue-devtools',
 })
+
+const { connected } = useVueDevToolsState()
+const client = useClient()
+const openInEditor = useOpenInEditor()
 
 function togglePanel(status: boolean) {
   if (status)

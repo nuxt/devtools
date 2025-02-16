@@ -182,22 +182,26 @@ export async function setupDevToolsClient({
     })
   }
 
+  function getInspector() {
+    return window.__NUXT_INSPECTOR__ || window.__VUE_INSPECTOR__
+  }
+
   function enableComponentInspector() {
-    window.__VUE_INSPECTOR__?.enable()
+    getInspector()?.enable()
     isInspecting.value = true
   }
 
   function disableComponentInspector() {
-    if (!window.__VUE_INSPECTOR__?.enabled)
+    if (!getInspector()?.enabled)
       return
 
-    window.__VUE_INSPECTOR__?.disable()
+    getInspector()?.disable()
     client?.hooks.callHook('host:inspector:close')
     isInspecting.value = false
   }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
-    const componentInspector = window.__VUE_INSPECTOR__
+    const componentInspector = getInspector()
     if (componentInspector) {
       componentInspector.openInEditor = async (url) => {
         disableComponentInspector()
@@ -218,7 +222,7 @@ export async function setupDevToolsClient({
       toggle: () => {
         if (!state.value.open)
           client.devtools.open()
-        if (window.__VUE_INSPECTOR__?.enabled)
+        if (getInspector()?.enabled)
           disableComponentInspector()
         else
           enableComponentInspector()

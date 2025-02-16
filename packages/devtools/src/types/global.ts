@@ -62,6 +62,11 @@ declare global {
     __VUE_INSPECTOR__?: VueInspectorClient
 
     /**
+     * Vue Inspector client
+     */
+    __NUXT_INSPECTOR__?: VueInspectorClient
+
+    /**
      * Experimental API: Picture-in-Picture mode
      *
      * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/

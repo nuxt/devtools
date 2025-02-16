@@ -379,7 +379,7 @@ onMounted(() => {
           {{ time[2] }}
         </span>
       </div>
-      <template v-if="client.inspector">
+      <template v-if="client.inspector?.instance">
         <div
           style="border-left: 1px solid #8883;width:1px;height:10px;"
           class="nuxt-devtools-panel-content"

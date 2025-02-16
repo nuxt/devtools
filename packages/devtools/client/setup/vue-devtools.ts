@@ -1,10 +1,20 @@
-import { functions, onRpcConnected, rpc, useDevToolsState as useVueDevToolsState } from '@vue/devtools-core'
+import { functions, onRpcConnected, rpc, useDevToolsState } from '@vue/devtools-core'
 import { createRpcClient } from '@vue/devtools-kit'
 import { watchEffect } from 'vue'
 import { useDevToolsFrameState } from '../composables/storage'
 
-export function setupVueDevTools() {
-  const { connected } = useVueDevToolsState()
+let initiated = false
+
+export function useVueDevToolsState() {
+  ensureVueDevTools()
+  return useDevToolsState()
+}
+
+export function ensureVueDevTools() {
+  if (initiated)
+    return
+  initiated = true
+  const { connected } = useDevToolsState()
 
   const state = useDevToolsFrameState()
 

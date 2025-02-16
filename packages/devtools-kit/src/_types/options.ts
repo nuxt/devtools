@@ -33,6 +33,11 @@ export interface ModuleOptions {
   componentInspector?: boolean | VitePluginInspectorOptions
 
   /**
+   * Enable Vue DevTools integration
+   */
+  vueDevTools?: boolean
+
+  /**
    * Enable vite-plugin-inspect
    *
    * @default true
