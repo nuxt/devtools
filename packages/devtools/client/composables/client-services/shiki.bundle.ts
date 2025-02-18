@@ -10,7 +10,7 @@ import {
   createSingletonShorthands,
   createdBundledHighlighter,
 } from '@shikijs/core'
-import { createJavaScriptRawEngine } from '@shikijs/engine-javascript/raw'
+import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
 
 type BundledLanguage =
   | 'json'
@@ -34,23 +34,23 @@ type BundledTheme = 'vitesse-dark' | 'vitesse-light'
 type Highlighter = HighlighterGeneric<BundledLanguage, BundledTheme>
 
 const bundledLanguages = {
-  json: () => import('@shikijs/langs-precompiled/json'),
-  yaml: () => import('@shikijs/langs-precompiled/yaml'),
-  yml: () => import('@shikijs/langs-precompiled/yaml'),
-  css: () => import('@shikijs/langs-precompiled/css'),
-  javascript: () => import('@shikijs/langs-precompiled/javascript'),
-  js: () => import('@shikijs/langs-precompiled/javascript'),
-  typescript: () => import('@shikijs/langs-precompiled/typescript'),
-  ts: () => import('@shikijs/langs-precompiled/typescript'),
-  vue: () => import('@shikijs/langs-precompiled/vue'),
-  'vue-html': () => import('@shikijs/langs-precompiled/vue-html'),
-  html: () => import('@shikijs/langs-precompiled/html'),
-  diff: () => import('@shikijs/langs-precompiled/diff'),
-  shellscript: () => import('@shikijs/langs-precompiled/shellscript'),
-  bash: () => import('@shikijs/langs-precompiled/shellscript'),
-  sh: () => import('@shikijs/langs-precompiled/shellscript'),
-  shell: () => import('@shikijs/langs-precompiled/shellscript'),
-  zsh: () => import('@shikijs/langs-precompiled/shellscript'),
+  json: () => import('@shikijs/langs/json'),
+  yaml: () => import('@shikijs/langs/yaml'),
+  yml: () => import('@shikijs/langs/yaml'),
+  css: () => import('@shikijs/langs/css'),
+  javascript: () => import('@shikijs/langs/javascript'),
+  js: () => import('@shikijs/langs/javascript'),
+  typescript: () => import('@shikijs/langs/typescript'),
+  ts: () => import('@shikijs/langs/typescript'),
+  vue: () => import('@shikijs/langs/vue'),
+  'vue-html': () => import('@shikijs/langs/vue-html'),
+  html: () => import('@shikijs/langs/html'),
+  diff: () => import('@shikijs/langs/diff'),
+  shellscript: () => import('@shikijs/langs/shellscript'),
+  bash: () => import('@shikijs/langs/shellscript'),
+  sh: () => import('@shikijs/langs/shellscript'),
+  shell: () => import('@shikijs/langs/shellscript'),
+  zsh: () => import('@shikijs/langs/shellscript'),
 } as Record<BundledLanguage, DynamicImportLanguageRegistration>
 
 const bundledThemes = {
@@ -64,7 +64,7 @@ const createHighlighter = /* @__PURE__ */ createdBundledHighlighter<
 >({
   langs: bundledLanguages,
   themes: bundledThemes,
-  engine: () => createJavaScriptRawEngine(),
+  engine: () => createJavaScriptRegexEngine(),
 })
 
 const {

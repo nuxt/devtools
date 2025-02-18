@@ -9,8 +9,8 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetUno,
   presetWebFonts,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -167,7 +167,7 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
     ...user,
     preflight: true,
     presets: [
-      presetUno(),
+      presetWind3(),
       presetAttributify(),
       presetTypography(),
       presetIcons({
