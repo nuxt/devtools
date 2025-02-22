@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useRouter } from '#imports'
+import { defineNuxtPlugin, useRouter } from 'nuxt/app'
 import { triggerRef } from 'vue'
 import { useClient, useComponentInspectorData } from '../composables/client'
 import { rpc } from '../composables/rpc'
