@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
-import type { Data, Node, Options } from 'vis-network'
+import type { Data, DataSetNodes, Node, Options } from 'vis-network'
 import type { ComponentRelationship } from '~/../src/types'
 import { useDebounce } from '@vueuse/core'
+import { DataSet } from 'vis-data'
 import { Network } from 'vis-network'
 import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { getColorMode } from '~/composables/client'
@@ -24,6 +25,8 @@ const selected = shallowRef<{
   page?: NuxtPage
   layout?: NuxtLayout
   relationship?: ComponentRelationship
+  label: string
+  selectedLabel: string
 }>()
 
 const pages = useServerPages()
@@ -99,9 +102,12 @@ const data = computed<Data>(() => {
 
     const isGrayedOut = searchDebounced.value && !rel.id.toLowerCase().includes(searchDebounced.value.toLowerCase())
 
+    const label = path.split('/').splice(-1)[0].replace(/\.\w+$/, '')
+    const selectedLabel = component?.pascalName || component?.kebabName || label
+
     return {
       id: rel.id,
-      label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
+      label,
       group,
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
@@ -116,6 +122,8 @@ const data = computed<Data>(() => {
         page,
         layout,
         relationship: rel,
+        selectedLabel,
+        label,
       },
     }
   }).filter((x): x is Node => !!x)
@@ -132,10 +140,12 @@ const data = computed<Data>(() => {
   })))
 
   return {
-    nodes,
+    nodes: new DataSet(nodes),
     edges,
   }
 })
+
+const dataSetNodes = computed(() => data.value.nodes as DataSetNodes)
 
 const selectedDependencies = computed(() => {
   if (!selected.value?.component)
@@ -193,9 +203,13 @@ onMounted(() => {
 
   network.on('click', (e) => {
     const id = e.nodes?.[0]
-    const node = (data.value.nodes as any[])?.find(i => i.id === id)?.extra
-    if (node)
-      selected.value = node
+    if (!id) {
+      dataSetNodes.value.update({ id: selected.value?.id, label: selected.value?.label })
+      return
+    }
+    const selectedNode = dataSetNodes.value.get(id) as any
+    selected.value = selectedNode.extra
+    dataSetNodes.value.update({ id, label: selected.value?.selectedLabel })
   })
 
   watch(data, () => {
@@ -205,6 +219,11 @@ onMounted(() => {
 
 function setFilter() {
   selectedFilter.value = selected.value?.relationship
+  selected.value = undefined
+}
+
+function onCloseDrawer() {
+  dataSetNodes.value.update({ id: selected.value?.id, label: selected.value?.label })
   selected.value = undefined
 }
 </script>
@@ -273,7 +292,7 @@ function setFilter() {
       :model-value="!!(selected && selected.component)"
       :top="navbar"
       border="t l base" w-80
-      @close="selected = undefined"
+      @close="onCloseDrawer"
     >
       <div v-if="selected && selected.component" py4 pt4 flex="~ col">
         <ComponentDetails
