@@ -1,3 +1,17 @@
+## [2.1.1](https://github.com/nuxt/devtools/compare/v2.1.0...v2.1.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* use shiki js engine instead of precompiled ([d018045](https://github.com/nuxt/devtools/commit/d01804526275505d387cab57ed22139f76b0f36a))
+
+
+### Features
+
+* update deps ([15dbe6d](https://github.com/nuxt/devtools/commit/15dbe6d7b6d3b7183d8c009b3be3968cd663d942))
+
+
+
 # [2.1.0](https://github.com/nuxt/devtools/compare/v2.0.0...v2.1.0) (2025-02-16)
 
 
