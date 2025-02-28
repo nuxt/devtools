@@ -334,8 +334,8 @@ catalogs:
       specifier: ^0.3.0
       version: 0.3.0
     vanilla-jsoneditor:
-      specifier: ^2.4.0
-      version: 2.4.0
+      specifier: ^3.0.0
+      version: 3.0.0
     vis-data:
       specifier: ^7.1.9
       version: 7.1.9
@@ -717,7 +717,7 @@ importers:
         version: 28.3.1(vite@6.2.0(@types/node@22.13.5)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.2)(yaml@2.7.0))
       vanilla-jsoneditor:
         specifier: 'catalog:'
-        version: 2.4.0(@lezer/common@1.1.2)
+        version: 3.0.0(@lezer/common@1.1.2)
       vis-data:
         specifier: 'catalog:'
         version: 7.1.9(uuid@9.0.0)(vis-util@5.0.3(@egjs/hammerjs@2.0.17)(component-emitter@1.3.0))
@@ -5099,6 +5099,11 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  jsonpath-plus@10.3.0:
+    resolution: {integrity: sha512-8TNmfeTCk2Le33A3vRRwtuworG/L5RrgMvdjhKZxvyShO+mBu2fP50OWUjRLNtvw344DdDarFh9buFAZs5ujeA==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   jsonrepair@3.8.0:
     resolution: {integrity: sha512-89lrxpwp+IEcJ6kwglF0HH3Tl17J08JEpYfXnvvjdp4zV4rjSoGu2NdQHxBs7yTOk3ETjTn9du48pBy8iBqj1w==}
     hasBin: true
@@ -5223,6 +5228,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
@@ -7332,6 +7338,9 @@ packages:
 
   vanilla-jsoneditor@2.4.0:
     resolution: {integrity: sha512-v/c8Zxr0mOcagXzJ+Gar2qhkG20RpuowVDTJshsZPFxN6OZ3bo7gWoNUcuFyVbuJyy96P9CHLrZ5DQJkLfD9wQ==}
+
+  vanilla-jsoneditor@3.0.0:
+    resolution: {integrity: sha512-bO9ihCFf6bsslmbz3A9dwXF6UelY5ZFUr7hulXRovbsQBYgwPtX3mvvT4I6DyvDXkcpvwxHeXHj/SK02MR/vcA==}
 
   vanilla-picker@2.12.3:
     resolution: {integrity: sha512-qVkT1E7yMbUsB2mmJNFmaXMWE2hF8ffqzMMwe9zdAikd8u2VfnsVY2HQcOUi2F38bgbxzlJBEdS1UUhOXdF9GQ==}
@@ -13006,6 +13015,12 @@ snapshots:
       '@jsep-plugin/regex': 1.0.4(jsep@1.4.0)
       jsep: 1.4.0
 
+  jsonpath-plus@10.3.0:
+    dependencies:
+      '@jsep-plugin/assignment': 1.3.0(jsep@1.4.0)
+      '@jsep-plugin/regex': 1.0.4(jsep@1.4.0)
+      jsep: 1.4.0
+
   jsonrepair@3.8.0: {}
 
   jsprim@2.0.2:
@@ -16201,6 +16216,37 @@ snapshots:
       jmespath: 0.16.0
       json-source-map: 0.6.1
       jsonpath-plus: 10.2.0
+      jsonrepair: 3.8.0
+      lodash-es: 4.17.21
+      memoize-one: 6.0.0
+      natural-compare-lite: 1.4.0
+      svelte: 4.2.18
+      vanilla-picker: 2.12.3
+    transitivePeerDependencies:
+      - '@lezer/common'
+
+  vanilla-jsoneditor@3.0.0(@lezer/common@1.1.2):
+    dependencies:
+      '@codemirror/autocomplete': 6.18.1(@codemirror/language@6.10.3)(@codemirror/state@6.4.1)(@codemirror/view@6.34.1)(@lezer/common@1.1.2)
+      '@codemirror/commands': 6.7.1
+      '@codemirror/lang-json': 6.0.1
+      '@codemirror/language': 6.10.3
+      '@codemirror/lint': 6.8.2
+      '@codemirror/search': 6.5.6
+      '@codemirror/state': 6.4.1
+      '@codemirror/view': 6.34.1
+      '@fortawesome/free-regular-svg-icons': 6.6.0
+      '@fortawesome/free-solid-svg-icons': 6.6.0
+      '@jsonquerylang/jsonquery': 4.0.0
+      '@lezer/highlight': 1.2.1
+      '@replit/codemirror-indentation-markers': 6.5.3(@codemirror/language@6.10.3)(@codemirror/state@6.4.1)(@codemirror/view@6.34.1)
+      ajv: 8.17.1
+      codemirror-wrapped-line-indent: 1.0.8(@codemirror/language@6.10.3)(@codemirror/state@6.4.1)(@codemirror/view@6.34.1)
+      diff-sequences: 29.6.3
+      immutable-json-patch: 6.0.1
+      jmespath: 0.16.0
+      json-source-map: 0.6.1
+      jsonpath-plus: 10.3.0
       jsonrepair: 3.8.0
       lodash-es: 4.17.21
       memoize-one: 6.0.0
