@@ -25,8 +25,6 @@ const selected = shallowRef<{
   page?: NuxtPage
   layout?: NuxtLayout
   relationship?: ComponentRelationship
-  label: string
-  selectedLabel: string
 }>()
 
 const pages = useServerPages()
@@ -102,12 +100,9 @@ const data = computed<Data>(() => {
 
     const isGrayedOut = searchDebounced.value && !rel.id.toLowerCase().includes(searchDebounced.value.toLowerCase())
 
-    const label = path.split('/').splice(-1)[0].replace(/\.\w+$/, '')
-    const selectedLabel = component?.pascalName || component?.kebabName || label
-
     return {
       id: rel.id,
-      label,
+      label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
       group,
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
@@ -122,8 +117,6 @@ const data = computed<Data>(() => {
         page,
         layout,
         relationship: rel,
-        selectedLabel,
-        label,
       },
     }
   }).filter((x): x is Node => !!x)
@@ -203,13 +196,14 @@ onMounted(() => {
 
   network.on('click', (e) => {
     const id = e.nodes?.[0]
-    if (!id) {
-      dataSetNodes.value.update({ id: selected.value?.id, label: selected.value?.label })
-      return
+    const node = ((data.value.nodes as DataSetNodes).get(id) as any).extra
+    if (node) {
+      selected.value = node
+      dataSetNodes.value.update({ id, label: getComponentName(node.id) })
     }
-    const selectedNode = dataSetNodes.value.get(id) as any
-    selected.value = selectedNode.extra
-    dataSetNodes.value.update({ id, label: selected.value?.selectedLabel })
+    else {
+      dataSetNodes.value.update({ id: selected.value?.id, label: getChunkSplitPath(selected.value?.id, -1) })
+    }
   })
 
   watch(data, () => {
@@ -217,13 +211,26 @@ onMounted(() => {
   })
 })
 
-function setFilter() {
-  selectedFilter.value = selected.value?.relationship
+function onCloseDrawer() {
+  dataSetNodes.value.update({ id: selected.value?.id, label: getChunkSplitPath(selected.value?.id, -1) })
   selected.value = undefined
 }
 
-function onCloseDrawer() {
-  dataSetNodes.value.update({ id: selected.value?.id, label: selected.value?.label })
+function getComponentName(path = '') {
+  const lastChunkPath = getChunkSplitPath(path, -1)
+
+  if (lastChunkPath === 'index')
+    return getChunkSplitPath(path, -2)
+
+  return lastChunkPath
+}
+
+function getChunkSplitPath(path = '', index: number) {
+  return path.split('/').splice(index)[0].replace(/\.\w+$/, '')
+}
+
+function setFilter() {
+  selectedFilter.value = selected.value?.relationship
   selected.value = undefined
 }
 </script>
