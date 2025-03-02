@@ -202,7 +202,7 @@ onMounted(() => {
       dataSetNodes.value.update({ id, label: getComponentName(node.id) })
     }
     else {
-      dataSetNodes.value.update({ id: selected.value?.id, label: getChunkSplitPath(selected.value?.id, -1) })
+      resetSelectedNodeLabel()
     }
   })
 
@@ -212,21 +212,25 @@ onMounted(() => {
 })
 
 function onCloseDrawer() {
-  dataSetNodes.value.update({ id: selected.value?.id, label: getChunkSplitPath(selected.value?.id, -1) })
+  resetSelectedNodeLabel()
   selected.value = undefined
 }
 
-function getComponentName(path = '') {
-  const lastChunkPath = getChunkSplitPath(path, -1)
-
-  if (lastChunkPath === 'index')
-    return getChunkSplitPath(path, -2)
-
-  return lastChunkPath
+function resetSelectedNodeLabel() {
+  dataSetNodes.value.update({
+    id: selected.value?.id,
+    label: selected.value?.id.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
+  })
 }
 
-function getChunkSplitPath(path = '', index: number) {
-  return path.split('/').splice(index)[0].replace(/\.\w+$/, '')
+function getComponentName(path: string) {
+  return path
+    .replace(/.*\/components\//, '')
+    .replace(/\/index\.vue$/, '')
+    .replace(/\.vue$/, '')
+    .split('/')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
 }
 
 function setFilter() {
