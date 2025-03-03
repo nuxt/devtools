@@ -1,4 +1,4 @@
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
+import type { VueInspectorClient } from 'vite-plugin-vue-tracer/client/vue-inspector-compat'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
 
 declare global {

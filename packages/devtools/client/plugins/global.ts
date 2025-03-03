@@ -1,11 +1,10 @@
 import { defineNuxtPlugin, useRouter } from '#imports'
 import { triggerRef } from 'vue'
-import { useClient, useComponentInspectorData } from '../composables/client'
+import { useClient } from '../composables/client'
 import { rpc } from '../composables/rpc'
 
 export default defineNuxtPlugin(() => {
   const client = useClient()
-  const inspectorData = useComponentInspectorData()
   const router = useRouter()
 
   function onUpdateReactivity() {
@@ -13,16 +12,8 @@ export default defineNuxtPlugin(() => {
     client.value.revision.value += 1
   }
 
-  function onInspectorUpdate(data: any) {
-    inspectorData.value = data
-  }
-
-  function onInspectorClick(url: URL) {
-    const query = url.searchParams.get('file')
-    if (query)
-      rpc.openInEditor(query)
-    else
-      console.error('[nuxt-devtools] Failed to open file from Vue Inspector', url)
+  function onInspectorClick(path: string) {
+    rpc.openInEditor(path)
   }
 
   Object.defineProperty(window, '__NUXT_DEVTOOLS_VIEW__', {
@@ -34,7 +25,6 @@ export default defineNuxtPlugin(() => {
         client.value = _client
 
         _client.hooks.hook('host:update:reactivity', onUpdateReactivity)
-        _client.hooks.hook('host:inspector:update', onInspectorUpdate)
         _client.hooks.hook('host:inspector:click', onInspectorClick)
         _client.hooks.hook('host:action:reload', () => location.reload())
         _client.hooks.hook('host:action:navigate', (path: string) => router.push(path))

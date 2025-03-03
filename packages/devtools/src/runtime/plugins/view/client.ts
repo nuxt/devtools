@@ -10,6 +10,7 @@ import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 
+import { events as inspectorEvents, state as inspectorState, isEnabled as isInspectorEnabled } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
@@ -33,7 +34,6 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
-  const isInspecting = ref(false)
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
 
@@ -182,52 +182,31 @@ export async function setupDevToolsClient({
     })
   }
 
-  function getInspector() {
-    return window.__NUXT_INSPECTOR__ || window.__VUE_INSPECTOR__
-  }
-
-  function enableComponentInspector() {
-    getInspector()?.enable()
-    isInspecting.value = true
-  }
-
-  function disableComponentInspector() {
-    if (!getInspector()?.enabled)
-      return
-
-    getInspector()?.disable()
-    client?.hooks.callHook('host:inspector:close')
-    isInspecting.value = false
-  }
-
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
-    const componentInspector = getInspector()
-    if (componentInspector) {
-      componentInspector.openInEditor = async (url) => {
-        disableComponentInspector()
-        await client.hooks.callHook('host:inspector:click', url)
-      }
-      componentInspector.onUpdated = () => {
-        client.hooks.callHook('host:inspector:update', {
-          ...componentInspector.linkParams,
-          ...componentInspector.position,
-        })
-      }
-    }
+    inspectorEvents.on('disable', () => {
+      inspectorState.show = false
+      client?.hooks.callHook('host:inspector:close')
+    })
+    inspectorEvents.on('enable', () => {
+      inspectorState.show = true
+    })
+    inspectorEvents.on('click', async (info) => {
+      isInspectorEnabled.value = false
+      await client.hooks.callHook('host:inspector:click', info.fullpath)
+    })
 
     return markRaw({
-      isEnabled: isInspecting,
-      enable: enableComponentInspector,
-      disable: disableComponentInspector,
-      toggle: () => {
-        if (!state.value.open)
-          client.devtools.open()
-        if (getInspector()?.enabled)
-          disableComponentInspector()
-        else
-          enableComponentInspector()
+      isAvailable: ref(true),
+      isEnabled: isInspectorEnabled,
+      enable: () => {
+        isInspectorEnabled.value = true
       },
-      instance: componentInspector,
+      disable: () => {
+        isInspectorEnabled.value = false
+      },
+      toggle: () => {
+        isInspectorEnabled.value = !isInspectorEnabled.value
+      },
     })
   }
 
