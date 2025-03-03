@@ -10,7 +10,7 @@ import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 
-import { events as inspectorEvents, state as inspectorState, isEnabled as isInspectorEnabled } from 'vite-plugin-vue-tracer/client/overlay'
+import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
@@ -183,29 +183,36 @@ export async function setupDevToolsClient({
   }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
-    inspectorEvents.on('disable', () => {
-      inspectorState.show = false
+    const isAvailable = ref(inspectorHasData())
+
+    inspectorEvents.on('disabled', () => {
+      inspectorState.isVisible = false
       client?.hooks.callHook('host:inspector:close')
     })
-    inspectorEvents.on('enable', () => {
-      inspectorState.show = true
+    inspectorEvents.on('enabled', () => {
+      inspectorState.isVisible = true
     })
     inspectorEvents.on('click', async (info) => {
-      isInspectorEnabled.value = false
+      inspectorState.isEnabled = false
       await client.hooks.callHook('host:inspector:click', info.fullpath)
     })
+    if (!isAvailable.value) {
+      inspectorEvents.on('hover', async () => {
+        isAvailable.value = inspectorHasData()
+      })
+    }
 
     return markRaw({
-      isAvailable: ref(true),
-      isEnabled: isInspectorEnabled,
+      isAvailable,
+      isEnabled: toRef(inspectorState, 'isEnabled'),
       enable: () => {
-        isInspectorEnabled.value = true
+        inspectorState.isEnabled = true
       },
       disable: () => {
-        isInspectorEnabled.value = false
+        inspectorState.isEnabled = false
       },
       toggle: () => {
-        isInspectorEnabled.value = !isInspectorEnabled.value
+        inspectorState.isEnabled = !inspectorState.isEnabled
       },
     })
   }
