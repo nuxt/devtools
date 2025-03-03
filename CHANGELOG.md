@@ -1,3 +1,7 @@
+## [2.1.2](https://github.com/nuxt/devtools/compare/v2.1.1...v2.1.2) (2025-03-03)
+
+
+
 ## [2.1.1](https://github.com/nuxt/devtools/compare/v2.1.0...v2.1.1) (2025-02-28)
 
 
