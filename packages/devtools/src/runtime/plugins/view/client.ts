@@ -185,17 +185,24 @@ export async function setupDevToolsClient({
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
     const isAvailable = ref(inspectorHasData())
 
-    inspectorEvents.on('disabled', () => {
-      inspectorState.isVisible = false
-      client?.hooks.callHook('host:inspector:close')
-    })
-    inspectorEvents.on('enabled', () => {
-      inspectorState.isVisible = true
-    })
-    inspectorEvents.on('click', async (info) => {
-      inspectorState.isEnabled = false
-      await client.hooks.callHook('host:inspector:click', info.fullpath)
-    })
+    if (!inspectorEvents.events.disabled?.length) {
+      inspectorEvents.on('disabled', () => {
+        inspectorState.isVisible = false
+        client?.hooks.callHook('host:inspector:close')
+      })
+    }
+    if (!inspectorEvents.events.enabled?.length) {
+      inspectorEvents.on('enabled', () => {
+        inspectorState.isVisible = true
+      })
+    }
+    if (!inspectorEvents.events.click?.length) {
+      inspectorEvents.on('click', async (info) => {
+        inspectorState.isEnabled = false
+        await client.hooks.callHook('host:inspector:click', info.fullpath)
+      })
+    }
+
     if (!isAvailable.value) {
       inspectorEvents.on('hover', async () => {
         isAvailable.value = inspectorHasData()
