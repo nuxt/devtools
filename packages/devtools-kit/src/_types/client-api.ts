@@ -6,7 +6,7 @@ import type { AppConfig } from 'nuxt/schema'
 import type { $Fetch } from 'ofetch'
 import type { BuiltinLanguage } from 'shiki'
 import type { Ref } from 'vue'
-import type { HookInfo, LoadingTimeMetric, PluginMetric, VueInspectorClient, VueInspectorData } from './integrations'
+import type { HookInfo, LoadingTimeMetric, PluginMetric } from './integrations'
 import type { ClientFunctions, ServerFunctions } from './rpc'
 import type { TimelineMetrics } from './timeline-metrics'
 
@@ -28,13 +28,9 @@ export interface NuxtDevtoolsClientHooks {
    */
   'devtools:navigate': (path: string) => void
   /**
-   * Event emitted when the component inspector is updated
-   */
-  'host:inspector:update': (data: VueInspectorData) => void
-  /**
    * Event emitted when the component inspector is clicked
    */
-  'host:inspector:click': (url: URL) => void
+  'host:inspector:click': (path: string) => void
   /**
    * Event to close the component inspector
    */
@@ -63,11 +59,11 @@ export interface NuxtDevtoolsHostClient {
   getIframe: () => HTMLIFrameElement | undefined
 
   inspector?: {
-    instance?: VueInspectorClient
     enable: () => void
     disable: () => void
     toggle: () => void
     isEnabled: Ref<boolean>
+    isAvailable: Ref<boolean>
   }
 
   devtools: {

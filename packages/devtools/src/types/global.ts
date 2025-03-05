@@ -1,4 +1,3 @@
-import type { VueInspectorClient } from 'vite-plugin-vue-inspector'
 import type { LoadingTimeMetric, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
 
 declare global {
@@ -55,16 +54,6 @@ declare global {
      * @internal
      */
     __NUXT_DEVTOOLS_IS_POPUP__?: boolean
-
-    /**
-     * Vue Inspector client
-     */
-    __VUE_INSPECTOR__?: VueInspectorClient
-
-    /**
-     * Vue Inspector client
-     */
-    __NUXT_INSPECTOR__?: VueInspectorClient
 
     /**
      * Experimental API: Picture-in-Picture mode

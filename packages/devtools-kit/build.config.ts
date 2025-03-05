@@ -22,7 +22,6 @@ export default defineBuildConfig({
     'nuxt/dist/app/nuxt',
     'birpc',
     'hookable',
-    'vite-plugin-vue-inspector',
     'error-stack-parser-es',
     'shiki',
   ],

@@ -254,7 +254,7 @@ const iframeStyle = computed(() => {
   const style: CSSProperties = {
     position: 'fixed',
     zIndex: -1,
-    pointerEvents: isDragging.value || !state.value.open ? 'none' : 'auto',
+    pointerEvents: (isDragging.value || !state.value.open || props.client.inspector?.isEnabled.value) ? 'none' : 'auto',
     width: `min(${state.value.width}vw, calc(100vw - ${marginHorizontal}px))`,
     height: `min(${state.value.height}vh, calc(100vh - ${marginVertical}px))`,
   }
@@ -303,6 +303,10 @@ const iframeStyle = computed(() => {
       break
   }
 
+  if (props.client.inspector?.isEnabled.value) {
+    style.opacity = 0
+  }
+
   return style
 })
 
@@ -323,6 +327,20 @@ const time = computed(() => {
     return [type, '', '-']
   return [type, ...millisecondToHumanreadable(time)]
 })
+
+function toggleInspector() {
+  const isDevToolsOpen = state.value.open
+  if (!isDevToolsOpen)
+    props.client.devtools.open()
+
+  props.client.inspector?.enable()
+
+  if (!isDevToolsOpen) {
+    setTimeout(() => {
+      props.client.devtools.close()
+    }, 500)
+  }
+}
 
 onMounted(() => {
   bringUp()
@@ -379,12 +397,12 @@ onMounted(() => {
           {{ time[2] }}
         </span>
       </div>
-      <template v-if="client.inspector?.instance">
+      <template v-if="client.inspector?.isAvailable">
         <div
           style="border-left: 1px solid #8883;width:1px;height:10px;"
           class="nuxt-devtools-panel-content"
         />
-        <button class="nuxt-devtools-icon-button nuxt-devtools-panel-content" title="Toggle Component Inspector" @click="client.inspector.toggle">
+        <button class="nuxt-devtools-icon-button nuxt-devtools-panel-content" title="Toggle Component Inspector" @click.prevent.stop="toggleInspector">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style="height: 1.2em; width: 1.2em; opacity:0.5;"
@@ -398,7 +416,6 @@ onMounted(() => {
     </div>
 
     <div
-      v-show="!client.inspector?.isEnabled.value"
       ref="frameBox"
       :style="iframeStyle"
     >

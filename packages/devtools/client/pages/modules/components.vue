@@ -19,9 +19,7 @@ const relationships = useComponentsRelationships()
 const { componentsView: view } = useDevToolsOptions('ui')
 
 function openComponentInspector() {
-  if (!client.value?.inspector?.instance)
-    return
-  client.value.inspector.enable()
+  client.value?.inspector?.enable()
 }
 
 function toggleView() {
@@ -45,7 +43,7 @@ function toggleView() {
           @click="toggleView"
         />
         <NButton
-          v-if="client?.inspector?.instance"
+          v-if="client?.inspector?.isAvailable"
           v-tooltip.bottom-end="'Inspect Vue components'"
           text-lg :border="false"
           icon="i-tabler-focus-2"
