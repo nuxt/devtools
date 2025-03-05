@@ -68,7 +68,6 @@ const data = computed<Data>(() => {
     const page = pages.value?.find(i => i.file === rel.id)
     const layout = layouts.value?.find(i => i.file === rel.id)
 
-    const path = rel.id.replace(/\?.*$/, '').replace(/#.*$/, '')
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
@@ -102,7 +101,7 @@ const data = computed<Data>(() => {
 
     return {
       id: rel.id,
-      label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
+      label: getComponentName(rel.id),
       group,
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
@@ -137,8 +136,6 @@ const data = computed<Data>(() => {
     edges,
   }
 })
-
-const dataSetNodes = computed(() => data.value.nodes as DataSetNodes)
 
 const selectedDependencies = computed(() => {
   if (!selected.value?.component)
@@ -197,13 +194,7 @@ onMounted(() => {
   network.on('click', (e) => {
     const id = e.nodes?.[0]
     const node = ((data.value.nodes as DataSetNodes).get(id) as any).extra
-    if (node) {
-      selected.value = node
-      dataSetNodes.value.update({ id, label: getComponentName(node.id) })
-    }
-    else {
-      resetSelectedNodeLabel()
-    }
+    selected.value = node
   })
 
   watch(data, () => {
@@ -212,22 +203,17 @@ onMounted(() => {
 })
 
 function onCloseDrawer() {
-  resetSelectedNodeLabel()
   selected.value = undefined
 }
 
-function resetSelectedNodeLabel() {
-  dataSetNodes.value.update({
-    id: selected.value?.id,
-    label: selected.value?.id.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
-  })
-}
-
 function getComponentName(path: string) {
+  const component = props.components.find(i => i.filePath === path)
+  if (component)
+    return component.pascalName
   return path
     .replace(/.*\/components\//, '')
-    .replace(/\/index\.vue$/, '')
     .replace(/\.vue$/, '')
+    .replace(/\/index$/, '')
     .split('/')
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join('')
