@@ -1,3 +1,12 @@
+## [2.2.1](https://github.com/nuxt/devtools/compare/v2.2.0...v2.2.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* **inspector:** do not register instapector events if there is already any ([db01e1b](https://github.com/nuxt/devtools/commit/db01e1b561c0ab41d05f2f9ac9d643c596e5bd9e))
+
+
+
 # [2.2.0](https://github.com/nuxt/devtools/compare/v2.1.3...v2.2.0) (2025-03-05)
 
 
