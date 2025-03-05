@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Component, NuxtLayout, NuxtPage } from 'nuxt/schema'
-import type { Data, Node, Options } from 'vis-network'
+import type { Data, DataSetNodes, Node, Options } from 'vis-network'
 import type { ComponentRelationship } from '~/../src/types'
 import { useDebounce } from '@vueuse/core'
+import { DataSet } from 'vis-data'
 import { Network } from 'vis-network'
 import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { getColorMode } from '~/composables/client'
@@ -67,7 +68,6 @@ const data = computed<Data>(() => {
     const page = pages.value?.find(i => i.file === rel.id)
     const layout = layouts.value?.find(i => i.file === rel.id)
 
-    const path = rel.id.replace(/\?.*$/, '').replace(/#.*$/, '')
     const group = rel.id.includes('/node_modules/')
       ? 'lib'
       : component
@@ -101,7 +101,7 @@ const data = computed<Data>(() => {
 
     return {
       id: rel.id,
-      label: path.split('/').splice(-1)[0].replace(/\.\w+$/, ''),
+      label: getComponentName(rel.id),
       group,
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
@@ -132,7 +132,7 @@ const data = computed<Data>(() => {
   })))
 
   return {
-    nodes,
+    nodes: new DataSet(nodes),
     edges,
   }
 })
@@ -193,15 +193,31 @@ onMounted(() => {
 
   network.on('click', (e) => {
     const id = e.nodes?.[0]
-    const node = (data.value.nodes as any[])?.find(i => i.id === id)?.extra
-    if (node)
-      selected.value = node
+    const node = ((data.value.nodes as DataSetNodes).get(id) as any).extra
+    selected.value = node
   })
 
   watch(data, () => {
     network.setData(data.value)
   })
 })
+
+function onCloseDrawer() {
+  selected.value = undefined
+}
+
+function getComponentName(path: string) {
+  const component = props.components.find(i => i.filePath === path)
+  if (component)
+    return component.pascalName
+  return path
+    .replace(/.*\/components\//, '')
+    .replace(/\.vue$/, '')
+    .replace(/\/index$/, '')
+    .split('/')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
+}
 
 function setFilter() {
   selectedFilter.value = selected.value?.relationship
@@ -273,7 +289,7 @@ function setFilter() {
       :model-value="!!(selected && selected.component)"
       :top="navbar"
       border="t l base" w-80
-      @close="selected = undefined"
+      @close="onCloseDrawer"
     >
       <div v-if="selected && selected.component" py4 pt4 flex="~ col">
         <ComponentDetails
