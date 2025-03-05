@@ -1,3 +1,13 @@
+# [2.2.0](https://github.com/nuxt/devtools/compare/v2.1.3...v2.2.0) (2025-03-05)
+
+
+### Features
+
+* component graph node name toogle ([#797](https://github.com/nuxt/devtools/issues/797)) ([2eb2a37](https://github.com/nuxt/devtools/commit/2eb2a37e7947cb3af89091223367ac610a8065ce))
+* migrate to `vite-plugin-vue-tracer` ([#803](https://github.com/nuxt/devtools/issues/803)) ([faa08d3](https://github.com/nuxt/devtools/commit/faa08d3949130d29ad905fec55cd2ddfd8dae911))
+
+
+
 ## [2.1.3](https://github.com/nuxt/devtools/compare/v2.1.2...v2.1.3) (2025-03-03)
 
 
