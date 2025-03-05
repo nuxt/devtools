@@ -199,7 +199,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
 
   if (options.componentInspector !== false)
-    await import('./integrations/vue-inspector').then(({ setup }) => setup(ctx))
+    await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
   const integrations = [
     options.vscode?.enabled

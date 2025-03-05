@@ -27,6 +27,9 @@ jobs:
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Force Set pnpm Registry
+        run: pnpm config set registry https://registry.npmjs.org
+
       - run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

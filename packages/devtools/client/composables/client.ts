@@ -1,5 +1,5 @@
 import type { useRoute, useRouter } from '#imports'
-import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, VueInspectorData } from '@nuxt/devtools-kit/types'
+import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient } from '@nuxt/devtools-kit/types'
 import type { Unhead } from '@unhead/schema'
 import type { ComputedRef } from 'vue'
 import { useState } from '#imports'
@@ -26,10 +26,6 @@ export function useClientRouter(): ComputedRef<ReturnType<typeof useRouter>> {
 export function useClientHead() {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$head as Unhead)
-}
-
-export function useComponentInspectorData() {
-  return useState<VueInspectorData>('devtools-component-inspector-data')
 }
 
 const connectionTimeout = ref(false)

@@ -182,7 +182,6 @@ export function setupGeneralRPC({
         let editor = getOptions()?.behavior.openInEditor ?? undefined
         if (editor === 'auto')
           editor = undefined
-        // @ts-expect-error missin types
         await import('launch-editor').then(r => (r.default || r)(path + suffix, editor))
         return true
       }

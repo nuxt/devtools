@@ -195,7 +195,7 @@ export interface VueInspectorClient {
   onUpdated: () => void
 }
 
-export type VueInspectorData = VueInspectorClient['linkParams'] & VueInspectorClient['position']
+export type VueInspectorData = VueInspectorClient['linkParams'] & Partial<VueInspectorClient['position']>
 
 export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'json' | 'other'
 
