@@ -11,7 +11,7 @@ import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 
