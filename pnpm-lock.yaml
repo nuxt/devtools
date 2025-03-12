@@ -207,8 +207,8 @@ catalogs:
       specifier: ^3.2.1
       version: 3.2.1
     splitpanes:
-      specifier: ^3.2.0
-      version: 3.2.0
+      specifier: ^4.0.2
+      version: 4.0.2
     structured-clone-es:
       specifier: ^1.0.0
       version: 1.0.0
@@ -798,7 +798,7 @@ importers:
         version: 7.6.4
       splitpanes:
         specifier: catalog:frontend
-        version: 3.2.0(vue@3.5.13(typescript@5.8.2))
+        version: 4.0.2(vue@3.5.13(typescript@5.8.2))
       unocss:
         specifier: catalog:buildtools
         version: 66.0.0(@unocss/webpack@66.0.0(webpack@5.88.2(esbuild@0.25.1)))(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
@@ -6421,6 +6421,11 @@ packages:
 
   splitpanes@3.2.0:
     resolution: {integrity: sha512-K+WKxWdqtKShV33gPjQl769wHxB3glypTOReCvYu/AJd38J+abHlpiF8rK6uBNPMrgw5thHZCI5JkEwsAqa9XA==}
+    peerDependencies:
+      vue: ^3.2.0
+
+  splitpanes@4.0.2:
+    resolution: {integrity: sha512-f8E/tcXuhHFutdhrggrcaSI37W37rjg316x3NBlCbe9UTttf1WVBFCTBfmFRDF7Vcv60z8WVT9G0oxK/Gdse6A==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -14355,6 +14360,10 @@ snapshots:
   speakingurl@14.0.1: {}
 
   splitpanes@3.2.0(vue@3.5.13(typescript@5.8.2)):
+    dependencies:
+      vue: 3.5.13(typescript@5.8.2)
+
+  splitpanes@4.0.2(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       vue: 3.5.13(typescript@5.8.2)
 
