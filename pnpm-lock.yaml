@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
-  bundling:
+  buildtools:
     '@discoveryjs/cli':
       specifier: ^2.13.1
       version: 2.13.1
@@ -387,7 +387,7 @@ importers:
         specifier: catalog:cli
         version: 1.2.0(@vue/compiler-sfc@3.5.13)(eslint-plugin-format@1.0.1(eslint@9.22.0(jiti@2.4.2)))(eslint@9.22.0(jiti@2.4.2))(magicast@0.3.5)(typescript@5.8.2)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))
       '@nuxt/module-builder':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 0.8.4(@nuxt/kit@3.16.0(magicast@0.3.5))(nuxi@3.17.2)(sass@1.77.4)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))
       '@nuxt/schema':
         specifier: catalog:types
@@ -405,7 +405,7 @@ importers:
         specifier: catalog:types
         version: 8.18.0
       '@unocss/eslint-config':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2)
       bumpp:
         specifier: catalog:cli
@@ -432,7 +432,7 @@ importers:
         specifier: catalog:cli
         version: 15.5.0
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@3.29.4)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
       nuxt-eslint-auto-explicit-import:
         specifier: catalog:cli
@@ -456,7 +456,7 @@ importers:
         specifier: catalog:types
         version: 4.1.2
       unocss:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(@unocss/webpack@66.0.0(webpack@5.88.2(esbuild@0.25.1)))(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       vite-hot-client:
         specifier: catalog:frontend
@@ -574,10 +574,10 @@ importers:
         specifier: catalog:frontend
         version: 9.1.0
       '@discoveryjs/cli':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 2.13.1(@discoveryjs/discovery@1.0.0-beta.92)
       '@discoveryjs/discovery':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 1.0.0-beta.92
       '@iconify-json/bxl':
         specifier: catalog:icons
@@ -604,19 +604,19 @@ importers:
         specifier: catalog:cli
         version: 3.17.2(@types/node@22.13.10)(@vitest/ui@3.0.8)(jiti@2.4.2)(magicast@0.3.5)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vitest@3.0.8)(yaml@2.7.0)
       '@parcel/watcher':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 2.5.1
       '@types/markdown-it-link-attributes':
         specifier: catalog:types
         version: 3.0.5
       '@unocss/nuxt':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(magicast@0.3.5)(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))(webpack@5.88.2(esbuild@0.25.1))
       '@unocss/preset-icons':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/preset-uno':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/runtime':
         specifier: catalog:frontend
@@ -628,7 +628,7 @@ importers:
         specifier: catalog:frontend
         version: 7.7.2(@unocss/reset@66.0.0)(change-case@5.4.4)(floating-vue@5.2.2(@nuxt/kit@3.16.0(magicast@0.3.5))(vue@3.5.13(typescript@5.8.2)))(fuse.js@7.1.0)(typescript@5.8.2)(unocss@66.0.0(@unocss/webpack@66.0.0(webpack@5.88.2(esbuild@0.25.1)))(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2)))(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       '@vueuse/nuxt':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 13.0.0(magicast@0.3.5)(nuxt@3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       '@xterm/addon-fit':
         specifier: catalog:frontend
@@ -658,10 +658,10 @@ importers:
         specifier: catalog:frontend
         version: 2.0.4
       nitropack:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 2.11.6(better-sqlite3@11.8.1)(encoding@0.1.13)(typescript@5.8.2)
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
       ofetch:
         specifier: catalog:frontend
@@ -676,7 +676,7 @@ importers:
         specifier: catalog:frontend
         version: 3.2.1
       shiki-codegen:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.2.1
       theme-vitesse:
         specifier: catalog:frontend
@@ -688,10 +688,10 @@ importers:
         specifier: catalog:types
         version: 4.1.2
       unocss:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(@unocss/webpack@66.0.0(webpack@5.88.2(esbuild@0.25.1)))(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       unplugin-vue-markdown:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 28.3.1(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))
       vanilla-jsoneditor:
         specifier: catalog:frontend
@@ -734,7 +734,7 @@ importers:
         specifier: catalog:frontend
         version: 5.5.3
       unbuild:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.5.0(sass@1.77.4)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(vue@3.5.13(typescript@5.8.2))
       unimport:
         specifier: catalog:types
@@ -764,19 +764,19 @@ importers:
         specifier: catalog:prod
         version: 3.16.0(magicast@0.3.5)
       '@unocss/core':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/nuxt':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(magicast@0.3.5)(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))(webpack@5.88.2(esbuild@0.25.1))
       '@unocss/preset-attributify':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/preset-icons':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/preset-mini':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0
       '@unocss/reset':
         specifier: catalog:frontend
@@ -788,7 +788,7 @@ importers:
         specifier: catalog:frontend
         version: 13.0.0(change-case@5.4.4)(focus-trap@7.6.4)(fuse.js@7.1.0)(vue@3.5.13(typescript@5.8.2))
       '@vueuse/nuxt':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 13.0.0(magicast@0.3.5)(nuxt@3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       defu:
         specifier: catalog:prod
@@ -800,7 +800,7 @@ importers:
         specifier: catalog:frontend
         version: 3.2.0(vue@3.5.13(typescript@5.8.2))
       unocss:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 66.0.0(@unocss/webpack@66.0.0(webpack@5.88.2(esbuild@0.25.1)))(postcss@8.5.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.2))
       v-lazy-show:
         specifier: catalog:frontend
@@ -810,7 +810,7 @@ importers:
         specifier: workspace:*
         version: link:../devtools
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   packages/devtools-wizard:
@@ -847,7 +847,7 @@ importers:
         specifier: catalog:types
         version: 2.4.9
       unbuild:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.5.0(sass@1.77.4)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(vue@3.5.13(typescript@5.8.2))
 
   playgrounds/empty:
@@ -856,7 +856,7 @@ importers:
         specifier: catalog:types
         version: 22.13.10
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   playgrounds/module-starter:
@@ -881,7 +881,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/devtools-ui-kit
       '@nuxt/module-builder':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 0.8.4(@nuxt/kit@3.16.0(magicast@0.3.5))(nuxi@3.17.2)(sass@1.77.4)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))
       '@nuxt/schema':
         specifier: catalog:types
@@ -893,7 +893,7 @@ importers:
         specifier: catalog:cli
         version: 9.22.0(jiti@2.4.2)
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
       vitest:
         specifier: catalog:cli
@@ -910,7 +910,7 @@ importers:
   playgrounds/tab-pinia:
     dependencies:
       '@pinia/nuxt':
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 0.10.1(magicast@0.3.5)(pinia@3.0.1(typescript@5.8.2)(vue@3.5.13(typescript@5.8.2)))
       '@vueuse/core':
         specifier: catalog:frontend
@@ -923,7 +923,7 @@ importers:
         specifier: catalog:cli
         version: 13.17.0
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   playgrounds/tab-seo:
@@ -932,7 +932,7 @@ importers:
         specifier: catalog:types
         version: 22.13.10
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   playgrounds/tab-server-route:
@@ -941,7 +941,7 @@ importers:
         specifier: catalog:types
         version: 22.13.10
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   playgrounds/tab-timeline:
@@ -953,7 +953,7 @@ importers:
         specifier: catalog:types
         version: 22.13.10
       nuxt:
-        specifier: catalog:bundling
+        specifier: catalog:buildtools
         version: 3.16.0(@parcel/watcher@2.5.1)(@types/node@22.13.10)(better-sqlite3@11.8.1)(db0@0.3.1(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(ioredis@5.6.0)(magicast@0.3.5)(meow@13.2.0)(optionator@0.9.3)(rollup@4.35.0)(sass@1.77.4)(terser@5.19.4)(tsx@4.19.3)(typescript@5.8.2)(vue-tsc@2.2.8(typescript@5.8.2))(yaml@2.7.0)
 
   playgrounds/v4: {}
