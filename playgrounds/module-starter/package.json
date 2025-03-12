@@ -23,18 +23,18 @@
   },
   "dependencies": {
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:",
-    "sirv": "catalog:"
+    "@nuxt/kit": "catalog:prod",
+    "sirv": "catalog:prod"
   },
   "devDependencies": {
-    "@iconify-json/carbon": "catalog:",
+    "@iconify-json/carbon": "catalog:icons",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
-    "@nuxt/module-builder": "catalog:",
-    "@nuxt/schema": "catalog:",
-    "@nuxt/test-utils": "catalog:",
-    "eslint": "catalog:",
-    "nuxt": "catalog:",
-    "vitest": "catalog:"
+    "@nuxt/module-builder": "catalog:buildtools",
+    "@nuxt/schema": "catalog:types",
+    "@nuxt/test-utils": "catalog:cli",
+    "eslint": "catalog:cli",
+    "nuxt": "catalog:buildtools",
+    "vitest": "catalog:cli"
   }
 }

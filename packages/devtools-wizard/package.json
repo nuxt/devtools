@@ -25,18 +25,18 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "consola": "catalog:",
-    "diff": "catalog:",
-    "execa": "catalog:",
-    "magicast": "catalog:",
-    "pathe": "catalog:",
-    "pkg-types": "catalog:",
-    "prompts": "catalog:",
-    "semver": "catalog:"
+    "consola": "catalog:prod",
+    "diff": "catalog:frontend",
+    "execa": "catalog:prod",
+    "magicast": "catalog:prod",
+    "pathe": "catalog:frontend",
+    "pkg-types": "catalog:prod",
+    "prompts": "catalog:prod",
+    "semver": "catalog:prod"
   },
   "devDependencies": {
-    "@types/diff": "catalog:",
-    "@types/prompts": "catalog:",
-    "unbuild": "catalog:"
+    "@types/diff": "catalog:types",
+    "@types/prompts": "catalog:types",
+    "unbuild": "catalog:buildtools"
   }
 }

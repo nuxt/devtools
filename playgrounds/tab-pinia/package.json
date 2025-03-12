@@ -8,13 +8,12 @@
     "test": "cypress run"
   },
   "dependencies": {
-    "@pinia/nuxt": "catalog:",
-    "@vueuse/core": "catalog:",
-    "pinia": "catalog:"
+    "@pinia/nuxt": "catalog:buildtools",
+    "@vueuse/core": "catalog:frontend",
+    "pinia": "catalog:frontend"
   },
   "devDependencies": {
-    "@exampledev/new.css": "catalog:",
-    "cypress": "catalog:",
-    "nuxt": "catalog:"
+    "cypress": "catalog:cli",
+    "nuxt": "catalog:buildtools"
   }
 }

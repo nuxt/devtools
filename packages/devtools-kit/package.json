@@ -47,16 +47,16 @@
     "vite": ">=6.0"
   },
   "dependencies": {
-    "@nuxt/kit": "catalog:",
-    "@nuxt/schema": "catalog:",
-    "execa": "catalog:"
+    "@nuxt/kit": "catalog:prod",
+    "@nuxt/schema": "catalog:types",
+    "execa": "catalog:prod"
   },
   "devDependencies": {
-    "birpc": "catalog:",
-    "error-stack-parser-es": "catalog:",
-    "hookable": "catalog:",
-    "unbuild": "catalog:",
-    "unimport": "catalog:",
-    "vue-router": "catalog:"
+    "birpc": "catalog:frontend",
+    "error-stack-parser-es": "catalog:frontend",
+    "hookable": "catalog:frontend",
+    "unbuild": "catalog:buildtools",
+    "unimport": "catalog:types",
+    "vue-router": "catalog:frontend"
   }
 }
