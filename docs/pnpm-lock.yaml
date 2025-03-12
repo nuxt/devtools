@@ -4,6 +4,54 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@iconify-json/heroicons':
+      specifier: ^1.2.2
+      version: 1.2.2
+    '@iconify-json/ph':
+      specifier: ^1.2.2
+      version: 1.2.2
+    '@iconify-json/simple-icons':
+      specifier: ^1.2.27
+      version: 1.2.27
+    '@nuxt/content':
+      specifier: ^2.13.4
+      version: 2.13.4
+    '@nuxt/devtools':
+      specifier: ^2.1.3
+      version: 2.1.3
+    '@nuxt/fonts':
+      specifier: ^0.10.3
+      version: 0.10.3
+    '@nuxt/image':
+      specifier: ^1.9.0
+      version: 1.9.0
+    '@nuxt/ui-pro':
+      specifier: ^1.7.0
+      version: 1.7.0
+    '@nuxthq/studio':
+      specifier: ^2.2.1
+      version: 2.2.1
+    '@nuxtjs/plausible':
+      specifier: ^1.2.0
+      version: 1.2.0
+    '@vueuse/core':
+      specifier: ^12.7.0
+      version: 12.7.0
+    '@vueuse/nuxt':
+      specifier: ^12.7.0
+      version: 12.7.0
+    better-sqlite3:
+      specifier: ^11.8.1
+      version: 11.8.1
+    nuxt:
+      specifier: ^3.15.4
+      version: 3.15.4
+    nuxt-og-image:
+      specifier: ^4.1.5
+      version: 4.1.5
+
 overrides:
   '@nuxt/ui': 2.15.2
 
@@ -12,49 +60,49 @@ importers:
   .:
     devDependencies:
       '@iconify-json/heroicons':
-        specifier: ^1.2.2
+        specifier: 'catalog:'
         version: 1.2.2
       '@iconify-json/ph':
-        specifier: ^1.2.2
+        specifier: 'catalog:'
         version: 1.2.2
       '@iconify-json/simple-icons':
-        specifier: ^1.2.27
+        specifier: 'catalog:'
         version: 1.2.27
       '@nuxt/content':
-        specifier: ^2.13.4
+        specifier: 'catalog:'
         version: 2.13.4(db0@0.2.3(better-sqlite3@11.8.1))(ioredis@5.4.1)(magicast@0.3.5)(nuxt@3.15.4(@parcel/watcher@2.4.1)(@types/node@20.11.30)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1))(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)(sass@1.77.4)(terser@5.29.2)(typescript@5.7.3)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.27.4)(vue@3.5.13(typescript@5.7.3))
       '@nuxt/devtools':
-        specifier: ^2.1.3
+        specifier: 'catalog:'
         version: 2.1.3(rollup@4.27.4)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))
       '@nuxt/fonts':
-        specifier: ^0.10.3
+        specifier: 'catalog:'
         version: 0.10.3(db0@0.2.3(better-sqlite3@11.8.1))(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))
       '@nuxt/image':
-        specifier: ^1.9.0
+        specifier: 'catalog:'
         version: 1.9.0(db0@0.2.3(better-sqlite3@11.8.1))(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)
       '@nuxt/ui-pro':
-        specifier: ^1.7.0
+        specifier: 'catalog:'
         version: 1.7.0(focus-trap@7.5.4)(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.3)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))
       '@nuxthq/studio':
-        specifier: ^2.2.1
+        specifier: 'catalog:'
         version: 2.2.1(magicast@0.3.5)(rollup@4.27.4)
       '@nuxtjs/plausible':
-        specifier: ^1.2.0
+        specifier: 'catalog:'
         version: 1.2.0(magicast@0.3.5)(rollup@4.27.4)
       '@vueuse/core':
-        specifier: ^12.7.0
+        specifier: 'catalog:'
         version: 12.7.0(typescript@5.7.3)
       '@vueuse/nuxt':
-        specifier: ^12.7.0
+        specifier: 'catalog:'
         version: 12.7.0(magicast@0.3.5)(nuxt@3.15.4(@parcel/watcher@2.4.1)(@types/node@20.11.30)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1))(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)(sass@1.77.4)(terser@5.29.2)(typescript@5.7.3)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.27.4)(typescript@5.7.3)
       better-sqlite3:
-        specifier: ^11.8.1
+        specifier: 'catalog:'
         version: 11.8.1
       nuxt:
-        specifier: ^3.15.4
+        specifier: 'catalog:'
         version: 3.15.4(@parcel/watcher@2.4.1)(@types/node@20.11.30)(better-sqlite3@11.8.1)(db0@0.2.3(better-sqlite3@11.8.1))(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.27.4)(sass@1.77.4)(terser@5.29.2)(typescript@5.7.3)(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(yaml@2.7.0)
       nuxt-og-image:
-        specifier: ^4.1.5
+        specifier: 'catalog:'
         version: 4.1.5(@unhead/vue@1.11.18(vue@3.5.13(typescript@5.7.3)))(magicast@0.3.5)(rollup@4.27.4)(unstorage@1.14.4(db0@0.2.3(better-sqlite3@11.8.1))(ioredis@5.4.1))(vite@6.0.11(@types/node@20.11.30)(jiti@2.4.2)(sass@1.77.4)(terser@5.29.2)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))
 
 packages:
