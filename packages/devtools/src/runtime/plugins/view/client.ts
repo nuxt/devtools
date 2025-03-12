@@ -10,7 +10,8 @@ import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, watch } from 'vue'
+import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
+import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import Main from './Main.vue'
 
@@ -33,7 +34,6 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
-  const isInspecting = ref(false)
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
 
@@ -182,48 +182,45 @@ export async function setupDevToolsClient({
     })
   }
 
-  function enableComponentInspector() {
-    window.__VUE_INSPECTOR__?.enable()
-    isInspecting.value = true
-  }
-
-  function disableComponentInspector() {
-    if (!window.__VUE_INSPECTOR__?.enabled)
-      return
-
-    window.__VUE_INSPECTOR__?.disable()
-    client?.hooks.callHook('host:inspector:close')
-    isInspecting.value = false
-  }
-
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
-    const componentInspector = window.__VUE_INSPECTOR__
-    if (componentInspector) {
-      componentInspector.openInEditor = async (url) => {
-        disableComponentInspector()
-        await client.hooks.callHook('host:inspector:click', url)
-      }
-      componentInspector.onUpdated = () => {
-        client.hooks.callHook('host:inspector:update', {
-          ...componentInspector.linkParams,
-          ...componentInspector.position,
-        })
-      }
+    const isAvailable = ref(inspectorHasData())
+
+    if (!inspectorEvents.events.disabled?.length) {
+      inspectorEvents.on('disabled', () => {
+        inspectorState.isVisible = false
+        client?.hooks.callHook('host:inspector:close')
+      })
+    }
+    if (!inspectorEvents.events.enabled?.length) {
+      inspectorEvents.on('enabled', () => {
+        inspectorState.isVisible = true
+      })
+    }
+    if (!inspectorEvents.events.click?.length) {
+      inspectorEvents.on('click', async (info) => {
+        inspectorState.isEnabled = false
+        await client.hooks.callHook('host:inspector:click', info.fullpath)
+      })
+    }
+
+    if (!isAvailable.value) {
+      inspectorEvents.on('hover', async () => {
+        isAvailable.value = inspectorHasData()
+      })
     }
 
     return markRaw({
-      isEnabled: isInspecting,
-      enable: enableComponentInspector,
-      disable: disableComponentInspector,
-      toggle: () => {
-        if (!state.value.open)
-          client.devtools.open()
-        if (window.__VUE_INSPECTOR__?.enabled)
-          disableComponentInspector()
-        else
-          enableComponentInspector()
+      isAvailable,
+      isEnabled: toRef(inspectorState, 'isEnabled'),
+      enable: () => {
+        inspectorState.isEnabled = true
       },
-      instance: componentInspector,
+      disable: () => {
+        inspectorState.isEnabled = false
+      },
+      toggle: () => {
+        inspectorState.isEnabled = !inspectorState.isEnabled
+      },
     })
   }
 

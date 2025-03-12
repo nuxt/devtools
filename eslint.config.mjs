@@ -5,6 +5,7 @@ export default antfu(
   {
     formatters: true,
     unocss: true,
+    pnpm: true,
   },
   {
     rules: {

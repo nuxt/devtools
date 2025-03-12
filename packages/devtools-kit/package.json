@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-kit",
   "type": "module",
-  "version": "2.0.0-beta.1",
+  "version": "2.2.1",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com/module/utils-kit",
   "repository": {
@@ -47,17 +47,16 @@
     "vite": ">=6.0"
   },
   "dependencies": {
-    "@nuxt/kit": "catalog:",
-    "@nuxt/schema": "catalog:",
-    "execa": "catalog:"
+    "@nuxt/kit": "catalog:prod",
+    "@nuxt/schema": "catalog:types",
+    "execa": "catalog:prod"
   },
   "devDependencies": {
-    "birpc": "catalog:",
-    "error-stack-parser-es": "catalog:",
-    "hookable": "catalog:",
-    "unbuild": "catalog:",
-    "unimport": "catalog:",
-    "vite-plugin-vue-inspector": "catalog:",
-    "vue-router": "catalog:"
+    "birpc": "catalog:frontend",
+    "error-stack-parser-es": "catalog:frontend",
+    "hookable": "catalog:frontend",
+    "unbuild": "catalog:buildtools",
+    "unimport": "catalog:types",
+    "vue-router": "catalog:frontend"
   }
 }

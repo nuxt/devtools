@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0-beta.1",
+  "version": "2.2.1",
   "private": true,
   "scripts": {
     "dev": "nuxi dev",
@@ -8,13 +8,12 @@
     "test": "cypress run"
   },
   "dependencies": {
-    "@pinia/nuxt": "catalog:",
-    "@vueuse/core": "catalog:",
-    "pinia": "catalog:"
+    "@pinia/nuxt": "catalog:buildtools",
+    "@vueuse/core": "catalog:frontend",
+    "pinia": "catalog:frontend"
   },
   "devDependencies": {
-    "@exampledev/new.css": "catalog:",
-    "cypress": "catalog:",
-    "nuxt": "catalog:"
+    "cypress": "catalog:cli",
+    "nuxt": "catalog:buildtools"
   }
 }

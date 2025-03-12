@@ -109,7 +109,7 @@ export function startSubprocess(
   }
 
   return {
-    getProcess() {
+    getProcess(): ReturnType<typeof execa> {
       return process
     },
     terminate,

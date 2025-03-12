@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools-ui-kit",
   "type": "module",
-  "version": "2.0.0-beta.1",
+  "version": "2.2.1",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com/module/ui-kit",
   "repository": {
@@ -38,30 +38,30 @@
     "@nuxt/devtools": "workspace:*"
   },
   "dependencies": {
-    "@iconify-json/carbon": "catalog:",
-    "@iconify-json/logos": "catalog:",
-    "@iconify-json/ri": "catalog:",
-    "@iconify-json/tabler": "catalog:",
+    "@iconify-json/carbon": "catalog:icons",
+    "@iconify-json/logos": "catalog:icons",
+    "@iconify-json/ri": "catalog:icons",
+    "@iconify-json/tabler": "catalog:icons",
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:",
-    "@unocss/core": "catalog:",
-    "@unocss/nuxt": "catalog:",
-    "@unocss/preset-attributify": "catalog:",
-    "@unocss/preset-icons": "catalog:",
-    "@unocss/preset-mini": "catalog:",
-    "@unocss/reset": "catalog:",
-    "@vueuse/core": "catalog:",
-    "@vueuse/integrations": "catalog:",
-    "@vueuse/nuxt": "catalog:",
-    "defu": "catalog:",
-    "focus-trap": "catalog:",
-    "splitpanes": "catalog:",
-    "unocss": "catalog:",
-    "v-lazy-show": "catalog:"
+    "@nuxt/kit": "catalog:prod",
+    "@unocss/core": "catalog:buildtools",
+    "@unocss/nuxt": "catalog:buildtools",
+    "@unocss/preset-attributify": "catalog:buildtools",
+    "@unocss/preset-icons": "catalog:buildtools",
+    "@unocss/preset-mini": "catalog:buildtools",
+    "@unocss/reset": "catalog:frontend",
+    "@vueuse/core": "catalog:frontend",
+    "@vueuse/integrations": "catalog:frontend",
+    "@vueuse/nuxt": "catalog:buildtools",
+    "defu": "catalog:prod",
+    "focus-trap": "catalog:frontend",
+    "splitpanes": "catalog:frontend",
+    "unocss": "catalog:buildtools",
+    "v-lazy-show": "catalog:frontend"
   },
   "devDependencies": {
     "@nuxt/devtools": "workspace:*",
-    "nuxt": "catalog:"
+    "nuxt": "catalog:buildtools"
   },
   "publishConfig": {
     "access": "public"

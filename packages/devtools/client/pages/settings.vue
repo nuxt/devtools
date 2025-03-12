@@ -60,14 +60,14 @@ const MinimizeInactiveOptions = [
 
 const categories = getCategorizedTabs(useAllTabs())
 
-function toggleTab(name: string, v: boolean) {
+function toggleTab(name: string, v?: boolean) {
   if (v)
     hiddenTabs.value = hiddenTabs.value.filter(i => i !== name)
   else
     hiddenTabs.value.push(name)
 }
 
-function toggleTabCategory(name: string, v: boolean) {
+function toggleTabCategory(name: string, v?: boolean) {
   if (v)
     hiddenTabCategories.value = hiddenTabCategories.value.filter(i => i !== name)
   else
@@ -141,7 +141,7 @@ watchEffect(() => {
             <NSwitch
               flex="~ row-reverse" py1 pl2 pr1 n-lime
               :model-value="!hiddenTabCategories.includes(name)"
-              @update:model-value="(v: boolean) => toggleTabCategory(name, v)"
+              @update:model-value="(v) => toggleTabCategory(name, v)"
             >
               <div flex="~ gap-2" flex-auto items-center justify-start>
                 <span capitalize op75>{{ name }}</span>
@@ -154,7 +154,7 @@ watchEffect(() => {
               <NSwitch
                 flex="~ row-reverse" py1 pl2 pr1 n-primary
                 :model-value="!hiddenTabs.includes(tab.name)"
-                @update:model-value="(v: boolean) => toggleTab(tab.name, v)"
+                @update:model-value="(v) => toggleTab(tab.name, v)"
               >
                 <div flex="~ gap-2" flex-auto items-center justify-start of-hidden pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
                   <TabIcon text-xl :icon="tab.icon" :title="tab.title" />

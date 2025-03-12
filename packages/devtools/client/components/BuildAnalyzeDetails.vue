@@ -12,7 +12,8 @@ const props = defineProps<{
 }>()
 
 const runtimeConfig = useRuntimeConfig()
-const ROUTE_ANALYZE = `${runtimeConfig.app.baseURL}/__nuxt_devtools__/analyze/`.replace(/\/+/g, '/')
+const CLIENT_BASE = '/__nuxt_devtools__/client'
+const ROUTE_ANALYZE = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}/__nuxt_devtools__/analyze/`.replace(/\/+/g, '/')
 
 const tabs = computed(() => {
   const items = [
@@ -95,7 +96,7 @@ async function clear(name: string) {
             <div>{{ formatFileSize(current.size.clientBundle) }}</div>
           </div>
         </template>
-        <template v-if="current.size.nitroBundle">
+        <template v-if="current.size?.nitroBundle">
           <div i-carbon-bare-metal-server text-xl />
           <div>
             <div text-sm op50>

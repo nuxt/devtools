@@ -15,6 +15,7 @@ definePageMeta({
 
 const config = useServerConfig()
 const filterMode = ref<'all' | 'using' | 'not-used'>('all')
+const filterEntries = ref<'all' | 'composables' | 'directives'>('all')
 
 const search = ref('')
 const autoImports = useAutoImports()
@@ -38,6 +39,15 @@ const filtered = computed(() => {
   let result = search.value
     ? fuse.value.search(search.value).map(i => i.item)
     : functions.value
+
+  const filter = filterEntries.value
+
+  if (filter === 'composables') {
+    result = result.filter(i => !(i.meta?.vueDirective === true))
+  }
+  else if (filter === 'directives') {
+    result = result.filter(i => i.meta?.vueDirective === true)
+  }
 
   if (filterMode.value === 'using' && importsMetadata.value) {
     result = result
@@ -74,12 +84,28 @@ const filtered = computed(() => {
     count,
   }
 })
+
+const filteredUserCountTitle = computed(() => {
+  return filterEntries.value === 'directives'
+    ? `${filtered.value.count.user} directives from ${filtered.value.user.size} modules`
+    : `${filtered.value.count.user} composables from ${filtered.value.user.size} modules`
+})
+const filteredBuiltinTitle = computed(() => {
+  return filterEntries.value === 'directives'
+    ? `${filtered.value.count.builtin} directives`
+    : `${filtered.value.count.builtin} composables`
+})
+const filteredLibTitle = computed(() => {
+  return filterEntries.value === 'directives'
+    ? `${filtered.value.count.lib} directives from ${filtered.value.lib.size} packages`
+    : `${filtered.value.count.lib} composables from ${filtered.value.lib.size} packages`
+})
 </script>
 
 <template>
   <div v-if="config" relative h-full of-auto>
     <NNavbar v-model:search="search" pb3>
-      <div v-if="importsMetadata" flex="~ gap-2 items-center">
+      <div v-if="importsMetadata" flex="~ gap-2 items-center lt-sm:col lt-sm:items-start">
         <NIcon icon="carbon-filter" op50 />
         <NSelectTabs
           v-model="filterMode"
@@ -90,14 +116,23 @@ const filtered = computed(() => {
             { label: 'Not used', value: 'not-used' },
           ]"
         />
+        <NSelectTabs
+          v-model="filterEntries"
+          n="primary sm"
+          :options="[
+            { label: 'All', value: 'all' },
+            { label: 'Composables', value: 'composables' },
+            { label: 'Directives', value: 'directives' },
+          ]"
+        />
       </div>
     </NNavbar>
     <NSectionBlock
       v-if="filtered.user.size"
       :open="filtered.count.user <= DETAILS_MAX_ITEMS"
-      icon="carbon-function"
-      text="User composables"
-      :description="`${filtered.count.user} composables from ${filtered.user.size} modules`"
+      :icon="filterEntries === 'directives' ? 'tabler:hexagon-letter-d' : 'carbon-function'"
+      :text="`User ${filterEntries === 'directives' ? 'directives' : 'composables'}`"
+      :description="filteredUserCountTitle"
     >
       <ComposableTree :map="filtered.user" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
@@ -105,8 +140,8 @@ const filtered = computed(() => {
       v-if="filtered.builtin.size"
       :open="filtered.count.builtin <= DETAILS_MAX_ITEMS"
       icon="simple-icons-nuxtdotjs"
-      text="Built-in composables"
-      :description="`${filtered.count.builtin} composables`"
+      :text="`Built-in ${filterEntries === 'directives' ? 'directives' : 'composables'}`"
+      :description="filteredBuiltinTitle"
     >
       <ComposableTree :map="filtered.builtin" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>
@@ -114,8 +149,8 @@ const filtered = computed(() => {
       v-if="filtered.lib.size"
       :open="filtered.count.lib <= DETAILS_MAX_ITEMS"
       icon="carbon-3d-mpr-toggle"
-      text="Composables from libraries"
-      :description="`${filtered.count.lib} composables from ${filtered.lib.size} packages`"
+      :text="`${filterEntries === 'directives' ? 'Directives' : 'Composables'} from libraries`"
+      :description="filteredLibTitle"
     >
       <ComposableTree :map="filtered.lib" :root="config.rootDir" :metadata="importsMetadata" />
     </NSectionBlock>

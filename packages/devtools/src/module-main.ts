@@ -109,7 +109,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   addVitePlugin(vitePlugin)
 
   const clientDirExists = existsSync(clientDir)
-  const analyzeDir = join(nuxt.options.rootDir, '.nuxt/analyze')
 
   nuxt.hook('vite:extendConfig', (config) => {
     config.server ||= {}
@@ -124,6 +123,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     if (!Array.isArray(config.server.watch.ignored))
       config.server.watch.ignored = [config.server.watch.ignored]
     config.server.watch.ignored.push('**/.nuxt/analyze/**')
+    config.server.watch.ignored.push('**/.cache/nuxt-devtools/**')
   })
 
   nuxt.hook('imports:extend', (imports) => {
@@ -141,7 +141,10 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
-    server.middlewares.use(ROUTE_ANALYZE, sirv(analyzeDir, { single: false, dev: true }))
+    const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
+
+    server.middlewares.use(ROUTE_ANALYZE, sirv(devtoolsAnalyzeDir, { single: false, dev: true, dotfiles: true, ignores: false }))
+
     // Serve the front end in production
     if (clientDirExists) {
       const indexHtmlPath = join(clientDir, 'index.html')
@@ -189,13 +192,14 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
 
-  await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
+  if (options.vueDevTools !== false)
+    await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
 
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
 
   if (options.componentInspector !== false)
-    await import('./integrations/vue-inspector').then(({ setup }) => setup(ctx))
+    await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
   const integrations = [
     options.vscode?.enabled

@@ -1,3 +1,122 @@
+## [2.2.1](https://github.com/nuxt/devtools/compare/v2.2.0...v2.2.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* **inspector:** do not register instapector events if there is already any ([db01e1b](https://github.com/nuxt/devtools/commit/db01e1b561c0ab41d05f2f9ac9d643c596e5bd9e))
+
+
+
+# [2.2.0](https://github.com/nuxt/devtools/compare/v2.1.3...v2.2.0) (2025-03-05)
+
+
+### Features
+
+* component graph node name toogle ([#797](https://github.com/nuxt/devtools/issues/797)) ([2eb2a37](https://github.com/nuxt/devtools/commit/2eb2a37e7947cb3af89091223367ac610a8065ce))
+* migrate to `vite-plugin-vue-tracer` ([#803](https://github.com/nuxt/devtools/issues/803)) ([faa08d3](https://github.com/nuxt/devtools/commit/faa08d3949130d29ad905fec55cd2ddfd8dae911))
+
+
+
+## [2.1.3](https://github.com/nuxt/devtools/compare/v2.1.2...v2.1.3) (2025-03-03)
+
+
+
+## [2.1.2](https://github.com/nuxt/devtools/compare/v2.1.1...v2.1.2) (2025-03-03)
+
+
+
+## [2.1.1](https://github.com/nuxt/devtools/compare/v2.1.0...v2.1.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* use shiki js engine instead of precompiled ([d018045](https://github.com/nuxt/devtools/commit/d01804526275505d387cab57ed22139f76b0f36a))
+
+
+### Features
+
+* update deps ([15dbe6d](https://github.com/nuxt/devtools/commit/15dbe6d7b6d3b7183d8c009b3be3968cd663d942))
+
+
+
+# [2.1.0](https://github.com/nuxt/devtools/compare/v2.0.0...v2.1.0) (2025-02-16)
+
+
+### Bug Fixes
+
+* hide inspector button when not available ([684897f](https://github.com/nuxt/devtools/commit/684897f306a89d398343ccce95089becedf85147))
+
+
+### Features
+
+* allow override component inspector with `__NUXT_INSPECTOR__` ([9f3c8bf](https://github.com/nuxt/devtools/commit/9f3c8bf147355b5b1c7435e8047432a0a47db4fb))
+* filter out installed modules in search result, closes [#780](https://github.com/nuxt/devtools/issues/780) ([#786](https://github.com/nuxt/devtools/issues/786)) ([fc8ced3](https://github.com/nuxt/devtools/commit/fc8ced33f4868b3ce28e84fcf18b30b4737105b7))
+* option to disable `vueDevTools` ([3e5251c](https://github.com/nuxt/devtools/commit/3e5251cb1be4c4adf6cc4affacab390fa4a3eaef))
+
+
+
+# [2.0.0](https://github.com/nuxt/devtools/compare/v2.0.0-beta.7...v2.0.0) (2025-02-06)
+
+
+### Features
+
+* add directives page ([#740](https://github.com/nuxt/devtools/issues/740)) ([c20c724](https://github.com/nuxt/devtools/commit/c20c724db0b3537132e2ea6156156b5c2ad6d53c))
+
+
+
+# [2.0.0-beta.7](https://github.com/nuxt/devtools/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2025-02-05)
+
+
+### Bug Fixes
+
+* build analyzer, close [#701](https://github.com/nuxt/devtools/issues/701) ([5ace123](https://github.com/nuxt/devtools/commit/5ace1235dca5086f6d85398f34bb38237048d7f0))
+
+
+
+# [2.0.0-beta.6](https://github.com/nuxt/devtools/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2025-02-05)
+
+
+### Bug Fixes
+
+* vue-devtools runtime injection, close [#667](https://github.com/nuxt/devtools/issues/667) ([1888974](https://github.com/nuxt/devtools/commit/1888974aa0dd00fa72f7884dfc605f66657823d4))
+
+
+
+# [2.0.0-beta.5](https://github.com/nuxt/devtools/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2025-02-04)
+
+
+### Bug Fixes
+
+* downgrade quicktype, bring back schema generator, fix [#753](https://github.com/nuxt/devtools/issues/753) ([7b9dd87](https://github.com/nuxt/devtools/commit/7b9dd8796d7a4629af57baf0432450b03bb209df))
+* rpc serialization error with Vite configs ([9033ce2](https://github.com/nuxt/devtools/commit/9033ce2cd5b0aa6ef54b53e29ce0a26139ec6bb6))
+
+
+
+# [2.0.0-beta.4](https://github.com/nuxt/devtools/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2025-01-31)
+
+
+
+# [2.0.0-beta.3](https://github.com/nuxt/devtools/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2025-01-18)
+
+
+
+# [2.0.0-beta.2](https://github.com/nuxt/devtools/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2025-01-16)
+
+
+### Bug Fixes
+
+* support Nuxt 4 window context format ([0459d44](https://github.com/nuxt/devtools/commit/0459d4459348f25188ebe75f0a5dbce96759fbc5))
+
+
+### Features
+
+* show module setup time ([a81055d](https://github.com/nuxt/devtools/commit/a81055dfe297fd08ffb1ce9ada3f24220255ce08))
+* show the floating panel by default, close [#717](https://github.com/nuxt/devtools/issues/717) ([6108b17](https://github.com/nuxt/devtools/commit/6108b173a7e555e959b9cd70f5676fe774b83053))
+* support basic view of resolved options with Discovery.js ([#771](https://github.com/nuxt/devtools/issues/771)) ([59b738c](https://github.com/nuxt/devtools/commit/59b738cead5815a0f677f19bb2e6918bd017c260))
+* use slimmer shiki bundle ([91bc060](https://github.com/nuxt/devtools/commit/91bc06030a723e705551806f4f9820fc28145cfd))
+
+
+
 # [2.0.0-beta.1](https://github.com/nuxt/devtools/compare/v1.7.0...v2.0.0-beta.1) (2025-01-13)
 
 

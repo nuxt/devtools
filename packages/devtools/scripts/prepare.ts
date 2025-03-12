@@ -23,8 +23,8 @@ const { code } = await codegen({
     'diff',
     'shellscript',
   ],
-  precompiled: true,
-  engine: 'javascript-raw',
+  precompiled: false,
+  engine: 'javascript',
   typescript: true,
   header: [
     '/* Generate by @shikijs/codegen */',

@@ -4,17 +4,19 @@ import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
 // @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
-import { useModulesList } from '~/composables/state-modules'
+import { useInstalledModules, useModulesList } from '~/composables/state-modules'
 
 type SortingFunction<T> = (a: T, b: T) => number
 
 const emit = defineEmits(['close'])
 
 const collection = useModulesList()
+const installedModules = useInstalledModules()
 
 const sortingOptions = ['downloads', 'stars', 'updated', 'created'] as const
 const ascendingOrder = ref(false)
 const selectedSortingOption = ref<typeof sortingOptions[number]>(sortingOptions[0])
+const excludeInstalled = ref(true)
 
 const sortingFactors: Record<typeof sortingOptions[number], SortingFunction<ModuleStaticInfo>> = {
   downloads: (a, b) => a.stats.downloads - b.stats.downloads,
@@ -45,9 +47,13 @@ const fuse = computed(() => new Fuse(collection.value || [], {
 }))
 
 const items = computed(() => {
+  let filteredItems = sortedItems.value
+  if (excludeInstalled.value) {
+    filteredItems = (filteredItems || []).filter(item => !installedModules.value.some(installed => installed.name === item.name))
+  }
   if (!search.value)
-    return sortedItems.value
-  return fuse.value.search(search.value).map(r => r.item)
+    return filteredItems
+  return fuse.value.search(search.value).map(r => r.item).filter(item => filteredItems?.includes(item))
 })
 </script>
 
@@ -59,7 +65,7 @@ const items = computed(() => {
       icon="i-carbon-intent-request-create"
       text="Install Module"
     />
-    <NNavbar v-model:search="search" no-padding px-6 pb-5 pt-2>
+    <NNavbar v-model:search="search" no-padding px-6 pb-3 pt-2>
       <template #actions>
         <NDropdown direction="end" n="sm primary">
           <template #trigger="{ click }">
@@ -96,6 +102,15 @@ const items = computed(() => {
           </div>
         </NDropdown>
       </template>
+      <div flex="~ items-center gap-2">
+        <NCheckbox v-model="excludeInstalled" n="primary md">
+          <span op75>Exclude installed modules</span>
+        </NCheckbox>
+        <div flex="~ gap1" text-sm op50>
+          <span v-if="search || excludeInstalled">{{ items?.length }} matched · </span>
+          <span>{{ collection?.length }} modules in total</span>
+        </div>
+      </div>
     </NNavbar>
 
     <div flex-auto of-auto flex="~ col gap-2" pl6 pr4>
