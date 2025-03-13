@@ -6,13 +6,14 @@ import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
-import type { InstallModuleReturn } from './server-ctx'
+import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
 import type { TerminalAction, TerminalInfo } from './terminals'
 import type { GetWizardArgs, WizardActions } from './wizard'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig: () => NuxtOptions
+  getServerDebugContext: () => Promise<ServerDebugContext | undefined>
   getServerData: (token: string) => Promise<NuxtServerData>
   getServerRuntimeConfig: () => Record<string, any>
   getModuleOptions: () => ModuleOptions

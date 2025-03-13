@@ -1,3 +1,4 @@
+import type { CodeHighlightOptions } from '@nuxt/devtools-kit/types'
 import type { BundledLanguage, BundledTheme, Highlighter } from './shiki.bundle'
 import { shallowRef } from 'vue'
 import { bundledLanguages, bundledThemes, createHighlighter } from './shiki.bundle'
@@ -6,7 +7,11 @@ export const shiki = shallowRef<Highlighter>()
 
 let promise: Promise<any> | null = null
 
-export function renderCodeHighlight(code: string, lang: BundledLanguage | 'text' = 'text') {
+export function renderCodeHighlight(
+  code: string,
+  lang: BundledLanguage | 'text' = 'text',
+  options?: CodeHighlightOptions,
+) {
   if (!promise && !shiki.value) {
     // Only loading when needed
     promise = createHighlighter({
@@ -27,6 +32,7 @@ export function renderCodeHighlight(code: string, lang: BundledLanguage | 'text'
 
   return {
     code: shiki.value!.codeToHtml(code, {
+      ...options,
       lang,
       themes: {
         dark: 'vitesse-dark',

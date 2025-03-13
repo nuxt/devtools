@@ -1,7 +1,7 @@
 import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
 import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
-import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerDebugContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
@@ -12,6 +12,7 @@ import { snakeCase } from 'scule'
 import { resolveBuiltinPresets } from 'unimport'
 import { getDevAuthToken } from '../dev-auth'
 import { setupHooksDebug } from '../runtime/shared/hooks'
+import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
 
 export function setupGeneralRPC({
@@ -80,6 +81,44 @@ export function setupGeneralRPC({
   })
 
   return {
+    getServerConfig() {
+      return nuxt.options
+    },
+    async getServerDebugContext() {
+      if (!nuxt._debug)
+        return
+
+      return <ServerDebugContext>{
+        ...nuxt._debug,
+        moduleMutationRecords: await Promise.all(
+          nuxt._debug.moduleMutationRecords?.map(async (i) => {
+            let value = i.value
+            try {
+              const json = toJsLiteral(value)
+              if (json.length > 200)
+                value = `${json.slice(0, 200)}...`
+              else
+                value = json
+            }
+            catch {
+              value = '[Circular]'
+            }
+            let name = (await i.module.getMeta?.())?.name
+            if (!name) {
+              const installedModule = nuxt.options._installedModules.find(m => m.module === i.module)
+              name = installedModule?.meta.name || installedModule?.entryPath
+            }
+
+            return {
+              ...i,
+              module: undefined,
+              name: name || '(unknown)',
+              value,
+            }
+          }) || [],
+        ),
+      }
+    },
     getServerRuntimeConfig(): Record<string, any> {
       // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
       // Since this operation happends on the Nitro runtime

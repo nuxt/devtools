@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import type { TimelineEventFunction } from '../../types'
 import { computed } from 'vue'
-import { getHashColorFromString } from '~/composables/utils'
+import { getHslColorFromStringHash } from '../../../devtools-ui-kit/src/composables/color'
 
 const props = defineProps<{
   item: TimelineEventFunction
 }>()
 
-const colorRaw = computed(() => getHashColorFromString(props.item.name, 50, 60, '_op_'))
+const colorRaw = computed(() => getHslColorFromStringHash(props.item.name, 50, 60, '_op_'))
 const color = computed(() => colorRaw.value.replace(/_op_/, '1'))
-const textColor = computed(() => getHashColorFromString(props.item.name, 50, 40))
+const textColor = computed(() => getHslColorFromStringHash(props.item.name, 50, 40))
 const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.2'))
 </script>
 
