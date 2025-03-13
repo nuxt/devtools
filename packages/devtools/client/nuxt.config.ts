@@ -96,25 +96,27 @@ export default defineNuxtConfig({
 
   vite: {
     warmupEntry: false,
-    build: {
-      target: 'esnext',
-      rollupOptions: {
-        output: {
-          chunkFileNames(chunkInfo) {
-            const kebabName = chunkInfo.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
-            return `_nuxt/${kebabName}-[hash].js`
+    $client: {
+      build: {
+        target: 'esnext',
+        rollupOptions: {
+          output: {
+            chunkFileNames(chunkInfo) {
+              const kebabName = chunkInfo.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+              return `_nuxt/${kebabName}-[hash].js`
+            },
+            assetFileNames(assetInfo) {
+              const kebabName = (assetInfo.name || '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+              return `_nuxt/${kebabName}-[hash][extname]`
+            },
+            manualChunks(id) {
+              for (const bundle of Object.entries(packageBundles)) {
+                if (bundle[1].some(pkg => id.includes(`node_modules/${pkg}/`)))
+                  return `vendor/${bundle[0]}`
+              }
+            },
+            hashCharacters: 'base36',
           },
-          assetFileNames(assetInfo) {
-            const kebabName = (assetInfo.name || '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
-            return `_nuxt/${kebabName}-[hash][extname]`
-          },
-          manualChunks(id) {
-            for (const bundle of Object.entries(packageBundles)) {
-              if (bundle[1].some(pkg => id.includes(`node_modules/${pkg}/`)))
-                return `vendor/${bundle[0]}`
-            }
-          },
-          hashCharacters: 'base36',
         },
       },
     },
