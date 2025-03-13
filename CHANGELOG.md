@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/nuxt/devtools/compare/v2.2.1...v2.3.0) (2025-03-13)
+
+
+### Features
+
+* debug page of module mutation ([#770](https://github.com/nuxt/devtools/issues/770)) ([f7e9ab5](https://github.com/nuxt/devtools/commit/f7e9ab555a333feda3d1b7d25d324f189afde2d2))
+
+
+
 ## [2.2.1](https://github.com/nuxt/devtools/compare/v2.2.0...v2.2.1) (2025-03-05)
 
 
