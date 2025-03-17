@@ -39,6 +39,7 @@ const editorOptions = [
   ['WebStorm', 'webstorm'],
   ['Sublime Text', 'sublime'],
   ['Atom', 'atom'],
+  ['Windsurf', 'windsurf'],
 ]
 
 const scaleOptions = [
