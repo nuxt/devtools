@@ -21,6 +21,6 @@ jobs:
       - run: corepack enable
       - run: pnpm install
       - run: pnpm lint --fix
-      - uses: autofix-ci/action@ea32e3a12414e6d3183163c3424a7d7a8631ad84
+      - uses: autofix-ci/action@551dded8c6cc8a1054039c8bc0b8b48c51dfc6ef
       - run: pnpm build
       - run: pnpm typecheck
