@@ -18,20 +18,20 @@ catalogs:
     '@unocss/preset-uno': ^66.0.0
     '@vueuse/nuxt': ^13.0.0
     esbuild: ^0.25.1
-    nitropack: ^2.11.6
-    nuxt: ^3.16.0
+    nitropack: ^2.11.7
+    nuxt: ^3.16.1
     shiki-codegen: ^3.2.1
     unbuild: ^3.5.0
     unocss: ^66.0.0
     unplugin-vue-markdown: ^28.3.1
-    vite: ^6.2.1
+    vite: ^6.2.2
 
   cli:
     '@antfu/eslint-config': ^4.10.1
-    '@antfu/ni': ^24.1.0
+    '@antfu/ni': ^24.3.0
     '@nuxt/eslint': ^1.2.0
     '@nuxt/test-utils': ^3.17.2
-    '@vitest/ui': ^3.0.8
+    '@vitest/ui': ^3.0.9
     bumpp: ^10.1.0
     conventional-changelog-cli: ^5.0.0
     cypress: ^13.17.0
@@ -45,7 +45,7 @@ catalogs:
     taze: ^19.0.2
     tsx: ^4.19.3
     typescript: ^5.8.2
-    vitest: ^3.0.8
+    vitest: ^3.0.9
     vue-tsc: ^2.2.8
 
   frontend:
@@ -82,7 +82,7 @@ catalogs:
     structured-clone-es: ^1.0.0
     theme-vitesse: ^0.8.3
     v-lazy-show: ^0.3.0
-    vanilla-jsoneditor: ^3.1.0
+    vanilla-jsoneditor: ^3.1.1
     vis-data: ^7.1.9
     vis-network: ^9.1.9
     vite-hot-client: ^2.0.4
@@ -95,16 +95,17 @@ catalogs:
     '@iconify-json/carbon': ^1.2.8
     '@iconify-json/logos': ^1.2.4
     '@iconify-json/ri': ^1.2.5
-    '@iconify-json/simple-icons': ^1.2.28
+    '@iconify-json/simple-icons': ^1.2.29
     '@iconify-json/tabler': ^1.2.17
 
   prod:
-    '@nuxt/kit': ^3.16.0
+    '@nuxt/kit': ^3.16.1
     '@vue/devtools-kit': ^7.7.2
-    consola: ^3.4.0
+    consola: ^3.4.2
     defu: ^6.1.4
     destr: ^2.0.3
-    execa: ^9.5.2
+    # v9 requires Node v20 which is incompatible with our current target
+    execa: ^8.0.1
     fast-npm-meta: ^0.3.1
     get-port-please: ^3.1.2
     image-meta: ^0.2.1
@@ -125,7 +126,7 @@ catalogs:
     ws: ^8.18.1
 
   types:
-    '@nuxt/schema': ^3.16.0
+    '@nuxt/schema': ^3.16.1
     '@types/diff': ^7.0.1
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5

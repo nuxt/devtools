@@ -1,4 +1,5 @@
 import type { BirpcGroup } from 'birpc'
+import type { ExecaChildProcess } from 'execa'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 import { useNuxt } from '@nuxt/kit'
 import { execa } from 'execa'
@@ -30,7 +31,12 @@ export function startSubprocess(
   execaOptions: SubprocessOptions,
   tabOptions: TerminalState,
   nuxt = useNuxt(),
-) {
+): {
+    getProcess: () => ExecaChildProcess<string>
+    terminate: () => void
+    restart: () => void
+    clear: () => void
+  } {
   const id = tabOptions.id
   let restarting = false
 
@@ -109,9 +115,7 @@ export function startSubprocess(
   }
 
   return {
-    getProcess(): ReturnType<typeof execa> {
-      return process
-    },
+    getProcess: () => process,
     terminate,
     restart,
     clear,
