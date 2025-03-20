@@ -1,3 +1,12 @@
+## [2.3.1](https://github.com/nuxt/devtools/compare/v2.3.0...v2.3.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* downgrade `execa` to be compatible with Node v18, fix [#821](https://github.com/nuxt/devtools/issues/821) ([f15c7dc](https://github.com/nuxt/devtools/commit/f15c7dca3a7561990adcc1c9629ed844147a47d2))
+
+
+
 # [2.3.0](https://github.com/nuxt/devtools/compare/v2.2.1...v2.3.0) (2025-03-13)
 
 
