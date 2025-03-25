@@ -10,6 +10,7 @@ export async function setup({ nuxt }: NuxtDevtoolsServerContext) {
   addPluginTemplate({
     name: 'vue-devtools-client',
     mode: 'client',
+    order: -1_000,
     src: await resolvePath(join(runtimeDir, 'vue-devtools-client')),
   })
 }

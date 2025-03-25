@@ -32,4 +32,6 @@ export default defineNuxtConfig({
   pinia: {
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
+
+  compatibilityDate: '2025-03-25',
 })
