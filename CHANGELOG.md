@@ -1,3 +1,13 @@
+## [2.3.2](https://github.com/nuxt/devtools/compare/v2.3.1...v2.3.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* prioritize vue-devtools plugin registation, fix [#823](https://github.com/nuxt/devtools/issues/823), fix [#822](https://github.com/nuxt/devtools/issues/822) ([259853b](https://github.com/nuxt/devtools/commit/259853b94c38bf94e5ec7a6a18b426854becce75))
+* update `vite-plugin-vue-tracer` ([0c1740c](https://github.com/nuxt/devtools/commit/0c1740cc1d3a266706a212f575a034aa2c6212f7))
+
+
+
 ## [2.3.1](https://github.com/nuxt/devtools/compare/v2.3.0...v2.3.1) (2025-03-20)
 
 
