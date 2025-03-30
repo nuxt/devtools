@@ -111,7 +111,7 @@ const openInEditor = useOpenInEditor()
         <DurationDisplay
           title="Module Setup Time"
           flex="~ items-center"
-          :duration="mod.timings.setup * 1000"
+          :duration="mod.timings.setup"
           :factor="0.5"
         >
           <template #before>
