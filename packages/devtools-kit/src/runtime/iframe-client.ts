@@ -1,5 +1,5 @@
-import type { NuxtDevtoolsIframeClient } from '@nuxt/devtools-kit/types'
 import type { Ref } from 'vue'
+import type { NuxtDevtoolsIframeClient } from '../types'
 import { shallowRef, triggerRef } from 'vue'
 
 let clientRef: Ref<NuxtDevtoolsIframeClient | undefined> | undefined
@@ -39,7 +39,7 @@ export function onDevtoolsClientConnected(fn: (client: NuxtDevtoolsIframeClient)
   }
 }
 
-export function useDevtoolsClient(): Ref<NuxtDevtoolsIframeClient | undefined> {
+export function useDevtoolsClient() {
   if (!clientRef) {
     clientRef = shallowRef<NuxtDevtoolsIframeClient | undefined>()
 
