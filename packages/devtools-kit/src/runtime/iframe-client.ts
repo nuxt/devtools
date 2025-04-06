@@ -39,7 +39,7 @@ export function onDevtoolsClientConnected(fn: (client: NuxtDevtoolsIframeClient)
   }
 }
 
-export function useDevtoolsClient() {
+export function useDevtoolsClient(): Ref<NuxtDevtoolsIframeClient | undefined> {
   if (!clientRef) {
     clientRef = shallowRef<NuxtDevtoolsIframeClient | undefined>()
 
