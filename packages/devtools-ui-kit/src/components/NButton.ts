@@ -4,7 +4,7 @@ import { defineComponent, h, renderSlot } from 'vue'
 import NIcon from './NIcon.vue'
 
 // eslint-disable-next-line ts/no-unused-expressions
-'@unocss-include' // this is a hack to include unocss styles in the build
+'@unocss-include' // this is a trick to keep @unocss-include in the built file. esbuild treeshakes comments
 export default defineComponent({
   name: 'NButton',
   props: {
