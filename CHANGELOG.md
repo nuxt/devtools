@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/nuxt/devtools/compare/v2.3.2...v2.4.0) (2025-04-14)
+
+
+### Bug Fixes
+
+* **devtools-kit:** fix `useDevtoolsClient` return type ([#845](https://github.com/nuxt/devtools/issues/845)) ([5ce9b47](https://github.com/nuxt/devtools/commit/5ce9b4712720c554ff74c29bf04a455ed8fe7ec7))
+* module setup times are multiplied by 1000 ([#838](https://github.com/nuxt/devtools/issues/838)) ([d16aa96](https://github.com/nuxt/devtools/commit/d16aa960724ef8aed0e97519d9fa316a990d930e))
+* **ui-kit:** add `[@unocss-include](https://github.com/unocss-include)` magic string in NButton ([#852](https://github.com/nuxt/devtools/issues/852)) ([f18de78](https://github.com/nuxt/devtools/commit/f18de7840d9e5e199355fb630964c928b27dfb93))
+* watch() typeof check on array is always false ([#850](https://github.com/nuxt/devtools/issues/850)) ([a873199](https://github.com/nuxt/devtools/commit/a873199ba3c3981a7eeab93c3ad6e5a13abf1352))
+
+
+
 ## [2.3.2](https://github.com/nuxt/devtools/compare/v2.3.1...v2.3.2) (2025-03-26)
 
 
