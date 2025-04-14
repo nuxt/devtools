@@ -3,7 +3,8 @@ import { NuxtLink } from '#components'
 import { defineComponent, h, renderSlot } from 'vue'
 import NIcon from './NIcon.vue'
 
-// @unocss-include
+// eslint-disable-next-line ts/no-unused-expressions
+'@unocss-include' // this is a trick to keep @unocss-include in the built file. esbuild treeshakes comments
 export default defineComponent({
   name: 'NButton',
   props: {
