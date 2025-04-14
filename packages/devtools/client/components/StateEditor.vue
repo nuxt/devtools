@@ -43,9 +43,9 @@ onMounted(() => {
 
   watch(
     () => [props.revision, props.state],
-    (value) => {
-      if (typeof value !== 'number' && typeof value !== 'string')
-        deepSync(value, props.state)
+    ([_, state]) => {
+      if (typeof state !== 'number' && typeof state !== 'string')
+        deepSync(state, props.state)
       else
         proxy.value = props.state
     },
@@ -54,15 +54,13 @@ onMounted(() => {
 })
 
 function deepSync(from: any, to: any) {
-  // const fromRevision = from[0]
-  const fromValue = from[1]
-  for (const key in fromValue) {
-    if (Array.isArray(fromValue[key]))
-      to[key] = fromValue[key].slice()
-    else if (typeof fromValue[key] === 'object' && fromValue[key] !== null)
-      deepSync(fromValue[key], to[key])
+  for (const key in from) {
+    if (Array.isArray(from[key]))
+      to[key] = from[key].slice()
+    else if (typeof from[key] === 'object' && from[key] !== null)
+      deepSync(from[key], to[key])
     else
-      to[key] = fromValue[key]
+      to[key] = from[key]
   }
 }
 
