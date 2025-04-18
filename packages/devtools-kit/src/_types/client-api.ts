@@ -5,6 +5,7 @@ import type { NuxtApp } from 'nuxt/app'
 import type { AppConfig } from 'nuxt/schema'
 import type { $Fetch } from 'ofetch'
 import type { BuiltinLanguage } from 'shiki'
+import type { state } from 'vite-plugin-vue-tracer/client/overlay'
 import type { Ref } from 'vue'
 import type { HookInfo, LoadingTimeMetric, PluginMetric } from './integrations'
 import type { ClientFunctions, ServerFunctions } from './rpc'
@@ -64,6 +65,7 @@ export interface NuxtDevtoolsHostClient {
     toggle: () => void
     isEnabled: Ref<boolean>
     isAvailable: Ref<boolean>
+    state: typeof state
   }
 
   devtools: {
