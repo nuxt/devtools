@@ -33,16 +33,18 @@ export default defineComponent({
         slots.default ? '' : 'n-icon-button',
         'n-button n-transition n-disabled:n-disabled',
       ].join(' '),
-    }, [
-      renderSlot(slots, 'icon', {}, () => props.icon
-        ? [
-            h(NIcon, {
-              icon: props.icon,
-              class: slots.default ? 'n-button-icon' : '',
-            }),
-          ]
-        : []),
-      renderSlot(slots, 'default'),
-    ])
+    }, {
+      default: () => [
+        renderSlot(slots, 'icon', {}, () => props.icon
+          ? [
+              h(NIcon, {
+                icon: props.icon,
+                class: slots.default ? 'n-button-icon' : '',
+              }),
+            ]
+          : []),
+        renderSlot(slots, 'default'),
+      ],
+    })
   },
 })
