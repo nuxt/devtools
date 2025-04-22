@@ -22,13 +22,16 @@ const colorMode = getColorMode()
 const proxy = shallowRef()
 const error = shallowRef()
 
+function isPrimitive(value: any): boolean {
+  return ['number', 'bigint', 'string', 'boolean'].includes(typeof value)
+}
+
 function clone() {
   error.value = undefined
   try {
-    if (props.state)
-      proxy.value = JSON.parse(JSON.stringify(props.state || {}))
-    else if (typeof props.state === 'number' || typeof props.state !== 'string')
-      proxy.value = props.state
+    proxy.value = isPrimitive(props.state)
+      ? props.state
+      : JSON.parse(JSON.stringify(props.state || {}))
   }
   catch (e) {
     console.error(e)
@@ -44,7 +47,7 @@ onMounted(() => {
   watch(
     () => [props.revision, props.state],
     ([_, state]) => {
-      if (typeof state !== 'number' && typeof state !== 'string')
+      if (!isPrimitive(state))
         deepSync(state, props.state)
       else
         proxy.value = props.state
