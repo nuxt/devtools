@@ -14,7 +14,7 @@ const context = useServerDebugContext()
 
 <template>
   <div v-if="!context" p6>
-    <div>No Debug Countext Found</div>
+    <div>No Debug Context Found</div>
     <div>Set `debug: true` in your nuxt.config.ts to enable this panel</div>
   </div>
   <div v-else>
