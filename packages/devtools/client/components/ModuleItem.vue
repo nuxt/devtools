@@ -20,7 +20,7 @@ const terminalId = useCurrentTerminalId()
   <ModuleItemBase :mod="mod" :info="staticInfo">
     <template #items>
       <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
-        <span i-carbon-folder-move-to text-lg op50 />
+        <span i-carbon-folder-move-to flex-none text-lg op50 />
         <FilepathItem :filepath="mod.entryPath" text-sm op50 hover="text-primary op100" />
       </div>
 
@@ -33,7 +33,7 @@ const terminalId = useCurrentTerminalId()
             :to="id ? '/modules/terminals' : undefined"
             @click="id ? terminalId = id : undefined"
           >
-            <span i-carbon-circle-dash animate-spin text-lg op50 />
+            <span i-carbon-circle-dash flex-none animate-spin text-lg op50 />
             <code text-sm op50>Upgrading...</code>
           </NuxtLink>
           <div v-else-if="state === 'updated'" mx--2>
@@ -43,7 +43,7 @@ const terminalId = useCurrentTerminalId()
               items-center rounded bg-primary:10 px2 text-sm text-primary
               @click="restart"
             >
-              <span i-carbon-intent-request-active text-lg text-primary />
+              <span i-carbon-intent-request-active flex-none text-lg text-primary />
               <code text-xs>Update installed, click to restart</code>
             </button>
           </div>
@@ -53,14 +53,14 @@ const terminalId = useCurrentTerminalId()
               hover="bg-active"
               @click="update()"
             >
-              <span i-carbon-intent-request-upgrade text-lg op50 />
+              <span i-carbon-intent-request-upgrade flex-none text-lg op50 />
               <code op50>v{{ info.current }}</code>
               <div i-carbon-arrow-right op50 />
               <code text-green>v{{ info.latest }}</code>
             </button>
           </div>
           <div v-else-if="info?.latest" flex="~ gap-2" items-center title="NPM">
-            <span i-carbon-cube text-lg op50 />
+            <span i-carbon-cube flex-none text-lg op50 />
             <code text-sm op50>v{{ info.current }}</code>
           </div>
         </template>

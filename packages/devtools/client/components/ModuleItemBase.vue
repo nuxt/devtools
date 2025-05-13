@@ -26,6 +26,11 @@ const avatarBase = 'https://api.nuxtjs.org/api/ipx/s_44,f_webp/gh_avatar/'
 const githubBase = 'https://github.com/'
 const npmBase = 'https://www.npmjs.com/package/'
 
+const { format: formatNumber } = Intl.NumberFormat(navigator.language || 'en', { notation: 'compact', maximumFractionDigits: 1 })
+
+const stars = computed(() => formatNumber(data.value.stats?.stars || 0))
+const downloads = computed(() => formatNumber(data.value.stats?.downloads || 0))
+
 const openInEditor = useOpenInEditor()
 </script>
 
@@ -67,7 +72,7 @@ const openInEditor = useOpenInEditor()
         <div flex-auto />
 
         <div v-if="data.website" flex="~ gap-2" title="Documentation">
-          <span i-carbon-link text-lg op50 />
+          <span i-carbon-link flex-none text-lg op50 />
           <NuxtLink
             :to="data.website"
             target="_blank"
@@ -78,7 +83,7 @@ const openInEditor = useOpenInEditor()
           </NuxtLink>
         </div>
         <div v-if="data.github" flex="~ gap-2">
-          <span i-carbon-logo-github text-lg op50 />
+          <span i-carbon-logo-github flex-none text-lg op50 />
           <NuxtLink
             :to="data.github"
             target="_blank"
@@ -93,16 +98,16 @@ const openInEditor = useOpenInEditor()
       <slot name="items" />
 
       <div v-if="data.stats" flex="~ gap-4 items-center">
-        <div flex="~ gap-2 items-center" op50>
-          <NIcon icon="carbon-star" text-lg />
+        <div v-if="data.stats.stars" flex="~ gap-2 items-center" op50>
+          <NIcon icon="carbon-star" flex-none text-lg />
           <span>
-            {{ data.stats.stars }}
+            {{ stars }}
           </span>
         </div>
-        <div flex="~ gap-2 items-center" op50>
-          <NIcon icon="carbon-download" text-lg />
+        <div v-if="data.stats.downloads" flex="~ gap-2 items-center" op50>
+          <NIcon icon="carbon-download" flex-none text-lg />
           <span>
-            {{ data.stats.downloads }}
+            {{ downloads }}
           </span>
         </div>
       </div>
@@ -115,7 +120,7 @@ const openInEditor = useOpenInEditor()
           :factor="0.5"
         >
           <template #before>
-            <NIcon icon="carbon-time" mr2 text-lg op50 />
+            <NIcon icon="carbon-time" mr2 flex-none text-lg op50 />
           </template>
         </DurationDisplay>
       </div>
@@ -127,7 +132,7 @@ const openInEditor = useOpenInEditor()
         h-20 w-20 flex flex-none rounded bg-gray:3 p4
       >
         <img v-if="data.icon" :src="iconBase + data.icon" :alt="mod.name" ma>
-        <div i-carbon-cube ma text-4xl op30 />
+        <div v-else i-carbon-cube ma flex-none text-4xl op30 />
       </div>
       <div v-if="data.maintainers?.length && maintainers" flex="~" mt2 flex-auto items-end justify-end>
         <NuxtLink

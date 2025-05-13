@@ -119,7 +119,6 @@ registerCommands(() => [
           rounded-full text-xl :border="false"
           @click="installModuleOpen = false"
         />
-
         <ModuleInstallList @close="installModuleOpen = false" />
       </div>
     </Transition>
