@@ -221,6 +221,7 @@ export async function setupDevToolsClient({
       toggle: () => {
         inspectorState.isEnabled = !inspectorState.isEnabled
       },
+      state: inspectorState,
     })
   }
 
