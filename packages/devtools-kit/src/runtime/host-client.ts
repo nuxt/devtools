@@ -35,7 +35,7 @@ export function onDevtoolsHostClientConnected(fn: (client: NuxtDevtoolsHostClien
   }
 }
 
-export function useDevtoolsHostClient() {
+export function useDevtoolsHostClient(): Ref<NuxtDevtoolsHostClient | undefined> {
   if (!clientRef) {
     clientRef = shallowRef<NuxtDevtoolsHostClient | undefined>()
 
