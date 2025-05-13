@@ -1,3 +1,20 @@
+## [2.4.1](https://github.com/nuxt/devtools/compare/v2.4.0...v2.4.1) (2025-05-13)
+
+
+### Bug Fixes
+
+* **devtools-kit:** explicitly type return type of useDevtoolsHostClient ([#861](https://github.com/nuxt/devtools/issues/861)) ([161e847](https://github.com/nuxt/devtools/commit/161e8476ad109737699a121e2407d94c18345a51))
+* **StateEditor:** add isPrimitive helper and support bigint type ([#744](https://github.com/nuxt/devtools/issues/744)) ([#854](https://github.com/nuxt/devtools/issues/854)) ([f8eed63](https://github.com/nuxt/devtools/commit/f8eed63eb553c6407d049aeff7f58c666e7dc8d9))
+* **ui-kit:** use object syntax for NButton slots ([#857](https://github.com/nuxt/devtools/issues/857)) ([09002d2](https://github.com/nuxt/devtools/commit/09002d27bf0f82d85348b3ee183a375f3ecbfd98))
+
+
+### Features
+
+* improve modules view ([807405f](https://github.com/nuxt/devtools/commit/807405fb7e2443e09d6ad21c1cd827fe4ef2f842))
+* show docs link for components ([9ab0ec8](https://github.com/nuxt/devtools/commit/9ab0ec85b06da9dd55be0eb854ca877d9c8584ed))
+
+
+
 # [2.4.0](https://github.com/nuxt/devtools/compare/v2.3.2...v2.4.0) (2025-04-14)
 
 
