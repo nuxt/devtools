@@ -19,12 +19,23 @@ const copy = useCopy()
 
 <template>
   <div flex="~ col gap1" items-start of-hidden>
-    <div flex="~ gap2" px3>
+    <div flex="~ gap2 items-center" px3>
       <ComponentName :component="component" />
       <NButton
-        title="Copy name" flex-none icon="carbon-copy" :border="false"
+        v-if="component.meta?.docs && typeof component.meta.docs === 'string'"
+        title="Open docs" flex-none n="xs"
+        :to="component.meta.docs" target="_blank"
+        icon="carbon-catalog"
+      >
+        Docs
+      </NButton>
+      <NButton
+        title="Copy name" flex-none n="xs"
+        icon="carbon-copy"
         @click="copy(`<${name}></${name}>`, 'component-name')"
-      />
+      >
+        Copy
+      </NButton>
       <NBadge
         v-if="component.global"
         n="green"

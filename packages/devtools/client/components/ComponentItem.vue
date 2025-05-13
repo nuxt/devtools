@@ -28,7 +28,7 @@ const filePath = computed(() => props.component.filePath || props.component.file
           :component="component"
           :dependencies="dependencies"
           :dependents="dependents"
-          w-100 pt4
+          w-100 pt3
         />
       </template>
     </VDropdown>

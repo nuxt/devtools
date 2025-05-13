@@ -291,7 +291,7 @@ function setFilter() {
       border="t l base" w-80
       @close="onCloseDrawer"
     >
-      <div v-if="selected && selected.component" py4 pt4 flex="~ col">
+      <div v-if="selected && selected.component" py4 pt3 flex="~ col">
         <ComponentDetails
           :component="selected.component"
           :dependencies="selectedDependencies"

@@ -24,6 +24,23 @@ const componentWithRelationships = computed(() => {
   return components
 })
 
+const builtinComponentDocs = {
+  ClientOnly: 'https://nuxt.com/docs/api/components/client-only',
+  DevOnly: 'https://nuxt.com/docs/api/components/dev-only',
+  NuxtClientFallback: 'https://nuxt.com/docs/api/components/nuxt-client-fallback',
+  NuxtPicture: 'https://nuxt.com/docs/api/components/nuxt-picture',
+  NuxtRouteAnnouncer: 'https://nuxt.com/docs/api/components/nuxt-route-announcer',
+  NuxtTime: 'https://nuxt.com/docs/api/components/nuxt-time',
+  NuxtPage: 'https://nuxt.com/docs/api/components/nuxt-page',
+  NuxtLayout: 'https://nuxt.com/docs/api/components/nuxt-layout',
+  NuxtLink: 'https://nuxt.com/docs/api/components/nuxt-link',
+  NuxtLoadingIndicator: 'https://nuxt.com/docs/api/components/nuxt-loading-indicator',
+  NuxtErrorBoundary: 'https://nuxt.com/docs/api/components/nuxt-error-boundary',
+  NuxtWelcome: 'https://nuxt.com/docs/api/components/nuxt-welcome',
+  NuxtIsland: 'https://nuxt.com/docs/api/components/nuxt-island',
+  NuxtImg: 'https://nuxt.com/docs/api/components/nuxt-img',
+}
+
 const fuse = computed(() => new Fuse(componentWithRelationships.value, {
   keys: [
     'component.pascalName',
@@ -57,6 +74,8 @@ const filtered = computed(() => {
         if (!name)
           return
         if (name === 'nuxt') {
+          c.meta ??= {}
+          c.meta.docs ??= builtinComponentDocs?.[c.pascalName as keyof typeof builtinComponentDocs]
           builtin.push(component)
           count.builtin++
         }
