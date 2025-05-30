@@ -1,4 +1,6 @@
 import { defineBuildConfig } from 'unbuild'
+import Vue from 'unplugin-vue/rollup'
+import { buildCSS } from './src/webcomponents/scripts/build-css'
 
 export default defineBuildConfig({
   entries: [
@@ -6,6 +8,7 @@ export default defineBuildConfig({
     // Chunking
     'src/types',
     'src/dirs',
+    'src/webcomponents/index',
   ],
   externals: [
     'nuxt',
@@ -13,6 +16,8 @@ export default defineBuildConfig({
     'vite',
     '@nuxt/kit',
     '@nuxt/schema',
+    '@nuxt/devtools',
+    '@nuxt/devtools/webcomponents',
     // Type only
     'vue',
     'vue-router',
@@ -21,5 +26,17 @@ export default defineBuildConfig({
   ],
   rollup: {
     inlineDependencies: true,
+  },
+  hooks: {
+    'build:before': async (ctx) => {
+      if (ctx.options.stub)
+        return
+      await buildCSS()
+    },
+    'rollup:options': function (ctx, options) {
+      if (ctx.options.stub)
+        return
+      options.plugins.push(Vue())
+    },
   },
 })
