@@ -5,62 +5,62 @@ catalogs:
   buildtools:
     '@discoveryjs/cli': ^2.14.2
     '@discoveryjs/discovery': 1.0.0-beta.92
-    '@nuxt/module-builder': ^0.8.4
+    '@nuxt/module-builder': ^1.0.1
     '@parcel/watcher': ^2.5.1
     '@pinia/nuxt': ^0.11.0
-    '@unocss/core': ^66.1.1
-    '@unocss/eslint-config': ^66.1.1
-    '@unocss/nuxt': ^66.1.1
-    '@unocss/preset-attributify': ^66.1.1
-    '@unocss/preset-icons': ^66.1.1
-    '@unocss/preset-mini': ^66.1.1
-    '@unocss/preset-uno': ^66.1.1
-    '@vueuse/nuxt': ^13.1.0
-    esbuild: ^0.25.4
+    '@unocss/core': ^66.1.2
+    '@unocss/eslint-config': ^66.1.2
+    '@unocss/nuxt': ^66.1.2
+    '@unocss/preset-attributify': ^66.1.2
+    '@unocss/preset-icons': ^66.1.2
+    '@unocss/preset-mini': ^66.1.2
+    '@unocss/preset-uno': ^66.1.2
+    '@vueuse/nuxt': ^13.3.0
+    esbuild: ^0.25.5
     nitropack: ^2.11.12
-    nuxt: ^3.17.3
-    shiki-codegen: ^3.4.0
+    nuxt: ^3.17.4
+    shiki-codegen: ^3.4.2
     unbuild: ^3.5.0
-    unocss: ^66.1.1
+    unocss: ^66.1.2
     unplugin-vue-markdown: ^28.3.1
     vite: ^6.3.5
   cli:
-    '@antfu/eslint-config': ^4.13.0
-    '@antfu/ni': ^24.3.0
-    '@nuxt/eslint': ^1.3.1
-    '@nuxt/test-utils': ^3.18.0
-    '@vitest/ui': ^3.1.3
-    bumpp: ^10.1.0
+    '@antfu/eslint-config': ^4.13.2
+    '@antfu/ni': ^25.0.0
+    '@nuxt/eslint': ^1.4.1
+    '@nuxt/test-utils': ^3.19.1
+    '@vitest/ui': ^3.1.4
+    bumpp: ^10.1.1
     conventional-changelog-cli: ^5.0.0
     cypress: ^13.17.0
-    eslint: ^9.26.0
-    eslint-flat-config-utils: ^2.0.1
+    eslint: ^9.27.0
+    eslint-flat-config-utils: ^2.1.0
     eslint-plugin-antfu: ^3.1.1
     eslint-plugin-format: ^1.0.1
-    lint-staged: ^16.0.0
+    lint-staged: ^16.1.0
     nuxt-eslint-auto-explicit-import: ^0.1.1
     simple-git-hooks: ^2.13.0
     taze: ^19.1.0
     tsx: ^4.19.4
     typescript: ^5.8.3
-    vitest: ^3.1.3
+    vitest: ^3.1.4
     vue-tsc: ^2.2.10
   frontend:
     '@antfu/utils': ^9.2.0
-    '@unocss/reset': ^66.1.1
-    '@unocss/runtime': ^66.1.1
+    '@unocss/reset': ^66.1.2
+    '@unocss/runtime': ^66.1.2
     '@vue/devtools-applet': ^7.7.6
     '@vue/devtools-core': ^7.7.6
-    '@vueuse/core': ^13.1.0
-    '@vueuse/integrations': ^13.1.0
+    '@vueuse/core': ^13.3.0
+    '@vueuse/integrations': ^13.3.0
     '@xterm/addon-fit': ^0.10.0
     '@xterm/xterm': ^5.5.0
     birpc: ^2.3.0
     cronstrue: ^2.61.0
-    diff: ^7.0.0
+    diff: ^8.0.2
     error-stack-parser-es: ^1.0.5
     floating-vue: ^5.2.2
-    focus-trap: ^7.6.4
+    focus-trap: ^7.6.5
     fuse.js: ^7.1.0
     hookable: ^5.5.3
     json-editor-vue: ^0.18.1
@@ -74,16 +74,16 @@ catalogs:
     pinia: ^3.0.2
     quicktype-core: 22.0.0
     scule: ^1.3.0
-    shiki: ^3.4.0
+    shiki: ^3.4.2
     splitpanes: ^3.2.0
     structured-clone-es: ^1.0.0
     theme-vitesse: ^0.8.3
     v-lazy-show: ^0.3.0
-    vanilla-jsoneditor: ^3.3.1
+    vanilla-jsoneditor: ^3.5.0
     vis-data: ^7.1.9
     vis-network: ^9.1.10
     vite-hot-client: ^2.0.4
-    vue: ^3.5.13
+    vue: ^3.5.16
     vue-router: ^4.5.1
     vue-virtual-scroller: ^2.0.0-beta.8
   icons:
@@ -91,18 +91,18 @@ catalogs:
     '@iconify-json/carbon': ^1.2.8
     '@iconify-json/logos': ^1.2.4
     '@iconify-json/ri': ^1.2.5
-    '@iconify-json/simple-icons': ^1.2.34
-    '@iconify-json/tabler': ^1.2.17
+    '@iconify-json/simple-icons': ^1.2.36
+    '@iconify-json/tabler': ^1.2.18
   playground:
     '@exampledev/new.css': ^1.1.3
   prod:
-    '@nuxt/kit': ^3.17.3
+    '@nuxt/kit': ^3.17.4
     '@vue/devtools-kit': ^7.7.6
     consola: ^3.4.2
     defu: ^6.1.4
     destr: ^2.0.5
     execa: ^8.0.1
-    fast-npm-meta: ^0.4.2
+    fast-npm-meta: ^0.4.3
     get-port-please: ^3.1.2
     image-meta: ^0.2.1
     is-installed-globally: ^1.0.0
@@ -115,21 +115,21 @@ catalogs:
     semver: ^7.7.2
     simple-git: ^3.27.0
     sirv: ^3.0.1
-    tinyglobby: ^0.2.13
-    vite-plugin-inspect: ^11.0.1
+    tinyglobby: ^0.2.14
+    vite-plugin-inspect: ^11.1.0
     vite-plugin-vue-tracer: ^0.1.3
     which: ^5.0.0
     ws: ^8.18.2
   types:
-    '@nuxt/schema': ^3.17.3
-    '@types/diff': ^7.0.2
+    '@nuxt/schema': ^3.17.4
+    '@types/diff': ^8.0.0
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^22.15.17
+    '@types/node': ^22.15.27
     '@types/prompts': ^2.4.9
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
-    '@unhead/schema': ^2.0.8
+    '@unhead/schema': ^2.0.10
     unimport: ^5.0.1
 onlyBuiltDependencies:
   - '@parcel/watcher'

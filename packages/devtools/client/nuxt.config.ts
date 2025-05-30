@@ -82,9 +82,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-07-22',
 
   nitro: {
-    output: {
-      publicDir: resolver.resolve('../dist/client'),
-    },
+    preset: 'static',
 
     hooks: {
       'prerender:routes': function (routes) {
@@ -151,7 +149,7 @@ export default defineNuxtConfig({
     includeWorkspace: true,
   },
 
-  debug: true,
+  // debug: true,
 
   eslint: {
     config: {
