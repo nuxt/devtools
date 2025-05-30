@@ -25,6 +25,7 @@ export default defineBuildConfig({
   rollup: {
     inlineDependencies: true,
   },
+  declaration: 'node16',
   clean: false,
   hooks: {
     'build:before': async () => {
