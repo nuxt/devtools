@@ -49,7 +49,12 @@ export async function buildCSS() {
       },
       minify: MINIFY,
     })
-    await fs.writeFile(GENERATED_CSS, `export default ${JSON.stringify(String(css))}`)
+    await fs.writeFile(GENERATED_CSS, [
+      `/* eslint-disable eslint-comments/no-unlimited-disable */`,
+      `/* eslint-disable */`,
+      `export default ${JSON.stringify(String(css))}`,
+      '',
+    ].join('\n'))
     console.log(`${c.green('✓')} CSS built`)
 
     return {

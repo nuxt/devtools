@@ -28,10 +28,14 @@ export default defineBuildConfig({
   declaration: 'node16',
   clean: false,
   hooks: {
-    'build:before': async () => {
+    'build:before': async (ctx) => {
+      if (ctx.options.stub)
+        return
       await buildCSS()
     },
     'rollup:options': function (ctx, options) {
+      if (ctx.options.stub)
+        return
       options.plugins.push(Vue())
     },
   },
