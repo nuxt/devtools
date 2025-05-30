@@ -3,7 +3,7 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 
-import type { NuxtCopilotProps } from '../../../../webcomponents'
+import type { NuxtCopilotProps } from '../../../webcomponents'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
@@ -13,7 +13,7 @@ import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
-import { NuxtDevtoolsInspectPanel } from '../../../../webcomponents'
+import { NuxtDevtoolsInspectPanel } from '../../../webcomponents'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 
 import Main from './Main.vue'
@@ -38,6 +38,8 @@ export async function setupDevToolsClient({
 }) {
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
+
+  let inspectorPanelReady = false
 
   const client: NuxtDevtoolsHostClient = shallowReactive({
     nuxt: markRaw(nuxt as any),
@@ -184,7 +186,6 @@ export async function setupDevToolsClient({
     })
   }
 
-  let inspectorPanelReady = false
   function initInspectorPanel() {
     if (inspectorPanelReady)
       return

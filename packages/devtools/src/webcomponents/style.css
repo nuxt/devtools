@@ -8,16 +8,39 @@
   transition: all 0.5s;
   filter: blur(10px);
   --nuxt-devtools-inspect-border-angle: 0deg;
-  background: conic-gradient(from var(--nuxt-devtools-inspect-border-angle),#00DC82,#00E6E8,#42E200,#0086E2,#00DC82) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  background: conic-gradient(
+      from var(--nuxt-devtools-inspect-border-angle),
+      #00dc82,
+      #00e6e8,
+      #42e200,
+      #0086e2,
+      #00dc82
+    )
+    border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
   animation: color-rotate-background 1s linear infinite;
 }
 
 .nuxt-devtools-inspect-neon {
-  background-image: linear-gradient(90deg, #00DC82, #00E6E8, #42E200,#00DC82, #00E6E8, #42E200,#00DC82, #00E6E8, #42E200);
+  background-image: linear-gradient(
+    90deg,
+    #00dc82,
+    #00e6e8,
+    #42e200,
+    #00dc82,
+    #00e6e8,
+    #42e200,
+    #00dc82,
+    #00e6e8,
+    #42e200
+  );
   background-size: 400% 400%;
   background-position: 0 50%;
 }
@@ -37,7 +60,6 @@
     background-position: 0% 50%;
   }
 }
-
 
 /* @keyframes color-rotate-background {
   0% {
