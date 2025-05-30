@@ -36,6 +36,9 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
+  let iframe: HTMLIFrameElement | undefined
+  let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
+
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
 
@@ -109,9 +112,6 @@ export async function setupDevToolsClient({
   })
 
   window.__NUXT_DEVTOOLS_HOST__ = client
-
-  let iframe: HTMLIFrameElement | undefined
-  let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
 
   function syncClient() {
     if (!client.inspector)
