@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client",
-    "build:client": "nuxi generate client && cp -r client/.output/public dist/client",
+    "build:client": "nuxi generate client && cp -r client/.output/public/ dist/client/",
     "build:module": "nuxt-build-module build",
     "build:discovery": "npx discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
     "dev:discovery": "discovery -c .discoveryrc.cjs",
