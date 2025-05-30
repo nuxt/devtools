@@ -1,0 +1,49 @@
+@property --nuxt-devtools-inspect-border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 90deg;
+}
+
+.nuxt-devtools-inspect-running-border {
+  transition: all 0.5s;
+  filter: blur(10px);
+  --nuxt-devtools-inspect-border-angle: 0deg;
+  background: conic-gradient(from var(--nuxt-devtools-inspect-border-angle),#00DC82,#00E6E8,#42E200,#0086E2,#00DC82) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: color-rotate-background 1s linear infinite;
+}
+
+.nuxt-devtools-inspect-neon {
+  background-image: linear-gradient(90deg, #00DC82, #00E6E8, #42E200,#00DC82, #00E6E8, #42E200,#00DC82, #00E6E8, #42E200);
+  background-size: 400% 400%;
+  background-position: 0 50%;
+}
+
+.nuxt-devtools-inspect-neon.running {
+  animation: neon-background 3s linear infinite;
+}
+
+@keyframes neon-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* @keyframes color-rotate-background {
+  0% {
+    --nuxt-devtools-inspect-border-angle: 0deg;
+  }
+  100% {
+    --nuxt-devtools-inspect-border-angle: 50deg;
+  }
+} */

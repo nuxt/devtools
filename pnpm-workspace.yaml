@@ -58,6 +58,7 @@ catalogs:
     birpc: ^2.3.0
     cronstrue: ^2.61.0
     diff: ^7.0.0
+    diff-match-patch-es: ^0.0.0
     error-stack-parser-es: ^1.0.5
     floating-vue: ^5.2.2
     focus-trap: ^7.6.4
@@ -131,6 +132,11 @@ catalogs:
     '@types/ws': ^8.18.1
     '@unhead/schema': ^2.0.8
     unimport: ^5.0.1
+  build:
+    lightningcss: ^0.0.0
+    unplugin-vue: ^0.0.0
+  dev:
+    nodemon: ^0.0.0
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - better-sqlite3

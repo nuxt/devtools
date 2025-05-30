@@ -3,18 +3,20 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 
+import type { NuxtCopilotProps } from '../../../../webcomponents'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
 import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
-import { debounce } from 'perfect-debounce'
 
+import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
+import { NuxtDevtoolsInspectPanel } from '../../../../webcomponents'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import Main from './Main.vue'
 
+import Main from './Main.vue'
 import { popupWindow, state } from './state'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -182,8 +184,53 @@ export async function setupDevToolsClient({
     })
   }
 
+  let inspectorPanelReady = false
+  function initInspectorPanel() {
+    if (inspectorPanelReady)
+      return
+    inspectorPanelReady = true
+    const props = shallowReactive<NuxtCopilotProps>({
+      mouse: { x: 0, y: 0 },
+      matched: undefined,
+    })
+    const component = new NuxtDevtoolsInspectPanel({ props })
+    document.body.appendChild(component)
+    Object.assign(component.style, {
+      zIndex: 999999,
+      position: 'fixed',
+    })
+
+    component.addEventListener('close', () => {
+      props.matched = undefined
+      inspectorState.isEnabled = false
+    })
+
+    component.addEventListener('selectParent', () => {
+      const parent = inspectorState.main?.getParent()
+      if (parent) {
+        inspectorState.main = parent
+        props.matched = parent
+      }
+    })
+
+    inspectorEvents.on('hover', () => {
+      inspectorState.isFocused = false
+    })
+
+    // Force clear click event
+    inspectorEvents.on('click', (result, e) => {
+      inspectorState.isEnabled = false
+      inspectorState.isFocused = true
+      inspectorState.isVisible = true
+
+      props.matched = result
+      props.mouse = { x: e.clientX, y: e.clientY }
+    })
+  }
+
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
     const isAvailable = ref(inspectorHasData())
+    initInspectorPanel()
 
     if (!inspectorEvents.events.disabled?.length) {
       inspectorEvents.on('disabled', () => {
