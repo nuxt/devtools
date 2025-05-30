@@ -1,19 +1,19 @@
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '@nuxt/devtools/types'
+import type { NuxtCopilotProps } from '@nuxt/devtools/webcomponents'
 import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
-import type { Router } from 'vue-router'
 
-import type { NuxtCopilotProps } from '../../../webcomponents'
+import type { Router } from 'vue-router'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
+import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { setIframeServerContext } from '@vue/devtools-kit'
-import { createHooks } from 'hookable'
 
+import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
-import { NuxtDevtoolsInspectPanel } from '../../../webcomponents'
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 
 import Main from './Main.vue'
@@ -38,8 +38,6 @@ export async function setupDevToolsClient({
 }) {
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
-
-  let inspectorPanelReady = false
 
   const client: NuxtDevtoolsHostClient = shallowReactive({
     nuxt: markRaw(nuxt as any),
@@ -113,6 +111,7 @@ export async function setupDevToolsClient({
   window.__NUXT_DEVTOOLS_HOST__ = client
 
   let iframe: HTMLIFrameElement | undefined
+  let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
 
   function syncClient() {
     if (!client.inspector)
@@ -186,26 +185,26 @@ export async function setupDevToolsClient({
     })
   }
 
-  function initInspectorPanel() {
-    if (inspectorPanelReady)
-      return
-    inspectorPanelReady = true
+  function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
+    if (inspector)
+      return inspector
+
+    const isAvailable = ref(inspectorHasData())
     const props = shallowReactive<NuxtCopilotProps>({
       mouse: { x: 0, y: 0 },
       matched: undefined,
     })
+
     const component = new NuxtDevtoolsInspectPanel({ props })
     document.body.appendChild(component)
     Object.assign(component.style, {
       zIndex: 999999,
       position: 'fixed',
     })
-
     component.addEventListener('close', () => {
       props.matched = undefined
       inspectorState.isEnabled = false
     })
-
     component.addEventListener('selectParent', () => {
       const parent = inspectorState.main?.getParent()
       if (parent) {
@@ -214,25 +213,11 @@ export async function setupDevToolsClient({
       }
     })
 
-    inspectorEvents.on('hover', () => {
-      inspectorState.isFocused = false
-    })
-
-    // Force clear click event
-    inspectorEvents.on('click', (result, e) => {
-      inspectorState.isEnabled = false
-      inspectorState.isFocused = true
-      inspectorState.isVisible = true
-
-      props.matched = result
-      props.mouse = { x: e.clientX, y: e.clientY }
-    })
-  }
-
-  function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
-    const isAvailable = ref(inspectorHasData())
-    initInspectorPanel()
-
+    if (!inspectorEvents.events.hover?.length) {
+      inspectorEvents.on('hover', () => {
+        inspectorState.isFocused = false
+      })
+    }
     if (!inspectorEvents.events.disabled?.length) {
       inspectorEvents.on('disabled', () => {
         inspectorState.isVisible = false
@@ -245,9 +230,13 @@ export async function setupDevToolsClient({
       })
     }
     if (!inspectorEvents.events.click?.length) {
-      inspectorEvents.on('click', async (info) => {
+      inspectorEvents.on('click', async (info, e) => {
         inspectorState.isEnabled = false
-        await client.hooks.callHook('host:inspector:click', info.fullpath)
+        inspectorState.isFocused = true
+        inspectorState.isVisible = true
+
+        props.matched = info
+        props.mouse = { x: e.clientX, y: e.clientY }
       })
     }
 
@@ -257,7 +246,7 @@ export async function setupDevToolsClient({
       })
     }
 
-    return markRaw({
+    return inspector = markRaw({
       isAvailable,
       isEnabled: toRef(inspectorState, 'isEnabled'),
       enable: () => {

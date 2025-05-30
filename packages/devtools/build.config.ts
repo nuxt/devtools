@@ -16,6 +16,8 @@ export default defineBuildConfig({
     'vite',
     '@nuxt/kit',
     '@nuxt/schema',
+    '@nuxt/devtools',
+    '@nuxt/devtools/webcomponents',
     // Type only
     'vue',
     'vue-router',
@@ -25,8 +27,6 @@ export default defineBuildConfig({
   rollup: {
     inlineDependencies: true,
   },
-  declaration: 'node16',
-  clean: false,
   hooks: {
     'build:before': async (ctx) => {
       if (ctx.options.stub)
