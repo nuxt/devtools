@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { NuxtCopilotProps } from './Props'
+import type { NuxtDevToolsInspectorProps } from './Props'
 import { onClickOutside, useDraggable } from '@vueuse/core'
 import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
 
-const { props } = defineProps<{ props: NuxtCopilotProps }>()
+const { props } = defineProps<{ props: NuxtDevToolsInspectorProps }>()
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'selectParent'): void

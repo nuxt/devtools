@@ -23,6 +23,7 @@ export default defineBuildConfig({
     'vue-router',
     'unstorage',
     'nitropack',
+    'vite-plugin-vue-tracer',
   ],
   rollup: {
     inlineDependencies: true,
