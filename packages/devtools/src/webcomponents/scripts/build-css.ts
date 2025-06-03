@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import c from 'ansis'
 import chokidar from 'chokidar'
+import { resolveModulePath } from 'exsolve'
 import { transform } from 'lightningcss'
 import { glob } from 'tinyglobby'
 import { createGenerator } from 'unocss'
@@ -16,6 +17,7 @@ const GENERATED_CSS = join(SRC_DIR, '.generated/css.ts')
 const MINIFY = true
 
 export async function buildCSS() {
+  const reset = await fs.readFile(resolveModulePath('@unocss/reset/tailwind.css'), 'utf-8')
   const files = await glob(GLOBS, {
     cwd: SRC_DIR,
     absolute: true,
@@ -35,6 +37,7 @@ export async function buildCSS() {
 
   const unoResult = await generater.generate(tokens)
   const input = [
+    reset,
     userStyle,
     unoResult.css,
   ].join('\n')

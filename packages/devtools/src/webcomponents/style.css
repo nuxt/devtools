@@ -1,3 +1,7 @@
+:root {
+  --un-text-opacity: 100%;
+}
+
 @property --nuxt-devtools-inspect-border-angle {
   syntax: '<angle>';
   inherits: false;
@@ -60,15 +64,6 @@
     background-position: 0% 50%;
   }
 }
-
-/* @keyframes color-rotate-background {
-  0% {
-    --nuxt-devtools-inspect-border-angle: 0deg;
-  }
-  100% {
-    --nuxt-devtools-inspect-border-angle: 50deg;
-  }
-} */
 
 /* NuxtDevtoolsBox */
 

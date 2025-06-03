@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NuxtDevToolsInspectorProps } from './Props'
 import { onClickOutside, useDraggable } from '@vueuse/core'
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 
 const { props } = defineProps<{ props: NuxtDevToolsInspectorProps }>()
 const emit = defineEmits<{
@@ -29,7 +29,6 @@ watch(
 
 const el = useTemplateRef<HTMLElement>('el')
 const draggingEl = useTemplateRef<HTMLElement>('draggingEl')
-const isMounted = ref(false)
 
 const { x, y, style, isDragging } = useDraggable(el, {
   initialValue: {
@@ -40,7 +39,7 @@ const { x, y, style, isDragging } = useDraggable(el, {
 })
 
 watch([initX, initY], () => {
-  if (!isMounted.value)
+  if (!props.matched)
     return
   x.value = initX.value
   y.value = initY.value
@@ -49,17 +48,13 @@ watch([initX, initY], () => {
 const hasMoved = computed(() => x.value !== initX.value || y.value !== initY.value)
 
 onClickOutside(el, () => {
-  if (!isMounted.value)
-    return
-  if (hasMoved.value)
-    return
-  close()
-})
-
-onMounted(() => {
-  setTimeout(() => {
-    isMounted.value = true
-  }, 1000)
+  nextTick(() => {
+    if (!props.matched)
+      return
+    if (hasMoved.value)
+      return
+    close()
+  })
 })
 
 function close() {
@@ -76,26 +71,26 @@ async function openInEditor() {
   const file = `${props.matched.pos[0]}:${props.matched.pos[1]}:${props.matched.pos[2]}`
   // await fetch(`/api/open-in-editor?file=${encodeURI(file)}`)
   emit('openInEditor', file)
-  close()
+  // close()
 }
 </script>
 
 <template>
   <div
     ref="el"
-    class="bg-glass ring-base fixed relative z-9999999 w-400px flex flex-col of-hidden rounded-lg text-sm shadow-lg ring-1 backdrop-blur duration-200"
+    class="bg-glass ring-base color-base fixed relative z-9999999 w-400px flex flex-col of-hidden border border-base rounded-lg text-sm shadow-lg ring-1 backdrop-blur duration-200"
     :style="style"
     :class="[
       isDragging ? 'transition-none' : 'transition-opacity',
       props.matched ? 'op100' : 'op0 pointer-events-none',
     ]"
   >
-    <div
+    <!-- <div
       class="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
     >
       <div class="nuxt-devtools-inspect-running-border pointer-events-none absolute inset-0 z-10 border-1.5 border-transparent rounded-lg" />
-    </div>
-    <div ref="draggingEl" class="flex items-center gap-2 p3">
+    </div> -->
+    <div ref="draggingEl" class="flex items-center gap-2 p2">
       <button
         title="Go to parent"
         class="flex items-center text-sm font-mono op50 hover:text-green6 hover:op100"

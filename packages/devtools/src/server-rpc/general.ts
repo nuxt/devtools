@@ -187,7 +187,7 @@ export function setupGeneralRPC({
       return Object.values(serverHooks)
     },
     async openInEditor(input: string): Promise<boolean> {
-      if (input.startsWith('./'))
+      if (input.startsWith('./') || !input.match(/^[a-z]:|^\//i))
         input = resolve(process.cwd(), input)
 
       // separate line and column syntax

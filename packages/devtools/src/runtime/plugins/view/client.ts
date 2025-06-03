@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '@nuxt/devtools/types'
 import type { NuxtDevToolsInspectorProps } from '@nuxt/devtools/webcomponents'
 import type { $Fetch } from 'ofetch'
@@ -212,12 +211,14 @@ export async function setupDevToolsClient({
         props.matched = parent
       }
     })
-    component.addEventListener('openInEditor', (path: string) => {
-      console.log('openInEditor', path)
-      client.hooks.callHook('host:inspector:click', path)
+    // eslint-disable-next-line ts/ban-ts-comment
+    // @ts-ignore WebComponent types
+    component.addEventListener('openInEditor', (e) => {
+      const url = (e as any)?.detail?.[0]
+      if (url)
+        client.hooks.callHook('host:inspector:click', url)
     })
 
-    console.log('inspectorEvents', inspectorEvents)
     inspectorEvents.on('hover', () => {
       inspectorState.isFocused = false
     })
@@ -229,7 +230,6 @@ export async function setupDevToolsClient({
       inspectorState.isVisible = true
     })
     inspectorEvents.on('click', async (info, e) => {
-      console.log('click')
       inspectorState.isFocused = true
       inspectorState.isVisible = true
 
@@ -248,15 +248,12 @@ export async function setupDevToolsClient({
       isAvailable,
       isEnabled: toRef(inspectorState, 'isEnabled'),
       enable: () => {
-        console.log('enable')
         inspectorState.isEnabled = true
       },
       disable: () => {
-        console.log('disable')
         inspectorState.isEnabled = false
       },
       toggle: () => {
-        console.log('toggle')
         inspectorState.isEnabled = !inspectorState.isEnabled
       },
     })

@@ -1,13 +1,13 @@
 import {
   defineConfig,
   presetIcons,
-  presetWind4,
+  presetWind3,
 } from 'unocss'
 
 export default defineConfig({
   shortcuts: [
     {
-      'color-base': 'color-neutral-800 dark:color-neutral-300',
+      'color-base': 'color-neutral-800 dark:color-neutral-200',
       'bg-base': 'bg-white dark:bg-#111',
       'bg-secondary': 'bg-#eee dark:bg-#222',
       'border-base': 'border-#8882',
@@ -16,7 +16,7 @@ export default defineConfig({
     [/^bg-glass(:\d+)?$/, ([, opacity = ':75']) => `bg-white${opacity} dark:bg-#111${opacity} backdrop-blur-5`],
   ],
   presets: [
-    presetWind4({
+    presetWind3({
       dark: 'media',
     }),
     presetIcons({
