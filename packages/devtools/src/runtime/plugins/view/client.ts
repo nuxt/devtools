@@ -1,20 +1,22 @@
 import type { NuxtDevtoolsHostClient, TimelineEventRoute, TimelineMetrics } from '@nuxt/devtools/types'
+import type { NuxtDevToolsInspectorProps } from '@nuxt/devtools/webcomponents'
 import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
-import type { Router } from 'vue-router'
 
+import type { Router } from 'vue-router'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
+import { NuxtDevtoolsFrame, NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { setIframeServerContext } from '@vue/devtools-kit'
+
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
-
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, createApp, h, markRaw, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
-import { initTimelineMetrics } from '../../function-metrics-helpers'
-import Main from './Main.vue'
+import { computed, markRaw, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 
+import { initTimelineMetrics } from '../../function-metrics-helpers'
+import { settings } from '../../settings'
 import { popupWindow, state } from './state'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -34,6 +36,9 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
+  let iframe: HTMLIFrameElement | undefined
+  let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
+
   const colorMode = useClientColorMode()
   const timeline = initTimelineMetrics()
 
@@ -108,8 +113,6 @@ export async function setupDevToolsClient({
 
   window.__NUXT_DEVTOOLS_HOST__ = client
 
-  let iframe: HTMLIFrameElement | undefined
-
   function syncClient() {
     if (!client.inspector)
       client.inspector = getInspectorInstance()
@@ -183,33 +186,65 @@ export async function setupDevToolsClient({
   }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
+    if (inspector)
+      return inspector
+
+    const props = reactive<NuxtDevToolsInspectorProps>({
+      mouse: { x: 0, y: 0 },
+      matched: undefined,
+    })
+
+    const component = new NuxtDevtoolsInspectPanel(reactive({ props }))
+    document.body.appendChild(component)
+    Object.assign(component.style, {
+      zIndex: 999999,
+      position: 'fixed',
+    })
+    component.addEventListener('close', () => {
+      props.matched = undefined
+      inspectorState.isEnabled = false
+    })
+    component.addEventListener('selectParent', () => {
+      const parent = inspectorState.main?.getParent()
+      if (parent) {
+        inspectorState.main = parent
+        props.matched = parent
+      }
+    })
+    // eslint-disable-next-line ts/ban-ts-comment
+    // @ts-ignore WebComponent types
+    component.addEventListener('openInEditor', (e) => {
+      const url = (e as any)?.detail?.[0]
+      if (url)
+        client.hooks.callHook('host:inspector:click', url)
+    })
+
+    inspectorEvents.on('hover', () => {
+      inspectorState.isFocused = false
+    })
+    inspectorEvents.on('disabled', () => {
+      inspectorState.isVisible = false
+      client?.hooks.callHook('host:inspector:close')
+    })
+    inspectorEvents.on('enabled', () => {
+      inspectorState.isVisible = true
+    })
+    inspectorEvents.on('click', async (info, e) => {
+      inspectorState.isFocused = true
+      inspectorState.isVisible = true
+
+      props.matched = info
+      props.mouse = { x: e.clientX, y: e.clientY }
+    })
+
     const isAvailable = ref(inspectorHasData())
-
-    if (!inspectorEvents.events.disabled?.length) {
-      inspectorEvents.on('disabled', () => {
-        inspectorState.isVisible = false
-        client?.hooks.callHook('host:inspector:close')
-      })
-    }
-    if (!inspectorEvents.events.enabled?.length) {
-      inspectorEvents.on('enabled', () => {
-        inspectorState.isVisible = true
-      })
-    }
-    if (!inspectorEvents.events.click?.length) {
-      inspectorEvents.on('click', async (info) => {
-        inspectorState.isEnabled = false
-        await client.hooks.callHook('host:inspector:click', info.fullpath)
-      })
-    }
-
     if (!isAvailable.value) {
       inspectorEvents.on('hover', async () => {
         isAvailable.value = inspectorHasData()
       })
     }
 
-    return markRaw({
+    return inspector = markRaw({
       isAvailable,
       isEnabled: toRef(inspectorState, 'isEnabled'),
       enable: () => {
@@ -284,13 +319,13 @@ export async function setupDevToolsClient({
       client.devtools.toggle()
   })
 
-  const app = createApp({
-    render: () => h(Main, { client }),
-    devtools: {
-      hide: true,
-    },
-  })
-  app.mount(holder)
+  const frame = new NuxtDevtoolsFrame(reactive({
+    client,
+    settings,
+    state,
+    popupWindow,
+  }))
+  holder.appendChild(frame)
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

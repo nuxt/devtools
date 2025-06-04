@@ -12,7 +12,10 @@ export function useOpenInEditor() {
   const router = useRouter()
   const virtualFileId = useCurrentVirtualFile()
 
-  return async (filepath: string) => {
+  return async (filepath?: string) => {
+    if (!filepath)
+      return
+
     const buildDir = config.value?.buildDir
     const path = (buildDir && filepath.startsWith(buildDir))
       ? `#build${filepath.slice(buildDir.length)}`

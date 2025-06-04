@@ -1,15 +1,32 @@
 <script setup lang="ts">
-import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
+import type { DevToolsFrameState, NuxtDevtoolsHostClient, NuxtDevToolsOptions } from '@nuxt/devtools/types'
 import type { CSSProperties } from 'vue'
+import { toRefs, useElementBounding, useEventListener, useScreenSafeArea } from '@vueuse/core'
 import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
-import { settings } from '../../settings'
-import FrameBox from './FrameBox.vue'
-import { state } from './state'
-import { millisecondToHumanreadable, useElementBounding, useEventListener, useScreenSafeArea } from './utils'
+import FrameBox from './NuxtDevtoolsFrameBox.vue'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
+  settings: {
+    ui: NuxtDevToolsOptions['ui']
+  }
+  state: DevToolsFrameState
 }>()
+
+const {
+  state,
+  settings,
+} = toRefs(props)
+
+function millisecondToHumanreadable(ms: number): [number, string] {
+  if (ms < 1000)
+    return [+ms.toFixed(0), 'ms']
+  if (ms < 1000 * 60)
+    return [+(ms / 1000).toFixed(1), 's']
+  if (ms < 1000 * 60 * 60)
+    return [+(ms / 1000 / 60).toFixed(1), 'min']
+  return [+(ms / 1000 / 60 / 60).toFixed(1), 'hour']
+}
 
 const panelMargins = reactive({
   left: 10,
@@ -22,10 +39,10 @@ const safeArea = useScreenSafeArea()
 const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
 
 watchEffect(() => {
-  panelMargins.left = safeArea.left.value + 10
-  panelMargins.top = safeArea.top.value + 10
-  panelMargins.right = safeArea.right.value + 10
-  panelMargins.bottom = safeArea.bottom.value + 10
+  panelMargins.left = +safeArea.left.value + 10
+  panelMargins.top = +safeArea.top.value + 10
+  panelMargins.right = +safeArea.right.value + 10
+  panelMargins.bottom = +safeArea.bottom.value + 10
 })
 
 const SNAP_THRESHOLD = 2
@@ -171,9 +188,9 @@ function bringUp() {
 const isHidden = computed(() => {
   if (state.value.open)
     return false
-  if (settings.ui.showPanel === true)
+  if (settings.value.ui.showPanel === true)
     return false
-  if (settings.ui.showPanel === false)
+  if (settings.value.ui.showPanel === false)
     return true
   // If not explicitly set, show the panel
   return false
@@ -231,6 +248,8 @@ const panelStyle = computed(() => {
 })
 
 const { width: frameWidth, height: frameHeight } = useElementBounding(frameBox)
+
+const popupWindow = ref<Window | null>(null)
 
 const iframeStyle = computed(() => {
   // eslint-disable-next-line no-sequences, ts/no-unused-expressions
@@ -420,159 +439,11 @@ onMounted(() => {
       :style="iframeStyle"
     >
       <FrameBox
+        v-model:popup-window="popupWindow"
+        :state
         :client="client"
         :is-dragging="isDragging"
       />
     </div>
   </div>
 </template>
-
-<style scoped>
-#nuxt-devtools-anchor {
-  width: 0;
-  z-index: 2147483645;
-  position: fixed;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) rotate(0);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 15px !important;
-  box-sizing: border-box;
-}
-
-#nuxt-devtools-anchor * {
-  box-sizing: border-box;
-}
-
-#nuxt-devtools-anchor button {
-  border: none;
-  background: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  outline: none;
-  color: inherit;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-label {
-  padding: 0 7px 0 8px;
-  font-size: 0.8em;
-  line-height: 1em;
-  display: flex;
-  gap: 3px;
-  justify-items: center;
-  align-items: center;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-label .nuxt-devtools-label-main {
-  opacity: 0.8;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-label .nuxt-devtools-label-secondary {
-  font-size: 0.8em;
-  line-height: 0.6em;
-  opacity: 0.5;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-nuxt-button {
-  flex: none;
-}
-
-#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-nuxt-button {
-  transform: rotate(-90deg);
-}
-
-#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-label {
-  transform: rotate(-90deg);
-  flex-direction: column;
-  gap: 2px;
-  padding: 0 10px;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-panel {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: flex-start;
-  overflow: hidden;
-  align-items: center;
-  gap: 2px;
-  height: 30px;
-  padding: 2px 2px 2px 2.5px;
-  border: 1px solid var(--nuxt-devtools-widget-border);
-  border-radius: 100px;
-  background-color: var(--nuxt-devtools-widget-bg);
-  backdrop-filter: blur(10px);
-  color: var(--nuxt-devtools-widget-fg);
-  box-shadow: 2px 2px 8px var(--nuxt-devtools-widget-shadow);
-  user-select: none;
-  touch-action: none;
-  max-width: 150px;
-  transition:
-    all 0.6s ease,
-    max-width 0.6s ease,
-    padding 0.5s ease,
-    transform 0.4s ease,
-    opacity 0.2s ease;
-}
-
-#nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel {
-  max-width: 32px;
-  padding: 2px 0;
-}
-
-#nuxt-devtools-anchor.nuxt-devtools-vertical .nuxt-devtools-panel {
-  transform: translate(-50%, -50%) rotate(90deg);
-  box-shadow: 2px -2px 8px var(--nuxt-devtools-widget-shadow);
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-panel-content {
-  transition: opacity 0.4s ease;
-}
-
-#nuxt-devtools-anchor.nuxt-devtools-hide .nuxt-devtools-panel-content {
-  opacity: 0;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-icon-button {
-  border-radius: 100%;
-  border-width: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.8;
-  transition: opacity 0.2s ease-in-out;
-}
-#nuxt-devtools-anchor .nuxt-devtools-icon-button:hover {
-  opacity: 1;
-}
-
-#nuxt-devtools-anchor:hover .nuxt-devtools-glowing {
-  opacity: 0.6;
-}
-
-#nuxt-devtools-anchor .nuxt-devtools-glowing {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  width: 160px;
-  height: 160px;
-  opacity: 0;
-  transition: all 1s ease;
-  pointer-events: none;
-  z-index: -1;
-  border-radius: 9999px;
-  background-image: linear-gradient(45deg, #00dc82, #00dc82, #00dc82);
-  filter: blur(60px);
-}
-
-@media print {
-  #nuxt-devtools-anchor {
-    display: none;
-  }
-}
-</style>

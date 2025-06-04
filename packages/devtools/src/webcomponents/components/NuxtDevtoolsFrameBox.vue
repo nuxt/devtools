@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import type { NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
+import type { DevToolsFrameState, NuxtDevtoolsHostClient } from '@nuxt/devtools/types'
+import { toRefs, useEventListener } from '@vueuse/core'
 import { ref, watchEffect } from 'vue'
-import { PANEL_MAX, PANEL_MIN, popupWindow, state } from './state'
-import { useEventListener } from './utils'
 
 const props = defineProps<{
   client: NuxtDevtoolsHostClient
   isDragging: boolean
+  state: DevToolsFrameState
 }>()
+
+const PANEL_MIN = 20
+const PANEL_MAX = 100
+
+const popupWindow = defineModel<Window | null>('popupWindow')
+
+const {
+  state,
+} = toRefs(props)
 
 const container = ref<HTMLElement>()
 const isResizing = ref<false | { top?: boolean, left?: boolean, right?: boolean, bottom?: boolean }>(false)
@@ -161,51 +170,3 @@ useEventListener(window, 'mouseleave', () => isResizing.value = false)
     />
   </div>
 </template>
-
-<style scoped>
-.nuxt-devtools-frame {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2147483645;
-  -webkit-font-smoothing: antialiased;
-}
-
-.nuxt-devtools-frame :deep(iframe) {
-  width: 100%;
-  height: 100%;
-  outline: none;
-  background: var(--nuxt-devtools-widget-bg);
-  border: 1px solid rgba(125, 125, 125, 0.2);
-  border-radius: 10px;
-}
-
-.nuxt-devtools-resize-handle-horizontal {
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  height: 10px;
-  margin: -5px 0;
-  cursor: ns-resize;
-  border-radius: 5px;
-}
-.nuxt-devtools-resize-handle-vertical {
-  position: absolute;
-  top: 6px;
-  bottom: 0;
-  width: 10px;
-  margin: 0 -5px;
-  cursor: ew-resize;
-  border-radius: 5px;
-}
-.nuxt-devtools-resize-handle-corner {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  margin: -6px;
-  border-radius: 6px;
-}
-.nuxt-devtools-resize-handle:hover {
-  background: rgba(125, 125, 125, 0.1);
-}
-</style>

@@ -15,6 +15,10 @@
       "types": "./dist/module.d.mts",
       "import": "./dist/module.mjs"
     },
+    "./webcomponents": {
+      "types": "./dist/webcomponents/index.d.mts",
+      "import": "./dist/webcomponents/index.mjs"
+    },
     "./types": {
       "types": "./dist/types.d.mts"
     },
@@ -85,6 +89,7 @@
     "@iconify-json/bxl": "catalog:icons",
     "@iconify-json/carbon": "catalog:icons",
     "@iconify-json/logos": "catalog:icons",
+    "@iconify-json/ph": "catalog:icons",
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/simple-icons": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
@@ -103,9 +108,11 @@
     "@xterm/addon-fit": "catalog:frontend",
     "@xterm/xterm": "catalog:frontend",
     "cronstrue": "catalog:frontend",
+    "exsolve": "catalog:buildtools",
     "floating-vue": "catalog:frontend",
     "fuse.js": "catalog:frontend",
     "json-editor-vue": "catalog:frontend",
+    "lightningcss": "catalog:buildtools",
     "markdown-it": "catalog:frontend",
     "markdown-it-link-attributes": "catalog:frontend",
     "my-ua-parser": "catalog:frontend",
@@ -120,6 +127,7 @@
     "tsx": "catalog:cli",
     "unimport": "catalog:types",
     "unocss": "catalog:buildtools",
+    "unplugin-vue": "catalog:buildtools",
     "unplugin-vue-markdown": "catalog:buildtools",
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
