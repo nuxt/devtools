@@ -1,3 +1,12 @@
+# [2.5.0-beta.2](https://github.com/nuxt/devtools/compare/v2.5.0-beta.1...v2.5.0-beta.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* inspector interaction ([bbc62b0](https://github.com/nuxt/devtools/commit/bbc62b07b9b87aab47911b2daffbfa9c7d69e1a7))
+
+
+
 # [2.5.0-beta.1](https://github.com/nuxt/devtools/compare/v2.4.1...v2.5.0-beta.1) (2025-06-04)
 
 
