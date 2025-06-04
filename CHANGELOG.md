@@ -1,3 +1,12 @@
+# [2.5.0-beta.1](https://github.com/nuxt/devtools/compare/v2.4.1...v2.5.0-beta.1) (2025-06-04)
+
+
+### Features
+
+* use webcomponents for embedded views ([#864](https://github.com/nuxt/devtools/issues/864)) ([ad8f305](https://github.com/nuxt/devtools/commit/ad8f305e2c33f0291f45a013ac131f0719cb1b67))
+
+
+
 ## [2.4.1](https://github.com/nuxt/devtools/compare/v2.4.0...v2.4.1) (2025-05-13)
 
 
