@@ -93,7 +93,8 @@ async function openInEditor() {
     <div ref="draggingEl" class="flex items-center gap-2 p2">
       <button
         title="Go to parent"
-        class="flex items-center text-sm font-mono op50 hover:text-green6 hover:op100"
+        class="flex items-center text-sm font-mono op50 disabled:pointer-events-none hover:text-green6 hover:op100 disabled:op10!"
+        :disabled="!props.hasParent"
         @click="selectParent"
       >
         <div class="i-ph-arrow-bend-left-up-duotone text-lg" />

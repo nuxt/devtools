@@ -13,7 +13,7 @@ import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, markRaw, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
+import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import { settings } from '../../settings'
@@ -191,6 +191,7 @@ export async function setupDevToolsClient({
 
     const props = reactive<NuxtDevToolsInspectorProps>({
       mouse: { x: 0, y: 0 },
+      hasParent: false,
       matched: undefined,
     })
 
@@ -203,24 +204,29 @@ export async function setupDevToolsClient({
     component.addEventListener('close', () => {
       props.matched = undefined
       inspectorState.isEnabled = false
+      inspectorState.isVisible = false
     })
     component.addEventListener('selectParent', () => {
       const parent = inspectorState.main?.getParent()
       if (parent) {
         inspectorState.main = parent
         props.matched = parent
+        nextTick(() => {
+          props.hasParent = !!inspectorState.main?.getParent()
+        })
       }
     })
     // eslint-disable-next-line ts/ban-ts-comment
     // @ts-ignore WebComponent types
-    component.addEventListener('openInEditor', (e) => {
+    component.addEventListener('openInEditor', async (e) => {
       const url = (e as any)?.detail?.[0]
       if (url)
-        client.hooks.callHook('host:inspector:click', url)
+        await client.hooks.callHook('host:inspector:click', url)
     })
 
     inspectorEvents.on('hover', () => {
       inspectorState.isFocused = false
+      props.hasParent = !!inspectorState.main?.getParent()
     })
     inspectorEvents.on('disabled', () => {
       inspectorState.isVisible = false
@@ -228,8 +234,10 @@ export async function setupDevToolsClient({
     })
     inspectorEvents.on('enabled', () => {
       inspectorState.isVisible = true
+      inspectorState.isEnabled = true
     })
     inspectorEvents.on('click', async (info, e) => {
+      inspectorState.isEnabled = false
       inspectorState.isFocused = true
       inspectorState.isVisible = true
 
@@ -246,15 +254,18 @@ export async function setupDevToolsClient({
 
     return inspector = markRaw({
       isAvailable,
-      isEnabled: toRef(inspectorState, 'isEnabled'),
+      isEnabled: toRef(inspectorState, 'isVisible'),
       enable: () => {
+        inspectorState.isVisible = true
         inspectorState.isEnabled = true
       },
       disable: () => {
+        inspectorState.isVisible = false
         inspectorState.isEnabled = false
       },
       toggle: () => {
         inspectorState.isEnabled = !inspectorState.isEnabled
+        inspectorState.isVisible = inspectorState.isEnabled
       },
     })
   }

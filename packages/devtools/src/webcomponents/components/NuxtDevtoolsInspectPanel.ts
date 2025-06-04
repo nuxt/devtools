@@ -4,10 +4,12 @@ import { defineCustomElement } from 'vue'
 import css from '../.generated/css'
 import Component from './NuxtDevtoolsInspectPanel.vue'
 
-export const NuxtDevtoolsInspectPanel = defineCustomElement({
-  ...Component,
-  shadowRoot: true,
-  styles: [css],
-} as any) as VueElementConstructor<{ props: NuxtDevToolsInspectorProps }>
+export const NuxtDevtoolsInspectPanel = defineCustomElement(
+  Component,
+  {
+    shadowRoot: true,
+    styles: [css],
+  },
+) as VueElementConstructor<{ props: NuxtDevToolsInspectorProps }>
 
 customElements.define('nuxt-devtools-inspect-panel', NuxtDevtoolsInspectPanel)
