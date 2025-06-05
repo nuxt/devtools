@@ -267,6 +267,7 @@ export async function setupDevToolsClient({
         inspectorState.isEnabled = !inspectorState.isEnabled
         inspectorState.isVisible = inspectorState.isEnabled
       },
+      state: inspectorState,
     })
   }
 
