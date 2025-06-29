@@ -1,3 +1,17 @@
+# [2.6.0](https://github.com/nuxt/devtools/compare/v2.5.0...v2.6.0) (2025-06-29)
+
+
+### Bug Fixes
+
+* timing labels wrapping ([#866](https://github.com/nuxt/devtools/issues/866)) ([fd01e60](https://github.com/nuxt/devtools/commit/fd01e6022af0fa8b5942ab25be1d223a413df090))
+
+
+### Features
+
+* update deps ([eef2c09](https://github.com/nuxt/devtools/commit/eef2c09ea1cb79d762a4448368f26dc7c4c5dd37))
+
+
+
 # [2.5.0](https://github.com/nuxt/devtools/compare/v2.5.0-beta.2...v2.5.0) (2025-06-04)
 
 
