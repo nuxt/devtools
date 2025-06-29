@@ -11,7 +11,7 @@ function reload() {
     <div
       v-if="wsConnectingDebounced"
       flex="~ col justify-center items-center gap-4"
-      fixed bottom-0 left-0 right-0 top-0 z-2147483646 p5 text-lg backdrop-blur-4 n-glass-effect
+      fixed bottom-0 left-0 right-0 top-0 z-2147483646 n-glass-effect p5 text-lg backdrop-blur-4
     >
       <div flex-auto />
       <div flex="~" mt-8 items-center justify-center>

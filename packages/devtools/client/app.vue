@@ -137,7 +137,7 @@ registerCommands(() => [
     <div
       v-else
       :class="isUtilityView ? 'flex' : sidebarExpanded ? 'grid grid-cols-[250px_1fr]' : 'grid grid-cols-[50px_1fr]'"
-      h-full h-screen of-hidden rounded-xl font-sans bg-base
+      h-full h-screen of-hidden rounded-xl bg-base font-sans
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>

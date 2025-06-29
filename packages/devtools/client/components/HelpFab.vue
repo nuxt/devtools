@@ -31,7 +31,7 @@ const { showHelpButtons } = useDevToolsOptions('ui')
       <div
         v-if="open" border="l base"
         class="prose" pos="fixed bottom-0 right-0 top-0"
-        z-200 h-full w-150 overflow-auto px8 py4 bg-base
+        z-200 h-full w-150 overflow-auto bg-base px8 py4
       >
         <slot />
         <NButton

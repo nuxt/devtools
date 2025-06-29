@@ -81,7 +81,7 @@ registerCommands(() => [
       <div flex="~ col">
         <template v-for="build of info?.builds" :key="build.slug">
           <button
-            flex="~ col gap1" hover:bg-active p3
+            flex="~ col gap1" p3 hover:bg-active
             :class="build.slug === selected?.slug ? 'text-primary bg-active' : ''"
             @click="slug = build.slug"
           >

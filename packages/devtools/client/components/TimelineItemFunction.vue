@@ -20,7 +20,7 @@ const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.2'))
       color,
       borderLeft: `2px solid ${color}`,
     }"
-    relative text-sm transition hover:z-1000 bg-base
+    relative bg-base text-sm transition hover:z-1000
   >
     <div
       :style="{

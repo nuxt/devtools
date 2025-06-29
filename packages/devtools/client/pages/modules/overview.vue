@@ -68,39 +68,39 @@ function authorize() {
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">
-        <NuxtLink to="https://nuxt.com" target="_blank" p4 theme-card-green flex="~ col auto">
+        <NuxtLink to="https://nuxt.com" target="_blank" theme-card-green p4 flex="~ col auto">
           <div logos-nuxt-icon text-3xl />
           <NpmVersionCheck package-name="nuxt" :options="{ dev: true }" />
         </NuxtLink>
-        <NuxtLink v-if="vueVersion" to="https://vuejs.org" target="_blank" p4 theme-card-green flex="~ col auto">
+        <NuxtLink v-if="vueVersion" to="https://vuejs.org" target="_blank" theme-card-green p4 flex="~ col auto">
           <div logos-vue text-3xl />
           <code>v{{ vueVersion }}</code>
         </NuxtLink>
         <template v-if="config">
           <NuxtLink
-            v-if="config && config.pages && client" min-w-40 p4 theme-card-lime flex="~ col auto"
+            v-if="config && config.pages && client" min-w-40 theme-card-lime p4 flex="~ col auto"
             to="/modules/pages"
           >
             <div carbon-tree-view-alt text-3xl />
             <div>{{ pluralizeByCount(routes.length, 'page') }}</div>
           </NuxtLink>
-          <NuxtLink v-if="config" min-w-40 p4 theme-card-lime flex="~ col auto" to="/modules/components">
+          <NuxtLink v-if="config" min-w-40 theme-card-lime p4 flex="~ col auto" to="/modules/components">
             <div i-carbon-assembly-cluster text-3xl />
             <div>{{ pluralizeByCount(components.length, 'component') }}</div>
           </NuxtLink>
-          <NuxtLink v-if="config && autoImports" min-w-40 p4 theme-card-yellow flex="~ col auto" to="/modules/imports">
+          <NuxtLink v-if="config && autoImports" min-w-40 theme-card-yellow p4 flex="~ col auto" to="/modules/imports">
             <div carbon-function text-3xl />
             <div>{{ pluralizeByCount(autoImports.imports.length, 'import') }}</div>
           </NuxtLink>
-          <NuxtLink v-if="config" min-w-40 p4 theme-card-purple flex="~ col auto" to="/modules/modules">
+          <NuxtLink v-if="config" min-w-40 theme-card-purple p4 flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
             <div>{{ pluralizeByCount(installedModules.length, 'module') }}</div>
           </NuxtLink>
-          <NuxtLink v-if="config" min-w-40 p4 theme-card-teal flex="~ col auto" to="/modules/plugins">
+          <NuxtLink v-if="config" min-w-40 theme-card-teal p4 flex="~ col auto" to="/modules/plugins">
             <div carbon-plug text-3xl />
             <div>{{ pluralizeByCount(config.plugins.length, 'plugin') }}</div>
           </NuxtLink>
-          <div v-if="metricsLoading" pointer-events-none min-w-40 p4 theme-card-lime flex="~ auto gap-6">
+          <div v-if="metricsLoading" pointer-events-none min-w-40 theme-card-lime p4 flex="~ auto gap-6">
             <div i-carbon-time-plot flex-none text-3xl />
             <div grid="~ cols-[auto_auto] gap-x-5 items-center">
               <template v-if="metricsLoading.ssrStart">

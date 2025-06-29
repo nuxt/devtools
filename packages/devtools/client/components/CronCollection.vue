@@ -19,7 +19,7 @@ const humanReadableCron = computed(() => {
 <template>
   <div>
     <button
-      flex="~ gap-2" w-full items-start items-center hover-bg-active p2
+      flex="~ gap-2" w-full items-start items-center p2 hover-bg-active
       :title="humanReadableCron"
       @click="open = !open"
     >
@@ -39,7 +39,7 @@ const humanReadableCron = computed(() => {
     <ul v-if="open">
       <li v-for="task in collection.tasks" :key="task">
         <button
-          flex="~ gap-2" w-full items-start items-center hover-bg-active px2 py1 pl-9 font-mono
+          flex="~ gap-2" w-full items-start items-center px2 py1 pl-9 font-mono hover-bg-active
           :class="[{ 'bg-active': currentTaskRoute === task }]"
           @click="currentTaskRoute = task"
         >

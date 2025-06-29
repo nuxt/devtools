@@ -255,7 +255,7 @@ function setFilter() {
 
   <div relative h-full w-full>
     <div ref="container" h-full w-full />
-    <NCard absolute bottom-3 left-3 border-0 p2 px3 text-sm n-glass-effect>
+    <NCard absolute bottom-3 left-3 border-0 n-glass-effect p2 px3 text-sm>
       <div grid="~ cols-[20px_1fr] items-center gap-y-1">
         <div h-3 w-3 rounded-full bg-hex-42b883 />
         <div op50>

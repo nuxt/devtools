@@ -68,7 +68,7 @@ const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}p
 
 <template>
   <div v-if="config?.pages && router" h-full of-auto>
-    <div border="b base" flex="~ col gap1" px4 py3 n-navbar-glass>
+    <div border="b base" flex="~ col gap1" n-navbar-glass px4 py3>
       <div>
         <template v-if="currentRoute !== routeInput">
           <span op50>Navigate from </span>

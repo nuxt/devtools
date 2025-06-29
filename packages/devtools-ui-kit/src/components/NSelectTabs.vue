@@ -24,7 +24,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
       v-for="i, idx of options"
       :key="i.label"
       :disabled="disabled"
-      class="relative n-border-base hover:n-bg-active px-0.5em py-0.1em"
+      class="relative n-border-base px-0.5em py-0.1em hover:n-bg-active"
       :class="[
         idx ? 'border-l n-border-base ml--1px' : '',
         i.value === input ? 'n-bg-active' : '',

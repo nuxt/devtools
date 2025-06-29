@@ -63,7 +63,7 @@ onClickOutside(
     z-100 h-full items-start of-hidden bg-base
   >
     <div
-      sticky top-0 z-1 w-full p1 bg-base border="b base"
+      sticky top-0 z-1 w-full bg-base p1 border="b base"
     >
       <VDropdown
         placement="left-start"
@@ -122,7 +122,7 @@ onClickOutside(
 
     <div
       :flex="`~ items-center gap-1 ${sidebarExpanded ? '' : 'none col'}`"
-      border="t base" sticky bottom-0 w-full p1 bg-base
+      border="t base" sticky bottom-0 w-full bg-base p1
     >
       <VDropdown
         v-if="overflowTabs.length && !sidebarScrollable && !sidebarExpanded"

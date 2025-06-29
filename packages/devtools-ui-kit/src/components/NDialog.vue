@@ -59,7 +59,7 @@ export default {
   <Teleport v-if="shown" to="body">
     <div
       v-show="show"
-      class="fixed inset-0 z-100 flex items-center justify-center n-transition n-glass-effect"
+      class="fixed inset-0 z-100 flex items-center justify-center n-glass-effect n-transition"
       role="dialog"
       aria-modal="true"
       :class="[

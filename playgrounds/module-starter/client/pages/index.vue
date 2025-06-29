@@ -20,7 +20,7 @@ onDevtoolsClientConnected((client) => {
 </script>
 
 <template>
-  <div class="relative h-screen flex flex-col p-10 n-bg-base">
+  <div class="relative h-screen flex flex-col n-bg-base p-10">
     <h1 class="text-3xl font-bold">
       My Module
     </h1>

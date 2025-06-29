@@ -14,7 +14,7 @@ function update(event: any) {
 </script>
 
 <template>
-  <div flex="~ col gap2 wrap" border="b base" flex-1 n-navbar-glass :class="[{ p4: !noPadding }]">
+  <div flex="~ col gap2 wrap" border="b base" n-navbar-glass flex-1 :class="[{ p4: !noPadding }]">
     <div flex="~ gap4 wrap" items-center>
       <slot name="search">
         <NTextInput

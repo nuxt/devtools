@@ -18,7 +18,7 @@ const currentServerRoute = useCurrentServeRoute()
 <template>
   <div>
     <button
-      flex="~ gap-2" w-full items-start items-center hover-bg-active px2 py1
+      flex="~ gap-2" w-full items-start items-center px2 py1 hover-bg-active
       :class="[{ 'bg-active': currentServerRoute === item.filepath }]"
       :style="{ paddingLeft: `calc(0.5rem + ${index * 1.5}em)` }"
       @click="open = !open;currentServerRoute = item.filepath"

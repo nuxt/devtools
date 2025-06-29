@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="max-w-[520px] min-w-[520px] cursor-pointer overflow-hidden border border-base rounded-[2px] shadow-md bg-base">
+  <div class="max-w-[520px] min-w-[520px] cursor-pointer overflow-hidden border border-base rounded-[2px] bg-base shadow-md">
     <div
       class="h-[270px] border-b border-base bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: `url(${JSON.stringify(card.image)})` }"

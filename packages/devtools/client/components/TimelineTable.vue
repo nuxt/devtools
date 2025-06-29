@@ -137,7 +137,7 @@ useEventListener(scroller, 'wheel', (e: WheelEvent) => {
         />
       </div>
       <TimelineSegment
-        flex-inline of-x-hidden hover:of-x-visible bg-base
+        flex-inline of-x-hidden bg-base hover:of-x-visible
         :class="idx === segments.length - 1 ? 'border-r border-base' : ''"
         :segment="segment"
         :style="{

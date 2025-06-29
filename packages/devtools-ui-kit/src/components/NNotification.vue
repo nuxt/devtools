@@ -36,7 +36,7 @@ devtoolsUiProvideNotificationFn((data) => {
       <div
         border="~ base"
         flex="~ inline gap2"
-        m-3 inline-block items-center rounded px-4 py-1 transition-all duration-300 bg-base
+        m-3 inline-block items-center rounded bg-base px-4 py-1 transition-all duration-300
         :style="show ? {} : { transform: `translateY(${position.startsWith('top') ? '-' : ''}300%)` }"
         :class="[show ? 'shadow' : 'shadow-none', classes]"
       >

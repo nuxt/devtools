@@ -17,7 +17,7 @@ const currentTaskRoute = useCurrentServerTask()
 <template>
   <div>
     <button
-      flex="~ gap-2" w-full items-start items-center hover-bg-active px2 py1
+      flex="~ gap-2" w-full items-start items-center px2 py1 hover-bg-active
       :class="[{ 'bg-active': currentTaskRoute === item.name }]"
       :style="{ paddingLeft: `calc(0.5rem + ${index * 1.5}em)` }"
       @click="open = !open;currentTaskRoute = item.name"

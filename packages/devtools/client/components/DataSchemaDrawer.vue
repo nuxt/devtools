@@ -77,7 +77,7 @@ function copyToClipboard() {
 <template>
   <Teleport v-if="language" to="body">
     <NDrawer :model-value="!!input?.input" auto-close max-w-screen w-2xl n-code-block @close="input = null">
-      <div border="b base" flex="~ items-center gap-2" sticky left-0 right-0 top-0 z-1 p3 bg-base>
+      <div border="b base" flex="~ items-center gap-2" sticky left-0 right-0 top-0 z-1 bg-base p3>
         <p mr-2>
           Schema
         </p>

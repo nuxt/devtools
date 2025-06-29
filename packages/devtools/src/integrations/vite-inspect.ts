@@ -34,9 +34,9 @@ export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
     const modules = (
       meta
         ? await api?.rpc.getModulesList({
-          vite: meta?.instances[0].vite,
-          env: meta?.instances[0].environments[0],
-        })
+            vite: meta?.instances[0].vite,
+            env: meta?.instances[0].environments[0],
+          })
         : null
     ) || []
 

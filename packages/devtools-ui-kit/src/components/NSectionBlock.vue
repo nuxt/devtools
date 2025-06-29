@@ -31,7 +31,7 @@ function onToggle(e: any) {
   <!-- @vue-ignore -->
   <details :open="open" @toggle="(onToggle as any)">
     <summary
-      class="cursor-pointer select-none hover:bg-active p4"
+      class="cursor-pointer select-none p4 hover:bg-active"
       :class="collapse ? '' : 'pointer-events-none'"
     >
       <NIconTitle :icon="icon" :text="text" text-xl transition :class="[open ? 'op100' : 'op60', headerClass]">

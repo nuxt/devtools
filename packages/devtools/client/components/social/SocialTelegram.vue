@@ -11,7 +11,7 @@ const time = useDateFormat(useNow(), 'HH:mm')
 </script>
 
 <template>
-  <div class="relative max-w-[420px] min-w-[420px] rounded-[16px] rounded-bl-0 py-[6px] leading-[18px] drop-shadow-sm drop-shadow-color-[#10232f26] bg-base">
+  <div class="relative max-w-[420px] min-w-[420px] rounded-[16px] rounded-bl-0 bg-base py-[6px] leading-[18px] drop-shadow-sm drop-shadow-color-[#10232f26]">
     <div class="pl-[10px] pr-[8px]">
       <div class="text-[#3390ec] leading-normal underline">
         {{ card.url }}

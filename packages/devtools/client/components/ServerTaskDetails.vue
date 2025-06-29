@@ -217,7 +217,7 @@ const copy = useCopy()
 
 <template>
   <div h-full w-full flex="~ col">
-    <div flex="~ col gap-2" flex-none p4 n-navbar-glass>
+    <div flex="~ col gap-2" n-navbar-glass flex-none p4>
       <div flex="~ gap2 items-center">
         <div v-tooltip="`Method is ${method} as ${method === 'GET' ? 'no' : ''} json body is sent`">
           <NButton

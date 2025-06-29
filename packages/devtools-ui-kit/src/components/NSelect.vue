@@ -21,7 +21,7 @@ const input = useVModel(props, 'modelValue', emit, { passive: true })
 
 <template>
   <div
-    class="n-select flex flex items-center border rounded px-2 py-1 focus-within:n-focus-base focus-within:border-context n-bg-base"
+    class="n-select flex flex items-center border rounded n-bg-base px-2 py-1 focus-within:border-context focus-within:n-focus-base"
     :class="disabled ? 'border-gray:10' : 'n-border-base'"
   >
     <slot name="icon">
