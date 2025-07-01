@@ -1,3 +1,12 @@
+## [2.6.1](https://github.com/nuxt/devtools/compare/v2.6.0...v2.6.1) (2025-07-01)
+
+
+### Bug Fixes
+
+* **deps:** do not depend on `@nuxt/schema` ([#872](https://github.com/nuxt/devtools/issues/872)) ([62443ec](https://github.com/nuxt/devtools/commit/62443ecb12a1320470b9b9aebea6821ab5dfc064))
+
+
+
 # [2.6.0](https://github.com/nuxt/devtools/compare/v2.5.0...v2.6.0) (2025-06-29)
 
 
