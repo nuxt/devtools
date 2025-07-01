@@ -748,9 +748,6 @@ importers:
       '@nuxt/kit':
         specifier: catalog:prod
         version: 3.17.5(magicast@0.3.5)
-      '@nuxt/schema':
-        specifier: catalog:types
-        version: 3.17.5
       execa:
         specifier: catalog:prod
         version: 8.0.1
@@ -758,6 +755,9 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(@types/node@24.0.7)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.0)(tsx@4.20.3)(yaml@2.8.0)
     devDependencies:
+      '@nuxt/schema':
+        specifier: catalog:types
+        version: 3.17.5
       birpc:
         specifier: catalog:frontend
         version: 2.4.0
@@ -7710,6 +7710,10 @@ packages:
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
+  webpack-sources@3.3.2:
+    resolution: {integrity: sha512-ykKKus8lqlgXX/1WjudpIEjqsafjOTcOJqxnAbMLAu/KCsDCJ6GBtvscewvTkrn24HsnvFwrSCbenFrhtcCsAA==}
+    engines: {node: '>=10.13.0'}
+
   webpack-sources@3.3.3:
     resolution: {integrity: sha512-yd1RBzSGanHkitROoPFd6qsrxt+oFhg/129YzheDGqeustzX0vTZJZsSsQjVQC4yzBQ56K55XU8gaNCtIzOnTg==}
     engines: {node: '>=10.13.0'}
@@ -12635,7 +12639,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.34
+      '@types/node': 24.0.7
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -15778,6 +15782,8 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
+  webpack-sources@3.3.2: {}
+
   webpack-sources@3.3.3: {}
 
   webpack-virtual-modules@0.6.2: {}
@@ -15806,7 +15812,7 @@ snapshots:
       tapable: 2.2.1
       terser-webpack-plugin: 5.3.11(esbuild@0.25.5)(webpack@5.98.0(esbuild@0.25.5))
       watchpack: 2.4.2
-      webpack-sources: 3.3.3
+      webpack-sources: 3.3.2
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
