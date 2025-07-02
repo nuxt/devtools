@@ -1,3 +1,12 @@
+## [2.6.2](https://github.com/nuxt/devtools/compare/v2.6.1...v2.6.2) (2025-07-02)
+
+
+### Bug Fixes
+
+* panel dragging issue, close [#874](https://github.com/nuxt/devtools/issues/874), close [#871](https://github.com/nuxt/devtools/issues/871), close [#873](https://github.com/nuxt/devtools/issues/873) ([619de37](https://github.com/nuxt/devtools/commit/619de37ace0d185542be997f03c7e964dd4ba933))
+
+
+
 ## [2.6.1](https://github.com/nuxt/devtools/compare/v2.6.0...v2.6.1) (2025-07-01)
 
 
