@@ -2,7 +2,7 @@
 import type { DevToolsFrameState, NuxtDevtoolsHostClient, NuxtDevToolsOptions } from '@nuxt/devtools/types'
 import type { CSSProperties } from 'vue'
 import { toRefs, useElementBounding, useEventListener, useScreenSafeArea } from '@vueuse/core'
-import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import { computed, onMounted, reactive, ref, useTemplateRef, watchEffect } from 'vue'
 import FrameBox from './NuxtDevtoolsFrameBox.vue'
 
 const props = defineProps<{
@@ -38,11 +38,18 @@ const panelMargins = reactive({
 const safeArea = useScreenSafeArea()
 const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
 
+function toNumber(value: string) {
+  const num = +value
+  if (Number.isNaN(num))
+    return 0
+  return num
+}
+
 watchEffect(() => {
-  panelMargins.left = +safeArea.left.value + 10
-  panelMargins.top = +safeArea.top.value + 10
-  panelMargins.right = +safeArea.right.value + 10
-  panelMargins.bottom = +safeArea.bottom.value + 10
+  panelMargins.left = toNumber(safeArea.left.value) + 10
+  panelMargins.top = toNumber(safeArea.top.value) + 10
+  panelMargins.right = toNumber(safeArea.right.value) + 10
+  panelMargins.bottom = toNumber(safeArea.bottom.value) + 10
 })
 
 const SNAP_THRESHOLD = 2
@@ -57,11 +64,14 @@ const vars = computed(() => {
   }
 })
 
-const frameBox = ref<HTMLDivElement>()
-const panelEl = ref<HTMLDivElement>()
-const anchorEl = ref<HTMLDivElement>()
+const frameBox = useTemplateRef<HTMLDivElement>('frameBox')
+const panelEl = useTemplateRef<HTMLDivElement>('panelEl')
+const anchorEl = useTemplateRef<HTMLDivElement>('anchorEl')
 
-const windowSize = reactive({ width: 0, height: 0 })
+const windowSize = reactive({
+  width: window.innerWidth,
+  height: window.innerHeight,
+})
 const isDragging = ref(false)
 const draggingOffset = reactive({ x: 0, y: 0 })
 const mousePosition = reactive({ x: 0, y: 0 })
@@ -88,11 +98,14 @@ onMounted(() => {
     if (!isDragging.value)
       return
 
-    const centerX = windowSize.width / 2
-    const centerY = windowSize.height / 2
+    const centerX = window.innerWidth / 2
+    const centerY = window.innerHeight / 2
 
     const x = e.clientX - draggingOffset.x
     const y = e.clientY - draggingOffset.y
+
+    if (Number.isNaN(x) || Number.isNaN(y))
+      return
 
     mousePosition.x = x
     mousePosition.y = y
@@ -101,9 +114,9 @@ onMounted(() => {
     const deg = Math.atan2(y - centerY, x - centerX)
     const HORIZONTAL_MARGIN = 70
     const TL = Math.atan2(0 - centerY + HORIZONTAL_MARGIN, 0 - centerX)
-    const TR = Math.atan2(0 - centerY + HORIZONTAL_MARGIN, windowSize.width - centerX)
-    const BL = Math.atan2(windowSize.height - HORIZONTAL_MARGIN - centerY, 0 - centerX)
-    const BR = Math.atan2(windowSize.height - HORIZONTAL_MARGIN - centerY, windowSize.width - centerX)
+    const TR = Math.atan2(0 - centerY + HORIZONTAL_MARGIN, window.innerWidth - centerX)
+    const BL = Math.atan2(window.innerHeight - HORIZONTAL_MARGIN - centerY, 0 - centerX)
+    const BR = Math.atan2(window.innerHeight - HORIZONTAL_MARGIN - centerY, window.innerWidth - centerX)
 
     state.value.position = deg >= TL && deg <= TR
       ? 'top'
@@ -113,8 +126,8 @@ onMounted(() => {
           ? 'bottom'
           : 'left'
 
-    state.value.left = snapToPoints(x / windowSize.width * 100)
-    state.value.top = snapToPoints(y / windowSize.height * 100)
+    state.value.left = snapToPoints(x / window.innerWidth * 100)
+    state.value.top = snapToPoints(y / window.innerHeight * 100)
   })
   useEventListener(window, 'pointerup', () => {
     isDragging.value = false
