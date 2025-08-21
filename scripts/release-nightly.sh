@@ -22,6 +22,6 @@ for p in packages/* ; do
   echo "Publishing $p"
   cp ../../LICENSE .
   cp ../../README.md .
-  pnpm publish --access public --no-git-checks
+  pnpm publish --access public --no-git-checks --tag latest
   popd
 done
