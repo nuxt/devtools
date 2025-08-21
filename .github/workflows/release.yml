@@ -23,7 +23,7 @@ jobs:
       - name: Set node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: latest
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
@@ -38,6 +38,3 @@ jobs:
         run: pnpm i
 
       - run: pnpm publish -r --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN_MAIN_PACKAGES}}
-          NPM_CONFIG_PROVENANCE: true

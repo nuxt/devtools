@@ -19,7 +19,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: latest
           cache: pnpm
       - run: npm install -g corepack@latest
       - run: corepack enable
@@ -30,6 +30,3 @@ jobs:
       - name: Release Nightly
         if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-release]')
         run: ./scripts/release-nightly.sh
-        env:
-          NPM_CONFIG_PROVENANCE: true
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN_NIGHTLY}}
