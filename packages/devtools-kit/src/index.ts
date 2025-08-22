@@ -32,11 +32,11 @@ export function startSubprocess(
   tabOptions: TerminalState,
   nuxt = useNuxt(),
 ): {
-    getProcess: () => ExecaChildProcess<string>
-    terminate: () => void
-    restart: () => void
-    clear: () => void
-  } {
+  getProcess: () => ExecaChildProcess<string>
+  terminate: () => void
+  restart: () => void
+  clear: () => void
+} {
   const id = tabOptions.id
   let restarting = false
 
