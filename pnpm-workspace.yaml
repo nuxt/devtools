@@ -1,6 +1,13 @@
 packages:
   - packages/**
   - playgrounds/**
+
+shamefullyHoist: true
+ignoreWorkspaceRootCheck: true
+strictPeerDependencies: false
+autoInstallPeers: true
+resolutionMode: highest
+
 catalogs:
   buildtools:
     '@discoveryjs/cli': ^2.14.4
