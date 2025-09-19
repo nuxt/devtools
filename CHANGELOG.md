@@ -1,3 +1,12 @@
+## [2.6.4](https://github.com/nuxt/devtools/compare/v2.6.3...v2.6.4) (2025-09-19)
+
+
+### Bug Fixes
+
+* using `textContent` instead of `innerHtml` for auth pagechore: update lock ([7cadbbe](https://github.com/nuxt/devtools/commit/7cadbbe93cd17899af0036ae991b74bcd6895b0c))
+
+
+
 ## [2.6.3](https://github.com/nuxt/devtools/compare/v2.6.2...v2.6.3) (2025-08-22)
 
 
