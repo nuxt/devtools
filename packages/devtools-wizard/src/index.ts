@@ -27,11 +27,11 @@ async function run() {
   consola.log(`\n${colors.gray('Learn more at https://devtools.nuxt.com\n')}`)
 
   if (moduleName.endsWith('-edge') || moduleName.endsWith('-nightly'))
-    throw new Error('Nightly release of Nuxt DevTools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#nightly-release-channel')
+    throw new Error('[Nuxt DevTools] Nightly release of Nuxt DevTools requires to be installed locally. Learn more at https://github.com/nuxt/devtools/#nightly-release-channel')
 
   const nuxtVersion = await getNuxtVersion(cwd)
   if (!nuxtVersion) {
-    consola.error('Unable to find any installed nuxt version in the current directory')
+    consola.error('[Nuxt DevTools] Unable to find any installed nuxt version in the current directory')
     process.exit(1)
   }
   if (command === 'enable') {

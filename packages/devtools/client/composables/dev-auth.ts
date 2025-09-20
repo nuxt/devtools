@@ -47,7 +47,7 @@ export async function ensureDevAuthToken() {
       classes: 'text-red',
     })
     await authConfirmAction()
-    throw new Error('Invalid auth token')
+    throw new Error('[Nuxt DevTools] Invalid auth token')
   }
 
   return devAuthToken.value!
@@ -83,6 +83,6 @@ async function authConfirmAction() {
       icon: 'carbon-close',
       classes: 'text-orange',
     })
-    throw new Error('User canceled auth')
+    throw new Error('[Nuxt DevTools] User canceled auth')
   }
 }

@@ -129,7 +129,7 @@ export function extendServerRpc<ClientFunctions = Record<string, never>, ServerF
 ): BirpcGroup<ClientFunctions, ServerFunctions> {
   const ctx = _getContext(nuxt)
   if (!ctx)
-    throw new Error('Failed to get devtools context.')
+    throw new Error('[Nuxt DevTools] Failed to get devtools context.')
 
   return ctx.extendServerRpc<ClientFunctions, ServerFunctions>(namespace, functions)
 }

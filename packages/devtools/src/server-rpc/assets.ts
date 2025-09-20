@@ -112,12 +112,12 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         files.map(async ({ path, content, encoding, override }) => {
           let finalPath = resolve(baseDir, path)
           if (!finalPath.startsWith(baseDir))
-            throw new Error(`File ${path} is not allowed to upload, it's outside of the public directory`)
+            throw new Error(`[Nuxt DevTools] File ${path} is not allowed to upload, it's outside of the public directory`)
 
           const { ext } = parse(finalPath)
           if (extensions !== '*') {
             if (!extensions.includes(ext.toLowerCase().slice(1)))
-              throw new Error(`File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
+              throw new Error(`[Nuxt DevTools] File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
           }
 
           if (!override) {
@@ -150,7 +150,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
 
       const exist = cache?.find(asset => asset.filePath === newPath)
       if (exist)
-        throw new Error(`File ${newPath} already exists`)
+        throw new Error(`[Nuxt DevTools] File ${newPath} already exists, failed to rename`)
       return await fsp.rename(oldPath, newPath)
     },
   } satisfies Partial<ServerFunctions>

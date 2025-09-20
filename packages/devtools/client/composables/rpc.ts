@@ -69,8 +69,8 @@ async function connectVite() {
 
   if (!hot) {
     wsConnecting.value = true
-    console.error('[nuxt-devtools] Unable to find Vite HMR context')
-    throw new Error('Unable to connect to devtools')
+    console.error('[Nuxt DevTools] Unable to find Vite HMR context')
+    throw new Error('[Nuxt DevTools] Unable to connect to devtools')
   }
 
   hot.on(WS_EVENT_NAME, (data) => {

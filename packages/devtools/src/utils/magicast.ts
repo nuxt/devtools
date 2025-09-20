@@ -8,7 +8,7 @@ export async function magicastGuard(fn: (() => Promise<string>), message = '') {
   }
   catch (e) {
     logger.error(e)
-    throw new Error(`Magicast failed to modify Nuxt config automatically. Maybe the config are composed too dynamically that we failed to statically analyze it. ${message}`)
+    throw new Error(`[Nuxt DevTools] Magicast failed to modify Nuxt config automatically. Maybe the config are composed too dynamically that we failed to statically analyze it. ${message}`)
   }
 
   return generated

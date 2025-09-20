@@ -81,7 +81,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       if (options.disableAuthorization)
         return
       if (token !== await getDevAuthToken())
-        throw new Error('Invalid dev auth token.')
+        throw new Error('[Nuxt DevTools] Invalid dev auth token.')
     },
   }
 

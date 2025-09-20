@@ -17,7 +17,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
 
   async function startAnalyzeBuild(name: string) {
     if (promise)
-      throw new Error('Already building')
+      throw new Error('[Nuxt DevTools] A building process is already running')
 
     const result = startSubprocess({
       command: 'npx',

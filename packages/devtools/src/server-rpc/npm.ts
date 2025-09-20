@@ -132,7 +132,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         const code = result.exitCode
         if (code !== 0) {
           console.error(result.stderr)
-          throw new Error(`Failed to install module, process exited with ${code}`)
+          throw new Error(`[Nuxt DevTools] Failed to install module, process exited with ${code}`)
         }
 
         // If all modules have been installed, write back to the config file, and auto restart.
@@ -193,7 +193,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         const code = result.exitCode
         if (code !== 0) {
           console.error(result.stderr)
-          throw new Error(`Failed to uninstall module', process exited with ${code}`)
+          throw new Error(`[Nuxt DevTools] Failed to uninstall module, process exited with ${code}`)
         }
 
         await fs.writeFile(filepath, generated, 'utf-8')
