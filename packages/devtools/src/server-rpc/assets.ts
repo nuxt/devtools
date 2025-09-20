@@ -47,6 +47,8 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
     for (const { layerDir, files } of dirs) {
       for (const path of files) {
         const filePath = resolve(layerDir, path)
+        if (!filePath.startsWith(layerDir))
+          continue
         const stat = await fsp.lstat(filePath)
         const fullPath = join(baseURL, path)
 
@@ -109,6 +111,8 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
       return await Promise.all(
         files.map(async ({ path, content, encoding, override }) => {
           let finalPath = resolve(baseDir, path)
+          if (!finalPath.startsWith(baseDir))
+            throw new Error(`File ${path} is not allowed to upload, it's outside of the public directory`)
 
           const { ext } = parse(finalPath)
           if (extensions !== '*') {
