@@ -1,3 +1,12 @@
+## [2.6.5](https://github.com/nuxt/devtools/compare/v2.6.4...v2.6.5) (2025-09-20)
+
+
+### Bug Fixes
+
+* ensure path resolve is safe ([1fabb49](https://github.com/nuxt/devtools/commit/1fabb493c0adc6683590ec5f95d06ee1af3a87fe))
+
+
+
 ## [2.6.4](https://github.com/nuxt/devtools/compare/v2.6.3...v2.6.4) (2025-09-19)
 
 
