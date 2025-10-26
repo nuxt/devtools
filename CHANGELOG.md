@@ -1,3 +1,12 @@
+# [2.7.0](https://github.com/nuxt/devtools/compare/v2.6.5...v2.7.0) (2025-10-26)
+
+
+### Bug Fixes
+
+* **devtools:** use vite plugin for env-specific config ([#899](https://github.com/nuxt/devtools/issues/899)) ([0c258d4](https://github.com/nuxt/devtools/commit/0c258d47758bca69d62db922d0fb736c529412e4))
+
+
+
 ## [2.6.5](https://github.com/nuxt/devtools/compare/v2.6.4...v2.6.5) (2025-09-20)
 
 
