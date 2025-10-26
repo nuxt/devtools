@@ -1,5 +1,5 @@
 import type { BuiltinLanguage } from 'shiki'
-import { defineNuxtModule, logger } from '@nuxt/kit'
+import { defineNuxtModule, extendViteConfig, logger } from '@nuxt/kit'
 import { consola } from 'consola'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { createHighlighter } from 'shiki'
@@ -24,7 +24,7 @@ export default defineNuxtModule({
 
     nuxt.options.extensions.push('.md')
 
-    nuxt.hook('vite:extendConfig', async (config) => {
+    extendViteConfig((config) => {
       config.plugins!.push(
         Markdown({
           async markdownItSetup(md) {
