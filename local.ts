@@ -18,7 +18,7 @@ import type { ModuleOptions } from './packages/devtools/src/types'
  * })
  * ```
  */
-import { defineNuxtModule, logger } from '@nuxt/kit'
+import { defineNuxtModule, extendViteConfig, logger } from '@nuxt/kit'
 import { getPort } from 'get-port-please'
 import { resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
@@ -40,7 +40,7 @@ export default defineNuxtModule<ModuleOptions>({
     const workspaceRoot = resolve(packageDir, '../..')
     const PORT = await getPort({ port: 12442 })
 
-    nuxt.hook('vite:extendConfig', (config) => {
+    extendViteConfig((config) => {
       config.server ||= {}
       // add proxy to client
       config.server.proxy ||= {}

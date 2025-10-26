@@ -5,7 +5,7 @@ import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import os from 'node:os'
-import { addPlugin, addTemplate, addVitePlugin, logger } from '@nuxt/kit'
+import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { join } from 'pathe'
 import sirv from 'sirv'
@@ -110,7 +110,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   const clientDirExists = existsSync(clientDir)
 
-  nuxt.hook('vite:extendConfig', (config) => {
+  extendViteConfig((config) => {
     config.server ||= {}
     config.server.fs ||= {}
     config.server.fs.allow ||= [
@@ -126,11 +126,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     config.server.watch.ignored.push('**/.cache/nuxt-devtools/**')
   })
 
-  nuxt.hook('imports:extend', (imports) => {
-    imports.push({
-      name: 'useNuxtDevTools',
-      from: join(runtimeDir, 'use-nuxt-devtools'),
-    })
+  addImports({
+    name: 'useNuxtDevTools',
+    from: join(runtimeDir, 'use-nuxt-devtools'),
   })
 
   const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(/\/+/g, '/')
