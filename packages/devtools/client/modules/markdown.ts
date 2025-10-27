@@ -1,5 +1,5 @@
 import type { BuiltinLanguage } from 'shiki'
-import { defineNuxtModule, extendViteConfig, logger } from '@nuxt/kit'
+import { addVitePlugin, defineNuxtModule, logger } from '@nuxt/kit'
 import { consola } from 'consola'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { createHighlighter } from 'shiki'
@@ -24,39 +24,38 @@ export default defineNuxtModule({
 
     nuxt.options.extensions.push('.md')
 
-    extendViteConfig((config) => {
-      config.plugins!.push(
-        Markdown({
-          async markdownItSetup(md) {
-            md.use(LinkAttributes, {
-              matcher: (link: string) => /^https?:\/\//.test(link),
-              attrs: {
-                target: '_blank',
-                rel: 'noopener',
+    addVitePlugin(() => {
+      return Markdown({
+        frontmatter: false,
+        async markdownItSetup(md) {
+          md.use(LinkAttributes, {
+            matcher: (link: string) => /^https?:\/\//.test(link),
+            attrs: {
+              target: '_blank',
+              rel: 'noopener',
+            },
+          })
+
+          const highlighter = await createHighlighter({
+            themes: [
+              'vitesse-dark',
+              'vitesse-light',
+            ],
+            langs: Object.keys(bundledLanguages),
+          })
+
+          md.options.highlight = (code, lang) => {
+            const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguage
+            return highlighter.codeToHtml(code, {
+              lang: _lang || 'text',
+              themes: {
+                dark: 'vitesse-dark',
+                light: 'vitesse-light',
               },
             })
-
-            const highlighter = await createHighlighter({
-              themes: [
-                'vitesse-dark',
-                'vitesse-light',
-              ],
-              langs: Object.keys(bundledLanguages),
-            })
-
-            md.options.highlight = (code, lang) => {
-              const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguage
-              return highlighter.codeToHtml(code, {
-                lang: _lang || 'text',
-                themes: {
-                  dark: 'vitesse-dark',
-                  light: 'vitesse-light',
-                },
-              })
-            }
-          },
-        }),
-      )
-    })
+          }
+        },
+      })
+    }, { server: false, client: true })
   },
 })
