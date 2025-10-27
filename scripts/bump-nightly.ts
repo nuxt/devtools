@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { promises as fsp } from 'node:fs'
-import { globby } from 'globby'
 import { resolve } from 'pathe'
+import { glob } from 'tinyglobby'
 
 // Temporary forked from nuxt/framework
 
@@ -37,7 +37,7 @@ type Package = ThenArg<ReturnType<typeof loadPackage>>
 
 async function loadWorkspace(dir: string) {
   const workspacePkg = await loadPackage(dir)
-  const pkgDirs = (await globby(['packages/*'], { onlyDirectories: true })).sort()
+  const pkgDirs = (await glob(['packages/*'], { onlyDirectories: true })).sort()
 
   const packages: Package[] = []
 

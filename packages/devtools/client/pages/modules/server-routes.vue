@@ -107,7 +107,7 @@ const filterByCollection = computed(() => {
       }
     }
 
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
+    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1]!.includes('.'))
       collectionNames.pop()
 
     collectionNames.forEach((collectionName) => {
@@ -192,7 +192,7 @@ function capitalize(str: string) {
       <NSectionBlock
         v-for="tab of Object.keys(inputDefaults)"
         :key="tab"
-        :text="`${capitalize(tab)} ${inputDefaults[tab].length ? `(${inputDefaults[tab].length})` : ''}`"
+        :text="`${capitalize(tab)} ${inputDefaults[tab]?.length ? `(${inputDefaults[tab]!.length})` : ''}`"
         :padding="false"
         :icon="ServerRouteTabIcons[tab]"
       >

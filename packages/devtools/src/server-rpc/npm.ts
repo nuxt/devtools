@@ -59,7 +59,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
     const processId = `npm:${command}:${packageName}`
 
     startSubprocess({
-      command: args[0],
+      command: args[0]!,
       args: args.slice(1),
     }, {
       id: processId,
@@ -112,7 +112,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         installSet.add(name)
 
         const process = startSubprocess({
-          command: commands[0],
+          command: commands[0]!,
           args: commands.slice(1),
         }, {
           id: processId,
@@ -177,7 +177,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
       if (!dry) {
         const process = startSubprocess({
-          command: commands[0],
+          command: commands[0]!,
           args: commands.slice(1),
         }, {
           id: processId,

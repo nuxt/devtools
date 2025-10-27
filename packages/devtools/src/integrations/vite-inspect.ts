@@ -32,10 +32,10 @@ export async function setup({ nuxt, rpc }: NuxtDevtoolsServerContext) {
   async function getComponentsRelationships() {
     const meta = await api?.rpc.getMetadata()
     const modules = (
-      meta
+      meta && meta.instances[0]
         ? await api?.rpc.getModulesList({
-            vite: meta?.instances[0].vite,
-            env: meta?.instances[0].environments[0],
+            vite: meta.instances[0].vite,
+            env: meta.instances[0].environments[0]!,
           })
         : null
     ) || []

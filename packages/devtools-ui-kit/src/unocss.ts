@@ -29,14 +29,14 @@ export function unocssPreset(): Preset {
     }),
     rules: [
       [/^n-(.*)$/, ([, body]: string[], { theme }: RuleContext<Theme>) => {
-        const color = parseColor(body, theme)
+        const color = parseColor(body!, theme)
         if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
           return {
             '--nui-c-context': `${color.cssColor.components.join(',')}`,
           }
         }
       }],
-      [/^n-(.*)$/, fonts[1][1] as any],
+      [/^n-(.*)$/, fonts[1]![1] as any],
       ['n-dashed', { 'border-style': 'dashed' }],
       ['n-solid', {
         'background-color': 'rgba(var(--nui-c-context), 1) !important',

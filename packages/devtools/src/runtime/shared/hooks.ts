@@ -25,11 +25,13 @@ export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
     }
     else {
       const hook = serverHooks[event.name]
-      if (hook.duration != null)
-        hook.executions.push(hook.duration)
-      hook.start = now()
-      hook.end = undefined
-      hook.duration = undefined
+      if (hook) {
+        if (hook.duration != null)
+          hook.executions.push(hook.duration)
+        hook.start = now()
+        hook.end = undefined
+        hook.duration = undefined
+      }
     }
   })
 

@@ -4,7 +4,7 @@ import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 function shouldIgnoreStorageKey(key: string) {
-  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0])
+  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
 }
 
 export function setupStorageRPC({
@@ -37,7 +37,7 @@ export function setupStorageRPC({
     for (const name of Object.keys(mounts)) {
       if (shouldIgnoreStorageKey(name))
         continue
-      storageMounts[name] = mounts[name]
+      storageMounts[name] = mounts[name]!
     }
   })
 
