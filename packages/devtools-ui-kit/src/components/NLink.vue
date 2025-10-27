@@ -16,7 +16,7 @@ const link = computed(() => props.href || props.to)
     v-bind="link ? {
       href: link,
       target,
-      rel: target === '_blank' ? 'noopener noreferrer' : null,
+      rel: target === '_blank' ? 'noopener noreferrer' : undefined,
     } : {}"
     :class="{ 'n-link n-transition hover:n-link-hover n-link-base': link || underline }"
   >
