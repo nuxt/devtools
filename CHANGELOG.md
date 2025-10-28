@@ -1,3 +1,7 @@
+# [3.0.0-beta.2](https://github.com/nuxt/devtools/compare/v3.0.0-beta.1...v3.0.0-beta.2) (2025-10-28)
+
+
+
 # [3.0.0-beta.1](https://github.com/nuxt/devtools/compare/v2.7.0...v3.0.0-beta.1) (2025-10-27)
 
 
