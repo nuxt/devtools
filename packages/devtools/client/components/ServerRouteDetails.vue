@@ -163,7 +163,7 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
-function parseInputs(inputs: ServerRouteInput[]) {
+function parseInputs(inputs: ServerRouteInput[] = []) {
   const formatted = Object.fromEntries(
     inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
@@ -433,7 +433,7 @@ const copy = useCopy()
           {{ tab.name }}
           {{ tab?.length ? `(${tab.length})` : '' }}
           <span>
-            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug]!.length})` : '' }}
           </span>
         </div>
       </NButton>
@@ -485,9 +485,9 @@ const copy = useCopy()
           placeholder="Value..."
           :model-value="cookie.value"
           flex-1 n="primary"
-          @input="updateCookie(cookie.key, ($event as any).target?.value)"
+          @input="updateCookie(cookie.key!, ($event as any).target?.value)"
         />
-        <NButton title="Delete" n="red" @click="updateCookie(cookie.key, undefined)">
+        <NButton title="Delete" n="red" @click="updateCookie(cookie.key!, undefined)">
           <NIcon icon="i-carbon-trash-can" />
         </NButton>
       </div>

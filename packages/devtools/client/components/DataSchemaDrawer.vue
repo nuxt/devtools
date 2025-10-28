@@ -97,7 +97,7 @@ function copyToClipboard() {
             <NSwitch
               v-for="item, index of options"
               :key="item.name"
-              v-model="options[index].defaultValue"
+              v-model="options[index]!.defaultValue"
               flex="~ gap-2" rounded px2 py2
             >
               <span text-xs capitalize op75>

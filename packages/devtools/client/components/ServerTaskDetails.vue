@@ -115,7 +115,7 @@ const finalPath = computed(() => {
 })
 const finalURL = computed(() => domain.value + finalPath.value)
 
-function parseInputs(inputs: ServerRouteInput[]) {
+function parseInputs(inputs: ServerRouteInput[] = []) {
   const formatted = Object.fromEntries(
     inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
@@ -272,7 +272,7 @@ const copy = useCopy()
           {{ tab.name }}
           {{ tab?.length ? `(${tab.length})` : '' }}
           <span>
-            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug].length})` : '' }}
+            {{ inputDefaults[tab.slug]?.length ? `(${inputDefaults[tab.slug]!.length})` : '' }}
           </span>
         </div>
       </NButton>

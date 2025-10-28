@@ -195,8 +195,8 @@ export function setupGeneralRPC({
       const match = input.match(/^(.*?)(:[:\d]*)$/)
       let suffix = ''
       if (match) {
-        input = match[1]
-        suffix = match[2]
+        input = match[1]!
+        suffix = match[2]!
       }
 
       // search for existing path

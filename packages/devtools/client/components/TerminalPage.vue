@@ -15,7 +15,7 @@ async function remove(id: string) {
 
 watchEffect(() => {
   if (!terminalId.value && terminals.value?.length)
-    terminalId.value = terminals.value[0].id
+    terminalId.value = terminals.value[0]!.id
 })
 </script>
 

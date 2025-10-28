@@ -40,7 +40,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
           return
 
         const [namespace, fnName] = name.split(':')
-        return extendedRpcMap.get(namespace)?.[fnName]
+        return extendedRpcMap.get(namespace!)?.[fnName!]
       },
       onError(error, name) {
         logger.error(

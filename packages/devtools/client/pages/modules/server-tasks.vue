@@ -31,7 +31,7 @@ const inputDefaultsDrawer = ref(false)
 const serverTasks = useServerTasks()
 const tasks = computed<ServerTaskInfo[]>(() => Object.keys(serverTasks.value?.tasks ?? {}).map(taskKey => ({
   name: taskKey,
-  ...serverTasks.value!.tasks[taskKey],
+  ...serverTasks.value!.tasks[taskKey]!,
   type: 'task',
 })))
 
@@ -121,7 +121,7 @@ const filterByCollection = computed(() => {
     const taskParts = item.name.split(':')
     const collectionNames = taskParts.concat()
 
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1].includes('.'))
+    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1]?.includes('.'))
       collectionNames.pop()
 
     collectionNames.forEach((collectionName) => {
@@ -215,7 +215,7 @@ function toggleView() {
         <span text-white op50>Merged as default for every task in DevTools</span>
       </div>
       <NSectionBlock
-        :text="`Query ${inputDefaults.query.length ? `(${inputDefaults.query.length})` : ''}`"
+        :text="`Query ${inputDefaults.query?.length ? `(${inputDefaults.query.length})` : ''}`"
         :padding="false"
         :icon="ServerRouteTabIcons.query"
       >

@@ -157,7 +157,7 @@ const renameDialog = ref(false)
 const newName = ref('')
 async function renameAsset() {
   const parts = asset.value.filePath.split('/')
-  const oldName = parts.slice(-1)[0].split('.').slice(0, -1).join('.')
+  const oldName = parts.slice(-1)[0]?.split('.').slice(0, -1).join('.')
 
   if (!newName.value || newName.value === oldName) {
     return devtoolsUiShowNotification({
@@ -168,7 +168,7 @@ async function renameAsset() {
   }
 
   try {
-    const extension = parts.slice(-1)[0].split('.').slice(-1)[0]
+    const extension = parts.slice(-1)[0]?.split('.').slice(-1)[0]
     const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
     await rpc.renameStaticAsset(await ensureDevAuthToken(), asset.value.filePath, fullPath)
     asset.value = undefined as any

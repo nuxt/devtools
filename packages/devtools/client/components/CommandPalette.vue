@@ -37,7 +37,11 @@ function moveSelected(delta: number) {
 }
 
 function scrollToITem() {
-  const item = document.getElementById(filtered.value[selectedIndex.value]?.id)
+  const id = filtered.value[selectedIndex.value]?.id
+  if (!id)
+    return
+
+  const item = document.getElementById(id)
   item?.scrollIntoView({
     block: 'center',
   })
