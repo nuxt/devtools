@@ -187,7 +187,7 @@ function capitalize(str: string) {
       <div p4 border="b base">
         <span text-lg>Default Inputs</span>
         <br>
-        <span text-black op50 dark-text-white>Merged as default for every request in DevTools</span>
+        <span text-black op50 dark:text-white>Merged as default for every request in DevTools</span>
       </div>
       <NSectionBlock
         v-for="tab of Object.keys(inputDefaults)"
