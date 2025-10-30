@@ -115,7 +115,7 @@ export function unocssPreset(): Preset {
       // checkbox
       'n-checkbox': 'inline-flex gap-1 items-center rounded',
       'n-checkbox-hover': 'op100 n-bg-hover cursor-pointer',
-      'n-checkbox-box': 'border n-border-base w-1.1em h-1.1em mr-1 text-white flex flex-none items-center rounded-sm overflow-visible',
+      'n-checkbox-box': 'border n-border-base w-1.1em h-1.1em mr-1 ml-2 text-white flex flex-none items-center rounded-sm overflow-visible',
       'n-checkbox-box-checked': 'bg-context border-context',
       'n-checkbox-icon': 'carbon-checkmark w-1em h-1em m-auto',
 
