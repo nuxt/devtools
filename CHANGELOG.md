@@ -1,3 +1,18 @@
+## [3.0.1](https://github.com/nuxt/devtools/compare/v3.0.0...v3.0.1) (2025-10-31)
+
+
+### Bug Fixes
+
+* update text color for default inputs description ([#904](https://github.com/nuxt/devtools/issues/904)) ([8cd29b7](https://github.com/nuxt/devtools/commit/8cd29b7103d258f6c788c57f7bc97e33dcad26ab))
+
+
+### Features
+
+* add expiermental support for Vite DevTools ([681378a](https://github.com/nuxt/devtools/commit/681378a2d1acf4488cef7314e9ff8ebcc3db1c21))
+* improve vite devtools integration ([8759cf3](https://github.com/nuxt/devtools/commit/8759cf37461a3e7e843967220aafb08c037178a9))
+
+
+
 # [3.0.0](https://github.com/nuxt/devtools/compare/v3.0.0-beta.2...v3.0.0) (2025-10-28)
 
 
