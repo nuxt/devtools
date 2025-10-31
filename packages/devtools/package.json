@@ -46,7 +46,13 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
+    "@vitejs/devtools": "*",
     "vite": ">=6.0"
+  },
+  "peerDependenciesMeta": {
+    "@vitejs/devtools": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@nuxt/devtools-kit": "workspace:*",
@@ -102,6 +108,7 @@
     "@unocss/preset-icons": "catalog:buildtools",
     "@unocss/preset-uno": "catalog:buildtools",
     "@unocss/runtime": "catalog:frontend",
+    "@vitejs/devtools": "catalog:buildtools",
     "@vitest/ui": "catalog:cli",
     "@vue/devtools-applet": "catalog:frontend",
     "@vueuse/nuxt": "catalog:buildtools",

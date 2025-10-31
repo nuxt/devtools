@@ -60,8 +60,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   })
 
   if (options.viteDevTools) {
-    // eslint-disable-next-line no-console
-    console.log('[nuxt-devtools] Enabling experimental Vite DevTools integration')
+    logger.info('[nuxt-devtools] Enabling experimental Vite DevTools integration')
+    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
+    addVitePlugin(DevTools)
     addVitePlugin({
       name: 'nuxt:devtools',
       devtools: {
@@ -76,7 +77,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         },
       },
     })
-    // TODO: disable builtin devtools panel for vite devtools
+    addPlugin({
+      src: join(runtimeDir, 'plugins/vite-devtools.client'),
+      mode: 'client',
+    })
   }
 
   // Mainly for the injected runtime plugin to access the settings
@@ -88,7 +92,12 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         {
           ...defaultTabOptions.ui,
           // When not enabled explicitly, we hide the panel by default
-          showPanel: enabledExplicitly ? true : null,
+          // When Vite DevTools is enabled, we hide the panel by default
+          showPanel: options.viteDevTools
+            ? false
+            : enabledExplicitly
+              ? true
+              : null,
         },
         { root: nuxt.options.rootDir },
       )
