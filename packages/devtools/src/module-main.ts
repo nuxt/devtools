@@ -1,3 +1,4 @@
+import type {} from '@vitejs/devtools-kit'
 import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
 import type { ViteDevServer } from 'vite'
@@ -34,7 +35,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   }
 
   // Determine if user aware devtools, by checking the presentation in the config
-  const enabledExplicitly = (nuxt.options.devtools === true as unknown)
+  const enabledExplicitly = (nuxt.options.devtools === true)
     || (nuxt.options.devtools && nuxt.options.devtools.enabled)
     || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge' || m === '@nuxt/devtools-nightly')
 
@@ -57,6 +58,26 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     src: join(runtimeDir, 'plugins/devtools.server'),
     mode: 'server',
   })
+
+  if (options.viteDevTools) {
+    // eslint-disable-next-line no-console
+    console.log('[nuxt-devtools] Enabling experimental Vite DevTools integration')
+    addVitePlugin({
+      name: 'nuxt:devtools',
+      devtools: {
+        setup(ctx) {
+          ctx.docks.register({
+            id: 'nuxt:devtools',
+            type: 'iframe',
+            icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+            title: 'Nuxt DevTools',
+            url: '/__nuxt_devtools__/client/',
+          })
+        },
+      },
+    })
+    // TODO: disable builtin devtools panel for vite devtools
+  }
 
   // Mainly for the injected runtime plugin to access the settings
   // Usage `import settings from '#build/devtools/settings'`

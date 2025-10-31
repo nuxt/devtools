@@ -120,8 +120,9 @@ export async function setupDevToolsClient({
     try {
       iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
     }
-    catch {
+    catch (e) {
       // cross-origin
+      console.error('[nuxt-devtools] Failed to connect view', e)
     }
     return client
   }

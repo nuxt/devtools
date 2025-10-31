@@ -44,6 +44,14 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
+   * Enable Vite DevTools integration
+   *
+   * @experimental
+   * @default false
+   */
+  viteDevTools?: boolean
+
+  /**
    * Disable dev time authorization check.
    *
    * **NOT RECOMMENDED**, only use this if you know what you are doing.

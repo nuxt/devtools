@@ -375,6 +375,9 @@ catalogs:
     '@unhead/schema':
       specifier: ^2.0.19
       version: 2.0.19
+    '@vitejs/devtools-kit':
+      specifier: 0.0.0-alpha.6
+      version: 0.0.0-alpha.6
     unimport:
       specifier: ^5.5.0
       version: 5.5.0
@@ -427,6 +430,9 @@ importers:
       '@unocss/eslint-config':
         specifier: catalog:buildtools
         version: 66.5.4(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
+      '@vitejs/devtools-kit':
+        specifier: catalog:types
+        version: 0.0.0-alpha.6(vite@7.1.12(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.39.0)(tsx@4.20.6)(yaml@2.8.1))
       bumpp:
         specifier: catalog:cli
         version: 10.3.1(magicast@0.3.5)
@@ -2887,6 +2893,19 @@ packages:
     resolution: {integrity: sha512-UEq+eF0ocEf9WQCV1gktxKhha36KDs7jln5qii6UpPf5clMqDc0p3E7d9l2Smx0i9Pm1qpq4S4lLfNl97bbv6w==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@vitejs/devtools-kit@0.0.0-alpha.6':
+    resolution: {integrity: sha512-BKdoozfpxswpGawKrwe4Og7M6axIEbqzFsC1Ei3+una2LNa2UZtanE1EWB8uwImDw0yPyk+P32xufySnWLI4NQ==}
+    peerDependencies:
+      vite: ^7.1.12
+
+  '@vitejs/devtools-rpc@0.0.0-alpha.6':
+    resolution: {integrity: sha512-obHl4tDrCOVP8ABFDXwkjGywtswHUEhOZahH797qZ0bmYJTbblpMKhrmx1aMnPeKui43r7siU1OIctEaDjhQcA==}
+    peerDependencies:
+      ws: '*'
+    peerDependenciesMeta:
+      ws:
+        optional: true
 
   '@vitejs/plugin-vue-jsx@5.1.1':
     resolution: {integrity: sha512-uQkfxzlF8SGHJJVH966lFTdjM/lGcwJGzwAHpVqAPDD/QcsqoUGa+q31ox1BrUfi+FLP2ChVp7uLXE3DkHyDdQ==}
@@ -10448,6 +10467,19 @@ snapshots:
       - encoding
       - rollup
       - supports-color
+
+  '@vitejs/devtools-kit@0.0.0-alpha.6(vite@7.1.12(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.39.0)(tsx@4.20.6)(yaml@2.8.1))':
+    dependencies:
+      '@vitejs/devtools-rpc': 0.0.0-alpha.6
+      birpc: 2.6.1
+      vite: 7.1.12(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.39.0)(tsx@4.20.6)(yaml@2.8.1)
+    transitivePeerDependencies:
+      - ws
+
+  '@vitejs/devtools-rpc@0.0.0-alpha.6':
+    dependencies:
+      birpc: 2.6.1
+      structured-clone-es: 1.0.0
 
   '@vitejs/plugin-vue-jsx@5.1.1(vite@7.1.12(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.39.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.22(typescript@5.9.3))':
     dependencies:
