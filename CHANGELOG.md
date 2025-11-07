@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/nuxt/devtools/compare/v3.0.1...v3.1.0) (2025-11-07)
+
+
+### Features
+
+* update Vue DevTools, close [#898](https://github.com/nuxt/devtools/issues/898) ([1175374](https://github.com/nuxt/devtools/commit/1175374c80f98fd1fa180c0a0d60f77f2e630d9d))
+
+
+
 ## [3.0.1](https://github.com/nuxt/devtools/compare/v3.0.0...v3.0.1) (2025-10-31)
 
 
