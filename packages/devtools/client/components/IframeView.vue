@@ -23,7 +23,7 @@ const box = reactive(useElementBounding(anchor))
 onMounted(() => {
   const view = props.tab.view as ModuleIframeView
   const isPersistent = view.persistent !== false
-  const allowedPermissions = ['clipboard-write', 'clipboard-read']
+  const allowedPermissions = ['clipboard-write', 'clipboard-read', ...(view.permissions || [])]
 
   if (iframeCacheMap.get(key.value) && isPersistent) {
     iframeEl.value = iframeCacheMap.get(key.value)!

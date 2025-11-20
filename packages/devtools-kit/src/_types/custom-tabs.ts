@@ -68,6 +68,13 @@ export interface ModuleIframeView {
    * @default true
    */
   persistent?: boolean
+  /**
+   * Additional permissions to allow in the iframe
+   * These will be merged with the default permissions (clipboard-write, clipboard-read)
+   *
+   * @example ['camera', 'microphone', 'geolocation']
+   */
+  permissions?: string[]
 }
 
 export interface ModuleVNodeView {
