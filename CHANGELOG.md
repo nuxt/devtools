@@ -1,3 +1,17 @@
+## [3.1.1](https://github.com/nuxt/devtools/compare/v3.1.0...v3.1.1) (2025-11-25)
+
+
+### Bug Fixes
+
+* **ui:** remove flash when switching to dark ([#909](https://github.com/nuxt/devtools/issues/909)) ([75a814f](https://github.com/nuxt/devtools/commit/75a814f8a0664a4661e24f9d9c6a6abb73bbc490))
+
+
+### Features
+
+* support passing additional permissions to the iframe ([#911](https://github.com/nuxt/devtools/issues/911)) ([bc1d11c](https://github.com/nuxt/devtools/commit/bc1d11c92a7da9bc6e1870417029c50cb66a964e))
+
+
+
 # [3.1.0](https://github.com/nuxt/devtools/compare/v3.0.1...v3.1.0) (2025-11-07)
 
 
