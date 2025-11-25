@@ -78,7 +78,7 @@ async function openInEditor() {
 <template>
   <div
     ref="el"
-    class="bg-glass ring-base color-base fixed relative z-9999999 w-400px flex flex-col of-hidden rounded-lg text-sm shadow-lg ring-1 backdrop-blur duration-200"
+    class="fixed relative z-9999999 w-400px flex flex-col of-hidden rounded-lg bg-glass text-sm color-base shadow-lg ring-1 ring-base backdrop-blur duration-200"
     :style="style"
     :class="[
       isDragging ? 'transition-none' : 'transition-opacity',
