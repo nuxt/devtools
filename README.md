@@ -120,7 +120,7 @@ On top of the [default Nuxt Telemetry events](https://github.com/nuxt/telemetry#
 [npm-downloads-href]: https://npm.chart.dev/@nuxt/devtools
 [license-src]: https://img.shields.io/npm/l/@nuxt/devtools.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://npmjs.com/package/@nuxt/devtools
-[nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
+[nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt
 [nuxt-href]: https://nuxt.com
 [volta-src]: https://user-images.githubusercontent.com/904724/209143798-32345f6c-3cf8-4e06-9659-f4ace4a6acde.svg
 [volta-href]: https://volta.net/nuxt/devtools?utm_source=nuxt_devtools_readme
