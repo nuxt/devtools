@@ -2,10 +2,10 @@
   "version": "3.1.1",
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "start": "node .output/server/index.mjs",
-    "test": "cypress run"
+    "play:dev": "nuxi dev",
+    "play:build": "nuxi build",
+    "play:start": "node .output/server/index.mjs",
+    "play:test": "cypress run"
   },
   "dependencies": {
     "@pinia/nuxt": "catalog:buildtools",
