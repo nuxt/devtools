@@ -9,9 +9,8 @@
     "url": "git+https://github.com/nuxt/devtools.git"
   },
   "scripts": {
-    "build": "pnpm -r --filter=\"./packages/**/*\" run build",
-    "stub": "pnpm -r run stub",
-    "dev": "pnpm run stub && pnpm -C packages/devtools dev",
+    "build": "turbo run build",
+    "dev": "pnpm run build && pnpm -C packages/devtools dev",
     "lint": "eslint --cache .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "pnpm test && bumpp -r -x \"pnpm run changelog\" --all",
@@ -50,6 +49,7 @@
     "simple-git-hooks": "catalog:cli",
     "taze": "catalog:cli",
     "tsx": "catalog:cli",
+    "turbo": "catalog:buildtools",
     "typescript": "catalog:cli",
     "unimport": "catalog:types",
     "unocss": "catalog:buildtools",
