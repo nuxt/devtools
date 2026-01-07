@@ -1,4 +1,4 @@
-import { defineConfig, presetAttributify, presetIcons, presetTypography, presetUno, presetWebFonts, transformerDirectives } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTypography, presetWebFonts, presetWind3, transformerDirectives } from 'unocss'
 import { unocssPreset as uiKit } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     [/^theme-card-(\w+)$/, $ => `p2 flex gap2 border border-base bg-base items-center rounded min-w-40 min-h-25 justify-center transition-all saturate-0 op50 shadow hover:(op100 bg-${$[1]}/10 text-${$[1]}6 saturate-100)`],
   ],
   presets: [
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetTypography(),
     presetIcons({

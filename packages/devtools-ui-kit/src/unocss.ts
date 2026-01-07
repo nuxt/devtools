@@ -1,6 +1,6 @@
-import type { Preset, RuleContext } from '@unocss/core'
 import type { UnocssNuxtOptions } from '@unocss/nuxt'
 import type { Theme } from '@unocss/preset-uno'
+import type { Preset, RuleContext } from 'unocss'
 import { theme as unoTheme } from '@unocss/preset-mini'
 import { fonts } from '@unocss/preset-mini/rules'
 import { parseColor } from '@unocss/preset-mini/utils'
@@ -167,7 +167,7 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
     ...user,
     preflight: true,
     presets: [
-      presetWind3(),
+      presetWind3() as any,
       presetAttributify(),
       presetTypography(),
       presetIcons({
@@ -191,6 +191,6 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
     transformers: [
       transformerDirectives(),
       transformerVariantGroup(),
-    ],
+    ] as any,
   }
 }

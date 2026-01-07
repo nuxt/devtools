@@ -42,7 +42,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         const [namespace, fnName] = name.split(':')
         return extendedRpcMap.get(namespace!)?.[fnName!]
       },
-      onError(error, name) {
+      onFunctionError(error, name) {
         logger.error(
           colors.yellow(`[nuxt-devtools] RPC error on executing "${colors.bold(name)}":\n`)
           + colors.red(error?.message || ''),

@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.1.1",
   "private": true,
-  "packageManager": "pnpm@10.23.0",
+  "packageManager": "pnpm@10.27.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -59,8 +59,10 @@
   },
   "resolutions": {
     "@nuxt/devtools": "workspace:*",
+    "chokidar": "catalog:buildtools",
     "esbuild": "catalog:buildtools",
     "rollup": "catalog:buildtools",
+    "semver": "catalog:prod",
     "typescript": "catalog:cli",
     "vite": "catalog:buildtools",
     "vue-tsc": "catalog:cli"

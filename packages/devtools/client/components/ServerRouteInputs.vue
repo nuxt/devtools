@@ -29,7 +29,7 @@ const keysObject = computed(() => {
 
 const inputTypes = ['string', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
 
-function onFileInputChange(index: number, event: Event) {
+function onFileInputChange(index: number | string, event: Event) {
   const target = event.target as HTMLInputElement
   if (target.files && target.files[0]) {
     const file = target.files[0]

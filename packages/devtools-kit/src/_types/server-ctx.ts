@@ -27,7 +27,7 @@ export interface NuxtDevtoolsServerContext {
    */
   ensureDevAuthToken: (token: string) => Promise<void>
 
-  extendServerRpc: <ClientFunctions = Record<string, never>, ServerFunctions = Record<string, never>>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
+  extendServerRpc: <ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
 
 export interface NuxtDevtoolsInfo {

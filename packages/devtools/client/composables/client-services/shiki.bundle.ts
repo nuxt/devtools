@@ -7,8 +7,8 @@ import type {
   HighlighterGeneric,
 } from '@shikijs/types'
 import {
+  createBundledHighlighter,
   createSingletonShorthands,
-  createdBundledHighlighter,
 } from '@shikijs/core'
 import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
 
@@ -66,7 +66,7 @@ const bundledThemes = {
   'vitesse-light': () => import('@shikijs/themes/vitesse-light'),
 } as Record<BundledTheme, DynamicImportThemeRegistration>
 
-const createHighlighter = /* @__PURE__ */ createdBundledHighlighter<
+const createHighlighter = /* @__PURE__ */ createBundledHighlighter<
   BundledLanguage,
   BundledTheme
 >({
