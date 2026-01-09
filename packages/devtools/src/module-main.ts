@@ -240,11 +240,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   await Promise.all(integrations)
 
-  await nuxt.callHook('devtools:initialized', {
+  nuxt.hook('modules:done', async () => nuxt.callHook('devtools:initialized', {
     version,
     packagePath: packageDir,
     isGlobalInstall: isGlobalInstall(),
-  })
+  }))
 
   const isMac = os.platform() === 'darwin'
 
