@@ -240,7 +240,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   await Promise.all(integrations)
 
-  nuxt.hook('modules:done', async () => nuxt.callHook('devtools:initialized', {
+  nuxt.hook('modules:done', () => nuxt.callHook('devtools:initialized', {
     version,
     packagePath: packageDir,
     isGlobalInstall: isGlobalInstall(),
