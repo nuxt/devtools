@@ -18,6 +18,9 @@ const terminalId = useCurrentTerminalId()
 
 <template>
   <ModuleItemBase :mod="mod" :info="staticInfo">
+    <template #badge>
+      <ModuleScoreBadge class="ml-1" :npm="data.npm" />
+    </template>
     <template #items>
       <div v-if="mod.entryPath" flex="~ gap-2" title="Open on filesystem">
         <span i-carbon-folder-move-to flex-none text-lg op50 />
