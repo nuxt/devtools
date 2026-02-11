@@ -1,7 +1,6 @@
 import type {} from '@vitejs/devtools-kit'
 import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
-import type { ViteDevServer } from 'vite'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
@@ -168,7 +167,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
 
   // TODO: Use WS from nitro server when possible
-  nuxt.hook('vite:serverCreated', (server: ViteDevServer) => {
+  nuxt.hook('vite:serverCreated', (server) => {
     const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
     server.middlewares.use(ROUTE_ANALYZE, sirv(devtoolsAnalyzeDir, { single: false, dev: true, dotfiles: true, ignores: false }))

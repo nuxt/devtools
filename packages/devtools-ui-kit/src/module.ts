@@ -32,7 +32,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.css.unshift(rPath('assets/styles.css'))
 
-    if (!options.dev)
+    if (!options.dev && nuxt.options.unocss)
       nuxt.options.unocss = extendUnocssOptions(nuxt.options.unocss)
 
     // eslint-disable-next-line ts/ban-ts-comment
