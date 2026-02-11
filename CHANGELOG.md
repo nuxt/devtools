@@ -1,3 +1,18 @@
+# [3.2.0](https://github.com/nuxt/devtools/compare/v3.1.1...v3.2.0) (2026-02-11)
+
+
+### Bug Fixes
+
+* **devtools:** call `devtools:initialized` hook after all modules run ([#919](https://github.com/nuxt/devtools/issues/919)) ([3662836](https://github.com/nuxt/devtools/commit/3662836921d407d06ddd29ec6d63f4852450d469))
+
+
+### Features
+
+* enhance inspect panel, add copy visual info for agents ([#928](https://github.com/nuxt/devtools/issues/928)) ([6bb2565](https://github.com/nuxt/devtools/commit/6bb256536ce17483231f2634477b7bace3a05015))
+* upgrade vite-devtools ([5c4a0b0](https://github.com/nuxt/devtools/commit/5c4a0b0bbbb1265d6cb80ebeb064aea0bddf5637))
+
+
+
 ## [3.1.1](https://github.com/nuxt/devtools/compare/v3.1.0...v3.1.1) (2025-11-25)
 
 
