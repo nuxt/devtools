@@ -16,6 +16,7 @@ const PANEL_MARGIN = 30
 
 const showToast = ref(false)
 const toastContent = ref('')
+let toastTimer: ReturnType<typeof setTimeout> | undefined
 
 const initX = ref(0)
 const initY = ref(0)
@@ -109,7 +110,7 @@ function generateUniqueSelector(element: Element | undefined): string {
       )
       if (siblings.length > 1) {
         const index = siblings.indexOf(current) + 1
-        selector += `:nth-child(${index})`
+        selector += `:nth-of-type(${index})`
       }
     }
 
@@ -203,8 +204,10 @@ async function copyAgentInfo() {
     toastContent.value = info
     showToast.value = true
 
+    if (toastTimer)
+      clearTimeout(toastTimer)
     // Hide toast after 6 seconds
-    setTimeout(() => {
+    toastTimer = setTimeout(() => {
       showToast.value = false
     }, 6_000)
   }
@@ -233,7 +236,7 @@ async function copyAgentInfo() {
     <div ref="draggingEl" class="flex flex-col gap-2 of-hidden p2">
       <div class="flex items-center gap-2">
         <button
-          v-if="!props.hasParent"
+          v-if="props.hasParent"
           title="Go to parent"
           class="flex items-center border-1 border-base rounded px1 py0.5 text-sm font-mono op50 disabled:pointer-events-none hover:text-green6 hover:op100 disabled:op10!"
           @click="selectParent"
@@ -280,7 +283,7 @@ async function copyAgentInfo() {
 
   <!-- Toast notification -->
   <div
-    v-if="showToast"
+    v-show="showToast"
     class="fixed bottom-20px right-20px z-99999999 max-w-500px flex flex-col gap-2 rounded-lg bg-glass p4 text-sm color-base shadow-xl ring-1 ring-base backdrop-blur transition-all duration-300"
     :class="showToast ? 'translate-y-0 op100' : 'translate-y-10 op0'"
   >
