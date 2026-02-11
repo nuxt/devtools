@@ -90,7 +90,7 @@ function generateUniqueSelector(element: Element | undefined): string {
 
     // Add ID if available
     if (current.id) {
-      selector += `#${current.id}`
+      selector += `#${CSS.escape(current.id)}`
       path.unshift(selector)
       break // ID is unique, no need to go further
     }
