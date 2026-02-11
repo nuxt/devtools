@@ -253,7 +253,7 @@ async function copyAgentInfo() {
           Open
         </button>
         <button
-          title="Copy information for agents"
+          title="Copy infos for agents"
           class="flex items-center border-1 border-base rounded px1 py0.5 text-sm font-mono op50 hover:text-green6 hover:op100"
           @click="copyAgentInfo"
         >
@@ -289,7 +289,7 @@ async function copyAgentInfo() {
   >
     <div class="flex items-center gap-2">
       <div class="i-ph-check-circle-duotone text-xl text-green6" />
-      <span class="font-semibold">Information copied to clipboard</span>
+      <span class="font-semibold">Infos for agents copied to clipboard</span>
     </div>
     <pre class="mt-2 max-h-200px of-auto whitespace-pre-wrap rounded bg-black bg-op-20 p2 text-xs font-mono">{{ toastContent }}</pre>
   </div>
