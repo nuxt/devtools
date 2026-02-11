@@ -99,7 +99,7 @@ function generateUniqueSelector(element: Element | undefined): string {
     if (current.className && typeof current.className === 'string') {
       const classes = current.className.trim().split(/\s+/).filter(Boolean)
       if (classes.length > 0)
-        selector += `.${classes.join('.')}`
+        selector += `.${classes.map(c => CSS.escape(c)).join('.')}`
     }
 
     // Add nth-child if there are siblings of the same type
