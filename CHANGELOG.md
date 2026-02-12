@@ -1,3 +1,12 @@
+## [3.2.1](https://github.com/nuxt/devtools/compare/v3.2.0...v3.2.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* inspect panel position ([2f93070](https://github.com/nuxt/devtools/commit/2f93070b88e612bdddbbfaceccaf3b114dcb8611))
+
+
+
 # [3.2.0](https://github.com/nuxt/devtools/compare/v3.1.1...v3.2.0) (2026-02-11)
 
 
