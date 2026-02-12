@@ -201,6 +201,8 @@ export async function setupDevToolsClient({
     Object.assign(component.style, {
       zIndex: 999999,
       position: 'fixed',
+      left: '0',
+      top: '0',
     })
     component.addEventListener('close', () => {
       props.matched = undefined
