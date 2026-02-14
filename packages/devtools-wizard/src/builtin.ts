@@ -55,7 +55,7 @@ async function toggleConfig(cwd: string, value?: boolean) {
     }
     else {
       consola.log('')
-      consola.log('We are going to update the Nuxt config with with the following changes:')
+      consola.log('We are going to update the Nuxt config with the following changes:')
       consola.log(colors.bold(colors.green(`./${relative(cwd, nuxtConfig)}`)))
       consola.log('')
       printDiffToCLI(source, generated)
