@@ -3,6 +3,9 @@ import type { NuxtDevToolsInspectorProps } from './Props'
 import { onClickOutside, useDraggable } from '@vueuse/core'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 
+defineOptions({
+  inheritAttrs: false,
+})
 const { props } = defineProps<{ props: NuxtDevToolsInspectorProps }>()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -227,6 +230,7 @@ async function copyAgentInfo() {
       isDragging ? 'transition-none' : 'transition-opacity',
       props.matched ? 'op100' : 'op0 pointer-events-none',
     ]"
+    v-bind="$attrs"
   >
     <!-- <div
       class="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
