@@ -1,6 +1,7 @@
 import type { StorageMounts } from 'nitropack'
 import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { watchStorageMount } from './storage-watch'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 function shouldIgnoreStorageKey(key: string) {
@@ -15,16 +16,26 @@ export function setupStorageRPC({
   const storageMounts: StorageMounts = {}
 
   let storage: Storage | undefined
+  let unwatchStorageMounts: Array<() => Promise<void> | void> = []
 
   nuxt.hook('nitro:init', (nitro) => {
     storage = nitro.storage
 
-    nuxt.hook('ready', () => {
-      storage!.watch((event, key) => {
-        if (shouldIgnoreStorageKey(key))
-          return
-        rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
-      })
+    nuxt.hook('close', async () => {
+      await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
+      unwatchStorageMounts = []
+    })
+
+    nuxt.hook('ready', async () => {
+      if (!storage)
+        return
+      await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
+      unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
+        watchStorageMount(storage, mountName, (event, key) => {
+          if (shouldIgnoreStorageKey(key))
+            return
+          rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
+        })))
     })
 
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
