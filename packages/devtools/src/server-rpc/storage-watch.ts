@@ -7,10 +7,13 @@ type WatchCallback = (event: WatchEvent, key: string) => void
 
 export async function watchStorageMount(storage: Storage, mountName: string, onChange: WatchCallback): Promise<UnwatchStorageMount> {
   const mountKey = normalizeBaseKey(mountName)
-  const unwatch = await storage.watch((event: WatchEvent, key: string) => {
-    if (!key.startsWith(mountKey))
-      return
-    onChange(event, normalizeKey(key))
+  const mount = storage.getMount(mountKey)
+  if (!mount || normalizeBaseKey(mount.base) !== mountKey || !mount.driver?.watch)
+    return () => {}
+
+  const unwatch = await mount.driver.watch((event: WatchEvent, key: string) => {
+    const fullKey = key.startsWith(mountKey) ? key : `${mountKey}${key}`
+    onChange(event, normalizeKey(fullKey))
   })
   return unwatch ?? (() => {})
 }
