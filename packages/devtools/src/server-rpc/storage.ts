@@ -21,24 +21,6 @@ export function setupStorageRPC({
   nuxt.hook('nitro:init', (nitro) => {
     storage = nitro.storage
 
-    nuxt.hook('close', async () => {
-      await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
-      unwatchStorageMounts = []
-    })
-
-    nuxt.hook('ready', async () => {
-      const activeStorage = storage
-      if (!activeStorage)
-        return
-      await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
-      unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
-        watchStorageMount(activeStorage, mountName, (event, key) => {
-          if (shouldIgnoreStorageKey(key))
-            return
-          rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
-        })))
-    })
-
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53
     const mounts = {
@@ -46,11 +28,30 @@ export function setupStorageRPC({
       ...nitro.options.devStorage,
     }
 
+    for (const key of Object.keys(storageMounts))
+      delete storageMounts[key]
+
     for (const name of Object.keys(mounts)) {
       if (shouldIgnoreStorageKey(name))
         continue
       storageMounts[name] = mounts[name]!
     }
+  })
+
+  nuxt.hook('ready', async () => {
+    const activeStorage = storage
+    if (!activeStorage)
+      return
+    await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
+    unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
+      watchStorageMount(activeStorage, mountName, (event, key) => {
+        rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
+      })))
+  })
+
+  nuxt.hook('close', async () => {
+    await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
+    unwatchStorageMounts = []
   })
 
   return {
