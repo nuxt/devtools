@@ -27,11 +27,12 @@ export function setupStorageRPC({
     })
 
     nuxt.hook('ready', async () => {
-      if (!storage)
+      const activeStorage = storage
+      if (!activeStorage)
         return
       await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
       unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
-        watchStorageMount(storage, mountName, (event, key) => {
+        watchStorageMount(activeStorage, mountName, (event, key) => {
           if (shouldIgnoreStorageKey(key))
             return
           rpc.broadcast.callHook.asEvent('storage:key:update', key, event)

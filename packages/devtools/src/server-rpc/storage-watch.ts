@@ -6,12 +6,11 @@ export type UnwatchStorageMount = () => Promise<void> | void
 export async function watchStorageMount(storage: Storage, mountName: string, onChange: WatchCallback): Promise<UnwatchStorageMount> {
   const mountKey = normalizeBaseKey(mountName)
   const mount = storage.getMounts().find(item => item.base === mountKey)
-  const watch = mount?.driver.watch
 
-  if (!watch)
+  if (!mount?.driver.watch)
     return () => {}
 
-  return await watch((event: WatchEvent, key: string) => {
+  return await mount.driver.watch((event: WatchEvent, key: string) => {
     onChange(event, normalizeKey(`${mountKey}${key}`))
   })
 }
