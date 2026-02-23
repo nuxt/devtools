@@ -1,7 +1,9 @@
-import type { Storage, WatchCallback, WatchEvent } from 'unstorage'
+import type { Storage } from 'unstorage'
 import { normalizeBaseKey, normalizeKey } from 'unstorage'
 
 export type UnwatchStorageMount = () => Promise<void> | void
+type WatchEvent = 'update' | 'remove'
+type WatchCallback = (event: WatchEvent, key: string) => void
 
 export async function watchStorageMount(storage: Storage, mountName: string, onChange: WatchCallback): Promise<UnwatchStorageMount> {
   const mountKey = normalizeBaseKey(mountName)
