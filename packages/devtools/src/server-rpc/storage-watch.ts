@@ -12,7 +12,8 @@ export async function watchStorageMount(storage: Storage, mountName: string, onC
   if (!mount?.driver.watch)
     return () => {}
 
-  return await mount.driver.watch((event: WatchEvent, key: string) => {
+  const unwatch = await mount.driver.watch((event: WatchEvent, key: string) => {
     onChange(event, normalizeKey(`${mountKey}${key}`))
   })
+  return unwatch ?? (() => {})
 }
