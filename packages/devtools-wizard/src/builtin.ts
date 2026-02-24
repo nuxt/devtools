@@ -1,12 +1,12 @@
 import { existsSync } from 'node:fs'
 import fsp from 'node:fs/promises'
 import { relative } from 'node:path'
+import * as p from '@clack/prompts'
 import { consola } from 'consola'
 import { colors } from 'consola/utils'
 import { diffLines } from 'diff'
 import { parseModule } from 'magicast'
 import { join } from 'pathe'
-import prompts from 'prompts'
 
 function findNuxtConfig(cwd: string) {
   const names = [
@@ -61,14 +61,12 @@ async function toggleConfig(cwd: string, value?: boolean) {
       printDiffToCLI(source, generated)
       consola.log('')
 
-      const { confirm } = await prompts({
-        type: 'confirm',
-        name: 'confirm',
+      const confirm = await p.confirm({
         message: 'Continue?',
-        initial: true,
+        initialValue: true,
       })
 
-      if (!confirm)
+      if (confirm !== true)
         return false
 
       await fsp.writeFile(nuxtConfig, `${generated.trimEnd()}\n`, 'utf-8')
