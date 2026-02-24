@@ -25,18 +25,17 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
+    "@clack/prompts": "catalog:prod",
     "consola": "catalog:prod",
     "diff": "catalog:frontend",
     "execa": "catalog:prod",
     "magicast": "catalog:prod",
     "pathe": "catalog:frontend",
     "pkg-types": "catalog:prod",
-    "prompts": "catalog:prod",
     "semver": "catalog:prod"
   },
   "devDependencies": {
     "@types/diff": "catalog:types",
-    "@types/prompts": "catalog:types",
     "unbuild": "catalog:buildtools"
   }
 }
