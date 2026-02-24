@@ -1,9 +1,11 @@
 import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
 import { debounce } from 'perfect-debounce'
+import { watchStorageMount } from './storage-watch'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   let nitro: Nitro
+  let unwatchStorage: (() => Promise<void> | void) | undefined
 
   let cache: ServerRouteInfo[] | null = null
 
@@ -18,11 +20,20 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     refresh('getServerRoutes')
   })
 
-  nuxt.hook('ready', () => {
-    nitro?.storage.watch((event, key) => {
+  nuxt.hook('ready', async () => {
+    if (!nitro)
+      return
+
+    await unwatchStorage?.()
+    unwatchStorage = await watchStorageMount(nitro.storage, 'src', (_event, key) => {
       if (key.startsWith('src:api:') || key.startsWith('src:routes:'))
         refreshDebounced()
     })
+  })
+
+  nuxt.hook('close', async () => {
+    await unwatchStorage?.()
+    unwatchStorage = undefined
   })
 
   function scan() {
