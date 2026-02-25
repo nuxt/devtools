@@ -6,7 +6,7 @@ Nuxt provides a file-based routing to create routes within your web application 
 
 ---
 
-# Middlewares
+## Middlewares
 
 Nuxt provides a customizable route middleware framework that can be used throughout the application. This is ideal for extracting code that needs to run before navigating to a particular route.
 
