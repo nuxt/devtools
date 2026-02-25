@@ -1,3 +1,19 @@
+## [3.2.2](https://github.com/nuxt/devtools/compare/v3.2.1...v3.2.2) (2026-02-25)
+
+
+### Bug Fixes
+
+* attributes error penetration warning ([#930](https://github.com/nuxt/devtools/issues/930)) ([706a760](https://github.com/nuxt/devtools/commit/706a76055afcaa9258f2e8576917086800e13922))
+* **devtools:** scope storage watchers to avoid EMFILE ([#934](https://github.com/nuxt/devtools/issues/934)) ([902c60c](https://github.com/nuxt/devtools/commit/902c60cb9d77802a0ed59c39584f27728d39e218))
+* **wizard:** typos ([#931](https://github.com/nuxt/devtools/issues/931)) ([0216c08](https://github.com/nuxt/devtools/commit/0216c08694fa78b3e338421a6f575c2bd46bbb35))
+
+
+### Features
+
+* replace `prompts` with `@clack/prompts` ([#935](https://github.com/nuxt/devtools/issues/935)) ([1aa3d2d](https://github.com/nuxt/devtools/commit/1aa3d2db4e9753cf976a1ca19761413f933f10fe))
+
+
+
 ## [3.2.1](https://github.com/nuxt/devtools/compare/v3.2.0...v3.2.1) (2026-02-12)
 
 
