@@ -42,6 +42,10 @@ provide('navigation', navigation)
         target="_blank" color="gray" variant="ghost"
       />
       <UButton
+        aria-label="Nuxt on Bluesky" icon="i-simple-icons-bluesky" to="https://go.nuxt.com/bluesky"
+        target="_blank" color="gray" variant="ghost"
+      />
+      <UButton
         aria-label="Nuxt on X" icon="i-simple-icons-x" to="https://x.com/nuxt_js"
         target="_blank" color="gray" variant="ghost"
       />
@@ -73,6 +77,11 @@ provide('navigation', navigation)
       <UButton
         aria-label="Nuxt Website" icon="i-simple-icons-nuxtdotjs"
         to="https://nuxt.com"
+        target="_blank" color="gray" variant="ghost"
+      />
+      <UButton
+        aria-label="Nuxt on Bluesky" icon="i-simple-icons-bluesky"
+        to="https://go.nuxt.com/bluesky"
         target="_blank" color="gray" variant="ghost"
       />
       <UButton
