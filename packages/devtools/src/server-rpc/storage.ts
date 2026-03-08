@@ -1,11 +1,46 @@
-import type { StorageMounts } from 'nitropack'
 import type { Storage, StorageValue } from 'unstorage'
-import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { NitroLike, NuxtDevtoolsServerContext, ServerFunctions, StorageMounts } from '../types'
+import { builtinDrivers, createStorage } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 function shouldIgnoreStorageKey(key: string) {
   return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
+}
+
+/**
+ * Resolve the unstorage instance from the nitro instance
+ * - in nitropack v2, `nitro.storage` is available in build-time
+ * - in nitro v3, it is runtime only, so we must initialise it here
+ */
+async function resolveStorage(nitro: NitroLike): Promise<Storage> {
+  // nitropack v2
+  if (nitro.storage) {
+    return nitro.storage
+  }
+
+  // nitro v3
+  const storage = createStorage()
+  const mounts = {
+    ...nitro.options.storage,
+    ...nitro.options.devStorage,
+  }
+
+  for (const [mountName, opts] of Object.entries(mounts)) {
+    if (opts?.driver) {
+      try {
+        const driverPath = (builtinDrivers as Record<string, string>)[opts.driver] || opts.driver
+        const createDriver = await import(driverPath).then(r => r.default || r)
+        const { driver: _, ...driverOpts } = opts
+        storage.mount(mountName, createDriver(driverOpts))
+      }
+      catch (err) {
+        console.warn(`[nuxt-devtools] Failed to mount storage driver "${opts.driver}" for "${mountName}":`, err)
+      }
+    }
+  }
+
+  return storage
 }
 
 export function setupStorageRPC({
@@ -18,8 +53,8 @@ export function setupStorageRPC({
   let storage: Storage | undefined
   let unwatchStorageMounts: Array<() => Promise<void> | void> = []
 
-  nuxt.hook('nitro:init', (nitro) => {
-    storage = nitro.storage
+  nuxt.hook('nitro:init', async (nitro: NitroLike) => {
+    storage = await resolveStorage(nitro)
 
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53

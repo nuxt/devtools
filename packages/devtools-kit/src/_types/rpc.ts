@@ -1,10 +1,10 @@
-import type { Nitro, StorageMounts } from 'nitropack'
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageValue } from 'unstorage'
 import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { NitroLike, StorageMounts } from './nitro'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
 import type { TerminalAction, TerminalInfo } from './terminals'
@@ -90,7 +90,7 @@ export interface ClientFunctions {
 
 export interface NuxtServerData {
   nuxt: NuxtOptions
-  nitro?: Nitro['options']
+  nitro?: NitroLike['options']
   vite: {
     server?: ResolvedConfig
     client?: ResolvedConfig

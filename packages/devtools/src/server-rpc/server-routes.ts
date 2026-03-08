@@ -1,11 +1,9 @@
-import type { Nitro } from 'nitropack'
-import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
+import type { NitroLike, NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
+import { relative, resolve } from 'pathe'
 import { debounce } from 'perfect-debounce'
-import { watchStorageMount } from './storage-watch'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let nitro: Nitro
-  let unwatchStorage: (() => Promise<void> | void) | undefined
+  let nitro: NitroLike | undefined
 
   let cache: ServerRouteInfo[] | null = null
 
@@ -14,26 +12,20 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     refresh('getServerRoutes')
   }, 500)
 
-  nuxt.hook('nitro:init', (_) => {
+  nuxt.hook('nitro:init', (_: NitroLike) => {
     nitro = _
     cache = null
     refresh('getServerRoutes')
   })
 
-  nuxt.hook('ready', async () => {
-    if (!nitro)
-      return
-
-    await unwatchStorage?.()
-    unwatchStorage = await watchStorageMount(nitro.storage, 'src', (_event, key) => {
-      if (key.startsWith('src:api:') || key.startsWith('src:routes:'))
-        refreshDebounced()
-    })
-  })
-
-  nuxt.hook('close', async () => {
-    await unwatchStorage?.()
-    unwatchStorage = undefined
+  // Watch for server route file changes
+  const serverDir = resolve(nuxt.options.srcDir, nuxt.options.serverDir)
+  nuxt.hook('builder:watch', (_event, path) => {
+    const absolutePath = resolve(nuxt.options.srcDir, path)
+    const rel = relative(serverDir, absolutePath)
+    if (!rel.startsWith('..') && (rel.startsWith('api/') || rel.startsWith('routes/'))) {
+      refreshDebounced()
+    }
   })
 
   function scan() {

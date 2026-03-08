@@ -1,11 +1,9 @@
-import type { Nitro } from 'nitropack'
-import type { NuxtDevtoolsServerContext, ScannedNitroTasks, ServerFunctions } from '../types'
+import type { NitroLike, NuxtDevtoolsServerContext, ScannedNitroTasks, ServerFunctions } from '../types'
+import { relative, resolve } from 'pathe'
 import { debounce } from 'perfect-debounce'
-import { watchStorageMount } from './storage-watch'
 
 export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let nitro: Nitro
-  let unwatchStorage: (() => Promise<void> | void) | undefined
+  let nitro: NitroLike | undefined
 
   let cache: ScannedNitroTasks | null = null
 
@@ -14,26 +12,20 @@ export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext
     refresh('getServerTasks')
   }, 500)
 
-  nuxt.hook('nitro:init', (_) => {
+  nuxt.hook('nitro:init', (_: NitroLike) => {
     nitro = _
     cache = null
     refresh('getServerTasks')
   })
 
-  nuxt.hook('ready', async () => {
-    if (!nitro)
-      return
-
-    await unwatchStorage?.()
-    unwatchStorage = await watchStorageMount(nitro.storage, 'src', (_event, key) => {
-      if (key.startsWith('src:tasks:'))
-        refreshDebounced()
-    })
-  })
-
-  nuxt.hook('close', async () => {
-    await unwatchStorage?.()
-    unwatchStorage = undefined
+  // Watch for server task file changes
+  const serverDir = resolve(nuxt.options.srcDir, nuxt.options.serverDir)
+  nuxt.hook('builder:watch', (_event, path) => {
+    const absolutePath = resolve(nuxt.options.srcDir, path)
+    const rel = relative(serverDir, absolutePath)
+    if (rel.startsWith('tasks/')) {
+      refreshDebounced()
+    }
   })
 
   function scan() {
