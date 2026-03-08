@@ -1,13 +1,12 @@
-import type { Nitro } from 'nitropack'
 import type { ResolvedConfig } from 'vite'
-import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { NitroLike, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { addVitePlugin } from '@nuxt/kit'
 
 export function setupServerDataRPC({
   nuxt,
   ensureDevAuthToken,
 }: NuxtDevtoolsServerContext) {
-  let nitro: Nitro | undefined
+  let nitro: NitroLike | undefined
   let viteServer: ResolvedConfig | undefined
   let viteClient: ResolvedConfig | undefined
 
