@@ -36,6 +36,7 @@ const editorOptions = [
   ['VS Code Insider', 'vscode-insider'],
   ['Cursor', 'cursor'],
   ['Zed', 'zed'],
+  ['Zed (zeditor)', 'zeditor'],
   ['WebStorm', 'webstorm'],
   ['Sublime Text', 'sublime'],
   ['Atom', 'atom'],
