@@ -32,7 +32,9 @@
     "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev playground",
     "prepack": "pnpm build",
-    "playground:build": "nuxi generate playground"
+    "playground:build": "nuxi generate playground",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "@nuxt/devtools": "workspace:*"
@@ -61,7 +63,13 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "workspace:*",
-    "nuxt": "catalog:buildtools"
+    "@nuxtjs/storybook": "catalog:",
+    "@storybook-vue/nuxt": "catalog:",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "eslint-plugin-storybook": "catalog:",
+    "nuxt": "catalog:buildtools",
+    "storybook": "catalog:"
   },
   "publishConfig": {
     "access": "public"

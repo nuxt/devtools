@@ -19,7 +19,8 @@
     "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "npx simple-git-hooks && pnpm -C docs install",
-    "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
+    "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare",
+    "ui-kit:storybook": "pnpm --filter=@nuxt/devtools-ui-kit storybook"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",
