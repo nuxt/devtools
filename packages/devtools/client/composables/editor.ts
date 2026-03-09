@@ -6,6 +6,8 @@ import { useServerConfig, useVirtualFiles } from './state'
 import { useCurrentVirtualFile } from './state-routes'
 import { telemetry } from './telemetry'
 
+const COLON_SEPARATOR_RE = /:/g
+
 export function useOpenInEditor() {
   const config = useServerConfig()
   const virtualFiles = useVirtualFiles()
@@ -21,7 +23,7 @@ export function useOpenInEditor() {
       ? `#build${filepath.slice(buildDir.length)}`
       : filepath
 
-    const [realpath, _line = 1, _col = 0] = path.split(/:/g)
+    const [realpath, _line = 1, _col = 0] = path.split(COLON_SEPARATOR_RE)
 
     const vfs = virtualFiles.value?.entries.find(i => i.path === realpath || i.id === realpath)
       || virtualFiles.value?.entries.find(i => i.path === filepath || i.id === filepath)

@@ -4,6 +4,8 @@ import fsp from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
 import { dirname, join } from 'pathe'
 
+const NUXT_WELCOME_RE = /<NuxtWelcome\s*\/>/
+
 const pagesIndexTemplate = `<script setup lang="ts">
 const route = useRoute()
 </script>
@@ -37,7 +39,7 @@ export async function enablePages(nuxt: Nuxt) {
   if (appContent && !appContent.includes('<NuxtPage')) {
     appContent = appContent
       .replace('</template>', '  <NuxtPage />\n</template>')
-      .replace(/<NuxtWelcome\s*\/>/, '')
+      .replace(NUXT_WELCOME_RE, '')
     await fsp.writeFile(pathApp, appContent, 'utf-8')
   }
 

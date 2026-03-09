@@ -1,3 +1,5 @@
+const VALID_IDENTIFIER_RE = /^[a-z_$][\w$]*$/i
+
 export function toJsLiteral(value: any, seen = new Set()): string {
   // null
   if (value === null) {
@@ -73,8 +75,7 @@ export function toJsLiteral(value: any, seen = new Set()): string {
  */
 function safeKey(key: string) {
   // A simple check for valid identifier names
-  const validIdentifier = /^[a-z_$][\w$]*$/i
-  if (validIdentifier.test(key)) {
+  if (VALID_IDENTIFIER_RE.test(key)) {
     return key // leave as is
   }
   // otherwise, wrap in quotes

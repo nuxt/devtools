@@ -6,8 +6,10 @@ const props = defineProps<{
   moduleMutationRecords: ServerDebugModuleMutationRecord[]
 }>()
 
+const WINDOWS_DRIVE_RE = /^[a-z]:[\\/]/i
+
 function isPath(path: string) {
-  return path.startsWith('/') || path.match(/^[a-z]:[\\/]/i)
+  return path.startsWith('/') || path.match(WINDOWS_DRIVE_RE)
 }
 
 // const search = ref('')

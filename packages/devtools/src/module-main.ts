@@ -17,6 +17,9 @@ import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { readLocalOptions } from './utils/local-options'
 
+const MULTIPLE_SLASHES_RE = /\/+/g
+const DEVTOOLS_BASE_RE = /\/__NUXT_DEVTOOLS_BASE__\//g
+
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
   if (process.env.TEST || process.env.NODE_ENV === 'test' || nuxt.options.test)
@@ -36,7 +39,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Determine if user aware devtools, by checking the presentation in the config
   const enabledExplicitly = (nuxt.options.devtools === true as unknown)
     || (nuxt.options.devtools && (nuxt.options.devtools as unknown as ModuleOptions).enabled)
-    || !!nuxt.options.modules.find(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge' || m === '@nuxt/devtools-nightly')
+    || nuxt.options.modules.some(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge' || m === '@nuxt/devtools-nightly')
 
   await nuxt.callHook('devtools:before')
 
@@ -160,7 +163,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     from: join(runtimeDir, 'use-nuxt-devtools'),
   })
 
-  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(/\/+/g, '/')
+  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
   const ROUTE_CLIENT = `${ROUTE_PATH}/client`
   const ROUTE_AUTH = `${ROUTE_PATH}/auth`
   const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`
@@ -184,7 +187,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
       const handleIndex = async (res: ServerResponse) => {
         res.setHeader('Content-Type', 'text/html')
         res.statusCode = 200
-        res.write((await indexContent).replace(/\/__NUXT_DEVTOOLS_BASE__\//g, `${ROUTE_CLIENT}/`))
+        res.write((await indexContent).replace(DEVTOOLS_BASE_RE, `${ROUTE_CLIENT}/`))
         res.end()
       }
       server.middlewares.use(ROUTE_CLIENT, (req, res) => {

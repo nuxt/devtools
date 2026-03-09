@@ -6,6 +6,8 @@ defineProps<{
   stacktrace: StackFrame[]
 }>()
 
+const MJS_EXTENSION_RE = /\.m?js$/
+
 const config = useServerConfig()
 
 function urlToFilepath(url: string) {
@@ -14,7 +16,7 @@ function urlToFilepath(url: string) {
     if (pathname.startsWith('/_nuxt/'))
       pathname = pathname.slice(6)
     if (pathname.startsWith('/@id/virtual:nuxt:'))
-      return `#build/${pathname.split('/.nuxt/')[1]}`.replace(/\.m?js$/, '')
+      return `#build/${pathname.split('/.nuxt/')[1]}`.replace(MJS_EXTENSION_RE, '')
     if (pathname.includes('/@fs/'))
       return `/${pathname.split('/@fs/')[1]}`
     return (config.value?.rootDir || '') + pathname

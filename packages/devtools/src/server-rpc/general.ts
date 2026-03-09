@@ -15,6 +15,11 @@ import { setupHooksDebug } from '../runtime/shared/hooks'
 import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
 
+const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
+// eslint-disable-next-line regexp/no-super-linear-backtracking
+const FILE_LINE_COL_RE = /^(.*?)(:[:\d]*)$/
+const MULTIPLE_SLASHES_RE = /\/+/g
+
 export function setupGeneralRPC({
   nuxt,
   options,
@@ -57,7 +62,7 @@ export function setupGeneralRPC({
       page.children?.forEach(searchChildren)
     }
     v.forEach(searchChildren)
-    serverPages.push(...Array.from(pagesSet).sort((a, b) => a.path.localeCompare(b.path)))
+    serverPages.push(...[...pagesSet].toSorted((a: NuxtPage, b: NuxtPage) => a.path.localeCompare(b.path)))
 
     refresh('getServerPages')
   })
@@ -70,8 +75,8 @@ export function setupGeneralRPC({
     importPresets.push(...result)
     refresh('getAutoImports')
   })
-  nuxt.hook('imports:context', (_unimport: Unimport) => {
-    unimport = _unimport
+  nuxt.hook('imports:context', (_unimport: any) => {
+    unimport = _unimport as Unimport
   })
   nuxt.hook('imports:dirs', (dirs) => {
     importDirs = dirs
@@ -187,12 +192,11 @@ export function setupGeneralRPC({
       return Object.values(serverHooks)
     },
     async openInEditor(input: string): Promise<boolean> {
-      if (input.startsWith('./') || !input.match(/^[a-z]:|^\//i))
+      if (input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input))
         input = resolve(process.cwd(), input)
 
       // separate line and column syntax
-      // eslint-disable-next-line regexp/no-super-linear-backtracking
-      const match = input.match(/^(.*?)(:[:\d]*)$/)
+      const match = input.match(FILE_LINE_COL_RE)
       let suffix = ''
       if (match) {
         input = match[1]!
@@ -242,7 +246,7 @@ export function setupGeneralRPC({
 
       origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
 
-      const ROUTE_AUTH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__/auth`.replace(/\/+/g, '/')
+      const ROUTE_AUTH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__/auth`.replace(MULTIPLE_SLASHES_RE, '/')
 
       const message = [
         `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,

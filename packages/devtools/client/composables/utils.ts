@@ -11,18 +11,23 @@ import { isRef, triggerRef } from 'vue'
 import { useClient } from './client'
 import { useServerConfig } from './state'
 
+const NODE_MODULES_RE = /[/\\]node_modules[/\\]/
+const PACKAGE_NAME_RE = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/
+const BACKSLASH_RE = /\\/g
+const NODE_MODULES_PATH_RE = /.*\/node_modules\/(.*)$/
+
 export function isNodeModulePath(path: string) {
-  return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
+  return !!path.match(NODE_MODULES_RE) || isPackageName(path)
 }
 
 export function isPackageName(name: string) {
-  return name[0] === '#' || !!name.match(/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/)
+  return name[0] === '#' || !!name.match(PACKAGE_NAME_RE)
 }
 
 export function getModuleNameFromPath(path: string) {
   if (isPackageName(path))
     return path
-  const match = path.replace(/\\/g, '/').match(/.*\/node_modules\/(.*)$/)?.[1]
+  const match = path.replace(BACKSLASH_RE, '/').match(NODE_MODULES_PATH_RE)?.[1]
   if (!match)
     return undefined
   if (match.startsWith('@'))
@@ -31,7 +36,7 @@ export function getModuleNameFromPath(path: string) {
 }
 
 function getModuleSubpathFromPath(path: string) {
-  const match = path.match(/.*\/node_modules\/(.*)$/)?.[1]
+  const match = path.match(NODE_MODULES_PATH_RE)?.[1]
   if (!match)
     return undefined
   return match
@@ -44,7 +49,7 @@ export function isBuiltInModule(name: string | undefined) {
 }
 
 export function parseReadablePath(path: string, root: string) {
-  path = path.replace(/\\/g, '/')
+  path = path.replace(BACKSLASH_RE, '/')
   if (isPackageName(path)) {
     return {
       moduleName: path,

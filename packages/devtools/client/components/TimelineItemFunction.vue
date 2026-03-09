@@ -7,10 +7,12 @@ const props = defineProps<{
   item: TimelineEventFunction
 }>()
 
+const OP_PLACEHOLDER_RE = /_op_/
+
 const colorRaw = computed(() => getHslColorFromStringHash(props.item.name, 50, 60, '_op_'))
-const color = computed(() => colorRaw.value.replace(/_op_/, '1'))
+const color = computed(() => colorRaw.value.replace(OP_PLACEHOLDER_RE, '1'))
 const textColor = computed(() => getHslColorFromStringHash(props.item.name, 50, 40))
-const colorBackground = computed(() => colorRaw.value.replace(/_op_/, '0.2'))
+const colorBackground = computed(() => colorRaw.value.replace(OP_PLACEHOLDER_RE, '0.2'))
 </script>
 
 <template>

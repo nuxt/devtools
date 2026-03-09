@@ -3,7 +3,9 @@ import { computed } from 'vue'
 
 const props = defineProps<{ id?: string }>()
 
-const ext = computed(() => props.id?.split(/\./g).pop() || '')
+const DOT_RE = /\./g
+
+const ext = computed(() => props.id?.split(DOT_RE).pop() || '')
 const icon = computed(() => {
   switch (ext.value) {
     case 'vue':

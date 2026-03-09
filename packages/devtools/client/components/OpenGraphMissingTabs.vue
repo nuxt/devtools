@@ -11,6 +11,8 @@ const props = defineProps<{
   tags: NormalizedHeadTag[]
   matchedRouteFilepath?: string
 }>()
+const JSON_KEY_RE = /"([^"]+)":/g
+const DOUBLE_QUOTE_RE = /"/g
 
 const missingTags = computed(() => {
   return ogTags.filter(define => !props.tags?.some(tag => tag.name === define.name))
@@ -31,16 +33,16 @@ const codeSnippet = computed(() => {
 
   if (Object.keys(mergedSeoMetaOptions).length) {
     const body = JSON.stringify(mergedSeoMetaOptions, null, 2)
-      .replace(/"([^"]+)":/g, '$1:')
-      .replace(/"/g, '\'')
+      .replace(JSON_KEY_RE, '$1:')
+      .replace(DOUBLE_QUOTE_RE, '\'')
 
     lines.push(`useSeoMeta(${body})`)
   }
 
   if (Object.keys(mergedHeadOptions).length) {
     const body = JSON.stringify(mergedHeadOptions, null, 2)
-      .replace(/"([^"]+)":/g, '$1:')
-      .replace(/"/g, '\'')
+      .replace(JSON_KEY_RE, '$1:')
+      .replace(DOUBLE_QUOTE_RE, '\'')
 
     lines.push(`useHead(${body})`)
   }

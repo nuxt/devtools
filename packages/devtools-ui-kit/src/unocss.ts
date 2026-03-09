@@ -17,6 +17,8 @@ import {
 
 // @unocss-include
 
+const N_PREFIX_RE = /^n-(.*)$/
+
 export function unocssPreset(): Preset {
   return {
     name: '@nuxt/devtools-ui-kit',
@@ -28,7 +30,7 @@ export function unocssPreset(): Preset {
       },
     }),
     rules: [
-      [/^n-(.*)$/, ([, body]: string[], { theme }: RuleContext<Theme>) => {
+      [N_PREFIX_RE, ([, body]: string[], { theme }: RuleContext<Theme>) => {
         const color = parseColor(body!, theme)
         if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
           return {
@@ -36,7 +38,7 @@ export function unocssPreset(): Preset {
           }
         }
       }],
-      [/^n-(.*)$/, fonts[1]![1] as any],
+      [N_PREFIX_RE, fonts[1]![1] as any],
       ['n-dashed', { 'border-style': 'dashed' }],
       ['n-solid', {
         'background-color': 'rgba(var(--nui-c-context), 1) !important',

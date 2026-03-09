@@ -56,7 +56,7 @@ export function useCommands() {
     return [
       ...fixedCommands,
       ...tabCommands.value,
-      ...Array.from(registeredCommands.values())
+      ...[...registeredCommands.values()]
         .flatMap(i => toValue(i)),
     ]
   })

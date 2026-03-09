@@ -57,7 +57,7 @@ const entries = computed(() => {
       })
     }
     addToSet(selectedFilter.value)
-    return Array.from(set)
+    return [...set]
   }
   return relations
 })
@@ -206,14 +206,18 @@ function onCloseDrawer() {
   selected.value = undefined
 }
 
+const COMPONENTS_PATH_RE = /.*\/components\//
+const VUE_EXT_RE = /\.vue$/
+const INDEX_SUFFIX_RE = /\/index$/
+
 function getComponentName(path: string) {
   const component = props.components.find(i => i.filePath === path)
   if (component)
     return component.pascalName
   return path
-    .replace(/.*\/components\//, '')
-    .replace(/\.vue$/, '')
-    .replace(/\/index$/, '')
+    .replace(COMPONENTS_PATH_RE, '')
+    .replace(VUE_EXT_RE, '')
+    .replace(INDEX_SUFFIX_RE, '')
     .split('/')
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join('')

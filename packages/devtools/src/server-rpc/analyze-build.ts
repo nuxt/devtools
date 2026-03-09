@@ -7,6 +7,8 @@ import { dirname, join } from 'pathe'
 import Git from 'simple-git'
 import { glob } from 'tinyglobby'
 
+const COLON_RE = /:/g
+
 export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
@@ -98,7 +100,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
     }
     catch {
       // if the git is not available, fallback to iso string
-      return new Date().toISOString().replace(/:/g, '-')
+      return new Date().toISOString().replace(COLON_RE, '-')
     }
   }
 

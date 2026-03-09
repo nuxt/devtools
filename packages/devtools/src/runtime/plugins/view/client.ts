@@ -19,6 +19,8 @@ import { initTimelineMetrics } from '../../function-metrics-helpers'
 import { settings } from '../../settings'
 import { popupWindow, state } from './state'
 
+const MULTIPLE_SLASHES_RE = /\/+/g
+
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
 export { clientRef as client }
@@ -131,7 +133,7 @@ export async function setupDevToolsClient({
     if (!iframe) {
       const runtimeConfig = useRuntimeConfig()
       const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(/\/+/g, '/')
+      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(MULTIPLE_SLASHES_RE, '/')
       const initialUrl = CLIENT_PATH + state.value.route
       iframe = document.createElement('iframe')
 

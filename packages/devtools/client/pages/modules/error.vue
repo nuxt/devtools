@@ -14,6 +14,8 @@ definePageMeta({
   },
 })
 
+const HTML_TAG_RE = /<.*?>/g
+
 const client = useClient()
 const error = computed(() => {
   const err = client.value?.nuxt?.payload?.error as {
@@ -39,7 +41,7 @@ const stacks = computed(() => {
     // Nuxt server returns a HTML rendered stacktrace, workaround by removing all HTML tags
     if (error.value.stack.startsWith('<pre>')) {
       return parseStrackTrace({
-        stack: error.value.stack.replace(/<.*?>/g, ''),
+        stack: error.value.stack.replace(HTML_TAG_RE, ''),
       } as any)
     }
     return parseStrackTrace(error.value)

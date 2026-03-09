@@ -1,5 +1,7 @@
 import type { RouteInfo } from '~~/../src/types'
 
+const SLASH_SEPARATOR_RE = /\//g
+
 export interface TreeNode {
   name?: string
   children: Record<string, TreeNode>
@@ -25,7 +27,7 @@ export function toTree(modules: RouteInfo[], name: string) {
   modules
     .filter(i => i.file)
     .forEach((m) => {
-      const parts = m.path.split(/\//g).filter(Boolean)
+      const parts = m.path.split(SLASH_SEPARATOR_RE).filter(Boolean)
       add(m, parts)
     })
 

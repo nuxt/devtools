@@ -35,7 +35,7 @@ watchEffect(() => {
       : 'auto'
 
     if (!popupWindow.value) {
-      if (Array.from(container.value.children).every(el => el !== iframe))
+      if ([...container.value.children].every(el => el !== iframe))
         container.value.appendChild(iframe)
     }
   }
@@ -60,7 +60,7 @@ useEventListener(window, 'mousedown', (e: MouseEvent) => {
 
   const matched = e.composedPath().find((_el) => {
     const el = _el as HTMLElement
-    return Array.from(el.classList || []).some(c => c.startsWith('nuxt-devtools-'))
+    return [...el.classList || []].some(c => c.startsWith('nuxt-devtools-'))
       || el.tagName?.toLowerCase() === 'iframe'
   })
 

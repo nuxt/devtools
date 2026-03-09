@@ -19,6 +19,8 @@ definePageMeta({
   },
 })
 
+const NON_WORD_CHARS_RE = /\W/g
+
 const inputDefaultsDrawer = ref(false)
 
 const serverRoutes = useServerRoutes()
@@ -76,7 +78,7 @@ const filterByCollection = computed(() => {
 
     const newCollection: ServerRouteInfo = {
       route: routeName,
-      filepath: routeName.replace(/\W/g, '-').toLowerCase(),
+      filepath: routeName.replace(NON_WORD_CHARS_RE, '-').toLowerCase(),
       type: 'collection',
       routes: [],
     }
@@ -107,7 +109,7 @@ const filterByCollection = computed(() => {
       }
     }
 
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1]!.includes('.'))
+    if (collectionNames.length > 0 && collectionNames.at(-1)!.includes('.'))
       collectionNames.pop()
 
     collectionNames.forEach((collectionName) => {

@@ -4,6 +4,8 @@ import DevTools from '../src/module'
 
 const resolver = createResolver(import.meta.url)
 
+const CAMEL_TO_KEBAB_RE = /([a-z0-9])([A-Z])/g
+
 const packageBundles = {
   'shiki': ['shiki', '@shikijs'],
   'quicktype-core': ['quicktype-core'],
@@ -100,11 +102,11 @@ export default defineNuxtConfig({
         rollupOptions: {
           output: {
             chunkFileNames(chunkInfo) {
-              const kebabName = chunkInfo.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+              const kebabName = chunkInfo.name.replace(CAMEL_TO_KEBAB_RE, '$1-$2').toLowerCase()
               return `_nuxt/${kebabName}-[hash].js`
             },
             assetFileNames(assetInfo) {
-              const kebabName = (assetInfo.name || '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+              const kebabName = (assetInfo.name || '').replace(CAMEL_TO_KEBAB_RE, '$1-$2').toLowerCase()
               return `_nuxt/${kebabName}-[hash][extname]`
             },
             manualChunks(id) {

@@ -12,8 +12,11 @@ const props = withDefaults(defineProps<{
   disabled: false,
   default: () => ({}),
 })
-
 const emit = defineEmits<{ (...args: any): void }>()
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const TIME_RE = /^\d{2}:\d{2}$/
+const DATETIME_LOCAL_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
+
 const params = useVModel(props, 'modelValue', emit, { passive: true })
 
 const filteredKeys = computed(() => {
@@ -53,13 +56,13 @@ watch(() => params, (items) => {
     else if (item.type === 'file' && typeof item.value !== 'object') {
       item.value = ''
     }
-    else if (item.type === 'date' && typeof item.value === 'string' && !item.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    else if (item.type === 'date' && typeof item.value === 'string' && !DATE_RE.test(item.value)) {
       item.value = new Date().toISOString().slice(0, 10)
     }
-    else if (item.type === 'time' && typeof item.value === 'string' && !item.value.match(/^\d{2}:\d{2}$/)) {
+    else if (item.type === 'time' && typeof item.value === 'string' && !TIME_RE.test(item.value)) {
       item.value = new Date().toISOString().slice(11, 16)
     }
-    else if (item.type === 'datetime-local' && typeof item.value === 'string' && !item.value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+    else if (item.type === 'datetime-local' && typeof item.value === 'string' && !DATETIME_LOCAL_RE.test(item.value)) {
       item.value = new Date().toISOString().slice(0, 16)
     }
     else if (item.type === 'string') {

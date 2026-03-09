@@ -4,6 +4,8 @@ import { useClient } from './client'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'
 
+const LAZY_COMPONENT_RE = /^Lazy[A-Z]/
+
 export function useComponents() {
   const client = useClient()
   const serverComponents = useAsyncState('getComponents', () => rpc.getComponents())
@@ -16,10 +18,9 @@ export function useComponents() {
         global: true,
       } as unknown as Component))
       // filter out lazy components
-      .filter(i => !/^Lazy[A-Z]/.test(i.pascalName))
+      .filter(i => !LAZY_COMPONENT_RE.test(i.pascalName))
       // dedupe server components
-      .filter(i => !(serverComponents.value || [])
-        .find((s: any) => s.pascalName === i.pascalName)))
+      .filter(i => !serverComponents.value || [].some((s: any) => s.pascalName === i.pascalName)))
 
   return computed(() => [
     ...globalComponents.value,

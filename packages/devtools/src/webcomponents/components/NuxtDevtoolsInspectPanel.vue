@@ -12,6 +12,8 @@ const emit = defineEmits<{
   (e: 'selectParent'): void
   (e: 'openInEditor', file: string): void
 }>()
+const WHITESPACE_RE = /\s+/
+const FILE_EXT_RE = /\.\w+$/
 
 const PANEL_WIDTH = 400
 const PANEL_HEIGHT = 300
@@ -100,7 +102,7 @@ function generateUniqueSelector(element: Element | undefined): string {
 
     // Add classes
     if (current.className && typeof current.className === 'string') {
-      const classes = current.className.trim().split(/\s+/).filter(Boolean)
+      const classes = current.className.trim().split(WHITESPACE_RE).filter(Boolean)
       if (classes.length > 0)
         selector += `.${classes.map(c => CSS.escape(c)).join('.')}`
     }
@@ -108,7 +110,7 @@ function generateUniqueSelector(element: Element | undefined): string {
     // Add nth-child if there are siblings of the same type
     const parent = current.parentElement
     if (parent) {
-      const siblings = Array.from(parent.children).filter(
+      const siblings = [...parent.children].filter(
         child => child.tagName === current!.tagName,
       )
       if (siblings.length > 1) {
@@ -146,7 +148,7 @@ function buildComponentTree(): string {
         }
         else if (typeof vnode.type === 'object') {
           const typeObj = vnode.type as any
-          componentName = typeObj.name || typeObj.__name || typeObj.__file?.split('/').pop()?.replace(/\.\w+$/, '') || 'AnonymousComponent'
+          componentName = typeObj.name || typeObj.__name || typeObj.__file?.split('/').pop()?.replace(FILE_EXT_RE, '') || 'AnonymousComponent'
         }
         else if (typeof vnode.type === 'function') {
           componentName = (vnode.type as any).name || 'FunctionalComponent'

@@ -1,5 +1,8 @@
 import type { NuxtDevtoolsServerContext } from '../types'
 
+const IMPORT_RE = /(?:\n|^)import (.*) from ['"](.*)['"]/g
+const EXPORT_DEFAULT_ARRAY_RE = /\nexport default\s*\[([\s\S]*)\]/
+
 export function setup({ nuxt }: NuxtDevtoolsServerContext) {
   if (!nuxt.options.dev || nuxt.options.test)
     return
@@ -53,10 +56,9 @@ function ${WRAPPER_KEY} (plugin, src) {
 }
 `
 
-          const imports = Array.from(content.matchAll(/(?:\n|^)import (.*) from ['"](.*)['"]/g))
-            .map(([, name, path]) => ({ name, path }))
+          const imports = Array.from(content.matchAll(IMPORT_RE), ([, name, path]) => ({ name, path }))
 
-          content = content.replace(/\nexport default\s*\[([\s\S]*)\]/, (_, itemsRaw: string) => {
+          content = content.replace(EXPORT_DEFAULT_ARRAY_RE, (_, itemsRaw: string) => {
             const items = itemsRaw.split(',').map(i => i.trim()).map((i) => {
               const importItem = imports.find(({ name }) => name === i)
               if (!importItem)

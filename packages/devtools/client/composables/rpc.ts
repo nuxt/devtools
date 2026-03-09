@@ -6,6 +6,9 @@ import { tryCreateHotContext } from 'vite-hot-client'
 import { ref, shallowRef } from 'vue'
 import { WS_EVENT_NAME } from '../../src/constant'
 
+const LEADING_TRAILING_SLASH_RE = /^\/|\/$/g
+const DEVTOOLS_CLIENT_PATH_RE = /\/__nuxt_devtools__\/client\/.*$/
+
 export const wsConnecting = ref(false)
 export const wsError = shallowRef<any>()
 export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
@@ -54,18 +57,18 @@ async function connectVite() {
     ?? window.parent?.useNuxtApp?.()?.payload?.config?.app // Nuxt 4 removes __NUXT__
 
   let base = appConfig?.baseURL ?? '/'
-  const buildAssetsDir = appConfig?.buildAssetsDir?.replace(/^\/|\/$/g, '') ?? '_nuxt'
+  const buildAssetsDir = appConfig?.buildAssetsDir?.replace(LEADING_TRAILING_SLASH_RE, '') ?? '_nuxt'
   if (base && !base.endsWith('/'))
     base += '/'
-  const current = window.location.href.replace(/\/__nuxt_devtools__\/client\/.*$/, '/')
-  const hot = await tryCreateHotContext(undefined, Array.from(new Set([
+  const current = window.location.href.replace(DEVTOOLS_CLIENT_PATH_RE, '/')
+  const hot = await tryCreateHotContext(undefined, [...new Set([
     `${base}${buildAssetsDir}/`,
     `${base}_nuxt/`,
     base,
     `${current}${buildAssetsDir}/`,
     `${current}_nuxt/`,
     current,
-  ])))
+  ])])
 
   if (!hot) {
     wsConnecting.value = true

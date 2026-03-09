@@ -23,7 +23,7 @@ const startTimes = computed(() => props.hooks.map(i => i.start).sort((a, b) => a
 
 const sorted = computed(() => {
   const sortFn = sortFunctions[sortby.value]
-  const sorted = [...props.hooks].sort(sortFn)
+  const sorted = props.hooks.toSorted(sortFn)
   if (direction.value === 'desc')
     sorted.reverse()
   return sorted

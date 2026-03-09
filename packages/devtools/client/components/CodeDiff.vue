@@ -9,6 +9,8 @@ const props = defineProps<{
   to: string
   lang: BuiltinLanguage | 'text'
 }>()
+const SHIKI_CLASS_RE = /class="shiki/
+const LINE_CLASS_RE = /class="line"/g
 
 function calculateDiff(from: string, to: string) {
   const diffs = diffLines(from.trim(), to.trim())
@@ -46,8 +48,8 @@ const diff = computed(() => calculateDiff(props.from, props.to))
 function transformRendered(code: string) {
   let count = 0
   return code
-    .replace(/class="shiki/, 'class="shiki diff')
-    .replace(/class="line"/g, (_) => {
+    .replace(SHIKI_CLASS_RE, 'class="shiki diff')
+    .replace(LINE_CLASS_RE, (_) => {
       count++
       if (diff.value.added.includes(count - 1))
         return 'class="line line-added"'

@@ -18,6 +18,8 @@ const props = defineProps({
   },
 })
 
+const FILE_EXT_RE = /\.\w+$/
+
 const visible = useVModel(props, 'modelValue')
 const lastTarget = ref()
 
@@ -41,7 +43,7 @@ function onDrop(e: DragEvent) {
 }
 
 function setFiles(data: FileList | null) {
-  const inputFiles = Array.from(data || [])
+  const inputFiles = [...data || []]
   if (inputFiles.length) {
     const newFiles: File[] = []
     const existingFileNames: string[] = files.value.map(file => file.name)
@@ -120,7 +122,7 @@ function blobIt(file: File) {
 
 function changeName(file: File, newName: string) {
   const [name, ext] = file.name.split('.')
-  const baseName = newName.replace(/\.\w+$/, '')
+  const baseName = newName.replace(FILE_EXT_RE, '')
   const newFileName = `${baseName}.${ext}`
   if (baseName.length === 0) {
     // TODO: with proper dialog

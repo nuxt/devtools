@@ -96,8 +96,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
 
       // use the latest generated config if available
       let source = latestGenerated
-      if (source == null)
-        source = await fs.readFile(filepath, 'utf-8')
+      source ??= await fs.readFile(filepath, 'utf-8')
 
       const generated = await magicastGuard(async () => {
         const mod = parseModule(source!, { sourceFileName: filepath })

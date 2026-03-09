@@ -4,6 +4,8 @@ import { resolve } from 'pathe'
 import semver from 'semver'
 import { runtimeDir } from '../dirs'
 
+const DEFINE_UPPER_RE = /^define[A-Z]/
+
 export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const helperPath = resolve(runtimeDir, 'function-metrics-helpers')
 
@@ -18,7 +20,7 @@ export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   ]
 
   const exclude = options.timeline?.functions?.exclude || [
-    /^define[A-Z]/,
+    DEFINE_UPPER_RE,
   ]
 
   function filter(item: Import) {

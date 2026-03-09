@@ -121,7 +121,7 @@ const filterByCollection = computed(() => {
     const taskParts = item.name.split(':')
     const collectionNames = taskParts.concat()
 
-    if (collectionNames.length > 0 && collectionNames[collectionNames.length - 1]?.includes('.'))
+    if (collectionNames.length > 0 && collectionNames.at(-1)?.includes('.'))
       collectionNames.pop()
 
     collectionNames.forEach((collectionName) => {

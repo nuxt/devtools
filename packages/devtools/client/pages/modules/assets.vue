@@ -28,7 +28,7 @@ const extensions = reactiveComputed(() => {
   const results: { name: string, value: boolean }[] = []
   for (const asset of assets.value || []) {
     const ext = asset.path.split('.').pop()
-    if (ext && !results.find(e => e.name === ext))
+    if (ext && !results.some(e => e.name === ext))
       results.push({ name: ext, value: true })
   }
   return results

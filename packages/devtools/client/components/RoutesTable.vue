@@ -22,7 +22,7 @@ const serverApp = useServerApp()
 const copy = useCopy()
 
 const sorted = computed(() => {
-  return [...props.pages].sort((a, b) => a.path.localeCompare(b.path))
+  return props.pages.toSorted((a, b) => a.path.localeCompare(b.path))
 })
 
 function openLayout(name: string) {

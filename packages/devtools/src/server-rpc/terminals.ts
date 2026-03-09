@@ -60,8 +60,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh, ensureDevAuthToken }: Nux
 
   return {
     getTerminals() {
-      return Array.from(terminals.values())
-        .map(i => serializeTerminal(i))
+      return Array.from(terminals.values(), i => serializeTerminal(i))
     },
     async getTerminalDetail(token: string, id: string) {
       await ensureDevAuthToken(token)

@@ -56,7 +56,7 @@ export default defineNuxtPlugin(() => {
   })
 
   connectParent()
-  setTimeout(() => connectParent(), 1000)
+  setTimeout(connectParent, 1000)
 
   router.afterEach(() => {
     const path = router.currentRoute.value?.path

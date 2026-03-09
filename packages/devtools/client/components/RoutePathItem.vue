@@ -5,25 +5,27 @@ import { computed, ref } from 'vue'
 const props = defineProps<{
   route: RouteInfo
 }>()
-
 const emit = defineEmits<{
   (e: 'navigate', path: string): void
 }>()
+const EXPRESS_PARAM_RE = /(:\w+[?*]?(?:\(\))?)/
+const TRAILING_PARENS_RE = /\(\)$/
+const MULTI_SLASH_RE = /\/+/g
 
 const partsInput = ref<string[]>([])
 const parts = computed(() => {
   const _ = parseExpressRoute(props.route.path)
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-  partsInput.value = Array.from({ length: _.length }, () => '')
+  partsInput.value = Array.from<string>({ length: _.length }).fill('')
   return _
 })
 
 function parseExpressRoute(route: string) {
   return route
-    .split(/(:\w+[?*]?(?:\(\))?)/)
+    .split(EXPRESS_PARAM_RE)
     .filter(Boolean)
     .map(i => i[0] === ':'
-      ? i.replace(/\(\)$/, '?')
+      ? i.replace(TRAILING_PARENS_RE, '?')
       : i)
 }
 
@@ -34,7 +36,7 @@ const path = computed(() => parts.value
       : i,
   )
   .join('')
-  .replace(/\/+/g, '/'))
+  .replace(MULTI_SLASH_RE, '/'))
 const hasWildcard = computed(() => props.route.path.includes(':'))
 
 function navigate() {
