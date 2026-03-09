@@ -18,7 +18,7 @@
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "npx simple-git-hooks && pnpm -C docs install",
+    "postinstall": "npx simple-git-hooks && pnpm -C docs install && skills-npm",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
@@ -47,6 +47,7 @@
     "nuxt-eslint-auto-explicit-import": "catalog:cli",
     "pathe": "catalog:frontend",
     "simple-git-hooks": "catalog:cli",
+    "skills-npm": "catalog:buildtools",
     "taze": "catalog:cli",
     "tsx": "catalog:cli",
     "turbo": "catalog:buildtools",
