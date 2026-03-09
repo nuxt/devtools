@@ -1,3 +1,13 @@
+## [3.2.3](https://github.com/nuxt/devtools/compare/v3.2.2...v3.2.3) (2026-03-09)
+
+
+### Bug Fixes
+
+* **devtools:** add zeditor option for Zed on Arch Linux ([#932](https://github.com/nuxt/devtools/issues/932)) ([4d481d5](https://github.com/nuxt/devtools/commit/4d481d514527ba3f24bf7463af6c898ab1918477))
+* unocss config, close [#937](https://github.com/nuxt/devtools/issues/937) ([0edaf99](https://github.com/nuxt/devtools/commit/0edaf99ab0291edf0b2e43c0c9775473d6ccaabd))
+
+
+
 ## [3.2.2](https://github.com/nuxt/devtools/compare/v3.2.1...v3.2.2) (2026-02-25)
 
 
