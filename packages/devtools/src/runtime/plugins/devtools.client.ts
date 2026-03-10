@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxt: any) => {
       return
 
     if (parent && window.self !== parent) {
-      if (parent.__NUXT_DEVTOOLS_VIEW__ || parent.document.querySelector('#nuxt-devtools-container'))
+      if (parent.__NUXT_DEVTOOLS_VIEW__)
         return
     }
   }
@@ -62,15 +62,5 @@ export default defineNuxtPlugin((nuxt: any) => {
         timeMetric,
         router,
       })
-
-      const isMac = typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('mac')
-
-      // eslint-disable-next-line no-console
-      console.log(
-        `✨ %cNuxt DevTools %c Press Shift + ${isMac ? 'Option' : 'Alt'} + D to open DevTools`,
-        'color: black; border-radius: 3px 0 0 3px; padding: 2px 2px 1px 10px; background: #00DC82',
-        'border-radius: 0 3px 3px 0; padding: 2px 10px 1px 2px; background: #00DC8220',
-        '',
-      )
     })
 })

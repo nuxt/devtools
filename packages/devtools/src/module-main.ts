@@ -1,4 +1,3 @@
-import type {} from '@vitejs/devtools-kit'
 import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
@@ -14,10 +13,10 @@ import { version } from '../package.json'
 import { defaultTabOptions } from './constant'
 import { getDevAuthToken } from './dev-auth'
 import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
+import { resolveNuxtDevToolsBaseRoute, setupViteDevToolsBridge } from './integrations/vite-devtools'
 import { setupRPC } from './server-rpc'
 import { readLocalOptions } from './utils/local-options'
 
-const MULTIPLE_SLASHES_RE = /\/+/g
 const DEVTOOLS_BASE_RE = /\/__NUXT_DEVTOOLS_BASE__\//g
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
@@ -34,6 +33,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     if (nuxt.options.build.analyze && (nuxt.options.build.analyze === true || nuxt.options.build.analyze.enabled))
       await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
+  }
+
+  if (typeof nuxt.options.devtools === 'object' && nuxt.options.devtools && 'viteDevTools' in nuxt.options.devtools) {
+    logger.warn('[nuxt-devtools] `devtools.viteDevTools` is removed and now always enabled. The option is ignored.')
   }
 
   // Determine if user aware devtools, by checking the presentation in the config
@@ -61,29 +64,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'server',
   })
 
-  if (options.viteDevTools) {
-    logger.info('[nuxt-devtools] Enabling experimental Vite DevTools integration')
-    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
-    addVitePlugin(DevTools)
-    addVitePlugin({
-      name: 'nuxt:devtools',
-      devtools: {
-        setup(ctx) {
-          ctx.docks.register({
-            id: 'nuxt:devtools',
-            type: 'iframe',
-            icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-            title: 'Nuxt DevTools',
-            url: '/__nuxt_devtools__/client/',
-          })
-        },
-      },
-    })
-    addPlugin({
-      src: join(runtimeDir, 'plugins/vite-devtools.client'),
-      mode: 'client',
-    })
-  }
+  const viteDevToolsBridge = await setupViteDevToolsBridge(nuxt)
+  console.log({viteDevToolsBridge})
+  viteDevToolsBridge.plugins.forEach(plugin => addVitePlugin(plugin))
 
   // Mainly for the injected runtime plugin to access the settings
   // Usage `import settings from '#build/devtools/settings'`
@@ -93,13 +76,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
         {
           ...defaultTabOptions.ui,
-          // When not enabled explicitly, we hide the panel by default
-          // When Vite DevTools is enabled, we hide the panel by default
-          showPanel: options.viteDevTools
-            ? false
-            : enabledExplicitly
-              ? true
-              : null,
+          // Legacy no-op option, retained for compatibility.
+          showPanel: enabledExplicitly
+            ? true
+            : null,
         },
         { root: nuxt.options.rootDir },
       )
@@ -138,6 +118,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     ...ctx
   } = setupRPC(nuxt, options)
 
+  const devtoolsCtx = ctx as any
+  devtoolsCtx.viteDevToolsBridge = viteDevToolsBridge.state
+
   addVitePlugin(vitePlugin)
 
   const clientDirExists = existsSync(clientDir)
@@ -163,7 +146,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     from: join(runtimeDir, 'use-nuxt-devtools'),
   })
 
-  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
+  const ROUTE_PATH = resolveNuxtDevToolsBaseRoute(nuxt.options.app.baseURL)
   const ROUTE_CLIENT = `${ROUTE_PATH}/client`
   const ROUTE_AUTH = `${ROUTE_PATH}/auth`
   const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`

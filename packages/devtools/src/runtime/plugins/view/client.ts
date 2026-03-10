@@ -6,9 +6,8 @@ import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
-import { useAppConfig, useRuntimeConfig } from '#imports'
-import { NuxtDevtoolsFrame, NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
-import { setIframeServerContext } from '@vue/devtools-kit'
+import { useAppConfig } from '#imports'
+import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
@@ -16,10 +15,8 @@ import { events as inspectorEvents, hasData as inspectorHasData, state as inspec
 import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import { settings } from '../../settings'
-import { popupWindow, state } from './state'
-
-const MULTIPLE_SLASHES_RE = /\/+/g
+import { state } from './state'
+import { closeNuxtDock, findNuxtDockIframe, getViteDocksContext, isNuxtDockSelected, openNuxtDock, toggleNuxtDock, waitForViteDocksContext } from './vite-dock'
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
@@ -53,33 +50,29 @@ export async function setupDevToolsClient({
     syncClient,
 
     devtools: {
-      toggle() {
-        if (state.value.open)
-          client.devtools.close()
-        else
-          client.devtools.open()
-      },
-      close() {
-        if (!state.value.open)
+      async toggle() {
+        const docks = await waitForViteDocksContext()
+        if (!docks)
           return
-        state.value.open = false
-        if (popupWindow.value) {
-          try {
-            popupWindow.value.close()
-          }
-          catch {
-          }
-          popupWindow.value = null
-        }
+        await toggleNuxtDock(docks)
+        state.value.open = isNuxtDockSelected(docks)
       },
-      open() {
-        if (state.value.open)
+      async close() {
+        const docks = getViteDocksContext()
+        if (!docks)
           return
-        state.value.open = true
+        await closeNuxtDock(docks)
+        state.value.open = isNuxtDockSelected(docks)
+      },
+      async open() {
+        const docks = await waitForViteDocksContext()
+        if (!docks)
+          return
+        await openNuxtDock(docks)
+        state.value.open = isNuxtDockSelected(docks)
       },
       async navigate(path: string) {
-        if (!state.value.open)
-          await client.devtools.open()
+        await client.devtools.open()
         await client.hooks.callHook('host:action:navigate', path)
       },
       async reload() {
@@ -120,7 +113,7 @@ export async function setupDevToolsClient({
       client.inspector = getInspectorInstance()
 
     try {
-      iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
+      getIframe()?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
     }
     catch (e) {
       // cross-origin
@@ -130,62 +123,8 @@ export async function setupDevToolsClient({
   }
 
   function getIframe() {
-    if (!iframe) {
-      const runtimeConfig = useRuntimeConfig()
-      const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(MULTIPLE_SLASHES_RE, '/')
-      const initialUrl = CLIENT_PATH + state.value.route
-      iframe = document.createElement('iframe')
-
-      // custom iframe props
-      for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
-        iframe.setAttribute(key, String(value))
-
-      iframe.id = 'nuxt-devtools-iframe'
-      iframe.src = initialUrl
-      iframe.onload = async () => {
-        try {
-          setIframeServerContext(iframe!)
-          await waitForClientInjection()
-          client.syncClient()
-        }
-        catch (e) {
-          console.error('Nuxt DevTools client injection failed')
-          console.error(e)
-        }
-      }
-    }
-
+    iframe = findNuxtDockIframe() || iframe
     return iframe
-  }
-
-  function waitForClientInjection(retry = 20, timeout = 300) {
-    let lastError: any
-    const test = () => {
-      try {
-        return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
-      }
-      catch (e) {
-        lastError = e
-      }
-      return false
-    }
-
-    if (test())
-      return
-
-    return new Promise<void>((resolve, reject) => {
-      const interval = setInterval(() => {
-        if (test()) {
-          clearInterval(interval)
-          resolve()
-        }
-        else if (retry-- <= 0) {
-          clearInterval(interval)
-          reject(lastError)
-        }
-      }, timeout)
-    })
   }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
@@ -280,68 +219,16 @@ export async function setupDevToolsClient({
 
   clientRef.value = client
 
-  // Experimental: Picture-in-Picture mode
-  // https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-  const documentPictureInPicture = window.documentPictureInPicture
-  if (documentPictureInPicture?.requestWindow) {
-    client.devtools.popup = async () => {
-      const iframe = getIframe()
-      if (!iframe)
-        return
-      const pip = popupWindow.value = await documentPictureInPicture.requestWindow({
-        width: Math.round(window.innerWidth * state.value.width / 100),
-        height: Math.round(window.innerHeight * state.value.height / 100),
-      }) as Window
-      const style = pip.document.createElement('style')
-      style.innerHTML = `
-        body {
-          margin: 0;
-          padding: 0;
-        }
-        iframe {
-          width: 100vw;
-          height: 100vh;
-          border: none;
-          outline: none;
-        }
-      `
-      pip.__NUXT_DEVTOOLS_DISABLE__ = true
-      pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
-      // eslint-disable-next-line ts/ban-ts-comment
-      // @ts-ignore Missing types
-      pip.__NUXT__ = window.parent?.__NUXT__ || window.__NUXT__
-      pip.document.title = 'Nuxt DevTools'
-      pip.document.head.appendChild(style)
-      pip.document.body.appendChild(iframe)
-      pip.addEventListener('resize', () => {
-        state.value.width = Math.round(pip.innerWidth / window.innerWidth * 100)
-        state.value.height = Math.round(pip.innerHeight / window.innerHeight * 100)
-      })
-      pip.addEventListener('pagehide', () => {
-        popupWindow.value = null
-        pip.close()
-      })
-    }
-  }
-
-  const holder = document.createElement('div')
-  holder.id = 'nuxt-devtools-container'
-  holder.setAttribute('data-v-inspector-ignore', 'true')
-  document.body.appendChild(holder)
+  state.value.open = isNuxtDockSelected(getViteDocksContext())
+  waitForViteDocksContext().then((docks) => {
+    state.value.open = isNuxtDockSelected(docks)
+  }).catch(() => {})
 
   // Shortcut to toggle devtools
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
-      client.devtools.toggle()
+      void client.devtools.toggle()
   })
-
-  const frame = new NuxtDevtoolsFrame(reactive({
-    client,
-    settings,
-    state,
-    popupWindow,
-  }))
-  holder.appendChild(frame)
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

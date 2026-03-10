@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
-import { watchEffect } from 'vue'
 import { useClient } from '~/composables/client'
 import { rpc } from '~/composables/rpc'
 import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
@@ -12,14 +11,11 @@ definePageMeta({
 })
 
 const {
-  interactionCloseOnOutsideClick,
-  showPanel,
   showHelpButtons,
   scale,
   hiddenTabs,
   pinnedTabs,
   hiddenTabCategories,
-  minimizePanelInactive,
   sidebarExpanded,
   sidebarScrollable,
 } = useDevToolsOptions('ui')
@@ -49,15 +45,6 @@ const scaleOptions = [
   ['Normal', 1],
   ['Large', 16 / 15],
   ['Huge', 18 / 15],
-]
-
-const MinimizeInactiveOptions = [
-  ['Always', 0],
-  ['1s', 1000],
-  ['2s', 2000],
-  ['5s', 5000],
-  ['10s', 10000],
-  ['Never', -1],
 ]
 
 const categories = getCategorizedTabs(useAllTabs())
@@ -110,17 +97,6 @@ async function clearOptions() {
     window.location.reload()
   }
 }
-
-// sync devtools options with frame state
-watchEffect(() => {
-  if (client.value)
-    client.value.app.frameState.value.closeOnOutsideClick = interactionCloseOnOutsideClick.value
-})
-
-watchEffect(() => {
-  if (client.value)
-    client.value.app.frameState.value.minimizePanelInactive = minimizePanelInactive.value
-})
 </script>
 
 <template>
@@ -222,28 +198,12 @@ watchEffect(() => {
           Features
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
-            <span>Close DevTools when clicking outside</span>
-          </NCheckbox>
           <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>
             <span>Show experimental features</span>
           </NCheckbox> -->
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
           </NCheckbox>
-
-          <NCheckbox v-model="showPanel" n-primary>
-            <span>Show the floating panel</span>
-          </NCheckbox>
-
-          <div mx--2 my1 h-1px border="b base" op75 />
-
-          <p>Minimize floating panel on inactive</p>
-          <NSelect v-model.number="minimizePanelInactive" n-primary>
-            <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
-              {{ i[0] }}
-            </option>
-          </NSelect>
 
           <div mx--2 my1 h-1px border="b base" op75 />
 
