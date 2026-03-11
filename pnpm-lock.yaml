@@ -197,9 +197,6 @@ catalogs:
     markdown-it-link-attributes:
       specifier: ^4.0.1
       version: 4.0.1
-    my-ua-parser:
-      specifier: ^2.0.4
-      version: 2.0.4
     ofetch:
       specifier: ^1.5.1
       version: 1.5.1
@@ -233,6 +230,9 @@ catalogs:
     theme-vitesse:
       specifier: ^1.0.0
       version: 1.0.0
+    ua-parser-modern:
+      specifier: ^0.1.0
+      version: 0.1.1
     v-lazy-show:
       specifier: ^0.3.0
       version: 0.3.0
@@ -703,9 +703,6 @@ importers:
       markdown-it-link-attributes:
         specifier: catalog:frontend
         version: 4.0.1
-      my-ua-parser:
-        specifier: catalog:frontend
-        version: 2.0.4
       nitropack:
         specifier: catalog:buildtools
         version: 2.13.1(@netlify/blobs@9.1.2)(rolldown@1.0.0-rc.6)
@@ -733,6 +730,9 @@ importers:
       tsx:
         specifier: catalog:cli
         version: 4.21.0
+      ua-parser-modern:
+        specifier: catalog:frontend
+        version: 0.1.1
       unimport:
         specifier: catalog:types
         version: 6.0.1
@@ -6573,9 +6573,6 @@ packages:
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
-  my-ua-parser@2.0.4:
-    resolution: {integrity: sha512-lhPyjoce3SRNXqgozoVti8XWC6oWY/rMcXljvov9IAgHKj2ZTU3dR5iQ7jLrIj02xD4Ggn6doTi7K2pnSbjzeg==}
-
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -7993,6 +7990,10 @@ packages:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  ua-parser-modern@0.1.1:
+    resolution: {integrity: sha512-7w/roxPc8S0HCZi8JvmZsg5rAdjLi6Tiw1Qs5bXJkZRpSiKhEP3HObm8F/oNGB9oOaQAIGZ27p8tO82mtMcOyA==}
+    engines: {node: '>=20.19.0'}
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
@@ -14894,8 +14895,6 @@ snapshots:
 
   muggle-string@0.4.1: {}
 
-  my-ua-parser@2.0.4: {}
-
   nanoid@3.3.11: {}
 
   nanotar@0.2.0: {}
@@ -16783,6 +16782,8 @@ snapshots:
   type-level-regexp@0.1.17: {}
 
   typescript@5.9.3: {}
+
+  ua-parser-modern@0.1.1: {}
 
   uc.micro@2.1.0: {}
 

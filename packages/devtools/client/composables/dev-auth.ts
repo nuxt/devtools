@@ -1,6 +1,6 @@
 import { devtoolsUiShowNotification } from '#imports'
 import { until } from '@vueuse/core'
-import { UAParser } from 'my-ua-parser'
+import { parseUA } from 'ua-parser-modern'
 import { ref } from 'vue'
 import { AuthConfirm } from './dialog'
 import { rpc } from './rpc'
@@ -53,7 +53,7 @@ export async function ensureDevAuthToken() {
   return devAuthToken.value!
 }
 
-export const userAgentInfo = new UAParser(navigator.userAgent).getResult()
+export const userAgentInfo = parseUA(navigator.userAgent)
 
 export async function requestForAuth() {
   const desc = [
