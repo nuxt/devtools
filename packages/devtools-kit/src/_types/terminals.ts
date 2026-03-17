@@ -12,6 +12,7 @@ export type TerminalAction = 'restart' | 'terminate' | 'clear' | 'remove'
 export interface SubprocessOptions {
   command: string
   args?: string[]
+  cwd?: string
   env?: Record<string, string | undefined>
   nodeOptions?: SpawnOptions
 }

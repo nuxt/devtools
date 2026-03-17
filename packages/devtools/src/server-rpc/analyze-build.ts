@@ -34,7 +34,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
     refresh('getAnalyzeBuildInfo')
 
     initalized = undefined
-    promise = result.getProcess()
+    promise = Promise.resolve(result.getResult())
       .then(() => {
         refresh('getAnalyzeBuildInfo')
         return readBuildInfo()

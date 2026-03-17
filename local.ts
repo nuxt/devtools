@@ -65,7 +65,7 @@ export default defineNuxtModule<ModuleOptions>({
           command: 'npx',
           args: ['nuxi', 'dev'],
           cwd: clientDir,
-          stdio: 'pipe',
+          nodeOptions: { stdio: 'pipe' },
           env: {
             NUXT_DEVTOOLS_LOCAL: 'true',
             PORT: PORT.toString(),

@@ -49,6 +49,7 @@ export function startSubprocess(
       execaOptions.args,
       {
         nodeOptions: {
+          cwd: execaOptions.cwd,
           env: {
             ...process.env,
             COLORS: 'true',
