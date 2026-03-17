@@ -1,8 +1,9 @@
 import type { BirpcGroup } from 'birpc'
-import type { ExecaChildProcess } from 'execa'
+import type { ChildProcess } from 'node:child_process'
+import type { Result } from 'tinyexec'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 import { useNuxt } from '@nuxt/kit'
-import { execa } from 'execa'
+import { x } from 'tinyexec'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -32,7 +33,9 @@ export function startSubprocess(
   tabOptions: TerminalState,
   nuxt = useNuxt(),
 ): {
-  getProcess: () => ExecaChildProcess<string>
+  /** @deprecated Use `getResult()` instead */
+  getProcess: () => ChildProcess | undefined
+  getResult: () => Result
   terminate: () => void
   restart: () => void
   clear: () => void
@@ -41,38 +44,40 @@ export function startSubprocess(
   let restarting = false
 
   function start() {
-    const process = execa(
+    const proc = x(
       execaOptions.command,
       execaOptions.args,
       {
-        reject: false,
-        ...execaOptions,
-        env: {
-          COLORS: 'true',
-          FORCE_COLOR: 'true',
-          ...execaOptions.env,
-          // Force disable Nuxi CLI override
-          __CLI_ARGV__: undefined,
+        nodeOptions: {
+          ...execaOptions.nodeOptions,
+          env: {
+            ...process.env,
+            COLORS: 'true',
+            FORCE_COLOR: 'true',
+            ...execaOptions.env,
+            ...execaOptions.nodeOptions?.env,
+            __CLI_ARGV__: undefined,
+          },
         },
       },
     )
 
     nuxt.callHook('devtools:terminal:write', { id, data: `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n` })
 
-    process.stdout!.on('data', (data) => {
+    proc.process?.stdout?.on('data', (data) => {
       nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
     })
-    process.stderr!.on('data', (data) => {
+    proc.process?.stderr?.on('data', (data) => {
       nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
     })
-    process.on('exit', (code) => {
+    proc.process?.on('exit', (code) => {
       if (!restarting) {
-        nuxt.callHook('devtools:terminal:write', { id, data: `\n> process terminalated with ${code}\n` })
+        nuxt.callHook('devtools:terminal:write', { id, data: `\n> process terminated with ${code}\n` })
         nuxt.callHook('devtools:terminal:exit', { id, code: code || 0 })
       }
     })
 
-    return process
+    return proc
   }
 
   register()
@@ -80,14 +85,14 @@ export function startSubprocess(
     terminate()
   })
 
-  let process = start()
+  let result = start()
 
   function restart() {
     restarting = true
-    process?.kill()
+    result.kill()
 
     clear()
-    process = start()
+    result = start()
     restarting = false
   }
 
@@ -99,7 +104,7 @@ export function startSubprocess(
   function terminate() {
     restarting = false
     try {
-      process?.kill()
+      result.kill()
     }
     catch {}
     nuxt.callHook('devtools:terminal:remove', { id })
@@ -115,7 +120,12 @@ export function startSubprocess(
   }
 
   return {
-    getProcess: () => process,
+    /** @deprecated Use `getResult()` instead */
+    getProcess: () => {
+      console.warn('[nuxt-devtools] `getProcess()` is deprecated, use `getResult()` instead.')
+      return result.process
+    },
+    getResult: () => result,
     terminate,
     restart,
     clear,

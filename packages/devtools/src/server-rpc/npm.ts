@@ -120,8 +120,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
           restartable: false,
         })
 
-        const execa = process.getProcess()
-        const result = await execa
+        const result = await process.getResult()
 
         await Promise.resolve()
 
@@ -184,8 +183,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
           icon: 'carbon:intent-request-uninstall',
           restartable: false,
         })
-        const execa = process.getProcess()
-        const result = await execa
+        const result = await process.getResult()
 
         await Promise.resolve()
 

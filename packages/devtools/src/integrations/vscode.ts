@@ -5,8 +5,8 @@ import { hostname } from 'node:os'
 import { resolve } from 'node:path'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
-import { execa } from 'execa'
 import { checkPort, getPort } from 'get-port-please'
+import { x } from 'tinyexec'
 import which from 'which'
 import { LOG_PREFIX } from '../logger'
 
@@ -86,10 +86,10 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
 
     // Install VS Code Server Controller
     // https://github.com/antfu/vscode-server-controller
-    execa(codeBinary, [
+    x(codeBinary, [
       '--install-extension',
       'antfu.vscode-server-controller',
-    ], { stderr: 'inherit', stdout: 'ignore', reject: false })
+    ], { nodeOptions: { stdio: ['pipe', 'ignore', 'inherit'] } })
 
     startSubprocess(
       {
@@ -121,21 +121,21 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
   }
 
   async function startCodeTunnel() {
-    const { stdout: currentDir } = await execa('pwd')
+    const { stdout: currentDir } = await x('pwd')
 
-    url = `https://vscode.dev/tunnel/${computerHostName}${currentDir}`
+    url = `https://vscode.dev/tunnel/${computerHostName}${currentDir.trim()}`
 
     logger.info(LOG_PREFIX, `Starting VS Code tunnel at ${url} ...`)
 
-    const command = execa('code', [
+    const command = x('code', [
       'tunnel',
       '--accept-server-license-terms',
       '--name',
       `${computerHostName}`,
     ])
 
-    command.stderr?.pipe(process.stderr)
-    command.stdout?.pipe(process.stdout)
+    command.process?.stderr?.pipe(process.stderr)
+    command.process?.stdout?.pipe(process.stdout)
 
     nuxt.hook('close', () => {
       command.kill()
