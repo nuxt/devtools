@@ -23,7 +23,6 @@ import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
 import { setupTerminalRPC } from './terminals'
 import { setupTimelineRPC } from './timeline'
-import { setupWizardRPC } from './wizard'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -94,7 +93,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupStorageRPC(ctx),
     ...setupAssetsRPC(ctx),
     ...setupNpmRPC(ctx),
-    ...setupWizardRPC(ctx),
     ...setupTerminalRPC(ctx),
     ...setupServerRoutesRPC(ctx),
     ...setupServerTasksRPC(ctx),

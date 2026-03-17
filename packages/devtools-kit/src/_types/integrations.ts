@@ -32,7 +32,6 @@ export type NpmCommandType = 'install' | 'uninstall' | 'update'
 
 export interface NpmCommandOptions {
   dev?: boolean
-  global?: boolean
 }
 
 export interface AutoImportsWithMetadata {

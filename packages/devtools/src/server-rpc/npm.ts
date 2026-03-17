@@ -2,7 +2,6 @@ import type { PackageManager } from 'nypm'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
-import isInstalledGlobally from 'is-installed-globally'
 import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
 import { detectPackageManager } from 'nypm'
@@ -21,20 +20,17 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
   async function getNpmCommand(command: NpmCommandType, packageName: string, options: NpmCommandOptions = {}) {
     const {
       dev = true,
-      global = (packageName === '@nuxt/devtools' && isInstalledGlobally),
     } = options
     const agent = await getPackageManager()
 
     const name = agent?.name || 'npm'
 
-    // TODO: smartly detect dev/global installs as default
     if (command === 'install' || command === 'update') {
       return [
         name,
         name === 'npm' ? 'install' : 'add',
         `${packageName}@latest`,
         dev ? '-D' : '',
-        global ? '-g' : '',
         // In yarn berry, `--ignore-scripts` is removed
         (name === 'yarn' && !agent?.version?.startsWith('1.')) ? '' : '--ignore-scripts',
       ].filter(Boolean)
@@ -45,7 +41,6 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         name,
         name === 'npm' ? 'uninstall' : 'remove',
         packageName,
-        global ? '-g' : '',
       ].filter(Boolean)
     }
   }

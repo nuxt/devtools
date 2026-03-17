@@ -8,7 +8,6 @@ import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelations
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
 import type { TerminalAction, TerminalInfo } from './terminals'
-import type { GetWizardArgs, WizardActions } from './wizard'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
@@ -67,7 +66,7 @@ export interface ServerFunctions {
   // Actions
   telemetryEvent: (payload: object, immediate?: boolean) => void
   customTabAction: (name: string, action: number) => Promise<boolean>
-  runWizard: <T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>) => Promise<void>
+  enablePages: (token: string) => Promise<void>
   openInEditor: (filepath: string) => Promise<boolean>
   restartNuxt: (token: string, hard?: boolean) => Promise<void>
   installNuxtModule: (token: string, name: string, dry?: boolean) => Promise<InstallModuleReturn>
