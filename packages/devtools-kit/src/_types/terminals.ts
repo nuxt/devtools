@@ -1,4 +1,4 @@
-import type { Options as ExecaOptions } from 'execa'
+import type { SpawnOptions } from 'node:child_process'
 
 export interface TerminalBase {
   id: string
@@ -9,9 +9,11 @@ export interface TerminalBase {
 
 export type TerminalAction = 'restart' | 'terminate' | 'clear' | 'remove'
 
-export interface SubprocessOptions extends ExecaOptions {
+export interface SubprocessOptions {
   command: string
   args?: string[]
+  env?: Record<string, string | undefined>
+  nodeOptions?: SpawnOptions
 }
 
 export interface TerminalInfo extends TerminalBase {
