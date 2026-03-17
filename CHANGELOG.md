@@ -1,3 +1,17 @@
+## [3.2.4](https://github.com/nuxt/devtools/compare/v3.2.3...v3.2.4) (2026-03-17)
+
+
+### Bug Fixes
+
+* nuxt devtools inspector style ([91f093d](https://github.com/nuxt/devtools/commit/91f093d3ef6cf53344fe44b0624da9b0cf7d498a))
+
+
+### Features
+
+* use `ua-parser-modern` ([114aa17](https://github.com/nuxt/devtools/commit/114aa1752ca34bc62f355e117a6c144430f30cd8))
+
+
+
 ## [3.2.3](https://github.com/nuxt/devtools/compare/v3.2.2...v3.2.3) (2026-03-09)
 
 
