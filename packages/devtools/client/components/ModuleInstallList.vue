@@ -2,7 +2,6 @@
 import type { ModuleStaticInfo } from '../../src/types'
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
-// @ts-expect-error missing types
 import { RecycleScroller } from 'vue-virtual-scroller'
 import { useInstalledModules, useModulesList } from '~/composables/state-modules'
 
@@ -117,11 +116,11 @@ const items = computed(() => {
       <RecycleScroller
         v-slot="{ item }"
         class="scroller"
-        :items="items"
+        :items="(items || []) as any[]"
         :item-size="200"
         key-field="name"
       >
-        <ModuleItemInstall :item="item" @start="emit('close')" />
+        <ModuleItemInstall :item="(item as ModuleStaticInfo)" @start="emit('close')" />
       </RecycleScroller>
     </div>
   </div>

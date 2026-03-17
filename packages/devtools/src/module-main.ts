@@ -1,6 +1,7 @@
-import type {} from '@vitejs/devtools-kit'
+import type { PluginWithDevTools } from '@vitejs/devtools-kit'
 import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
+import type { Plugin } from 'vite'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
@@ -65,10 +66,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     logger.info('[nuxt-devtools] Enabling experimental Vite DevTools integration')
     const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
     addVitePlugin(DevTools)
-    addVitePlugin({
+    addVitePlugin(defineViteDevToolsPlugin({
       name: 'nuxt:devtools',
       devtools: {
-        setup(ctx) {
+        setup(ctx: any) {
           ctx.docks.register({
             id: 'nuxt:devtools',
             type: 'iframe',
@@ -78,7 +79,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
           })
         },
       },
-    })
+    }))
     addPlugin({
       src: join(runtimeDir, 'plugins/vite-devtools.client'),
       mode: 'client',
@@ -261,4 +262,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     colors.dim(` in the browser (v${version})`),
     '\n',
   ].join(''))
+}
+
+function defineViteDevToolsPlugin(plugin: PluginWithDevTools): Plugin<any> {
+  return plugin as any
 }

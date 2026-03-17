@@ -72,5 +72,5 @@ export function setupServerDataRPC({
         },
       }
     },
-  } satisfies Partial<ServerFunctions>
+  } as any as Partial<ServerFunctions>
 }

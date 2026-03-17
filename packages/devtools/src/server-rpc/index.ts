@@ -103,7 +103,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupTimelineRPC(ctx),
     ...setupTelemetryRPC(ctx),
     ...setupServerDataRPC(ctx),
-  } satisfies ServerFunctions)
+  } as ServerFunctions)
 
   const wsClients = new Set<WebSocket>()
 
