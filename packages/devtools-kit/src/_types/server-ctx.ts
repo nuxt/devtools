@@ -33,7 +33,6 @@ export interface NuxtDevtoolsServerContext {
 export interface NuxtDevtoolsInfo {
   version: string
   packagePath: string
-  isGlobalInstall: boolean
 }
 
 export interface InstallModuleReturn {

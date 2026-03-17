@@ -14,7 +14,7 @@ import { searchForWorkspaceRoot } from 'vite'
 import { version } from '../package.json'
 import { defaultTabOptions } from './constant'
 import { getDevAuthToken } from './dev-auth'
-import { clientDir, isGlobalInstall, packageDir, runtimeDir } from './dirs'
+import { clientDir, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { readLocalOptions } from './utils/local-options'
 
@@ -246,7 +246,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   nuxt.hook('modules:done', () => nuxt.callHook('devtools:initialized', {
     version,
     packagePath: packageDir,
-    isGlobalInstall: isGlobalInstall(),
   }))
 
   const isMac = os.platform() === 'darwin'

@@ -3,10 +3,11 @@ import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerDebugContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
+import fs from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import destr from 'destr'
-import { resolve } from 'pathe'
+import { dirname, join, resolve } from 'pathe'
 import { snakeCase } from 'scule'
 
 import { resolveBuiltinPresets } from 'unimport'
@@ -19,6 +20,7 @@ const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const FILE_LINE_COL_RE = /^(.*?)(:[:\d]*)$/
 const MULTIPLE_SLASHES_RE = /\/+/g
+const NUXT_WELCOME_RE = /<NuxtWelcome\s*\/>/
 
 export function setupGeneralRPC({
   nuxt,
@@ -232,6 +234,36 @@ export function setupGeneralRPC({
         console.error(e)
         return false
       }
+    },
+    async enablePages(token: string) {
+      await ensureDevAuthToken(token)
+
+      const baseDir = nuxt.options.future.compatibilityVersion === 4 ? nuxt.options.dir.app : nuxt.options.srcDir
+      const pathApp = join(baseDir, 'app.vue')
+      const pathPageIndex = join(baseDir, 'pages/index.vue')
+
+      if (existsSync(pathPageIndex)) {
+        logger.warn('pages/index.vue already exists, skipping')
+        return
+      }
+
+      const pagesIndexTemplate = `<script setup lang="ts">\nconst route = useRoute()\n</script>\n\n<template>\n  <div>\n    <h1>Nuxt Routing set up successfully!</h1>\n    <p>Current route: {{ route.path }}</p>\n    <a href="https://nuxt.com/docs/getting-started/routing" target="_blank">Learn more about Nuxt Routing</a>\n  </div>\n</template>\n`
+
+      await fs.mkdir(dirname(pathPageIndex), { recursive: true })
+      await fs.writeFile(pathPageIndex, pagesIndexTemplate, 'utf-8')
+
+      let appContent = existsSync(pathApp)
+        ? await fs.readFile(pathApp, 'utf-8')
+        : undefined
+
+      if (appContent && !appContent.includes('<NuxtPage')) {
+        appContent = appContent
+          .replace('</template>', '  <NuxtPage />\n</template>')
+          .replace(NUXT_WELCOME_RE, '')
+        await fs.writeFile(pathApp, appContent, 'utf-8')
+      }
+
+      logger.success('Routing creation completed')
     },
     async restartNuxt(token: string, hard = true) {
       await ensureDevAuthToken(token)

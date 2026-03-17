@@ -125,13 +125,6 @@ export interface ModuleOptions {
   telemetry?: boolean
 }
 
-export interface ModuleGlobalOptions {
-  /**
-   * List of projects to enable devtools for. Only works when devtools is installed globally.
-   */
-  projects?: string[]
-}
-
 export interface VSCodeIntegrationOptions {
   /**
    * Enable VS Code Server integration
