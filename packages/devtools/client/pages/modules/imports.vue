@@ -51,11 +51,11 @@ const filtered = computed(() => {
 
   if (filterMode.value === 'using' && importsMetadata.value) {
     result = result
-      .filter(i => (i.as || i.name) in importsMetadata.value!.injectionUsage)
+      .filter(i => (i.as || i.name) in importsMetadata.value!.injectionsUsageMap)
   }
   else if (filterMode.value === 'not-used' && importsMetadata.value) {
     result = result
-      .filter(i => !((i.as || i.name) in importsMetadata.value!.injectionUsage))
+      .filter(i => !((i.as || i.name) in importsMetadata.value!.injectionsUsageMap))
   }
 
   const count = {

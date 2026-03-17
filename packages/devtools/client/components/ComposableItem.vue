@@ -35,9 +35,9 @@ const copyName = computed(() => {
   }
   return n
 })
-const usageCount = computed(() => props.metadata?.injectionUsage?.[name.value]?.count || 0)
+const usageCount = computed(() => props.metadata?.injectionsUsageMap?.get(name.value)?.count || 0)
 const modules = computed(() =>
-  (props.metadata?.injectionUsage?.[name.value]?.moduleIds || [])
+  (props.metadata?.injectionsUsageMap?.get(name.value)?.moduleIds || [])
     .filter(i => !i.endsWith('?macro=true')))
 
 const docsUrl = computed(() => {

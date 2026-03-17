@@ -79,6 +79,7 @@ export default defineNuxtConfig({
 
   experimental: {
     watcher: 'parcel',
+    payloadExtraction: 'client',
   },
 
   compatibilityDate: '2024-07-22',
@@ -150,8 +151,6 @@ export default defineNuxtConfig({
   typescript: {
     includeWorkspace: true,
   },
-
-  // debug: true,
 
   eslint: {
     config: {
