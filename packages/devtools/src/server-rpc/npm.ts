@@ -1,19 +1,19 @@
-import type { PackageManager } from 'nypm'
+import type { DetectResult } from 'package-manager-detector/detect'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
-import { detectPackageManager } from 'nypm'
+import { detect } from 'package-manager-detector/detect'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 
 export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
-  let detectPromise: Promise<PackageManager | undefined> | undefined
+  let detectPromise: Promise<DetectResult | null> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
   function getPackageManager() {
-    detectPromise ||= detectPackageManager(nuxt.options.rootDir)
+    detectPromise ||= detect({ cwd: nuxt.options.rootDir })
     return detectPromise
   }
 
