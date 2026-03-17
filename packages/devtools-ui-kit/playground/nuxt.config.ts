@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   },
   unocss: {
     preflight: true,
-    configFile: resolver.resolve('../unocss.config.ts'),
+    configFile: false,
   },
   alias: {
     '@nuxt/devtools-kit/iframe-client': resolver.resolve('./stub/iframe-client.ts'),
