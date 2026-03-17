@@ -23,6 +23,9 @@ Unleash Nuxt Developer Experience.
   <a href="https://devtools.nuxt.com/">📚 Documentation</a>
 </p>
 
+> [!NOTE]
+> You are current at the `main` branch for v4 development. The latest stable branch is [`v3`](https://github.com/nuxt/devtools/tree/v3).
+
 <br>
 
 ## Installation
