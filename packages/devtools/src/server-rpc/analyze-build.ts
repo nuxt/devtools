@@ -4,7 +4,7 @@ import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
-import Git from 'simple-git'
+import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
 
 const COLON_RE = /:/g
@@ -87,14 +87,18 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
     return builds.sort((a, b) => b.endTime - a.endTime)
   }
 
+  async function git(...args: string[]): Promise<string> {
+    const result = await x('git', args, { nodeOptions: { cwd: nuxt.options.rootDir } })
+    return result.stdout.trim()
+  }
+
   async function generateAnalyzeBuildName() {
     try {
-      const git = Git(nuxt.options.rootDir)
-      const branch = await git.branch()
-      const branchName = branch.current || 'head'
-      const sha = await git.revparse(['--short', 'HEAD'])
-      const isWorkingTreeClean = (await git.status()).isClean()
-      if (isWorkingTreeClean)
+      const branchName = await git('rev-parse', '--abbrev-ref', 'HEAD') || 'head'
+      const sha = await git('rev-parse', '--short', 'HEAD')
+      const status = await git('status', '--porcelain')
+      const isClean = status === ''
+      if (isClean)
         return `${branchName}#${sha}`
       return `${branchName}#${sha}-dirty`
     }
