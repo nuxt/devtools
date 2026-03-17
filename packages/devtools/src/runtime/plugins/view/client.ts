@@ -7,7 +7,7 @@ import type { Router } from 'vue-router'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
-import { NuxtDevtoolsFrame, NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
+import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { setIframeServerContext } from '@vue/devtools-kit'
 
 import { createHooks } from 'hookable'
@@ -16,10 +16,22 @@ import { events as inspectorEvents, hasData as inspectorHasData, state as inspec
 import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import { settings } from '../../settings'
-import { popupWindow, state } from './state'
+import { state } from './state'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
+
+let _viteDevToolsContext: any = null
+
+function getViteDevToolsContext() {
+  if (_viteDevToolsContext)
+    return _viteDevToolsContext
+  // The Vite DevTools init() appends a <vite-devtools-dock-embedded> element to document.body
+  // We extract the context from its Vue custom element internal instance
+  const el = document.querySelector('vite-devtools-dock-embedded') as any
+  if (el?._instance?.props?.context)
+    _viteDevToolsContext = el._instance.props.context
+  return _viteDevToolsContext
+}
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
@@ -54,32 +66,28 @@ export async function setupDevToolsClient({
 
     devtools: {
       toggle() {
-        if (state.value.open)
-          client.devtools.close()
-        else
-          client.devtools.open()
+        const ctx = getViteDevToolsContext()
+        if (ctx)
+          ctx.docks.toggleEntry('nuxt:devtools')
       },
       close() {
-        if (!state.value.open)
-          return
-        state.value.open = false
-        if (popupWindow.value) {
-          try {
-            popupWindow.value.close()
-          }
-          catch {
-          }
-          popupWindow.value = null
-        }
+        const ctx = getViteDevToolsContext()
+        if (ctx)
+          ctx.panel.store.value.open = false
       },
       open() {
-        if (state.value.open)
-          return
-        state.value.open = true
+        const ctx = getViteDevToolsContext()
+        if (ctx) {
+          ctx.panel.store.value.open = true
+          ctx.docks.switchEntry('nuxt:devtools')
+        }
       },
       async navigate(path: string) {
-        if (!state.value.open)
-          await client.devtools.open()
+        const ctx = getViteDevToolsContext()
+        if (ctx) {
+          ctx.panel.store.value.open = true
+          ctx.docks.switchEntry('nuxt:devtools')
+        }
         await client.hooks.callHook('host:action:navigate', path)
       },
       async reload() {
@@ -280,68 +288,11 @@ export async function setupDevToolsClient({
 
   clientRef.value = client
 
-  // Experimental: Picture-in-Picture mode
-  // https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-  const documentPictureInPicture = window.documentPictureInPicture
-  if (documentPictureInPicture?.requestWindow) {
-    client.devtools.popup = async () => {
-      const iframe = getIframe()
-      if (!iframe)
-        return
-      const pip = popupWindow.value = await documentPictureInPicture.requestWindow({
-        width: Math.round(window.innerWidth * state.value.width / 100),
-        height: Math.round(window.innerHeight * state.value.height / 100),
-      }) as Window
-      const style = pip.document.createElement('style')
-      style.innerHTML = `
-        body {
-          margin: 0;
-          padding: 0;
-        }
-        iframe {
-          width: 100vw;
-          height: 100vh;
-          border: none;
-          outline: none;
-        }
-      `
-      pip.__NUXT_DEVTOOLS_DISABLE__ = true
-      pip.__NUXT_DEVTOOLS_IS_POPUP__ = true
-      // eslint-disable-next-line ts/ban-ts-comment
-      // @ts-ignore Missing types
-      pip.__NUXT__ = window.parent?.__NUXT__ || window.__NUXT__
-      pip.document.title = 'Nuxt DevTools'
-      pip.document.head.appendChild(style)
-      pip.document.body.appendChild(iframe)
-      pip.addEventListener('resize', () => {
-        state.value.width = Math.round(pip.innerWidth / window.innerWidth * 100)
-        state.value.height = Math.round(pip.innerHeight / window.innerHeight * 100)
-      })
-      pip.addEventListener('pagehide', () => {
-        popupWindow.value = null
-        pip.close()
-      })
-    }
-  }
-
-  const holder = document.createElement('div')
-  holder.id = 'nuxt-devtools-container'
-  holder.setAttribute('data-v-inspector-ignore', 'true')
-  document.body.appendChild(holder)
-
-  // Shortcut to toggle devtools
+  // Shortcut to toggle devtools (opens Vite DevTools panel with Nuxt DevTools entry)
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
-
-  const frame = new NuxtDevtoolsFrame(reactive({
-    client,
-    settings,
-    state,
-    popupWindow,
-  }))
-  holder.appendChild(frame)
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

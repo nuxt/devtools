@@ -1,30 +1,18 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
 import { ref } from 'vue'
-import { useClient } from '~/composables/client'
 import { isFirstVisit } from '~/composables/storage'
-import { useDevToolsOptions } from '~/composables/storage-options'
 import { telemetryEnabled } from '~/composables/telemetry'
 
 definePageMeta({
   layout: 'none',
 })
 
-const client = useClient()
 const telemetryModel = ref(true)
-
-const {
-  showPanel,
-} = useDevToolsOptions('ui')
 
 function visit() {
   telemetryEnabled.value = telemetryModel.value
   isFirstVisit.value = false
-}
-
-function hideFloatingPanel() {
-  showPanel.value = false
-  client.value.devtools.close()
 }
 </script>
 
@@ -47,9 +35,6 @@ function hideFloatingPanel() {
 
       <NButton to="/modules/overview" n="lg primary" @click="visit">
         <span>Get Started</span>
-      </NButton>
-      <NButton v-if="showPanel !== false" n="borderless orange" @click="hideFloatingPanel">
-        <span>Always hide the floating panel</span>
       </NButton>
     </div>
     <div p4>

@@ -37,11 +37,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     return
   }
 
-  // Determine if user aware devtools, by checking the presentation in the config
-  const enabledExplicitly = (nuxt.options.devtools === true as unknown)
-    || (nuxt.options.devtools && (nuxt.options.devtools as unknown as ModuleOptions).enabled)
-    || nuxt.options.modules.some(m => m === '@nuxt/devtools' || m === '@nuxt/devtools-edge' || m === '@nuxt/devtools-nightly')
-
   await nuxt.callHook('devtools:before')
 
   if (options.iframeProps) {
@@ -62,29 +57,26 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'server',
   })
 
-  if (options.viteDevTools) {
-    logger.info('[nuxt-devtools] Enabling experimental Vite DevTools integration')
-    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
-    addVitePlugin(DevTools)
-    addVitePlugin(defineViteDevToolsPlugin({
-      name: 'nuxt:devtools',
-      devtools: {
-        setup(ctx: any) {
-          ctx.docks.register({
-            id: 'nuxt:devtools',
-            type: 'iframe',
-            icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-            title: 'Nuxt DevTools',
-            url: '/__nuxt_devtools__/client/',
-          })
-        },
+  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
+  addVitePlugin(DevTools)
+  addVitePlugin(defineViteDevToolsPlugin({
+    name: 'nuxt:devtools',
+    devtools: {
+      setup(ctx: any) {
+        ctx.docks.register({
+          id: 'nuxt:devtools',
+          type: 'iframe',
+          icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+          title: 'Nuxt DevTools',
+          url: '/__nuxt_devtools__/client/',
+        })
       },
-    }))
-    addPlugin({
-      src: join(runtimeDir, 'plugins/vite-devtools.client'),
-      mode: 'client',
-    })
-  }
+    },
+  }))
+  addPlugin({
+    src: join(runtimeDir, 'plugins/vite-devtools.client'),
+    mode: 'client',
+  })
 
   // Mainly for the injected runtime plugin to access the settings
   // Usage `import settings from '#build/devtools/settings'`
@@ -94,13 +86,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
         {
           ...defaultTabOptions.ui,
-          // When not enabled explicitly, we hide the panel by default
-          // When Vite DevTools is enabled, we hide the panel by default
-          showPanel: options.viteDevTools
-            ? false
-            : enabledExplicitly
-              ? true
-              : null,
         },
         { root: nuxt.options.rootDir },
       )

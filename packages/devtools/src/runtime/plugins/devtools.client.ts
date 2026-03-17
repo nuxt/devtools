@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxt: any) => {
       return
 
     if (parent && window.self !== parent) {
-      if (parent.__NUXT_DEVTOOLS_VIEW__ || parent.document.querySelector('#nuxt-devtools-container'))
+      if (parent.__NUXT_DEVTOOLS_VIEW__)
         return
     }
   }

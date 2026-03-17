@@ -45,17 +45,12 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "@vitejs/devtools": "*",
     "vite": ">=6.0"
-  },
-  "peerDependenciesMeta": {
-    "@vitejs/devtools": {
-      "optional": true
-    }
   },
   "dependencies": {
     "@nuxt/devtools-kit": "workspace:*",
     "@nuxt/kit": "catalog:prod",
+    "@vitejs/devtools": "catalog:buildtools",
     "@vue/devtools-core": "catalog:frontend",
     "@vue/devtools-kit": "catalog:prod",
     "birpc": "catalog:frontend",
