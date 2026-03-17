@@ -381,15 +381,13 @@ catalogs:
     '@vitejs/devtools-kit':
       specifier: ^0.1.2
       version: 0.1.2
-    unimport:
-      specifier: ^6.0.1
-      version: 6.0.1
 
 overrides:
   '@nuxt/devtools': workspace:*
   chokidar: ^5.0.0
   esbuild: ^0.27.4
   rollup: ^4.59.0
+  unimport: ^6.0.2
   semver: ^7.7.4
   typescript: ^5.9.3
   vite: ^8.0.0
@@ -467,7 +465,7 @@ importers:
         version: 4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.27.1(@babel/core@7.29.0))(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.6)(@types/node@25.5.0)(@vitejs/devtools@0.0.0-alpha.33(@netlify/blobs@9.1.2)(@pnpm/logger@1001.0.1)(db0@0.3.4)(ioredis@5.9.2)(typescript@5.9.3)(vite@8.0.0)(vue@3.5.30(typescript@5.9.3)))(@vue/compiler-sfc@3.5.30)(cac@6.7.14)(db0@0.3.4)(esbuild@0.27.4)(eslint@10.0.3(jiti@2.6.1))(ioredis@5.9.2)(magicast@0.5.2)(meow@13.2.0)(optionator@0.9.4)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(rolldown@1.0.0-rc.9)(rollup-plugin-visualizer@6.0.5(rolldown@1.0.0-rc.9)(rollup@4.59.0))(rollup@4.59.0)(terser@5.39.0)(tsx@4.21.0)(typescript@5.9.3)(vue-tsc@3.2.5(typescript@5.9.3))(yaml@2.8.2)
       nuxt-eslint-auto-explicit-import:
         specifier: catalog:cli
-        version: 0.1.1(eslint@10.0.3(jiti@2.6.1))(magicast@0.5.2)(rollup@4.59.0)(typescript@5.9.3)
+        version: 0.1.1(eslint@10.0.3(jiti@2.6.1))(magicast@0.5.2)(typescript@5.9.3)
       pathe:
         specifier: catalog:frontend
         version: 2.0.3
@@ -490,8 +488,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       unimport:
-        specifier: catalog:types
-        version: 6.0.1
+        specifier: ^6.0.2
+        version: 6.0.2
       unocss:
         specifier: catalog:buildtools
         version: 66.6.6(@unocss/webpack@66.6.6(webpack@5.98.0(esbuild@0.27.4)))(vite@8.0.0)
@@ -734,8 +732,8 @@ importers:
         specifier: catalog:frontend
         version: 0.1.1
       unimport:
-        specifier: catalog:types
-        version: 6.0.1
+        specifier: ^6.0.2
+        version: 6.0.2
       unocss:
         specifier: catalog:buildtools
         version: 66.6.6(@unocss/webpack@66.6.6(webpack@5.98.0(esbuild@0.27.4)))(vite@8.0.0)
@@ -789,8 +787,8 @@ importers:
         specifier: catalog:buildtools
         version: 3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.1.16(@vue/compiler-core@3.5.30)(esbuild@0.27.4)(vue@3.5.30(typescript@5.9.3)))(vue-tsc@3.2.5(typescript@5.9.3))(vue@3.5.30(typescript@5.9.3))
       unimport:
-        specifier: catalog:types
-        version: 6.0.1
+        specifier: ^6.0.2
+        version: 6.0.2
       vue-router:
         specifier: catalog:frontend
         version: 5.0.3(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
@@ -7794,9 +7792,6 @@ packages:
     resolution: {integrity: sha512-SlyRoSkdh1dYP0PzclLE7r0M9sgbFKKMFXpFRUMNuKhQSbC6VQIGzq3E0qsfvGJaUFJPGv6Ws1NZ/haTAjfbMA==}
     engines: {node: '>=12'}
 
-  strip-literal@2.1.1:
-    resolution: {integrity: sha512-631UJ6O00eNGfMiWG78ck80dfBab8X6IVFB51jZK5Icd7XAs60Z5y7QdSd/wGIklnWvRbUNloVzhOKKmutxQ6Q==}
-
   strip-literal@3.1.0:
     resolution: {integrity: sha512-8r3mkIM/2+PpjHoOtiAW8Rg3jJLHaV7xPwG+YRGrv6FP0wwk/toTpATxWYOW0BKdWwl82VT2tFYi5DlROa0Mxg==}
 
@@ -8158,15 +8153,8 @@ packages:
     resolution: {integrity: sha512-wH590V9VNgYH9g3lH9wWjTrUoKsjLF6sGLjhR4sH1LWpLmCOH0Zf7PukhDA8BiS7KHe4oPNkcTHqYkj7SOGUOw==}
     engines: {node: '>=20'}
 
-  unimport@3.14.6:
-    resolution: {integrity: sha512-CYvbDaTT04Rh8bmD8jz3WPmHYZRG/NnvYVzwD6V1YAlvvKROlAeNDUBhkBGzNav2RKaeuXvlWYaa1V4Lfi/O0g==}
-
-  unimport@5.6.0:
-    resolution: {integrity: sha512-8rqAmtJV8o60x46kBAJKtHpJDJWkA2xcBqWKPI14MgUb05o1pnpnCnXSxedUXyeq7p8fR5g3pTo2BaswZ9lD9A==}
-    engines: {node: '>=18.12.0'}
-
-  unimport@6.0.1:
-    resolution: {integrity: sha512-RbT3PfMshH2eYH5ylQuCf1sUQ1ocygZp57HaBNIp96g1upcTZnIstCfl6ZbZM7KHI88K3jmwhgeMxwtYsWSqug==}
+  unimport@6.0.2:
+    resolution: {integrity: sha512-ZSOkrDw380w+KIPniY3smyXh2h7H9v2MNr9zejDuh239o5sdea44DRAYrv+rfUi2QGT186P2h0GPGKvy8avQ5g==}
     engines: {node: '>=18.12.0'}
 
   unist-util-is@6.0.0:
@@ -8222,10 +8210,6 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       vue: ^3.2.25
-
-  unplugin@1.16.1:
-    resolution: {integrity: sha512-4/u/j4FrCKdi17jaxuJA0jClGxB1AvU2hw/IuayPc4ay1XGaJs/rbb4v5WKwAjNifjmXK9PIFyuPiaK8azyR9w==}
-    engines: {node: '>=14.0.0'}
 
   unplugin@2.3.11:
     resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
@@ -9788,7 +9772,7 @@ snapshots:
       get-port-please: 3.2.0
       mlly: 1.8.1
       pathe: 2.0.3
-      unimport: 5.6.0
+      unimport: 6.0.2
     transitivePeerDependencies:
       - '@typescript-eslint/utils'
       - '@vue/compiler-sfc'
@@ -13521,16 +13505,15 @@ snapshots:
       semver: 7.7.4
       strip-indent: 4.1.1
 
-  eslint-plugin-unimport@0.1.2(eslint@10.0.3(jiti@2.6.1))(rollup@4.59.0)(typescript@5.9.3):
+  eslint-plugin-unimport@0.1.2(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/scope-manager': 8.57.1
       '@typescript-eslint/utils': 8.57.1(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3)
       debug: 4.4.3(supports-color@8.1.1)
       eslint: 10.0.3(jiti@2.6.1)
       pathe: 1.1.2
-      unimport: 3.14.6(rollup@4.59.0)
+      unimport: 6.0.2
     transitivePeerDependencies:
-      - rollup
       - supports-color
       - typescript
 
@@ -15273,7 +15256,7 @@ snapshots:
       uncrypto: 0.1.3
       unctx: 2.5.0
       unenv: 2.0.0-rc.24
-      unimport: 5.6.0
+      unimport: 6.0.2
       unplugin-utils: 0.3.1
       unstorage: 1.17.4(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.9.2)
       untyped: 2.0.0
@@ -15363,14 +15346,13 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt-eslint-auto-explicit-import@0.1.1(eslint@10.0.3(jiti@2.6.1))(magicast@0.5.2)(rollup@4.59.0)(typescript@5.9.3):
+  nuxt-eslint-auto-explicit-import@0.1.1(eslint@10.0.3(jiti@2.6.1))(magicast@0.5.2)(typescript@5.9.3):
     dependencies:
       '@nuxt/kit': 3.21.1(magicast@0.5.2)
-      eslint-plugin-unimport: 0.1.2(eslint@10.0.3(jiti@2.6.1))(rollup@4.59.0)(typescript@5.9.3)
+      eslint-plugin-unimport: 0.1.2(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3)
     transitivePeerDependencies:
       - eslint
       - magicast
-      - rollup
       - supports-color
       - typescript
 
@@ -15426,7 +15408,7 @@ snapshots:
       ultrahtml: 1.6.0
       uncrypto: 0.1.3
       unctx: 2.5.0
-      unimport: 6.0.1
+      unimport: 6.0.2
       unplugin: 3.0.0
       unrouting: 0.1.7
       untyped: 2.0.0
@@ -15550,7 +15532,7 @@ snapshots:
       ultrahtml: 1.6.0
       uncrypto: 0.1.3
       unctx: 2.5.0
-      unimport: 6.0.1
+      unimport: 6.0.2
       unplugin: 3.0.0
       unrouting: 0.1.7
       untyped: 2.0.0
@@ -16816,10 +16798,6 @@ snapshots:
 
   strip-indent@4.1.1: {}
 
-  strip-literal@2.1.1:
-    dependencies:
-      js-tokens: 9.0.1
-
   strip-literal@3.1.0:
     dependencies:
       js-tokens: 9.0.1
@@ -17187,43 +17165,7 @@ snapshots:
 
   unicorn-magic@0.4.0: {}
 
-  unimport@3.14.6(rollup@4.59.0):
-    dependencies:
-      '@rollup/pluginutils': 5.2.0(rollup@4.59.0)
-      acorn: 8.16.0
-      escape-string-regexp: 5.0.0
-      estree-walker: 3.0.3
-      fast-glob: 3.3.3
-      local-pkg: 1.1.2
-      magic-string: 0.30.21
-      mlly: 1.8.1
-      pathe: 2.0.3
-      picomatch: 4.0.3
-      pkg-types: 1.3.1
-      scule: 1.3.0
-      strip-literal: 2.1.1
-      unplugin: 1.16.1
-    transitivePeerDependencies:
-      - rollup
-
-  unimport@5.6.0:
-    dependencies:
-      acorn: 8.16.0
-      escape-string-regexp: 5.0.0
-      estree-walker: 3.0.3
-      local-pkg: 1.1.2
-      magic-string: 0.30.21
-      mlly: 1.8.1
-      pathe: 2.0.3
-      picomatch: 4.0.3
-      pkg-types: 2.3.0
-      scule: 1.3.0
-      strip-literal: 3.1.0
-      tinyglobby: 0.2.15
-      unplugin: 2.3.11
-      unplugin-utils: 0.3.1
-
-  unimport@6.0.1:
+  unimport@6.0.2:
     dependencies:
       acorn: 8.16.0
       escape-string-regexp: 5.0.0
@@ -17328,11 +17270,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-
-  unplugin@1.16.1:
-    dependencies:
-      acorn: 8.16.0
-      webpack-virtual-modules: 0.6.2
 
   unplugin@2.3.11:
     dependencies:
