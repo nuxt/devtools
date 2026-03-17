@@ -88,7 +88,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
   }
 
   async function git(...args: string[]): Promise<string> {
-    const result = await x('git', args, { nodeOptions: { cwd: nuxt.options.rootDir } })
+    const result = await x('git', args, { nodeOptions: { cwd: nuxt.options.rootDir }, throwOnError: true })
     return result.stdout.trim()
   }
 
