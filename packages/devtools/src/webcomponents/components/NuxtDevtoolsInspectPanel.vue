@@ -26,33 +26,38 @@ let toastTimer: ReturnType<typeof setTimeout> | undefined
 const initX = ref(0)
 const initY = ref(0)
 
-watch(
-  () => [props.matched, props.mouse] as const,
-  ([matched, mouse]) => {
-    if (!matched || !mouse)
-      return
-    initX.value = Math.max(PANEL_MARGIN, Math.min(mouse.x, window.innerWidth - PANEL_WIDTH - PANEL_MARGIN))
-    initY.value = Math.max(PANEL_MARGIN, Math.min(mouse.y, window.innerHeight - PANEL_HEIGHT - PANEL_MARGIN))
-  },
-)
-
 const el = useTemplateRef<HTMLElement>('el')
 const draggingEl = useTemplateRef<HTMLElement>('draggingEl')
 
-const { x, y, style, isDragging } = useDraggable(el, {
+const { x, y, style: panelStyle, isDragging } = useDraggable(el, {
   initialValue: {
     x: initX.value,
     y: initY.value,
   },
+  preventDefault: true,
+  stopPropagation: true,
   handle: draggingEl,
 })
 
-watch([initX, initY], () => {
-  if (!props.matched)
-    return
-  x.value = initX.value
-  y.value = initY.value
-})
+const rect = computed(() => props.matched?.rect || props.matched?.el?.getBoundingClientRect())
+
+watch(
+  () => rect.value,
+  (rect) => {
+    if (!rect)
+      return
+    // Position panel below the element, or above if not enough space below
+    const preferredX = rect.left
+    const preferredY = rect.bottom + PANEL_MARGIN / 2
+    const fitsBelow = preferredY + PANEL_HEIGHT + PANEL_MARGIN < window.innerHeight
+    initX.value = Math.max(PANEL_MARGIN, Math.min(preferredX, window.innerWidth - PANEL_WIDTH - PANEL_MARGIN))
+    initY.value = fitsBelow
+      ? Math.max(PANEL_MARGIN, preferredY)
+      : Math.max(PANEL_MARGIN, rect.top - PANEL_HEIGHT - PANEL_MARGIN / 2)
+    x.value = initX.value
+    y.value = initY.value
+  },
+)
 
 const hasMoved = computed(() => x.value !== initX.value || y.value !== initY.value)
 
@@ -171,7 +176,7 @@ function buildComponentTree(): string {
 }
 
 async function copyAgentInfo() {
-  if (!props.matched)
+  if (!rect.value || !props.matched)
     return
 
   try {
@@ -224,15 +229,14 @@ async function copyAgentInfo() {
 
 <template>
   <div
-    v-if="props.matched"
+    v-if="rect && props.matched"
     ref="el"
     class="fixed relative z-9999999 w-400px flex flex-col of-hidden rounded-lg bg-glass text-sm color-base shadow-lg ring-1 ring-base backdrop-blur duration-200"
-    :style="style"
+    :style="panelStyle"
     :class="[
       isDragging ? 'transition-none' : 'transition-opacity',
       props.matched ? 'op100' : 'op0 pointer-events-none',
     ]"
-    v-bind="$attrs"
   >
     <!-- <div
       class="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
