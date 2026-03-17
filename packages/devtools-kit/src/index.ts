@@ -49,7 +49,6 @@ export function startSubprocess(
       execaOptions.args,
       {
         nodeOptions: {
-        nodeOptions: {
           ...execaOptions.nodeOptions,
           env: {
             ...process.env,
