@@ -31,7 +31,6 @@ function toggleSplitScreen() {
         <div i-carbon-split-screen />
         {{ splitScreenEnabled ? 'Close Split Screen' : 'Split Screen' }}
       </NButton>
-      <PictureInPictureButton />
     </div>
     <div px3 py2 flex="~ gap2">
       <NButton n="primary sm" @click="refreshData">

@@ -18,30 +18,23 @@ export function ensureVueDevTools() {
 
   const state = useDevToolsFrameState()
 
-  const isInPopup = window.__NUXT_DEVTOOLS_IS_POPUP__
-
-  function toggleClientDetected(state: boolean) {
+  function toggleClientDetected(detected: boolean) {
     if (connected.value) {
       rpc.value.updateDevToolsClientDetected({
-        iframe: state,
+        iframe: detected,
       })
     }
     else {
       onRpcConnected(() => {
         rpc.value.updateDevToolsClientDetected({
-          iframe: state,
+          iframe: detected,
         })
       })
     }
   }
 
   watchEffect(() => {
-    if (isInPopup) {
-      toggleClientDetected(true)
-    }
-    else {
-      toggleClientDetected(state.value?.open ?? false)
-    }
+    toggleClientDetected(state.value?.open ?? false)
   })
 
   createRpcClient(functions, {

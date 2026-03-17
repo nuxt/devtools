@@ -48,19 +48,6 @@ declare global {
      */
     __NUXT_DEVTOOLS_DISABLE__?: boolean
 
-    /**
-     * Is popup mode
-     *
-     * @internal
-     */
-    __NUXT_DEVTOOLS_IS_POPUP__?: boolean
-
-    /**
-     * Experimental API: Picture-in-Picture mode
-     *
-     * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-     */
-    documentPictureInPicture?: any
   }
 
 }

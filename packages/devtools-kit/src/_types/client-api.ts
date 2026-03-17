@@ -72,17 +72,6 @@ export interface NuxtDevtoolsHostClient {
     toggle: () => void
     reload: () => void
     navigate: (path: string) => void
-
-    /**
-     * Popup the DevTools frame into Picture-in-Picture mode
-     *
-     * Requires Chrome 111 with experimental flag enabled.
-     *
-     * Function is undefined when not supported.
-     *
-     * @see https://developer.chrome.com/docs/web-platform/document-picture-in-picture/
-     */
-    popup?: () => any
   }
 
   app: {
