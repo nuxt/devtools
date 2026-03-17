@@ -73,7 +73,7 @@ export function startSubprocess(
     })
     proc.process?.on('exit', (code) => {
       if (!restarting) {
-        nuxt.callHook('devtools:terminal:write', { id, data: `\n> process terminalated with ${code}\n` })
+        nuxt.callHook('devtools:terminal:write', { id, data: `\n> process terminated with ${code}\n` })
         nuxt.callHook('devtools:terminal:exit', { id, code: code || 0 })
       }
     })
