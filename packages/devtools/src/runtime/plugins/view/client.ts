@@ -8,8 +8,9 @@ import type { Router } from 'vue-router'
 // @ts-ignore tsconfig
 import { useAppConfig, useRuntimeConfig } from '#imports'
 import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
-import { setIframeServerContext } from '@vue/devtools-kit'
+import { getDevToolsClientContext } from '@vitejs/devtools-kit/client'
 
+import { setIframeServerContext } from '@vue/devtools-kit'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
@@ -20,17 +21,8 @@ import { state } from './state'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
 
-let _viteDevToolsContext: any = null
-
 function getViteDevToolsContext() {
-  if (_viteDevToolsContext)
-    return _viteDevToolsContext
-  // The Vite DevTools init() appends a <vite-devtools-dock-embedded> element to document.body
-  // We extract the context from its Vue custom element internal instance
-  const el = document.querySelector('vite-devtools-dock-embedded') as any
-  if (el?._instance?.props?.context)
-    _viteDevToolsContext = el._instance.props.context
-  return _viteDevToolsContext
+  return getDevToolsClientContext() as any
 }
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
