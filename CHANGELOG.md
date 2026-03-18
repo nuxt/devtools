@@ -1,3 +1,7 @@
+# [4.0.0-alpha.1](https://github.com/nuxt/devtools/compare/v3.2.4...v4.0.0-alpha.1) (2026-03-18)
+
+
+
 ## [3.2.4](https://github.com/nuxt/devtools/compare/v3.2.3...v3.2.4) (2026-03-17)
 
 
