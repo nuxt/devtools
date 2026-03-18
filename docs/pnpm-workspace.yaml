@@ -1,22 +1,27 @@
-onlyBuiltDependencies:
-  - better-sqlite3
-  - esbuild
-  - sharp
 packages: []
 catalog:
   '@iconify-json/heroicons': ^1.2.3
+  '@iconify-json/lucide': ^1.2.98
   '@iconify-json/ph': ^1.2.2
-  '@iconify-json/lucide': ^1.2.45
   '@iconify-json/simple-icons': ^1.2.74
   '@nuxt/content': ^3.12.0
-  '@nuxt/devtools': ^3.2.4
+  '@nuxt/devtools': ^4.0.0-alpha.1
   '@nuxt/fonts': ^0.14.0
   '@nuxt/image': ^2.0.0
   '@nuxt/ui': ^3.3.7
   '@nuxt/ui-pro': ^3.3.7
   '@nuxtjs/plausible': ^3.0.2
+  '@takumi-rs/core': ^0.73.1
+  '@takumi-rs/wasm': ^0.73.1
   '@vueuse/core': ^14.2.1
   '@vueuse/nuxt': ^14.2.1
   better-sqlite3: ^12.8.0
   nuxt: ^4.4.2
-  nuxt-og-image: ^6.0.1
+  nuxt-og-image: ^6.0.3
+onlyBuiltDependencies:
+  - better-sqlite3
+  - esbuild
+  - sharp
+  - vue-demi
+shamefullyHoist: true
+strictPeerDependencies: false
