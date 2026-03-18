@@ -8,12 +8,12 @@ const navigation = inject('navigation')
       <UContainer>
         <UPage>
           <template #left>
-            <UAside>
+            <UPageAside>
               <template #top>
                 <UContentSearchButton size="md" />
               </template>
-              <UNavigationTree :links="mapContentNavigation(navigation)" />
-            </UAside>
+              <UContentNavigation :navigation="navigation" />
+            </UPageAside>
           </template>
           <slot />
         </UPage>
