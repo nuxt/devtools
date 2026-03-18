@@ -1,4 +1,4 @@
-import type { DetectResult } from 'package-manager-detector/detect'
+import type { DetectResult } from 'package-manager-detector'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
