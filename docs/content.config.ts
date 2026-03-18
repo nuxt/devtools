@@ -4,7 +4,14 @@ export default defineContentConfig({
   collections: {
     docs: defineCollection({
       type: 'page',
-      source: '**/*.md',
+      source: {
+        include: '**/*.md',
+        exclude: ['home/**'],
+      },
+    }),
+    home: defineCollection({
+      type: 'page',
+      source: 'home/**',
     }),
     landing: defineCollection({
       type: 'data',

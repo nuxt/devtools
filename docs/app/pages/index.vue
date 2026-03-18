@@ -18,7 +18,7 @@ useSeoMeta({
 
 const { data } = await useAsyncData('landing', () => {
   return Promise.all([
-    queryCollection('docs').path('/home/get-started').first(),
+    queryCollection('home').path('/home/get-started').first(),
     queryCollection('landing').first(),
   ])
 })
@@ -57,8 +57,9 @@ useIntersectionObserver(
 
 const { format: formatNumber } = Intl.NumberFormat('en-GB', { notation: 'compact' })
 
-watch(projectsSectionVisible, () => {
-  if (projectsSectionVisible.value) {
+watch(projectsSectionVisible, (visible) => {
+  clearInterval(intervalId.value)
+  if (visible) {
     intervalId.value = setInterval(() => {
       if (currentStep.value < 2)
         currentStep.value += 1
@@ -66,6 +67,10 @@ watch(projectsSectionVisible, () => {
         currentStep.value = 0
     }, 4000)
   }
+})
+
+onUnmounted(() => {
+  clearInterval(intervalId.value)
 })
 </script>
 

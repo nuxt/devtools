@@ -95,7 +95,7 @@ provide('navigation', navigation)
           target="_blank" color="neutral" variant="ghost"
         />
         <UButton
-          aria-label="Nuxt Devtools on GitHub" icon="i-simple-icons-github"
+          aria-label="Nuxt DevTools on GitHub" icon="i-simple-icons-github"
           to="https://github.com/nuxt/devtools"
           target="_blank" color="neutral" variant="ghost"
         />
