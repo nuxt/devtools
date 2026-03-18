@@ -59,6 +59,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
   addVitePlugin(DevTools)
+
+  // Deferred: will be set when Vite DevTools plugin setup runs
+  let connectRpcHost: ((host: any) => void) | undefined
+
   addVitePlugin(defineViteDevToolsPlugin({
     name: 'nuxt:devtools',
     devtools: {
@@ -70,6 +74,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
           title: 'Nuxt DevTools',
           url: '/__nuxt_devtools__/client/',
         })
+
+        // Connect Nuxt DevTools RPC to Vite DevTools Kit's RPC host
+        connectRpcHost?.(ctx.rpc)
       },
     },
   }))
@@ -120,11 +127,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   })
 
   const {
-    vitePlugin,
+    connectRpcHost: _connectRpcHost,
     ...ctx
   } = setupRPC(nuxt, options)
 
-  addVitePlugin(vitePlugin)
+  connectRpcHost = _connectRpcHost
 
   const clientDirExists = existsSync(clientDir)
 

@@ -2,7 +2,7 @@ import type { ClientFunctions } from '../../src/types'
 import { useNuxtApp, useRouter } from '#imports'
 import { useClient } from '../composables/client'
 import { devAuthToken, isDevAuthed } from '../composables/dev-auth'
-import { clientFunctions, rpc } from '../composables/rpc'
+import { clientFunctions, registerClientFunctions, rpc } from '../composables/rpc'
 import { processAnalyzeBuildInfo, processInstallingModules } from '../composables/state-subprocess'
 import { useDevToolsOptions } from '../composables/storage-options'
 import { telemetry } from '../composables/telemetry'
@@ -42,6 +42,9 @@ export function setupClientRPC() {
         router.push(path)
     },
   } satisfies ClientFunctions)
+
+  // Re-register client functions now that they're populated
+  registerClientFunctions()
 
   rpc.getModuleOptions()
     .then((options) => {

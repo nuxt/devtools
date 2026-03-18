@@ -1,5 +1,4 @@
 import type {} from '@nuxt/schema'
-import type { BirpcReturn } from 'birpc'
 import type { Hookable } from 'hookable'
 import type { NuxtApp } from 'nuxt/app'
 import type { AppConfig } from 'nuxt/schema'
@@ -7,7 +6,7 @@ import type { $Fetch } from 'ofetch'
 import type { BuiltinLanguage } from 'shiki'
 import type { Ref } from 'vue'
 import type { HookInfo, LoadingTimeMetric, PluginMetric } from './integrations'
-import type { ClientFunctions, ServerFunctions } from './rpc'
+import type { ServerFunctions } from './rpc'
 import type { TimelineMetrics } from './timeline-metrics'
 
 export interface DevToolsFrameState {
@@ -107,7 +106,7 @@ export interface CodeHighlightOptions {
 }
 
 export interface NuxtDevtoolsClient {
-  rpc: BirpcReturn<ServerFunctions, ClientFunctions>
+  rpc: ServerFunctions
   renderCodeHighlight: (code: string, lang?: BuiltinLanguage, options?: CodeHighlightOptions) => {
     code: string
     supported: boolean
@@ -115,7 +114,7 @@ export interface NuxtDevtoolsClient {
   renderMarkdown: (markdown: string) => string
   colorMode: string
 
-  extendClientRpc: <ServerFunctions extends object = Record<string, unknown>, ClientFunctions extends object = Record<string, unknown>>(name: string, functions: ClientFunctions) => BirpcReturn<ServerFunctions, ClientFunctions>
+  extendClientRpc: <ServerFunctions extends object = Record<string, unknown>, ClientFunctions extends object = Record<string, unknown>>(name: string, functions: ClientFunctions) => ServerFunctions
 }
 
 export interface NuxtDevtoolsIframeClient {
