@@ -44,14 +44,6 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
-   * Enable Vite DevTools integration
-   *
-   * @experimental
-   * @default false
-   */
-  viteDevTools?: boolean
-
-  /**
    * Disable dev time authorization check.
    *
    * **NOT RECOMMENDED**, only use this if you know what you are doing.
@@ -201,12 +193,10 @@ export interface NuxtDevToolsOptions {
     hiddenTabCategories: string[]
     hiddenTabs: string[]
     interactionCloseOnOutsideClick: boolean
-    minimizePanelInactive: number
     pinnedTabs: string[]
     scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    showPanel: boolean | null
     sidebarExpanded: boolean
     sidebarScrollable: boolean
   }

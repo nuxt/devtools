@@ -1,8 +1,5 @@
 import type { DevToolsFrameState } from '@nuxt/devtools/types'
-import { shallowRef } from 'vue'
 import { useObjectStorage } from './utils'
-
-export const popupWindow = shallowRef<Window | null>(null)
 
 export const state = useObjectStorage<DevToolsFrameState>('nuxt-devtools-frame-state', {
   width: 80,
