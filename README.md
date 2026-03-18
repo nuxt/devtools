@@ -44,20 +44,99 @@ export default defineNuxtConfig({
 })
 ```
 
+### Opting in to v4.0
+
+Nuxt DevTools v4.0 is currently in alpha. Since Nuxt ships with a built-in version of DevTools, you can opt-in to v4.0 by using package manager resolutions to override the bundled version:
+
+<details>
+<summary>npm</summary>
+
+```json
+{
+  "overrides": {
+    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>yarn</summary>
+
+```json
+{
+  "resolutions": {
+    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>pnpm</summary>
+
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+    }
+  }
+}
+```
+
+</details>
+
+Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
+
 ### Nightly Release Channel
 
 Similar to [Nuxt's Nightly Channel](https://nuxt.com/docs/guide/going-further/nightly-release-channel), DevTools also offers a nightly release channel, that automatically releases for every commit to `main` branch.
 
-You can opt-in to the nightly release channel by running:
+You can opt-in to the nightly release channel by using package manager resolutions:
 
-```diff
+<details>
+<summary>npm</summary>
+
+```json
 {
-  "devDependencies": {
---    "@nuxt/devtools": "^0.1.0"
-++    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+  "overrides": {
+    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
   }
 }
 ```
+
+</details>
+
+<details>
+<summary>yarn</summary>
+
+```json
+{
+  "resolutions": {
+    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>pnpm</summary>
+
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
+    }
+  }
+}
+```
+
+</details>
 
 Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
 
