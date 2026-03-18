@@ -4,18 +4,14 @@ definePageMeta({
 })
 const route = useRoute()
 
-const { data: page } = await useAsyncData(`docs-${route.path}`, () => queryContent(route.path).findOne())
+const { data: page } = await useAsyncData(`docs-${route.path}`, () => queryCollection('docs').path(route.path).first())
 if (!page.value)
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 
 const { data: surround } = await useAsyncData(`docs-${route.path}-surround`, () => {
-  return queryContent()
-    .where({ _extension: 'md', navigation: { $ne: false } })
-    .findSurround(route.path.endsWith('/') ? route.path.slice(0, -1) : route.path)
-}, {
-  transform(surround) {
-    return surround.map(doc => doc.navigation === false ? null : doc)
-  },
+  return queryCollectionItemSurroundings('docs', route.path, {
+    fields: ['title', 'description'],
+  })
 })
 
 useSeoMeta({
@@ -26,18 +22,16 @@ useSeoMeta({
   ogDescription: page.value.description,
 })
 
-defineOgImage({
-  component: 'Docs',
+defineOgImage('OgImageDocs', {
   title: page.value.title,
   description: page.value.description,
 })
 
-const headline = computed(() => findPageHeadline(page.value))
 const communityLinks = computed(() => [
   {
     icon: 'i-ph-pen-duotone',
     label: 'Edit this page',
-    to: `https://github.com/nuxt/devtools/edit/main/docs/content/${page?.value?._file}`,
+    to: `https://github.com/nuxt/devtools/edit/main/docs/content/${page?.value?.stem}.md`,
     target: '_blank',
   },
   {
@@ -69,7 +63,7 @@ const communityLinks = computed(() => [
 
 <template>
   <UPage>
-    <UPageHeader :title="page.title" :description="page.description" :links="page.links" :headline="headline" />
+    <UPageHeader :title="page.title" :description="page.description" />
 
     <UPageBody prose class="pb-0">
       <ContentRenderer v-if="page.body" :value="page" />
@@ -81,7 +75,7 @@ const communityLinks = computed(() => [
       <UContentToc :links="page.body.toc.links">
         <template #bottom>
           <div class="hidden !mt-6 lg:block space-y-6">
-            <UDivider v-if="page.body?.toc?.links?.length" dashed />
+            <USeparator v-if="page.body?.toc?.links?.length" />
             <UPageLinks title="Community" :links="communityLinks" />
           </div>
         </template>

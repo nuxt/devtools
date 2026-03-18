@@ -7,15 +7,14 @@ useSeoMeta({
   ogTitle: 'Nuxt DevTools Playground',
   description,
 })
-defineOgImage({
-  component: 'Docs',
+defineOgImage('OgImageDocs', {
   title,
   description,
 })
 </script>
 
 <template>
-  <div class="h-[calc(100vh-var(--header-height))] flex dark:bg-gray-950">
+  <div class="h-[calc(100vh-var(--ui-header-height))] flex dark:bg-gray-950">
     <ClientOnly>
       <iframe class="dark:bg-gray-950" :src="`https://stackblitz.com/github/nuxt/starter/tree/v3?embed=1&file=app.vue&theme=${$colorMode.preference}`" width="100%" height="100%" />
     </ClientOnly>
