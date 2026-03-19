@@ -68,5 +68,8 @@ const anyObj = {} as any
         </NButton>
       </NDropdown>
     </template>
+    <template #items>
+      <ModuleScoreItem :npm="item.npm" />
+    </template>
   </ModuleItemBase>
 </template>
