@@ -1,4 +1,3 @@
-import type { BirpcGroup } from 'birpc'
 import type { ChildProcess } from 'node:child_process'
 import type { Result } from 'tinyexec'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
@@ -132,11 +131,16 @@ export function startSubprocess(
   }
 }
 
+/**
+ * Extend server RPC with namespaced functions.
+ *
+ * Returns an object with a `broadcast` proxy for calling client functions.
+ */
 export function extendServerRpc<ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(
   namespace: string,
   functions: ServerFunctions,
   nuxt = useNuxt(),
-): BirpcGroup<ClientFunctions, ServerFunctions> {
+): { broadcast: ClientFunctions } {
   const ctx = _getContext(nuxt)
   if (!ctx)
     throw new Error('[Nuxt DevTools] Failed to get devtools context.')
