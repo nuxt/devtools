@@ -1,88 +1,26 @@
-import { devtoolsUiShowNotification } from '#imports'
-import { until } from '@vueuse/core'
 import { parseUA } from 'ua-parser-modern'
 import { ref } from 'vue'
-import { AuthConfirm } from './dialog'
-import { rpc } from './rpc'
 
-export const devAuthToken = ref<string | null>(localStorage.getItem('__nuxt_dev_token__'))
+/** @deprecated Auth is now handled by Vite DevTools */
+export const devAuthToken = ref<string | null>('disabled')
 
-export const isDevAuthed = ref(false)
+/** @deprecated Auth is now handled by Vite DevTools */
+export const isDevAuthed = ref(true)
 
-const bc = new BroadcastChannel('__nuxt_dev_token__')
-
-bc.addEventListener('message', (e) => {
-  if (e.data.event === 'new-token') {
-    if (e.data.data === devAuthToken.value)
-      return
-    const token = e.data.data
-    rpc.verifyAuthToken(token)
-      .then((result) => {
-        devAuthToken.value = result ? token : null
-        isDevAuthed.value = result
-      })
-  }
-})
-
-export function updateDevAuthToken(token: string) {
-  devAuthToken.value = token
-  isDevAuthed.value = true
-  localStorage.setItem('__nuxt_dev_token__', token)
-  bc.postMessage({ event: 'new-token', data: token })
+/** @deprecated Auth is now handled by Vite DevTools */
+export function updateDevAuthToken(_token: string) {
+  console.warn('[nuxt-devtools] `updateDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
 }
 
+/** @deprecated Auth is now handled by Vite DevTools */
 export async function ensureDevAuthToken() {
-  if (isDevAuthed.value)
-    return devAuthToken.value!
-
-  if (!devAuthToken.value)
-    await authConfirmAction()
-
-  isDevAuthed.value = await rpc.verifyAuthToken(devAuthToken.value!)
-  if (!isDevAuthed.value) {
-    devAuthToken.value = null
-    devtoolsUiShowNotification({
-      message: 'Invalid auth token, action canceled',
-      icon: 'i-carbon-warning-alt',
-      classes: 'text-red',
-    })
-    await authConfirmAction()
-    throw new Error('[Nuxt DevTools] Invalid auth token')
-  }
-
-  return devAuthToken.value!
+  console.warn('[nuxt-devtools] `ensureDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
+  return ''
 }
 
 export const userAgentInfo = parseUA(navigator.userAgent)
 
+/** @deprecated Auth is now handled by Vite DevTools */
 export async function requestForAuth() {
-  const desc = [
-    userAgentInfo.browser.name,
-    userAgentInfo.browser.version,
-    '|',
-    userAgentInfo.os.name,
-    userAgentInfo.os.version,
-    userAgentInfo.device.type,
-  ].filter(i => i).join(' ')
-  return await rpc.requestForAuth(desc, window.location.origin)
-}
-
-async function authConfirmAction() {
-  if (!devAuthToken.value)
-    requestForAuth()
-
-  const result = await Promise.race([
-    AuthConfirm.start(),
-    until(devAuthToken.value).toBeTruthy(),
-  ])
-
-  if (result === false) {
-    // @unocss-include
-    devtoolsUiShowNotification({
-      message: 'Action canceled',
-      icon: 'carbon-close',
-      classes: 'text-orange',
-    })
-    throw new Error('[Nuxt DevTools] User canceled auth')
-  }
+  console.warn('[nuxt-devtools] `requestForAuth` is deprecated. Auth is now handled by Vite DevTools.')
 }

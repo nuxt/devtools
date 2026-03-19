@@ -13,7 +13,6 @@ import sirv from 'sirv'
 import { searchForWorkspaceRoot } from 'vite'
 import { version } from '../package.json'
 import { defaultTabOptions } from './constant'
-import { getDevAuthToken } from './dev-auth'
 import { clientDir, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { readLocalOptions } from './utils/local-options'
@@ -38,6 +37,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   }
 
   await nuxt.callHook('devtools:before')
+
+  if (nuxt.options.devtools && typeof nuxt.options.devtools !== 'boolean' && 'disableAuthorization' in nuxt.options.devtools) {
+    logger.warn('[nuxt-devtools] `disableAuthorization` option is deprecated. Auth is now handled by Vite DevTools.')
+  }
 
   if (options.iframeProps) {
     nuxt.options.runtimeConfig.app.devtools ||= {}
@@ -158,8 +161,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
   const ROUTE_CLIENT = `${ROUTE_PATH}/client`
-  const ROUTE_AUTH = `${ROUTE_PATH}/auth`
-  const ROUTE_AUTH_VERIFY = `${ROUTE_PATH}/auth-verify`
   const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
 
   // TODO: Use WS from nitro server when possible
@@ -189,28 +190,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
         return handleStatic(req, res, () => handleIndex(res))
       })
     }
-    server.middlewares.use(ROUTE_AUTH, sirv(join(runtimeDir, 'auth'), { single: true, dev: true }))
-    server.middlewares.use(ROUTE_AUTH_VERIFY, async (req, res) => {
-      const search = req.url?.split('?')[1]
-      if (!search) {
-        res.statusCode = 400
-        res.end('No token provided')
-      }
-      const query = new URLSearchParams(search)
-      const token = query.get('token')
-      if (!token) {
-        res.statusCode = 400
-        res.end('No token provided')
-      }
-      if (token === await getDevAuthToken()) {
-        res.statusCode = 200
-        res.end('Valid token')
-      }
-      else {
-        res.statusCode = 403
-        res.end('Invalid token')
-      }
-    })
   })
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))

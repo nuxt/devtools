@@ -41,7 +41,7 @@ export interface NuxtDevtoolsServerContext {
   refresh: (event: keyof ServerFunctions) => void
 
   /**
-   * Ensure dev auth token is valid, throw if not
+   * @deprecated Auth is now handled by Vite DevTools. This is a noop.
    */
   ensureDevAuthToken: (token: string) => Promise<void>
 

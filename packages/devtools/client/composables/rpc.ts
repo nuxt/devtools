@@ -1,5 +1,5 @@
 import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
-import type { ClientFunctions, ServerFunctions } from '../../src/types'
+import type { AsyncServerFunctions, ClientFunctions } from '../../src/types'
 import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, shallowRef } from 'vue'
@@ -22,7 +22,7 @@ const connectPromise = connectDevToolsRpc()
  * Proxy-based RPC object that provides backward-compatible `rpc.functionName()` interface.
  * Server functions are called via Vite DevTools Kit's RPC client.
  */
-export const rpc = new Proxy({} as ServerFunctions, {
+export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {
     return async (...args: any[]) => {
       const client = rpcClient || await connectPromise

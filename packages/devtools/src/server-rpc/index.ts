@@ -4,7 +4,6 @@ import type { Nuxt } from 'nuxt/schema'
 import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
-import { getDevAuthToken } from '../dev-auth'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -23,10 +22,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
   const extendedRpcMap = new Map<string, Record<string, (...args: any[]) => any>>()
   let rpcHost: RpcFunctionsHost | undefined
+  const pendingBroadcasts: { method: string, args: any[] }[] = []
 
   function broadcast(method: string, ...args: any[]) {
     if (!rpcHost) {
-      logger.warn(`[nuxt-devtools] RPC host not connected yet, cannot broadcast "${method}"`)
+      pendingBroadcasts.push({ method, args })
       return
     }
     rpcHost.broadcast({
@@ -106,11 +106,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
-    async ensureDevAuthToken(token: string) {
-      if (options.disableAuthorization)
-        return
-      if (token !== await getDevAuthToken())
-        throw new Error('[Nuxt DevTools] Invalid dev auth token.')
+    /** @deprecated Auth is now handled by Vite DevTools */
+    async ensureDevAuthToken(_token: string) {
+      logger.warn('[nuxt-devtools] `ensureDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
     },
   }
 
@@ -139,6 +137,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
    */
   function connectRpcHost(host: RpcFunctionsHost) {
     rpcHost = host
+
+    // Flush any broadcasts that were queued before connection
+    for (const { method, args } of pendingBroadcasts) {
+      broadcast(method, ...args)
+    }
+    pendingBroadcasts.length = 0
 
     // Register all collected server functions
     for (const [name, handler] of Object.entries(serverFunctions)) {

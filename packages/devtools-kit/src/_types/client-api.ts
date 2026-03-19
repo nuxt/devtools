@@ -105,8 +105,12 @@ export interface CodeHighlightOptions {
   grammarContextCode?: string
 }
 
+export type AsyncServerFunctions = {
+  [K in keyof ServerFunctions]: (...args: Parameters<ServerFunctions[K]>) => Promise<Awaited<ReturnType<ServerFunctions[K]>>>
+}
+
 export interface NuxtDevtoolsClient {
-  rpc: ServerFunctions
+  rpc: AsyncServerFunctions
   renderCodeHighlight: (code: string, lang?: BuiltinLanguage, options?: CodeHighlightOptions) => {
     code: string
     supported: boolean
