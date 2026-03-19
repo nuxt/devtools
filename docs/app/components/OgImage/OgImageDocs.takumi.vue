@@ -23,7 +23,7 @@ defineProps({
 <template>
   <div class="h-full w-full flex flex-col items-start justify-between bg-[#020420] p-20 pb-16 pt-32">
     <div
-      style="position: absolute;width: 1156px;height: 1000px;left: -215px;top: -337px;background: radial-gradient(50% 50% at 50% 50%, #00DC82 0%, rgba(0, 220, 130, 0) 100%);filter: blur(180.5px);opacity: 0.5;"
+      style="position: absolute;width: 1156px;height: 1000px;left: -215px;top: -337px;background-image: radial-gradient(circle at 50% 50%, #00DC82 0%, rgba(0, 220, 130, 0) 100%);filter: blur(180.5px);opacity: 0.5;"
     />
     <div>
       <h1 class="mb-4 flex items-center text-8xl text-white">
