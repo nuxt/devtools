@@ -4,7 +4,6 @@ import type { Result } from 'tinyexec'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 import { useNuxt } from '@nuxt/kit'
 import { x } from 'tinyexec'
-
 /**
  * Hooks to extend a custom tab in devtools.
  *
@@ -50,6 +49,7 @@ export function startSubprocess(
       {
         nodeOptions: {
           ...execaOptions.nodeOptions,
+          cwd: execaOptions.cwd,
           env: {
             ...process.env,
             COLORS: 'true',
