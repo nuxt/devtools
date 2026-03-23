@@ -1,3 +1,4 @@
+import type { BirpcGroup } from 'birpc'
 import type { ChildProcess } from 'node:child_process'
 import type { Result } from 'tinyexec'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
@@ -140,7 +141,7 @@ export function extendServerRpc<ClientFunctions extends object = Record<string, 
   namespace: string,
   functions: ServerFunctions,
   nuxt = useNuxt(),
-): { broadcast: ClientFunctions } {
+): BirpcGroup<ClientFunctions, ServerFunctions> {
   const ctx = _getContext(nuxt)
   if (!ctx)
     throw new Error('[Nuxt DevTools] Failed to get devtools context.')

@@ -96,6 +96,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
 
     return {
       broadcast: createBroadcastProxy(namespace),
+      functions,
+      clients: [],
+      updateChannels: () => [],
     }
   }
 

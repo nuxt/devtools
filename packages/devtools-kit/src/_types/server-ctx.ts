@@ -1,3 +1,4 @@
+import type { BirpcGroup } from 'birpc'
 import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
 import type { ModuleOptions } from './options'
 import type { ClientFunctions, ServerFunctions } from './rpc'
@@ -45,7 +46,7 @@ export interface NuxtDevtoolsServerContext {
    */
   ensureDevAuthToken: (token: string) => Promise<void>
 
-  extendServerRpc: <ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(name: string, functions: ServerFunctions) => { broadcast: ClientFunctions }
+  extendServerRpc: <ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
 
 export interface NuxtDevtoolsInfo {
