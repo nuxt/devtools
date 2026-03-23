@@ -352,6 +352,9 @@ catalogs:
     '@types/node':
       specifier: ^25.5.0
       version: 25.5.0
+    '@types/semver':
+      specifier: ^7.7.1
+      version: 7.7.1
     '@types/which':
       specifier: ^3.0.4
       version: 3.0.4
@@ -407,6 +410,9 @@ importers:
       '@types/node':
         specifier: catalog:types
         version: 25.5.0
+      '@types/semver':
+        specifier: catalog:types
+        version: 7.7.1
       '@types/which':
         specifier: catalog:types
         version: 3.0.4
@@ -3210,6 +3216,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/semver@7.7.1':
+    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/sinonjs__fake-timers@8.1.1':
     resolution: {integrity: sha512-0kSuKjAS0TrGLJ0M/+8MaFkGsQhZpB6pxOmvS3K8FYI72K//YmdfoW9X2qPsAKh1mkwxGD5zib9s1FIFed6E8g==}
@@ -11013,6 +11022,8 @@ snapshots:
       undici-types: 7.18.2
 
   '@types/resolve@1.20.2': {}
+
+  '@types/semver@7.7.1': {}
 
   '@types/sinonjs__fake-timers@8.1.1': {}
 
