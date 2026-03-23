@@ -132,6 +132,11 @@ export function startSubprocess(
   }
 }
 
+/**
+ * Extend server RPC with namespaced functions.
+ *
+ * Returns an object with a `broadcast` proxy for calling client functions.
+ */
 export function extendServerRpc<ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(
   namespace: string,
   functions: ServerFunctions,

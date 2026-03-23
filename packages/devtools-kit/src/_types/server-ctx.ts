@@ -4,13 +4,32 @@ import type { ModuleOptions } from './options'
 import type { ClientFunctions, ServerFunctions } from './rpc'
 
 /**
+ * Compatibility RPC interface that supports broadcast and function access.
+ * Backed by Vite DevTools Kit's RpcFunctionsHost internally.
+ */
+export interface NuxtDevtoolsRpc {
+  /**
+   * Broadcast proxy for calling client functions.
+   * Supports `rpc.broadcast.refresh.asEvent(event)` pattern for backward compatibility.
+   */
+  broadcast: {
+    [K in keyof ClientFunctions]: ClientFunctions[K] & { asEvent: ClientFunctions[K] }
+  }
+
+  /**
+   * Proxy for accessing server functions locally.
+   */
+  functions: ServerFunctions
+}
+
+/**
  * @internal
  */
 export interface NuxtDevtoolsServerContext {
   nuxt: Nuxt
   options: ModuleOptions
 
-  rpc: BirpcGroup<ClientFunctions, ServerFunctions>
+  rpc: NuxtDevtoolsRpc
 
   /**
    * Hook to open file in editor
@@ -23,7 +42,7 @@ export interface NuxtDevtoolsServerContext {
   refresh: (event: keyof ServerFunctions) => void
 
   /**
-   * Ensure dev auth token is valid, throw if not
+   * @deprecated Auth is now handled by Vite DevTools. This is a noop.
    */
   ensureDevAuthToken: (token: string) => Promise<void>
 

@@ -1,98 +1,109 @@
-import type { ClientFunctions, ServerFunctions } from '../../src/types'
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
+import type { AsyncServerFunctions, ClientFunctions } from '../../src/types'
+import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
-import { createBirpc } from 'birpc'
-import { parse, stringify } from 'structured-clone-es'
-import { tryCreateHotContext } from 'vite-hot-client'
 import { ref, shallowRef } from 'vue'
-import { WS_EVENT_NAME } from '../../src/constant'
 
-const LEADING_TRAILING_SLASH_RE = /^\/|\/$/g
-const DEVTOOLS_CLIENT_PATH_RE = /\/__nuxt_devtools__\/client\/.*$/
-
-export const wsConnecting = ref(false)
+export const wsConnecting = ref(true)
 export const wsError = shallowRef<any>()
 export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
 
-const connectPromise = connectVite()
-let onMessage: any = () => {}
-
 export const clientFunctions = {
-  // will be added in app.vue
+  // will be added in setup/client-rpc.ts
 } as ClientFunctions
 
 export const extendedRpcMap = new Map<string, any>()
 
-export const rpc = createBirpc<ServerFunctions, ClientFunctions>(clientFunctions, {
-  post: async (d) => {
-    (await connectPromise).send(WS_EVENT_NAME, d)
+let rpcClient: DevToolsRpcClient | undefined
+
+const connectPromise = connectDevToolsRpc()
+
+/**
+ * Proxy-based RPC object that provides backward-compatible `rpc.functionName()` interface.
+ * Server functions are called via Vite DevTools Kit's RPC client.
+ */
+export const rpc = new Proxy({} as AsyncServerFunctions, {
+  get: (_, method: string) => {
+    return async (...args: any[]) => {
+      const client = rpcClient || await connectPromise
+      // Check extended RPC map first for namespaced functions
+      if (method.includes(':')) {
+        const [namespace, fnName] = method.split(':') as [string, string]
+        const extFn = extendedRpcMap.get(namespace)?.[fnName]
+        if (extFn)
+          return extFn(...args)
+      }
+      return client.call(method as any, ...args as any)
+    }
   },
-  on: (fn) => {
-    onMessage = fn
-  },
-  serialize: stringify,
-  deserialize: parse,
-  resolver(name, fn) {
-    if (fn)
-      return fn
-    if (!name.includes(':'))
-      return
-    const [namespace, fnName] = name.split(':') as [string, string]
-    return extendedRpcMap.get(namespace)?.[fnName]
-  },
-  onFunctionError(error, name) {
-    console.error(`[nuxt-devtools] RPC error on executing "${name}":`)
-    console.error(error)
-    return true
-  },
-  onGeneralError(error) {
-    console.error(`[nuxt-devtools] RPC error:`)
-    console.error(error)
-    return true
-  },
-  timeout: 120_000,
 })
 
-async function connectVite() {
-  const appConfig = window.parent?.__NUXT__?.config?.app
-    ?? window.parent?.useNuxtApp?.()?.payload?.config?.app // Nuxt 4 removes __NUXT__
+async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
+  try {
+    const client = await getDevToolsRpcClient()
 
-  let base = appConfig?.baseURL ?? '/'
-  const buildAssetsDir = appConfig?.buildAssetsDir?.replace(LEADING_TRAILING_SLASH_RE, '') ?? '_nuxt'
-  if (base && !base.endsWith('/'))
-    base += '/'
-  const current = window.location.href.replace(DEVTOOLS_CLIENT_PATH_RE, '/')
-  const hot = await tryCreateHotContext(undefined, [...new Set([
-    `${base}${buildAssetsDir}/`,
-    `${base}_nuxt/`,
-    base,
-    `${current}${buildAssetsDir}/`,
-    `${current}_nuxt/`,
-    current,
-  ])])
+    rpcClient = client
 
-  if (!hot) {
-    wsConnecting.value = true
-    console.error('[Nuxt DevTools] Unable to find Vite HMR context')
-    throw new Error('[Nuxt DevTools] Unable to connect to devtools')
+    // Register client functions so the server can call them
+    for (const [name, handler] of Object.entries(clientFunctions)) {
+      if (typeof handler === 'function') {
+        client.client.register({
+          name,
+          type: 'event',
+          handler: handler as any,
+        })
+      }
+    }
+
+    // Register extended client RPC functions
+    for (const [namespace, fns] of extendedRpcMap) {
+      for (const [fnName, handler] of Object.entries(fns)) {
+        if (typeof handler === 'function') {
+          client.client.register({
+            name: `${namespace}:${fnName}`,
+            type: 'event',
+            handler: handler as any,
+          })
+        }
+      }
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('[nuxt-devtools] Connected to Vite DevTools RPC')
+    wsConnecting.value = false
+
+    return client
   }
-
-  hot.on(WS_EVENT_NAME, (data) => {
-    wsConnecting.value = false
-    onMessage(data)
-  })
-
-  wsConnecting.value = true
-
-  hot.on('vite:ws:connect', () => {
-    // eslint-disable-next-line no-console
-    console.log('[nuxt-devtools] Connected to WebSocket')
-    wsConnecting.value = false
-  })
-  hot.on('vite:ws:disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log('[nuxt-devtools] Disconnected from WebSocket')
+  catch (e) {
     wsConnecting.value = true
-  })
+    wsError.value = e
+    console.error('[Nuxt DevTools] Unable to connect to Vite DevTools RPC', e)
+    throw e
+  }
+}
 
-  return hot
+/**
+ * Register additional client functions after initial connection.
+ * Used by setup/client-rpc.ts to register functions that are set up later.
+ */
+export async function registerClientFunctions() {
+  const client = rpcClient || await connectPromise
+  for (const [name, handler] of Object.entries(clientFunctions)) {
+    if (typeof handler === 'function') {
+      try {
+        client.client.update({
+          name,
+          type: 'event',
+          handler: handler as any,
+        })
+      }
+      catch {
+        client.client.register({
+          name,
+          type: 'event',
+          handler: handler as any,
+        })
+      }
+    }
+  }
 }

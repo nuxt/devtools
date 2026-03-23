@@ -44,12 +44,7 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
-   * Disable dev time authorization check.
-   *
-   * **NOT RECOMMENDED**, only use this if you know what you are doing.
-   *
-   * @see https://github.com/nuxt/devtools/pull/257
-   * @default false
+   * @deprecated Auth is now handled by Vite DevTools. This option is ignored.
    */
   disableAuthorization?: boolean
 

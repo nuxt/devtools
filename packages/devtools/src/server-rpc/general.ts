@@ -5,13 +5,11 @@ import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, Serv
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { logger } from '@nuxt/kit'
-import { colors } from 'consola/utils'
 import destr from 'destr'
 import { dirname, join, resolve } from 'pathe'
 import { snakeCase } from 'scule'
 
 import { resolveBuiltinPresets } from 'unimport'
-import { getDevAuthToken } from '../dev-auth'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
@@ -19,7 +17,6 @@ import { getOptions } from './options'
 const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const FILE_LINE_COL_RE = /^(.*?)(:[:\d]*)$/
-const MULTIPLE_SLASHES_RE = /\/+/g
 const NUXT_WELCOME_RE = /<NuxtWelcome\s*\/>/
 
 export function setupGeneralRPC({
@@ -270,40 +267,14 @@ export function setupGeneralRPC({
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },
-    async requestForAuth(info, origin?) {
-      if (options.disableAuthorization)
-        return
-
-      const token = await getDevAuthToken()
-
-      origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
-
-      const ROUTE_AUTH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__/auth`.replace(MULTIPLE_SLASHES_RE, '/')
-
-      const message = [
-        `A browser is requesting permissions of ${colors.bold(colors.yellow('writing files and running commands'))} from the DevTools UI.`,
-        colors.bold(info || 'Unknown'),
-        '',
-        'Please open the following URL in the browser:',
-        colors.bold(colors.green(`${origin}${ROUTE_AUTH}?token=${token}`)),
-        '',
-        'Or manually copy and paste the following token:',
-        colors.bold(colors.cyan(token)),
-      ]
-
-      logger.box({
-        message: message.join('\n'),
-        title: colors.bold(colors.yellow(' Permission Request ')),
-        style: {
-          borderColor: 'yellow',
-          borderStyle: 'rounded',
-        },
-      })
+    /** @deprecated Auth is now handled by Vite DevTools */
+    async requestForAuth() {
+      logger.warn('[nuxt-devtools] `requestForAuth` is deprecated. Auth is now handled by Vite DevTools.')
     },
-    async verifyAuthToken(token: string) {
-      if (options.disableAuthorization)
-        return true
-      return token === await getDevAuthToken()
+    /** @deprecated Auth is now handled by Vite DevTools */
+    async verifyAuthToken() {
+      logger.warn('[nuxt-devtools] `verifyAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
+      return true
     },
   } satisfies Partial<ServerFunctions>
 }

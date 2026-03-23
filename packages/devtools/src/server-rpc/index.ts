@@ -1,15 +1,9 @@
-import type { ChannelOptions } from 'birpc'
+import type { RpcFunctionsHost } from '@vitejs/devtools-kit'
 import type { Nuxt } from 'nuxt/schema'
-import type { Plugin } from 'vite'
 
-import type { WebSocket } from 'ws'
-import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { logger } from '@nuxt/kit'
-import { createBirpcGroup } from 'birpc'
 import { colors } from 'consola/utils'
-import { parse, stringify } from 'structured-clone-es'
-import { WS_EVENT_NAME } from '../constant'
-import { getDevAuthToken } from '../dev-auth'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -26,61 +20,98 @@ import { setupTimelineRPC } from './timeline'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
-  const extendedRpcMap = new Map<string, any>()
-  const rpc = createBirpcGroup<ClientFunctions, ServerFunctions>(
-    serverFunctions,
-    [],
-    {
-      resolver: (name, fn) => {
-        if (fn)
-          return fn
+  const extendedRpcMap = new Map<string, Record<string, (...args: any[]) => any>>()
+  let rpcHost: RpcFunctionsHost | undefined
+  const pendingBroadcasts: { method: string, args: any[] }[] = []
 
-        if (!name.includes(':'))
+  function broadcast(method: string, ...args: any[]) {
+    if (!rpcHost) {
+      pendingBroadcasts.push({ method, args })
+      return
+    }
+    rpcHost.broadcast({
+      method: method as any,
+      args: args as any,
+      event: true,
+    })
+  }
+
+  /**
+   * Compatibility broadcast proxy that supports the old birpc-style API:
+   * `rpc.broadcast.refresh.asEvent(event)` and `rpc.broadcast.onTerminalData.asEvent({ id, data })`
+   */
+  function createBroadcastProxy(prefix = ''): any {
+    return new Proxy({}, {
+      get: (_, method) => {
+        if (typeof method !== 'string')
           return
+        const fullMethod = prefix ? `${prefix}:${method}` : method
+        const fn = (...args: any[]) => broadcast(fullMethod, ...args)
+        fn.asEvent = (...args: any[]) => broadcast(fullMethod, ...args)
+        return fn
+      },
+    })
+  }
 
-        const [namespace, fnName] = name.split(':')
-        return extendedRpcMap.get(namespace!)?.[fnName!]
-      },
-      onFunctionError(error, name) {
-        logger.error(
-          colors.yellow(`[nuxt-devtools] RPC error on executing "${colors.bold(name)}":\n`)
-          + colors.red(error?.message || ''),
-        )
-      },
-      timeout: 120_000,
+  /**
+   * Compatibility proxy for `rpc.functions` that reads/writes to serverFunctions
+   * and also updates the RpcFunctionsHost when available.
+   */
+  const functionsProxy = new Proxy(serverFunctions, {
+    set(target, prop, value) {
+      (target as any)[prop] = value
+      // Also update on RpcFunctionsHost if available
+      if (rpcHost && typeof prop === 'string') {
+        if (rpcHost.has(prop)) {
+          rpcHost.update({ name: prop, handler: value })
+        }
+        else {
+          rpcHost.register({ name: prop, handler: value })
+        }
+      }
+      return true
     },
-  )
+  })
+
+  const rpc = {
+    broadcast: createBroadcastProxy(),
+    functions: functionsProxy,
+  }
 
   function refresh(event: keyof ServerFunctions) {
-    rpc.broadcast.refresh.asEvent(event)
+    broadcast('refresh', event)
   }
 
   function extendServerRpc(namespace: string, functions: any): any {
     extendedRpcMap.set(namespace, functions)
 
+    // Register on RpcFunctionsHost if already available
+    if (rpcHost) {
+      for (const [fnName, handler] of Object.entries(functions)) {
+        if (typeof handler === 'function') {
+          rpcHost.register({ name: `${namespace}:${fnName}`, handler: handler as any })
+        }
+      }
+    }
+
     return {
-      broadcast: new Proxy({}, {
-        get: (_, key) => {
-          if (typeof key !== 'string')
-            return
-          return (rpc.broadcast as any)[`${namespace}:${key}`]
-        },
-      }),
+      broadcast: createBroadcastProxy(namespace),
+      functions,
+      clients: [],
+      updateChannels: () => [],
     }
   }
 
   const ctx: NuxtDevtoolsServerContext = {
     nuxt,
     options,
-    rpc,
+    rpc: rpc as any,
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
-    async ensureDevAuthToken(token: string) {
-      if (options.disableAuthorization)
-        return
-      if (token !== await getDevAuthToken())
-        throw new Error('[Nuxt DevTools] Invalid dev auth token.')
+    /** @deprecated Auth is now handled by Vite DevTools */
+    async ensureDevAuthToken(_token: string) {
+      logger.warn('[nuxt-devtools] `ensureDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
     },
   }
 
@@ -103,51 +134,60 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupServerDataRPC(ctx),
   } as ServerFunctions)
 
-  const wsClients = new Set<WebSocket>()
+  /**
+   * Connect to Vite DevTools Kit's RPC host.
+   * Called from the Vite DevTools plugin setup callback.
+   */
+  function connectRpcHost(host: RpcFunctionsHost) {
+    rpcHost = host
 
-  const vitePlugin: Plugin = {
-    name: 'nuxt:devtools:rpc',
-    configureServer(server) {
-      server.ws.on('connection', (ws) => {
-        wsClients.add(ws)
-        const channel: ChannelOptions = {
-          post: d => ws.send(JSON.stringify({
-            type: 'custom',
-            event: WS_EVENT_NAME,
-            data: d,
-          })),
-          on: (fn) => {
-            ws.on('message', (e) => {
-              try {
-                const data = JSON.parse(String(e)) || {}
-                if (data.type === 'custom' && data.event === WS_EVENT_NAME) {
-                  // console.log(data.data)
-                  fn(data.data)
-                }
-              }
-              catch {}
-            })
-          },
-          serialize: stringify,
-          deserialize: parse,
-        }
-        rpc.updateChannels((c) => {
-          c.push(channel)
-        })
-        ws.on('close', () => {
-          wsClients.delete(ws)
-          rpc.updateChannels((c) => {
-            const index = c.indexOf(channel)
-            if (index >= 0)
-              c.splice(index, 1)
+    // Flush any broadcasts that were queued before connection
+    for (const { method, args } of pendingBroadcasts) {
+      broadcast(method, ...args)
+    }
+    pendingBroadcasts.length = 0
+
+    // Register all collected server functions
+    for (const [name, handler] of Object.entries(serverFunctions)) {
+      if (typeof handler === 'function') {
+        try {
+          host.register({
+            name,
+            handler: handler as any,
           })
-        })
-      })
-    },
+        }
+        catch (e) {
+          logger.warn(
+            colors.yellow(`[nuxt-devtools] Failed to register RPC function "${name}":\n`)
+            + colors.red((e as Error)?.message || ''),
+          )
+        }
+      }
+    }
+
+    // Register extended (namespaced) functions
+    for (const [namespace, fns] of extendedRpcMap) {
+      for (const [fnName, handler] of Object.entries(fns)) {
+        if (typeof handler === 'function') {
+          try {
+            host.register({
+              name: `${namespace}:${fnName}`,
+              handler: handler as any,
+            })
+          }
+          catch (e) {
+            logger.warn(
+              colors.yellow(`[nuxt-devtools] Failed to register RPC function "${namespace}:${fnName}":\n`)
+              + colors.red((e as Error)?.message || ''),
+            )
+          }
+        }
+      }
+    }
   }
 
   return {
-    vitePlugin,
+    connectRpcHost,
     ...ctx,
   }
 }
