@@ -80,12 +80,14 @@ export function parseReadablePath(path: string, root: string) {
 
 export function useAsyncState<T>(key: string, fn: () => Promise<T>, options?: AsyncDataOptions<T>) {
   const nuxt = useNuxtApp()
-
-  const unique = nuxt.payload.unique = nuxt.payload.unique || {} as any
-  if (!unique[key])
-    unique[key] = useAsyncData(key, fn, options)
-
-  return unique[key].data as Ref<T | null>
+  const { data } = useAsyncData(key, fn, {
+    ...options,
+    // Custom getCachedData serves two purposes:
+    // 1. Returns previously fetched data from payload.data on remount, so pages render instantly
+    // 2. Prevents Nuxt's purgeCachedData from clearing data when the last consumer unmounts
+    getCachedData: key => nuxt.payload.data[key] as T,
+  })
+  return data as Ref<T | null>
 }
 
 export function getIsMacOS() {
