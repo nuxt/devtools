@@ -9,7 +9,7 @@ import { glob } from 'tinyglobby'
 
 const COLON_RE = /:/g
 
-export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
+export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
   let initalized: Promise<any> | undefined
@@ -118,9 +118,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
         builds,
       }
     },
-    async clearAnalyzeBuilds(token: string, names?: string[]) {
-      await ensureDevAuthToken(token)
-
+    async clearAnalyzeBuilds(names?: string[]) {
       if (!names) {
         await fsp.rm(devtoolsAnalyzeDir, { recursive: true, force: true })
       }
@@ -132,8 +130,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh, ensureDevAuthToken }: Nuxt
       refresh('getAnalyzeBuildInfo')
     },
     generateAnalyzeBuildName,
-    async startAnalyzeBuild(token: string, ...args) {
-      await ensureDevAuthToken(token)
+    async startAnalyzeBuild(...args) {
       return startAnalyzeBuild(...args)
     },
   } satisfies Partial<ServerFunctions>

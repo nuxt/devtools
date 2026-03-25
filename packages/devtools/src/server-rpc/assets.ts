@@ -7,7 +7,7 @@ import { debounce } from 'perfect-debounce'
 import { glob } from 'tinyglobby'
 import { defaultAllowedExtensions } from '../constant'
 
-export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: NuxtDevtoolsServerContext) {
+export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
   let cache: AssetInfo[] | null = null
 
@@ -75,9 +75,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
     async getStaticAssets() {
       return await scan()
     },
-    async getImageMeta(token: string, filepath: string) {
-      await ensureDevAuthToken(token)
-
+    async getImageMeta(filepath: string) {
       if (_imageMetaCache.has(filepath))
         return _imageMetaCache.get(filepath)
       try {
@@ -91,9 +89,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         return undefined
       }
     },
-    async getTextAssetContent(token: string, filepath: string, limit = 300) {
-      await ensureDevAuthToken(token)
-
+    async getTextAssetContent(filepath: string, limit = 300) {
       try {
         const content = await fsp.readFile(filepath, 'utf-8')
         return content.slice(0, limit)
@@ -103,9 +99,7 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         return undefined
       }
     },
-    async writeStaticAssets(token: string, files: AssetEntry[], folder: string) {
-      await ensureDevAuthToken(token)
-
+    async writeStaticAssets(files: AssetEntry[], folder: string) {
       const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
 
       return await Promise.all(
@@ -140,14 +134,10 @@ export function setupAssetsRPC({ nuxt, ensureDevAuthToken, refresh, options }: N
         }),
       )
     },
-    async deleteStaticAsset(token: string, path: string) {
-      await ensureDevAuthToken(token)
-
+    async deleteStaticAsset(path: string) {
       return await fsp.unlink(path)
     },
-    async renameStaticAsset(token: string, oldPath: string, newPath: string) {
-      await ensureDevAuthToken(token)
-
+    async renameStaticAsset(oldPath: string, newPath: string) {
       const exist = cache?.find(asset => asset.filePath === newPath)
       if (exist)
         throw new Error(`[Nuxt DevTools] File ${newPath} already exists, failed to rename`)

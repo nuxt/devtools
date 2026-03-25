@@ -2,7 +2,6 @@ import type { NpmCommandOptions } from '../../src/types'
 import { useNuxtApp } from '#app/nuxt'
 import semver from 'semver'
 import { computed, ref } from 'vue'
-import { ensureDevAuthToken } from './dev-auth'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'
 
@@ -58,7 +57,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
     state.value = 'running'
 
-    processId.value = (await rpc.runNpmCommand(await ensureDevAuthToken(), 'update', name, options))?.processId
+    processId.value = (await rpc.runNpmCommand('update', name, options))?.processId
 
     return processId.value
   }
@@ -66,7 +65,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   async function restart() {
     if (state.value !== 'updated')
       return
-    await rpc.restartNuxt(await ensureDevAuthToken())
+    await rpc.restartNuxt()
   }
 
   return {

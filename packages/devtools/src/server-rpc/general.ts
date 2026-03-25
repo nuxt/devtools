@@ -23,7 +23,6 @@ export function setupGeneralRPC({
   nuxt,
   options,
   refresh,
-  ensureDevAuthToken,
   openInEditorHooks,
 }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
@@ -232,9 +231,7 @@ export function setupGeneralRPC({
         return false
       }
     },
-    async enablePages(token: string) {
-      await ensureDevAuthToken(token)
-
+    async enablePages() {
       const baseDir = nuxt.options.future.compatibilityVersion === 4 ? nuxt.options.dir.app : nuxt.options.srcDir
       const pathApp = join(baseDir, 'app.vue')
       const pathPageIndex = join(baseDir, 'pages/index.vue')
@@ -262,8 +259,7 @@ export function setupGeneralRPC({
 
       logger.success('Routing creation completed')
     },
-    async restartNuxt(token: string, hard = true) {
-      await ensureDevAuthToken(token)
+    async restartNuxt(hard = true) {
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },

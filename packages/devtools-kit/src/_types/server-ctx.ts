@@ -41,11 +41,6 @@ export interface NuxtDevtoolsServerContext {
    */
   refresh: (event: keyof ServerFunctions) => void
 
-  /**
-   * @deprecated Auth is now handled by Vite DevTools. This is a noop.
-   */
-  ensureDevAuthToken: (token: string) => Promise<void>
-
   extendServerRpc: <ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
 

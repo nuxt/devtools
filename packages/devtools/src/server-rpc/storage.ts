@@ -11,7 +11,6 @@ function shouldIgnoreStorageKey(key: string) {
 export function setupStorageRPC({
   nuxt,
   rpc,
-  ensureDevAuthToken,
 }: NuxtDevtoolsServerContext) {
   const storageMounts: StorageMounts = {}
 
@@ -71,20 +70,17 @@ export function setupStorageRPC({
         return []
       }
     },
-    async getStorageItem(token: string, key: string) {
-      await ensureDevAuthToken(token)
+    async getStorageItem(key: string) {
       if (!storage)
         return null
       return await storage.getItem(key)
     },
-    async setStorageItem(token: string, key: string, value: StorageValue) {
-      await ensureDevAuthToken(token)
+    async setStorageItem(key: string, value: StorageValue) {
       if (!storage)
         return
       return await storage.setItem(key, value)
     },
-    async removeStorageItem(token: string, key: string) {
-      await ensureDevAuthToken(token)
+    async removeStorageItem(key: string) {
       if (!storage)
         return
       return await storage.removeItem(key)

@@ -11,7 +11,6 @@ import { isFirstVisit } from '~/composables/storage'
 import { getIsMacOS } from '~/composables/utils'
 import { version } from '../../../package.json'
 import { showConnectionWarning } from '../../composables/client'
-import { ensureDevAuthToken } from '../../composables/dev-auth'
 import { formatDuration, pluralizeByCount } from '../../composables/utils'
 
 definePageMeta({
@@ -38,7 +37,7 @@ const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
 const metricsLoading = computed(() => client.value?.metrics.loading())
 
 function authorize() {
-  ensureDevAuthToken()
+  // Auth is now handled by Vite DevTools
 }
 </script>
 

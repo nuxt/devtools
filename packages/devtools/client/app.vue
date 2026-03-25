@@ -77,7 +77,7 @@ onMounted(async () => {
 
   if (!isDevAuthed.value) {
     if (devAuthToken.value) {
-      const result = await rpc.verifyAuthToken(devAuthToken.value)
+      const result = await rpc.verifyAuthToken()
       if (result)
         isDevAuthed.value = true
     }

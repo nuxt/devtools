@@ -2,7 +2,6 @@
 import { useNuxtApp } from '#app/nuxt'
 import { createTemplatePromise } from '@vueuse/core'
 import { useClient } from '~/composables/client'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { useRestartDialogs } from '~/composables/dialog'
 import { rpc } from '~/composables/rpc'
 
@@ -22,7 +21,7 @@ nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
         .start(dialog.message)
         .then(async (result) => {
           if (result) {
-            rpc.restartNuxt(await ensureDevAuthToken())
+            rpc.restartNuxt()
             setTimeout(() => {
               client.value?.app.reload()
             }, 500)

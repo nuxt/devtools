@@ -181,7 +181,7 @@ const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}p
       {
         label: 'Enable Routing',
         async handle() {
-          return rpc.enablePages(await ensureDevAuthToken())
+          return rpc.enablePages()
         },
       },
     ]"

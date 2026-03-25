@@ -3,7 +3,6 @@ import type { AssetEntry } from '~/../src/types'
 import { devtoolsUiShowNotification } from '#imports'
 import { useEventListener, useVModel } from '@vueuse/core'
 import { ref } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { rpc, wsConnecting, wsError } from '~/composables/rpc'
 import { telemetry } from '~/composables/telemetry'
 
@@ -95,7 +94,7 @@ async function uploadFiles() {
       content,
     })
   }
-  await rpc.writeStaticAssets(await ensureDevAuthToken(), [...uploadFiles], props.folder).then(() => {
+  await rpc.writeStaticAssets([...uploadFiles], props.folder).then(() => {
     close()
     devtoolsUiShowNotification({
       message: 'Files uploaded successfully!',

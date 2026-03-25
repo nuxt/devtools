@@ -8,7 +8,6 @@ import { computed, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { getColorMode } from '~/composables/client'
 import { rpc } from '~/composables/rpc'
 import { useSessionState } from '~/composables/utils'
-import { ensureDevAuthToken } from '../composables/dev-auth'
 
 const colorMode = getColorMode()
 const nuxtApp = useNuxtApp()
@@ -71,7 +70,7 @@ const filteredKeys = computed(() => {
 })
 
 async function fetchItem(key: string) {
-  const content = await rpc.getStorageItem(await ensureDevAuthToken(), key)
+  const content = await rpc.getStorageItem(key)
   currentItem.value = {
     key,
     updatedKey: keyName(key),
@@ -87,7 +86,7 @@ async function saveNewItem() {
   // If does not exists
   const key = `${currentStorage.value}:${newKey.value}`
   if (!storageKeys.value?.includes(key))
-    await rpc.setStorageItem(await ensureDevAuthToken(), key, '')
+    await rpc.setStorageItem(key, '')
 
   router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
@@ -96,14 +95,14 @@ async function saveNewItem() {
 async function saveCurrentItem() {
   if (!currentItem.value)
     return
-  await rpc.setStorageItem(await ensureDevAuthToken(), currentItem.value.key, currentItem.value.updatedContent)
+  await rpc.setStorageItem(currentItem.value.key, currentItem.value.updatedContent)
   await fetchItem(currentItem.value.key)
 }
 
 async function removeCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
-  await rpc.removeStorageItem(await ensureDevAuthToken(), currentItem.value.key)
+  await rpc.removeStorageItem(currentItem.value.key)
   currentItem.value = null
 }
 
@@ -111,9 +110,8 @@ async function renameCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
-  const token = await ensureDevAuthToken()
-  await rpc.setStorageItem(token, renamedKey, currentItem.value.updatedContent)
-  await rpc.removeStorageItem(token, currentItem.value.key)
+  await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
+  await rpc.removeStorageItem(currentItem.value.key)
   router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>

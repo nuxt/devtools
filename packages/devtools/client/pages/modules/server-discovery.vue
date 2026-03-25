@@ -3,7 +3,6 @@ import { useRuntimeConfig } from '#app/nuxt'
 import { definePageMeta } from '#imports'
 import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js'
 import { onMounted, onUnmounted, useTemplateRef } from 'vue'
-import { ensureDevAuthToken } from '../../composables/dev-auth'
 import { rpc } from '../../composables/rpc'
 import { jsonStringifyCircular } from '../../composables/utils'
 
@@ -23,7 +22,7 @@ const iframe = useTemplateRef<HTMLIFrameElement>('iframe')
 onMounted(() => {
   const disconnect = connectToEmbedApp(iframe.value!, (app) => {
     (async () => {
-      const data = await rpc.getServerData(await ensureDevAuthToken())
+      const data = await rpc.getServerData()
       const json = `{${Object.entries(data).map(([key, value]) => `"${key}": ${jsonStringifyCircular(value)}`).join(',')}}`
       // @ts-expect-error missing API
       app.uploadData(json)

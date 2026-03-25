@@ -5,7 +5,6 @@ import { addVitePlugin } from '@nuxt/kit'
 
 export function setupServerDataRPC({
   nuxt,
-  ensureDevAuthToken,
 }: NuxtDevtoolsServerContext) {
   let nitro: Nitro | undefined
   let viteServer: ResolvedConfig | undefined
@@ -61,8 +60,7 @@ export function setupServerDataRPC({
     getServerConfig() {
       return nuxt.options
     },
-    async getServerData(token: string) {
-      await ensureDevAuthToken(token)
+    async getServerData() {
       return {
         nuxt: nuxt.options,
         nitro: nitro?.options,
