@@ -106,6 +106,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     nuxt,
     options,
     rpc: rpc as any,
+    get rpcHost() { return rpcHost },
     refresh,
     extendServerRpc,
     openInEditorHooks: [],

@@ -1,3 +1,4 @@
+import type { RpcFunctionsHost } from '@vitejs/devtools-kit'
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
 import type { ModuleOptions } from './options'
@@ -30,6 +31,11 @@ export interface NuxtDevtoolsServerContext {
   options: ModuleOptions
 
   rpc: NuxtDevtoolsRpc
+
+  /**
+   * The Vite DevTools Kit RPC host, available after connection.
+   */
+  rpcHost: RpcFunctionsHost | undefined
 
   /**
    * Hook to open file in editor
