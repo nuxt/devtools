@@ -10,20 +10,20 @@ export async function createVitePluginInspect(options?: ViteInspectOptions): Pro
   return await import('vite-plugin-inspect').then(r => r.default(options))
 }
 
-export async function setup({ rpc, rpcHost }: NuxtDevtoolsServerContext) {
+export async function setup({ rpc, devtoolsKit }: NuxtDevtoolsServerContext) {
   const plugin = await createVitePluginInspect()
   addVitePlugin(plugin)
 
   async function getComponentsRelationships() {
-    if (!rpcHost?.has('vite-plugin-inspect:get-metadata')) {
+    if (!devtoolsKit?.rpc.has('vite-plugin-inspect:get-metadata')) {
       logger.warn('[nuxt-devtools] vite-plugin-inspect RPC functions not registered, component relationships unavailable')
       return []
     }
 
-    const meta = await rpcHost.invokeLocal('vite-plugin-inspect:get-metadata' as any)
+    const meta = await devtoolsKit.rpc.invokeLocal('vite-plugin-inspect:get-metadata' as any)
     const modules = (
       meta && meta.instances[0]
-        ? await rpcHost.invokeLocal('vite-plugin-inspect:get-modules-list' as any, {
+        ? await devtoolsKit.rpc.invokeLocal('vite-plugin-inspect:get-modules-list' as any, {
             vite: meta.instances[0].vite,
             env: meta.instances[0].environments[0]!,
           })
