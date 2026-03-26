@@ -4,7 +4,6 @@ import { useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
 import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { satisfyNuxtVersion } from '~/composables/npm'
 import { rpc } from '~/composables/rpc'
 import { useAnalyzeBuildInfo } from '~/composables/state'
@@ -46,7 +45,7 @@ async function start() {
 
   processAnalyzeBuildInfo.value = {
     name: buildNameInput.value,
-    processId: await rpc.startAnalyzeBuild(await ensureDevAuthToken(), buildNameInput.value),
+    processId: await rpc.startAnalyzeBuild(buildNameInput.value),
   }
   if (shouldGotoTerminal.value)
     gotoTerminal()

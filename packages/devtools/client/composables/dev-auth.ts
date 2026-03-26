@@ -12,12 +12,6 @@ export function updateDevAuthToken(_token: string) {
   console.warn('[nuxt-devtools] `updateDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
 }
 
-/** @deprecated Auth is now handled by Vite DevTools */
-export async function ensureDevAuthToken() {
-  console.warn('[nuxt-devtools] `ensureDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
-  return ''
-}
-
 export const userAgentInfo = parseUA(navigator.userAgent)
 
 /** @deprecated Auth is now handled by Vite DevTools */

@@ -8,7 +8,7 @@ import { detect } from 'package-manager-detector/detect'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 
-export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
+export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
   let detectPromise: Promise<DetectResult | null> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
@@ -78,13 +78,10 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       return updatesPromise.get(name)!
     },
     getNpmCommand,
-    async runNpmCommand(token, ...args) {
-      await ensureDevAuthToken(token)
+    async runNpmCommand(...args) {
       return runNpmCommand(...args)
     },
-    async installNuxtModule(token: string, name: string, dry = true) {
-      await ensureDevAuthToken(token)
-
+    async installNuxtModule(name: string, dry = true) {
       const commands = (await getNpmCommand('install', name, { dev: true }))!
 
       const filepath = nuxt.options._nuxtConfigFile
@@ -142,9 +139,7 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
         processId,
       }
     },
-    async uninstallNuxtModule(token: string, name: string, dry = true) {
-      await ensureDevAuthToken(token)
-
+    async uninstallNuxtModule(name: string, dry = true) {
       const commands = (await getNpmCommand('uninstall', name))!
 
       const filepath = nuxt.options._nuxtConfigFile

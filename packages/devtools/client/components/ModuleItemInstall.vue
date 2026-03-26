@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ModuleActionType, ModuleStaticInfo } from '../../src/types'
 import { computed } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { ModuleDialog } from '~/composables/dialog'
 import { rpc } from '~/composables/rpc'
 import { useInstalledModules } from '~/composables/state-modules'
@@ -21,7 +20,7 @@ const isUninstallable = computed(() => installedInfo.value && installedInfo.valu
 
 async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
   const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
-  const result = await method(await ensureDevAuthToken(), item.npm, true)
+  const result = await method(item.npm, true)
 
   telemetry(`modules:${type}`, {
     moduleName: item.npm,
@@ -41,7 +40,7 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
 
   emit('start')
 
-  await method(await ensureDevAuthToken(), item.npm, false)
+  await method(item.npm, false)
 }
 
 const anyObj = {} as any

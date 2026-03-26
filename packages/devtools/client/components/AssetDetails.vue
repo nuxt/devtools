@@ -3,7 +3,6 @@ import type { AssetInfo, CodeSnippet } from '~/../src/types'
 import { devtoolsUiShowNotification } from '#imports'
 import { computedAsync, useTimeAgo, useVModel } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { useCopy, useOpenInEditor } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
 import { useServerConfig } from '~/composables/state'
@@ -18,7 +17,7 @@ const asset = useVModel(props, 'modelValue', emit, { passive: true })
 const imageMeta = computedAsync(async () => {
   if (asset.value.type !== 'image')
     return undefined
-  return rpc.getImageMeta(await ensureDevAuthToken(), asset.value.filePath)
+  return rpc.getImageMeta(asset.value.filePath)
 })
 
 const editDialog = ref(false)
@@ -31,7 +30,7 @@ const textContent = computedAsync(async () => {
   // eslint-disable-next-line ts/no-unused-expressions
   textContentCounter.value
 
-  const content = await rpc.getTextAssetContent(await ensureDevAuthToken(), asset.value.filePath)
+  const content = await rpc.getTextAssetContent(asset.value.filePath)
   newTextContent.value = content
   return content
 })
@@ -39,7 +38,7 @@ const textContent = computedAsync(async () => {
 async function saveTextContent() {
   if (textContent.value !== newTextContent.value) {
     try {
-      await rpc.writeStaticAssets(await ensureDevAuthToken(), [{
+      await rpc.writeStaticAssets([{
         path: asset.value.path,
         content: newTextContent.value,
         override: true,
@@ -134,7 +133,7 @@ const supportsPreview = computed(() => {
 const deleteDialog = ref(false)
 async function deleteAsset() {
   try {
-    await rpc.deleteStaticAsset(await ensureDevAuthToken(), asset.value.filePath)
+    await rpc.deleteStaticAsset(asset.value.filePath)
     asset.value = undefined as any
     deleteDialog.value = false
     devtoolsUiShowNotification({
@@ -170,7 +169,7 @@ async function renameAsset() {
   try {
     const extension = parts.slice(-1)[0]?.split('.').slice(-1)[0]
     const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
-    await rpc.renameStaticAsset(await ensureDevAuthToken(), asset.value.filePath, fullPath)
+    await rpc.renameStaticAsset(asset.value.filePath, fullPath)
     asset.value = undefined as any
     renameDialog.value = false
     devtoolsUiShowNotification({

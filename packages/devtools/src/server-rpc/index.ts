@@ -109,10 +109,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
-    /** @deprecated Auth is now handled by Vite DevTools */
-    async ensureDevAuthToken(_token: string) {
-      logger.warn('[nuxt-devtools] `ensureDevAuthToken` is deprecated. Auth is now handled by Vite DevTools.')
-    },
   }
 
   // @ts-expect-error untyped

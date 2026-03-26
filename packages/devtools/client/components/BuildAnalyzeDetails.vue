@@ -3,7 +3,6 @@ import type { AnalyzeBuildMeta } from '../../src/types'
 import { useRuntimeConfig } from '#imports'
 import { formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 
 const props = defineProps<{
@@ -46,7 +45,7 @@ function formatFileSize(bytes: number) {
 }
 
 async function clear(name: string) {
-  return rpc.clearAnalyzeBuilds(await ensureDevAuthToken(), [name])
+  return rpc.clearAnalyzeBuilds([name])
 }
 </script>
 

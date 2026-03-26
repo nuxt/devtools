@@ -5,7 +5,6 @@ import { useEventListener } from '@vueuse/core'
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal } from '@xterm/xterm'
 import { onMounted, ref } from 'vue'
-import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import '@xterm/xterm/css/xterm.css'
 
@@ -33,7 +32,7 @@ onMounted(async () => {
     fitAddon.fit()
   })
 
-  info.value = await rpc.getTerminalDetail(await ensureDevAuthToken(), props.id)
+  info.value = await rpc.getTerminalDetail(props.id)
   if (info.value?.buffer)
     term.write(info.value.buffer)
 
@@ -44,17 +43,17 @@ onMounted(async () => {
   })
 })
 
-async function clear() {
-  rpc.runTerminalAction(await ensureDevAuthToken(), props.id, 'clear')
+function clear() {
+  rpc.runTerminalAction(props.id, 'clear')
   term?.clear()
 }
 
-async function restart() {
-  rpc.runTerminalAction(await ensureDevAuthToken(), props.id, 'restart')
+function restart() {
+  rpc.runTerminalAction(props.id, 'restart')
 }
 
-async function terminate() {
-  rpc.runTerminalAction(await ensureDevAuthToken(), props.id, 'terminate')
+function terminate() {
+  rpc.runTerminalAction(props.id, 'terminate')
 }
 </script>
 
