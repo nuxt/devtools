@@ -1,4 +1,4 @@
-import type { RpcFunctionsHost } from '@vitejs/devtools-kit'
+import type { DevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { Nuxt } from 'nuxt/schema'
 
 import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
@@ -21,15 +21,15 @@ import { setupTimelineRPC } from './timeline'
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
   const extendedRpcMap = new Map<string, Record<string, (...args: any[]) => any>>()
-  let rpcHost: RpcFunctionsHost | undefined
+  let devtoolsKitCtx: DevToolsNodeContext | undefined
   const pendingBroadcasts: { method: string, args: any[] }[] = []
 
   function broadcast(method: string, ...args: any[]) {
-    if (!rpcHost) {
+    if (!devtoolsKitCtx) {
       pendingBroadcasts.push({ method, args })
       return
     }
-    rpcHost.broadcast({
+    devtoolsKitCtx.rpc.broadcast({
       method: method as any,
       args: args as any,
       event: true,
@@ -61,12 +61,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     set(target, prop, value) {
       (target as any)[prop] = value
       // Also update on RpcFunctionsHost if available
-      if (rpcHost && typeof prop === 'string') {
-        if (rpcHost.has(prop)) {
-          rpcHost.update({ name: prop, handler: value })
+      if (devtoolsKitCtx && typeof prop === 'string') {
+        if (devtoolsKitCtx.rpc.has(prop)) {
+          devtoolsKitCtx.rpc.update({ name: prop, handler: value })
         }
         else {
-          rpcHost.register({ name: prop, handler: value })
+          devtoolsKitCtx.rpc.register({ name: prop, handler: value })
         }
       }
       return true
@@ -86,10 +86,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     extendedRpcMap.set(namespace, functions)
 
     // Register on RpcFunctionsHost if already available
-    if (rpcHost) {
+    if (devtoolsKitCtx) {
       for (const [fnName, handler] of Object.entries(functions)) {
         if (typeof handler === 'function') {
-          rpcHost.register({ name: `${namespace}:${fnName}`, handler: handler as any })
+          devtoolsKitCtx.rpc.register({ name: `${namespace}:${fnName}`, handler: handler as any })
         }
       }
     }
@@ -106,6 +106,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     nuxt,
     options,
     rpc: rpc as any,
+    get devtoolsKit() { return devtoolsKitCtx },
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
@@ -131,11 +132,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   } as ServerFunctions)
 
   /**
-   * Connect to Vite DevTools Kit's RPC host.
+   * Connect to Vite DevTools Kit context.
    * Called from the Vite DevTools plugin setup callback.
    */
-  function connectRpcHost(host: RpcFunctionsHost) {
-    rpcHost = host
+  function connectDevToolsKit(ctx: DevToolsNodeContext) {
+    devtoolsKitCtx = ctx
+    const host = ctx.rpc
 
     // Flush any broadcasts that were queued before connection
     for (const { method, args } of pendingBroadcasts) {
@@ -183,7 +185,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   }
 
   return {
-    connectRpcHost,
+    connectDevToolsKit,
     ...ctx,
   }
 }

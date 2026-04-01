@@ -24,6 +24,8 @@ export default defineBuildConfig({
     'hookable',
     'error-stack-parser-es',
     'shiki',
+    '@vitejs/devtools-kit',
+    '@vitejs/devtools-rpc',
   ],
   declaration: true,
   rollup: {
