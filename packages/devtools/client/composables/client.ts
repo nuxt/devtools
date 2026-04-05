@@ -75,7 +75,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
         if (rpcClient)
           register(rpcClient)
         else
-          connectPromise.then(register)
+          void connectPromise.then(register, () => {})
 
         return new Proxy({}, {
           get(_, key) {
