@@ -12,11 +12,9 @@ export const clientFunctions = {
   // will be added in setup/client-rpc.ts
 } as ClientFunctions
 
-export const extendedRpcMap = new Map<string, any>()
+export let rpcClient: DevToolsRpcClient | undefined
 
-let rpcClient: DevToolsRpcClient | undefined
-
-const connectPromise = connectDevToolsRpc()
+export const connectPromise = connectDevToolsRpc()
 
 /**
  * Proxy-based RPC object that provides backward-compatible `rpc.functionName()` interface.
@@ -26,13 +24,6 @@ export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {
     return async (...args: any[]) => {
       const client = rpcClient || await connectPromise
-      // Check extended RPC map first for namespaced functions
-      if (method.includes(':')) {
-        const [namespace, fnName] = method.split(':') as [string, string]
-        const extFn = extendedRpcMap.get(namespace)?.[fnName]
-        if (extFn)
-          return extFn(...args)
-      }
       return client.call(method as any, ...args as any)
     }
   },
@@ -52,19 +43,6 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
           type: 'event',
           handler: handler as any,
         })
-      }
-    }
-
-    // Register extended client RPC functions
-    for (const [namespace, fns] of extendedRpcMap) {
-      for (const [fnName, handler] of Object.entries(fns)) {
-        if (typeof handler === 'function') {
-          client.client.register({
-            name: `${namespace}:${fnName}`,
-            type: 'event',
-            handler: handler as any,
-          })
-        }
       }
     }
 
