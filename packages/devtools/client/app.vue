@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
-import { useEventListener, useEyeDropper, watchOnce } from '@vueuse/core'
+import { useEventListener, useEyeDropper } from '@vueuse/core'
 import { computed, onMounted, watch, watchEffect } from 'vue'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'
-import { rpc } from '~/composables/rpc'
+import { rpc, WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
 import { useSchemaInput } from './composables/state-schema'
@@ -49,8 +49,9 @@ const showDisconnectIndicator = ref(false)
 
 if (wsConnectedOnce.value) {
   // debounce one time to avoid showing the indicator on first load of the app
- onConnected()
-} else {
+  onConnected()
+}
+else {
   // watch for connection and show the indicator if it was connected at least once
   const stop = watch(wsConnectedOnce, (val) => {
     if (val) {
