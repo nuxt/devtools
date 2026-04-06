@@ -18,7 +18,6 @@ import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
-import DisconnectIndicator from './components/DisconnectIndicator.vue'
 
 if (import.meta.client)
   import('./setup/unocss-runtime')
