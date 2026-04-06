@@ -44,14 +44,26 @@ const client = useClient()
 const route = useRoute()
 const colorMode = getColorMode()
 const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
-const waiting = computed(() => !client.value && !showConnectionWarning.value && !wsConnecting.value)
+const waiting = computed(() => !client.value && !showConnectionWarning.value)
+const showDisconnectIndicator = ref(false)
 
-const wsConnectedOnce = ref(false)
-if (wsConnecting.value) {
-  watchOnce(wsConnecting, (val) => {
-    if (val === false)
-      wsConnectedOnce.value = true
+if (wsConnectedOnce.value) {
+  // debounce one time to avoid showing the indicator on first load of the app
+ onConnected()
+} else {
+  // watch for connection and show the indicator if it was connected at least once
+  const stop = watch(wsConnectedOnce, (val) => {
+    if (val) {
+      onConnected()
+      stop()
+    }
   })
+}
+
+function onConnected() {
+  setTimeout(() => {
+    showDisconnectIndicator.value = true
+  }, WS_DEBOUNCE_TIME)
 }
 
 watch(
@@ -139,7 +151,7 @@ registerCommands(() => [
   <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
     <NNotification />
-    <NLoading v-if="waiting && !wsConnectedOnce">
+    <NLoading v-if="waiting">
       Connecting....
     </NLoading>
     <div
@@ -160,8 +172,8 @@ registerCommands(() => [
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />
-    </div> 
-    <DisconnectIndicator v-if="wsConnectedOnce" />
+    </div>
+    <DisconnectIndicator v-if="showDisconnectIndicator" />
     <RestartDialogs />
     <div v-lazy-show="dataSchema">
       <LazyDataSchemaDrawer />
