@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
-import { useEventListener, useEyeDropper } from '@vueuse/core'
+import { useEventListener, useEyeDropper, watchOnce } from '@vueuse/core'
 import { computed, onMounted, watch, watchEffect } from 'vue'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
@@ -18,6 +18,7 @@ import '@vue/devtools-applet/style.css'
 import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
+import DisconnectIndicator from './components/DisconnectIndicator.vue'
 
 if (import.meta.client)
   import('./setup/unocss-runtime')
@@ -44,7 +45,15 @@ const client = useClient()
 const route = useRoute()
 const colorMode = getColorMode()
 const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
-const waiting = computed(() => !client.value && !showConnectionWarning.value)
+const waiting = computed(() => !client.value && !showConnectionWarning.value && !wsConnecting.value)
+
+const wsConnectedOnce = ref(false)
+if (wsConnecting.value) {
+  watchOnce(wsConnecting, (val) => {
+    if (val === false)
+      wsConnectedOnce.value = true
+  })
+}
 
 watch(
   () => client.value?.app.colorMode.value,
@@ -131,7 +140,7 @@ registerCommands(() => [
   <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
     <NNotification />
-    <NLoading v-if="waiting">
+    <NLoading v-if="waiting && !wsConnectedOnce">
       Connecting....
     </NLoading>
     <div
@@ -152,8 +161,8 @@ registerCommands(() => [
       </NuxtLayout>
       <CommandPalette />
       <AuthConfirmDialog />
-    </div>
-    <DisconnectIndicator />
+    </div> 
+    <DisconnectIndicator v-if="wsConnectedOnce" />
     <RestartDialogs />
     <div v-lazy-show="dataSchema">
       <LazyDataSchemaDrawer />
