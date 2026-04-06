@@ -72,8 +72,8 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
           }
         }
 
-        if (rpcClient)
-          register(rpcClient)
+        if (rpcClient.value)
+          register(rpcClient.value)
         else
           void connectPromise.then(register, () => {})
 
@@ -82,7 +82,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
             if (typeof key !== 'string')
               return
             return async (...args: any[]) => {
-              const client = rpcClient || await connectPromise
+              const client = rpcClient.value || await connectPromise
               return client.call(`${namespace}:${key}` as any, ...args as any)
             }
           },

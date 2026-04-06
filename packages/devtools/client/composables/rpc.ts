@@ -12,7 +12,7 @@ export const clientFunctions = {
   // will be added in setup/client-rpc.ts
 } as ClientFunctions
 
-export let rpcClient: DevToolsRpcClient | undefined
+export const rpcClient = shallowRef<DevToolsRpcClient>()
 
 export const connectPromise = connectDevToolsRpc()
 
@@ -23,7 +23,7 @@ export const connectPromise = connectDevToolsRpc()
 export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {
     return async (...args: any[]) => {
-      const client = rpcClient || await connectPromise
+      const client = rpcClient.value || await connectPromise
       return client.call(method as any, ...args as any)
     }
   },
@@ -33,7 +33,7 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
   try {
     const client = await getDevToolsRpcClient()
 
-    rpcClient = client
+    rpcClient.value = client
 
     // Register client functions so the server can call them
     for (const [name, handler] of Object.entries(clientFunctions)) {
@@ -65,7 +65,7 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
  * Used by setup/client-rpc.ts to register functions that are set up later.
  */
 export async function registerClientFunctions() {
-  const client = rpcClient || await connectPromise
+  const client = rpcClient.value || await connectPromise
   for (const [name, handler] of Object.entries(clientFunctions)) {
     if (typeof handler === 'function') {
       try {
