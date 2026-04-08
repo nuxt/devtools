@@ -1,13 +1,14 @@
 import type { useRoute, useRouter } from '#imports'
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient } from '@nuxt/devtools-kit/types'
 import type { Unhead } from '@unhead/schema'
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import type { ComputedRef } from 'vue'
 import { useState } from '#imports'
 import { useColorMode } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
-import { extendedRpcMap, rpc } from './rpc'
+import { connectPromise, rpc, rpcClient } from './rpc'
 
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
@@ -59,13 +60,31 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
         return renderMarkdown(code)
       },
       extendClientRpc(namespace, functions) {
-        extendedRpcMap.set(namespace, functions)
+        const register = (client: DevToolsRpcClient) => {
+          for (const [name, handler] of Object.entries(functions)) {
+            if (typeof handler === 'function') {
+              client.client.register({
+                name: `${namespace}:${name}`,
+                type: 'event',
+                handler: handler as any,
+              })
+            }
+          }
+        }
+
+        if (rpcClient.value)
+          register(rpcClient.value)
+        else
+          void connectPromise.then(register, () => {})
 
         return new Proxy({}, {
           get(_, key) {
             if (typeof key !== 'string')
               return
-            return (rpc as any)[`${namespace}:${key}`]
+            return async (...args: any[]) => {
+              const client = rpcClient.value || await connectPromise
+              return client.call(`${namespace}:${key}` as any, ...args as any)
+            }
           },
         })
       },
