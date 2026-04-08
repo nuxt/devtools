@@ -136,6 +136,13 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
    * Called from the Vite DevTools plugin setup callback.
    */
   function connectDevToolsKit(ctx: DevToolsNodeContext) {
+    /**
+     * guarded to keep the first connection (client Vite), since Nuxt creates
+     * two Vite instances and the second (server) one has 0 WebSocket clients.
+     * If we don't guard this, the server connection will overwrite the client connection and break all RPC calls from server to client.
+     */
+    if (devtoolsKitCtx)
+      return
     devtoolsKitCtx = ctx
     const host = ctx.rpc
 

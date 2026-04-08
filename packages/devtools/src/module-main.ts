@@ -90,7 +90,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         connectDevToolsKit?.(ctx)
       },
     },
-  }))
+  }), { server: false })
   addPlugin({
     src: join(runtimeDir, 'plugins/vite-devtools.client'),
     mode: 'client',
