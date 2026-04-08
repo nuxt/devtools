@@ -60,6 +60,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     mode: 'server',
   })
 
+  // See #980
+  if (nuxt.options.dev) {
+    nuxt.options.vite.optimizeDeps ||= {}
+    nuxt.options.vite.optimizeDeps.include ||= []
+    nuxt.options.vite.optimizeDeps.include.push('@vue/devtools-kit')
+    nuxt.options.vite.optimizeDeps.include.push('@vue/devtools-core')
+  }
+
   const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
   addVitePlugin(DevTools)
 
