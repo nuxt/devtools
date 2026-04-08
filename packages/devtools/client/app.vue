@@ -6,7 +6,7 @@ import { computed, onMounted, watch, watchEffect } from 'vue'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'
-import { rpc } from '~/composables/rpc'
+import { rpc, WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
 import { useSchemaInput } from './composables/state-schema'
@@ -45,6 +45,27 @@ const route = useRoute()
 const colorMode = getColorMode()
 const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
+const showDisconnectIndicator = ref(false)
+
+if (wsConnectedOnce.value) {
+  // debounce one time to avoid showing the indicator on first load of the app
+  onConnected()
+}
+else {
+  // watch for connection and show the indicator if it was connected at least once
+  const stop = watch(wsConnectedOnce, (val) => {
+    if (val) {
+      onConnected()
+      stop()
+    }
+  })
+}
+
+function onConnected() {
+  setTimeout(() => {
+    showDisconnectIndicator.value = true
+  }, WS_DEBOUNCE_TIME)
+}
 
 watch(
   () => client.value?.app.colorMode.value,
@@ -153,7 +174,7 @@ registerCommands(() => [
       <CommandPalette />
       <AuthConfirmDialog />
     </div>
-    <DisconnectIndicator />
+    <DisconnectIndicator v-if="showDisconnectIndicator" />
     <RestartDialogs />
     <div v-lazy-show="dataSchema">
       <LazyDataSchemaDrawer />

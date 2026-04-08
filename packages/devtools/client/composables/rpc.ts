@@ -4,9 +4,11 @@ import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, shallowRef } from 'vue'
 
+export const WS_DEBOUNCE_TIME = 2000
+export const wsConnectedOnce = ref(false)
 export const wsConnecting = ref(true)
 export const wsError = shallowRef<any>()
-export const wsConnectingDebounced = useDebounce(wsConnecting, 2000)
+export const wsConnectingDebounced = useDebounce(wsConnecting, WS_DEBOUNCE_TIME)
 
 export const clientFunctions = {
   // will be added in setup/client-rpc.ts
@@ -71,6 +73,7 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
     // eslint-disable-next-line no-console
     console.log('[nuxt-devtools] Connected to Vite DevTools RPC')
     wsConnecting.value = false
+    wsConnectedOnce.value = true
 
     return client
   }
