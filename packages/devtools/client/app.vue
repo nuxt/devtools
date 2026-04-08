@@ -2,13 +2,13 @@
 import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { useEventListener, useEyeDropper } from '@vueuse/core'
-import { computed, onMounted, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
-import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'
-import { rpc, WS_DEBOUNCE_TIME } from '~/composables/rpc'
+import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
+import { wsConnectedOnce } from './composables/rpc'
 import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
 import { setupClientRPC } from './setup/client-rpc'
@@ -95,14 +95,6 @@ onMounted(async () => {
   watchEffect(() => {
     document.body.style.fontSize = `${scale.value * 15}px`
   })
-
-  if (!isDevAuthed.value) {
-    if (devAuthToken.value) {
-      const result = await rpc.verifyAuthToken()
-      if (result)
-        isDevAuthed.value = true
-    }
-  }
 })
 
 const copy = useCopy()
