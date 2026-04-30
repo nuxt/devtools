@@ -1,3 +1,12 @@
+## [3.2.5](https://github.com/nuxt/devtools/compare/v3.2.4...v3.2.5) (2026-04-30)
+
+
+### Bug Fixes
+
+* **devtools:** add undeclared `unstorage` dependency ([#986](https://github.com/nuxt/devtools/issues/986)) ([8c0d3c7](https://github.com/nuxt/devtools/commit/8c0d3c781f9962d19485bf9e1db8326f33434f5d))
+
+
+
 ## [3.2.4](https://github.com/nuxt/devtools/compare/v3.2.3...v3.2.4) (2026-03-17)
 
 
