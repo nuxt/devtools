@@ -1,6 +1,6 @@
 import type { PropType } from 'vue'
-import { NuxtLink } from '#components'
 import { defineComponent, h, renderSlot } from 'vue'
+import { NuxtLink } from '#components'
 import NIcon from './NIcon.vue'
 
 // eslint-disable-next-line ts/no-unused-expressions

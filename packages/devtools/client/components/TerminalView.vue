@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { TerminalInfo } from '../../src/types'
-import { useNuxtApp } from '#app/nuxt'
 import { useEventListener } from '@vueuse/core'
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal } from '@xterm/xterm'
 import { onMounted, ref } from 'vue'
+import { useNuxtApp } from '#app/nuxt'
 import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import '@xterm/xterm/css/xterm.css'

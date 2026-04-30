@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { AnalyzeBuildMeta } from '~/../src/types'
-import { useRouter } from '#app/composables/router'
-import { definePageMeta } from '#imports'
 import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import { useRouter } from '#app/composables/router'
+import { definePageMeta } from '#imports'
 import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { satisfyNuxtVersion } from '~/composables/npm'
 import { rpc } from '~/composables/rpc'

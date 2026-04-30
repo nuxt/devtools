@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { computed } from 'vue'
+import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 
 definePageMeta({

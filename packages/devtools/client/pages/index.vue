@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 import { isFirstVisit } from '~/composables/storage'
 import { useDevToolsOptions } from '~/composables/storage-options'

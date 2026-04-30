@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
-import { computed } from 'vue'
 import { useClient } from '~/composables/client'
 import { useAutoImports, useServerConfig } from '~/composables/state'
 import { useComponents } from '~/composables/state-components'

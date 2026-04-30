@@ -1,7 +1,7 @@
 import type { NpmCommandOptions } from '../../src/types'
-import { useNuxtApp } from '#app/nuxt'
 import semver from 'semver'
 import { computed, ref } from 'vue'
+import { useNuxtApp } from '#app/nuxt'
 import { ensureDevAuthToken } from './dev-auth'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'

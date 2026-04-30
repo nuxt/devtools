@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ModuleCustomTab } from '~/../src/types'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
-import { computed, onMounted } from 'vue'
 import { isDevAuthed, requestForAuth } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import { useAllTabs } from '~/composables/state-tabs'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { Components as VueComponents } from '@vue/devtools-applet'
+import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 import { useOpenInEditor } from '~/composables/editor'
 import { useModuleOptions } from '~/composables/state'

@@ -1,7 +1,7 @@
-import { devtoolsUiShowNotification } from '#imports'
 import { until } from '@vueuse/core'
 import { parseUA } from 'ua-parser-modern'
 import { ref } from 'vue'
+import { devtoolsUiShowNotification } from '#imports'
 import { AuthConfirm } from './dialog'
 import { rpc } from './rpc'
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
-import { definePageMeta } from '#imports'
 import { onKeyDown, reactiveComputed } from '@vueuse/core'
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { DETAILS_MAX_ITEMS } from '~/composables/constants'
 import { useStaticAssets } from '~/composables/state'
 import { useDevToolsOptions } from '~/composables/storage-options'

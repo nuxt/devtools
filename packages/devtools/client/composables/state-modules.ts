@@ -1,6 +1,6 @@
 import type { InstalledModuleInfo, ModuleStaticInfo } from '../../src/types'
-import { useState } from '#imports'
 import { computed } from 'vue'
+import { useState } from '#imports'
 import { useServerConfig } from './state'
 import { getModuleNameFromPath, isNodeModulePath, parseReadablePath, useAsyncState } from './utils'
 

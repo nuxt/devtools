@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Import } from 'unimport'
-import { definePageMeta } from '#imports'
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { DETAILS_MAX_ITEMS } from '~/composables/constants'
 import { useAutoImports, useServerConfig } from '~/composables/state'
 import { getModuleNameFromPath, isBuiltInModule, isNodeModulePath } from '~/composables/utils'

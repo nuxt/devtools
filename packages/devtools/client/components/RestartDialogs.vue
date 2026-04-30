@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useNuxtApp } from '#app/nuxt'
 import { createTemplatePromise } from '@vueuse/core'
+import { useNuxtApp } from '#app/nuxt'
 import { useClient } from '~/composables/client'
 import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { useRestartDialogs } from '~/composables/dialog'

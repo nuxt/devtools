@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta, devtoolsUiShowNotification } from '#imports'
 import { createTemplatePromise } from '@vueuse/core'
+import { definePageMeta, devtoolsUiShowNotification } from '#imports'
 import { useOpenInEditor } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
 import { useModuleOptions, useServerConfig } from '~/composables/state'

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from '#app/composables/router'
-import { useHead } from '#imports'
 import { useEventListener, useEyeDropper } from '@vueuse/core'
 import { computed, onMounted, watch, watchEffect } from 'vue'
+import { useRoute } from '#app/composables/router'
+import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'

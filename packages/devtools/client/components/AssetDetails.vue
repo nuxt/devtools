@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { AssetInfo, CodeSnippet } from '~/../src/types'
-import { devtoolsUiShowNotification } from '#imports'
 import { computedAsync, useTimeAgo, useVModel } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import { devtoolsUiShowNotification } from '#imports'
 import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { useCopy, useOpenInEditor } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'

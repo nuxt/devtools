@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { computed, ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { registerCommands } from '~/composables/state-commands'
 import { useInstalledModules } from '~/composables/state-modules'
 import { useCurrentTerminalId } from '~/composables/state-routes'
