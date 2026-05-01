@@ -24,7 +24,16 @@ test('playground page renders without errors', async ({ page }) => {
   const response = await page.goto('/')
   expect(response?.ok()).toBe(true)
   await expect(page.locator('body')).not.toBeEmpty()
-  // Ignore HMR/Vite warnings; only fail on hard runtime errors.
-  const fatal = consoleErrors.filter(e => !/HMR|404|favicon|websocket|ws/i.test(e))
+  // Ignore known-benign messages: HMR notices, favicon 404s (no favicon in
+  // playgrounds), and websocket connection setup messages from Vite/HMR.
+  // Anything else (real runtime errors, missing imports, etc.) should fail.
+  const ignored = [
+    /\[vite\] hmr/i,
+    /\[HMR\]/,
+    /favicon\.ico/i,
+    /WebSocket connection .*failed/i,
+    /failed to connect to websocket/i,
+  ]
+  const fatal = consoleErrors.filter(e => !ignored.some(re => re.test(e)))
   expect(fatal, fatal.join('\n')).toEqual([])
 })

@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
@@ -13,9 +14,12 @@ function buildPlayground(name: string) {
       stdio: 'inherit',
       env: process.env,
     })
-    child.on('exit', (code) => {
+    child.once('error', err => reject(new Error(`Failed to spawn build for ${name}: ${err.message}`)))
+    child.once('exit', (code, signal) => {
       if (code === 0)
         resolve()
+      else if (signal)
+        reject(new Error(`Build failed for ${name}: terminated by ${signal}`))
       else
         reject(new Error(`Build failed for ${name}: exit code ${code}`))
     })
@@ -29,17 +33,9 @@ export default async function globalSetup() {
   if (process.env.PW_SKIP_BUILD === 'true')
     return
 
-  // PW_PROJECT may filter which playgrounds need building.
   const filter = process.env.PW_PROJECT
-  const needsBuild = (name: string) => {
-    if (!filter)
-      return true
-    const re = new RegExp(`^${filter.replace(/\*/g, '.*')}$`)
-    return re.test(`${name}:built`)
-  }
-
   for (const name of PLAYGROUNDS) {
-    if (!needsBuild(name))
+    if (!matchesProjectFilter(`${name}:built`, filter))
       continue
     // eslint-disable-next-line no-console
     console.log(`[e2e] Pre-building ${name}...`)

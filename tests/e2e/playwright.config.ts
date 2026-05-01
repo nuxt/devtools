@@ -1,6 +1,7 @@
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, devices } from '@playwright/test'
+import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
@@ -30,12 +31,7 @@ const allSpecs: Spec[] = PLAYGROUNDS.flatMap((playground, idx) =>
 // Used by the npm scripts to avoid booting all 6 servers when only one mode is needed.
 // Falls back to all specs when unset.
 const filter = process.env.PW_PROJECT
-const specs = filter
-  ? allSpecs.filter((s) => {
-      const regex = new RegExp(`^${filter.replace(/\*/g, '.*')}$`)
-      return regex.test(s.name)
-    })
-  : allSpecs
+const specs = allSpecs.filter(s => matchesProjectFilter(s.name, filter))
 
 export default defineConfig({
   testDir: './specs',
