@@ -41,9 +41,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   // First iframe test for `../../local` playgrounds (tab-pinia, tab-seo) can flake
   // on cold subprocess boot; one retry covers it.
-  retries: process.env.CI ? 2 : 1,
+  retries: 1,
   reporter: process.env.CI
-    ? [['github'], ['html', { open: 'never', outputFolder: 'playwright-report' }]]
+    ? [['list'], ['github'], ['html', { open: 'never', outputFolder: 'playwright-report' }]]
     : 'list',
   timeout: 90_000,
   use: {
