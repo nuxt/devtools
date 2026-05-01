@@ -27,6 +27,19 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm typecheck
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report/
+          retention-days: 7
       - name: Release Nightly
         if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-release]')
         run: ./scripts/release-nightly.sh
