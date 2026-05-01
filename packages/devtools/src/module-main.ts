@@ -64,8 +64,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (nuxt.options.dev) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
-    nuxt.options.vite.optimizeDeps.include.push('@vue/devtools-kit')
-    nuxt.options.vite.optimizeDeps.include.push('@vue/devtools-core')
+    nuxt.options.vite.optimizeDeps.include.push(
+      '@vue/devtools-kit',
+      '@vue/devtools-core',
+      '@vitejs/devtools/client/inject',
+      '@vitejs/devtools-kit/client',
+      'error-stack-parser-es',
+      'vite-plugin-vue-tracer/client/overlay',
+    )
   }
 
   const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
