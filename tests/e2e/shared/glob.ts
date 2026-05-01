@@ -1,6 +1,5 @@
-// Shared helper for `PW_PROJECT` glob filtering. Used by both playwright.config.ts
-// (to filter projects + webServer entries) and global-setup.ts (to skip prebuilds
-// for playgrounds whose `:built` project isn't in the active selection).
+// Helper for `PW_PROJECT` glob filtering — used by playwright.config.ts to
+// filter projects + webServer entries down to the active selection.
 
 const REGEX_META = /[.+?^${}()|[\]\\]/g
 

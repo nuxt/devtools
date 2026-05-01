@@ -29,13 +29,15 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
-      # tab-pinia/tab-seo use `../../local` which spawns a Nuxt dev subprocess for
-      # the devtools client. On CI cold-start the subprocess can't compile the
-      # inner client app within the test's 90s budget — every dev test then
-      # times out. Limit CI to the `empty` playground (which uses the pre-built
-      # `@nuxt/devtools`), and run all three playgrounds for the built-mode
-      # smoke check (which doesn't depend on the subprocess).
+      # tab-pinia/tab-seo use `../../local` which spawns a Nuxt dev subprocess
+      # for the devtools client. On CI cold-start that subprocess can't compile
+      # the inner client app within the test's 90s budget, so we restrict the
+      # dev-mode coverage on CI to the `empty` playground (which uses the
+      # pre-built `@nuxt/devtools` and doesn't need the subprocess). Built-mode
+      # runs across all three playgrounds — that path doesn't depend on the
+      # subprocess.
       - run: PW_PROJECT='empty:dev' pnpm exec playwright test --config tests/e2e/playwright.config.ts
+      - run: pnpm test:e2e:prebuild
       - run: PW_PROJECT='*:built' pnpm exec playwright test --config tests/e2e/playwright.config.ts
       - uses: actions/upload-artifact@v4
         if: failure()

@@ -35,7 +35,6 @@ const specs = allSpecs.filter(s => matchesProjectFilter(s.name, filter))
 
 export default defineConfig({
   testDir: './specs',
-  globalSetup: './global-setup.ts',
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
