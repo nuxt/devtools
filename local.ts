@@ -17,6 +17,11 @@ import type { ModuleOptions } from './packages/devtools/src/types'
  *   ]
  * })
  * ```
+ *
+ * The bundled playgrounds in this repo opt in via the `NUXT_DEVTOOLS_LOCAL`
+ * environment variable: when set to a truthy value, their `nuxt.config.ts`
+ * loads `../../local` instead of the published `@nuxt/devtools`. Leave it
+ * unset to test against the built package.
  */
 import { defineNuxtModule, extendViteConfig, logger } from '@nuxt/kit'
 import { getPort } from 'get-port-please'

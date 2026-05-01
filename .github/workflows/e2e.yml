@@ -29,19 +29,11 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
-      # tab-pinia/tab-seo use `../../local`, which spawns a Nuxt dev subprocess
-      # for the devtools client. On CI runners:
-      #  - dev mode: the subprocess can't compile the inner client app within
-      #    the test's 90s budget, so dev tests time out.
-      #  - built mode: `nuxt build` itself hangs after one playground because
-      #    a stale subprocess from the previous build holds something that
-      #    blocks the next build from progressing.
-      # Restrict CI to the `empty` playground (which uses prebuilt
-      # `@nuxt/devtools` directly, no subprocess). Local `pnpm test:e2e` still
-      # exercises the full matrix.
-      - run: PW_PROJECT='empty:dev' pnpm exec playwright test --config tests/e2e/playwright.config.ts
-      - run: pnpm -C playgrounds/empty exec nuxt build
-      - run: PW_PROJECT='empty:built' pnpm exec playwright test --config tests/e2e/playwright.config.ts
+      # Playgrounds load `@nuxt/devtools` (built) by default. They only switch
+      # to `../../local` (which spawns a Nuxt dev subprocess for HMR on the
+      # devtools client) when `NUXT_DEVTOOLS_LOCAL` is set, which we don't
+      # set in CI — that subprocess doesn't reliably finish on cold runners.
+      - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

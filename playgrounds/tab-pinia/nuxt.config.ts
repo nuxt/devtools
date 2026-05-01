@@ -2,12 +2,14 @@ import { createResolver } from '@nuxt/kit'
 
 const resolver = createResolver(import.meta.url)
 
+const devtoolsModule = process.env.NUXT_DEVTOOLS_LOCAL ? '../../local' : '@nuxt/devtools'
+
 export default defineNuxtConfig({
   css: ['~/assets/main.css'],
 
   modules: [
     '../../packages/devtools-ui-kit/src/module',
-    '../../local',
+    devtoolsModule,
     '@pinia/nuxt',
   ],
 
