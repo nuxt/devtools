@@ -82,6 +82,7 @@ export interface ClientFunctions {
   refresh: (event: ClientUpdateEvent) => void
   callHook: (hook: string, ...args: any[]) => Promise<void>
   navigateTo: (path: string) => void
+  openUrl: (url: string) => void
 
   onTerminalData: (_: { id: string, data: string }) => void
   onTerminalExit: (_: { id: string, code?: number }) => void
