@@ -50,7 +50,7 @@
   const el = document.getElementById('message')
 
   if (!token) {
-    el.innerHTML = '⚠️ No token found, please double check your URL.'
+    el.textContent = '⚠️ No token found, please double check your URL.'
     el.style.color = '#df513f'
   } else {
     fetch(`${location.pathname.split(/\//g).slice(0, -1).join('/')}/auth-verify?token=${token}`)
@@ -65,11 +65,11 @@
           data: token,
         })
 
-        el.innerHTML = '✅ Authorized! You can close this window now.'
+        el.textContent = '✅ Authorized! You can close this window now.'
         window.close()
       })
       .catch((err) => {
-        el.innerHTML = `⚠️ Failed to authorize: ${err.message}`
+        el.textContent = `⚠️ Failed to authorize: ${err.message}`
         el.style.color = '#df513f'
       })
   }
