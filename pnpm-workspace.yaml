@@ -10,6 +10,26 @@ packages:
   - packages/**
   - playgrounds/**
 
+allowBuilds:
+  '@parcel/watcher': true
+  better-sqlite3: true
+  cypress: true
+  esbuild: true
+  json-editor-vue: true
+  simple-git-hooks: true
+  unrs-resolver: true
+  vue-demi: true
+
+overrides:
+  '@nuxt/devtools': workspace:*
+  chokidar: catalog:buildtools
+  esbuild: catalog:buildtools
+  rollup: catalog:buildtools
+  semver: catalog:prod
+  typescript: catalog:cli
+  unimport: catalog:types
+  vite: catalog:buildtools
+  vue-tsc: catalog:cli
 catalogs:
   buildtools:
     '@discoveryjs/cli': ^2.14.7
@@ -147,12 +167,3 @@ catalogs:
     '@unhead/schema': ^2.1.13
     '@vitejs/devtools-kit': ^0.1.13
     unimport: ^6.0.2
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - better-sqlite3
-  - cypress
-  - esbuild
-  - json-editor-vue
-  - simple-git-hooks
-  - unrs-resolver
-  - vue-demi
