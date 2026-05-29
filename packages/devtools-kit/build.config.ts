@@ -25,7 +25,6 @@ export default defineBuildConfig({
     'error-stack-parser-es',
     'shiki',
     '@vitejs/devtools-kit',
-    '@vitejs/devtools-rpc',
   ],
   declaration: true,
   rollup: {
