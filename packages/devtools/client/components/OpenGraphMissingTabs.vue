@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MetaFlatInput } from '@unhead/schema'
+import type { MetaFlat } from '@unhead/schema'
 import type { ReactiveHead } from '@unhead/vue'
 import type { NormalizedHeadTag } from '../../src/types'
 import { defu } from 'defu'
@@ -20,7 +20,7 @@ const missingTags = computed(() => {
 
 const codeSnippet = computed(() => {
   let mergedHeadOptions: Partial<ReactiveHead> = {}
-  const mergedSeoMetaOptions: Partial<MetaFlatInput> = {}
+  const mergedSeoMetaOptions: Partial<MetaFlat> = {}
   missingTags.value
     .forEach((tag) => {
       if (tag.seoMeta)

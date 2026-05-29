@@ -1,6 +1,6 @@
 import type { InstallModuleReturn, ModuleActionType, ModuleStaticInfo } from '../../src/types'
-import { useState } from '#imports'
 import { createTemplatePromise } from '@vueuse/core'
+import { useState } from '#imports'
 
 export const ModuleDialog = createTemplatePromise<boolean, [info: ModuleStaticInfo, result: InstallModuleReturn, type: ModuleActionType]>()
 

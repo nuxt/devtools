@@ -1,6 +1,6 @@
 import type { NuxtDevtoolsHostClient } from '@nuxt/devtools-kit/types'
-import { defineNuxtPlugin, useRouter } from '#imports'
 import { triggerRef } from 'vue'
+import { defineNuxtPlugin, useRouter } from '#imports'
 import { useClient } from '../composables/client'
 import { rpc } from '../composables/rpc'
 

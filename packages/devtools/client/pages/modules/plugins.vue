@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PluginInfoWithMetic } from '@nuxt/devtools-kit/types'
-import { definePageMeta } from '#imports'
 import { computed } from 'vue'
+import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 import { useServerApp } from '~/composables/state'
 

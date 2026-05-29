@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { isFirstVisit } from '~/composables/storage'
 import { telemetryEnabled } from '~/composables/telemetry'
 

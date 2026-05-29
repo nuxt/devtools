@@ -102,7 +102,7 @@ useEventListener('keydown', (e) => {
   }
 })
 
-function onKeyDown(e: KeyboardEvent) {
+function handleKeyDown(e: KeyboardEvent) {
   if (e.key === 'Backspace' && !search.value && overrideItems.value) {
     e.preventDefault()
     overrideItems.value = undefined
@@ -120,7 +120,7 @@ function onKeyDown(e: KeyboardEvent) {
           placeholder="Type to search..."
           class="rounded-none py3 px2! ring-0!"
           n="green borderless"
-          @keydown="onKeyDown"
+          @keydown="handleKeyDown"
         />
       </header>
       <div flex-auto of-auto p2 flex="~ col">
