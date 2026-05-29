@@ -65,8 +65,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
     nuxt.options.vite.optimizeDeps.include.push(
-      '@vue/devtools-core',
-      '@vue/devtools-kit',
       'nuxt > @nuxt/devtools > @vue/devtools-kit',
       'nuxt > @nuxt/devtools > @vue/devtools-core',
       'nuxt > @nuxt/devtools > @vitejs/devtools/client/inject',
