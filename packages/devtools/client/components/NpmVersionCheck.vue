@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { NpmCommandOptions } from '../../src/types'
-import { useRouter } from '#app/composables/router'
 import { createTemplatePromise } from '@vueuse/core'
 import { ref } from 'vue'
+import { useRouter } from '#app/composables/router'
 import { useRestartDialogs } from '~/composables/dialog'
 import { usePackageUpdate } from '~/composables/npm'
 import { useCurrentTerminalId } from '~/composables/state-routes'

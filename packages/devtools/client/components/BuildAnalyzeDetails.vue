@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { AnalyzeBuildMeta } from '../../src/types'
-import { useRuntimeConfig } from '#imports'
 import { formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import { useRuntimeConfig } from '#imports'
 import { rpc } from '~/composables/rpc'
 
 const props = defineProps<{

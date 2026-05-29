@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
-import { definePageMeta } from '#imports'
 import { computedAsync, until } from '@vueuse/core'
 import { computed, nextTick, ref } from 'vue'
+import { definePageMeta } from '#imports'
 import { useClient, useClientHead, useClientRoute, useClientRouter } from '~/composables/client'
 import { useOpenInEditor } from '~/composables/editor'
 import { useMergedRouteList } from '~/composables/state'

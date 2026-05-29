@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRuntimeConfig } from '#app/nuxt'
-import { definePageMeta } from '#imports'
 import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js'
 import { onMounted, onUnmounted, useTemplateRef } from 'vue'
+import { useRuntimeConfig } from '#app/nuxt'
+import { definePageMeta } from '#imports'
 import { rpc } from '../../composables/rpc'
 import { jsonStringifyCircular } from '../../composables/utils'
 

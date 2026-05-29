@@ -4,17 +4,17 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 
 import type { Router } from 'vue-router'
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-ignore tsconfig
-import { useAppConfig, useRuntimeConfig } from '#imports'
 import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { getDevToolsClientContext } from '@vitejs/devtools-kit/client'
-
 import { setIframeServerContext } from '@vue/devtools-kit'
+
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
 import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-ignore tsconfig
+import { useAppConfig, useRuntimeConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 import { state } from './state'

@@ -1,11 +1,11 @@
-import type { MetaFlatInput } from '@unhead/schema'
+import type { MetaFlat } from '@unhead/schema'
 import type { ReactiveHead } from '@unhead/vue'
 
 export interface OpenGraphTagDefine {
   name: string
   suggestion: 'required' | 'recommended' | 'optional'
   head: Partial<ReactiveHead>
-  seoMeta?: Partial<MetaFlatInput> & { title?: string }
+  seoMeta?: Partial<MetaFlat> & { title?: string }
   docs?: string
   description?: string
 }

@@ -1,6 +1,6 @@
+import { useClipboard } from '@vueuse/core'
 import { useRouter } from '#app/composables/router'
 import { devtoolsUiShowNotification } from '#imports'
-import { useClipboard } from '@vueuse/core'
 import { rpc } from './rpc'
 import { useServerConfig, useVirtualFiles } from './state'
 import { useCurrentVirtualFile } from './state-routes'

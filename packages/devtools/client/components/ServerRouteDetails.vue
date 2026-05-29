@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { $Fetch } from 'ofetch'
 import type { CodeSnippet, ServerRouteInfo, ServerRouteInput } from '~/../src/types'
-import { useCookie } from '#app/composables/cookie'
 import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 import { computed, reactive, ref, watchEffect } from 'vue'
+import { useCookie } from '#app/composables/cookie'
 import { getColorMode, useClient } from '~/composables/client'
 import { ComposablesDocs } from '~/composables/constants'
 import { useOpenInEditor } from '~/composables/editor'

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { VfsFile } from '~/composables/state'
-import { definePageMeta } from '#imports'
 import Fuse from 'fuse.js'
 import { computed, ref, watchEffect } from 'vue'
+import { definePageMeta } from '#imports'
 import { useVirtualFiles } from '~/composables/state'
 import { useCurrentVirtualFile } from '~/composables/state-routes'
 

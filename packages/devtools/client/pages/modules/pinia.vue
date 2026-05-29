@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { definePageMeta } from '#imports'
 import { Pinia } from '@vue/devtools-applet'
+import { definePageMeta } from '#imports'
 import { useModuleOptions, useServerConfig } from '~/composables/state'
 import { useVueDevToolsState } from '~/setup/vue-devtools'
 

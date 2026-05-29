@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from '#app/composables/router'
-import { useHead } from '#imports'
 import { useEventListener, useEyeDropper } from '@vueuse/core'
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { useRoute } from '#app/composables/router'
+import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'

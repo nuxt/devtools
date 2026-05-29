@@ -35,5 +35,13 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
 
+  vite: {
+    optimizeDeps: {
+      // Pre-bundle deps `@pinia/nuxt` pulls in directly, so the Vue DevTools
+      // applet in the Pinia tab doesn't trigger a page reload mid-test.
+      include: ['@vue/devtools-core', '@vue/devtools-kit'],
+    },
+  },
+
   compatibilityDate: '2025-03-25',
 })
