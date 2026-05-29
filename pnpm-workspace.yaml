@@ -1,10 +1,29 @@
 ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
+minimumReleaseAgeExclude:
+  - '@devframes/hub@0.5.2'
+  - '@rolldown/debug@1.0.3'
+  - '@vitejs/devtools-kit@0.3.1'
+  - '@vitejs/devtools-rolldown@0.3.1'
+  - '@vitejs/devtools@0.3.1'
+  - '@vue/compiler-core@3.5.35'
+  - '@vue/compiler-dom@3.5.35'
+  - '@vue/compiler-sfc@3.5.35'
+  - '@vue/compiler-ssr@3.5.35'
+  - '@vue/reactivity@3.5.35'
+  - '@vue/runtime-core@3.5.35'
+  - '@vue/runtime-dom@3.5.35'
+  - '@vue/server-renderer@3.5.35'
+  - '@vue/shared@3.5.35'
+  - devframe@0.5.2
+  - vue@3.5.35
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - 'tinyexec@1.2.0 || 1.2.1 || 1.2.2'
 
 packages:
   - packages/**
@@ -44,7 +63,7 @@ catalogs:
     '@unocss/preset-icons': ^66.6.7
     '@unocss/preset-mini': ^66.6.7
     '@unocss/preset-uno': ^66.6.7
-    '@vitejs/devtools': ^0.1.13
+    '@vitejs/devtools': ^0.3.1
     '@vueuse/nuxt': ^14.2.1
     chokidar: ^5.0.0
     esbuild: ^0.28.0
@@ -119,7 +138,7 @@ catalogs:
     vis-data: ^8.0.3
     vis-network: ^10.0.2
     vite-hot-client: ^2.1.0
-    vue: ^3.5.32
+    vue: ^3.5.35
     vue-router: ^5.0.4
     vue-virtual-scroller: ^2.0.1
   icons:
@@ -165,5 +184,5 @@ catalogs:
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
     '@unhead/schema': ^2.1.13
-    '@vitejs/devtools-kit': ^0.1.13
+    '@vitejs/devtools-kit': ^0.3.1
     unimport: ^6.0.2
