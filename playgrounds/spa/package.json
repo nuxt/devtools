@@ -1,0 +1,23 @@
+{
+  "name": "spa",
+  "version": "4.0.0-alpha.6",
+  "private": true,
+  "main": "nuxt.config.ts",
+  "files": [
+    "app.vue",
+    "components",
+    "nuxt.config.ts",
+    "pages",
+    "public"
+  ],
+  "scripts": {
+    "play:build": "nuxt build",
+    "play:dev": "nuxt dev",
+    "play:generate": "nuxt generate",
+    "play:preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "nuxt": "catalog:buildtools"
+  }
+}

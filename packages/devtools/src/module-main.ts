@@ -80,6 +80,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Deferred: will be set when Vite DevTools plugin setup runs
   let connectDevToolsKit: ((ctx: any) => void) | undefined
 
+  // Do NOT pass `{ server: false }` here: under Nuxt 5 / Vite 8 the kit wraps
+  // the plugin in an `applyToEnvironment` shell that strips the `devtools`
+  // property, so `@vitejs/devtools` silently drops the dock entry. The
+  // original client-vs-server RPC race is already handled by the guard inside
+  // `connectDevToolsKit` (`if (devtoolsKitCtx) return`).
   addVitePlugin(defineViteDevToolsPlugin({
     name: 'nuxt:devtools',
     devtools: {
@@ -96,7 +101,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         connectDevToolsKit?.(ctx)
       },
     },
-  }), { server: false })
+  }))
   addPlugin({
     src: join(runtimeDir, 'plugins/vite-devtools.client'),
     mode: 'client',

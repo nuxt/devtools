@@ -18,7 +18,7 @@
     "test:e2e:all": "pnpm test:e2e:prebuild && playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:dev": "PW_PROJECT='*:dev' playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:built": "pnpm test:e2e:prebuild && PW_PROJECT='*:built' playwright test --config tests/e2e/playwright.config.ts",
-    "test:e2e:prebuild": "pnpm -C playgrounds/empty exec nuxt build && pnpm -C playgrounds/tab-pinia exec nuxt build && pnpm -C playgrounds/tab-seo exec nuxt build",
+    "test:e2e:prebuild": "pnpm -C playgrounds/empty exec nuxt build && pnpm -C playgrounds/spa exec nuxt build && pnpm -C playgrounds/tab-pinia exec nuxt build && pnpm -C playgrounds/tab-seo exec nuxt build",
     "test:e2e:ui": "playwright test --config tests/e2e/playwright.config.ts --ui",
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",

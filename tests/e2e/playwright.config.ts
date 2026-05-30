@@ -5,7 +5,7 @@ import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
-const PLAYGROUNDS = ['empty', 'tab-pinia', 'tab-seo'] as const
+const PLAYGROUNDS = ['empty', 'spa', 'tab-pinia', 'tab-seo'] as const
 const MODES = ['dev', 'built'] as const
 
 type Mode = typeof MODES[number]
