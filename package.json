@@ -23,7 +23,7 @@
     "docs": "nuxi dev docs",
     "docs:build": "CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "npx simple-git-hooks && pnpm -C docs install && skills-npm",
+    "postinstall": "simple-git-hooks && pnpm -C docs install && skills-npm",
     "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
@@ -65,7 +65,7 @@
     "vue-tsc": "catalog:cli"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
