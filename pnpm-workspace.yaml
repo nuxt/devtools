@@ -2,22 +2,25 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@devframes/hub@0.5.2'
+  - '@devframes/hub@0.6.0'
+  - '@devframes/plugin-inspect@0.6.0'
+  - '@devframes/plugin-messages@0.6.0'
+  - '@devframes/plugin-terminals@0.6.0'
   - '@rolldown/debug@1.0.3'
-  - '@vitejs/devtools-kit@0.3.1'
-  - '@vitejs/devtools-rolldown@0.3.1'
-  - '@vitejs/devtools@0.3.1'
-  - '@vue/compiler-core@3.5.35'
-  - '@vue/compiler-dom@3.5.35'
-  - '@vue/compiler-sfc@3.5.35'
-  - '@vue/compiler-ssr@3.5.35'
-  - '@vue/reactivity@3.5.35'
-  - '@vue/runtime-core@3.5.35'
-  - '@vue/runtime-dom@3.5.35'
-  - '@vue/server-renderer@3.5.35'
-  - '@vue/shared@3.5.35'
-  - devframe@0.5.2
-  - vue@3.5.35
+  - '@vitejs/devtools-kit@0.4.0'
+  - '@vitejs/devtools-rolldown@0.4.0'
+  - '@vitejs/devtools@0.4.0'
+  - '@vue/compiler-core@3.5.39'
+  - '@vue/compiler-dom@3.5.39'
+  - '@vue/compiler-sfc@3.5.39'
+  - '@vue/compiler-ssr@3.5.39'
+  - '@vue/reactivity@3.5.39'
+  - '@vue/runtime-core@3.5.39'
+  - '@vue/runtime-dom@3.5.39'
+  - '@vue/server-renderer@3.5.39'
+  - '@vue/shared@3.5.39'
+  - devframe@0.6.0
+  - vue@3.5.39
   - '@turbo/darwin-64@2.9.16'
   - '@turbo/darwin-arm64@2.9.16'
   - '@turbo/linux-64@2.9.16'
@@ -50,6 +53,11 @@ allowBuilds:
 
 overrides:
   '@nuxt/devtools': workspace:*
+  # Force a single `@vitejs/devtools-kit` across the tree. `vite-plugin-inspect`
+  # still pins `^0.3.1` (which pulls devframe/hub 0.5.2), but only uses the
+  # version-agnostic `defineRpcFunction` passthrough, so deduping onto 0.4.0
+  # keeps devframe 0.6 as the single devtools runtime.
+  '@vitejs/devtools-kit': catalog:types
   chokidar: catalog:buildtools
   esbuild: catalog:buildtools
   rollup: catalog:buildtools
@@ -57,6 +65,10 @@ overrides:
   typescript: catalog:cli
   unimport: catalog:types
   vite: catalog:buildtools
+  # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
+  # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
+  # SFC codegen errors from mixed compiler versions.
+  vue: catalog:frontend
   vue-tsc: catalog:cli
 catalogs:
   buildtools:
@@ -72,7 +84,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.0
     '@unocss/preset-mini': ^66.7.0
     '@unocss/preset-uno': ^66.7.0
-    '@vitejs/devtools': ^0.3.1
+    '@vitejs/devtools': ^0.4.0
     '@vueuse/nuxt': ^14.3.0
     chokidar: ^5.0.0
     esbuild: ^0.28.0
@@ -147,7 +159,7 @@ catalogs:
     vis-data: ^8.0.4
     vis-network: ^10.1.0
     vite-hot-client: ^2.2.0
-    vue: ^3.5.35
+    vue: ^3.5.39
     vue-router: ^5.1.0
     vue-virtual-scroller: ^3.0.4
   icons:
@@ -193,5 +205,5 @@ catalogs:
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.1.1
-    '@vitejs/devtools-kit': ^0.3.1
+    '@vitejs/devtools-kit': ^0.4.0
     unimport: ^6.3.0
