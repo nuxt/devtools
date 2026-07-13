@@ -8,7 +8,7 @@ import { computed, ref } from 'vue'
 import { useState } from '#imports'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
-import { connectPromise, rpc, rpcClient } from './rpc'
+import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
@@ -62,13 +62,8 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
       extendClientRpc(namespace, functions) {
         const register = (client: DevToolsRpcClient) => {
           for (const [name, handler] of Object.entries(functions)) {
-            if (typeof handler === 'function') {
-              client.client.register({
-                name: `${namespace}:${name}`,
-                type: 'event',
-                handler: handler as any,
-              })
-            }
+            if (typeof handler === 'function')
+              upsertClientFunction(client, `${namespace}:${name}`, handler as any)
           }
         }
 

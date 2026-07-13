@@ -331,8 +331,8 @@ catalogs:
       specifier: ^1.17.5
       version: 1.17.5
     vite-plugin-inspect:
-      specifier: ^12.0.0-beta.3
-      version: 12.0.0-beta.3
+      specifier: ^12.0.2
+      version: 12.0.2
     vite-plugin-vue-tracer:
       specifier: ^1.4.0
       version: 1.4.0
@@ -367,10 +367,12 @@ catalogs:
     '@unhead/schema':
       specifier: ^3.1.1
       version: 3.1.1
+    '@vitejs/devtools-kit':
+      specifier: ^0.4.0
+      version: 0.4.0
 
 overrides:
   '@nuxt/devtools': workspace:*
-  '@vitejs/devtools-kit': ^0.4.0
   chokidar: ^5.0.0
   esbuild: ^0.28.0
   rollup: ^4.60.4
@@ -428,7 +430,7 @@ importers:
         specifier: catalog:buildtools
         version: 66.7.0(eslint@10.4.0(jiti@2.7.0))(typescript@6.0.3)
       '@vitejs/devtools-kit':
-        specifier: ^0.4.0
+        specifier: catalog:types
         version: 0.4.0(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14)
       bumpp:
         specifier: catalog:cli
@@ -506,7 +508,7 @@ importers:
         specifier: catalog:buildtools
         version: 0.4.0(crossws@0.4.10(srvx@0.11.16))(srvx@0.11.16)(typescript@6.0.3)(valibot@1.4.2(typescript@6.0.3))(vite@8.0.14)
       '@vitejs/devtools-kit':
-        specifier: ^0.4.0
+        specifier: catalog:types
         version: 0.4.0(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14)
       '@vue/devtools-core':
         specifier: catalog:frontend
@@ -582,7 +584,7 @@ importers:
         version: 8.0.14(@types/node@25.9.1)(@vitejs/devtools@0.4.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.39.0)(tsx@4.22.3)(yaml@2.9.0)
       vite-plugin-inspect:
         specifier: catalog:prod
-        version: 12.0.0-beta.3(@nuxt/kit@4.4.6(magicast@0.5.3))(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14)
+        version: 12.0.2(@nuxt/kit@4.4.6(magicast@0.5.3))(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14)
       vite-plugin-vue-tracer:
         specifier: catalog:prod
         version: 1.4.0(vite@8.0.14)(vue@3.5.39(typescript@6.0.3))
@@ -4021,8 +4023,8 @@ packages:
     resolution: {integrity: sha512-HqZ5rWlFjGiV0tDm3UxxgNRqsOTniqoKZu0pIAfh7TZQMGuZK+hH0drySty0si0QXj1ieop4+SkSfPZBPPkHig==}
     engines: {node: '>=14'}
 
-  ansis@4.3.0:
-    resolution: {integrity: sha512-44mvgtPvohuU/70DdY5Oz2AIrLJ9k6/5x4KmoSvPwO+5Moijo0+N9D0fKbbYZQWP1hNm5CpOf+E01jhxG/r8xg==}
+  ansis@4.3.1:
+    resolution: {integrity: sha512-BJ8/l4R5LRE7hW9WdSuGYrLSHi2ynxeFpDFbH0K/CgNeY/tyhk+vO6TYxXC5r5CpUhNVX310xzPsN/H9lCdfOA==}
     engines: {node: '>=14'}
 
   anymatch@3.1.3:
@@ -4866,6 +4868,9 @@ packages:
 
   error-stack-parser-es@1.0.5:
     resolution: {integrity: sha512-5qucVt2XcuGMcEGgWI7i+yZpmpByQ8J1lHhcL7PwqCwu9FPP3VUXzT4ltHe5i2z9dePwEHcDVOAfSnHsOlCXRA==}
+
+  error-stack-parser-es@2.0.1:
+    resolution: {integrity: sha512-J36ntO+rMQVRuR/umlmxmfLi4TpWwtmTnHoJoXTiC2xDNazs0VDPKcX6pbhZMDd2HFtH9isMBJXMdbki+A++Pg==}
 
   errx@0.1.0:
     resolution: {integrity: sha512-fZmsRiDNv07K6s2KkKFTiD2aIvECa7++PKyD5NC32tpRw46qZA3sOz+aM+/V9V0GDHxVTKLziveV4JhzBHDp9Q==}
@@ -8169,6 +8174,10 @@ packages:
     resolution: {integrity: sha512-5lWVjgi6vuHhJ526bI4nlCOmkCIF3nnfXkCMDeMJrtdvxTs6ZFCM8oNufGTsDbKv/tJ/xj8RpvXjRuPBZJuJog==}
     engines: {node: '>=20.19.0'}
 
+  unplugin-utils@0.3.2:
+    resolution: {integrity: sha512-xVToRh2CTmLk2HnEG7ac4rl1MJTT3RFkpS8B++/SnB0kXvuaavD+n3m/vrzyWQOdJNSZQACnbz01pnppbwV5BA==}
+    engines: {node: '>=20.19.0'}
+
   unplugin-vue-markdown@32.0.0:
     resolution: {integrity: sha512-K9uiYJF9kvngrN/NRx8fVPZFXiqJR7tbnXQV4mVFxjcsKhuiL6+vVQ5woam59RqeCDprecBmbg+cCGADz0somA==}
     engines: {node: '>=22'}
@@ -8404,8 +8413,8 @@ packages:
       vue-tsc:
         optional: true
 
-  vite-plugin-inspect@12.0.0-beta.3:
-    resolution: {integrity: sha512-1uMZPSO7Y09KGRhBIhdxdobot14VxKrxm/yYxs5h5FqI4UplbP8PADazLveAUiQSvNwyl9taGPMBfgktX5g8Gg==}
+  vite-plugin-inspect@12.0.2:
+    resolution: {integrity: sha512-/Mm4kurRsH9rm4vFtRNi89n73dqEPmxDvSq27A5HFdZblpYCy4Vkli96UYrMWiMmj4gDLfDF+pvw0fqgN76FHg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
@@ -12283,7 +12292,7 @@ snapshots:
 
   ansis@4.2.0: {}
 
-  ansis@4.3.0: {}
+  ansis@4.3.1: {}
 
   anymatch@3.1.3:
     dependencies:
@@ -13170,6 +13179,8 @@ snapshots:
   environment@1.1.0: {}
 
   error-stack-parser-es@1.0.5: {}
+
+  error-stack-parser-es@2.0.1: {}
 
   errx@0.1.0: {}
 
@@ -17244,6 +17255,11 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.4
 
+  unplugin-utils@0.3.2:
+    dependencies:
+      pathe: 2.0.3
+      picomatch: 4.0.4
+
   unplugin-vue-markdown@32.0.0(vite@8.0.14):
     dependencies:
       '@mdit-vue/plugin-component': 3.0.2
@@ -17472,7 +17488,7 @@ snapshots:
     dependencies:
       cac: 6.7.14
       es-module-lexer: 2.0.0
-      obug: 2.1.1
+      obug: 2.1.3
       pathe: 2.0.3
       vite: 8.0.14(@types/node@25.9.1)(@vitejs/devtools@0.4.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.39.0)(tsx@4.22.3)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -17507,17 +17523,17 @@ snapshots:
       typescript: 6.0.3
       vue-tsc: 3.3.2(typescript@6.0.3)
 
-  vite-plugin-inspect@12.0.0-beta.3(@nuxt/kit@4.4.6(magicast@0.5.3))(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14):
+  vite-plugin-inspect@12.0.2(@nuxt/kit@4.4.6(magicast@0.5.3))(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14):
     dependencies:
       '@vitejs/devtools-kit': 0.4.0(srvx@0.11.16)(typescript@6.0.3)(vite@8.0.14)
-      ansis: 4.3.0
-      error-stack-parser-es: 1.0.5
-      obug: 2.1.1
+      ansis: 4.3.1
+      error-stack-parser-es: 2.0.1
+      obug: 2.1.3
       ohash: 2.0.11
       open: 11.0.0
       perfect-debounce: 2.1.0
       sirv: 3.0.2
-      unplugin-utils: 0.3.1
+      unplugin-utils: 0.3.2
       vite: 8.0.14(@types/node@25.9.1)(@vitejs/devtools@0.4.0)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.39.0)(tsx@4.22.3)(yaml@2.9.0)
     optionalDependencies:
       '@nuxt/kit': 4.4.6(magicast@0.5.3)

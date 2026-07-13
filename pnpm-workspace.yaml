@@ -29,7 +29,7 @@ minimumReleaseAgeExclude:
   - '@turbo/windows-arm64@2.9.16'
   - turbo@2.9.16
   - vue-router@5.1.0
-  - vite-plugin-inspect@12.0.0-beta.3
+  - vite-plugin-inspect@12.0.2
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
@@ -53,11 +53,6 @@ allowBuilds:
 
 overrides:
   '@nuxt/devtools': workspace:*
-  # Force a single `@vitejs/devtools-kit` across the tree. `vite-plugin-inspect`
-  # still pins `^0.3.1` (which pulls devframe/hub 0.5.2), but only uses the
-  # version-agnostic `defineRpcFunction` passthrough, so deduping onto 0.4.0
-  # keeps devframe 0.6 as the single devtools runtime.
-  '@vitejs/devtools-kit': catalog:types
   chokidar: catalog:buildtools
   esbuild: catalog:buildtools
   rollup: catalog:buildtools
@@ -192,7 +187,7 @@ catalogs:
     tinyexec: ^1.2.2
     tinyglobby: ^0.2.16
     unstorage: ^1.17.5
-    vite-plugin-inspect: ^12.0.0-beta.3
+    vite-plugin-inspect: ^12.0.2
     vite-plugin-vue-tracer: ^1.4.0
     which: ^7.0.0
     ws: ^8.21.0
