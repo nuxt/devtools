@@ -1,4 +1,4 @@
-import type { DevToolsNodeContext } from '@vitejs/devtools-kit'
+import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
 import type { ModuleOptions } from './options'
@@ -36,13 +36,14 @@ export interface NuxtDevtoolsServerContext {
   rpc: NuxtDevtoolsRpc
 
   /**
-   * The Vite DevTools Kit context, available after connection.
+   * The connected Vite DevTools kit context (`docks`/`terminals`/`messages`/
+   * `commands`/`rpc`/`diagnostics`/…).
    *
    * This is the raw escape hatch and is `undefined` until the Vite DevTools
    * plugin connects. Prefer {@link onDevtoolsReady}, which hands you the
    * connected context.
    */
-  devtoolsKit: DevToolsNodeContext | undefined
+  devtoolsKit: ViteDevToolsNodeContext | undefined
 
   /**
    * Hook to open file in editor

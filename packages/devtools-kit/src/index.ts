@@ -74,21 +74,6 @@ export function startSubprocess(
     replacement: 'onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))',
   }, { key: tabOptions.id })
 
-  return startSubprocessInternal(execaOptions, tabOptions, nuxt)
-}
-
-/**
- * The un-deprecated implementation of {@link startSubprocess}, used by Nuxt
- * DevTools internally so it doesn't warn on its own usage. External modules
- * should use the Vite DevTools terminals host.
- *
- * @internal
- */
-export function startSubprocessInternal(
-  execaOptions: SubprocessOptions,
-  tabOptions: TerminalState,
-  nuxt = useNuxt(),
-): StartSubprocessReturn {
   const id = tabOptions.id
   let restarting = false
 

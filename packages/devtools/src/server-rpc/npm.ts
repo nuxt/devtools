@@ -1,7 +1,6 @@
 import type { DetectResult } from 'package-manager-detector'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
-import { startSubprocessInternal } from '@nuxt/devtools-kit'
 import { parseModule } from 'magicast'
 import { addNuxtModule } from 'magicast/helpers'
 import { detect } from 'package-manager-detector/detect'
@@ -9,7 +8,15 @@ import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 import { removeNuxtModuleFromCode } from '../utils/nuxt-config'
 
-export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt } = ctx
+
+  function getTerminals() {
+    const kit = ctx.devtoolsKit
+    if (!kit)
+      throw new Error('[Nuxt DevTools] Vite DevTools kit is not connected yet.')
+    return kit.terminals
+  }
   let detectPromise: Promise<DetectResult | null> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
@@ -54,14 +61,13 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
     const processId = `npm:${command}:${packageName}`
 
-    startSubprocessInternal({
+    await getTerminals().startChildProcess({
       command: args[0]!,
       args: args.slice(1),
     }, {
       id: processId,
-      name: `${command} ${packageName}`,
+      title: `${command} ${packageName}`,
       icon: 'i-logos-npm-icon',
-      restartable: false,
     })
 
     return {
@@ -103,17 +109,16 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         latestGenerated = generated // cache the latest generated config
         installSet.add(name)
 
-        const process = startSubprocessInternal({
+        const session = await getTerminals().startChildProcess({
           command: commands[0]!,
           args: commands.slice(1),
         }, {
           id: processId,
-          name: `Install ${name}`,
+          title: `Install ${name}`,
           icon: 'carbon:intent-request-create',
-          restartable: false,
         })
 
-        const result = await process.getResult()
+        const result = await session.getResult()
 
         await Promise.resolve()
 
@@ -152,16 +157,15 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
       const processId = `nuxt:remove-module:${name}`
 
       if (!dry) {
-        const process = startSubprocessInternal({
+        const session = await getTerminals().startChildProcess({
           command: commands[0]!,
           args: commands.slice(1),
         }, {
           id: processId,
-          name: `Uninstall ${name}`,
+          title: `Uninstall ${name}`,
           icon: 'carbon:intent-request-uninstall',
-          restartable: false,
         })
-        const result = await process.getResult()
+        const result = await session.getResult()
 
         await Promise.resolve()
 

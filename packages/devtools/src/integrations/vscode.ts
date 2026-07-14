@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { hostname } from 'node:os'
 import { resolve } from 'node:path'
-import { startSubprocessInternal } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { checkPort, getPort } from 'get-port-please'
 import { x } from 'tinyexec'
@@ -31,7 +30,8 @@ const codeBinaryOptions: Record<CodeServerType, CodeServerOptions> = {
   },
 }
 
-export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevtoolsServerContext) {
+export async function setup(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt, options, openInEditorHooks, rpc } = ctx
   const vsOptions = options?.vscode || {}
   const codeServer: CodeServerType = vsOptions?.codeServer || 'ms-code-server'
   const { codeBinary, launchArg, licenseTermsArg, connectionTokenArg } = codeBinaryOptions[codeServer]
@@ -91,7 +91,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       'antfu.vscode-server-controller',
     ], { nodeOptions: { stdio: ['pipe', 'ignore', 'inherit'] } })
 
-    startSubprocessInternal(
+    await ctx.devtoolsKit?.terminals.startChildProcess(
       {
         command: codeBinary,
         args: [
@@ -104,10 +104,9 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       },
       {
         id: 'devtools:vscode',
-        name: 'VS Code Server',
+        title: 'VS Code Server',
         icon: 'logos-visual-studio-code',
       },
-      nuxt,
     )
 
     for (let i = 0; i < 100; i++) {
