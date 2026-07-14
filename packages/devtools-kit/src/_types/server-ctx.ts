@@ -5,6 +5,7 @@ import type {
   DevToolsMessagesHost,
   DevToolsNodeContext,
   DevToolsTerminalHost,
+  RpcFunctionsHost,
 } from '@vitejs/devtools-kit'
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
@@ -28,6 +29,16 @@ export interface NuxtDevtoolsRpc {
    * Proxy for accessing server functions locally.
    */
   functions: ServerFunctions
+
+  /**
+   * Register a server RPC function on the Vite DevTools kit.
+   *
+   * This is the connect-safe forward path for the devframe-native RPC
+   * registration (`ctx.rpc.register(defineRpcFunction(...))`): calls made before
+   * the kit connects are buffered and replayed on connect. Prefer this over the
+   * deprecated {@link NuxtDevtoolsServerContext.extendServerRpc}.
+   */
+  register: RpcFunctionsHost['register']
 }
 
 /**
@@ -104,6 +115,10 @@ export interface NuxtDevtoolsServerContext {
    */
   refresh: (event: keyof ServerFunctions) => void
 
+  /**
+   * @deprecated Use the Vite DevTools RPC registration instead:
+   * `nuxt.devtools.rpc.register(defineRpcFunction(...))`. Kept working as a shim.
+   */
   extendServerRpc: <ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(name: string, functions: ServerFunctions) => BirpcGroup<ClientFunctions, ServerFunctions>
 }
 

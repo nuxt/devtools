@@ -143,6 +143,10 @@ export function startSubprocess(
  * Extend server RPC with namespaced functions.
  *
  * Returns an object with a `broadcast` proxy for calling client functions.
+ *
+ * @deprecated Use the Vite DevTools RPC registration instead:
+ * `nuxt.devtools.rpc.register(defineRpcFunction(...))`. Still works as a shim,
+ * but emits the `NDT_DEP_0003` deprecation diagnostic.
  */
 export function extendServerRpc<ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(
   namespace: string,

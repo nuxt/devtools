@@ -21,8 +21,8 @@ describe('diagnosticsDocsBase', () => {
 })
 
 describe('diagnosticCodes', () => {
-  it('defines the two pilot deprecation codes', () => {
-    expect(Object.keys(diagnosticCodes)).toEqual(['NDT_DEP_0001', 'NDT_DEP_0002'])
+  it('defines the deprecation codes', () => {
+    expect(Object.keys(diagnosticCodes)).toEqual(['NDT_DEP_0001', 'NDT_DEP_0002', 'NDT_DEP_0003'])
   })
 })
 

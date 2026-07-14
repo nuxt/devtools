@@ -3,7 +3,7 @@ import type { Nuxt } from 'nuxt/schema'
 
 import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import type { PendingHostCalls } from './connect-safe-hosts'
-import { registerHostDiagnostics } from '@nuxt/devtools-kit'
+import { deprecate, registerHostDiagnostics } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { setupAnalyzeBuildRPC } from './analyze-build'
@@ -81,9 +81,28 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     },
   })
 
+  /**
+   * Connect-safe RPC registration — the forward path for the deprecated
+   * `extendServerRpc`. Forwards to the Vite DevTools kit's RPC host once
+   * connected, buffering (and replaying on connect) calls made beforehand.
+   */
+  function register(definition: any): any {
+    const apply = () => {
+      const name = definition?.name
+      if (name && devtoolsKitCtx!.rpc.has(name))
+        devtoolsKitCtx!.rpc.update(definition)
+      else
+        devtoolsKitCtx!.rpc.register(definition)
+    }
+    if (devtoolsKitCtx)
+      return apply()
+    pendingHostCalls.push(apply)
+  }
+
   const rpc = {
     broadcast: createBroadcastProxy(),
     functions: functionsProxy,
+    register,
   }
 
   function refresh(event: keyof ServerFunctions) {
@@ -91,6 +110,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   }
 
   function extendServerRpc(namespace: string, functions: any): any {
+    deprecate(nuxt, 'NDT_DEP_0003', {
+      api: 'extendServerRpc',
+      replacement: 'nuxt.devtools.rpc.register(defineRpcFunction(...))',
+    }, { key: namespace })
+
     extendedRpcMap.set(namespace, functions)
 
     // Register on RpcFunctionsHost if already available
