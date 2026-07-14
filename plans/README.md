@@ -6,6 +6,11 @@ executor with no prior context. Executor: read the whole plan before starting,
 honor its STOP conditions, run the drift check first, and update your row below
 when done.
 
+> **Related plan set:** the numbered plans below are `improve`-skill audit fixes.
+> The Vite DevTools 0.4 / devframe 0.6 *integration* RFCs (compat foundation,
+> messages/terminals reuse, dock groups, ecosystem dogfooding) live in
+> [`vite-devtools-integration/`](./vite-devtools-integration/README.md).
+
 ## Execution order & status
 
 | Plan | Title | Priority | Effort | Depends on | Status |
