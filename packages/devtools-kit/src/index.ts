@@ -12,8 +12,18 @@ export * from './diagnostics'
  * Hooks to extend a custom tab in devtools.
  *
  * Provide a function to pass a factory that can be updated dynamically.
+ *
+ * @deprecated Register a dock entry on the Vite DevTools docks host instead:
+ * `nuxt.devtools.docks.register(...)`. Still works as a shim, but emits the
+ * `NDT_DEP_0005` deprecation diagnostic. Note the docks host does not yet cover
+ * `vnode` views or tab categories.
  */
 export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Promise<ModuleCustomTab>), nuxt = useNuxt()) {
+  deprecate(nuxt, 'NDT_DEP_0005', {
+    api: 'addCustomTab',
+    replacement: 'nuxt.devtools.docks.register(...)',
+  }, { key: typeof tab === 'function' ? undefined : tab.name })
+
   nuxt.hook('devtools:customTabs', async (tabs) => {
     if (typeof tab === 'function')
       tab = await tab()
@@ -23,26 +33,61 @@ export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Pro
 
 /**
  * Retrigger update for custom tabs, `devtools:customTabs` will be called again.
+ *
+ * @deprecated Update dock entries directly via the handle returned by
+ * `nuxt.devtools.docks.register(...)`. Still works as a shim, but emits the
+ * `NDT_DEP_0006` deprecation diagnostic.
  */
 export function refreshCustomTabs(nuxt = useNuxt()) {
+  deprecate(nuxt, 'NDT_DEP_0006', {
+    api: 'refreshCustomTabs',
+    replacement: 'nuxt.devtools.docks.register(...).update(...)',
+  })
+
   return nuxt.callHook('devtools:customTabs:refresh')
 }
 
-/**
- * Create a subprocess that handled by the DevTools.
- */
-export function startSubprocess(
-  execaOptions: SubprocessOptions,
-  tabOptions: TerminalState,
-  nuxt = useNuxt(),
-): {
+export interface StartSubprocessReturn {
   /** @deprecated Use `getResult()` instead */
   getProcess: () => ChildProcess | undefined
   getResult: () => Result
   terminate: () => void
   restart: () => void
   clear: () => void
-} {
+}
+
+/**
+ * Create a subprocess that handled by the DevTools.
+ *
+ * @deprecated Use the Vite DevTools terminals host instead:
+ * `nuxt.devtools.terminals.startChildProcess(...)`. Still works as a shim, but
+ * emits the `NDT_DEP_0004` deprecation diagnostic.
+ */
+export function startSubprocess(
+  execaOptions: SubprocessOptions,
+  tabOptions: TerminalState,
+  nuxt = useNuxt(),
+): StartSubprocessReturn {
+  deprecate(nuxt, 'NDT_DEP_0004', {
+    api: 'startSubprocess',
+    replacement: 'nuxt.devtools.terminals.startChildProcess(...)',
+  }, { key: tabOptions.id })
+
+  return startSubprocessInternal(execaOptions, tabOptions, nuxt)
+}
+
+/**
+ * The un-deprecated implementation of {@link startSubprocess}, used by Nuxt
+ * DevTools internally so it doesn't warn on its own usage. External modules
+ * should use the Vite DevTools terminals host.
+ *
+ * @internal
+ */
+export function startSubprocessInternal(
+  execaOptions: SubprocessOptions,
+  tabOptions: TerminalState,
+  nuxt = useNuxt(),
+): StartSubprocessReturn {
   const id = tabOptions.id
   let restarting = false
 

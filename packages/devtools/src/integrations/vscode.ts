@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { hostname } from 'node:os'
 import { resolve } from 'node:path'
-import { startSubprocess } from '@nuxt/devtools-kit'
+import { startSubprocessInternal } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { checkPort, getPort } from 'get-port-please'
 import { x } from 'tinyexec'
@@ -91,7 +91,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       'antfu.vscode-server-controller',
     ], { nodeOptions: { stdio: ['pipe', 'ignore', 'inherit'] } })
 
-    startSubprocess(
+    startSubprocessInternal(
       {
         command: codeBinary,
         args: [

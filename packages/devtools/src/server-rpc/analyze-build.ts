@@ -2,7 +2,7 @@ import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import { startSubprocess } from '@nuxt/devtools-kit'
+import { startSubprocessInternal } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
 import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
@@ -21,7 +21,7 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     if (promise)
       throw new Error('[Nuxt DevTools] A building process is already running')
 
-    const result = startSubprocess({
+    const result = startSubprocessInternal({
       command: 'npx',
       args: ['nuxi', 'analyze', '--no-serve', '--name', name],
       cwd: nuxt.options.rootDir,

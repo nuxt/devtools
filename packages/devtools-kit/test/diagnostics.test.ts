@@ -22,7 +22,14 @@ describe('diagnosticsDocsBase', () => {
 
 describe('diagnosticCodes', () => {
   it('defines the deprecation codes', () => {
-    expect(Object.keys(diagnosticCodes)).toEqual(['NDT_DEP_0001', 'NDT_DEP_0002', 'NDT_DEP_0003'])
+    expect(Object.keys(diagnosticCodes)).toEqual([
+      'NDT_DEP_0001',
+      'NDT_DEP_0002',
+      'NDT_DEP_0003',
+      'NDT_DEP_0004',
+      'NDT_DEP_0005',
+      'NDT_DEP_0006',
+    ])
   })
 })
 

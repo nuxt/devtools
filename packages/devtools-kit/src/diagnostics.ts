@@ -52,6 +52,21 @@ export const diagnosticCodes = {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
+  /** `startSubprocess` → `nuxt.devtools.terminals.startChildProcess(...)`. */
+  NDT_DEP_0004: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
+  },
+  /** `addCustomTab` → `nuxt.devtools.docks.register(...)`. */
+  NDT_DEP_0005: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
+  },
+  /** `refreshCustomTabs` → `nuxt.devtools.docks.register(...).update(...)`. */
+  NDT_DEP_0006: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
+  },
 } satisfies Record<string, DiagnosticDefinition<DeprecationParams>>
 
 export type NuxtDiagnosticCode = keyof typeof diagnosticCodes

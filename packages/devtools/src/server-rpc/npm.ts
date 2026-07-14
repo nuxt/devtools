@@ -1,7 +1,7 @@
 import type { DetectResult } from 'package-manager-detector'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
 import fs from 'node:fs/promises'
-import { startSubprocess } from '@nuxt/devtools-kit'
+import { startSubprocessInternal } from '@nuxt/devtools-kit'
 import { parseModule } from 'magicast'
 import { addNuxtModule } from 'magicast/helpers'
 import { detect } from 'package-manager-detector/detect'
@@ -54,7 +54,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
     const processId = `npm:${command}:${packageName}`
 
-    startSubprocess({
+    startSubprocessInternal({
       command: args[0]!,
       args: args.slice(1),
     }, {
@@ -103,7 +103,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
         latestGenerated = generated // cache the latest generated config
         installSet.add(name)
 
-        const process = startSubprocess({
+        const process = startSubprocessInternal({
           command: commands[0]!,
           args: commands.slice(1),
         }, {
@@ -152,7 +152,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
       const processId = `nuxt:remove-module:${name}`
 
       if (!dry) {
-        const process = startSubprocess({
+        const process = startSubprocessInternal({
           command: commands[0]!,
           args: commands.slice(1),
         }, {
