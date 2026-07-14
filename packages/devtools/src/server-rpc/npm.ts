@@ -3,10 +3,11 @@ import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, Pack
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import { parseModule } from 'magicast'
-import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
+import { addNuxtModule } from 'magicast/helpers'
 import { detect } from 'package-manager-detector/detect'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
+import { removeNuxtModuleFromCode } from '../utils/nuxt-config'
 
 export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
   let detectPromise: Promise<DetectResult | null> | undefined
@@ -145,20 +146,7 @@ export function setupNpmRPC({ nuxt }: NuxtDevtoolsServerContext) {
       const filepath = nuxt.options._nuxtConfigFile
       const source = await fs.readFile(filepath, 'utf-8')
       const generated = await magicastGuard(async () => {
-        const mod = parseModule(source, { sourceFileName: filepath })
-
-        // TODO: remove module from config
-        // removeNuxtModule(mod, name)
-        const config = getDefaultExportOptions(mod)
-        config.modules ||= []
-        if (config.modules.includes(name)) {
-          Object.values(config.modules).forEach((value, index) => {
-            if (value === name)
-              config.modules.splice(index - 1, 1)
-          })
-        }
-
-        return mod.generate().code
+        return removeNuxtModuleFromCode(source, name, filepath)
       })
 
       const processId = `nuxt:remove-module:${name}`
