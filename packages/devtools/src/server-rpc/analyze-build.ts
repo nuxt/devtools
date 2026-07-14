@@ -2,14 +2,14 @@ import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
-import { startSubprocess } from '@nuxt/devtools-kit'
 import { dirname, join } from 'pathe'
 import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
 
 const COLON_RE = /:/g
 
-export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
+export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt, refresh } = ctx
   let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
   let initalized: Promise<any> | undefined
@@ -21,20 +21,24 @@ export function setupAnalyzeBuildRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     if (promise)
       throw new Error('[Nuxt DevTools] A building process is already running')
 
-    const result = startSubprocess({
+    const kit = ctx.devtoolsKit
+    if (!kit)
+      throw new Error('[Nuxt DevTools] Vite DevTools kit is not connected yet.')
+
+    const session = await kit.terminals.startChildProcess({
       command: 'npx',
       args: ['nuxi', 'analyze', '--no-serve', '--name', name],
       cwd: nuxt.options.rootDir,
     }, {
       id: processId,
-      name: 'Analyze Build',
+      title: 'Analyze Build',
       icon: 'logos-nuxt-icon',
-    }, nuxt)
+    })
 
     refresh('getAnalyzeBuildInfo')
 
     initalized = undefined
-    promise = Promise.resolve(result.getResult())
+    promise = Promise.resolve(session.getResult())
       .then(() => {
         refresh('getAnalyzeBuildInfo')
         return readBuildInfo()

@@ -6,6 +6,8 @@ minimumReleaseAgeExclude:
   - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1'
   - '@vitejs/devtools@0.4.0 || 0.4.1'
   - vite-plugin-inspect@12.0.2
+  - '@devframes/hub@0.6.1'
+  - devframe@0.6.1
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
@@ -28,14 +30,16 @@ allowBuilds:
   vue-demi: true
 
 overrides:
-  '@nuxt/devtools': workspace:*
   # NOTE: these must be literal ranges, not `catalog:` refs. pnpm's
   # `catalog:` protocol inside `overrides` isn't understood by pnpm 9.x
   # (e.g. the pnpm major Vercel falls back to when corepack isn't active),
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
+  '@devframes/hub': ^0.6.1
+  '@nuxt/devtools': workspace:*
   chokidar: ^5.0.0
+  devframe: ^0.6.1
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5
@@ -166,6 +170,7 @@ catalogs:
     launch-editor: ^2.14.1
     local-pkg: ^1.2.1
     magicast: ^0.5.3
+    nostics: ^1.1.4
     pkg-types: ^2.3.1
     semver: ^7.8.5
     sirv: ^3.0.2

@@ -38,8 +38,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:before')
 
-  if (nuxt.options.devtools && typeof nuxt.options.devtools !== 'boolean' && 'disableAuthorization' in nuxt.options.devtools) {
-    logger.warn('[nuxt-devtools] `disableAuthorization` option is deprecated. Auth is now handled by Vite DevTools.')
+  // `disableAuthorization` disables the Vite DevTools client-auth prompt. The
+  // resolved value is used (default `isSandboxed`), so sandboxes keep
+  // auto-bypassing the prompt.
+  if (options.disableAuthorization) {
+    extendViteConfig((config) => {
+      const devtoolsConfig = ((config as any).devtools ||= {})
+      if (devtoolsConfig.clientAuth === undefined)
+        devtoolsConfig.clientAuth = false
+    })
   }
 
   if (options.iframeProps) {
@@ -78,7 +85,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addVitePlugin(DevTools)
 
   // Deferred: will be set when Vite DevTools plugin setup runs
-  let connectDevToolsKit: ((ctx: any) => void) | undefined
+  let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined
 
   // Do NOT pass `{ server: false }` here: under Nuxt 5 / Vite 8 the kit wraps
   // the plugin in an `applyToEnvironment` shell that strips the `devtools`
@@ -88,17 +95,18 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addVitePlugin(defineViteDevToolsPlugin({
     name: 'nuxt:devtools',
     devtools: {
-      setup(ctx: any) {
+      async setup(ctx) {
         ctx.docks.register({
           id: 'nuxt:devtools',
           type: 'iframe',
-          icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+          icon: '/__nuxt_devtools__/client/nuxt.svg',
           title: 'Nuxt DevTools',
           url: '/__nuxt_devtools__/client/',
+          defaultOrder: -2000,
         })
 
         // Connect Nuxt DevTools to Vite DevTools Kit context
-        connectDevToolsKit?.(ctx)
+        await connectDevToolsKit?.(ctx)
       },
     },
   }))
