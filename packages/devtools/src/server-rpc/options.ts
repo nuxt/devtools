@@ -9,13 +9,15 @@ export function getOptions() {
 }
 
 export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
-  async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
-    if (!options || options[tab]) {
-      options = defaultTabOptions
-      await read(tab)
-    }
+  const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
 
-    return options![tab]
+  async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
+    if (!options)
+      options = structuredClone(defaultTabOptions)
+    if (options[tab] === undefined || !hasReadOnce.has(tab))
+      await read(tab)
+
+    return options[tab]
   }
 
   async function read<T extends keyof NuxtDevToolsOptions>(tab: T) {
@@ -23,6 +25,7 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
+    hasReadOnce.add(tab)
     return options
   }
 
