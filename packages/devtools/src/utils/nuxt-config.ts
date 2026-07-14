@@ -13,13 +13,18 @@ export function removeNuxtModuleFromCode(source: string, name: string, filepath?
   if (!Array.isArray(config.modules))
     return mod.generate().code
 
-  config.modules = config.modules.filter((entry: unknown) => {
-    if (typeof entry === 'string')
-      return entry !== name
-    if (Array.isArray(entry))
-      return entry[0] !== name
-    return true
-  })
+  // Splice matching entries out in place (reverse order so indices stay
+  // valid as we remove) rather than reassigning a filtered array — magicast
+  // regenerates a reassigned array from scratch and drops the surrounding
+  // formatting/comments of the entries that remain.
+  for (let i = config.modules.length - 1; i >= 0; i--) {
+    const entry = config.modules[i]
+    const matches = typeof entry === 'string'
+      ? entry === name
+      : Array.isArray(entry) && entry[0] === name
+    if (matches)
+      config.modules.splice(i, 1)
+  }
 
   return mod.generate().code
 }
