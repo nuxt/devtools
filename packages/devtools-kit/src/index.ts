@@ -1,3 +1,4 @@
+import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { BirpcGroup } from 'birpc'
 import type { ChildProcess } from 'node:child_process'
 import type { Result } from 'tinyexec'
@@ -207,6 +208,26 @@ export function extendServerRpc<ClientFunctions extends object = Record<string, 
 
 export function onDevToolsInitialized(fn: (info: NuxtDevtoolsInfo) => void, nuxt = useNuxt()) {
   nuxt.hook('devtools:initialized', fn)
+}
+
+/**
+ * Run a callback once the Vite DevTools kit has connected, receiving the
+ * connected `ViteDevToolsNodeContext`.
+ *
+ * This is the recommended entry point for DevTools integration: the kit is
+ * guaranteed available, so you can use `ctx.docks` / `ctx.terminals` /
+ * `ctx.messages` / `ctx.commands` / `ctx.rpc` / `ctx.diagnostics` directly
+ * without the connect-safe accessors on `nuxt.devtools`.
+ *
+ * @example
+ * ```ts
+ * onDevtoolsReady((ctx) => {
+ *   ctx.docks.register({ id: 'my-module', title: 'My Module', type: 'iframe', url: '/…' })
+ * })
+ * ```
+ */
+export function onDevtoolsReady(fn: (ctx: ViteDevToolsNodeContext) => void | Promise<void>, nuxt = useNuxt()) {
+  nuxt.hook('devtools:ready', fn)
 }
 
 function _getContext(nuxt = useNuxt()): NuxtDevtoolsServerContext | undefined {

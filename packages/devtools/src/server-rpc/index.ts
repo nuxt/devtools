@@ -164,7 +164,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
    * Connect to Vite DevTools Kit context.
    * Called from the Vite DevTools plugin setup callback.
    */
-  function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
+  async function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
     /**
      * guarded to keep the first connection (client Vite), since Nuxt creates
      * two Vite instances and the second (server) one has 0 WebSocket clients.
@@ -225,6 +225,10 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
         }
       }
     }
+
+    // Signal that the DevTools kit is connected and ready. This is the
+    // recommended place for modules to do their DevTools integration.
+    await nuxt.callHook('devtools:ready', kitCtx)
   }
 
   return {

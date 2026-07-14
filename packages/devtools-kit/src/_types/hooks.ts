@@ -1,3 +1,4 @@
+import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { NuxtDevtoolsInfo } from './server-ctx'
 import type { TerminalState } from './terminals'
@@ -13,6 +14,17 @@ declare module '@nuxt/schema' {
      * Called after devtools is initialized.
      */
     'devtools:initialized': (info: NuxtDevtoolsInfo) => void
+
+    /**
+     * Called once the Vite DevTools kit has connected, with the connected
+     * `ViteDevToolsNodeContext`.
+     *
+     * This is the recommended place to do all DevTools integration
+     * (registering docks, terminals, messages, commands, RPC functions,
+     * diagnostics, …): the kit is guaranteed to be available here, so you don't
+     * need the connect-safe accessors on `nuxt.devtools`.
+     */
+    'devtools:ready': (ctx: ViteDevToolsNodeContext) => void | Promise<void>
 
     /**
      * Hooks to extend devtools tabs.

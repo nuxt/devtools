@@ -85,7 +85,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addVitePlugin(DevTools)
 
   // Deferred: will be set when Vite DevTools plugin setup runs
-  let connectDevToolsKit: ((ctx: any) => void) | undefined
+  let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined
 
   // Do NOT pass `{ server: false }` here: under Nuxt 5 / Vite 8 the kit wraps
   // the plugin in an `applyToEnvironment` shell that strips the `devtools`
@@ -95,7 +95,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addVitePlugin(defineViteDevToolsPlugin({
     name: 'nuxt:devtools',
     devtools: {
-      setup(ctx: any) {
+      async setup(ctx: any) {
         ctx.docks.register({
           id: 'nuxt:devtools',
           type: 'iframe',
@@ -105,7 +105,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         })
 
         // Connect Nuxt DevTools to Vite DevTools Kit context
-        connectDevToolsKit?.(ctx)
+        await connectDevToolsKit?.(ctx)
       },
     },
   }))
