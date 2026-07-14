@@ -10,6 +10,16 @@ to a thin adapter).
 > Self-contained: read this whole file; you don't need other plans. Shared API
 > facts are repeated here.
 
+## Relationship to Plan 00 (foundation)
+
+If Plan 00 (compat foundation) has landed, prefer its **connect-safe**
+`nuxt.devtools.messages` host over reaching into `nuxt.devtools.devtoolsKit.messages`
+directly (it queues pre-connect calls for you), and emit the toast
+soft-deprecation through Plan 00's **nostics** catalog (a `NDT_DEP_xxxx` code
+with `fix` + doc link) rather than an ad-hoc `console.warn`. If Plan 00 is not
+yet in place, use `devtoolsKit.messages` guarded for the undefined-until-connect
+window (queue + flush like `server-rpc/index.ts`'s `pendingBroadcasts`).
+
 ## Context you need
 
 Repo: `nuxt/devtools` monorepo (this checkout). Nuxt DevTools v4 renders inside

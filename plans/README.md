@@ -24,19 +24,37 @@ Today Nuxt DevTools:
 - Ships its **own** ephemeral toast (`devtoolsUiShowNotification` in
   `packages/devtools-ui-kit`), client-only, no history.
 
-These three plans make Nuxt DevTools *use the platform* instead of duplicating
-it.
+These plans make Nuxt DevTools *use the platform* instead of duplicating it.
 
-## The three workstreams
+## Strategy (this major)
+
+We're cutting a **new major**. Breaking changes are acceptable, but migration
+for module authors/users must be **minimal and self-discoverable**, with a
+gradual long-term move to devframe-native APIs. Concretely:
+
+1. **Keep** the existing Nuxt DevTools API working.
+2. **Expose** the devframe-native API alongside it (connect-safe hosts on
+   `nuxt.devtools`).
+3. **Soft-deprecate** the Nuxt API where a devframe equivalent exists — via a
+   backward-compatible **shim** + a **nostics** deprecation diagnostic (code +
+   fix + doc link). **Hard-break only where a faithful shim is infeasible.**
+4. Build the feature work (Messages / Terminals / Dock groups) **on top of**
+   that foundation.
+5. **Dogfood** against real ecosystem modules and produce migration reports.
+
+## Workstreams
 
 | # | Plan | Scope | Risk | Depends on |
 |---|------|-------|------|------------|
-| 01 | [`01-messages-unification.md`](./01-messages-unification.md) | Route all notifications through the devframe Messages system (`ctx.messages` + the built-in Messages dock); retire the bespoke toast. | Low | none |
-| 02 | [`02-terminals-reuse.md`](./02-terminals-reuse.md) | Retire Nuxt's `@xterm` terminals; surface sessions in the built-in Terminals dock via `ctx.terminals`; keep a compat shim for the `devtools:terminal:register` hook. | Medium | none |
-| 03 | [`03-dock-groups-presentation.md`](./03-dock-groups-presentation.md) | Introduce a **"Nuxt" dock group** and a general **promote‑tab‑to‑dock** capability; relocate a curated set of tools onto the dock bar. | High (UX) | benefits from 01/02 landing first |
+| 00 | [`00-compat-foundation.md`](./00-compat-foundation.md) | Expose devframe-native API as connect-safe hosts on `nuxt.devtools`; add nostics-driven soft-deprecation (catalog + host registration); establish the shim-first policy + deprecation map. | Medium | none |
+| 01 | [`01-messages-unification.md`](./01-messages-unification.md) | Route all notifications through the devframe Messages system (`messages` host + built-in Messages dock); retire the bespoke toast. | Low | 00 |
+| 02 | [`02-terminals-reuse.md`](./02-terminals-reuse.md) | Retire Nuxt's `@xterm` terminals; surface sessions in the built-in Terminals dock via the `terminals` host; keep a compat shim for the `devtools:terminal:register` hook. | Medium | 00 |
+| 03 | [`03-dock-groups-presentation.md`](./03-dock-groups-presentation.md) | Introduce a **"Nuxt" dock group** and a general **promote‑tab‑to‑dock** capability; relocate a curated set of tools onto the dock bar. | High (UX) | 00 |
+| 04 | [`04-ecosystem-playgrounds.md`](./04-ecosystem-playgrounds.md) | `playgrounds-ecosystem/` per popular module (og-image/SEO, scripts, content, tailwindcss, nuxthub, fonts, image) linked to local devtools; opt-in install; per-module compat report. | Low | cross-cutting (verifies 00–03) |
 
-Recommended order: **01 → 02 → 03** (lowest risk first; each de‑risks the next).
-They are technically independent and can be built/reviewed as **separate PRs**.
+Recommended order: **00 → 01 → 02 → 03**, with **04** running alongside as the
+dogfooding/verification surface. Each is technically buildable/reviewable as a
+**separate PR** (00 first, since 01/02/03 use the surfaces it creates).
 
 ## Shared facts every plan relies on
 
@@ -124,6 +142,26 @@ iframe. (This is the same mechanism as the "Connecting…" fix in
 
 North star: pursue **all** of — discoverability/UX parity, maintenance
 reduction, behavioral consistency, and capability upgrade.
+
+Foundation (plan 00):
+- **Expose devframe-native API** as first-class **connect-safe** hosts on
+  `nuxt.devtools` (`docks`/`terminals`/`messages`/`commands`/`diagnostics`),
+  queuing pre-connect calls; keep raw `devtoolsKit` as an escape hatch.
+- **Self-discoverable deprecations** via a Nuxt **nostics** catalog
+  (`defineDiagnostics` + `createConsoleReporter()` + `docsBase` → Nuxt docs),
+  **also registered into the DevTools host diagnostics** so they surface inside
+  DevTools. Warn-only by default; every code carries `why` + `fix` + doc link.
+- **Shim-first**: keep every existing API working this major via shims;
+  deprecations are warnings; removal deferred to the next major. **Hard-break
+  only where a faithful shim is infeasible** (error-level diagnostic naming the
+  replacement).
+
+Ecosystem (plan 04):
+- **One playground per module** under `playgrounds-ecosystem/`, linked to the
+  **local** `@nuxt/devtools`; initial set: og-image/SEO, scripts, content,
+  tailwindcss, nuxthub, fonts, image.
+- **Opt-in install / out of main CI** (avoid dep bloat + flake).
+- **Per-module compatibility report** that later seeds an upstream issue/PR.
 
 Presentation (plan 03):
 - **Curated hybrid "Nuxt" dock group**: the hub iframe stays the primary member;

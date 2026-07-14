@@ -9,6 +9,17 @@ opt-in interactive **PTY** path is added.
 
 > Self-contained: read this whole file; shared API facts are repeated here.
 
+## Relationship to Plan 00 (foundation)
+
+If Plan 00 (compat foundation) has landed, prefer its **connect-safe**
+`nuxt.devtools.terminals` host over `nuxt.devtools.devtoolsKit.terminals`
+(it queues pre-connect `register`/`start…` calls), and emit the
+`devtools:terminal:register` / `startSubprocess` soft-deprecations through Plan
+00's **nostics** catalog (`NDT_DEP_xxxx` with `fix` + doc link). The
+`getProcess()`→`getResult()` deprecation is already a Plan 00 pilot. If Plan 00
+is not yet in place, use `devtoolsKit.terminals` guarded for the
+undefined-until-connect window (queue + flush like `pendingBroadcasts`).
+
 ## Context you need
 
 Nuxt DevTools v4 renders inside **Vite DevTools** `@vitejs/devtools@0.4` on the

@@ -10,6 +10,16 @@ group. Promotion is a general, opt-in capability any tab can request.
 > Self-contained: read this whole file; shared API facts are repeated here.
 > This is the largest/most opinionated plan — do it after 01 & 02 if possible.
 
+## Relationship to Plan 00 (foundation)
+
+If Plan 00 (compat foundation) has landed, register the group + promoted entries
+through its **connect-safe** `nuxt.devtools.docks` host (queues pre-connect
+`register` calls) rather than reaching into `devtoolsKit.docks` directly. The
+`dock:true` promotion flag is an **additive extension** of the existing custom
+tabs API (`ModuleCustomTab`) — it is **not** a deprecation (per the Plan 00
+classification map, custom tabs stay Nuxt-native). If Plan 00 is not yet in
+place, use `devtoolsKit.docks` guarded for the undefined-until-connect window.
+
 ## Context you need
 
 Nuxt DevTools v4 renders inside **Vite DevTools** `@vitejs/devtools@0.4` on
