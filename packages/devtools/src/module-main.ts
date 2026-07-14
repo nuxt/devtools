@@ -6,6 +6,7 @@ import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import os from 'node:os'
+import { deprecate } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { join } from 'pathe'
@@ -38,8 +39,24 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:before')
 
+  // `disableAuthorization` forwards to Vite DevTools' own client-auth toggle.
+  // The resolved value is used (default `isSandboxed`), so sandboxes keep
+  // auto-bypassing the auth prompt.
+  if (options.disableAuthorization) {
+    extendViteConfig((config) => {
+      const devtoolsConfig = ((config as any).devtools ||= {})
+      if (devtoolsConfig.clientAuth === undefined)
+        devtoolsConfig.clientAuth = false
+    })
+  }
+
+  // Soft-deprecate the Nuxt-specific option in favour of the Vite-native one —
+  // only when the user explicitly set it, not for the sandbox default.
   if (nuxt.options.devtools && typeof nuxt.options.devtools !== 'boolean' && 'disableAuthorization' in nuxt.options.devtools) {
-    logger.warn('[nuxt-devtools] `disableAuthorization` option is deprecated. Auth is now handled by Vite DevTools.')
+    deprecate(nuxt, 'NDT_DEP_0002', {
+      api: 'disableAuthorization',
+      replacement: 'vite: { devtools: { clientAuth: false } }',
+    })
   }
 
   if (options.iframeProps) {

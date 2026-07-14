@@ -44,7 +44,13 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
-   * @deprecated Auth is now handled by Vite DevTools. This option is ignored.
+   * Disable Vite DevTools client authorization, allowing any browser to connect
+   * without the interactive auth prompt.
+   *
+   * Forwards to Vite DevTools' `clientAuth: false`. Defaults to `true` in
+   * sandboxed environments (StackBlitz, CodeSandbox).
+   *
+   * @deprecated Prefer the Vite-native option: `vite: { devtools: { clientAuth: false } }`.
    */
   disableAuthorization?: boolean
 

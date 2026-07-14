@@ -1,11 +1,14 @@
-import type { DevToolsNodeContext } from '@vitejs/devtools-kit'
+import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { Nuxt } from 'nuxt/schema'
 
 import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { PendingHostCalls } from './connect-safe-hosts'
+import { registerHostDiagnostics } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
+import { createConnectSafeHosts, flushPendingHostCalls } from './connect-safe-hosts'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupNpmRPC } from './npm'
@@ -21,8 +24,13 @@ import { setupTimelineRPC } from './timeline'
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
   const extendedRpcMap = new Map<string, Record<string, (...args: any[]) => any>>()
-  let devtoolsKitCtx: DevToolsNodeContext | undefined
+  let devtoolsKitCtx: ViteDevToolsNodeContext | undefined
   const pendingBroadcasts: { method: string, args: any[] }[] = []
+  const pendingHostCalls: PendingHostCalls = []
+
+  // Connect-safe devframe host accessors: forward to `devtoolsKit.*` once
+  // connected, buffering mutating calls (replayed on connect) beforehand.
+  const hosts = createConnectSafeHosts(() => devtoolsKitCtx, pendingHostCalls)
 
   function broadcast(method: string, ...args: any[]) {
     if (!devtoolsKitCtx) {
@@ -107,6 +115,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     options,
     rpc: rpc as any,
     get devtoolsKit() { return devtoolsKitCtx },
+    docks: hosts.docks,
+    terminals: hosts.terminals,
+    messages: hosts.messages,
+    commands: hosts.commands,
+    diagnostics: hosts.diagnostics,
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
@@ -135,7 +148,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
    * Connect to Vite DevTools Kit context.
    * Called from the Vite DevTools plugin setup callback.
    */
-  function connectDevToolsKit(ctx: DevToolsNodeContext) {
+  function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
     /**
      * guarded to keep the first connection (client Vite), since Nuxt creates
      * two Vite instances and the second (server) one has 0 WebSocket clients.
@@ -143,14 +156,21 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
      */
     if (devtoolsKitCtx)
       return
-    devtoolsKitCtx = ctx
-    const host = ctx.rpc
+    devtoolsKitCtx = kitCtx
+    const host = kitCtx.rpc
 
     // Flush any broadcasts that were queued before connection
     for (const { method, args } of pendingBroadcasts) {
       broadcast(method, ...args)
     }
     pendingBroadcasts.length = 0
+
+    // Replay connect-safe host mutations buffered before connection.
+    flushPendingHostCalls(pendingHostCalls)
+
+    // Register the Nuxt deprecation codes into the DevTools diagnostics host so
+    // post-connect deprecations also surface in the DevTools UI.
+    registerHostDiagnostics(ctx)
 
     // Register all collected server functions
     for (const [name, handler] of Object.entries(serverFunctions)) {

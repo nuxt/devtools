@@ -4,6 +4,9 @@ import type { Result } from 'tinyexec'
 import type { ModuleCustomTab, NuxtDevtoolsInfo, NuxtDevtoolsServerContext, SubprocessOptions, TerminalState } from './types'
 import { useNuxt } from '@nuxt/kit'
 import { x } from 'tinyexec'
+import { deprecate } from './diagnostics'
+
+export * from './diagnostics'
 
 /**
  * Hooks to extend a custom tab in devtools.
@@ -123,7 +126,10 @@ export function startSubprocess(
   return {
     /** @deprecated Use `getResult()` instead */
     getProcess: () => {
-      console.warn('[nuxt-devtools] `getProcess()` is deprecated, use `getResult()` instead.')
+      deprecate(nuxt, 'NDT_DEP_0001', {
+        api: 'startSubprocess().getProcess()',
+        replacement: 'getResult()',
+      })
       return result.process
     },
     getResult: () => result,
