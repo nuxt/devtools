@@ -1,14 +1,10 @@
 <script setup lang="ts">
-// @nuxt/content — query the collection defined in content.config.ts, giving
-// the DevTools Content tab a real collection/DB to browse.
-const { data: home } = await useAsyncData(() => queryCollection('content').path('/').first())
-
 // nuxt-og-image — a zero-config default OG image is generated for every
 // route from useSeoMeta's title/description; the DevTools OG Image tab lets
 // you preview/edit the template for this route.
 useSeoMeta({
-  title: home.value?.title,
-  description: home.value?.description,
+  title: 'Ecosystem playground',
+  description: 'Dogfooding the Nuxt DevTools integrations of a few popular Nuxt modules.',
 })
 
 // @nuxt/scripts — load js-confetti via the useScriptNpm() registry script
@@ -44,22 +40,17 @@ function celebrate() {
 
 <template>
   <div class="playground">
-    <ContentRenderer v-if="home" :value="home" />
+    <h1>Ecosystem playground</h1>
+    <p>
+      This page's default OG image is served by <strong>nuxt-og-image</strong>,
+      so the DevTools OG Image tab has a real route to preview.
+    </p>
 
     <!-- @nuxt/fonts — a custom font-family used in CSS gets auto-detected
          and self-hosted; see assets/main.css. -->
     <p class="fonts-demo">
       This heading-ish line uses a custom self-hosted font (Space Grotesk).
     </p>
-
-    <!-- @nuxt/image — NuxtImg optimizes/serves the sample asset via ipx. -->
-    <NuxtImg
-      src="/sample.png"
-      width="480"
-      height="252"
-      format="webp"
-      alt="Sample image served through @nuxt/image"
-    />
 
     <button type="button" @click="celebrate">
       🎉 Celebrate (loads js-confetti via @nuxt/scripts)

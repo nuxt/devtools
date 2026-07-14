@@ -12,6 +12,13 @@ against the **local** `@nuxt/devtools` (this repo's `packages/devtools`, on
   authorizing the Vite DevTools connection (the 6-digit `devframe auth code`
   printed in the terminal) and navigating the embedded DevTools client.
 
+`@nuxt/content` and `@nuxt/image` were tried too, but **removed from the active
+playground** after this run showed neither registers a DevTools tab in the
+versions tested — there was nothing left to dogfood against. Their findings
+are kept below (["Modules removed after testing"](#modules-removed-after-testing))
+since they're the evidence for why they were dropped, and useful raw material
+for the upstream follow-ups in [Recommendations](#recommendations).
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |
@@ -19,29 +26,26 @@ against the **local** `@nuxt/devtools` (this repo's `packages/devtools`, on
 | `nuxt-og-image` | 6.7.2 | Custom tab (`custom-nuxt-seo-og-image`) | Works — lazy-installs a companion panel |
 | `@nuxt/scripts` | 1.3.1 | Custom tab (`custom-nuxt-scripts`) | Works |
 | `@nuxt/fonts` | 0.14.0 | Custom tab (`custom-fonts`) | Works |
-| `@nuxt/content` | 3.15.0 | **None found** | No DevTools integration in this major |
-| `@nuxt/image` | 2.0.0 | **None found** | No DevTools integration in this major |
 
-No console errors were caused by any of the five modules themselves. The only
+No console errors were caused by any of the three modules themselves. The only
 console noise was pre-existing / environmental (see [Other observations](#other-observations)).
 
 ### A UX trap during verification, worth flagging on its own
 
-None of the five modules' tabs are reachable from the SideNav's visible icon
+None of the three modules' tabs are reachable from the SideNav's visible icon
 strip. They only show up inside the **overflow "⋯" menu** at the bottom of the
 SideNav — alongside other already-hidden built-ins (`debug`, `hooks`,
 `server-discovery`, `virtual-files`, `custom-builtin-vscode`,
 `custom-nuxt-seo-site-config`). A first-time user has no visual cue that
-clicking "⋯" reveals five more tabs; this is exactly the kind of
-discoverability gap Plan 03 (dock groups / promote-tab-to-dock) is meant to
-fix. Recommend cross-referencing this report when implementing Plan 03.
+clicking "⋯" reveals more tabs; this is exactly the kind of discoverability
+gap Plan 03 (dock groups / promote-tab-to-dock) is meant to fix. Recommend
+cross-referencing this report when implementing Plan 03.
 
 ## Per-module findings
 
 ### `nuxt-og-image` 6.7.2 — works, lazy-installs its panel
 
-- Installed module is detected (`8 modules` → `nuxt-og-image`, ~102ms in the
-  Modules tab).
+- Installed module is detected (`nuxt-og-image`, ~102ms in the Modules tab).
 - Registers a real custom tab, `custom-nuxt-seo-og-image`, reachable via the
   SideNav overflow menu.
 - Opening it shows a **"Nuxt SEO DevTools"** placeholder: *"The panel needs
@@ -93,29 +97,37 @@ fix. Recommend cross-referencing this report when implementing Plan 03.
   the panel renders a live "Aa" preview of it.
 - No console errors.
 
+## Modules removed after testing
+
+Both of these were part of the playground during testing (see the git history
+of this file/`modules/` for the full setup that was removed) and are kept here
+purely as the evidence for dropping them — neither is installed in the
+playground anymore.
+
 ### `@nuxt/content` 3.15.0 — no DevTools integration found
 
-- Module loads correctly (content is queried and rendered on the page fine;
-  `55ms` load time in the Modules tab), but it registers **no** custom tab —
+- Module loaded correctly (content was queried and rendered on the page fine;
+  `55ms` load time in the Modules tab), but it registered **no** custom tab —
   confirmed by grepping the installed package for any DevTools hook:
   `grep -rl devtools node_modules/@nuxt/content/dist` returns nothing at all.
 - This contradicts this plan's original assumption ("Content DevTools tab
   (collections/DB viewer)") — that integration either predates this major
-  version or was removed. Nothing in this playground is broken; there's
-  simply no surface to dogfood against.
+  version or was removed. Nothing in the playground was broken; there was
+  simply no surface to dogfood against, so it was removed rather than kept as
+  dead weight.
 - **Follow-up**: worth an upstream question/issue to `nuxt/content` asking
   whether a DevTools tab is planned/deprecated for v3, rather than assuming
   our local devtools regressed something.
 
 ### `@nuxt/image` 2.0.0 — no DevTools integration found
 
-- Module loads correctly (`<1ms` in the Modules tab, `<NuxtImg>` serves/
-  resizes `public/sample.png` via `/_ipx/...` with no errors), but registers
+- Module loaded correctly (`<1ms` in the Modules tab, `<NuxtImg>` served/
+  resized a sample image via `/_ipx/...` with no errors), but registered
   **no** custom tab — same `grep -rl devtools node_modules/@nuxt/image/dist`
   returns nothing.
 - Same conclusion as `@nuxt/content`: this plan's assumption of an "Image
-  module DevTools surface" doesn't hold for `@nuxt/image` 2.0.0. Worth an
-  upstream question/issue to `nuxt/image`.
+  module DevTools surface" doesn't hold for `@nuxt/image` 2.0.0. Removed for
+  the same reason. Worth an upstream question/issue to `nuxt/image`.
 
 ## Other observations
 
@@ -131,12 +143,12 @@ fix. Recommend cross-referencing this report when implementing Plan 03.
 - **The Vite DevTools authorization flow works as designed.** First load
   shows an "Unauthorized" badge; clicking it prompts for the 6-digit
   `devframe auth code` printed in the terminal (or a magic link). Entering it
-  authorizes the session. This is unrelated to Nuxt or any of the five
+  authorizes the session. This is unrelated to Nuxt or any of the three
   modules — it's Vite DevTools 0.4's own security gate — but it's worth
   documented in this repo's own contributor docs since it surprises anyone
   dogfooding for the first time (see the runbook in `README.md`).
 - Two pre-existing Vue warnings appeared in the console, unrelated to any of
-  the five ecosystem modules: `onUnmounted is called when there is no active
+  the ecosystem modules: `onUnmounted is called when there is no active
   component instance...` (from a `SideNavItem`/`VTooltip` around the
   Terminals nav item) and a `[useAsyncData] Incompatible options detected for
   "npm:check:nuxt"` warning. Both come from the Nuxt DevTools **client** itself

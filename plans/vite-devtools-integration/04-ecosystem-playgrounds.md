@@ -4,11 +4,10 @@
 **Depends on:** nothing (but most useful once plans 00–03 are in progress, to
 verify real integrations).
 **Outcome:** a `playgrounds-ecosystem/` folder with one combined playground
-covering five popular Nuxt modules that ship (or were expected to ship) a
-Nuxt DevTools integration, wired to the **local** `@nuxt/devtools`, for
-verification + dogfooding — plus a **compatibility/migration report**
-(`playgrounds-ecosystem/REPORTS.md`) that later seeds an issue/PR to each
-module.
+covering three popular Nuxt modules that ship a Nuxt DevTools integration,
+wired to the **local** `@nuxt/devtools`, for verification + dogfooding — plus
+a **compatibility/migration report** (`playgrounds-ecosystem/REPORTS.md`)
+that later seeds an issue/PR to each module.
 
 > Self-contained: read this whole file.
 
@@ -22,35 +21,40 @@ is the dogfooding surface and the basis for helping the ecosystem migrate.
 
 ## Modules covered
 
-One combined playground, `playgrounds-ecosystem/modules/`, running all five
+One combined playground, `playgrounds-ecosystem/modules/`, running three
 together:
 
 - `nuxt-og-image` — OG Image DevTools tab
 - `@nuxt/scripts` — Scripts DevTools tab (first-party)
-- `@nuxt/content` — content collections/DB
 - `@nuxt/fonts` — Fonts module DevTools surface
-- `@nuxt/image` — image optimization
 
-Two modules originally considered were dropped before implementation (see
-"Decisions (locked)" below): `@nuxthub/core` (out of scope, per explicit
-direction) and `@nuxtjs/tailwindcss` (a real version conflict with
-`nuxt-og-image`'s optional Tailwind peer — see below).
+Four modules originally considered were dropped, two before implementation and
+two after actually testing them (see "Decisions (locked)" below):
+
+- `@nuxthub/core` — out of scope, per explicit direction.
+- `@nuxtjs/tailwindcss` — a real version conflict with `nuxt-og-image`'s
+  optional Tailwind peer, found before implementation.
+- `@nuxt/content` and `@nuxt/image` — tried, installed, and dogfooded, but
+  **removed after testing**: neither registers a DevTools tab in the versions
+  used here (`3.15.0` / `2.0.0`), so there was nothing to dogfood against. See
+  ["Modules removed after testing"](../../playgrounds-ecosystem/REPORTS.md#modules-removed-after-testing)
+  in `REPORTS.md` for the evidence — that's a real, reportable finding in its
+  own right, not a scaffolding failure, and worth an upstream question to each
+  module.
 
 **Reality check from actually running this (full findings in
-[`REPORTS.md`](../../playgrounds-ecosystem/REPORTS.md)):** of the five,
-`nuxt-og-image`, `@nuxt/scripts`, and `@nuxt/fonts` do register a working
-DevTools custom tab (tucked in the SideNav's overflow menu). `@nuxt/content`
-3.15.0 and `@nuxt/image` 2.0.0 currently register **no** DevTools tab at all —
-this plan's original assumption that every "popular module" still ships one
-doesn't hold for those two majors. That's a real, reportable finding in its
-own right, not a scaffolding failure.
+[`REPORTS.md`](../../playgrounds-ecosystem/REPORTS.md)):** all three of the
+modules that remain — `nuxt-og-image`, `@nuxt/scripts`, `@nuxt/fonts` — do
+register a working DevTools custom tab, but all three are tucked away in the
+SideNav's overflow menu rather than its visible icon strip — a discoverability
+gap worth feeding into Plan 03.
 
 ## Decisions (locked)
 
-These were decided in a grilling session that deviated from this plan's
-original shape (originally: one playground *per* module, 7 modules including
-`@nuxthub/core` and `@nuxtjs/tailwindcss`). What's below is what actually
-shipped:
+These were decided in a grilling session (and a follow-up trim) that deviated
+from this plan's original shape (originally: one playground *per* module, 7
+modules including `@nuxthub/core` and `@nuxtjs/tailwindcss`). What's below is
+what actually shipped:
 
 1. **One combined playground**, not one per module — `playgrounds-ecosystem/modules/`.
    Grouping keeps the review surface small; the modules chosen have no
@@ -67,7 +71,14 @@ shipped:
    satori). Rather than accept the unmet-peer tension, `@nuxtjs/tailwindcss`
    was dropped entirely, at the cost of losing the canonical "Tailwind Viewer"
    iframe-tab example from this playground.
-4. **Sealed opt-in workspace.** `playgrounds-ecosystem/modules/` has its
+4. **`@nuxt/content` and `@nuxt/image` dropped after testing** — both were
+   implemented, installed, and dogfooded first; the run showed neither
+   registers a Nuxt DevTools tab in the version tested (confirmed by grepping
+   their installed `dist/` for any devtools hook — zero matches). With
+   nothing to dogfood against, they were removed rather than kept as dead
+   weight in an "ecosystem DevTools" playground. Their findings stay in
+   `REPORTS.md` as the evidence.
+5. **Sealed opt-in workspace.** `playgrounds-ecosystem/modules/` has its
    **own** `pnpm-workspace.yaml` (`packages: - .`) and its own committed
    lockfile — same pattern this repo already uses for `docs/`. Confirmed by a
    sandbox test that *without* a workspace-root file of its own, `pnpm
@@ -76,9 +87,6 @@ shipped:
    **not** listed in the root `pnpm-workspace.yaml`'s `packages:` globs and is
    **not** part of `postinstall` (unlike `docs/`, which *is* auto-installed on
    `postinstall` — this is deliberately more opt-in than that).
-5. **`@nuxt/content` uses the native `node:sqlite` connector**
-   (`experimental.sqliteConnector: 'native'`), not `better-sqlite3` — avoids a
-   native build step entirely (Node ≥ 22.5 has it built in).
 6. **`@nuxt/scripts` demo uses `useScriptNpm` (`js-confetti`, `bundle: true`)**,
    not a registry analytics script — no third-party runtime network
    dependency (analytics CDNs), only a one-time build-time fetch from npm/unpkg
@@ -93,7 +101,7 @@ shipped:
    playground now).
 9. **An optional, `workflow_dispatch`-only GitHub Actions workflow**
    (`.github/workflows/ecosystem-playground.yml`) installs the workspace and
-   runs `nuxt build` as a manually-triggered "does the 5-module combo still
+   runs `nuxt build` as a manually-triggered "does the module combo still
    build" smoke check. It runs against the **published** `@nuxt/devtools`,
    deliberately — Nuxt DevTools no-ops entirely outside `dev` mode
    (`packages/devtools/src/module-main.ts`, bails when `!nuxt.options.dev`),
@@ -121,7 +129,7 @@ is never invoked automatically by the root install or `postinstall`.
 
 ### The playground app
 
-`playgrounds-ecosystem/modules/nuxt.config.ts` wires up all five modules plus
+`playgrounds-ecosystem/modules/nuxt.config.ts` wires up all three modules plus
 the local-vs-published devtools toggle, reusing the exact convention from
 `playgrounds/*`:
 
@@ -134,11 +142,9 @@ the same depth below the repo root as `playgrounds/<name>/` (two directories
 down either way), so no extra `../` was needed despite the longer-looking
 `playgrounds-ecosystem` segment name.
 
-One page (`pages/index.vue`) exercises all five: renders a `@nuxt/content`
-collection, applies a custom self-hosted font via `@nuxt/fonts`, serves an
-image through `<NuxtImg>` (`@nuxt/image`), loads `js-confetti` via
-`@nuxt/scripts`' `useScriptNpm`, and gets a zero-config OG image from
-`nuxt-og-image` via `useSeoMeta`.
+One page (`pages/index.vue`) exercises all three: applies a custom self-hosted
+font via `@nuxt/fonts`, loads `js-confetti` via `@nuxt/scripts`' `useScriptNpm`,
+and gets a zero-config OG image from `nuxt-og-image` via `useSeoMeta`.
 
 ### The compatibility report
 
@@ -148,8 +154,10 @@ written from an actual run: installed the workspace, started
 (`agent-browser`) through the Vite DevTools authorization flow (entering the
 `devframe auth code` printed in the terminal) and into the embedded DevTools
 client, and recorded exactly what rendered, what didn't, and why — including a
-concrete discoverability gap (all five modules' tabs are buried in the
-SideNav's overflow menu) worth feeding into Plan 03.
+concrete discoverability gap (all three modules' tabs are buried in the
+SideNav's overflow menu) worth feeding into Plan 03, and the evidence for
+dropping `@nuxt/content`/`@nuxt/image` after they were tested and found to
+have no DevTools tab at all.
 
 ### The dogfooding runbook
 
@@ -162,17 +170,17 @@ and produces a false "0 modules" reading).
 ## Acceptance criteria
 
 - [x] `playgrounds-ecosystem/modules/` exists, runnable with the local
-  `@nuxt/devtools`, with three of the five modules' DevTools integrations
-  visibly active (the other two have none to activate, per `REPORTS.md`).
+  `@nuxt/devtools`, with all three modules' DevTools integrations visibly
+  active.
 - [x] A normal `pnpm install` at the repo root is **unaffected** (the
   ecosystem workspace is opt-in, sealed off by its own
   `pnpm-workspace.yaml` + lockfile; main CI unchanged).
 - [x] A compatibility report exists with a clear, evidenced verdict per
-  module.
-- [x] Running the playground surfaced real, actionable findings (2 of 5
-  modules have no DevTools tab in their current major version; the working
-  three are only reachable via the SideNav overflow menu) — richer than the
-  original "deprecated API usage" framing, since Plan 00's nostics
+  module, including the two that were tried and dropped.
+- [x] Running the playground surfaced real, actionable findings (2 modules
+  dropped for having no DevTools tab in their current major version; the
+  remaining three are only reachable via the SideNav overflow menu) — richer
+  than the original "deprecated API usage" framing, since Plan 00's nostics
   deprecation diagnostics don't exist yet on `main` at the time of this run.
 
 ## Risks / gotchas
@@ -180,11 +188,10 @@ and produces a false "0 modules" reading).
 - **Dependency bloat / lockfile churn.** Mitigated: the ecosystem workspace's
   lockfile lives at `playgrounds-ecosystem/modules/pnpm-lock.yaml`, sealed off
   from the root by its own `pnpm-workspace.yaml` — confirmed by direct test
-  that this is required (see Decision 4 above).
-- **Module config specifics.** Handled per module (native sqlite connector for
-  content, `bundle: true` npm script for scripts, a self-hosted custom font
-  for fonts, a served/optimized sample image for image, zero-config OG image
-  for og-image).
+  that this is required (see Decision 5 above).
+- **Module config specifics.** Handled per module (`bundle: true` npm script
+  for scripts, a self-hosted custom font for fonts, zero-config OG image for
+  og-image).
 - **Version drift.** Each module is pinned via a direct caret range in
   `playgrounds-ecosystem/modules/package.json`; exact resolved versions are
   recorded at the top of `REPORTS.md`.
@@ -192,6 +199,11 @@ and produces a false "0 modules" reading).
   `@nuxtjs/tailwindcss` (Tailwind v3) vs. `nuxt-og-image`'s optional Tailwind
   v4 peer. Resolved by dropping `@nuxtjs/tailwindcss` rather than accepting an
   unmet-peer workaround.
+- **Missing DevTools integrations surfaced *after* implementation** —
+  `@nuxt/content` and `@nuxt/image` were built into the playground first, and
+  only removed once dogfooding showed neither has a tab to test. Don't assume
+  a module's own docs/marketing about a DevTools tab still holds for whatever
+  version you pin.
 - **Local-devtools resolution.** Verified: `'../../local'` resolves correctly
   from `playgrounds-ecosystem/modules/` (same depth as `playgrounds/<name>/`).
 - **Not a CI gate.** `.github/workflows/ecosystem-playground.yml` is

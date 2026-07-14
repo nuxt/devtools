@@ -1,15 +1,17 @@
 # Ecosystem dogfooding playground
 
-Dogfoods the Nuxt DevTools integrations of five popular Nuxt modules — all in
+Dogfoods the Nuxt DevTools integrations of three popular Nuxt modules — all in
 one combined app — against the **local** `@nuxt/devtools` (this repo's
 `packages/devtools`), for verification while working through
 [`plans/vite-devtools-integration/`](../plans/vite-devtools-integration/).
 
 Modules covered, in [`modules/`](./modules/): `nuxt-og-image`, `@nuxt/scripts`,
-`@nuxt/content`, `@nuxt/fonts`, `@nuxt/image`. See [`REPORTS.md`](./REPORTS.md)
-for what was actually found running each of them.
+`@nuxt/fonts`. See [`REPORTS.md`](./REPORTS.md) for what was actually found
+running each of them — including `@nuxt/content` and `@nuxt/image`, which
+were tried and then removed: neither registers a DevTools tab in the versions
+tested, so there was nothing to dogfood against.
 
-> Why one combined playground instead of one per module, and why only five of
+> Why one combined playground instead of one per module, and why only three of
 > the originally-considered seven modules? See the "locked decisions" note in
 > [`plans/vite-devtools-integration/04-ecosystem-playgrounds.md`](../plans/vite-devtools-integration/04-ecosystem-playgrounds.md#decisions-locked).
 
@@ -53,12 +55,11 @@ Click the Nuxt-logo entry to open the embedded Nuxt DevTools client. From
 there:
 
 - **Overview → `N modules`** lists every installed module with its setup
-  time — confirms all five ecosystem modules loaded.
-- Each module's own tab (when it has one) is **not** in the SideNav's visible
-  icon strip — check the **"⋯" overflow menu** at the bottom of the SideNav.
-  As of this report, that's where `nuxt-og-image`, `@nuxt/scripts`, and
-  `@nuxt/fonts`'s tabs live (`@nuxt/content` and `@nuxt/image` don't register
-  a tab at all in the versions pinned here — see `REPORTS.md`).
+  time — confirms all three ecosystem modules loaded.
+- Each module's own tab is **not** in the SideNav's visible icon strip — check
+  the **"⋯" overflow menu** at the bottom of the SideNav. As of this report,
+  that's where `nuxt-og-image`, `@nuxt/scripts`, and `@nuxt/fonts`'s tabs
+  live.
 
 Don't navigate directly to `http://localhost:3000/__nuxt_devtools__/client/`
 in a plain tab expecting the same result — that bypasses the RPC handshake the
