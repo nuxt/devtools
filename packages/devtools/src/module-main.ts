@@ -95,13 +95,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   addVitePlugin(defineViteDevToolsPlugin({
     name: 'nuxt:devtools',
     devtools: {
-      async setup(ctx: any) {
+      async setup(ctx) {
         ctx.docks.register({
           id: 'nuxt:devtools',
           type: 'iframe',
-          icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+          icon: '/__nuxt_devtools__/client/nuxt.svg',
           title: 'Nuxt DevTools',
           url: '/__nuxt_devtools__/client/',
+          defaultOrder: -2000,
         })
 
         // Connect Nuxt DevTools to Vite DevTools Kit context
