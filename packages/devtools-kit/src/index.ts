@@ -14,15 +14,15 @@ export * from './diagnostics'
  *
  * Provide a function to pass a factory that can be updated dynamically.
  *
- * @deprecated Register a dock entry on the Vite DevTools docks host instead:
- * `nuxt.devtools.docks.register(...)`. Still works as a shim, but emits the
- * `NDT_DEP_0005` deprecation diagnostic. Note the docks host does not yet cover
- * `vnode` views or tab categories.
+ * @deprecated Register a dock entry from the `devtools:ready` hook instead:
+ * `onDevtoolsReady((ctx) => ctx.docks.register(...))`. Still works as a shim, but
+ * emits the `NDT_DEP_0005` deprecation diagnostic. Note the docks host does not
+ * yet cover `vnode` views or tab categories.
  */
 export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Promise<ModuleCustomTab>), nuxt = useNuxt()) {
   deprecate(nuxt, 'NDT_DEP_0005', {
     api: 'addCustomTab',
-    replacement: 'nuxt.devtools.docks.register(...)',
+    replacement: 'onDevtoolsReady((ctx) => ctx.docks.register(...))',
   }, { key: typeof tab === 'function' ? undefined : tab.name })
 
   nuxt.hook('devtools:customTabs', async (tabs) => {
@@ -36,13 +36,13 @@ export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Pro
  * Retrigger update for custom tabs, `devtools:customTabs` will be called again.
  *
  * @deprecated Update dock entries directly via the handle returned by
- * `nuxt.devtools.docks.register(...)`. Still works as a shim, but emits the
- * `NDT_DEP_0006` deprecation diagnostic.
+ * `ctx.docks.register(...)` inside the `devtools:ready` hook. Still works as a
+ * shim, but emits the `NDT_DEP_0006` deprecation diagnostic.
  */
 export function refreshCustomTabs(nuxt = useNuxt()) {
   deprecate(nuxt, 'NDT_DEP_0006', {
     api: 'refreshCustomTabs',
-    replacement: 'nuxt.devtools.docks.register(...).update(...)',
+    replacement: 'onDevtoolsReady((ctx) => ctx.docks.register(...).update(...))',
   })
 
   return nuxt.callHook('devtools:customTabs:refresh')
@@ -60,9 +60,9 @@ export interface StartSubprocessReturn {
 /**
  * Create a subprocess that handled by the DevTools.
  *
- * @deprecated Use the Vite DevTools terminals host instead:
- * `nuxt.devtools.terminals.startChildProcess(...)`. Still works as a shim, but
- * emits the `NDT_DEP_0004` deprecation diagnostic.
+ * @deprecated Use the Vite DevTools terminals host from the `devtools:ready`
+ * hook instead: `onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))`.
+ * Still works as a shim, but emits the `NDT_DEP_0004` deprecation diagnostic.
  */
 export function startSubprocess(
   execaOptions: SubprocessOptions,
@@ -71,7 +71,7 @@ export function startSubprocess(
 ): StartSubprocessReturn {
   deprecate(nuxt, 'NDT_DEP_0004', {
     api: 'startSubprocess',
-    replacement: 'nuxt.devtools.terminals.startChildProcess(...)',
+    replacement: 'onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))',
   }, { key: tabOptions.id })
 
   return startSubprocessInternal(execaOptions, tabOptions, nuxt)
@@ -190,9 +190,9 @@ export function startSubprocessInternal(
  *
  * Returns an object with a `broadcast` proxy for calling client functions.
  *
- * @deprecated Use the Vite DevTools RPC registration instead:
- * `nuxt.devtools.rpc.register(defineRpcFunction(...))`. Still works as a shim,
- * but emits the `NDT_DEP_0003` deprecation diagnostic.
+ * @deprecated Register RPC functions from the `devtools:ready` hook instead:
+ * `onDevtoolsReady((ctx) => ctx.rpc.register(defineRpcFunction(...)))`. Still
+ * works as a shim, but emits the `NDT_DEP_0003` deprecation diagnostic.
  */
 export function extendServerRpc<ClientFunctions extends object = Record<string, unknown>, ServerFunctions extends object = Record<string, unknown>>(
   namespace: string,

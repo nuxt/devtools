@@ -2,13 +2,11 @@ import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { Nuxt } from 'nuxt/schema'
 
 import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import type { PendingHostCalls } from './connect-safe-hosts'
 import { deprecate, registerHostDiagnostics } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
-import { createConnectSafeHosts, createConnectSafeRpc, flushPendingHostCalls } from './connect-safe-hosts'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupNpmRPC } from './npm'
@@ -26,11 +24,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const extendedRpcMap = new Map<string, Record<string, (...args: any[]) => any>>()
   let devtoolsKitCtx: ViteDevToolsNodeContext | undefined
   const pendingBroadcasts: { method: string, args: any[] }[] = []
-  const pendingHostCalls: PendingHostCalls = []
-
-  // Connect-safe devframe host accessors: forward to `devtoolsKit.*` once
-  // connected, buffering mutating calls (replayed on connect) beforehand.
-  const hosts = createConnectSafeHosts(() => devtoolsKitCtx, pendingHostCalls)
 
   function broadcast(method: string, ...args: any[]) {
     if (!devtoolsKitCtx) {
@@ -81,21 +74,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     },
   })
 
-  // `nuxt.devtools.rpc` is the devframe RpcFunctionsHost, exposed connect-safe.
-  // The legacy broadcast proxy + `functions` map are kept as deprecated
-  // backcompat (NDT_DEP_0007).
-  const rpc = createConnectSafeRpc(() => devtoolsKitCtx?.rpc, pendingHostCalls, {
-    legacyBroadcast: createBroadcastProxy(),
-    legacyFunctions: functionsProxy,
-    onLegacyBroadcast: method => deprecate(nuxt, 'NDT_DEP_0007', {
-      api: `nuxt.devtools.rpc.broadcast.${method}`,
-      replacement: 'nuxt.devtools.rpc.broadcast({ method, args, event })',
-    }, { key: `broadcast:${method}` }),
-    onLegacyFunctions: () => deprecate(nuxt, 'NDT_DEP_0007', {
-      api: 'nuxt.devtools.rpc.functions',
-      replacement: 'nuxt.devtools.rpc.register(...) / nuxt.devtools.rpc.invokeLocal(...)',
-    }, { key: 'functions' }),
-  })
+  // Legacy `nuxt.devtools.rpc` compatibility surface. New integrations should
+  // use the connected `ctx.rpc` from the `devtools:ready` hook instead.
+  const rpc = {
+    broadcast: createBroadcastProxy(),
+    functions: functionsProxy,
+  }
 
   function refresh(event: keyof ServerFunctions) {
     broadcast('refresh', event)
@@ -104,7 +88,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   function extendServerRpc(namespace: string, functions: any): any {
     deprecate(nuxt, 'NDT_DEP_0003', {
       api: 'extendServerRpc',
-      replacement: 'nuxt.devtools.rpc.register(defineRpcFunction(...))',
+      replacement: 'onDevtoolsReady((ctx) => ctx.rpc.register(defineRpcFunction(...)))',
     }, { key: namespace })
 
     extendedRpcMap.set(namespace, functions)
@@ -131,11 +115,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     options,
     rpc,
     get devtoolsKit() { return devtoolsKitCtx },
-    docks: hosts.docks,
-    terminals: hosts.terminals,
-    messages: hosts.messages,
-    commands: hosts.commands,
-    diagnostics: hosts.diagnostics,
     refresh,
     extendServerRpc,
     openInEditorHooks: [],
@@ -180,9 +159,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       broadcast(method, ...args)
     }
     pendingBroadcasts.length = 0
-
-    // Replay connect-safe host mutations buffered before connection.
-    flushPendingHostCalls(pendingHostCalls)
 
     // Register the Nuxt deprecation codes into the DevTools diagnostics host so
     // post-connect deprecations also surface in the DevTools UI.

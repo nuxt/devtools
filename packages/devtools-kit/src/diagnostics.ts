@@ -44,28 +44,23 @@ export const diagnosticCodes = {
   },
   // NDT_DEP_0002 is retired (was `disableAuthorization`, now a supported
   // first-class option). The code is left unused so numbers stay stable.
-  /** `extendServerRpc` → `nuxt.devtools.rpc.register(defineRpcFunction(...))`. */
+  /** `extendServerRpc` → `onDevtoolsReady((ctx) => ctx.rpc.register(...))`. */
   NDT_DEP_0003: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
-  /** `startSubprocess` → `nuxt.devtools.terminals.startChildProcess(...)`. */
+  /** `startSubprocess` → `onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))`. */
   NDT_DEP_0004: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
-  /** `addCustomTab` → `nuxt.devtools.docks.register(...)`. */
+  /** `addCustomTab` → `onDevtoolsReady((ctx) => ctx.docks.register(...))`. */
   NDT_DEP_0005: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
-  /** `refreshCustomTabs` → `nuxt.devtools.docks.register(...).update(...)`. */
+  /** `refreshCustomTabs` → `onDevtoolsReady((ctx) => ctx.docks.register(...))`. */
   NDT_DEP_0006: {
-    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
-    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
-  },
-  /** Legacy `nuxt.devtools.rpc` compat (broadcast proxy / functions map). */
-  NDT_DEP_0007: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },

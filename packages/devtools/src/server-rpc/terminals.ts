@@ -24,7 +24,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
 
     terminal.buffer ||= ''
     terminal.buffer += data
-    rpc.broadcast({ method: 'onTerminalData', args: [{ id, data }], event: true } as any)
+    rpc.broadcast.onTerminalData.asEvent({ id, data })
     return true
   })
 
@@ -34,7 +34,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
       return false
 
     terminal.isTerminated = true
-    rpc.broadcast({ method: 'onTerminalExit', args: [{ id, code }], event: true } as any)
+    rpc.broadcast.onTerminalExit.asEvent({ id, code })
     refresh('getTerminals')
     return true
   })

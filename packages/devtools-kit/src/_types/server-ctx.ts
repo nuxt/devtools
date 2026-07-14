@@ -1,45 +1,27 @@
-import type {
-  DevToolsCommandsHost,
-  DevToolsDiagnosticsHost,
-  DevToolsDockHost,
-  DevToolsMessagesHost,
-  DevToolsNodeContext,
-  DevToolsTerminalHost,
-  RpcFunctionsHost,
-} from '@vitejs/devtools-kit'
+import type { DevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { BirpcGroup } from 'birpc'
 import type { Nuxt, NuxtDebugModuleMutationRecord } from 'nuxt/schema'
 import type { ModuleOptions } from './options'
 import type { ClientFunctions, ServerFunctions } from './rpc'
 
 /**
- * The Vite DevTools RPC host (devframe `RpcFunctionsHost`), exposed connect-safe
- * on `nuxt.devtools.rpc`: `register`/`update`/`has`/`get`/`list`/`invokeLocal`/
- * `broadcast`/`sharedState`/`streaming`/… forward to the kit once connected, and
- * mutating calls made before connect are buffered and replayed.
+ * Legacy Nuxt DevTools RPC compatibility surface exposed on `nuxt.devtools.rpc`.
  *
- * The two members below are overridden to keep the legacy Nuxt compatibility API
- * working (deprecated).
+ * For new integrations prefer {@link onDevtoolsReady}, where the connected
+ * `ViteDevToolsNodeContext` gives you the full devframe `ctx.rpc`
+ * (`register`/`invokeLocal`/`broadcast`/`sharedState`/…).
  */
-export interface NuxtDevtoolsRpc extends Omit<RpcFunctionsHost, 'broadcast' | 'functions'> {
+export interface NuxtDevtoolsRpc {
   /**
-   * Broadcast a message to connected clients.
-   *
-   * Native form (preferred): `rpc.broadcast({ method, args, event })`.
-   *
-   * For backward compatibility it is also a proxy supporting
-   * `rpc.broadcast.<method>.asEvent(...)`, but that form is **deprecated**
-   * (`NDT_DEP_0007`) — use the native call form instead.
+   * Broadcast proxy for calling client functions.
+   * Supports `rpc.broadcast.refresh.asEvent(event)` for backward compatibility.
    */
-  broadcast: RpcFunctionsHost['broadcast'] & {
+  broadcast: {
     [K in keyof ClientFunctions]: ClientFunctions[K] & { asEvent: ClientFunctions[K] }
   }
 
   /**
    * Proxy for reading/writing server functions locally.
-   *
-   * @deprecated Use `rpc.register(...)` to add functions and `rpc.invokeLocal(...)`
-   * to call them (`NDT_DEP_0007`).
    */
   functions: ServerFunctions
 }
@@ -56,57 +38,11 @@ export interface NuxtDevtoolsServerContext {
   /**
    * The Vite DevTools Kit context, available after connection.
    *
-   * Prefer the connect-safe host accessors below (`docks`, `terminals`,
-   * `messages`, `commands`, `diagnostics`) — this is the raw escape hatch and is
-   * `undefined` until the Vite DevTools plugin connects.
+   * This is the raw escape hatch and is `undefined` until the Vite DevTools
+   * plugin connects. Prefer {@link onDevtoolsReady}, which hands you the
+   * connected context.
    */
   devtoolsKit: DevToolsNodeContext | undefined
-
-  /**
-   * Connect-safe accessor for the Vite DevTools **docks** host.
-   *
-   * Forwards to `devtoolsKit.docks` once connected. Calls made before connect
-   * are buffered and replayed on connect; `register()` returns a lazy handle
-   * whose `update()` is applied once the real entry exists.
-   */
-  docks: DevToolsDockHost
-
-  /**
-   * Connect-safe accessor for the Vite DevTools **terminals** host.
-   *
-   * Forwards to `devtoolsKit.terminals` once connected. Pre-connect,
-   * `startChildProcess`/`startPtySession` return a promise resolving after
-   * connect and `register()` returns a lazy session handle.
-   */
-  terminals: DevToolsTerminalHost
-
-  /**
-   * Connect-safe accessor for the Vite DevTools **messages** host.
-   *
-   * Forwards to `devtoolsKit.messages` once connected. Pre-connect, `add()` and
-   * the level shortcuts return a promise resolving to the real handle after
-   * connect.
-   */
-  messages: DevToolsMessagesHost
-
-  /**
-   * Connect-safe accessor for the Vite DevTools **commands** host.
-   *
-   * Forwards to `devtoolsKit.commands` once connected. Pre-connect, `register()`
-   * returns a lazy handle and `execute()` returns a promise resolving after
-   * connect.
-   */
-  commands: DevToolsCommandsHost
-
-  /**
-   * Connect-safe accessor for the Vite DevTools **diagnostics** host.
-   *
-   * Forwards to `devtoolsKit.diagnostics` once connected. Pre-connect,
-   * `register()` and `logger` emissions are buffered, and `defineDiagnostics()`
-   * returns a standalone (terminal) catalog whose codes are also registered into
-   * the DevTools host on connect.
-   */
-  diagnostics: DevToolsDiagnosticsHost
 
   /**
    * Hook to open file in editor
