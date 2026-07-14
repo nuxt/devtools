@@ -41,7 +41,13 @@ overrides:
   semver: ^7.8.5
   typescript: ^6.0.3
   unimport: ^6.3.0
-  vite: ^8.1.4
+  # `@vitejs/devtools@0.4` has no Vite 8.1-compatible release yet (peer
+  # `vite: *`, still built against 8.0): under Vite 8.1's reworked
+  # WebSocket-upgrade handling, its crossws-based RPC socket ends up calling
+  # `server.handleUpgrade()` twice on the same SSR socket, killing the
+  # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
+  # `@vitejs/devtools` ships 8.1 support.
+  vite: ~8.0.14
   # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
   # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
   # SFC codegen errors from mixed compiler versions.
