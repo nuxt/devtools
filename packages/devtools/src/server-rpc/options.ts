@@ -1,5 +1,5 @@
 import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { defaultTabOptions } from '../constant'
+import { createDefaultTabOptions } from '../constant'
 import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils/local-options'
 
 let options: NuxtDevToolsOptions | undefined
@@ -12,20 +12,23 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
 
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
+    // `createDefaultTabOptions()` always returns a brand-new object graph, so
+    // this can never alias (or leak mutations back into) another instance's
+    // defaults the way sharing a single module-level constant used to.
     if (!options)
-      options = structuredClone(defaultTabOptions)
-    if (options[tab] === undefined || !hasReadOnce.has(tab))
+      options = createDefaultTabOptions()
+    if (!hasReadOnce.has(tab))
       await read(tab)
 
     return options[tab]
   }
 
   async function read<T extends keyof NuxtDevToolsOptions>(tab: T) {
-    // Pass the already-cloned `options![tab]` (not `defaultTabOptions[tab]`) as the
-    // defaults argument: `readLocalOptions` only shallow-copies its defaults, so
-    // sourcing from the shared constant here would leak its nested objects/arrays
-    // back into the cache and let later mutations corrupt `defaultTabOptions`.
-    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(options![tab], {
+    // Source defaults fresh from `createDefaultTabOptions()` rather than the
+    // cached `options![tab]`, so a dynamic default set after the cache was
+    // first created — e.g. `serverTasks.enabled` toggled by Nitro's `tasks`
+    // feature — is still honored the first time this tab is actually read.
+    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(createDefaultTabOptions()[tab], {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
