@@ -3,6 +3,7 @@ import type { ViteInspectOptions } from 'vite-plugin-inspect'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { onDevtoolsReady } from '@nuxt/devtools-kit'
 import { addVitePlugin, logger } from '@nuxt/kit'
+import { RPC_NAMESPACE } from '../rpc-namespace'
 
 const VERSION_QUERY_RE = /\?v=\w+$/
 const VUE_EXT_RE = /\.vue($|\?v=)/
@@ -33,7 +34,7 @@ export async function setup(ctx: NuxtDevtoolsServerContext) {
           : null
       ) || []
 
-      const components = await kit.rpc.invokeLocal('getComponents' as any) as Awaited<ReturnType<ServerFunctions['getComponents']>> || []
+      const components = await kit.rpc.invokeLocal(`${RPC_NAMESPACE}:getComponents` as any) as Awaited<ReturnType<ServerFunctions['getComponents']>> || []
       const vueModules = modules.filter((m: any) => {
         const plainId = m.id.replace(VERSION_QUERY_RE, '')
         if (components.some(c => c.filePath === plainId))
@@ -65,6 +66,8 @@ export async function setup(ctx: NuxtDevtoolsServerContext) {
       return graph
     }
 
-    kit.rpc.register({ name: 'getComponentsRelationships', handler: getComponentsRelationships } as any)
+    // Overwrite the `getComponentsRelationships` placeholder registered by
+    // `setupGeneralRPC` (hence `force`).
+    kit.rpc.register({ name: `${RPC_NAMESPACE}:getComponentsRelationships`, handler: getComponentsRelationships } as any, true)
   }, ctx.nuxt)
 }

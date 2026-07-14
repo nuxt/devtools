@@ -5,6 +5,7 @@ import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '
 import { deprecate, registerHostDiagnostics } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
+import { RPC_NAMESPACE } from '../rpc-namespace'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -175,41 +176,34 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     // post-connect deprecations also surface in the DevTools UI.
     registerHostDiagnostics(ctx)
 
-    // Register all collected server functions
-    for (const [name, handler] of Object.entries(serverFunctions)) {
-      if (typeof handler === 'function') {
-        try {
-          host.register({
-            name,
-            handler: handler as any,
-          })
-        }
-        catch (e) {
-          logger.warn(
-            colors.yellow(`[nuxt-devtools] Failed to register RPC function "${name}":\n`)
-            + colors.red((e as Error)?.message || ''),
-          )
-        }
+    function registerFn(name: string, handler: any) {
+      try {
+        host.register({ name, handler })
       }
+      catch (e) {
+        logger.warn(
+          colors.yellow(`[nuxt-devtools] Failed to register RPC function "${name}":\n`)
+          + colors.red((e as Error)?.message || ''),
+        )
+      }
+    }
+
+    // Register all collected server functions under the devframe-convention
+    // namespace (`nuxt:devtools:<name>`).
+    for (const [name, handler] of Object.entries(serverFunctions)) {
+      if (typeof handler !== 'function')
+        continue
+      registerFn(`${RPC_NAMESPACE}:${name}`, handler)
+      // TODO(@nuxt/devtools next major): drop these bare-name aliases, kept for
+      // backward compatibility with callers using the un-namespaced names.
+      registerFn(name, handler as any)
     }
 
     // Register extended (namespaced) functions
     for (const [namespace, fns] of extendedRpcMap) {
       for (const [fnName, handler] of Object.entries(fns)) {
-        if (typeof handler === 'function') {
-          try {
-            host.register({
-              name: `${namespace}:${fnName}`,
-              handler: handler as any,
-            })
-          }
-          catch (e) {
-            logger.warn(
-              colors.yellow(`[nuxt-devtools] Failed to register RPC function "${namespace}:${fnName}":\n`)
-              + colors.red((e as Error)?.message || ''),
-            )
-          }
-        }
+        if (typeof handler === 'function')
+          registerFn(`${namespace}:${fnName}`, handler)
       }
     }
 

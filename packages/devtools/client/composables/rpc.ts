@@ -3,6 +3,7 @@ import type { AsyncServerFunctions, ClientFunctions } from '../../src/types'
 import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, shallowRef } from 'vue'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 export const WS_DEBOUNCE_TIME = 2000
 export const wsConnectedOnce = ref(false)
@@ -26,7 +27,9 @@ export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {
     return async (...args: any[]) => {
       const client = rpcClient.value || await connectPromise
-      return client.call(method as any, ...args as any)
+      // Nuxt DevTools' server functions are registered under the devframe
+      // `nuxt:devtools:` namespace.
+      return client.call(`${RPC_NAMESPACE}:${method}` as any, ...args as any)
     }
   },
 })
