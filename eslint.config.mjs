@@ -6,8 +6,9 @@ export default antfu(
     formatters: true,
     unocss: true,
     pnpm: true,
-    ignore: [
+    ignores: [
       '**/.generated/**',
+      '**/plans/**/*.md',
     ],
   },
   {
