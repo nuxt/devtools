@@ -71,7 +71,11 @@ catalogs:
     unocss: ^66.7.5
     unplugin-vue: ^7.2.0
     unplugin-vue-markdown: ^32.0.0
-    vite: ^8.1.4
+    # Pin to Vite 8.0.x: Vite 8.1 changed WebSocket-upgrade handling and
+    # `@vitejs/devtools@0.4`'s route-bound WS double-registers `handleUpgrade`
+    # under SSR, breaking the DevTools client injection. Unpin once
+    # `@vitejs/devtools` ships a Vite 8.1-compatible release.
+    vite: ~8.0.14
   cli:
     '@antfu/eslint-config': ^9.1.0
     '@antfu/ni': ^30.2.0
