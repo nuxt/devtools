@@ -8,7 +8,7 @@ import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
-import { createConnectSafeHosts, flushPendingHostCalls } from './connect-safe-hosts'
+import { createConnectSafeHosts, createConnectSafeRpc, flushPendingHostCalls } from './connect-safe-hosts'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { setupNpmRPC } from './npm'
@@ -81,29 +81,21 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     },
   })
 
-  /**
-   * Connect-safe RPC registration — the forward path for the deprecated
-   * `extendServerRpc`. Forwards to the Vite DevTools kit's RPC host once
-   * connected, buffering (and replaying on connect) calls made beforehand.
-   */
-  function register(definition: any): any {
-    const apply = () => {
-      const name = definition?.name
-      if (name && devtoolsKitCtx!.rpc.has(name))
-        devtoolsKitCtx!.rpc.update(definition)
-      else
-        devtoolsKitCtx!.rpc.register(definition)
-    }
-    if (devtoolsKitCtx)
-      return apply()
-    pendingHostCalls.push(apply)
-  }
-
-  const rpc = {
-    broadcast: createBroadcastProxy(),
-    functions: functionsProxy,
-    register,
-  }
+  // `nuxt.devtools.rpc` is the devframe RpcFunctionsHost, exposed connect-safe.
+  // The legacy broadcast proxy + `functions` map are kept as deprecated
+  // backcompat (NDT_DEP_0007).
+  const rpc = createConnectSafeRpc(() => devtoolsKitCtx?.rpc, pendingHostCalls, {
+    legacyBroadcast: createBroadcastProxy(),
+    legacyFunctions: functionsProxy,
+    onLegacyBroadcast: method => deprecate(nuxt, 'NDT_DEP_0007', {
+      api: `nuxt.devtools.rpc.broadcast.${method}`,
+      replacement: 'nuxt.devtools.rpc.broadcast({ method, args, event })',
+    }, { key: `broadcast:${method}` }),
+    onLegacyFunctions: () => deprecate(nuxt, 'NDT_DEP_0007', {
+      api: 'nuxt.devtools.rpc.functions',
+      replacement: 'nuxt.devtools.rpc.register(...) / nuxt.devtools.rpc.invokeLocal(...)',
+    }, { key: 'functions' }),
+  })
 
   function refresh(event: keyof ServerFunctions) {
     broadcast('refresh', event)
@@ -137,7 +129,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const ctx: NuxtDevtoolsServerContext = {
     nuxt,
     options,
-    rpc: rpc as any,
+    rpc,
     get devtoolsKit() { return devtoolsKitCtx },
     docks: hosts.docks,
     terminals: hosts.terminals,

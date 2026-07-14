@@ -4,8 +4,10 @@ import type {
   DevToolsDockHost,
   DevToolsMessagesHost,
   DevToolsTerminalHost,
+  RpcFunctionsHost,
   ViteDevToolsNodeContext,
 } from '@vitejs/devtools-kit'
+import type { NuxtDevtoolsRpc } from '../types'
 import { defineStandaloneDiagnostics } from '@nuxt/devtools-kit'
 
 /**
@@ -295,6 +297,98 @@ export function createConnectSafeHosts(
   const diagnostics = createDiagnosticsProxy(() => getKit()?.diagnostics, queue)
 
   return { docks, terminals, messages, commands, diagnostics }
+}
+
+/**
+ * Legacy compatibility pieces + deprecation hooks for {@link createConnectSafeRpc}.
+ */
+export interface ConnectSafeRpcOptions {
+  /** The legacy broadcast proxy (`rpc.broadcast.<method>.asEvent(...)`). */
+  legacyBroadcast: any
+  /** The legacy server-functions proxy (`rpc.functions`). */
+  legacyFunctions: any
+  /** Emitted when the deprecated legacy broadcast proxy is accessed. */
+  onLegacyBroadcast: (method: string) => void
+  /** Emitted when the deprecated legacy `functions` proxy is accessed. */
+  onLegacyFunctions: () => void
+}
+
+/**
+ * Expose the devframe `RpcFunctionsHost` connect-safe on `nuxt.devtools.rpc`.
+ *
+ * Native members (`register`/`update`/`has`/`get`/`list`/`invokeLocal`/
+ * `sharedState`/`streaming`/…) forward to the kit once connected and buffer
+ * mutating calls beforehand. `broadcast` is a hybrid — callable natively
+ * (`broadcast({ method, args, event })`) and still usable as the deprecated
+ * `broadcast.<method>.asEvent(...)` proxy. `functions` stays the deprecated
+ * legacy proxy.
+ */
+export function createConnectSafeRpc(
+  getHost: () => RpcFunctionsHost | undefined,
+  queue: PendingHostCalls,
+  options: ConnectSafeRpcOptions,
+): NuxtDevtoolsRpc {
+  const native = createHostProxy<RpcFunctionsHost>(getHost, queue, {
+    maps: ['definitions'],
+    emitters: [],
+    async: ['invokeLocal', 'getHandler'],
+    handles: [],
+    reads: {
+      has: () => false,
+      list: () => [],
+      get: () => undefined,
+      getSchema: () => ({ args: undefined, returns: undefined }),
+      getCurrentRpcSession: () => undefined,
+    },
+    syncDefaults: {},
+  })
+
+  // Hybrid broadcast: native call form + deprecated legacy proxy access.
+  const broadcast = new Proxy(function () {} as any, {
+    apply(_target, _thisArg, args) {
+      const host = getHost()
+      if (host)
+        return host.broadcast(args[0])
+      const deferred = createDeferred<void>()
+      queue.push(() => {
+        try {
+          deferred.resolve(getHost()!.broadcast(args[0]))
+        }
+        catch (error) {
+          deferred.reject(error)
+        }
+      })
+      return deferred.promise
+    },
+    get(_target, prop) {
+      if (typeof prop === 'symbol' || prop in Function.prototype)
+        return (Function.prototype as any)[prop]
+      options.onLegacyBroadcast(String(prop))
+      return options.legacyBroadcast[prop]
+    },
+  })
+
+  // Deprecated legacy `functions` proxy.
+  const functions = new Proxy(options.legacyFunctions, {
+    get(target, prop, receiver) {
+      options.onLegacyFunctions()
+      return Reflect.get(target, prop, receiver)
+    },
+    set(target, prop, value, receiver) {
+      options.onLegacyFunctions()
+      return Reflect.set(target, prop, value, receiver)
+    },
+  })
+
+  return new Proxy(native as any, {
+    get(target, prop, receiver) {
+      if (prop === 'broadcast')
+        return broadcast
+      if (prop === 'functions')
+        return functions
+      return Reflect.get(target, prop, receiver)
+    },
+  }) as NuxtDevtoolsRpc
 }
 
 /**

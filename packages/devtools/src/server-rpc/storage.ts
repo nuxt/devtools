@@ -44,7 +44,7 @@ export function setupStorageRPC({
     await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
     unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
       watchStorageMount(activeStorage, mountName, (event, key) => {
-        rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
+        rpc.broadcast({ method: 'callHook', args: ['storage:key:update', key, event], event: true } as any)
       })))
   })
 

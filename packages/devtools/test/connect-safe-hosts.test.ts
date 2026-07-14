@@ -1,5 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createConnectSafeHosts, flushPendingHostCalls } from '../src/server-rpc/connect-safe-hosts'
+import { createConnectSafeHosts, createConnectSafeRpc, flushPendingHostCalls } from '../src/server-rpc/connect-safe-hosts'
+
+function rpcOptions(over: Partial<Parameters<typeof createConnectSafeRpc>[2]> = {}) {
+  return {
+    legacyBroadcast: {},
+    legacyFunctions: {},
+    onLegacyBroadcast: vi.fn(),
+    onLegacyFunctions: vi.fn(),
+    ...over,
+  }
+}
 
 describe('connect-safe hosts', () => {
   it('returns empty reads before connect', () => {
@@ -73,5 +83,58 @@ describe('connect-safe hosts', () => {
     // On connect the codes are registered into the real host too.
     expect(defineDiagnostics).toHaveBeenCalled()
     expect(register).toHaveBeenCalled()
+  })
+})
+
+describe('connect-safe rpc', () => {
+  it('forwards a native broadcast, buffering pre-connect', async () => {
+    let kit: any
+    const queue: (() => void)[] = []
+    const opts = rpcOptions()
+    const rpc = createConnectSafeRpc(() => kit?.rpc, queue, opts)
+
+    const promise = rpc.broadcast({ method: 'x', args: [1], event: true } as any)
+    expect(queue).toHaveLength(1)
+
+    const broadcast = vi.fn(async () => {})
+    kit = { rpc: { broadcast } }
+    flushPendingHostCalls(queue)
+    await promise
+
+    expect(broadcast).toHaveBeenCalledWith({ method: 'x', args: [1], event: true })
+    expect(opts.onLegacyBroadcast).not.toHaveBeenCalled()
+  })
+
+  it('warns and forwards when the legacy broadcast proxy is accessed', () => {
+    const legacyFn = vi.fn()
+    const opts = rpcOptions({ legacyBroadcast: { refresh: legacyFn } })
+    const rpc = createConnectSafeRpc(() => undefined, [], opts)
+
+    const fn = (rpc.broadcast as any).refresh
+    expect(opts.onLegacyBroadcast).toHaveBeenCalledWith('refresh')
+    expect(fn).toBe(legacyFn)
+  })
+
+  it('warns when the legacy functions proxy is accessed', () => {
+    const opts = rpcOptions({ legacyFunctions: { foo: 1 } })
+    const rpc = createConnectSafeRpc(() => undefined, [], opts)
+
+    // eslint-disable-next-line ts/no-unused-expressions
+    ;(rpc.functions as any).foo
+    expect(opts.onLegacyFunctions).toHaveBeenCalled()
+  })
+
+  it('buffers register and forwards it once connected', () => {
+    let kit: any
+    const queue: (() => void)[] = []
+    const rpc = createConnectSafeRpc(() => kit?.rpc, queue, rpcOptions())
+
+    rpc.register({ name: 'foo', handler: () => {} } as any)
+    expect(queue).toHaveLength(1)
+
+    const register = vi.fn()
+    kit = { rpc: { register } }
+    flushPendingHostCalls(queue)
+    expect(register).toHaveBeenCalledWith({ name: 'foo', handler: expect.any(Function) })
   })
 })

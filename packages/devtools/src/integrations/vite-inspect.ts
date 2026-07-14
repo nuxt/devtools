@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite'
 import type { ViteInspectOptions } from 'vite-plugin-inspect'
-import type { NuxtDevtoolsServerContext } from '../types'
+import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { addVitePlugin, logger } from '@nuxt/kit'
 
 const VERSION_QUERY_RE = /\?v=\w+$/
@@ -30,7 +30,7 @@ export async function setup({ rpc, devtoolsKit }: NuxtDevtoolsServerContext) {
         : null
     ) || []
 
-    const components = await rpc.functions.getComponents() || []
+    const components = await rpc.invokeLocal('getComponents' as any) as Awaited<ReturnType<ServerFunctions['getComponents']>> || []
     const vueModules = modules.filter((m: any) => {
       const plainId = m.id.replace(VERSION_QUERY_RE, '')
       if (components.some(c => c.filePath === plainId))
@@ -62,5 +62,5 @@ export async function setup({ rpc, devtoolsKit }: NuxtDevtoolsServerContext) {
     return graph
   }
 
-  rpc.functions.getComponentsRelationships = getComponentsRelationships
+  rpc.register({ name: 'getComponentsRelationships', handler: getComponentsRelationships } as any)
 }

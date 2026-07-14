@@ -13,32 +13,35 @@ import type { ModuleOptions } from './options'
 import type { ClientFunctions, ServerFunctions } from './rpc'
 
 /**
- * Compatibility RPC interface that supports broadcast and function access.
- * Backed by Vite DevTools Kit's RpcFunctionsHost internally.
+ * The Vite DevTools RPC host (devframe `RpcFunctionsHost`), exposed connect-safe
+ * on `nuxt.devtools.rpc`: `register`/`update`/`has`/`get`/`list`/`invokeLocal`/
+ * `broadcast`/`sharedState`/`streaming`/… forward to the kit once connected, and
+ * mutating calls made before connect are buffered and replayed.
+ *
+ * The two members below are overridden to keep the legacy Nuxt compatibility API
+ * working (deprecated).
  */
-export interface NuxtDevtoolsRpc {
+export interface NuxtDevtoolsRpc extends Omit<RpcFunctionsHost, 'broadcast' | 'functions'> {
   /**
-   * Broadcast proxy for calling client functions.
-   * Supports `rpc.broadcast.refresh.asEvent(event)` pattern for backward compatibility.
+   * Broadcast a message to connected clients.
+   *
+   * Native form (preferred): `rpc.broadcast({ method, args, event })`.
+   *
+   * For backward compatibility it is also a proxy supporting
+   * `rpc.broadcast.<method>.asEvent(...)`, but that form is **deprecated**
+   * (`NDT_DEP_0007`) — use the native call form instead.
    */
-  broadcast: {
+  broadcast: RpcFunctionsHost['broadcast'] & {
     [K in keyof ClientFunctions]: ClientFunctions[K] & { asEvent: ClientFunctions[K] }
   }
 
   /**
-   * Proxy for accessing server functions locally.
+   * Proxy for reading/writing server functions locally.
+   *
+   * @deprecated Use `rpc.register(...)` to add functions and `rpc.invokeLocal(...)`
+   * to call them (`NDT_DEP_0007`).
    */
   functions: ServerFunctions
-
-  /**
-   * Register a server RPC function on the Vite DevTools kit.
-   *
-   * This is the connect-safe forward path for the devframe-native RPC
-   * registration (`ctx.rpc.register(defineRpcFunction(...))`): calls made before
-   * the kit connects are buffered and replayed on connect. Prefer this over the
-   * deprecated {@link NuxtDevtoolsServerContext.extendServerRpc}.
-   */
-  register: RpcFunctionsHost['register']
 }
 
 /**

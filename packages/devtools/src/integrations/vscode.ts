@@ -56,7 +56,7 @@ export async function setup({ nuxt, options, openInEditorHooks, rpc }: NuxtDevto
       const { port } = JSON.parse(await fs.readFile(vscodeServerControllerFile, 'utf-8')) as any
       const url = `http://localhost:${port}/open?path=${encodeURIComponent(`${root}/${file}`)}`
       await fetch(url)
-      rpc.broadcast.navigateTo('/modules/custom-builtin-vscode')
+      rpc.broadcast({ method: 'navigateTo', args: ['/modules/custom-builtin-vscode'], event: true } as any)
       return true
     }
     catch (e) {
