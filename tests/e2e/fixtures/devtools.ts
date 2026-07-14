@@ -40,6 +40,24 @@ export const test = base.extend<DevToolsFixtures>({
 
   openDevTools: async ({ page }, use) => {
     await use(async () => {
+      // Wait for the Vite DevTools client context to be injected.
+      await page.waitForFunction(
+        () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.rpc),
+        null,
+        { timeout: 30_000 },
+      )
+      // devframe 0.6 only fetches the `devframe:docks` shared state once the
+      // client is marked trusted (via the `rpc:is-trusted:updated` event).
+      // `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH` trusts the *server* peer — so RPC
+      // calls are allowed — but never flips the *client-side* trust flag, so the
+      // dock list would otherwise stay empty forever. Nudge it here so the docks
+      // subscription kicks off. (Built/preview mode uses the static RPC backend,
+      // which is already trusted, so this is a harmless no-op there.)
+      await page.evaluate(() => {
+        const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+        if (ctx?.rpc && !ctx.rpc.isTrusted)
+          ctx.rpc.events?.emit?.('rpc:is-trusted:updated', true)
+      })
       await page.waitForFunction(
         () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.docks?.entries?.length),
         null,

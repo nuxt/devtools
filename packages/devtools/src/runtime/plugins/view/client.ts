@@ -277,6 +277,7 @@ export async function setupDevToolsClient({
 
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
+  bindVueDevToolsIframe()
 
   clientRef.value = client
 
@@ -285,6 +286,31 @@ export async function setupDevToolsClient({
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
+
+  // The Nuxt DevTools panel is rendered as an iframe **inside Vite DevTools'
+  // dock**, so we never create it ourselves (`getIframe()` above is legacy).
+  // The `@vue/devtools-kit` iframe messaging channel, however, only talks to
+  // whichever iframe was registered via `setIframeServerContext()` — without
+  // that the in-panel Vue DevTools applets (Pinia, component inspector, …) sit
+  // on "Connecting..." forever because the host backend never learns which
+  // iframe to answer. Point it at the dock iframe as soon as Vite DevTools
+  // mounts it (and keep it pointed there if the element is recreated).
+  function bindVueDevToolsIframe() {
+    let bound: HTMLIFrameElement | undefined
+    const bind = () => {
+      const ctx = getViteDevToolsContext()
+      const dockIframe = ctx?.docks?.getStateById?.('nuxt:devtools')?.domElements?.iframe as HTMLIFrameElement | null | undefined
+      if (!dockIframe || dockIframe === bound)
+        return
+      bound = dockIframe
+      iframe = dockIframe
+      // The channel reads `.contentWindow` lazily on every message, so binding
+      // the element once is enough even across in-iframe navigations/reloads.
+      setIframeServerContext(dockIframe)
+    }
+    bind()
+    setInterval(bind, 500)
+  }
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

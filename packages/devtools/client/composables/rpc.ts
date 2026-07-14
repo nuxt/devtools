@@ -37,15 +37,10 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
 
     rpcClient.value = client
 
-    // Register client functions so the server can call them
+    // Register client functions so the server can call them.
     for (const [name, handler] of Object.entries(clientFunctions)) {
-      if (typeof handler === 'function') {
-        client.client.register({
-          name,
-          type: 'event',
-          handler: handler as any,
-        })
-      }
+      if (typeof handler === 'function')
+        upsertClientFunction(client, name, handler)
     }
 
     // eslint-disable-next-line no-console
@@ -70,21 +65,22 @@ async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
 export async function registerClientFunctions() {
   const client = rpcClient.value || await connectPromise
   for (const [name, handler] of Object.entries(clientFunctions)) {
-    if (typeof handler === 'function') {
-      try {
-        client.client.update({
-          name,
-          type: 'event',
-          handler: handler as any,
-        })
-      }
-      catch {
-        client.client.register({
-          name,
-          type: 'event',
-          handler: handler as any,
-        })
-      }
-    }
+    if (typeof handler === 'function')
+      upsertClientFunction(client, name, handler)
   }
+}
+
+/**
+ * Register (or replace) a client-side event function on the devframe RPC host.
+ *
+ * devframe 0.6 split registration into `register()` (throws DF0021 if the name
+ * already exists) and `update()` (throws DF0022 if it does not), so pick the
+ * right one based on the current definitions to keep this an idempotent upsert.
+ */
+export function upsertClientFunction(client: DevToolsRpcClient, name: string, handler: (...args: any[]) => any) {
+  const definition = { name, type: 'event', handler } as const
+  if (client.client.definitions.has(name))
+    client.client.update(definition as any)
+  else
+    client.client.register(definition as any)
 }
