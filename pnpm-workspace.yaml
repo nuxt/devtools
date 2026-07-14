@@ -2,9 +2,9 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@vitejs/devtools-kit@0.4.0'
-  - '@vitejs/devtools-rolldown@0.4.0'
-  - '@vitejs/devtools@0.4.0'
+  - '@vitejs/devtools-kit@0.4.0 || 0.4.1'
+  - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1'
+  - '@vitejs/devtools@0.4.0 || 0.4.1'
   - vite-plugin-inspect@12.0.2
 resolutionMode: highest
 shamefullyHoist: true
@@ -67,7 +67,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.5
     '@unocss/preset-mini': ^66.7.5
     '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.0
+    '@vitejs/devtools': ^0.4.1
     '@vueuse/nuxt': ^14.3.0
     exsolve: ^1.1.0
     lightningcss: ^1.32.0
@@ -98,7 +98,7 @@ catalogs:
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.13.1
     taze: ^19.14.1
-    tsx: ^4.23.0
+    tsx: ^4.23.1
     typescript: ^6.0.3
     vitest: ^4.1.10
     vue-tsc: ^3.3.7
@@ -148,7 +148,7 @@ catalogs:
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.89
+    '@iconify-json/simple-icons': ^1.2.90
     '@iconify-json/tabler': ^1.2.35
   inlined:
     package-manager-detector: ^1.7.0
@@ -185,5 +185,5 @@ catalogs:
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.1.8
-    '@vitejs/devtools-kit': ^0.4.0
+    '@vitejs/devtools-kit': ^0.4.1
     unimport: ^6.3.0
