@@ -1,5 +1,5 @@
 import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { defaultTabOptions } from '../constant'
+import { createDefaultTabOptions } from '../constant'
 import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils/local-options'
 
 let options: NuxtDevToolsOptions | undefined
@@ -9,20 +9,30 @@ export function getOptions() {
 }
 
 export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
-  async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
-    if (!options || options[tab]) {
-      options = defaultTabOptions
-      await read(tab)
-    }
+  const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
 
-    return options![tab]
+  async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
+    // `createDefaultTabOptions()` always returns a brand-new object graph, so
+    // this can never alias (or leak mutations back into) another instance's
+    // defaults the way sharing a single module-level constant used to.
+    if (!options)
+      options = createDefaultTabOptions()
+    if (!hasReadOnce.has(tab))
+      await read(tab)
+
+    return options[tab]
   }
 
   async function read<T extends keyof NuxtDevToolsOptions>(tab: T) {
-    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(defaultTabOptions[tab], {
+    // Source defaults fresh from `createDefaultTabOptions()` rather than the
+    // cached `options![tab]`, so a dynamic default set after the cache was
+    // first created — e.g. `serverTasks.enabled` toggled by Nitro's `tasks`
+    // feature — is still honored the first time this tab is actually read.
+    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(createDefaultTabOptions()[tab], {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
+    hasReadOnce.add(tab)
     return options
   }
 

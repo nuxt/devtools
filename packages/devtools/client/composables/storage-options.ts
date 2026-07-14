@@ -2,7 +2,7 @@ import type { ToRefs } from 'vue'
 import type { NuxtDevToolsOptions } from '../../types'
 import { watchDebounced } from '@vueuse/core'
 import { reactive, toRefs } from 'vue'
-import { defaultTabOptions } from '../../src/constant'
+import { createDefaultTabOptions } from '../../src/constant'
 import { rpc } from './rpc'
 
 const cache = new Map<string, any>()
@@ -11,7 +11,7 @@ function getTabOptions<T extends keyof NuxtDevToolsOptions>(tab: T): ToRefs<Nuxt
   if (cache.has(tab)) {
     return cache.get(tab)
   }
-  const source = reactive({ ...defaultTabOptions[tab] }) as NuxtDevToolsOptions[T]
+  const source = reactive(createDefaultTabOptions()[tab]) as NuxtDevToolsOptions[T]
   const refs = toRefs(source)
   cache.set(tab, refs)
 

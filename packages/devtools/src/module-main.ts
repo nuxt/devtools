@@ -12,7 +12,7 @@ import { join } from 'pathe'
 import sirv from 'sirv'
 import { searchForWorkspaceRoot } from 'vite'
 import { version } from '../package.json'
-import { defaultTabOptions } from './constant'
+import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { clientDir, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { readLocalOptions } from './utils/local-options'
@@ -113,9 +113,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     filename: 'devtools/settings.mjs',
     async getContents() {
       const uiOptions = await readLocalOptions<NuxtDevToolsOptions['ui']>(
-        {
-          ...defaultTabOptions.ui,
-        },
+        createDefaultTabOptions().ui,
         { root: nuxt.options.rootDir },
       )
       return `export default ${JSON.stringify({
@@ -127,7 +125,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   nuxt.hook('nitro:config', (config) => {
     // Check user opted-in for tasks
     if (config.experimental?.tasks)
-      defaultTabOptions.serverTasks.enabled = true
+      setServerTasksEnabledByDefault(true)
 
     // Inject inline script
     config.externals = config.externals || {}

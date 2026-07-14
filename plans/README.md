@@ -18,7 +18,7 @@ when done.
 | 001 | Establish a Vitest unit-test baseline | P1 | S | — | DONE |
 | 002 | Add a root AGENTS.md | P2 | S | — | DONE |
 | 003 | Fix `uninstallNuxtModule` (removes wrong module → config data loss) | P1 | S | 001 | TODO |
-| 004 | Fix options RPC cache (inverted guard + shared-constant mutation) | P1 | S | 001 | TODO |
+| 004 | Fix options RPC cache (inverted guard + shared-constant mutation) | P1 | S | 001 | DONE |
 | 005 | Harden assets RPC (path containment + collision-filename bug) | P1 | S–M | 001 | TODO |
 | 006 | Enforce storage denylist on item access (not just listing) | P1 | S | 001 | TODO |
 | 007 | Fix fn-metric metadata + server-data `environments` bug | P2 | S | 001 | TODO |
