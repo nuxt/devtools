@@ -31,7 +31,7 @@ const codeBinaryOptions: Record<CodeServerType, CodeServerOptions> = {
 }
 
 export async function setup(ctx: NuxtDevtoolsServerContext) {
-  const { nuxt, options, openInEditorHooks, rpc } = ctx
+  const { nuxt, options, openInEditorHooks } = ctx
   const vsOptions = options?.vscode || {}
   const codeServer: CodeServerType = vsOptions?.codeServer || 'ms-code-server'
   const { codeBinary, launchArg, licenseTermsArg, connectionTokenArg } = codeBinaryOptions[codeServer]
@@ -56,7 +56,7 @@ export async function setup(ctx: NuxtDevtoolsServerContext) {
       const { port } = JSON.parse(await fs.readFile(vscodeServerControllerFile, 'utf-8')) as any
       const url = `http://localhost:${port}/open?path=${encodeURIComponent(`${root}/${file}`)}`
       await fetch(url)
-      rpc.broadcast.navigateTo('/modules/custom-builtin-vscode')
+      ctx.devtoolsKit?.rpc.broadcast({ method: 'navigateTo', args: ['/modules/custom-builtin-vscode'], event: true } as any)
       return true
     }
     catch (e) {

@@ -74,12 +74,23 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     },
   })
 
-  // Legacy `nuxt.devtools.rpc` compatibility surface. New integrations should
-  // use the connected `ctx.rpc` from the `devtools:ready` hook instead.
-  const rpc = {
+  // Legacy `nuxt.devtools.rpc` compatibility surface. Direct access to
+  // `broadcast` / `functions` is deprecated (NDT_DEP_0007) — new integrations
+  // should use the connected `ctx.rpc` from the `devtools:ready` hook instead.
+  const rpc = new Proxy({
     broadcast: createBroadcastProxy(),
     functions: functionsProxy,
-  }
+  }, {
+    get(target, prop, receiver) {
+      if (prop === 'broadcast' || prop === 'functions') {
+        deprecate(nuxt, 'NDT_DEP_0007', {
+          api: `nuxt.devtools.rpc.${prop}`,
+          replacement: 'the connected ctx.rpc from onDevtoolsReady((ctx) => ...)',
+        }, { key: prop })
+      }
+      return Reflect.get(target, prop, receiver)
+    },
+  })
 
   function refresh(event: keyof ServerFunctions) {
     broadcast('refresh', event)

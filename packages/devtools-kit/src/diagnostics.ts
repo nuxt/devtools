@@ -64,6 +64,11 @@ export const diagnosticCodes = {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
+  /** Direct `nuxt.devtools.rpc` access (`broadcast` / `functions`). */
+  NDT_DEP_0007: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
+  },
 } satisfies Record<string, DiagnosticDefinition<DeprecationParams>>
 
 export type NuxtDiagnosticCode = keyof typeof diagnosticCodes
