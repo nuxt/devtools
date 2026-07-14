@@ -6,8 +6,9 @@ export default antfu(
     formatters: true,
     unocss: true,
     pnpm: true,
-    ignore: [
+    ignores: [
       '**/.generated/**',
+      '**/plans/**/*.md',
     ],
   },
   {
@@ -26,9 +27,3 @@ export default antfu(
   .removeRules(
     'vue/no-multiple-template-root',
   )
-  // Planning/RFC docs — free-form Markdown with illustrative (non-runnable)
-  // code fences; not linted or formatted.
-  .append({
-    name: 'nuxt-devtools/plans-ignore',
-    ignores: ['plans/**'],
-  })

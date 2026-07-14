@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.0.0-alpha.7",
   "private": true,
-  "packageManager": "pnpm@11.4.0",
+  "packageManager": "pnpm@11.12.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -13,7 +13,8 @@
     "dev": "pnpm run build && pnpm -C packages/devtools dev",
     "lint": "eslint --cache .",
     "release": "pnpm test && bumpp -r --all",
-    "test": "pnpm lint",
+    "test": "pnpm lint && pnpm test:unit",
+    "test:unit": "vitest run",
     "test:e2e": "pnpm test:e2e:dev && pnpm test:e2e:built",
     "test:e2e:all": "pnpm test:e2e:prebuild && playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:dev": "PW_PROJECT='*:dev' playwright test --config tests/e2e/playwright.config.ts",
@@ -47,7 +48,8 @@
     "eslint-flat-config-utils": "catalog:cli",
     "eslint-plugin-antfu": "catalog:cli",
     "eslint-plugin-format": "catalog:cli",
-    "lint-staged": "catalog:cli",
+    "eslint-typegen": "catalog:cli",
+    "nano-staged": "catalog:cli",
     "nuxt": "catalog:buildtools",
     "nuxt-eslint-auto-explicit-import": "catalog:cli",
     "pathe": "catalog:frontend",
@@ -61,13 +63,14 @@
     "unimport": "catalog:types",
     "unocss": "catalog:buildtools",
     "vite-hot-client": "catalog:frontend",
+    "vitest": "catalog:cli",
     "vue": "catalog:frontend",
     "vue-tsc": "catalog:cli"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && lint-staged"
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm exec nano-staged"
   },
-  "lint-staged": {
+  "nano-staged": {
     "*": "eslint --fix"
   }
 }

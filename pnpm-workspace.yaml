@@ -2,33 +2,9 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@devframes/hub@0.6.0'
-  - '@devframes/plugin-inspect@0.6.0'
-  - '@devframes/plugin-messages@0.6.0'
-  - '@devframes/plugin-terminals@0.6.0'
-  - '@rolldown/debug@1.0.3'
   - '@vitejs/devtools-kit@0.4.0'
   - '@vitejs/devtools-rolldown@0.4.0'
   - '@vitejs/devtools@0.4.0'
-  - '@vue/compiler-core@3.5.39'
-  - '@vue/compiler-dom@3.5.39'
-  - '@vue/compiler-sfc@3.5.39'
-  - '@vue/compiler-ssr@3.5.39'
-  - '@vue/reactivity@3.5.39'
-  - '@vue/runtime-core@3.5.39'
-  - '@vue/runtime-dom@3.5.39'
-  - '@vue/server-renderer@3.5.39'
-  - '@vue/shared@3.5.39'
-  - devframe@0.6.0
-  - vue@3.5.39
-  - '@turbo/darwin-64@2.9.16'
-  - '@turbo/darwin-arm64@2.9.16'
-  - '@turbo/linux-64@2.9.16'
-  - '@turbo/linux-arm64@2.9.16'
-  - '@turbo/windows-64@2.9.16'
-  - '@turbo/windows-arm64@2.9.16'
-  - turbo@2.9.16
-  - vue-router@5.1.0
   - vite-plugin-inspect@12.0.2
 resolutionMode: highest
 shamefullyHoist: true
@@ -67,75 +43,76 @@ overrides:
   vue-tsc: catalog:cli
 catalogs:
   buildtools:
-    '@discoveryjs/cli': ^2.14.7
+    '@discoveryjs/cli': ^2.15.0
     '@discoveryjs/discovery': 1.0.0-beta.92
     '@nuxt/module-builder': ^1.0.2
     '@parcel/watcher': ^2.5.6
     '@pinia/nuxt': ^0.11.3
-    '@unocss/core': ^66.7.0
-    '@unocss/eslint-config': ^66.7.0
-    '@unocss/nuxt': ^66.7.0
-    '@unocss/preset-attributify': ^66.7.0
-    '@unocss/preset-icons': ^66.7.0
-    '@unocss/preset-mini': ^66.7.0
-    '@unocss/preset-uno': ^66.7.0
+    '@unocss/core': ^66.7.5
+    '@unocss/eslint-config': ^66.7.5
+    '@unocss/nuxt': ^66.7.5
+    '@unocss/preset-attributify': ^66.7.5
+    '@unocss/preset-icons': ^66.7.5
+    '@unocss/preset-mini': ^66.7.5
+    '@unocss/preset-uno': ^66.7.5
     '@vitejs/devtools': ^0.4.0
     '@vueuse/nuxt': ^14.3.0
     chokidar: ^5.0.0
-    esbuild: ^0.28.0
-    exsolve: ^1.0.8
+    esbuild: ^0.28.1
+    exsolve: ^1.1.0
     lightningcss: ^1.32.0
     nitropack: ^2.13.4
-    nuxt: ^4.4.6
-    rollup: ^4.60.4
-    shiki-codegen: ^4.1.0
-    skills-npm: ^1.1.1
-    turbo: ^2.9.16
+    nuxt: ^4.4.8
+    rollup: ^4.62.2
+    shiki-codegen: ^4.3.1
+    skills-npm: ^1.2.0
+    turbo: ^2.10.4
     unbuild: ^3.6.1
-    unocss: ^66.7.0
+    unocss: ^66.7.5
     unplugin-vue: ^7.2.0
     unplugin-vue-markdown: ^32.0.0
-    vite: ^8.0.14
+    vite: ^8.1.4
   cli:
-    '@antfu/eslint-config': ^9.0.0
-    '@antfu/ni': ^30.1.0
-    '@nuxt/eslint': ^1.15.2
+    '@antfu/eslint-config': ^9.1.0
+    '@antfu/ni': ^30.2.0
+    '@nuxt/eslint': ^1.16.0
     '@nuxt/test-utils': ^4.0.3
-    '@playwright/test': ^1.60.0
-    '@vitest/ui': ^4.1.7
+    '@playwright/test': ^1.61.1
+    '@vitest/ui': ^4.1.10
     bumpp: ^11.1.0
-    cypress: ^15.16.0
-    eslint: ^10.4.0
+    cypress: ^15.18.1
+    eslint: ^10.7.0
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.2.3
     eslint-plugin-format: ^2.0.1
-    lint-staged: ^17.0.5
+    eslint-typegen: ^2.3.1
+    nano-staged: ^1.0.2
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.13.1
     taze: ^19.14.1
-    tsx: ^4.22.3
+    tsx: ^4.23.0
     typescript: ^6.0.3
-    vitest: ^4.1.7
-    vue-tsc: ^3.3.2
+    vitest: ^4.1.10
+    vue-tsc: ^3.3.7
   frontend:
     '@antfu/utils': ^9.3.0
-    '@unocss/reset': ^66.7.0
-    '@unocss/runtime': ^66.7.0
-    '@vue/devtools-applet': ^8.1.2
-    '@vue/devtools-core': ^8.1.2
+    '@unocss/reset': ^66.7.5
+    '@unocss/runtime': ^66.7.5
+    '@vue/devtools-applet': ^8.1.5
+    '@vue/devtools-core': ^8.1.5
     '@vueuse/core': ^14.3.0
     '@vueuse/integrations': ^14.3.0
     '@xterm/addon-fit': ^0.11.0
     '@xterm/xterm': ^6.0.0
     birpc: ^4.0.0
-    cronstrue: ^3.14.0
-    error-stack-parser-es: ^1.0.5
+    cronstrue: ^3.24.0
+    error-stack-parser-es: ^2.0.1
     floating-vue: ^5.2.2
-    focus-trap: ^8.2.1
-    fuse.js: ^7.3.0
+    focus-trap: ^8.2.2
+    fuse.js: ^7.4.2
     hookable: ^6.1.1
     json-editor-vue: ^0.18.1
-    markdown-it: ^14.2.0
+    markdown-it: ^14.3.0
     markdown-it-link-attributes: ^4.0.1
     ofetch: ^1.5.1
     ohash: ^2.0.11
@@ -144,7 +121,7 @@ catalogs:
     pinia: ^3.0.4
     quicktype-core: 22.0.0
     scule: ^1.3.0
-    shiki: ^4.1.0
+    shiki: ^4.3.1
     splitpanes: ^4.1.2
     structured-clone-es: ^2.0.0
     theme-vitesse: ^1.0.0
@@ -159,46 +136,46 @@ catalogs:
     vue-virtual-scroller: ^3.0.4
   icons:
     '@iconify-json/bxl': ^1.2.4
-    '@iconify-json/carbon': ^1.2.22
+    '@iconify-json/carbon': ^1.2.24
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.84
+    '@iconify-json/simple-icons': ^1.2.89
     '@iconify-json/tabler': ^1.2.35
   inlined:
-    package-manager-detector: ^1.6.0
+    package-manager-detector: ^1.7.0
   playground:
     '@exampledev/new.css': ^1.1.3
   prod:
-    '@nuxt/kit': ^4.4.6
-    '@vue/devtools-kit': ^8.1.2
+    '@nuxt/kit': ^4.4.8
+    '@vue/devtools-kit': ^8.1.5
     consola: ^3.4.2
     defu: ^6.1.7
     destr: ^2.0.5
-    fast-npm-meta: ^2.0.0
+    fast-npm-meta: ^2.1.0
     get-port-please: ^3.2.0
     image-meta: ^0.2.2
-    launch-editor: ^2.13.2
+    launch-editor: ^2.14.1
     local-pkg: ^1.2.1
     magicast: ^0.5.3
     pkg-types: ^2.3.1
-    semver: ^7.8.1
+    semver: ^7.8.5
     sirv: ^3.0.2
-    tinyexec: ^1.2.2
-    tinyglobby: ^0.2.16
+    tinyexec: ^1.2.4
+    tinyglobby: ^0.2.17
     unstorage: ^1.17.5
     vite-plugin-inspect: ^12.0.2
     vite-plugin-vue-tracer: ^1.4.0
     which: ^7.0.0
     ws: ^8.21.0
   types:
-    '@nuxt/schema': ^4.4.6
+    '@nuxt/schema': ^4.4.8
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^25.9.1
+    '@types/node': ^26.1.1
     '@types/semver': ^7.7.1
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
-    '@unhead/schema': ^3.1.1
+    '@unhead/schema': ^3.1.8
     '@vitejs/devtools-kit': ^0.4.0
     unimport: ^6.3.0
