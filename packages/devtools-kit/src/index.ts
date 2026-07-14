@@ -160,7 +160,7 @@ export function startSubprocess(
       deprecate(nuxt, 'NDT_DEP_0001', {
         api: 'startSubprocess().getProcess()',
         replacement: 'getResult()',
-      })
+      }, { key: id })
       return result.process
     },
     getResult: () => result,
