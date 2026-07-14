@@ -10,6 +10,22 @@ import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
 import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 
+let warnedExtendClientRpc = false
+/**
+ * @deprecated `extendClientRpc` is deprecated. Register client RPC functions on
+ * the devframe client context instead, via `getDevToolsRpcClient()` /
+ * `getDevToolsClientContext()` from `@vitejs/devtools-kit/client`.
+ */
+function warnExtendClientRpcDeprecated() {
+  if (warnedExtendClientRpc)
+    return
+  warnedExtendClientRpc = true
+  console.warn(
+    '[nuxt-devtools] `extendClientRpc` is deprecated. Register client RPC functions on the '
+    + 'devframe client context instead (`getDevToolsRpcClient()` from `@vitejs/devtools-kit/client`).',
+  )
+}
+
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
@@ -60,9 +76,11 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
         return renderMarkdown(code)
       },
       extendClientRpc(namespace, functions) {
+        warnExtendClientRpcDeprecated()
         const register = (client: DevToolsRpcClient) => {
           for (const [name, handler] of Object.entries(functions)) {
             if (typeof handler === 'function')
+              // force-registers (override by default) via upsertClientFunction
               upsertClientFunction(client, `${namespace}:${name}`, handler as any)
           }
         }

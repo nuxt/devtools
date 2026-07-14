@@ -77,13 +77,12 @@ export async function registerClientFunctions() {
  * Register (or replace) a client-side event function on the devframe RPC host.
  *
  * devframe 0.6 split registration into `register()` (throws DF0021 if the name
- * already exists) and `update()` (throws DF0022 if it does not), so pick the
- * right one based on the current definitions to keep this an idempotent upsert.
+ * already exists) and `update()` (throws DF0022 if it does not). We always
+ * force-register so this stays an idempotent override regardless of the current
+ * state — the client re-runs registration on (re)connect and integrations may
+ * override a function, so neither error should ever surface.
  */
 export function upsertClientFunction(client: DevToolsRpcClient, name: string, handler: (...args: any[]) => any) {
   const definition = { name, type: 'event', handler } as const
-  if (client.client.definitions.has(name))
-    client.client.update(definition as any)
-  else
-    client.client.register(definition as any)
+  ;(client.client.register as (fn: any, force?: boolean) => void)(definition, true)
 }

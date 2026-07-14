@@ -118,6 +118,11 @@ export interface NuxtDevtoolsClient {
   renderMarkdown: (markdown: string) => string
   colorMode: string
 
+  /**
+   * @deprecated Register client RPC functions on the devframe client context
+   * instead, via `getDevToolsRpcClient()` / `getDevToolsClientContext()` from
+   * `@vitejs/devtools-kit/client`.
+   */
   extendClientRpc: <ServerFunctions extends object = Record<string, unknown>, ClientFunctions extends object = Record<string, unknown>>(name: string, functions: ClientFunctions) => ServerFunctions
 }
 
