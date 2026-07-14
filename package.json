@@ -13,7 +13,8 @@
     "dev": "pnpm run build && pnpm -C packages/devtools dev",
     "lint": "eslint --cache .",
     "release": "pnpm test && bumpp -r --all",
-    "test": "pnpm lint",
+    "test": "pnpm lint && pnpm test:unit",
+    "test:unit": "vitest run",
     "test:e2e": "pnpm test:e2e:dev && pnpm test:e2e:built",
     "test:e2e:all": "pnpm test:e2e:prebuild && playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:dev": "PW_PROJECT='*:dev' playwright test --config tests/e2e/playwright.config.ts",
@@ -62,6 +63,7 @@
     "unimport": "catalog:types",
     "unocss": "catalog:buildtools",
     "vite-hot-client": "catalog:frontend",
+    "vitest": "catalog:cli",
     "vue": "catalog:frontend",
     "vue-tsc": "catalog:cli"
   },

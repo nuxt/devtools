@@ -495,6 +495,9 @@ importers:
       vite-hot-client:
         specifier: catalog:frontend
         version: 2.2.0(vite@8.1.4(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.0)(yaml@2.9.0))
+      vitest:
+        specifier: catalog:cli
+        version: 4.1.10(@types/node@26.1.1)(@vitest/ui@4.1.10)(vite@8.1.4)
       vue:
         specifier: ^3.5.39
         version: 3.5.39(typescript@6.0.3)
