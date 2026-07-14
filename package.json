@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.0.0-alpha.7",
   "private": true,
-  "packageManager": "pnpm@11.4.0",
+  "packageManager": "pnpm@11.12.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -47,7 +47,8 @@
     "eslint-flat-config-utils": "catalog:cli",
     "eslint-plugin-antfu": "catalog:cli",
     "eslint-plugin-format": "catalog:cli",
-    "lint-staged": "catalog:cli",
+    "eslint-typegen": "catalog:cli",
+    "nano-staged": "catalog:cli",
     "nuxt": "catalog:buildtools",
     "nuxt-eslint-auto-explicit-import": "catalog:cli",
     "pathe": "catalog:frontend",
@@ -65,9 +66,9 @@
     "vue-tsc": "catalog:cli"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && lint-staged"
+    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm exec nano-staged"
   },
-  "lint-staged": {
+  "nano-staged": {
     "*": "eslint --fix"
   }
 }
