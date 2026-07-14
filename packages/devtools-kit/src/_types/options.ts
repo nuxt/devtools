@@ -44,13 +44,14 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
-   * Disable Vite DevTools client authorization, allowing any browser to connect
-   * without the interactive auth prompt.
+   * Disable the DevTools client authorization prompt, allowing any browser to
+   * connect without approving it first.
    *
-   * Forwards to Vite DevTools' `clientAuth: false`. Defaults to `true` in
-   * sandboxed environments (StackBlitz, CodeSandbox).
+   * Defaults to `true` in sandboxed environments (StackBlitz, CodeSandbox).
    *
-   * @deprecated Prefer the Vite-native option: `vite: { devtools: { clientAuth: false } }`.
+   * Note: disabling authorization lets any browser (including other devices, if
+   * you expose the dev server to your LAN/WAN) connect to DevTools and access
+   * your server and filesystem. Only disable it in trusted environments.
    */
   disableAuthorization?: boolean
 

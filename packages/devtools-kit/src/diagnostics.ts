@@ -42,11 +42,8 @@ export const diagnosticCodes = {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
-  /** `disableAuthorization` module option → `vite: { devtools: { clientAuth: false } }`. */
-  NDT_DEP_0002: {
-    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
-    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
-  },
+  // NDT_DEP_0002 is retired (was `disableAuthorization`, now a supported
+  // first-class option). The code is left unused so numbers stay stable.
   /** `extendServerRpc` → `nuxt.devtools.rpc.register(defineRpcFunction(...))`. */
   NDT_DEP_0003: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,

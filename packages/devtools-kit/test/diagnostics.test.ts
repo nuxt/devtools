@@ -24,7 +24,6 @@ describe('diagnosticCodes', () => {
   it('defines the deprecation codes', () => {
     expect(Object.keys(diagnosticCodes)).toEqual([
       'NDT_DEP_0001',
-      'NDT_DEP_0002',
       'NDT_DEP_0003',
       'NDT_DEP_0004',
       'NDT_DEP_0005',
@@ -54,7 +53,7 @@ describe('deprecate', () => {
 
     const diagnostic = deprecate(
       fakeNuxt(),
-      'NDT_DEP_0002',
+      'NDT_DEP_0003',
       { api: 'x', replacement: 'y' },
       { method: 'error' },
     )
@@ -87,7 +86,7 @@ describe('deprecate', () => {
   it('routes through the host catalog once the kit has connected', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const handle = vi.fn()
-    const hostCatalog = { NDT_DEP_0001: handle, NDT_DEP_0002: vi.fn() }
+    const hostCatalog = { NDT_DEP_0001: handle, NDT_DEP_0003: vi.fn() }
     const register = vi.fn()
     const defineDiagnostics = vi.fn(() => hostCatalog)
     const ctx = {
