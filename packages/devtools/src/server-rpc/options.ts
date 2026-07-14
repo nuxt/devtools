@@ -21,7 +21,11 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   }
 
   async function read<T extends keyof NuxtDevToolsOptions>(tab: T) {
-    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(defaultTabOptions[tab], {
+    // Pass the already-cloned `options![tab]` (not `defaultTabOptions[tab]`) as the
+    // defaults argument: `readLocalOptions` only shallow-copies its defaults, so
+    // sourcing from the shared constant here would leak its nested objects/arrays
+    // back into the cache and let later mutations corrupt `defaultTabOptions`.
+    options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(options![tab], {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
