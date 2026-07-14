@@ -1,7 +1,4 @@
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
-import { provider } from 'std-env'
-
-const isSandboxed = provider === 'stackblitz' || provider === 'codesandbox'
 
 export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
@@ -13,7 +10,6 @@ export const defaultOptions: ModuleOptions = {
     port: 3080,
     reuseExistingServer: true,
   },
-  disableAuthorization: isSandboxed,
 }
 
 export const defaultTabOptions: NuxtDevToolsOptions = {
