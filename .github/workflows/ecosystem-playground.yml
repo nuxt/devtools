@@ -1,0 +1,31 @@
+name: ecosystem-playground
+
+# Manual-trigger only smoke check for playgrounds-ecosystem/modules/ — NOT
+# part of the default push/pull_request CI path. See
+# playgrounds-ecosystem/README.md and
+# plans/vite-devtools-integration/04-ecosystem-playgrounds.md for context.
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      # This is its own sealed pnpm workspace (see
+      # playgrounds-ecosystem/modules/pnpm-workspace.yaml) — no root install
+      # needed. Builds against the *published* @nuxt/devtools (NUXT_DEVTOOLS_LOCAL
+      # unset): Nuxt DevTools no-ops entirely outside `dev` mode
+      # (packages/devtools/src/module-main.ts), so a `build` against the
+      # local workspace copy wouldn't exercise anything devtools-specific
+      # anyway — this is purely a "does the 5-module combo still build" signal.
+      - run: pnpm -C playgrounds-ecosystem/modules install
+      - name: Build the 5-module combo
+        run: pnpm -C playgrounds-ecosystem/modules run build

@@ -50,7 +50,7 @@ gradual long-term move to devframe-native APIs. Concretely:
 | 01 | [`01-messages-unification.md`](./01-messages-unification.md) | Route all notifications through the devframe Messages system (`messages` host + built-in Messages dock); retire the bespoke toast. | Low | 00 |
 | 02 | [`02-terminals-reuse.md`](./02-terminals-reuse.md) | Retire Nuxt's `@xterm` terminals; surface sessions in the built-in Terminals dock via the `terminals` host; keep a compat shim for the `devtools:terminal:register` hook. | Medium | 00 |
 | 03 | [`03-dock-groups-presentation.md`](./03-dock-groups-presentation.md) | Introduce a **"Nuxt" dock group** and a general **promote‑tab‑to‑dock** capability; relocate a curated set of tools onto the dock bar. | High (UX) | 00 |
-| 04 | [`04-ecosystem-playgrounds.md`](./04-ecosystem-playgrounds.md) | `playgrounds-ecosystem/` per popular module (og-image/SEO, scripts, content, tailwindcss, nuxthub, fonts, image) linked to local devtools; opt-in install; per-module compat report. | Low | cross-cutting (verifies 00–03) |
+| 04 | [`04-ecosystem-playgrounds.md`](./04-ecosystem-playgrounds.md) | `playgrounds-ecosystem/modules/` — one combined playground (og-image, scripts, content, fonts, image) linked to local devtools; opt-in install; compat report. **Implemented** — see `playgrounds-ecosystem/REPORTS.md`. | Low | cross-cutting (verifies 00–03) |
 
 Recommended order: **00 → 01 → 02 → 03**, with **04** running alongside as the
 dogfooding/verification surface. Each is technically buildable/reviewable as a
@@ -156,12 +156,21 @@ Foundation (plan 00):
   only where a faithful shim is infeasible** (error-level diagnostic naming the
   replacement).
 
-Ecosystem (plan 04):
-- **One playground per module** under `playgrounds-ecosystem/`, linked to the
-  **local** `@nuxt/devtools`; initial set: og-image/SEO, scripts, content,
-  tailwindcss, nuxthub, fonts, image.
-- **Opt-in install / out of main CI** (avoid dep bloat + flake).
-- **Per-module compatibility report** that later seeds an upstream issue/PR.
+Ecosystem (plan 04) — **implemented**, see `playgrounds-ecosystem/REPORTS.md`:
+- **One combined playground** (`playgrounds-ecosystem/modules/`), not one per
+  module, linked to the **local** `@nuxt/devtools`; final set: og-image,
+  scripts, content, fonts, image (`nuxthub` dropped as out of scope;
+  `tailwindcss` dropped after a real version conflict surfaced — see the plan
+  file's "Decisions (locked)").
+- **Opt-in install / out of main CI**: its own sealed `pnpm-workspace.yaml` +
+  lockfile, not in the root `packages:` globs, not run on `postinstall`; an
+  optional `workflow_dispatch`-only GH Actions workflow exists for on-demand
+  smoke checks.
+- **Compatibility report** (`playgrounds-ecosystem/REPORTS.md`) written from
+  an actual dogfooding run: 3 of 5 modules have a working DevTools tab (all
+  buried in the SideNav overflow menu — a discoverability gap worth feeding
+  into this same plan 03), 2 of 5 (`@nuxt/content`, `@nuxt/image`) currently
+  ship no DevTools tab at all in the versions tested.
 
 Presentation (plan 03):
 - **Curated hybrid "Nuxt" dock group**: the hub iframe stays the primary member;
