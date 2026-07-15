@@ -20,11 +20,21 @@ tested, so there was nothing to dogfood against.
 This directory is **not** in the root `pnpm-workspace.yaml` `packages:` list,
 and `modules/` has its **own** `pnpm-workspace.yaml` + lockfile, sealed off
 from the root one. A plain `pnpm install` at the repo root never touches this
-directory. Install it explicitly when you want to dogfood:
+directory.
+
+`@nuxt/devtools` in `modules/package.json` is a
+`link:../../packages/devtools` dependency — **this repo's own build, never
+the npm registry** — so before installing this workspace, make sure the root
+one is installed and at least stubbed:
 
 ```sh
+pnpm install        # repo root, if you haven't already
+pnpm run prepare     # stubs packages/devtools/dist (fast; enough to resolve)
 pnpm -C playgrounds-ecosystem/modules install
 ```
+
+(Use `pnpm run build` instead of `prepare` if you want the real static
+DevTools client — see below.)
 
 ## Running it against the local devtools
 
@@ -35,8 +45,14 @@ NUXT_DEVTOOLS_LOCAL=true pnpm run dev
 
 (`dev` already binds to `0.0.0.0` — see `package.json`.)
 
-(Omit `NUXT_DEVTOOLS_LOCAL` to run against the published `@nuxt/devtools`
-instead, for an A/B comparison.)
+Omitting `NUXT_DEVTOOLS_LOCAL` still uses this repo's own `@nuxt/devtools`
+(via the `link:` dependency above), just without the special
+HMR-client-over-a-subprocess wrapper `../../local` provides — it serves
+whatever's currently built at `packages/devtools/dist/client`. If that's only
+a stub (`pnpm run prepare`), there's no client to serve and DevTools won't
+render; run `pnpm run build` at the repo root first to get the real static
+client, then this path shows the same UI without the dev-mode HMR overhead —
+useful for an A/B comparison against the `NUXT_DEVTOOLS_LOCAL=true` path.
 
 ## Opening DevTools and authorizing it
 
@@ -75,8 +91,11 @@ material for upstream issues/PRs to each module.
 ## Automated smoke check (optional, manual trigger only)
 
 `.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only — it
-installs this workspace and runs `nuxt build` (against the *published*
-`@nuxt/devtools` — DevTools no-ops outside `dev` mode, so build-mode can't
-exercise the local-devtools path anyway) as a cheap "did the module combo
-break" signal. It is **not** part of the default CI path; trigger it manually
-from the Actions tab when you want a sanity check without dogfooding by hand.
+installs the root workspace, stubs `packages/devtools` (`pnpm run prepare`),
+installs this workspace, and runs `nuxt build` as a cheap "did the module
+combo break" signal. It deliberately doesn't run the full `pnpm build` or set
+`NUXT_DEVTOOLS_LOCAL` — DevTools no-ops outside `dev` mode, so build-mode
+can't exercise anything devtools-specific anyway, and the cheap stub is
+enough for the module to resolve. It is **not** part of the default CI path;
+trigger it manually from the Actions tab when you want a sanity check without
+dogfooding by hand.

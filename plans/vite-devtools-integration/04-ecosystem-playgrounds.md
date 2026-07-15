@@ -100,15 +100,30 @@ what actually shipped:
    the playground (not a per-module `COMPAT.md`, since there's only one
    playground now).
 9. **An optional, `workflow_dispatch`-only GitHub Actions workflow**
-   (`.github/workflows/ecosystem-playground.yml`) installs the workspace and
-   runs `nuxt build` as a manually-triggered "does the module combo still
-   build" smoke check. It runs against the **published** `@nuxt/devtools`,
-   deliberately — Nuxt DevTools no-ops entirely outside `dev` mode
-   (`packages/devtools/src/module-main.ts`, bails when `!nuxt.options.dev`),
-   so a `build` with `NUXT_DEVTOOLS_LOCAL=true` wouldn't exercise anything
-   devtools-specific anyway; that mismatch was caught and corrected before
-   merging this plan. It is **not** part of the default `push`/`pull_request`
-   CI path.
+   (`.github/workflows/ecosystem-playground.yml`) installs the root
+   workspace (stubbed via `pnpm run prepare`), then the ecosystem workspace,
+   and runs `nuxt build` as a manually-triggered "does the module combo still
+   build" smoke check — not the full `pnpm build`, and not
+   `NUXT_DEVTOOLS_LOCAL=true`: Nuxt DevTools no-ops entirely outside `dev`
+   mode (`packages/devtools/src/module-main.ts`, bails when
+   `!nuxt.options.dev`), so neither the real static client nor the local dev
+   subprocess gets exercised by a `build` anyway; the cheap stub is enough
+   for the module to resolve. It is **not** part of the default
+   `push`/`pull_request` CI path.
+10. **`@nuxt/devtools` is a `link:../../packages/devtools` dependency, never
+    the npm registry.** `modules/package.json` points `@nuxt/devtools`
+    straight at this repo's own package via pnpm's `link:` protocol (a plain
+    symlink, workspace-membership-independent — unlike `workspace:*`, which
+    only works within the *same* pnpm workspace, and this is a deliberately
+    separate one). Both the `NUXT_DEVTOOLS_LOCAL` branches in `nuxt.config.ts`
+    therefore always test this repo's own code: `'../../local'` spawns a live
+    `nuxi dev` subprocess for the devtools client (HMR); the plain
+    `'@nuxt/devtools'` import resolves through the link to whatever's
+    currently in `packages/devtools/dist` — a stub (`pnpm run prepare`, no
+    client to serve) or a full static build (`pnpm run build`, real client).
+    Verified both: `nuxt build` in the ecosystem workspace succeeds against
+    the stub, and `nuxt dev` (without `NUXT_DEVTOOLS_LOCAL`) against the full
+    build renders the real DevTools UI with no console errors.
 
 ## Implementation (as built)
 
@@ -125,12 +140,15 @@ shamefullyHoist: true
 ```
 
 Install explicitly with `pnpm -C playgrounds-ecosystem/modules install` — this
-is never invoked automatically by the root install or `postinstall`.
+is never invoked automatically by the root install or `postinstall`. It does
+need the root workspace installed and at least stubbed first
+(`pnpm install && pnpm run prepare`), since `@nuxt/devtools` is a
+`link:../../packages/devtools` dependency (see Decision 10).
 
 ### The playground app
 
 `playgrounds-ecosystem/modules/nuxt.config.ts` wires up all three modules plus
-the local-vs-published devtools toggle, reusing the exact convention from
+the local-vs-linked-build devtools toggle, reusing the exact convention from
 `playgrounds/*`:
 
 ```ts
@@ -206,6 +224,11 @@ and produces a false "0 modules" reading).
   version you pin.
 - **Local-devtools resolution.** Verified: `'../../local'` resolves correctly
   from `playgrounds-ecosystem/modules/` (same depth as `playgrounds/<name>/`).
+- **`link:` dependency needs the root workspace stubbed/built first.**
+  Installing `playgrounds-ecosystem/modules/` before running `pnpm install &&
+  pnpm run prepare` (or `build`) at the repo root leaves `@nuxt/devtools`
+  pointing at a directory with no `dist/` to resolve. Documented in the
+  runbook; the CI workflow does this step explicitly.
 - **Not a CI gate.** `.github/workflows/ecosystem-playground.yml` is
   `workflow_dispatch`-only, deliberately off the default `push`/`pull_request`
   path — a human triggers it on demand.

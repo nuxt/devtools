@@ -19,6 +19,16 @@ are kept below (["Modules removed after testing"](#modules-removed-after-testing
 since they're the evidence for why they were dropped, and useful raw material
 for the upstream follow-ups in [Recommendations](#recommendations).
 
+**Addendum:** `@nuxt/devtools` in `modules/package.json` was switched from a
+plain npm version range to a `link:../../packages/devtools` dependency — this
+repo's own build, never the registry (see plan Decision 10). Re-verified after
+that change: `nuxt build` succeeds against a stubbed `packages/devtools/dist`
+(`pnpm run prepare`), and `nuxt dev` *without* `NUXT_DEVTOOLS_LOCAL` against a
+fully-built one (`pnpm run build`) renders the real DevTools UI — connects,
+authorizes, and opens with no console errors — giving a second way to
+dogfood this repo's own code without the `../../local` HMR-subprocess
+wrapper.
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |

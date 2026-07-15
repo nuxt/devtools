@@ -19,13 +19,16 @@ jobs:
           node-version: lts/*
       - run: npm install -g corepack@latest
       - run: corepack enable
-      # This is its own sealed pnpm workspace (see
-      # playgrounds-ecosystem/modules/pnpm-workspace.yaml) — no root install
-      # needed. Builds against the *published* @nuxt/devtools (NUXT_DEVTOOLS_LOCAL
-      # unset): Nuxt DevTools no-ops entirely outside `dev` mode
-      # (packages/devtools/src/module-main.ts), so a `build` against the
-      # local workspace copy wouldn't exercise anything devtools-specific
-      # anyway — this is purely a "does the 5-module combo still build" signal.
+      # playgrounds-ecosystem/modules/ links @nuxt/devtools via
+      # `link:../../packages/devtools` (this repo's own build, not the npm
+      # registry) — so the root workspace needs to be installed + stubbed
+      # first for that path to resolve. `prepare` (stub build) is enough:
+      # Nuxt DevTools no-ops entirely outside `dev` mode
+      # (packages/devtools/src/module-main.ts), so a `build` here can't
+      # exercise anything devtools-specific anyway — this is purely a "does
+      # the module combo still build" signal, not a full `pnpm build`.
+      - run: pnpm install
+      - run: pnpm run prepare
       - run: pnpm -C playgrounds-ecosystem/modules install
-      - name: Build the 5-module combo
+      - name: Build the module combo
         run: pnpm -C playgrounds-ecosystem/modules run build

@@ -9,6 +9,15 @@
 // See ../README.md for the runbook and
 // ../../plans/vite-devtools-integration/04-ecosystem-playgrounds.md for the
 // plan this implements.
+//
+// `@nuxt/devtools` (package.json) is a `link:../../packages/devtools`
+// dependency — this repo's own build, never the npm registry — so both
+// branches below test this repo's code, just two different builds of it:
+// `../../local` spawns a live `nuxi dev` subprocess for the devtools client
+// (HMR, for iterating on client code); the plain `@nuxt/devtools` import
+// resolves through that link to whatever's currently in
+// `packages/devtools/dist` (stub via `pnpm run prepare`, or a full static
+// client via `pnpm run build`).
 const devtoolsModule = process.env.NUXT_DEVTOOLS_LOCAL ? '../../local' : '@nuxt/devtools'
 
 export default defineNuxtConfig({
