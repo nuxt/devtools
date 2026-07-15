@@ -12,8 +12,18 @@ were tried and then removed: neither registers a DevTools tab in the versions
 tested, so there was nothing to dogfood against.
 
 > Why one combined playground instead of one per module, and why only three of
-> the originally-considered seven modules? See the "locked decisions" note in
-> [`plans/vite-devtools-integration/04-ecosystem-playgrounds.md`](../plans/vite-devtools-integration/04-ecosystem-playgrounds.md#decisions-locked).
+> the originally-considered seven modules? Grouping keeps the review surface
+> small (this repo's own `docs/` app already proves `@nuxt/content` +
+> `@nuxt/fonts` + `@nuxt/image` + `nuxt-og-image` coexist safely). Two were
+> dropped before implementation: `@nuxthub/core` (out of scope) and
+> `@nuxtjs/tailwindcss` (a real version conflict — it hard-depends on
+> Tailwind v3, while `nuxt-og-image` lists Tailwind v4 as an optional peer).
+> Two more, `@nuxt/content` and `@nuxt/image`, were built in and dogfooded
+> first, then dropped once that run showed neither has a DevTools tab to test
+> — see [`REPORTS.md`](./REPORTS.md#modules-removed-after-testing) for the
+> evidence. The former standalone "plan 04" doc this all comes from has since
+> been retired in favor of this directory being the living implementation —
+> see nuxt/devtools#1022 for the full history.
 
 ## Opt-in — not part of the main install or CI
 

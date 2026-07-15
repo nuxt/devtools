@@ -2,8 +2,8 @@ name: ecosystem-playground
 
 # Manual-trigger only smoke check for playgrounds-ecosystem/modules/ — NOT
 # part of the default push/pull_request CI path. See
-# playgrounds-ecosystem/README.md and
-# plans/vite-devtools-integration/04-ecosystem-playgrounds.md for context.
+# playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
+# context (nuxt/devtools#1022).
 on:
   workflow_dispatch:
 

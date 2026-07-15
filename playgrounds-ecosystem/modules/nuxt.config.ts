@@ -6,9 +6,11 @@
 // ../REPORTS.md for the findings). @nuxt/content and @nuxt/image were tried
 // too but dropped — neither ships a DevTools tab in the versions tested, so
 // there was nothing to dogfood against; see ../REPORTS.md for that finding.
-// See ../README.md for the runbook and
-// ../../plans/vite-devtools-integration/04-ecosystem-playgrounds.md for the
-// plan this implements.
+// See ../README.md for the runbook. This directory is the living
+// implementation of the "ecosystem dogfooding" workstream from
+// ../../plans/vite-devtools-integration/ (see nuxt/devtools#1022) — that
+// plan's own doc has since been retired in favor of this being the source
+// of truth.
 //
 // `@nuxt/devtools` (package.json) is a `link:../../packages/devtools`
 // dependency — this repo's own build, never the npm registry — so both
