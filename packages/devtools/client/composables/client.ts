@@ -10,6 +10,21 @@ import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
 import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 
+let warnedExtendClientRpc = false
+/**
+ * @deprecated `extendClientRpc` is deprecated. Use `onDevtoolsReady` from
+ * `@nuxt/devtools-kit/iframe-client`, or the exposed `devtoolsKit` client.
+ */
+function warnExtendClientRpcDeprecated() {
+  if (warnedExtendClientRpc)
+    return
+  warnedExtendClientRpc = true
+  console.warn(
+    '[nuxt-devtools] `extendClientRpc` is deprecated. Use `onDevtoolsReady((kit) => '
+    + 'kit.client.register(...))` from `@nuxt/devtools-kit/iframe-client`.',
+  )
+}
+
 export function useClient() {
   return useState<NuxtDevtoolsHostClient>('devtools-client')
 }
@@ -52,6 +67,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
     host: client.value,
     devtools: <NuxtDevtoolsClient>{
       rpc,
+      devtoolsKit: rpcClient.value,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {
         return renderCodeHighlight(code, lang as any)
@@ -60,9 +76,11 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
         return renderMarkdown(code)
       },
       extendClientRpc(namespace, functions) {
+        warnExtendClientRpcDeprecated()
         const register = (client: DevToolsRpcClient) => {
           for (const [name, handler] of Object.entries(functions)) {
             if (typeof handler === 'function')
+              // force-registers (override by default) via upsertClientFunction
               upsertClientFunction(client, `${namespace}:${name}`, handler as any)
           }
         }

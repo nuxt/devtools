@@ -1,6 +1,7 @@
 import type { NuxtDevtoolsServerContext, ServerFunctions, TerminalAction, TerminalInfo, TerminalState } from '../types'
 
-export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerContext) {
+export function setupTerminalRPC(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt, refresh } = ctx
   const terminals = new Map<string, TerminalState>()
 
   nuxt.hook('devtools:terminal:register', (terminal) => {
@@ -24,7 +25,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
 
     terminal.buffer ||= ''
     terminal.buffer += data
-    rpc.broadcast.onTerminalData.asEvent({ id, data })
+    ctx.devtoolsKit?.rpc.broadcast({ method: 'onTerminalData', args: [{ id, data }], event: true } as any)
     return true
   })
 
@@ -34,7 +35,7 @@ export function setupTerminalRPC({ nuxt, rpc, refresh }: NuxtDevtoolsServerConte
       return false
 
     terminal.isTerminated = true
-    rpc.broadcast.onTerminalExit.asEvent({ id, code })
+    ctx.devtoolsKit?.rpc.broadcast({ method: 'onTerminalExit', args: [{ id, code }], event: true } as any)
     refresh('getTerminals')
     return true
   })

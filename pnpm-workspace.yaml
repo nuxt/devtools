@@ -2,10 +2,12 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@vitejs/devtools-kit@0.4.0'
-  - '@vitejs/devtools-rolldown@0.4.0'
-  - '@vitejs/devtools@0.4.0'
+  - '@vitejs/devtools-kit@0.4.0 || 0.4.1'
+  - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1'
+  - '@vitejs/devtools@0.4.0 || 0.4.1'
   - vite-plugin-inspect@12.0.2
+  - '@devframes/hub@0.6.1'
+  - devframe@0.6.1
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
@@ -28,20 +30,28 @@ allowBuilds:
   vue-demi: true
 
 overrides:
-  '@nuxt/devtools': workspace:*
   # NOTE: these must be literal ranges, not `catalog:` refs. pnpm's
   # `catalog:` protocol inside `overrides` isn't understood by pnpm 9.x
   # (e.g. the pnpm major Vercel falls back to when corepack isn't active),
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
+  '@devframes/hub': ^0.6.1
+  '@nuxt/devtools': workspace:*
   chokidar: ^5.0.0
+  devframe: ^0.6.1
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5
   typescript: ^6.0.3
   unimport: ^6.3.0
-  vite: ^8.1.4
+  # `@vitejs/devtools@0.4` has no Vite 8.1-compatible release yet (peer
+  # `vite: *`, still built against 8.0): under Vite 8.1's reworked
+  # WebSocket-upgrade handling, its crossws-based RPC socket ends up calling
+  # `server.handleUpgrade()` twice on the same SSR socket, killing the
+  # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
+  # `@vitejs/devtools` ships 8.1 support.
+  vite: ~8.0.14
   # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
   # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
   # SFC codegen errors from mixed compiler versions.
@@ -61,7 +71,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.5
     '@unocss/preset-mini': ^66.7.5
     '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.0
+    '@vitejs/devtools': ^0.4.1
     '@vueuse/nuxt': ^14.3.0
     exsolve: ^1.1.0
     lightningcss: ^1.32.0
@@ -92,7 +102,7 @@ catalogs:
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.13.1
     taze: ^19.14.1
-    tsx: ^4.23.0
+    tsx: ^4.23.1
     typescript: ^6.0.3
     vitest: ^4.1.10
     vue-tsc: ^3.3.7
@@ -142,7 +152,7 @@ catalogs:
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.89
+    '@iconify-json/simple-icons': ^1.2.90
     '@iconify-json/tabler': ^1.2.35
   inlined:
     package-manager-detector: ^1.7.0
@@ -160,6 +170,7 @@ catalogs:
     launch-editor: ^2.14.1
     local-pkg: ^1.2.1
     magicast: ^0.5.3
+    nostics: ^1.1.4
     pkg-types: ^2.3.1
     semver: ^7.8.5
     sirv: ^3.0.2
@@ -179,5 +190,5 @@ catalogs:
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.1.8
-    '@vitejs/devtools-kit': ^0.4.0
+    '@vitejs/devtools-kit': ^0.4.1
     unimport: ^6.3.0

@@ -44,7 +44,14 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
-   * @deprecated Auth is now handled by Vite DevTools. This option is ignored.
+   * Disable the DevTools client authorization prompt, allowing any browser to
+   * connect without approving it first.
+   *
+   * Defaults to `true` in sandboxed environments (StackBlitz, CodeSandbox).
+   *
+   * Note: disabling authorization lets any browser (including other devices, if
+   * you expose the dev server to your LAN/WAN) connect to DevTools and access
+   * your server and filesystem. Only disable it in trusted environments.
    */
   disableAuthorization?: boolean
 

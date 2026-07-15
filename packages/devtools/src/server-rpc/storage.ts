@@ -8,10 +8,8 @@ function shouldIgnoreStorageKey(key: string) {
   return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
 }
 
-export function setupStorageRPC({
-  nuxt,
-  rpc,
-}: NuxtDevtoolsServerContext) {
+export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt } = ctx
   const storageMounts: StorageMounts = {}
 
   let storage: Storage | undefined
@@ -44,7 +42,7 @@ export function setupStorageRPC({
     await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
     unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
       watchStorageMount(activeStorage, mountName, (event, key) => {
-        rpc.broadcast.callHook.asEvent('storage:key:update', key, event)
+        ctx.devtoolsKit?.rpc.broadcast({ method: 'callHook', args: ['storage:key:update', key, event], event: true } as any)
       })))
   })
 

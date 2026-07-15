@@ -3,6 +3,7 @@ import type { AsyncServerFunctions, ClientFunctions } from '../../src/types'
 import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, shallowRef } from 'vue'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 export const WS_DEBOUNCE_TIME = 2000
 export const wsConnectedOnce = ref(false)
@@ -26,7 +27,9 @@ export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {
     return async (...args: any[]) => {
       const client = rpcClient.value || await connectPromise
-      return client.call(method as any, ...args as any)
+      // Nuxt DevTools' server functions are registered under the devframe
+      // `nuxt:devtools:` namespace.
+      return client.call(`${RPC_NAMESPACE}:${method}` as any, ...args as any)
     }
   },
 })
@@ -74,13 +77,16 @@ export async function registerClientFunctions() {
  * Register (or replace) a client-side event function on the devframe RPC host.
  *
  * devframe 0.6 split registration into `register()` (throws DF0021 if the name
- * already exists) and `update()` (throws DF0022 if it does not), so pick the
- * right one based on the current definitions to keep this an idempotent upsert.
+ * already exists) and `update()` (throws DF0022 if it does not). We always
+ * force-register so this stays an idempotent override regardless of the current
+ * state — the client re-runs registration on (re)connect and integrations may
+ * override a function, so neither error should ever surface.
  */
 export function upsertClientFunction(client: DevToolsRpcClient, name: string, handler: (...args: any[]) => any) {
   const definition = { name, type: 'event', handler } as const
-  if (client.client.definitions.has(name))
-    client.client.update(definition as any)
-  else
-    client.client.register(definition as any)
+  // The cast is a workaround for a devframe type gap: its `RpcFunctionsCollector`
+  // interface (used for the client host) omits the `force` parameter that the
+  // concrete `RpcFunctionsCollectorBase` and the runtime actually accept. Drop
+  // the cast once devframe types `register(fn, force?)` on the interface.
+  ;(client.client.register as (fn: any, force?: boolean) => void)(definition, true)
 }

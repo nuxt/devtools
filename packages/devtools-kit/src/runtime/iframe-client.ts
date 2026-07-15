@@ -1,3 +1,4 @@
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import type { Ref } from 'vue'
 import type { NuxtDevtoolsIframeClient } from '../types'
 import { shallowRef, triggerRef } from 'vue'
@@ -37,6 +38,30 @@ export function onDevtoolsClientConnected(fn: (client: NuxtDevtoolsIframeClient)
   return () => {
     fns.splice(fns.indexOf(fn), 1)
   }
+}
+
+/**
+ * Run a callback once the Vite DevTools client is ready, receiving the connected
+ * `DevToolsRpcClient` — the client-side mirror of the server's
+ * `onDevtoolsReady((ctx) => …)`.
+ *
+ * This is the recommended way to do client-side DevTools integration (register
+ * client RPC functions, call server functions, shared state, streaming, …):
+ *
+ * ```ts
+ * import { onDevtoolsReady } from '@nuxt/devtools-kit/iframe-client'
+ *
+ * onDevtoolsReady((kit) => {
+ *   kit.client.register({ name: 'my-module:on-update', type: 'event', handler })
+ * })
+ * ```
+ */
+export function onDevtoolsReady(fn: (kit: DevToolsRpcClient) => void) {
+  return onDevtoolsClientConnected((client) => {
+    const kit = client.devtools.devtoolsKit
+    if (kit)
+      fn(kit)
+  })
 }
 
 export function useDevtoolsClient() {
