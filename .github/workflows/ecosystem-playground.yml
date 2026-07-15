@@ -1,0 +1,34 @@
+name: ecosystem-playground
+
+# Manual-trigger only smoke check for playgrounds-ecosystem/modules/ — NOT
+# part of the default push/pull_request CI path. See
+# playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
+# context (nuxt/devtools#1022).
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      # playgrounds-ecosystem/modules/ links @nuxt/devtools via
+      # `link:../../packages/devtools` (this repo's own build, not the npm
+      # registry) — so the root workspace needs to be installed + stubbed
+      # first for that path to resolve. `prepare` (stub build) is enough:
+      # Nuxt DevTools no-ops entirely outside `dev` mode
+      # (packages/devtools/src/module-main.ts), so a `build` here can't
+      # exercise anything devtools-specific anyway — this is purely a "does
+      # the module combo still build" signal, not a full `pnpm build`.
+      - run: pnpm install
+      - run: pnpm run prepare
+      - run: pnpm -C playgrounds-ecosystem/modules install
+      - name: Build the module combo
+        run: pnpm -C playgrounds-ecosystem/modules run build
