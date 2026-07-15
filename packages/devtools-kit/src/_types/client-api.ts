@@ -1,4 +1,5 @@
 import type {} from '@nuxt/schema'
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import type { Hookable } from 'hookable'
 import type { NuxtApp } from 'nuxt/app'
 import type { AppConfig } from 'nuxt/schema'
@@ -119,9 +120,18 @@ export interface NuxtDevtoolsClient {
   colorMode: string
 
   /**
-   * @deprecated Register client RPC functions on the devframe client context
-   * instead, via `getDevToolsRpcClient()` / `getDevToolsClientContext()` from
-   * `@vitejs/devtools-kit/client`.
+   * The connected Vite DevTools RPC client, mirroring `nuxt.devtools.devtoolsKit`
+   * on the server. Use it for full devframe-native access — register client RPC
+   * functions (`devtoolsKit.client.register(...)`), call server functions
+   * (`devtoolsKit.call(...)`), shared state, streaming, scoping, etc.
+   *
+   * `undefined` until the DevTools client has connected.
+   */
+  devtoolsKit: DevToolsRpcClient | undefined
+
+  /**
+   * @deprecated Register client RPC functions on the Vite DevTools client
+   * instead: `client.devtools.devtoolsKit?.client.register({ name, type: 'event', handler })`.
    */
   extendClientRpc: <ServerFunctions extends object = Record<string, unknown>, ClientFunctions extends object = Record<string, unknown>>(name: string, functions: ClientFunctions) => ServerFunctions
 }

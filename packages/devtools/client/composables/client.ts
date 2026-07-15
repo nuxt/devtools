@@ -13,8 +13,8 @@ import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 let warnedExtendClientRpc = false
 /**
  * @deprecated `extendClientRpc` is deprecated. Register client RPC functions on
- * the devframe client context instead, via `getDevToolsRpcClient()` /
- * `getDevToolsClientContext()` from `@vitejs/devtools-kit/client`.
+ * the exposed Vite DevTools client instead:
+ * `client.devtools.devtoolsKit?.client.register(...)`.
  */
 function warnExtendClientRpcDeprecated() {
   if (warnedExtendClientRpc)
@@ -22,7 +22,7 @@ function warnExtendClientRpcDeprecated() {
   warnedExtendClientRpc = true
   console.warn(
     '[nuxt-devtools] `extendClientRpc` is deprecated. Register client RPC functions on the '
-    + 'devframe client context instead (`getDevToolsRpcClient()` from `@vitejs/devtools-kit/client`).',
+    + 'exposed Vite DevTools client instead: `client.devtools.devtoolsKit?.client.register(...)`.',
   )
 }
 
@@ -68,6 +68,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
     host: client.value,
     devtools: <NuxtDevtoolsClient>{
       rpc,
+      devtoolsKit: rpcClient.value,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {
         return renderCodeHighlight(code, lang as any)
