@@ -19,10 +19,6 @@ export function setupClientRPC() {
     async callHook(hook: string, ...args: any[]) {
       nuxt.hooks.callHookParallel(hook as any, ...args)
     },
-    async onTerminalData(data) {
-      // @ts-expect-error fail to extend hooks
-      nuxt.hooks.callHookParallel('devtools:terminal:data', data)
-    },
     async onTerminalExit(data) {
       // @ts-expect-error fail to extend hooks
       nuxt.hooks.callHookParallel('devtools:terminal:exit', data)

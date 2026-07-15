@@ -7,6 +7,7 @@ import { detect } from 'package-manager-detector/detect'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 import { removeNuxtModuleFromCode } from '../utils/nuxt-config'
+import { broadcastTerminalExit } from './terminals'
 
 export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
   const { nuxt } = ctx
@@ -61,7 +62,7 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
 
     const processId = `npm:${command}:${packageName}`
 
-    await getTerminals().startChildProcess({
+    const session = await getTerminals().startChildProcess({
       command: args[0]!,
       args: args.slice(1),
     }, {
@@ -69,6 +70,11 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
       title: `${command} ${packageName}`,
       icon: 'i-logos-npm-icon',
     })
+
+    // Surface the exit to the client so the update UI state can settle.
+    void Promise.resolve(session.getResult()).then((result) => {
+      broadcastTerminalExit(ctx, processId, result.exitCode)
+    }).catch(() => {})
 
     return {
       processId,
@@ -119,6 +125,7 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
         })
 
         const result = await session.getResult()
+        broadcastTerminalExit(ctx, processId, result.exitCode)
 
         await Promise.resolve()
 
@@ -180,6 +187,7 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
           icon: 'carbon:intent-request-uninstall',
         })
         const result = await session.getResult()
+        broadcastTerminalExit(ctx, processId, result.exitCode)
 
         await Promise.resolve()
 

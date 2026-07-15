@@ -10,7 +10,6 @@ const packageBundles = {
   'shiki': ['shiki', '@shikijs'],
   'quicktype-core': ['quicktype-core'],
   'json-editor-vue': ['json-editor-vue', 'ajv', 'vanilla-picker', 'vanilla-jsoneditor'],
-  'xterm': ['xterm', '@xterm'],
   'vis': ['vis-data', 'vis-network'],
   'unocss': ['@unocss', 'unocss'],
   'markdown-it': ['markdown-it'],
@@ -137,8 +136,6 @@ export default defineNuxtConfig({
         'vis-data',
         'vis-network',
         '@vue/devtools-applet',
-        '@xterm/xterm',
-        '@xterm/addon-fit',
       ],
     },
     server: {

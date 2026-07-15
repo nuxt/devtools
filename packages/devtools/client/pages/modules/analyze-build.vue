@@ -2,13 +2,11 @@
 import type { AnalyzeBuildMeta } from '~/../src/types'
 import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
 import { satisfyNuxtVersion } from '~/composables/npm'
 import { rpc } from '~/composables/rpc'
 import { useAnalyzeBuildInfo } from '~/composables/state'
 import { registerCommands } from '~/composables/state-commands'
-import { useCurrentTerminalId } from '~/composables/state-routes'
 import { processAnalyzeBuildInfo } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
 import { useSessionState } from '~/composables/utils'
@@ -26,12 +24,11 @@ definePageMeta({
 const PromiseConfirm = createTemplatePromise<boolean>()
 
 const info = useAnalyzeBuildInfo()
-const router = useRouter()
 const slug = useSessionState<string>('analyze-build:slug', '')
 
 const selected = computed(() => info.value?.builds.find(b => b.slug === slug.value) ?? info.value?.builds[0])
 
-const shouldGotoTerminal = ref(false)
+const shouldRevealTerminal = ref(false)
 
 const buildNameInput = ref('')
 const buildNameConflicted = computed(() => info.value?.builds.some(b => b.name === buildNameInput.value.trim()))
@@ -47,21 +44,17 @@ async function start() {
     name: buildNameInput.value,
     processId: await rpc.startAnalyzeBuild(buildNameInput.value),
   }
-  if (shouldGotoTerminal.value)
-    gotoTerminal()
+  if (shouldRevealTerminal.value)
+    revealTerminal()
 }
-
-const terminalId = useCurrentTerminalId()
 
 function getDuration(build: AnalyzeBuildMeta) {
   return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
 
-function gotoTerminal() {
-  if (processAnalyzeBuildInfo.value?.processId) {
-    terminalId.value = processAnalyzeBuildInfo.value.processId
-    router.push('/modules/terminals')
-  }
+function revealTerminal() {
+  if (processAnalyzeBuildInfo.value?.processId)
+    rpc.revealTerminal(processAnalyzeBuildInfo.value.processId)
 }
 
 registerCommands(() => [
@@ -98,7 +91,7 @@ registerCommands(() => [
           <NButton v-if="!processAnalyzeBuildInfo" n="primary" icon="carbon-edge-node" @click="start()">
             Start a new build
           </NButton>
-          <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" @click="gotoTerminal()">
+          <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" title="Open the output in the Terminals dock" @click="revealTerminal()">
             Building...
           </NButton>
         </div>
@@ -135,8 +128,8 @@ registerCommands(() => [
           lang="bash" px4 py2 border="~ base rounded"
           :lines="false"
         />
-        <NCheckbox v-model="shouldGotoTerminal" mt2 n="primary">
-          Navigate to terminal
+        <NCheckbox v-model="shouldRevealTerminal" mt2 n="primary">
+          Open the Terminals dock
         </NCheckbox>
 
         <div flex="~ gap-3" mt2 justify-end>

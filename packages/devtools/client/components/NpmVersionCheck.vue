@@ -2,10 +2,9 @@
 import type { NpmCommandOptions } from '../../src/types'
 import { createTemplatePromise } from '@vueuse/core'
 import { ref } from 'vue'
-import { useRouter } from '#app/composables/router'
 import { useRestartDialogs } from '~/composables/dialog'
 import { usePackageUpdate } from '~/composables/npm'
-import { useCurrentTerminalId } from '~/composables/state-routes'
+import { rpc } from '~/composables/rpc'
 import { telemetry } from '~/composables/telemetry'
 
 const props = withDefaults(
@@ -19,7 +18,6 @@ const props = withDefaults(
   },
 )
 
-const router = useRouter()
 const {
   info,
   update,
@@ -28,12 +26,11 @@ const {
   restart,
 } = usePackageUpdate(props.packageName, props.options)
 
-const shouldGotoTerminal = ref(true)
+const shouldRevealTerminal = ref(true)
 const shouldRestartServer = ref(true)
 const restartDialogs = useRestartDialogs()
 
 const PromiseConfirm = createTemplatePromise<boolean, [string]>()
-const terminalId = useCurrentTerminalId()
 
 async function updateWithConfirm() {
   const processId = await update(async (command) => {
@@ -51,10 +48,8 @@ async function updateWithConfirm() {
       message: `${props.packageName} has been updated. Do you want to restart the Nuxt server now?`,
     })
   }
-  if (processId && shouldGotoTerminal.value) {
-    terminalId.value = processId
-    router.push('/modules/terminals')
-  }
+  if (processId && shouldRevealTerminal.value)
+    rpc.revealTerminal(processId)
 }
 </script>
 
@@ -88,8 +83,8 @@ async function updateWithConfirm() {
           The following command will be executed in your terminal:
         </p>
         <NCodeBlock :code="args[0]" lang="bash" my3 px4 py2 border="~ base rounded" :lines="false" />
-        <NCheckbox v-model="shouldGotoTerminal" n="primary">
-          Navigate to terminal
+        <NCheckbox v-model="shouldRevealTerminal" n="primary">
+          Open the Terminals dock
         </NCheckbox>
         <NCheckbox v-model="shouldRestartServer" n="primary">
           Restart Nuxt server after update

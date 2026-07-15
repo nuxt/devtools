@@ -18,7 +18,7 @@ import { setupServerRoutesRPC } from './server-routes'
 import { setupServerTasksRPC } from './server-tasks'
 import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
-import { setupTerminalRPC } from './terminals'
+import { setupTerminalsBridge } from './terminals'
 import { setupTimelineRPC } from './timeline'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
@@ -41,7 +41,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
 
   /**
    * Compatibility broadcast proxy that supports the old birpc-style API:
-   * `rpc.broadcast.refresh.asEvent(event)` and `rpc.broadcast.onTerminalData.asEvent({ id, data })`
+   * `rpc.broadcast.refresh.asEvent(event)` and `rpc.broadcast.onTerminalExit.asEvent({ id, code })`
    */
   function createBroadcastProxy(prefix = ''): any {
     return new Proxy({}, {
@@ -150,7 +150,11 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupStorageRPC(ctx),
     ...setupAssetsRPC(ctx),
     ...setupNpmRPC(ctx),
-    ...setupTerminalRPC(ctx),
+    // Bridge the `devtools:terminal:*` hooks onto the Vite DevTools terminals
+    // host so module terminals surface in the built-in Terminals dock. Also
+    // registers its own hook listeners (including `devtools:ready`) as a side
+    // effect, and contributes the `revealTerminal` RPC.
+    ...setupTerminalsBridge(ctx),
     ...setupServerRoutesRPC(ctx),
     ...setupServerTasksRPC(ctx),
     ...setupAnalyzeBuildRPC(ctx),
