@@ -39,9 +39,35 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
 
     initalized = undefined
     promise = Promise.resolve(session.getResult())
-      .then(() => {
+      .then((result) => {
+        if (result.exitCode && result.exitCode !== 0) {
+          ctx.notify({
+            message: `Build analysis "${name}" failed`,
+            level: 'error',
+            description: `Process exited with code ${result.exitCode}. Check the Analyze Build terminal for details.`,
+            category: 'build',
+            notify: true,
+          })
+        }
+        else {
+          ctx.notify({
+            message: `Build analysis "${name}" complete`,
+            level: 'success',
+            category: 'build',
+            notify: true,
+          })
+        }
         refresh('getAnalyzeBuildInfo')
         return readBuildInfo()
+      })
+      .catch((error) => {
+        ctx.notify({
+          message: `Build analysis "${name}" failed`,
+          level: 'error',
+          description: error instanceof Error ? error.message : String(error),
+          category: 'build',
+          notify: true,
+        })
       })
       .finally(() => {
         promise = undefined

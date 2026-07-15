@@ -1,5 +1,6 @@
 import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { ModuleCustomTab } from './custom-tabs'
+import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { NuxtDevtoolsInfo } from './server-ctx'
 import type { TerminalState } from './terminals'
 
@@ -25,6 +26,21 @@ declare module '@nuxt/schema' {
      * need the connect-safe accessors on `nuxt.devtools`.
      */
     'devtools:ready': (ctx: ViteDevToolsNodeContext) => void | Promise<void>
+
+    /**
+     * Push a notification through the devframe Messages system.
+     *
+     * Forwarded to the connected `ctx.messages` host, so it surfaces in the
+     * Vite DevTools **Messages** dock (persistent, when leveled) and/or as a
+     * transient toast (when `notify` is set). Calls made before the kit connects
+     * are buffered and replayed once it does.
+     *
+     * @example
+     * ```ts
+     * nuxt.callHook('devtools:notify', { message: 'Build failed', level: 'error' })
+     * ```
+     */
+    'devtools:notify': (input: NuxtDevtoolsNotifyInput) => void
 
     /**
      * Hooks to extend devtools tabs.

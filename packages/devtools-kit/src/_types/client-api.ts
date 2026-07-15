@@ -7,6 +7,7 @@ import type { $Fetch } from 'ofetch'
 import type { BuiltinLanguage } from 'shiki'
 import type { Ref } from 'vue'
 import type { HookInfo, LoadingTimeMetric, PluginMetric } from './integrations'
+import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ServerFunctions } from './rpc'
 import type { TimelineMetrics } from './timeline-metrics'
 
@@ -118,6 +119,16 @@ export interface NuxtDevtoolsClient {
   }
   renderMarkdown: (markdown: string) => string
   colorMode: string
+
+  /**
+   * Push a notification through the devframe Messages system.
+   *
+   * Routes to the shared Messages host, so it surfaces in the Vite DevTools
+   * **Messages** dock and/or as a transient toast (when `notify` is set — the
+   * default). Use this from custom tabs / in-client code to give feedback
+   * through the same notification system as the rest of DevTools.
+   */
+  notify: (input: NuxtDevtoolsNotifyInput) => Promise<void>
 
   /**
    * The connected Vite DevTools RPC client, mirroring `nuxt.devtools.devtoolsKit`

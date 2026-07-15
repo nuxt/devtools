@@ -143,7 +143,6 @@ registerCommands(() => [
 <template>
   <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
-    <NNotification />
     <NLoading v-if="waiting">
       Connecting....
     </NLoading>
