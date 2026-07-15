@@ -1,7 +1,8 @@
 # Plan 03 — "Nuxt" dock group + promote-tab-to-dock capability
 
 **Status:** ready to execute · **Risk:** high (UX/architecture) ·
-**Depends on:** benefits from plans 01 & 02 landing first (not a hard dep)
+**Depends on:** the landed compat/deprecation foundation (nuxt/devtools#1021 —
+see the folder README); benefits from plans 01 & 02 landing first (not a hard dep)
 **Outcome:** Nuxt DevTools presents as a **"Nuxt" dock group** in the Vite
 DevTools dock bar. The full client stays reachable as the group's hub member,
 and a curated set of tools is **promoted** to sibling dock buttons under the
@@ -10,31 +11,47 @@ group. Promotion is a general, opt-in capability any tab can request.
 > Self-contained: read this whole file; shared API facts are repeated here.
 > This is the largest/most opinionated plan — do it after 01 & 02 if possible.
 
-## Relationship to Plan 00 (foundation)
+## Relationship to the landed foundation
 
-If Plan 00 (compat foundation) has landed, register the group + promoted entries
-through its **connect-safe** `nuxt.devtools.docks` host (queues pre-connect
-`register` calls) rather than reaching into `devtoolsKit.docks` directly. The
-`dock:true` promotion flag is an **additive extension** of the existing custom
-tabs API (`ModuleCustomTab`) — it is **not** a deprecation (per the Plan 00
-classification map, custom tabs stay Nuxt-native). If Plan 00 is not yet in
-place, use `devtoolsKit.docks` guarded for the undefined-until-connect window.
+The foundation shipped in nuxt/devtools#1021. Register the group + promoted
+entries on `ctx.docks`:
+
+- Nuxt DevTools' **own** group/hub registration lives in
+  `packages/devtools/src/module-main.ts`'s `devtools.setup(ctx)` callback, right
+  next to the existing `ctx.docks.register({ id: 'nuxt:devtools', … })` (which
+  today registers a single iframe with `defaultOrder: -2000`).
+- For **module authors** promoting their own tabs, use
+  `onDevtoolsReady((ctx) => ctx.docks.register(...))` — the *already connected*
+  context, so **no pre-connect queue** is needed. Raw escape hatch:
+  `nuxt.devtools.devtoolsKit?.docks`.
+
+**Tension to resolve, not ignore.** `addCustomTab` / `refreshCustomTabs` are now
+**soft-deprecated** (`NDT_DEP_0005` / `NDT_DEP_0006`, shipped in #1021) pointing
+authors at `ctx.docks.register`. `ctx.docks` is therefore the **long-term path**.
+This plan still adds a `dock:true` **convenience flag** on the existing custom-tab
+API (so authors get a dock button without rewriting onto docks yet), but treat it
+as a bridge: the custom-tabs API persists mainly because docks does **not yet**
+cover `vnode` views or tab categories. Do not present `dock:true` as the
+permanent, recommended API — call out that `ctx.docks.register` is the direction
+of travel. If you add any new deprecation here, use the **next free**
+`NDT_DEP_xxxx` code (don't reuse `0002`).
 
 ## Context you need
 
 Nuxt DevTools v4 renders inside **Vite DevTools** `@vitejs/devtools@0.4` on
 **devframe 0.6**. Today it registers exactly **one** dock entry:
 
-`packages/devtools/src/module-main.ts` (~lines 92‑98), inside the plugin
-`devtools.setup(ctx)` callback (`ctx` is a `ViteDevToolsNodeContext`):
+`packages/devtools/src/module-main.ts`, inside the plugin `devtools.setup(ctx)`
+callback (`ctx` is a `ViteDevToolsNodeContext`):
 
 ```ts
 ctx.docks.register({
   id: 'nuxt:devtools',
   type: 'iframe',
-  icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+  icon: '/__nuxt_devtools__/client/nuxt.svg',
   title: 'Nuxt DevTools',
   url: '/__nuxt_devtools__/client/',
+  defaultOrder: -2000,
 })
 ```
 
@@ -114,14 +131,14 @@ ctx.docks.register({
   id: 'nuxt',
   type: 'group',
   title: 'Nuxt',
-  icon: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+  icon: '/__nuxt_devtools__/client/nuxt.svg',
   defaultOrder: -900,          // sits near the framework tools; tune vs ~viteplus (-1000)
   defaultChildId: 'nuxt:devtools',
 })
 ctx.docks.register({
   id: 'nuxt:devtools',
   type: 'iframe',
-  icon: '…',
+  icon: '/__nuxt_devtools__/client/nuxt.svg',
   title: 'Nuxt DevTools',
   url: '/__nuxt_devtools__/client/',
   groupId: 'nuxt',
@@ -162,8 +179,9 @@ ctx.docks.register({
   - Custom tabs arrive/refresh dynamically (`devtools:customTabs:refresh`) — keep
     the promoted dock entries in sync (register on add, update on change; use the
     `ctx.docks.register(...)` return `{ update }` handle, and re-evaluate on
-    refresh). Guard for `devtoolsKit` not yet connected (queue + flush, mirroring
-    `server-rpc/index.ts` `pendingBroadcasts`).
+    refresh). Do this from `onDevtoolsReady((ctx) => …)` so `ctx.docks` is
+    already connected; buffer tabs collected before `ready` and register them in
+    the callback (no `pendingBroadcasts`-style queue needed).
 - Ship the curated default: mark **Components, Server Routes, Pages** with
   `dock: true` in their `definePageMeta`.
 
@@ -213,8 +231,8 @@ ctx.docks.register({
   a promoted one. Review/adjust that logic (it currently binds by dock entry id
   `nuxt:devtools`, which is correct — verify it still resolves to the hub).
 - **Dynamic custom tabs.** Promoted dock entries must track the async
-  `devtools:customTabs` lifecycle (add/update/remove + refresh) and the
-  pre-connect queue.
+  `devtools:customTabs` lifecycle (add/update/remove + refresh); register them
+  from `onDevtoolsReady` and buffer any collected before the hook fires.
 - **"Relocating" UX surprise.** Tools vanish from the SideNav; make sure they're
   discoverable via the dock group and the command palette. Consider a one-time
   note/changelog for users.

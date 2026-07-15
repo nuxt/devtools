@@ -1,6 +1,7 @@
 # Plan 01 — Unify notifications on the devframe Messages system
 
-**Status:** ready to execute · **Risk:** low · **Depends on:** nothing
+**Status:** ready to execute · **Risk:** low · **Depends on:** the landed
+compat/deprecation foundation (nuxt/devtools#1021, #1023 — see the folder README)
 **Outcome:** one notification system across Nuxt DevTools — ephemeral toasts and
 persistent, leveled notifications both flow through devframe's Messages
 subsystem, surfaced by Vite DevTools' built-in **Messages** dock and its toast
@@ -10,15 +11,24 @@ to a thin adapter).
 > Self-contained: read this whole file; you don't need other plans. Shared API
 > facts are repeated here.
 
-## Relationship to Plan 00 (foundation)
+## Relationship to the landed foundation
 
-If Plan 00 (compat foundation) has landed, prefer its **connect-safe**
-`nuxt.devtools.messages` host over reaching into `nuxt.devtools.devtoolsKit.messages`
-directly (it queues pre-connect calls for you), and emit the toast
-soft-deprecation through Plan 00's **nostics** catalog (a `NDT_DEP_xxxx` code
-with `fix` + doc link) rather than an ad-hoc `console.warn`. If Plan 00 is not
-yet in place, use `devtoolsKit.messages` guarded for the undefined-until-connect
-window (queue + flush like `server-rpc/index.ts`'s `pendingBroadcasts`).
+The compat/deprecation foundation has **already shipped** (nuxt/devtools#1021
+server-side, #1023 client-side). Build on it — do not rebuild it:
+
+- **Reach `ctx.messages` via the ready hooks**, which hand you the *already
+  connected* context — there is no pre-connect window to guard and **no queue to
+  manage**:
+  - Server: `onDevtoolsReady((ctx) => ctx.messages.…)` from `@nuxt/devtools-kit`
+    (raw escape hatch: `nuxt.devtools.devtoolsKit?.messages`).
+  - Client: `onDevtoolsReady((kit) => …)` from `@nuxt/devtools-kit/iframe-client`,
+    or `client.devtools.devtoolsKit` — the connected `DevToolsRpcClient`, so you
+    can call the messages RPC without importing `@vitejs/devtools-kit/client`.
+- **Emit the toast soft-deprecation through the nostics catalog**
+  (`deprecate(nuxt, code, params)` from `packages/devtools-kit/src/diagnostics.ts`)
+  with the **next free** `NDT_DEP_xxxx` code (don't reuse `0002`) rather than an
+  ad-hoc `console.warn`; add the code to `diagnosticCodes` and give it a
+  migration-guide anchor.
 
 ## Context you need
 
@@ -51,10 +61,12 @@ today.
 ### devframe Messages API (target)
 
 **Node side** — `ctx.messages` (a `DevframeMessagesHost`) where `ctx` is the
-`ViteDevToolsNodeContext` available in `module-main.ts`'s
-`devtools.setup(ctx)` and stored as `devtoolsKit` on the Nuxt server context
-(see `packages/devtools/src/server-rpc/index.ts` → `connectDevToolsKit`, and the
-`devtoolsKit` field typed in `packages/devtools-kit/src/_types/server-ctx.ts`):
+connected `ViteDevToolsNodeContext` handed to you by
+`onDevtoolsReady((ctx) => …)` (from `@nuxt/devtools-kit`). It is also stored as
+`devtoolsKit` on the Nuxt server context (see
+`packages/devtools/src/server-rpc/index.ts` → `connectDevToolsKit`, which fires
+the `devtools:ready` hook, and the `devtoolsKit` field typed in
+`packages/devtools-kit/src/_types/server-ctx.ts`):
 
 ```ts
 ctx.messages.add({ message, level, description?, notify?, autoDismiss?, autoDelete?, labels?, category?, filePosition?, stacktrace? })
@@ -68,18 +80,22 @@ Key entry fields:
 - `autoDismiss`: toast auto-hides.
 - `autoDelete`: entry is not kept in the persistent list (toast-only).
 
-**Client side** — the Nuxt DevTools client already holds a devframe RPC client
-(`packages/devtools/client/composables/rpc.ts` → `rpcClient` /
-`getDevToolsRpcClient()`, and the `rpc` proxy that does `client.call(method, …)`).
-Messages can be added from the client by calling the messages RPC method
-(`devframes-plugin-messages:add`) — the client is trusted and the method is
-registered by the plugin. Confirm the exact method name at build time by
-inspecting `node_modules/.pnpm/@devframes+plugin-messages@0.6.0*/…/dist/rpc`
+**Client side** — since nuxt/devtools#1023 the client exposes the connected
+devframe client directly: `client.devtools.devtoolsKit` is the connected
+`DevToolsRpcClient`, and `onDevtoolsReady((kit) => …)` from
+`@nuxt/devtools-kit/iframe-client` hands you that same `kit`. Use it to add
+messages from the client (`kit.client.call('<messages-method>', …)`) rather than
+hand-rolling `getDevToolsRpcClient()`.
+
+Confirm the exact messages RPC method at build time by inspecting
+`node_modules/.pnpm/@devframes+plugin-messages@0.6.0*/…/dist/rpc`
 (`devframes-plugin-messages:list|add|update|remove|clear`). There is also a core
 kit surface (`devtoolskit:internal:messages:*` / `hub:messages:*`) visible in
 the connection meta; prefer the plugin method, and fall back to whichever one
 actually drives the core toast if the plugin one does not (verify with a manual
-`rpc.call(...)` in the running playground).
+`kit.client.call(...)` in the running playground). The legacy
+`packages/devtools/client/composables/rpc.ts` proxy still exists but
+`extendClientRpc` is now deprecated in favour of `onDevtoolsReady`.
 
 ## Decisions (locked)
 
@@ -99,10 +115,11 @@ actually drives the core toast if the plugin one does not (verify with a manual
 - In the server RPC layer (`packages/devtools/src/server-rpc/`), add a small
   module (e.g. `messages.ts`) wired in `server-rpc/index.ts` alongside the other
   `setup*RPC` calls. It should:
-  - Expose a helper `notify(input)` that calls `ctx.devtoolsKit?.messages.add(…)`
-    (guard for `devtoolsKit` being `undefined` before the kit connects — queue
-    and flush on connect, mirroring how `server-rpc/index.ts` already queues
-    `pendingBroadcasts` until `connectDevToolsKit` runs).
+  - Expose a helper `notify(input)` that adds to `ctx.messages`. Get the
+    connected context from `onDevtoolsReady((ctx) => …)` (capture `ctx.messages`
+    once ready); no manual queue/flush is needed because the ready hook only
+    fires post-connect. Buffer any `notify(...)` calls made before `ready` and
+    replay them in the `onDevtoolsReady` callback if early emission matters.
   - Register a Nuxt hook **`devtools:notify`** (add it to the hooks type in
     `packages/devtools-kit/src/_types/hooks.ts`) so modules can push:
     `nuxt.callHook('devtools:notify', { message, level?, description?, … })`.
@@ -131,16 +148,20 @@ intentional, leveled message.
 
 - Reimplement `devtoolsUiShowNotification` (in
   `packages/devtools-ui-kit/src/composables/notification.ts`) so that, instead of
-  driving the local `NNotification` component, it emits a devframe message via
-  the client RPC with `notify:true, autoDismiss:true, autoDelete:true` and a
-  `level` derived from intent (default `info`; allow callers to pass one).
+  driving the local `NNotification` component, it emits a devframe message with
+  `notify:true, autoDismiss:true, autoDelete:true` and a `level` derived from
+  intent (default `info`; allow callers to pass one). Emit the toast
+  soft-deprecation for `devtoolsUiShowNotification` via `deprecate(...)` (next
+  free `NDT_DEP_xxxx`) if you keep it as a thin adapter.
   - The UI kit must not hard-depend on the devtools client RPC. Keep the
     `devtoolsUiProvideNotificationFn` seam: the **client** provides the concrete
-    implementation (which calls the devframe RPC) at startup; the UI kit stays a
-    thin proxy. So: keep `notification.ts` as the proxy, and register the
-    devframe-backed implementation from the Nuxt DevTools client (e.g. in
-    `packages/devtools/client/plugins/` or `app.vue` setup) via
-    `devtoolsUiProvideNotificationFn`.
+    implementation at startup; the UI kit stays a thin proxy. Register the
+    devframe-backed implementation from the Nuxt DevTools client via
+    `devtoolsUiProvideNotificationFn`, using the client-side
+    `onDevtoolsReady((kit) => …)` (from `@nuxt/devtools-kit/iframe-client`) /
+    `client.devtools.devtoolsKit` from #1023 to obtain the connected client and
+    call the messages RPC (e.g. in `packages/devtools/client/plugins/` or
+    `app.vue` setup).
 - Map the existing callers' options (`message`, `icon`, `duration`, `position`)
   onto message fields where they have an equivalent; `position`/`duration` become
   no-ops or best-effort (the chrome toast owns placement/timing). Audit each
@@ -177,9 +198,10 @@ intentional, leveled message.
 ## Risks / gotchas
 
 - **Which RPC method drives the core toast.** Verify empirically in the running
-  playground (`rpc.call('devframes-plugin-messages:add', …)` vs the
-  `devtoolskit:internal:messages:*` / `hub:messages:*` methods). Whichever makes
-  a floating toast appear is the one to use for the ephemeral tier.
+  playground (`kit.client.call('devframes-plugin-messages:add', …)` vs the
+  `devtoolskit:internal:messages:*` / `hub:messages:*` methods, with `kit` from
+  the client `onDevtoolsReady`). Whichever makes a floating toast appear is the
+  one to use for the ephemeral tier.
 - **Toast location.** The chrome toast renders in the Vite DevTools host layer,
   not inside the (possibly promoted, separate) Nuxt iframe where the action
   happened. This is expected under "unify"; confirm it renders above the panel.

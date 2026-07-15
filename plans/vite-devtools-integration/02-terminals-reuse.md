@@ -1,6 +1,7 @@
 # Plan 02 — Reuse the built-in devframe Terminals dock
 
-**Status:** ready to execute · **Risk:** medium · **Depends on:** nothing
+**Status:** ready to execute · **Risk:** medium · **Depends on:** the landed
+compat/deprecation foundation (nuxt/devtools#1021 — see the folder README)
 **Outcome:** Nuxt DevTools stops shipping its own `@xterm` terminal UI + RPC and
 instead surfaces terminal sessions through devframe's `ctx.terminals`, so they
 render in Vite DevTools' built-in **Terminals** dock. Existing modules that use
@@ -9,16 +10,31 @@ opt-in interactive **PTY** path is added.
 
 > Self-contained: read this whole file; shared API facts are repeated here.
 
-## Relationship to Plan 00 (foundation)
+## What already landed (don't redo)
 
-If Plan 00 (compat foundation) has landed, prefer its **connect-safe**
-`nuxt.devtools.terminals` host over `nuxt.devtools.devtoolsKit.terminals`
-(it queues pre-connect `register`/`start…` calls), and emit the
-`devtools:terminal:register` / `startSubprocess` soft-deprecations through Plan
-00's **nostics** catalog (`NDT_DEP_xxxx` with `fix` + doc link). The
-`getProcess()`→`getResult()` deprecation is already a Plan 00 pilot. If Plan 00
-is not yet in place, use `devtoolsKit.terminals` guarded for the
-undefined-until-connect window (queue + flush like `pendingBroadcasts`).
+nuxt/devtools#1021 already ships the **deprecation warnings** for this area:
+
+- `startSubprocess` → `NDT_DEP_0004` (points at
+  `onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))`).
+- `startSubprocess().getProcess()` → `getResult()` = `NDT_DEP_0001`.
+
+But the **shim still routes through the old system** — `startSubprocess` (in
+`packages/devtools-kit/src/index.ts`) still fires the `devtools:terminal:*`
+hooks, which `packages/devtools/src/server-rpc/terminals.ts` still services with
+its own `@xterm`-backed Map + RPC. So the warnings exist, but the underlying
+implementation is unchanged. **This plan's job is to swap that implementation to
+`ctx.terminals`** while keeping the hooks/deprecations working. Reuse the
+existing `NDT_DEP_0004`/`0001` codes; if you add a `devtools:terminal:register`
+deprecation, use the **next free** `NDT_DEP_xxxx` (don't reuse `0002`).
+
+## Relationship to the landed foundation
+
+Reach `ctx.terminals` via `onDevtoolsReady((ctx) => …)` from
+`@nuxt/devtools-kit`, which hands you the *already connected* context — **no
+pre-connect window to guard and no queue to manage**. Raw escape hatch:
+`nuxt.devtools.devtoolsKit?.terminals`. Emit any new soft-deprecations through
+the nostics catalog (`deprecate(...)` in
+`packages/devtools-kit/src/diagnostics.ts`).
 
 ## Context you need
 
@@ -75,10 +91,11 @@ DevTools; DevTools is a passive viewer" (output-only; no stdin, no resize).
 ### devframe Terminals API (target)
 
 `ctx.terminals` is a `DevframeTerminalsHost` on the `ViteDevToolsNodeContext`
-available in `packages/devtools/src/module-main.ts`'s `devtools.setup(ctx)` and
-stored as `devtoolsKit` on the Nuxt server context
-(`packages/devtools/src/server-rpc/index.ts` → `connectDevToolsKit`;
-`packages/devtools-kit/src/_types/server-ctx.ts` `devtoolsKit` field):
+handed to you by `onDevtoolsReady((ctx) => …)` (from `@nuxt/devtools-kit`). It is
+also stored as `devtoolsKit` on the Nuxt server context
+(`packages/devtools/src/server-rpc/index.ts` → `connectDevToolsKit`, which fires
+`devtools:ready`; `packages/devtools-kit/src/_types/server-ctx.ts` `devtoolsKit`
+field):
 
 ```ts
 interface DevframeTerminalsHost {
@@ -119,17 +136,20 @@ Rewrite `packages/devtools/src/server-rpc/terminals.ts` (or replace it with a
 `terminals-bridge` integration) so that instead of maintaining its own map + RPC
 it:
 
+- Capture `ctx.terminals` from `onDevtoolsReady((ctx) => …)`. Terminals may be
+  registered before the kit connects (module setup runs early); since the ready
+  hook only fires post-connect, buffer any early `register`/`write`/`exit` events
+  in your own `Map` and replay them into `ctx.terminals` inside the
+  `onDevtoolsReady` callback. (No `pendingBroadcasts`-style plumbing needed — the
+  ready hook removes the undefined-until-connect race.)
 - On `devtools:terminal:register`: create a `ReadableStream<string>` (keep its
   controller in a `Map<id, controller>`), build a `DevframeTerminalSession`
   `{ id, title: terminal.name, status: 'running', icon?, stream }`, and call
-  `devtoolsKit.terminals.register(session)`. Guard for `devtoolsKit` being
-  `undefined` before the kit connects — queue registrations and flush them in
-  `connectDevToolsKit` (mirror the existing `pendingBroadcasts` pattern in
-  `server-rpc/index.ts`).
+  `ctx.terminals.register(session)`.
 - On `devtools:terminal:write`: `controller.enqueue(data)` for that id (and keep
   a rolling buffer if the session's initial `buffer` needs seeding).
 - On `devtools:terminal:exit`: `controller.close()`, set the session `status` to
-  `'stopped'`/`'error'` and `devtoolsKit.terminals.update(session)`.
+  `'stopped'`/`'error'` and `ctx.terminals.update(session)`.
 - On `devtools:terminal:remove` + `runTerminalAction` semantics: map
   `restart`/`terminate`/`remove`/`clear` onto the module-provided
   `onActionRestart`/`onActionTerminate` callbacks (still owned by the module) and
@@ -158,8 +178,9 @@ module-facing contracts don't change.
 ### Step 3 — add an opt-in PTY path
 
 - Add a server helper (e.g. on the Nuxt server context / a new
-  `devtools:terminal:spawn` hook option `{ interactive: true }`) that calls
-  `devtoolsKit.terminals.startPtySession({ command, args, cwd, env, cols, rows }, { id, title })`.
+  `devtools:terminal:spawn` hook option `{ interactive: true }`) that, from
+  within `onDevtoolsReady`, calls
+  `ctx.terminals.startPtySession({ command, args, cwd, env, cols, rows }, { id, title })`.
   Interactive sessions get stdin `write` + `resize` handled entirely by the
   built-in Terminals dock UI (no Nuxt client code needed).
 - Note PTY uses `zigpty` native bindings with graceful pipe fallback
@@ -201,8 +222,9 @@ module-facing contracts don't change.
   their lifecycle/`onActionRestart`/`onActionTerminate` semantics.
 - **Don't drop exit-driven cleanup.** `client-rpc.ts` prunes installing-modules /
   analyze-build state on `devtools:terminal:exit`. Preserve an exit signal path.
-- **Timing before kit connect.** Terminals may register before
-  `connectDevToolsKit` runs; queue + flush (mirror `pendingBroadcasts`).
+- **Timing before kit connect.** Terminals may register before the kit connects;
+  buffer early events in your own `Map` and replay them inside the
+  `onDevtoolsReady` callback (the ready hook only fires post-connect).
 - **Read-only session controls.** Registered read-only sessions have no
   `write`/`resize`; make sure the dock UI doesn't imply interactivity for them
   (rely on the session's `interactive` flag being falsy).
