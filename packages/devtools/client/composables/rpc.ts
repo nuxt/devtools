@@ -84,5 +84,9 @@ export async function registerClientFunctions() {
  */
 export function upsertClientFunction(client: DevToolsRpcClient, name: string, handler: (...args: any[]) => any) {
   const definition = { name, type: 'event', handler } as const
+  // The cast is a workaround for a devframe type gap: its `RpcFunctionsCollector`
+  // interface (used for the client host) omits the `force` parameter that the
+  // concrete `RpcFunctionsCollectorBase` and the runtime actually accept. Drop
+  // the cast once devframe types `register(fn, force?)` on the interface.
   ;(client.client.register as (fn: any, force?: boolean) => void)(definition, true)
 }
