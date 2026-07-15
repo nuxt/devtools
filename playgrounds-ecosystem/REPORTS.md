@@ -29,6 +29,44 @@ authorizes, and opens with no console errors — giving a second way to
 dogfood this repo's own code without the `../../local` HMR-subprocess
 wrapper.
 
+**Addendum 2 — Plan 00 landed on this branch, re-tested:** this feature
+branch was rebased onto `main` after nuxt/devtools#1021 (devframe-native
+hosts + nostics deprecation foundation) and nuxt/devtools#1023 (client RPC
+registration fix) merged. Re-ran the full dogfooding pass against the
+rebased tip:
+
+- **The client RPC registration bug is fixed.** Earlier runs against
+  pre-#1023 `main` logged `[DF0022] RPC function "refresh"/"callHook"/
+  "onTerminalData"/"onTerminalExit"/"navigateTo" is not registered` on every
+  load (a client/server registration race in the devframe RPC migration,
+  unrelated to any of the three ecosystem modules). None of those errors
+  reproduce anymore.
+- **Plan 00's deprecation diagnostics are live and already flagging real
+  ecosystem usage** — exactly the signal this plan exists to surface:
+  - `[NDT_DEP_0003] extendServerRpc is deprecated` fires from **both**
+    `@nuxt/fonts` (`node_modules/@nuxt/fonts/dist/module.mjs`) and
+    `nuxt-og-image`'s shared dependency `nuxtseo-shared`
+    (`node_modules/nuxtseo-shared/dist/devtools.mjs`) — confirmed by
+    grepping the installed packages for `extendServerRpc`. Both point to
+    `onDevtoolsReady((ctx) => ctx.rpc.register(defineRpcFunction(...)))` as
+    the fix — good candidates for the upstream questions in
+    [Recommendations](#recommendations).
+  - `[NDT_DEP_0004] startSubprocess is deprecated` fires too, but from this
+    repo's **own** `local.ts` dev-tooling helper (used only by
+    `NUXT_DEVTOOLS_LOCAL=true`, not by any ecosystem module) — worth a
+    small follow-up to migrate `local.ts` itself to
+    `ctx.terminals.startChildProcess(...)`, tracked separately from this
+    plan.
+  - `@nuxt/scripts`'s legacy `addCustomTab` (from its own
+    `@nuxt/devtools-kit@^3.2.4` dependency, see the per-module finding below)
+    did **not** trigger a matching deprecation warning in this run — either
+    it's not yet covered by Plan 00's diagnostic catalog, or the code path it
+    takes differs from `extendServerRpc`'s. Worth a follow-up once Plan 00's
+    catalog is more complete.
+- Everything else held: all three modules still show up in the Modules tab,
+  all three tabs are still reachable (still only via the SideNav overflow
+  menu), and `@nuxt/scripts` still shows "No scripts loaded".
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |
@@ -157,27 +195,41 @@ playground anymore.
   modules — it's Vite DevTools 0.4's own security gate — but it's worth
   documented in this repo's own contributor docs since it surprises anyone
   dogfooding for the first time (see the runbook in `README.md`).
-- Two pre-existing Vue warnings appeared in the console, unrelated to any of
-  the ecosystem modules: `onUnmounted is called when there is no active
-  component instance...` (from a `SideNavItem`/`VTooltip` around the
+- A few pre-existing Vue warnings appeared in the console, unrelated to any of
+  the ecosystem modules: `onBeforeMount`/`onUnmounted is called when there is
+  no active component instance...` (from a `SideNavItem`/`VTooltip` around the
   Terminals nav item) and a `[useAsyncData] Incompatible options detected for
   "npm:check:nuxt"` warning. Both come from the Nuxt DevTools **client** itself
   (not from this playground's app code), so out of scope for this plan — but
-  worth a linked follow-up issue against `packages/devtools/client`.
+  worth a linked follow-up issue against `packages/devtools/client`. Still
+  present after the Plan 00/RPC-fix rebase (Addendum 2).
 
 ## Recommendations
 
 1. File upstream questions/issues against `nuxt/content` and `nuxt/image`
    asking about DevTools tab support (or lack thereof) in their current major
    versions, referencing this report.
-2. Once Plan 03 (dock groups / promote-tab-to-dock) lands, re-test whether
+2. File upstream issues against `nuxt-og-image`/`nuxtseo-shared` and
+   `@nuxt/fonts` for their `extendServerRpc` usage now flagged by Plan 00's
+   `NDT_DEP_0003` — both already have a clear migration path
+   (`onDevtoolsReady((ctx) => ctx.rpc.register(defineRpcFunction(...)))`)
+   printed right in the warning.
+3. Once Plan 03 (dock groups / promote-tab-to-dock) lands, re-test whether
    `nuxt-og-image`, `@nuxt/scripts`, and `@nuxt/fonts`'s tabs are easier to
    discover than today's "buried in the overflow menu" state.
-3. Re-run this playground once Plan 00's devframe-native hosts + shim layer
-   land, to confirm `@nuxt/scripts`'s legacy `@nuxt/devtools-kit@^3.2.4`
-   `addCustomTab` call keeps working unshimmed (it should, per the
-   `useNuxt()`-based mechanism described above) and pick up the new
-   deprecation diagnostics if any fire for it.
-4. Re-run after Plan 01 (Messages) lands to see whether `@nuxt/scripts`'s
+4. Confirmed (Addendum 2 above): `@nuxt/scripts`'s legacy
+   `@nuxt/devtools-kit@^3.2.4` `addCustomTab` call keeps working against
+   Plan 00's landed devframe-native hosts, per the `useNuxt()`-based
+   mechanism described in its per-module finding above — but it did **not**
+   trigger a deprecation diagnostic the way `extendServerRpc` did for the
+   other two modules. Worth a follow-up once Plan 00's diagnostic catalog
+   covers more of the legacy surface, to see whether `addCustomTab` itself
+   should get its own `NDT_DEP_*` code.
+5. Small, separate follow-up: `local.ts` (this repo's own
+   `NUXT_DEVTOOLS_LOCAL` dev-tooling helper) triggers Plan 00's
+   `NDT_DEP_0004` (`startSubprocess` deprecated) on every run — migrate it to
+   `ctx.terminals.startChildProcess(...)` so dogfooding this playground
+   doesn't itself produce deprecation noise.
+6. Re-run after Plan 01 (Messages) lands to see whether `@nuxt/scripts`'s
    "No scripts loaded" / "Not connected to the client app" gap resolves once
    more of the client bridge is exercised.
