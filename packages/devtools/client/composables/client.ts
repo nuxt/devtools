@@ -8,6 +8,7 @@ import { computed, ref } from 'vue'
 import { useState } from '#imports'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
+import { notify } from './notify'
 import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 
 let warnedExtendClientRpc = false
@@ -67,6 +68,7 @@ export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {
     host: client.value,
     devtools: <NuxtDevtoolsClient>{
       rpc,
+      notify,
       devtoolsKit: rpcClient.value,
       colorMode: mode.value,
       renderCodeHighlight(code, lang) {

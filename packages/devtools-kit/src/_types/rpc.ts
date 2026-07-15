@@ -5,6 +5,7 @@ import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
 import type { TerminalAction, TerminalInfo } from './terminals'
@@ -62,6 +63,9 @@ export interface ServerFunctions {
   writeStaticAssets: (file: AssetEntry[], folder: string) => Promise<string[]>
   deleteStaticAsset: (filepath: string) => Promise<void>
   renameStaticAsset: (oldPath: string, newPath: string) => Promise<void>
+
+  // Notifications
+  notify: (input: NuxtDevtoolsNotifyInput) => Promise<void>
 
   // Actions
   telemetryEvent: (payload: object, immediate?: boolean) => void

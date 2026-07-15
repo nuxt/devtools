@@ -128,8 +128,22 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
         const code = result.exitCode
         if (code !== 0) {
           console.error(result.stderr)
+          ctx.notify({
+            message: `Failed to install ${name}`,
+            level: 'error',
+            description: `Process exited with code ${code}. Check the Install ${name} terminal for details.`,
+            category: 'module',
+            notify: true,
+          })
           throw new Error(`[Nuxt DevTools] Failed to install module, process exited with ${code}`)
         }
+
+        ctx.notify({
+          message: `Installed ${name}`,
+          level: 'success',
+          category: 'module',
+          notify: true,
+        })
 
         // If all modules have been installed, write back to the config file, and auto restart.
         if (installSet.size === 0) {
@@ -172,8 +186,22 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
         const code = result.exitCode
         if (code !== 0) {
           console.error(result.stderr)
+          ctx.notify({
+            message: `Failed to uninstall ${name}`,
+            level: 'error',
+            description: `Process exited with code ${code}. Check the Uninstall ${name} terminal for details.`,
+            category: 'module',
+            notify: true,
+          })
           throw new Error(`[Nuxt DevTools] Failed to uninstall module, process exited with ${code}`)
         }
+
+        ctx.notify({
+          message: `Uninstalled ${name}`,
+          level: 'success',
+          category: 'module',
+          notify: true,
+        })
 
         await fs.writeFile(filepath, generated, 'utf-8')
       }

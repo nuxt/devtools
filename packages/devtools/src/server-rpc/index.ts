@@ -10,6 +10,7 @@ import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
+import { createNotifier, setupMessagesRPC } from './messages'
 import { setupNpmRPC } from './npm'
 import { setupOptionsRPC } from './options'
 import { setupServerDataRPC } from './server-data'
@@ -97,6 +98,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     broadcast('refresh', event)
   }
 
+  // Notify machinery: forwards notifications into the connected `ctx.messages`
+  // host, buffering any emitted before the kit connects. Registers the
+  // `devtools:notify` hook. Exposed on the context as `ctx.notify` for the
+  // curated built-in notification sources.
+  const notify = createNotifier(nuxt)
+
   function extendServerRpc(namespace: string, functions: any): any {
     deprecate(nuxt, 'NDT_DEP_0003', {
       api: 'extendServerRpc',
@@ -128,6 +135,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     rpc,
     get devtoolsKit() { return devtoolsKitCtx },
     refresh,
+    notify,
     extendServerRpc,
     openInEditorHooks: [],
   }
@@ -137,6 +145,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
 
   Object.assign(serverFunctions, {
     ...setupGeneralRPC(ctx),
+    ...setupMessagesRPC(ctx),
     ...setupCustomTabRPC(ctx),
     ...setupStorageRPC(ctx),
     ...setupAssetsRPC(ctx),
