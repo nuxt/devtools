@@ -12,17 +12,16 @@ import { connectPromise, rpc, rpcClient, upsertClientFunction } from './rpc'
 
 let warnedExtendClientRpc = false
 /**
- * @deprecated `extendClientRpc` is deprecated. Register client RPC functions on
- * the exposed Vite DevTools client instead:
- * `client.devtools.devtoolsKit?.client.register(...)`.
+ * @deprecated `extendClientRpc` is deprecated. Use `onDevtoolsReady` from
+ * `@nuxt/devtools-kit/iframe-client`, or the exposed `devtoolsKit` client.
  */
 function warnExtendClientRpcDeprecated() {
   if (warnedExtendClientRpc)
     return
   warnedExtendClientRpc = true
   console.warn(
-    '[nuxt-devtools] `extendClientRpc` is deprecated. Register client RPC functions on the '
-    + 'exposed Vite DevTools client instead: `client.devtools.devtoolsKit?.client.register(...)`.',
+    '[nuxt-devtools] `extendClientRpc` is deprecated. Use `onDevtoolsReady((kit) => '
+    + 'kit.client.register(...))` from `@nuxt/devtools-kit/iframe-client`.',
   )
 }
 

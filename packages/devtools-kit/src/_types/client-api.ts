@@ -130,8 +130,9 @@ export interface NuxtDevtoolsClient {
   devtoolsKit: DevToolsRpcClient | undefined
 
   /**
-   * @deprecated Register client RPC functions on the Vite DevTools client
-   * instead: `client.devtools.devtoolsKit?.client.register({ name, type: 'event', handler })`.
+   * @deprecated Use `onDevtoolsReady((kit) => kit.client.register(...))` from
+   * `@nuxt/devtools-kit/iframe-client`, or the exposed `devtoolsKit` client
+   * directly (`client.devtools.devtoolsKit?.client.register(...)`).
    */
   extendClientRpc: <ServerFunctions extends object = Record<string, unknown>, ClientFunctions extends object = Record<string, unknown>>(name: string, functions: ClientFunctions) => ServerFunctions
 }
