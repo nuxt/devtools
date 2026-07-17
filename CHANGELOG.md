@@ -1,3 +1,12 @@
+## [3.2.6](https://github.com/nuxt/devtools/compare/v3.2.5...v3.2.6) (2026-07-17)
+
+
+### Bug Fixes
+
+* nuxt api url ([1f0b20d](https://github.com/nuxt/devtools/commit/1f0b20dae362a5a32360aad12484e3f33f48b6d0))
+
+
+
 ## [3.2.5](https://github.com/nuxt/devtools/compare/v3.2.4...v3.2.5) (2026-04-30)
 
 
