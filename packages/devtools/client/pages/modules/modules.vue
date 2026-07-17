@@ -18,7 +18,7 @@ const terminalId = useCurrentTerminalId()
 const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
 
-const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'
+const iconBase = 'https://ipx.nuxt.com/s_80,f_webp/gh/nuxt/modules/main/icons/'
 
 registerCommands(() => [
   {

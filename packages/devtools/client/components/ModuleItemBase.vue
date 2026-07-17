@@ -21,8 +21,8 @@ const data = computed(() => ({
   ...props.info,
 }))
 
-const iconBase = 'https://api.nuxtjs.org/api/ipx/s_80,f_webp/gh/nuxt/modules/main/icons/'
-const avatarBase = 'https://api.nuxtjs.org/api/ipx/s_44,f_webp/gh_avatar/'
+const iconBase = 'https://ipx.nuxt.com/s_80,f_webp/gh/nuxt/modules/main/icons/'
+const avatarBase = 'https://ipx.nuxt.com/s_44,f_webp/gh_avatar/'
 const githubBase = 'https://github.com/'
 const npmBase = 'https://www.npmjs.com/package/'
 
