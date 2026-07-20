@@ -5,11 +5,13 @@ import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
-const PLAYGROUNDS = ['empty', 'spa', 'tab-pinia', 'tab-seo'] as const
+const PLAYGROUNDS = ['empty', 'spa', 'tab-pinia', 'tab-seo', 'tab-timeline'] as const
 const MODES = ['dev', 'built'] as const
 
 type Mode = typeof MODES[number]
 type Playground = typeof PLAYGROUNDS[number]
+
+const DEV_ONLY_PLAYGROUNDS: readonly Playground[] = ['tab-timeline']
 
 interface Spec {
   name: string
@@ -19,12 +21,13 @@ interface Spec {
 }
 
 const allSpecs: Spec[] = PLAYGROUNDS.flatMap((playground, idx) =>
-  MODES.map((mode): Spec => ({
-    name: `${playground}:${mode}`,
-    playground,
-    mode,
-    port: 13000 + idx * 10 + (mode === 'dev' ? 0 : 1),
-  })),
+  MODES.filter(mode => mode === 'dev' || !DEV_ONLY_PLAYGROUNDS.includes(playground))
+    .map((mode): Spec => ({
+      name: `${playground}:${mode}`,
+      playground,
+      mode,
+      port: 13000 + idx * 10 + (mode === 'dev' ? 0 : 1),
+    })),
 )
 
 // PW_PROJECT supports glob-style filtering (e.g. `*:dev`, `empty:*`, `empty:dev`).
