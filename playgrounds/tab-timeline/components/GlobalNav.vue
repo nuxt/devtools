@@ -26,6 +26,9 @@
       <NButton n="primary sm" to="/error" active-class="n-solid">
         /error
       </NButton>
+      <NButton n="primary sm" to="/keyed" active-class="n-solid">
+        /keyed
+      </NButton>
     </div>
   </div>
 </template>
