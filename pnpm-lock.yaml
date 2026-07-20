@@ -336,6 +336,9 @@ catalogs:
     unstorage:
       specifier: ^1.17.5
       version: 1.17.5
+    verkit:
+      specifier: ^0.1.2
+      version: 0.1.2
     vite-plugin-inspect:
       specifier: ^12.0.2
       version: 12.0.2
@@ -361,9 +364,6 @@ catalogs:
     '@types/node':
       specifier: ^26.1.1
       version: 26.1.1
-    '@types/semver':
-      specifier: ^7.7.1
-      version: 7.7.1
     '@types/which':
       specifier: ^3.0.4
       version: 3.0.4
@@ -425,9 +425,6 @@ importers:
       '@types/node':
         specifier: catalog:types
         version: 26.1.1
-      '@types/semver':
-        specifier: catalog:types
-        version: 7.7.1
       '@types/which':
         specifier: catalog:types
         version: 3.0.4
@@ -575,9 +572,6 @@ importers:
       pkg-types:
         specifier: catalog:prod
         version: 2.3.1
-      semver:
-        specifier: ^7.8.5
-        version: 7.8.5
       sirv:
         specifier: catalog:prod
         version: 3.0.2
@@ -593,6 +587,9 @@ importers:
       unstorage:
         specifier: catalog:prod
         version: 1.17.5(db0@0.3.4)(ioredis@5.11.1)
+      verkit:
+        specifier: catalog:prod
+        version: 0.1.2
       vite:
         specifier: ~8.0.14
         version: 8.0.16(@types/node@26.1.1)(@vitejs/devtools@0.4.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0)
@@ -3316,9 +3313,6 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
-
-  '@types/semver@7.7.1':
-    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/sinonjs__fake-timers@8.1.1':
     resolution: {integrity: sha512-0kSuKjAS0TrGLJ0M/+8MaFkGsQhZpB6pxOmvS3K8FYI72K//YmdfoW9X2qPsAKh1mkwxGD5zib9s1FIFed6E8g==}
@@ -8269,6 +8263,10 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
+  verkit@0.1.2:
+    resolution: {integrity: sha512-WqkT8n3hqizuCu71W3bUzf5fjBmkbXcudsehe/NbxA8PgqoKnSOY5K0Ba2ckg1qaRaSpSz7as/n9K1R9JXjQKg==}
+    engines: {node: '>=18.12.0'}
+
   verror@1.10.0:
     resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
     engines: {'0': node >=0.6.0}
@@ -11179,8 +11177,6 @@ snapshots:
       undici-types: 8.3.0
 
   '@types/resolve@1.20.2': {}
-
-  '@types/semver@7.7.1': {}
 
   '@types/sinonjs__fake-timers@8.1.1': {}
 
@@ -17768,6 +17764,8 @@ snapshots:
       '@sphinxxxx/color-conversion': 2.2.2
 
   vary@1.1.2: {}
+
+  verkit@0.1.2: {}
 
   verror@1.10.0:
     dependencies:

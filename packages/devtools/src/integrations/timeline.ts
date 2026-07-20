@@ -1,7 +1,7 @@
 import type { Import } from 'unimport'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { resolve } from 'pathe'
-import semver from 'semver'
+import { isGreaterOrEqual } from 'verkit'
 import { runtimeDir } from '../dirs'
 
 const DEFINE_UPPER_RE = /^define[A-Z]/
@@ -37,7 +37,7 @@ export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   nuxt.hook('imports:context', (unimport) => {
     const ctx = unimport.getInternalContext()
 
-    if (!ctx.version || !semver.gte(ctx.version, '3.1.0'))
+    if (!ctx.version || !isGreaterOrEqual(ctx.version, '3.1.0'))
       throw new Error(`[Nuxt DevTools] The timeline feature requires \`unimport\` >= v3.1.0, but got \`${ctx.version || '(unknown)'}\`. Please upgrade using \`nuxi upgrade --force\`.`)
 
     ctx.addons.push(
