@@ -42,7 +42,8 @@
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest run"
   },
   "peerDependencies": {
     "vite": ">=6.0"
@@ -58,13 +59,16 @@
     "consola": "catalog:prod",
     "destr": "catalog:prod",
     "error-stack-parser-es": "catalog:frontend",
+    "escape-string-regexp": "catalog:prod",
     "fast-npm-meta": "catalog:prod",
     "get-port-please": "catalog:prod",
     "hookable": "catalog:frontend",
     "image-meta": "catalog:prod",
     "launch-editor": "catalog:prod",
     "local-pkg": "catalog:prod",
+    "magic-string": "catalog:prod",
     "magicast": "catalog:prod",
+    "mlly": "catalog:prod",
     "ohash": "catalog:frontend",
     "pathe": "catalog:frontend",
     "perfect-debounce": "catalog:frontend",
@@ -74,6 +78,7 @@
     "structured-clone-es": "catalog:frontend",
     "tinyexec": "catalog:prod",
     "tinyglobby": "catalog:prod",
+    "unplugin": "catalog:prod",
     "unstorage": "catalog:prod",
     "vite-plugin-inspect": "catalog:prod",
     "vite-plugin-vue-tracer": "catalog:prod",
@@ -91,6 +96,7 @@
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/simple-icons": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
+    "@nuxt/schema": "catalog:types",
     "@nuxt/test-utils": "catalog:cli",
     "@parcel/watcher": "catalog:buildtools",
     "@types/markdown-it-link-attributes": "catalog:types",
@@ -131,6 +137,7 @@
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
+    "vitest": "catalog:cli",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"
   }
