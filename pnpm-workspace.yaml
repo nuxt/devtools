@@ -39,6 +39,9 @@ overrides:
   # with the matching catalog entries below by hand.
   '@devframes/hub': ^0.7.5
   '@nuxt/devtools': workspace:*
+  '@vue/compiler-core': 3.5.39
+  '@vue/compiler-dom': 3.5.39
+  '@vue/shared': 3.5.39
   chokidar: ^5.0.0
   devframe: ^0.7.5
   esbuild: ^0.28.1
@@ -52,10 +55,9 @@ overrides:
   # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
   # `@vitejs/devtools` ships working 8.1 support.
   vite: ~8.0.14
-  # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
-  # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
-  # SFC codegen errors from mixed compiler versions.
-  vue: ^3.5.39
+  # `@vitejs/devtools@0.4.2` requests Vue 3.5.40, but mixing its compiler
+  # internals with the 3.5.39 runtime generates duplicate-import SFC errors.
+  vue: 3.5.39
   vue-tsc: ^3.3.7
 catalogs:
   buildtools:
@@ -144,7 +146,7 @@ catalogs:
     vis-data: ^8.0.4
     vis-network: ^10.1.0
     vite-hot-client: ^2.2.0
-    vue: ^3.5.39
+    vue: 3.5.39
     vue-router: ^5.1.0
     vue-virtual-scroller: ^3.0.4
   icons:
