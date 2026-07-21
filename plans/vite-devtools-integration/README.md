@@ -1,280 +1,131 @@
-# Nuxt DevTools × Vite DevTools 0.4 / devframe 0.6 — integration plans
+# Nuxt DevTools and Devframe 0.7 integration plans
 
-This folder holds three **independently executable** implementation plans. Each
-plan is self-contained: a fresh agent with no prior context can pick up any one
-file and execute it. Read this overview once for shared context, then follow the
-individual plan.
+This folder contains four implementation plans for `@vitejs/devtools-kit` 0.4.2
+and Devframe 0.7.5. They replace the earlier Devframe 0.6 plans, which no longer
+matched the repository: Messages had mostly landed, terminals were split across
+two systems, and the proposed dynamic dock promotion depended on lifecycle APIs
+that Devframe does not expose.
 
-## Background
+Each plan is written for a fresh implementation agent. Read the whole selected
+plan, run its drift check, and honor its STOP conditions. A plan may depend on a
+landed predecessor, but does not require reading the other plan files.
 
-Nuxt DevTools v4 renders inside **Vite DevTools** (`@vitejs/devtools` 0.4.x),
-which is built on the **devframe 0.6** runtime (`@devframes/hub`, plus the
-official `@devframes/plugin-terminals` / `@devframes/plugin-messages` /
-`@devframes/plugin-inspect` built-ins). The migration to those versions has
-already landed on `main` (nuxt/devtools#1010).
+## Target state
 
-The **compatibility & deprecation foundation** these plans were originally going
-to build has **also already landed** — nuxt/devtools#1021 (server-side) and
-nuxt/devtools#1023 (client-side). See ["Landed foundation"](#landed-foundation)
-below; that section is now the shared ground these plans stand on (there is no
-longer a separate "plan 00" — it shipped).
+Nuxt DevTools becomes a first-class `Nuxt` framework group in Vite DevTools:
 
-Today Nuxt DevTools:
+- `nuxt:devtools` remains the default group member and keeps its complete
+  internal SideNav.
+- `@devframes/plugin-code-server` replaces the bespoke VS Code server tab.
+- `@devframes/plugin-data-inspector` replaces the DiscoveryJS-based Nuxt
+  Options Viewer with one preconfigured, live `Nuxt Application` source.
+- Messages and terminals use the Devframe 0.7 host services without duplicate
+  Nuxt UI implementations.
 
-- Registers **one** `type:'iframe'` dock entry (`nuxt:devtools`) that loads the
-  whole client (`/__nuxt_devtools__/client/`), with ~25 tabs behind an internal
-  `SideNav`. Registration lives in `packages/devtools/src/module-main.ts`
-  (inside a Vite DevTools plugin `devtools.setup(ctx)` callback, ~lines 95‑112).
-- Ships its **own** terminals system (`@xterm` UI, `server-rpc/terminals.ts`,
-  `devtools:terminal:*` Nuxt hooks, output-only child processes).
-- Ships its **own** ephemeral toast (`devtoolsUiShowNotification` in
-  `packages/devtools-ui-kit`), client-only, no history.
-
-These plans make Nuxt DevTools *use the platform* instead of duplicating it.
-
-## Strategy (this major)
-
-We're cutting a **new major**. Breaking changes are acceptable, but migration
-for module authors/users must be **minimal and self-discoverable**, with a
-gradual long-term move to devframe-native APIs. Concretely:
-
-1. **Keep** the existing Nuxt DevTools API working (via shims).
-2. **Expose** the devframe-native API — done: modules reach the connected
-   `ViteDevToolsNodeContext` through the `devtools:ready` hook / `onDevtoolsReady`
-   (server) and `onDevtoolsReady` from `@nuxt/devtools-kit/iframe-client` +
-   `client.devtools.devtoolsKit` (client).
-3. **Soft-deprecate** the Nuxt API where a devframe equivalent exists — via a
-   backward-compatible **shim** + a **nostics** deprecation diagnostic (code +
-   fix + doc link). This mechanism has shipped (see below).
-4. Build the feature work (Messages / Terminals / Dock groups) **on top of**
-   that foundation.
-
-## Landed foundation
-
-The foundation these plans depend on is **already implemented** — do **not**
-rebuild it. Build the feature plans on top of it.
-
-### Reaching the connected context
-
-**Server side** — `onDevtoolsReady((ctx) => …)` (from `@nuxt/devtools-kit`,
-backed by the `devtools:ready` Nuxt hook) runs once the Vite DevTools kit has
-connected and hands you the connected `ViteDevToolsNodeContext`, exposing
-`ctx.docks`, `ctx.terminals`, `ctx.messages`, `ctx.commands`, `ctx.rpc`, and
-`ctx.diagnostics`:
+The group does **not** hoist Nuxt's built-in pages into separate iframes. There
+is no `dock: true` custom-tab bridge. Module authors join the group through the
+native dock API and the exported `NUXT_DEVTOOLS_GROUP_ID`:
 
 ```ts
-import { onDevtoolsReady } from '@nuxt/devtools-kit'
+import { NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
 
 onDevtoolsReady((ctx) => {
-  ctx.docks.register({ id: 'my-module', type: 'iframe', title: 'My Module', url: '/…' })
+  ctx.docks.register({
+    id: 'my-module',
+    type: 'iframe',
+    title: 'My Module',
+    icon: 'i-ph-puzzle-piece',
+    url: '/my-module/',
+    groupId: NUXT_DEVTOOLS_GROUP_ID,
+  })
 })
 ```
 
-This is the **recommended entry point** — the kit is guaranteed available, so
-there is **no pre-connect timing problem and no queue to manage**. (Earlier
-drafts proposed "connect-safe host accessors" on `nuxt.devtools` with an internal
-queue; those were **not** built and the ready hook supersedes them.) The raw
-`nuxt.devtools.devtoolsKit` (`ViteDevToolsNodeContext | undefined` until connect)
-remains the escape hatch. Wiring lives in
-`packages/devtools/src/server-rpc/index.ts` (`connectDevToolsKit` fires
-`devtools:ready`).
+## Verified platform facts
 
-**Client side** (nuxt/devtools#1023) — `onDevtoolsReady((kit) => …)` from
-`@nuxt/devtools-kit/iframe-client` mirrors the server hook and hands back the
-connected `DevToolsRpcClient`. `client.devtools.devtoolsKit` is that same
-connected client (mirror of `nuxt.devtools.devtoolsKit`), giving full
-devframe-native client access (register client RPC, call server functions,
-shared state, streaming) with **no** `@vitejs/devtools-kit/client` import:
+- The root lockfile resolves `@vitejs/devtools-kit` and `@vitejs/devtools` to
+  0.4.2 and `devframe` / `@devframes/hub` to 0.7.5.
+- The target integration requires Vite 8. Code Server 0.7.5 peers only with
+  Vite 8, so retaining the package's old Vite 6+ peer range would be misleading.
+- A dock group is `{ type: 'group', id, title, icon, defaultChildId? }`; members
+  point to it with `groupId`. Membership is one level deep and orphan-tolerant.
+- `ctx.docks.register()` can update an entry but cannot unregister it. An open
+  iframe also does not navigate when its registered URL changes. These gaps are
+  why dynamic custom-tab promotion is out of scope.
+- `mountDevframe()` is re-exported from `@vitejs/devtools-kit/node`. It serves a
+  Devframe SPA, mounts connection metadata, registers its iframe dock, and runs
+  the definition's setup against the existing hub.
+- `@devframes/plugin-code-server` 0.7.5 supports on-demand Coder `code-server`.
+  It does not support Microsoft server variants, tunnels, existing-server reuse,
+  start-on-boot, or the old controller extension.
+- `@devframes/plugin-data-inspector` 0.7.5 has a process-global source registry.
+  A non-static factory is resolved on every query. The query engine handles
+  circular and exotic values, so the old JSON serialization layer is needless.
+- The public terminals host can register external output streams, but cannot
+  remove them or expose restart/terminate actions for externally owned sessions.
+  The compatibility bridge is therefore output/status only.
 
-```ts
-import { onDevtoolsReady } from '@nuxt/devtools-kit/iframe-client'
+## Plans and order
 
-onDevtoolsReady((kit) => {
-  kit.client.register({ name: 'my-module:on-update', type: 'event', handler })
-})
+| # | Plan | Outcome | Depends on | Parallel with |
+|---|---|---|---|---|
+| 01 | [`01-dock-foundation.md`](./01-dock-foundation.md) | Select the correct Nuxt client Vite context and register/export the Nuxt group. | landed v4 foundation | 02 |
+| 02 | [`02-platform-services-cleanup.md`](./02-platform-services-cleanup.md) | Repair Messages transport and finish terminal convergence. | landed v4 foundation | 01 |
+| 03 | [`03-code-server-plugin.md`](./03-code-server-plugin.md) | Replace the built-in VS Code integration with the Code Server plugin. | 01 | 04 (implementation only) |
+| 04 | [`04-data-inspector-plugin.md`](./04-data-inspector-plugin.md) | Replace DiscoveryJS with the Data Inspector plugin and Nuxt source. | 01 | 03 (implementation only) |
+
+Recommended landing order: **01 and 02 in either order, then 03, then 04**.
+Plans 03 and 04 may be implemented in parallel, but both edit the package
+manifest, workspace catalog, and lockfile. Land them serially; rebase the second
+PR and regenerate its lockfile. Both rely on the group constant and deterministic
+ready context from Plan 01. Their Devframe docks would be orphan-tolerant at
+runtime, but their source code should not duplicate the group ID.
+
+## Locked decisions
+
+- Use stable group ID `nuxt`, title `Nuxt`, category `framework`, and
+  `nuxt:devtools` as `defaultChildId`.
+- Use default order `-900` for the group and member orders `-300` for the hub,
+  `-200` for Code Server, and `-100` for Data Inspector.
+- Keep every built-in Nuxt page in the hub SideNav; do not create shell-less
+  duplicate Nuxt clients.
+- Drop the proposed custom-tab `dock: true` API. Native `ctx.docks` is the only
+  public extension path.
+- Replace `vscode` with a curated `codeServer` module option. Keep `vscode` only
+  long enough to emit a migration warning, then ignore it.
+- Mount Code Server by default, detect the binary immediately, and start it only
+  when the user requests it.
+- Always mount Data Inspector, disable its example source, and register one live
+  source containing Nuxt options, Nitro options, and client/SSR Vite configs.
+- Do not add Nuxt wrappers around Data Inspector source registration or Devframe
+  terminals. Ecosystem modules use those platform APIs directly.
+- Keep the legacy terminal hooks and `startSubprocess` output bridge through v4,
+  with existing deprecations. Remove the bridge in v5.
+- Reserve `NDT_DEP_0008` for the removed `vscode` option. The terminal bridge
+  keeps the existing `NDT_DEP_0001` / `NDT_DEP_0004` diagnostics rather than
+  double-warning `startSubprocess` through its underlying hook.
+- Give every Nuxt-owned process run a unique session ID. Retain completed output
+  for the life of the dev server because Devframe 0.7 cannot unregister sessions.
+- Use caret `^0.7.5` catalog entries and keep all Devframe packages aligned when
+  updating the lockfile.
+- Narrow `@nuxt/devtools`' Vite peer range to Vite 8 before adding the plugins.
+
+## Shared verification
+
+Every implementation PR must run, using pnpm 11 — the version pinned in the
+root `package.json`'s `packageManager` field — not npm or yarn:
+
+```sh
+pnpm install
+pnpm lint
+pnpm build
+pnpm typecheck
+pnpm test:unit
 ```
 
-### nostics deprecation system (shipped)
+Run the plan-specific e2e command in addition. `pnpm build` or `pnpm prepare`
+must precede `pnpm typecheck` because the root tsconfig extends the generated
+Nuxt client config.
 
-`packages/devtools-kit/src/diagnostics.ts` implements the deprecation engine:
-
-- A `diagnosticCodes` catalog + `consoleDiagnostics` standalone reporter (prints
-  to the terminal pre-connect), and `registerHostDiagnostics(ctx)` which also
-  registers the codes into the DevTools **diagnostics host** post-connect so they
-  surface inside DevTools.
-- `deprecate(nuxt, code, params, { key?, method? })` — emits once per
-  `code:key` (deduped), routing to the host catalog when connected and the
-  console catalog otherwise. `method: 'error'` for hard breaks; default `'warn'`.
-- `docsBase` resolves to a per-code migration-guide anchor:
-  `https://devtools.nuxt.com/module/migration-v4#<code>`.
-
-**Codes already allocated** (extend by appending to `diagnosticCodes`; give each
-new code a migration-guide anchor):
-
-| Code | Deprecated API | Replacement |
-|---|---|---|
-| `NDT_DEP_0001` | `startSubprocess().getProcess()` | `getResult()` |
-| `NDT_DEP_0002` | *retired* (`disableAuthorization` is now a supported option) | — |
-| `NDT_DEP_0003` | `extendServerRpc` | `onDevtoolsReady((ctx) => ctx.rpc.register(defineRpcFunction(...)))` |
-| `NDT_DEP_0004` | `startSubprocess` | `onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...))` |
-| `NDT_DEP_0005` | `addCustomTab` | `onDevtoolsReady((ctx) => ctx.docks.register(...))` |
-| `NDT_DEP_0006` | `refreshCustomTabs` | update via the `ctx.docks.register(...)` handle |
-| `NDT_DEP_0007` | direct `nuxt.devtools.rpc` (`broadcast`/`functions`) | the connected `ctx.rpc` from `onDevtoolsReady` |
-| `extendClientRpc` (client) | deprecated in #1023 | `onDevtoolsReady((kit) => kit.client.register(...))` |
-
-These shims **already ship** — `addCustomTab` / `refreshCustomTabs` /
-`startSubprocess` / `extendServerRpc` all still work and merely warn. New
-deprecations added by the plans below use `deprecate(...)` with the **next free**
-`NDT_DEP_xxxx` code (don't reuse `0002`).
-
-> **Note — `disableAuthorization`.** An earlier draft wanted to hard-break this
-> option with an error-level diagnostic. That was reversed: it is now a
-> **supported first-class option** (`ModuleOptions.disableAuthorization`,
-> mapped to Vite's `devtools.clientAuth = false`; default `isSandboxed`). Do
-> **not** deprecate it.
-
-## Workstreams
-
-| # | Plan | Scope | Risk | Depends on |
-|---|------|-------|------|------------|
-| 01 | [`01-messages-unification.md`](./01-messages-unification.md) | Route all notifications through the devframe Messages system (`ctx.messages` + built-in Messages dock); retire the bespoke toast. | Low | landed foundation |
-| 02 | [`02-terminals-reuse.md`](./02-terminals-reuse.md) | Retire Nuxt's `@xterm` terminals; surface sessions in the built-in Terminals dock via `ctx.terminals`; keep a compat shim for the `devtools:terminal:register` hook. | Medium | landed foundation |
-| 03 | [`03-dock-groups-presentation.md`](./03-dock-groups-presentation.md) | Introduce a **"Nuxt" dock group** and a general **promote‑tab‑to‑dock** capability; relocate a curated set of tools onto the dock bar. | High (UX) | landed foundation |
-
-Recommended order: **01 → 02 → 03**. Each is technically buildable/reviewable as
-a **separate PR** on top of the landed foundation (#1021/#1023).
-
-> **Ecosystem dogfooding** (the former "plan 04") is being handled separately in
-> nuxt/devtools#1022 (`playgrounds-ecosystem/`), so it no longer lives here. Use
-> those playgrounds to verify plans 01–03 against real module integrations and to
-> capture per-module compatibility reports.
-
-## Shared facts every plan relies on
-
-**Versions** (already in `pnpm-workspace.yaml` catalogs): `@vitejs/devtools`
-`^0.4.0`, `@vitejs/devtools-kit` `^0.4.0`, `vite-plugin-inspect` `^12.0.2`,
-`vue` `^3.5.39`; transitively `devframe`/`@devframes/hub`/`@devframes/plugin-*`
-`0.6.0`; `nostics` `1.1.4`.
-
-**devframe host APIs (node side)** — from `@devframes/hub` (re-exported by
-`@vitejs/devtools-kit`), reached via `ctx` from `onDevtoolsReady`:
-
-```ts
-// ctx.terminals: DevframeTerminalsHost
-interface DevframeTerminalsHost {
-  readonly sessions: Map<string, DevframeTerminalSession>
-  readonly events: EventEmitter<{ 'terminal:session:updated': (s) => void }>
-  register: (session: DevframeTerminalSession) => DevframeTerminalSession
-  update:   (session: DevframeTerminalSession) => void
-  startChildProcess: (exec: { command; args; cwd?; env? },
-                      terminal: Omit<DevframeTerminalSessionBase,'status'>) => Promise<DevframeChildProcessTerminalSession> // output-only
-  startPtySession:   (exec: { command; args?; cwd?; env?; cols?; rows? },
-                      terminal: Omit<DevframeTerminalSessionBase,'status'>) => Promise<DevframePtyTerminalSession>          // interactive (zigpty; pipe fallback)
-}
-// A registered session may carry `buffer?: string[]` and/or `stream?: ReadableStream<string>`.
-// child-process sessions are output-only (no write/resize); pty sessions add write(data)+resize(cols,rows).
-
-// ctx.messages: DevframeMessagesHost
-interface DevframeMessagesHost {
-  readonly entries: Map<string, DevframeMessageEntry>
-  info|warn|error|success|debug: (message: string, extra?) => Promise<DevframeMessageHandle>
-  add:    (entry: DevframeMessageEntryInput) => Promise<DevframeMessageHandle>
-  update: (id, patch) => Promise<DevframeMessageEntry | undefined>
-  remove: (id) => Promise<void>
-  clear:  () => Promise<void>
-}
-// DevframeMessageEntry fields incl: message, description?, level('info'|'warn'|'error'|'success'|'debug'),
-// stacktrace?, filePosition?, notify?, autoDismiss?, autoDelete?, labels?, category?, from, timestamp, status?
-```
-
-**devframe dock API (node side)** — `ctx.docks.register(entry, force?)`:
-
-```ts
-// A GROUP is a first-class dock entry:
-ctx.docks.register({ id: 'nuxt', type: 'group', title: 'Nuxt', icon: '…', defaultOrder: -900, defaultChildId: 'nuxt:devtools' })
-// A member joins by pointing groupId at the group id:
-ctx.docks.register({ id: 'nuxt:devtools', type: 'iframe', title: 'Nuxt DevTools', icon: '…', url: '…', groupId: 'nuxt' })
-```
-
-- Grouping is a **flat pointer** (`groupId`), one level deep, orphan-tolerant
-  (a member whose group never registers renders top-level).
-- `category` (`'app' | 'framework' | 'web' | 'advanced' | 'default' | '~builtin' | (string&{})`)
-  is a **separate** ordering/bucketing axis, not the grouping mechanism.
-- Precedent to copy: Vite DevTools core registers the `~viteplus` group
-  (`DEVTOOLS_VITEPLUS_GROUP_ID`, "Vite+") and Rolldown joins it via
-  `groupId: DEVTOOLS_VITEPLUS_GROUP_ID`.
-
-**Built-in docks already mounted by `DevTools()`** (Nuxt calls `DevTools()` with
-default options, so `builtinDevTools` is on): **Terminals**, **Messages**,
-**Inspect** — each `category:'~builtin'`, auto-hidden when empty. Sessions/
-messages Nuxt pushes into `ctx.terminals` / `ctx.messages` surface in those
-docks for free.
-
-**Hard constraint (Vue DevTools bridge):** only **one** iframe can hold the
-Vue DevTools messaging context at a time (`setIframeServerContext(iframe)` is a
-single global). The Vue-backed tools (**Pinia**, **Render Tree**) must therefore
-stay inside the single hub iframe; they cannot each be a separately-promoted
-iframe. (This is the same mechanism as the "Connecting…" fix in
-`packages/devtools/src/runtime/plugins/view/client.ts`.)
-
-## Design decisions (locked via a grilling session)
-
-North star: pursue **all** of — discoverability/UX parity, maintenance
-reduction, behavioral consistency, and capability upgrade.
-
-Foundation (landed in #1021/#1023 — for reference, not to rebuild):
-- **Devframe-native API exposed** via the server + client `onDevtoolsReady`
-  hooks and `nuxt.devtools.devtoolsKit` / `client.devtools.devtoolsKit`. The
-  connect-safe-accessor idea was dropped in favour of the ready hooks (kit
-  guaranteed present, no queue).
-- **Self-discoverable deprecations** via the Nuxt **nostics** catalog
-  (`deprecate()` → console pre-connect + DevTools diagnostics host post-connect;
-  every code carries `why` + `fix` + a migration-guide doc link).
-- **Shim-first**: existing APIs keep working this major via shims; deprecations
-  are warnings; removal deferred to the next major.
-
-Messages (plan 01):
-- **Unify everything into the devframe Messages system** (one notification
-  system). The client toast is re-implemented to push into it.
-- **Tiered by intent**: ephemeral client feedback → `notify + autoDismiss +
-  autoDelete` (toast-only, no history); server-originated → persisted + leveled.
-- **Public notify API** (a `devtools:notify` Nuxt hook and/or
-  `useNuxtDevTools().notify()`) forwarded to `ctx.messages`, plus a curated set
-  of built-in sources (build/module errors & warnings, server-task results).
-
-Terminals (plan 02):
-- **Full replacement + compat shim**: retire the `@xterm` UI + `server-rpc/terminals`
-  + terminals tab; route sessions through `ctx.terminals` (built-in Terminals
-  dock); keep the `devtools:terminal:register` hook as a shim forwarding to
-  `ctx.terminals`.
-- Capability: **preserve output-only** for existing module terminals (map to
-  read-only registered sessions), **add opt-in PTY** for new interactive use.
-- Note: the `startSubprocess` (`NDT_DEP_0004`) and `getProcess()` (`NDT_DEP_0001`)
-  deprecation warnings already ship, but the shim still routes through the old
-  `devtools:terminal:*` hooks — this plan swaps the underlying implementation.
-
-Presentation (plan 03):
-- **Curated hybrid "Nuxt" dock group**: the hub iframe stays the primary member;
-  a small curated set is promoted as sibling dock entries.
-- Promotion is a **general opt-in capability** — any tab (core, module, user
-  custom) can request a dock button via a flag; ship curated defaults.
-- **Type-aware realization**: iframe custom tabs → dock iframe at their own
-  `src`; core pages + in-client custom tabs → dock iframe deep-linking into the
-  Nuxt client in a **shell-less "dock" mode** (SideNav hidden), one instance per
-  promoted tool.
-- **Relocating** SideNav semantics: a promoted tool leaves the hub SideNav and
-  lives only as a dock button; the SideNav shrinks to non-promoted + Vue tools.
-- Vue-bridge tools (Pinia, Render Tree) stay in the hub only.
-- Default promoted set: **Components, Server Routes, Pages**.
-- Tension to keep in mind: `addCustomTab` is now soft-deprecated (`NDT_DEP_0005`)
-  toward `ctx.docks.register`. Plan 03 still adds a `dock:true` convenience flag
-  on the custom-tab API, but docks is the long-term path (docks doesn't yet cover
-  `vnode` views or tab categories, which is why custom tabs still exist).
-
-## Working agreement
-
-- Base each PR on a fresh branch off `origin/main`.
-- Follow the repo's `AGENTS.md`; run `pnpm lint`, `pnpm build`, `pnpm typecheck`,
-  and the relevant `pnpm test:e2e` before opening a PR.
-- Conventional Commits; one PR per plan; note in the PR body that it was created
-  with the help of an agent.
+Use one Conventional Commit and one PR per plan. The final PR description line
+must state that the PR was created with the help of an agent.

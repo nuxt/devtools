@@ -7,8 +7,8 @@ honor its STOP conditions, run the drift check first, and update your row below
 when done.
 
 > **Related plan set:** the numbered plans below are `improve`-skill audit fixes.
-> The Vite DevTools 0.4 / devframe 0.6 *integration* RFCs (compat foundation,
-> messages/terminals reuse, dock groups, ecosystem dogfooding) live in
+> The Vite DevTools Kit 0.4.2 / Devframe 0.7.5 integration plans (dock
+> foundation, platform-service cleanup, Code Server, and Data Inspector) live in
 > [`vite-devtools-integration/`](./vite-devtools-integration/README.md).
 
 ## Execution order & status
