@@ -2,12 +2,12 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@vitejs/devtools-kit@0.4.0 || 0.4.1'
-  - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1'
-  - '@vitejs/devtools@0.4.0 || 0.4.1'
+  - '@vitejs/devtools-kit@0.4.0 || 0.4.1 || 0.4.2'
+  - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1 || 0.4.2'
+  - '@vitejs/devtools@0.4.0 || 0.4.1 || 0.4.2'
+  - '@devframes/hub@0.6.1 || 0.7.5'
+  - 'devframe@0.6.1 || 0.7.5'
   - vite-plugin-inspect@12.0.2
-  - '@devframes/hub@0.6.1'
-  - devframe@0.6.1
   - verkit@0.1.2
 resolutionMode: highest
 shamefullyHoist: true
@@ -37,26 +37,27 @@ overrides:
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.6.1
+  '@devframes/hub': ^0.7.5
   '@nuxt/devtools': workspace:*
+  '@vue/compiler-core': 3.5.39
+  '@vue/compiler-dom': 3.5.39
+  '@vue/shared': 3.5.39
   chokidar: ^5.0.0
-  devframe: ^0.6.1
+  devframe: ^0.7.5
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5
   typescript: ^6.0.3
   unimport: ^6.3.0
-  # `@vitejs/devtools@0.4` has no Vite 8.1-compatible release yet (peer
-  # `vite: *`, still built against 8.0): under Vite 8.1's reworked
-  # WebSocket-upgrade handling, its crossws-based RPC socket ends up calling
+  # `@vitejs/devtools@0.4.2` still fails under Vite 8.1's reworked
+  # WebSocket-upgrade handling: its crossws-based RPC socket ends up calling
   # `server.handleUpgrade()` twice on the same SSR socket, killing the
   # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
-  # `@vitejs/devtools` ships 8.1 support.
+  # `@vitejs/devtools` ships working 8.1 support.
   vite: ~8.0.14
-  # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
-  # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
-  # SFC codegen errors from mixed compiler versions.
-  vue: ^3.5.39
+  # `@vitejs/devtools@0.4.2` requests Vue 3.5.40, but mixing its compiler
+  # internals with the 3.5.39 runtime generates duplicate-import SFC errors.
+  vue: 3.5.39
   vue-tsc: ^3.3.7
 catalogs:
   buildtools:
@@ -72,7 +73,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.5
     '@unocss/preset-mini': ^66.7.5
     '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.1
+    '@vitejs/devtools': ^0.4.2
     '@vueuse/nuxt': ^14.3.0
     exsolve: ^1.1.0
     lightningcss: ^1.32.0
@@ -119,6 +120,7 @@ catalogs:
     '@xterm/xterm': ^6.0.0
     birpc: ^4.0.0
     cronstrue: ^3.24.0
+    diff: ^8.0.4
     error-stack-parser-es: ^2.0.1
     floating-vue: ^5.2.2
     focus-trap: ^8.2.2
@@ -144,7 +146,7 @@ catalogs:
     vis-data: ^8.0.4
     vis-network: ^10.1.0
     vite-hot-client: ^2.2.0
-    vue: ^3.5.39
+    vue: 3.5.39
     vue-router: ^5.1.0
     vue-virtual-scroller: ^3.0.4
   icons:
@@ -190,5 +192,5 @@ catalogs:
     '@types/which': ^3.0.4
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.1.8
-    '@vitejs/devtools-kit': ^0.4.1
+    '@vitejs/devtools-kit': ^0.4.2
     unimport: ^6.3.0
