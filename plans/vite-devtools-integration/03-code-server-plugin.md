@@ -192,9 +192,14 @@ Document:
 
 Add unit tests for option projection, disabled behavior, defaults, and legacy
 diagnostic deduplication. Add a dev e2e assertion for the detected-not-installed
-state; do not make CI install code-server. Then run the shared commands and:
+state; do not make CI install code-server. Then run, using pnpm 11 (this repo's
+pinned `packageManager`, not npm or yarn):
 
 ```sh
+pnpm lint
+pnpm build   # or `pnpm prepare` — either must run before `pnpm typecheck`
+pnpm typecheck
+pnpm test:unit
 pnpm test:e2e:dev
 ```
 

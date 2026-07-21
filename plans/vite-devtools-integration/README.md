@@ -112,7 +112,8 @@ runtime, but their source code should not duplicate the group ID.
 
 ## Shared verification
 
-Every implementation PR must run:
+Every implementation PR must run, using pnpm 11 — the version pinned in the
+root `package.json`'s `packageManager` field — not npm or yarn:
 
 ```sh
 pnpm install

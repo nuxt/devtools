@@ -137,6 +137,15 @@ change its `defaultOrder` to `-300`. Keep its ID, URL, icon, and title unchanged
 Existing calls that activate or look up `nuxt:devtools`, including the single
 Vue DevTools iframe bridge, must continue to target the hub member directly.
 
+Guard **both** registrations with the same client classifier from Step 2: only
+call `ctx.docks.register(...)` for the group and the `nuxt:devtools` member when
+`ctx` is the selected client candidate. Today's code registers `nuxt:devtools`
+unconditionally in `devtools.setup(ctx)`, so it already runs once per Vite
+instance (client and SSR); adding the group without the same guard would create
+a second, inert `Nuxt` group + hub member on the SSR context. Skip registration
+entirely (do not register a disabled/hidden placeholder) when `ctx` classifies
+as SSR or unknown.
+
 The lower `defaultOrder` values sort earlier in Vite DevTools 0.4.2. Verify the
 result visually rather than relying only on the stale type comment.
 
@@ -163,12 +172,18 @@ result visually rather than relying only on the stale type comment.
   Vue DevTools bridge without a `Connecting...` regression.
 - A module can import `NUXT_DEVTOOLS_GROUP_ID` from `@nuxt/devtools-kit`.
 - No `dock` field is added to custom-tab or page-meta types.
+- The SSR Vite context never registers the `Nuxt` group or the `nuxt:devtools`
+  member; only the selected client context does.
 
 ## Verification
 
-Run the shared commands from the folder README, then:
+Run, using pnpm 11 (this repo's pinned `packageManager`, not npm or yarn):
 
 ```sh
+pnpm lint
+pnpm build   # or `pnpm prepare` — either must run before `pnpm typecheck`
+pnpm typecheck
+pnpm test:unit
 pnpm test:e2e:dev
 ```
 

@@ -106,22 +106,33 @@ remove them.
 Rewrite `server-rpc/terminals.ts` as a bridge from the existing
 `devtools:terminal:*` Nuxt hooks to `ctx.terminals`:
 
-- Buffer registrations and chunks that arrive before `devtools:ready`.
-- On each legacy registration, create a unique Devframe session ID and a
-  `ReadableStream<string>` plus a pre-connect chunk buffer.
+- Buffer registrations, chunks, **and exit status** that arrive before
+  `devtools:ready`. A short-lived legacy process can exit before the kit
+  connects; dropping that exit would leave the eventual session stuck as
+  `running` forever.
+- On each legacy registration, mint a unique Devframe session ID and a
+  **generation token** for that run, plus a `ReadableStream<string>` and a
+  pre-connect chunk buffer.
 - Register `{ id, title, icon, status: 'running', stream }` once the host is
   ready, then enqueue every buffered pre-ready chunk through that stream in
   order. Devframe Terminals 0.7.5 does not replay `session.buffer` for foreign
-  sessions.
+  sessions. If an exit was buffered for this legacy ID before registration,
+  apply it immediately after registering — close the stream and set the final
+  `stopped`/`error` status — instead of leaving the session `running`.
 - Route later `devtools:terminal:write` calls to the same stream for the legacy
-  ID.
+  ID, gated by the generation check below.
 - On `devtools:terminal:exit`, close the stream and update status to `stopped`
   for exit code 0 or an omitted code, and `error` only for a defined non-zero
   code.
-- On re-register/clear/restart of the same legacy ID, close the prior run and
-  create a new unique session. Do not call `register` twice with one Devframe ID.
-- On `devtools:terminal:remove`, close and stop the current bridge session, then
-  forget the legacy-ID mapping. The retained Devframe history entry is expected.
+- On re-register/clear/restart of the same legacy ID, mint a **new** generation
+  token, close the prior run's stream, and create a new unique session. Every
+  `write`/`exit`/`remove` handler must check the event's generation against the
+  currently mapped one for that legacy ID and drop the event if it is stale (a
+  delayed callback from the process a restart just replaced). Do not call
+  `register` twice with one Devframe ID.
+- On `devtools:terminal:remove`, close and stop the current bridge session
+  (matching generation), then forget the legacy-ID mapping. The retained
+  Devframe history entry is expected.
 
 Ignore `onActionRestart`, `onActionTerminate`, `restartable`, and `terminatable`
 when projecting the session. Programmatic methods on `startSubprocess()` still
@@ -142,9 +153,15 @@ generic package-update flow that must return before its process completes:
 - For module install/uninstall, remove the matching client pending entry in a
   `finally` block around the execution RPC. The server RPC already awaits
   `session.getResult()`.
-- Extend analyze-build info with the active terminal session ID while a build is
-  running. Derive the client building state and "view terminal" action from
-  refreshed server info instead of `processAnalyzeBuildInfo` and an exit event.
+- Extend `getAnalyzeBuildInfo()`'s return with the active terminal session ID
+  (e.g. `activeSessionId`) alongside `isBuilding`. `startAnalyzeBuild()` already
+  calls `refresh('getAnalyzeBuildInfo')` right after `startChildProcess()`
+  registers the session, before awaiting `session.getResult()` — keep that call
+  site and just widen the payload, so the client's refetched info carries the
+  session ID as soon as the build starts. Clear `activeSessionId` in the
+  `refresh('getAnalyzeBuildInfo')` already made on completion/failure. Derive
+  the client building state and "view terminal" action entirely from this
+  refreshed info instead of `processAnalyzeBuildInfo` and an exit event.
 - Keep a minimal `onTerminalExit` client event for generic package updates in
   `client/composables/npm.ts`, which must expose the session ID before the
   process starts through Step 2's confirmation handshake. Start a detached
@@ -207,6 +224,10 @@ them until v5.
   persistent history after `autoDelete`.
 - Repeating analyze-build, install, uninstall, and package update operations in
   one dev-server process never throws a duplicate terminal ID error.
+- A legacy process that exits before `devtools:ready` still ends up `stopped`/
+  `error` (not stuck `running`) once its session registers. A stale `write`/
+  `exit`/`remove` from a restarted legacy ID's prior run never mutates the
+  replacement session.
 - Every "view terminal" action activates the built-in dock and selects the
   correct unique session.
 - A module using legacy terminal register/write/exit hooks gets live output and
@@ -220,11 +241,16 @@ them until v5.
 
 ## Verification
 
-Add unit tests for message transport, unique ID generation, bridge buffering,
-re-registration, status mapping, and client cleanup. Then run the shared commands
-and:
+Add unit tests for message transport, unique ID generation, bridge buffering
+(including exit-before-ready and stale-generation dropping), re-registration,
+status mapping, and client cleanup. Then run, using pnpm 11 (this repo's pinned
+`packageManager`, not npm or yarn):
 
 ```sh
+pnpm lint
+pnpm build   # or `pnpm prepare` — either must run before `pnpm typecheck`
+pnpm typecheck
+pnpm test:unit
 pnpm test:e2e:dev
 ```
 

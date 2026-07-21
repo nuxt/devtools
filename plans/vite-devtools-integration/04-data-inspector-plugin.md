@@ -180,9 +180,12 @@ still compile. Do not conflate the duplicate old `getServerConfig` return in
 - Add the outer Nuxt-group Data Inspector member to
   `docs/content/1.guide/1.features.md`; there are no current Discovery docs or
   screenshots to migrate.
-- Explain the three root fields, live-query behavior, four presets, optional
-  polling, and the fact that custom queries can invoke reachable functions or
-  getters.
+- Explain the three root fields, live-query behavior, the four presets, and the
+  fact that custom queries can invoke reachable functions or getters.
+- Mention Data Inspector's built-in optional polling toggle (5s default,
+  clamped 1-3600s, pauses in background tabs) as a feature of the bundled
+  Devframe SPA — it is upstream UI, not something this plan implements; it
+  needs no Nuxt-side wiring, refresh trigger, cleanup, or tests.
 - Direct module authors to the upstream package and registry API rather than a
   Nuxt wrapper.
 - Add unit tests for source shape before and after Nitro/Vite hook capture, source
@@ -207,9 +210,13 @@ still compile. Do not conflate the duplicate old `getServerConfig` return in
 
 ## Verification
 
-Run the shared commands and:
+Run, using pnpm 11 (this repo's pinned `packageManager`, not npm or yarn):
 
 ```sh
+pnpm lint
+pnpm build   # or `pnpm prepare` — either must run before `pnpm typecheck`
+pnpm typecheck
+pnpm test:unit
 pnpm test:e2e:dev
 pnpm docs:build
 ```
