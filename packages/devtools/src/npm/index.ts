@@ -4,7 +4,7 @@ import { logger, useNuxt } from '@nuxt/kit'
 import { getPackageInfo } from 'local-pkg'
 import { fetch } from 'ofetch'
 import { readPackageJSON } from 'pkg-types'
-import semver from 'semver'
+import { isLess } from 'verkit'
 
 export async function getMainPackageJSON(nuxt = useNuxt()) {
   return readPackageJSON(nuxt.options.rootDir)
@@ -32,7 +32,7 @@ export async function checkForUpdateOf(name: string, current?: string, nuxt = us
       fetch,
     })
 
-    const needsUpdate = !!latest && latest !== current && semver.lt(current, latest)
+    const needsUpdate = !!latest && latest !== current && isLess(current, latest)
 
     return {
       name,

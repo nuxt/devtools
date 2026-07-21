@@ -1,5 +1,5 @@
 import type { NpmCommandOptions } from '../../src/types'
-import semver from 'semver'
+import { satisfies } from 'verkit'
 import { computed, ref } from 'vue'
 import { useNuxtApp } from '#app/nuxt'
 import { rpc } from './rpc'
@@ -25,7 +25,7 @@ export function satisfyNuxtVersion(range: string) {
   return computed(() => {
     if (!nuxt?.value?.current)
       return false
-    return semver.satisfies(nuxt.value.current, range)
+    return satisfies(nuxt.value.current, range)
   })
 }
 
