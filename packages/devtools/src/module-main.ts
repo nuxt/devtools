@@ -154,9 +154,13 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     config.plugins.unshift(join(runtimeDir, 'nitro/inline'))
   })
 
+  // Destructure `ctx` as a nested property rather than spreading it
+  // (`...ctx`): `ctx.devtoolsKit` is a live getter, and spreading it into a
+  // new object would freeze it to its pre-connect (`undefined`) value for
+  // every integration below (see the comment in `server-rpc/index.ts`).
   const {
     connectDevToolsKit: _connectDevToolsKit,
-    ...ctx
+    ctx,
   } = setupRPC(nuxt, options)
 
   connectDevToolsKit = _connectDevToolsKit

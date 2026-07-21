@@ -225,8 +225,17 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     await nuxt.callHook('devtools:ready', kitCtx)
   }
 
+  // NOTE: do not spread `ctx` here (`{ ...ctx }`) — `ctx.devtoolsKit` is a
+  // getter backed by the `devtoolsKitCtx` closure variable above, and object
+  // spread/`Object.assign` read a getter's *current* value into a plain
+  // property on the new object. At this point (synchronous module setup,
+  // before the Vite DevTools plugin has connected) that value is always
+  // `undefined`, which would permanently freeze every consumer's `ctx.devtoolsKit`
+  // to `undefined` even after the kit connects. Return the same live `ctx`
+  // object (plus `connectDevToolsKit`) so the getter keeps working for callers
+  // like `module-main.ts`'s integrations (e.g. the VS Code Server launcher).
   return {
     connectDevToolsKit,
-    ...ctx,
+    ctx,
   }
 }
