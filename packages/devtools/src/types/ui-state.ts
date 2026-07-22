@@ -35,9 +35,4 @@ export interface InstallingModulestate {
   processId: string
 }
 
-export interface AnalyzeBuildingState {
-  name: string
-  processId: string
-}
-
 export type ModuleActionType = 'install' | 'uninstall'

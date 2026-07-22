@@ -5,7 +5,7 @@ import fsp from 'node:fs/promises'
 import { dirname, join } from 'pathe'
 import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
-import { broadcastTerminalExit } from './terminals'
+import { createUniqueSessionId } from '../utils/session-id'
 
 const COLON_RE = /:/g
 
@@ -14,8 +14,11 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
   let builds: AnalyzeBuildMeta[] = []
   let promise: Promise<any> | undefined
   let initalized: Promise<any> | undefined
+  // The unique id of the terminal session for the run currently in flight, so
+  // the client can reveal it and derive its "Building…" state from the refreshed
+  // `getAnalyzeBuildInfo` payload (no `onTerminalExit` needed).
+  let activeSessionId: string | undefined
 
-  const processId = 'devtools:analyze-build'
   const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
   async function startAnalyzeBuild(name: string) {
@@ -26,12 +29,17 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
     if (!kit)
       throw new Error('[Nuxt DevTools] Vite DevTools kit is not connected yet.')
 
+    // A fresh id per run — completed sessions linger in the dock, so a fixed id
+    // would collide (`DF8200`) on the next build.
+    const sessionId = createUniqueSessionId('devtools:analyze-build')
+    activeSessionId = sessionId
+
     const session = await kit.terminals.startChildProcess({
       command: 'npx',
       args: ['nuxi', 'analyze', '--no-serve', '--name', name],
       cwd: nuxt.options.rootDir,
     }, {
-      id: processId,
+      id: sessionId,
       title: 'Analyze Build',
       icon: 'logos-nuxt-icon',
     })
@@ -41,8 +49,6 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
     initalized = undefined
     promise = Promise.resolve(session.getResult())
       .then((result) => {
-        // Surface the exit so the client's "Building…" state can settle.
-        broadcastTerminalExit(ctx, processId, result?.exitCode)
         if (result.exitCode && result.exitCode !== 0) {
           ctx.notify({
             message: `Build analysis "${name}" failed`,
@@ -75,10 +81,11 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
       .finally(() => {
         promise = undefined
         initalized = undefined
+        activeSessionId = undefined
         refresh('getAnalyzeBuildInfo')
       })
 
-    return processId
+    return sessionId
   }
 
   async function readBuildInfo() {
@@ -148,6 +155,7 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
       await initalized
       return {
         isBuilding: !!promise,
+        activeSessionId,
         builds,
       }
     },

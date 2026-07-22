@@ -7,7 +7,6 @@ import { satisfyNuxtVersion } from '~/composables/npm'
 import { rpc } from '~/composables/rpc'
 import { useAnalyzeBuildInfo } from '~/composables/state'
 import { registerCommands } from '~/composables/state-commands'
-import { processAnalyzeBuildInfo } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
 import { useSessionState } from '~/composables/utils'
 
@@ -40,12 +39,12 @@ async function start() {
 
   telemetry('analyze-build:start')
 
-  processAnalyzeBuildInfo.value = {
-    name: buildNameInput.value,
-    processId: await rpc.startAnalyzeBuild(buildNameInput.value),
-  }
+  // `startAnalyzeBuild` refreshes `getAnalyzeBuildInfo` as soon as the session
+  // registers, so `info.isBuilding` / `info.activeSessionId` drive the UI. It
+  // also returns the id so we can reveal the dock immediately.
+  const sessionId = await rpc.startAnalyzeBuild(buildNameInput.value)
   if (shouldRevealTerminal.value)
-    revealTerminal()
+    rpc.revealTerminal(sessionId)
 }
 
 function getDuration(build: AnalyzeBuildMeta) {
@@ -53,8 +52,8 @@ function getDuration(build: AnalyzeBuildMeta) {
 }
 
 function revealTerminal() {
-  if (processAnalyzeBuildInfo.value?.processId)
-    rpc.revealTerminal(processAnalyzeBuildInfo.value.processId)
+  if (info.value?.activeSessionId)
+    rpc.revealTerminal(info.value.activeSessionId)
 }
 
 registerCommands(() => [
@@ -88,7 +87,7 @@ registerCommands(() => [
           <div x-divider />
         </template>
         <div flex="~ items-center justify-center wrap" p4>
-          <NButton v-if="!processAnalyzeBuildInfo" n="primary" icon="carbon-edge-node" @click="start()">
+          <NButton v-if="!info?.isBuilding" n="primary" icon="carbon-edge-node" @click="start()">
             Start a new build
           </NButton>
           <NButton v-else n="primary" icon="carbon-circle-dash animate-spin" title="Open the output in the Terminals dock" @click="revealTerminal()">

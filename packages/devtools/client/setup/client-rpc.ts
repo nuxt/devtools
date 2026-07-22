@@ -2,7 +2,6 @@ import type { ClientFunctions } from '../../src/types'
 import { useNuxtApp, useRouter } from '#imports'
 import { useClient } from '../composables/client'
 import { clientFunctions, registerClientFunctions } from '../composables/rpc'
-import { processAnalyzeBuildInfo, processInstallingModules } from '../composables/state-subprocess'
 import { useDevToolsOptions } from '../composables/storage-options'
 import { telemetry } from '../composables/telemetry'
 
@@ -20,16 +19,12 @@ export function setupClientRPC() {
       nuxt.hooks.callHookParallel(hook as any, ...args)
     },
     async onTerminalExit(data) {
+      // Minimal completion signal for generic package updates: re-dispatch it as
+      // the `devtools:terminal:exit` hook that `usePackageUpdate` and the restart
+      // prompt listen to. Module install/uninstall and analyze-build clear their
+      // own UI from the awaited RPC / refreshed info, so nothing else runs here.
       // @ts-expect-error fail to extend hooks
       nuxt.hooks.callHookParallel('devtools:terminal:exit', data)
-
-      // remove installing modules entry
-      const index = processInstallingModules.value.findIndex(i => i.processId === data.id)
-      if (index !== -1)
-        processInstallingModules.value.splice(index, 1)
-
-      if (processAnalyzeBuildInfo.value?.processId === data.id)
-        processAnalyzeBuildInfo.value = undefined
     },
     async navigateTo(path: string) {
       client.value.devtools.open()
