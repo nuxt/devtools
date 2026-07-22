@@ -46,7 +46,7 @@ export const test = base.extend<DevToolsFixtures>({
         null,
         { timeout: 30_000 },
       )
-      // devframe 0.6 only fetches the `devframe:docks` shared state once the
+      // Devframe 0.7 only fetches the `devframe:docks` shared state once the
       // client is marked trusted (via the `rpc:is-trusted:updated` event).
       // `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH` trusts the *server* peer — so RPC
       // calls are allowed — but never flips the *client-side* trust flag, so the

@@ -10,6 +10,29 @@ import { deprecate } from './diagnostics'
 export * from './diagnostics'
 
 /**
+ * The public `Nuxt` dock group id registered on the Vite DevTools framework
+ * category. Module authors join the group natively by pointing their own
+ * dock entries at it — no special Nuxt API required:
+ *
+ * @example
+ * ```ts
+ * import { NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
+ *
+ * onDevtoolsReady((ctx) => {
+ *   ctx.docks.register({
+ *     id: 'my-module',
+ *     type: 'iframe',
+ *     title: 'My Module',
+ *     icon: 'i-ph-puzzle-piece',
+ *     url: '/my-module/',
+ *     groupId: NUXT_DEVTOOLS_GROUP_ID,
+ *   })
+ * })
+ * ```
+ */
+export const NUXT_DEVTOOLS_GROUP_ID = 'nuxt'
+
+/**
  * Hooks to extend a custom tab in devtools.
  *
  * Provide a function to pass a factory that can be updated dynamically.
