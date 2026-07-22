@@ -123,10 +123,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   // overridden per-mount: group members do not inherit their group's category.
   const definition = createDataInspectorDevframe({ exampleSource: false })
   onDevtoolsReady((kit) => {
-    // `kit` (ViteDevToolsNodeContext) is structurally a DevframeHubContext at
-    // runtime; the cast bridges a purely type-level drift between
-    // @vitejs/devtools-kit and @devframes/hub's `createJsonRenderer` spec types.
-    return mountDevframe(kit as unknown as Parameters<typeof mountDevframe>[0], definition, {
+    return mountDevframe(kit, definition, {
       dock: {
         groupId: NUXT_DEVTOOLS_GROUP_ID,
         category: 'framework',
