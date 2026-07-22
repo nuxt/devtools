@@ -21,7 +21,7 @@ export function getOptionsDir() {
 
   // https://specifications.freedesktop.org/basedir/latest/#variables
   // Check if env var is set, otherwise fallback to $HOME/.config
-  const xdgBase = process.env.XDG_CONFIG_HOME ?? join(home, '.config')
+  const xdgBase = process.env.XDG_CONFIG_HOME || join(home, '.config')
   return join(xdgBase, 'nuxt/devtools')
 }
 
