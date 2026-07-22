@@ -8,7 +8,6 @@ import { colors } from 'consola/utils'
 import { RPC_NAMESPACE } from '../rpc-namespace'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
-import { classifyViteDevToolsContext } from './client-context'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { createNotifier, setupMessagesRPC } from './messages'
@@ -17,6 +16,7 @@ import { setupOptionsRPC } from './options'
 import { setupServerDataRPC } from './server-data'
 import { setupServerRoutesRPC } from './server-routes'
 import { setupServerTasksRPC } from './server-tasks'
+import { skipInSSR } from './skip-in-ssr'
 import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
 import { setupTerminalRPC } from './terminals'
@@ -166,27 +166,12 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
    * Called from the Vite DevTools plugin setup callback.
    *
    * Nuxt creates two Vite instances (client and SSR); only the browser-serving
-   * client instance has WebSocket peers, so we classify each candidate from
-   * its resolved Vite config (see `classifyViteDevToolsContext`) rather than
-   * relying on setup order. The SSR candidate is ignored; an unknown candidate
-   * is logged and also ignored, rather than falling back to first-wins.
+   * client instance has WebSocket peers, so we skip the SSR candidate (see
+   * `skipInSSR`) rather than relying on setup order.
    */
   async function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
-    if (devtoolsKitCtx)
+    if (devtoolsKitCtx || skipInSSR(kitCtx))
       return
-
-    const classification = classifyViteDevToolsContext(kitCtx)
-    if (classification === 'ssr')
-      return
-
-    if (classification === 'unknown') {
-      const config = kitCtx.viteConfig
-      logger.warn(
-        colors.yellow('[nuxt-devtools] Could not classify a connecting Vite DevTools context as client or SSR; skipping.\n')
-        + colors.dim(`  command: ${config?.command}, environments: ${config ? Object.keys(config.environments || {}).join(', ') : 'n/a'}, build.ssr: ${config?.build?.ssr}`),
-      )
-      return
-    }
 
     devtoolsKitCtx = kitCtx
     const host = kitCtx.rpc

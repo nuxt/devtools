@@ -16,7 +16,7 @@ import { version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { clientDir, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
-import { classifyViteDevToolsContext } from './server-rpc/client-context'
+import { skipInSSR } from './server-rpc/skip-in-ssr'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
@@ -101,8 +101,8 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         // Only the browser-serving client Vite context registers the `Nuxt`
         // group and its hub member — Nuxt's SSR Vite instance runs this same
         // setup callback too, and would otherwise create a second, inert
-        // group + hub member. See `classifyViteDevToolsContext`.
-        if (classifyViteDevToolsContext(ctx) === 'client') {
+        // group + hub member. See `skipInSSR`.
+        if (!skipInSSR(ctx)) {
           ctx.docks.register({
             id: NUXT_DEVTOOLS_GROUP_ID,
             type: 'group',

@@ -1,8 +1,8 @@
 import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { Nuxt } from 'nuxt/schema'
-import { logger, runWithNuxtContext } from '@nuxt/kit'
+import { runWithNuxtContext } from '@nuxt/kit'
 import { createHooks } from 'hookable'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { setupRPC } from '../src/server-rpc'
 
 /**
@@ -49,7 +49,6 @@ function fakeKitCtx(viteConfig: ViteDevToolsNodeContext['viteConfig']): ViteDevT
 
 const clientConfig = { command: 'serve', build: { ssr: false } } as ViteDevToolsNodeContext['viteConfig']
 const ssrConfig = { command: 'build', build: { ssr: true } } as ViteDevToolsNodeContext['viteConfig']
-const unknownConfig = { command: 'build', build: {} } as ViteDevToolsNodeContext['viteConfig']
 
 function setup() {
   const nuxt = fakeNuxt()
@@ -85,20 +84,16 @@ describe('connectDevToolsKit', () => {
     expect(getConnectedKit()).toBeUndefined()
   })
 
-  it('ignores an unknown candidate without connecting, logging an actionable diagnostic', async () => {
+  it('connects a candidate with a missing/falsy build.ssr, even outside "serve"', async () => {
+    // `skipInSSR` only reads `build.ssr` — any other candidate is treated as
+    // the client rather than logged and ignored.
     const { connectDevToolsKit, getConnectedKit, readyContexts } = setup()
-    const unknownCtx = fakeKitCtx(unknownConfig)
-    const warn = vi.spyOn(logger, 'warn').mockImplementation(() => {})
+    const ambiguousCtx = fakeKitCtx({ command: 'build', build: {} } as ViteDevToolsNodeContext['viteConfig'])
 
-    await connectDevToolsKit(unknownCtx)
+    await connectDevToolsKit(ambiguousCtx)
 
-    expect(readyContexts).toEqual([])
-    expect(getConnectedKit()).toBeUndefined()
-    expect(warn).toHaveBeenCalledOnce()
-    const output = warn.mock.calls[0]!.join(' ')
-    expect(output).toContain('command: build')
-    expect(output).toContain('build.ssr: undefined')
-    warn.mockRestore()
+    expect(readyContexts).toEqual([ambiguousCtx])
+    expect(getConnectedKit()).toBe(ambiguousCtx)
   })
 
   it('connects the client candidate when the SSR candidate arrives first', async () => {
