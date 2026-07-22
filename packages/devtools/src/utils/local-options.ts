@@ -56,7 +56,7 @@ function getOptionsFilepath(options: LocalOptionSearchOptions) {
     hashedKey = hash(options.root)
 
   const dir = getOptionsDir()
-  const filePath = join(dir, '.nuxt/devtools', `${hashedKey}.json`)
+  const filePath = join(dir, `${hashedKey}.json`)
 
   return {
     filePath,
