@@ -70,8 +70,8 @@ export interface ServerFunctions {
   enablePages: () => Promise<void>
   openInEditor: (filepath: string) => Promise<boolean>
   restartNuxt: (hard?: boolean) => Promise<void>
-  installNuxtModule: (name: string, dry?: boolean) => Promise<InstallModuleReturn>
-  uninstallNuxtModule: (name: string, dry?: boolean) => Promise<InstallModuleReturn>
+  installNuxtModule: (name: string, dry?: boolean, sessionId?: string) => Promise<InstallModuleReturn>
+  uninstallNuxtModule: (name: string, dry?: boolean, sessionId?: string) => Promise<InstallModuleReturn>
   enableTimeline: (dry: boolean) => Promise<[string, string]>
 
   // Dev Token
@@ -85,9 +85,12 @@ export interface ClientFunctions {
   navigateTo: (path: string) => void
 
   /**
-   * Server→client signal that a terminal session has exited. Kept so the
-   * client can clear transient subprocess UI state (installing-modules /
-   * analyze-build / npm updates) when the underlying process finishes.
+   * Minimal server→client completion signal for generic package updates only
+   * (`runNpmCommand`): the run RPC returns before the process exits, so this
+   * lets `usePackageUpdate` and the restart prompt settle once it finishes. It
+   * carries only `{ id, code }` and is not a terminal-data transport. Module
+   * install/uninstall and analyze-build no longer rely on it — they clear their
+   * UI from the awaited RPC / refreshed info instead.
    */
   onTerminalExit: (_: { id: string, code?: number }) => void
 }

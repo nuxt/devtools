@@ -39,7 +39,8 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
   // @ts-expect-error missing hooks type
   nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
-    if (id !== processId || !processId)
+    // Compare against the tracked id value, not the ref object.
+    if (!processId.value || id !== processId.value)
       return
     state.value = code === 0 ? 'updated' : 'idle'
   })

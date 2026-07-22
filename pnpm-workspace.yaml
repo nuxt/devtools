@@ -5,8 +5,8 @@ minimumReleaseAgeExclude:
   - '@vitejs/devtools-kit@0.4.0 || 0.4.1 || 0.4.2'
   - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1 || 0.4.2'
   - '@vitejs/devtools@0.4.0 || 0.4.1 || 0.4.2'
-  - '@devframes/hub@0.6.1 || 0.7.5'
-  - 'devframe@0.6.1 || 0.7.5'
+  - '@devframes/hub@0.6.1 || 0.7.5 || 0.7.7'
+  - 'devframe@0.6.1 || 0.7.5 || 0.7.7'
   - vite-plugin-inspect@12.0.2
   - verkit@0.1.2
 resolutionMode: highest
@@ -37,13 +37,13 @@ overrides:
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.7.5
+  '@devframes/hub': ^0.7.7
   '@nuxt/devtools': workspace:*
   '@vue/compiler-core': 3.5.39
   '@vue/compiler-dom': 3.5.39
   '@vue/shared': 3.5.39
   chokidar: ^5.0.0
-  devframe: ^0.7.5
+  devframe: ^0.7.7
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5

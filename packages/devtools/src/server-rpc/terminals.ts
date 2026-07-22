@@ -1,180 +1,244 @@
 import type { ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { NuxtDevtoolsServerContext, ServerFunctions, TerminalState } from '../types'
+import { DEVTOOLS_TERMINALS_DOCK_ID } from '@vitejs/devtools-kit/constants'
+import { createUniqueSessionId } from '../utils/session-id'
 
 type TerminalsHost = ViteDevToolsNodeContext['terminals']
 type DevframeTerminalSession = Parameters<TerminalsHost['register']>[0]
 
 /**
- * Stable devframe id of the built-in `@devframes/plugin-terminals` dock. The
- * hub's `docks.activate(id, { sessionId })` focuses this dock (and, via
- * `params.sessionId`, a specific session) — see `DOCKS_ACTIVE_STATE_KEY` in
- * the plugin. Kept as a literal so we need no build dependency on the plugin.
- */
-const TERMINALS_DOCK_ID = 'devframes_plugin_terminals'
-
-/**
- * A `DevframeTerminalsHost` grows a `remove(session)` at runtime that isn't in
- * the published type surface yet. Prefer it (it disposes the bound stream and
- * emits the update event); fall back to deleting from the sessions map.
- */
-function removeSession(host: TerminalsHost, session: DevframeTerminalSession) {
-  const maybeRemove = (host as { remove?: (s: DevframeTerminalSession) => void }).remove
-  if (typeof maybeRemove === 'function')
-    maybeRemove.call(host, session)
-  else
-    host.sessions.delete(session.id)
-}
-
-/**
- * Broadcast a terminal-exit signal to the DevTools client so it can clear any
- * transient subprocess UI state (installing-modules / analyze-build / npm
- * updates). Safe to call before the kit connects (it no-ops).
+ * Broadcast a terminal-exit signal to the DevTools client. This is the minimal
+ * completion event for the generic package-update flow only (`runNpmCommand`),
+ * whose run RPC returns before the process exits; the bridge below does **not**
+ * use it. Safe to call before the kit connects (it no-ops).
  */
 export function broadcastTerminalExit(ctx: NuxtDevtoolsServerContext, id: string, code?: number) {
   ctx.devtoolsKit?.rpc.broadcast({ method: 'onTerminalExit', args: [{ id, code }], event: true } as any)
 }
 
-interface BridgedTerminal {
+/**
+ * One run of a legacy terminal. A single legacy id (e.g. `my-module:build`) can
+ * be re-registered many times via `startSubprocess().clear()`/`restart()`; each
+ * re-registration mints a fresh {@link BridgedRun} with a new unique Devframe
+ * session id and an incremented `generation`, so a delayed callback from a
+ * previous run can be recognised as stale and dropped.
+ */
+interface BridgedRun {
+  legacyId: string
+  /** Unique Devframe session id for this run (readable prefix + counter). */
+  sessionId: string
+  /** Per-legacy-id run counter; bumped on every re-registration. */
+  generation: number
   session: DevframeTerminalSession
   controller?: ReadableStreamDefaultController<string>
-  state: TerminalState
-  exited: boolean
+  /** True once the session is registered with the host (post-`devtools:ready`). */
+  registered: boolean
+  streamClosed: boolean
+  /** Chunks that arrived before the host was ready, replayed in order on register. */
+  pendingChunks: string[]
+  /** An exit that arrived before the host was ready, applied right after register. */
+  pendingExit?: { code?: number }
+}
+
+/**
+ * Map an exit code to a Devframe terminal status: `stopped` for a clean exit
+ * (code 0 or omitted, e.g. killed by signal), `error` only for a defined
+ * non-zero code.
+ */
+function statusForExit(code?: number): DevframeTerminalSession['status'] {
+  return code == null || code === 0 ? 'stopped' : 'error'
 }
 
 /**
  * Bridge the Nuxt `devtools:terminal:*` hooks onto the Vite DevTools terminals
- * host (`ctx.terminals`), so module-registered terminals surface in the
- * built-in **Terminals** dock instead of a bespoke `@xterm` UI + RPC.
+ * host (`ctx.terminals`), so terminals registered through the legacy
+ * `startSubprocess()`/hook API surface in the built-in **Terminals** dock
+ * instead of a bespoke `@xterm` UI + RPC.
  *
- * The current hook model is "the module owns the process and streams output";
- * we map that to a read-only session registered via `ctx.terminals.register`
- * with a `ReadableStream` we push each `write` into.
- *
- * The "devframe owns the process" model (interactive PTYs, output-only child
- * processes) is intentionally *not* re-wrapped here: modules should use Vite
- * DevTools' own terminals host directly via the exposed
- * `onDevtoolsReady((ctx) => ctx.terminals.startChildProcess(...) /
- * .startPtySession(...))`, rather than a Nuxt-specific shim.
+ * This bridge is **output + final status only**. The legacy action callbacks
+ * (`onActionRestart`/`onActionTerminate`) and the `restartable`/`terminatable`
+ * flags are intentionally ignored: Devframe cannot attach them to an externally
+ * registered session, so no UI action is shown for these read-only sessions.
+ * Programmatic control still works because `startSubprocess()` owns its process
+ * and emits fresh hook events; only the old Nuxt UI controls disappear.
  *
  * Terminals may be registered during module setup — before the kit connects.
- * The `devtools:ready` hook only fires post-connect, so early events are
- * buffered in `terminals` and replayed inside the ready callback.
+ * The `devtools:ready` hook only fires post-connect, so early registrations,
+ * output chunks, **and** exit status are buffered and replayed once ready. (A
+ * short-lived process can exit before the kit connects; dropping that exit would
+ * leave the session stuck as `running` forever.)
  */
 export function setupTerminalsBridge(ctx: NuxtDevtoolsServerContext) {
   const { nuxt } = ctx
-  const terminals = new Map<string, BridgedTerminal>()
+  /** The current run for each legacy id. */
+  const runs = new Map<string, BridgedRun>()
+  const generations = new Map<string, number>()
   let host: TerminalsHost | undefined
 
-  function createBridged(state: TerminalState): BridgedTerminal {
+  function createRun(terminal: TerminalState): BridgedRun {
+    const legacyId = terminal.id
+    const generation = (generations.get(legacyId) ?? 0) + 1
+    generations.set(legacyId, generation)
+
     let controller: ReadableStreamDefaultController<string> | undefined
     // `start` runs synchronously in the ReadableStream constructor, so the
-    // controller is captured immediately. Chunks enqueued before the kit
-    // connects stay queued in the stream and drain once a reader attaches.
+    // controller is captured immediately.
     const stream = new ReadableStream<string>({
       start(c) {
         controller = c
       },
     })
-    const buffer = typeof state.buffer === 'string' && state.buffer ? [state.buffer] : []
+
+    // Do not pre-fill `session.buffer`: the host's `register()` binds the stream
+    // and populates the scrollback from it, so seeding a buffer *and* streaming
+    // the same chunks would double every line. We replay pre-ready chunks
+    // through the stream instead.
     const session: DevframeTerminalSession = {
-      id: state.id,
-      title: state.name,
-      description: state.description,
-      icon: state.icon,
-      status: state.isTerminated ? 'stopped' : 'running',
+      id: createUniqueSessionId(legacyId),
+      title: terminal.name,
+      description: terminal.description,
+      icon: terminal.icon,
+      status: 'running',
       interactive: false,
-      buffer,
       stream,
     }
-    return { session, controller, state, exited: !!state.isTerminated }
+
+    return {
+      legacyId,
+      sessionId: session.id,
+      generation,
+      session,
+      controller,
+      registered: false,
+      streamClosed: false,
+      pendingChunks: [],
+    }
+  }
+
+  /** True when `run` is still the live run for its legacy id. */
+  function isCurrent(run: BridgedRun): boolean {
+    return runs.get(run.legacyId) === run
+  }
+
+  function closeStream(run: BridgedRun) {
+    if (run.streamClosed)
+      return
+    run.streamClosed = true
+    try {
+      run.controller?.close()
+    }
+    catch {}
+  }
+
+  function applyExit(run: BridgedRun, code?: number) {
+    if (!isCurrent(run) || run.streamClosed)
+      return
+    closeStream(run)
+    run.session.status = statusForExit(code)
+    host?.update(run.session)
+  }
+
+  function registerWithHost(run: BridgedRun) {
+    // Guard against a run that was superseded before the host became ready.
+    if (!host || run.registered || !isCurrent(run))
+      return
+    host.register(run.session)
+    run.registered = true
+    // Replay pre-ready output in order, then a pre-ready exit if any.
+    for (const chunk of run.pendingChunks) {
+      try {
+        run.controller?.enqueue(chunk)
+      }
+      catch {}
+    }
+    run.pendingChunks.length = 0
+    if (run.pendingExit) {
+      const { code } = run.pendingExit
+      run.pendingExit = undefined
+      applyExit(run, code)
+    }
   }
 
   nuxt.hook('devtools:terminal:register', (terminal) => {
-    const existing = terminals.get(terminal.id)
+    const existing = runs.get(terminal.id)
     if (existing) {
-      // Re-registration (e.g. `startSubprocess().clear()`/`restart()`): reset
-      // the session back to running and clear the display buffer in place.
-      existing.state = terminal
-      existing.exited = false
-      existing.session.status = 'running'
-      existing.session.buffer?.splice(0, existing.session.buffer.length)
-      host?.update(existing.session)
-      return terminal.id
+      // Re-registration (`clear()`/`restart()`): supersede the prior run. Close
+      // its stream and drop its session so a fresh, unique session represents
+      // the new run — a foreign session cannot be reset in place.
+      closeStream(existing)
+      if (host && existing.registered)
+        host.remove(existing.session)
     }
 
-    const bridged = createBridged(terminal)
-    terminals.set(terminal.id, bridged)
-    host?.register(bridged.session)
+    const run = createRun(terminal)
+    runs.set(terminal.id, run)
+    if (host)
+      registerWithHost(run)
     return terminal.id
   })
 
   nuxt.hook('devtools:terminal:write', ({ id, data }) => {
-    const bridged = terminals.get(id)
-    if (!bridged)
+    const run = runs.get(id)
+    if (!run || run.streamClosed)
       return false
-    bridged.state.buffer = (bridged.state.buffer || '') + data
-    try {
-      bridged.controller?.enqueue(data)
+    if (run.registered) {
+      try {
+        run.controller?.enqueue(data)
+      }
+      catch {}
     }
-    catch {}
+    else {
+      run.pendingChunks.push(data)
+    }
     return true
   })
 
   nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
-    const bridged = terminals.get(id)
-    if (!bridged)
+    const run = runs.get(id)
+    if (!run)
       return false
-    bridged.exited = true
-    bridged.state.isTerminated = true
-    bridged.session.status = code ? 'error' : 'stopped'
-    try {
-      bridged.controller?.close()
-    }
-    catch {}
-    host?.update(bridged.session)
-    broadcastTerminalExit(ctx, id, code)
+    if (run.registered)
+      applyExit(run, code)
+    else
+      run.pendingExit = { code }
     return true
   })
 
   nuxt.hook('devtools:terminal:remove', ({ id }) => {
-    const bridged = terminals.get(id)
-    if (!bridged)
+    const run = runs.get(id)
+    if (!run)
       return false
-    try {
-      bridged.controller?.close()
-    }
-    catch {}
-    terminals.delete(id)
-    if (host)
-      removeSession(host, bridged.session)
+    closeStream(run)
+    runs.delete(id)
+    if (host && run.registered)
+      host.remove(run.session)
     return true
   })
 
   nuxt.hook('devtools:ready', (kit) => {
     host = kit.terminals
-    // Replay terminals registered before the kit connected.
-    for (const bridged of terminals.values()) {
-      if (!host.sessions.has(bridged.session.id))
-        host.register(bridged.session)
-      if (bridged.exited)
-        host.update(bridged.session)
-    }
+    // Register every run buffered before the kit connected, replaying their
+    // pre-ready output and exit status.
+    for (const run of runs.values())
+      registerWithHost(run)
   })
 
   return {
     /**
-     * Focus the built-in **Terminals** dock on a session (devframe 0.7
-     * `docks.activate`). Replaces the old in-client "go to Terminals tab"
-     * navigation now that terminals live in the hub dock. Returns `false`
-     * when the kit isn't connected or the session is unknown.
+     * Focus the built-in **Terminals** dock on a session (Devframe 0.7
+     * `docks.activate`, driven by the `hub:docks:activate` RPC). Replaces the
+     * old in-client "go to Terminals tab" navigation now that terminals live in
+     * the hub dock. `id` is a unique Devframe session id (from a bridged run or
+     * a `startChildProcess` call). Returns `false` when the kit isn't connected
+     * or the session is unknown.
      */
     async revealTerminal(id: string) {
       const kit = ctx.devtoolsKit
       if (!kit)
         return false
-      if (!terminals.has(id) && !kit.terminals.sessions.has(id))
+      if (!kit.terminals.sessions.has(id))
         return false
-      kit.docks.activate(TERMINALS_DOCK_ID, { sessionId: id })
+      kit.docks.activate(DEVTOOLS_TERMINALS_DOCK_ID, { sessionId: id })
       return true
     },
   } satisfies Partial<ServerFunctions>
