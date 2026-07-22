@@ -16,6 +16,7 @@ import { setupOptionsRPC } from './options'
 import { setupServerDataRPC } from './server-data'
 import { setupServerRoutesRPC } from './server-routes'
 import { setupServerTasksRPC } from './server-tasks'
+import { skipInSSR } from './skip-in-ssr'
 import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
 import { setupTerminalsBridge } from './terminals'
@@ -167,15 +168,15 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   /**
    * Connect to Vite DevTools Kit context.
    * Called from the Vite DevTools plugin setup callback.
+   *
+   * Nuxt creates two Vite instances (client and SSR); only the browser-serving
+   * client instance has WebSocket peers, so we skip the SSR candidate (see
+   * `skipInSSR`) rather than relying on setup order.
    */
   async function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
-    /**
-     * guarded to keep the first connection (client Vite), since Nuxt creates
-     * two Vite instances and the second (server) one has 0 WebSocket clients.
-     * If we don't guard this, the server connection will overwrite the client connection and break all RPC calls from server to client.
-     */
-    if (devtoolsKitCtx)
+    if (devtoolsKitCtx || skipInSSR(kitCtx))
       return
+
     devtoolsKitCtx = kitCtx
     const host = kitCtx.rpc
 

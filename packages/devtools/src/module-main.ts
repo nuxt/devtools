@@ -6,6 +6,7 @@ import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import os from 'node:os'
+import { NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { join } from 'pathe'
@@ -15,6 +16,7 @@ import { version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { clientDir, packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
+import { skipInSSR } from './server-rpc/skip-in-ssr'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
@@ -96,14 +98,31 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     name: 'nuxt:devtools',
     devtools: {
       async setup(ctx) {
-        ctx.docks.register({
-          id: 'nuxt:devtools',
-          type: 'iframe',
-          icon: '/__nuxt_devtools__/client/nuxt.svg',
-          title: 'Nuxt DevTools',
-          url: '/__nuxt_devtools__/client/',
-          defaultOrder: -2000,
-        })
+        // Only the browser-serving client Vite context registers the `Nuxt`
+        // group and its hub member — Nuxt's SSR Vite instance runs this same
+        // setup callback too, and would otherwise create a second, inert
+        // group + hub member. See `skipInSSR`.
+        if (!skipInSSR(ctx)) {
+          ctx.docks.register({
+            id: NUXT_DEVTOOLS_GROUP_ID,
+            type: 'group',
+            title: 'Nuxt',
+            icon: '/__nuxt_devtools__/client/nuxt.svg',
+            category: 'framework',
+            defaultOrder: -900,
+            defaultChildId: 'nuxt:devtools',
+          })
+
+          ctx.docks.register({
+            id: 'nuxt:devtools',
+            type: 'iframe',
+            icon: '/__nuxt_devtools__/client/nuxt.svg',
+            title: 'Nuxt DevTools',
+            url: '/__nuxt_devtools__/client/',
+            groupId: NUXT_DEVTOOLS_GROUP_ID,
+            defaultOrder: -300,
+          })
+        }
 
         // Connect Nuxt DevTools to Vite DevTools Kit context
         await connectDevToolsKit?.(ctx)
