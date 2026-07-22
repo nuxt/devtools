@@ -108,8 +108,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             type: 'group',
             title: 'Nuxt',
             icon: '/__nuxt_devtools__/client/nuxt.svg',
-            category: 'framework',
-            defaultOrder: -900,
+            defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
           })
 
