@@ -53,7 +53,11 @@ declare module '@nuxt/schema' {
     'devtools:customTabs:refresh': () => void
 
     /**
-     * Register a terminal.
+     * Register a terminal whose process is owned by the caller (module).
+     *
+     * The registered session is surfaced **read-only** in the built-in Vite
+     * DevTools **Terminals** dock; stream output into it via
+     * `devtools:terminal:write`.
      */
     'devtools:terminal:register': (terminal: TerminalState) => void
 
@@ -75,18 +79,6 @@ declare module '@nuxt/schema' {
      * Mark a terminal as terminated.
      */
     'devtools:terminal:exit': (_: { id: string, code?: number }) => void
-  }
-}
-
-declare module '@nuxt/schema' {
-  /**
-   * Runtime Hooks
-   */
-  interface RuntimeNuxtHooks {
-    /**
-     * On terminal data.
-     */
-    'devtools:terminal:data': (payload: { id: string, data: string }) => void
   }
 }
 

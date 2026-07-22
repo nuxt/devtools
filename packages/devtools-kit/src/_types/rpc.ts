@@ -8,7 +8,6 @@ import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelations
 import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
-import type { TerminalAction, TerminalInfo } from './terminals'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
@@ -40,9 +39,7 @@ export interface ServerFunctions {
   runNpmCommand: (command: NpmCommandType, packageName: string, options?: NpmCommandOptions) => Promise<{ processId: string } | undefined>
 
   // Terminal
-  getTerminals: () => TerminalInfo[]
-  getTerminalDetail: (id: string) => Promise<TerminalInfo | undefined>
-  runTerminalAction: (id: string, action: TerminalAction) => Promise<boolean>
+  revealTerminal: (id: string) => Promise<boolean>
 
   // Storage
   getStorageMounts: () => Promise<StorageMounts>
@@ -87,7 +84,11 @@ export interface ClientFunctions {
   callHook: (hook: string, ...args: any[]) => Promise<void>
   navigateTo: (path: string) => void
 
-  onTerminalData: (_: { id: string, data: string }) => void
+  /**
+   * Server→client signal that a terminal session has exited. Kept so the
+   * client can clear transient subprocess UI state (installing-modules /
+   * analyze-build / npm updates) when the underlying process finishes.
+   */
   onTerminalExit: (_: { id: string, code?: number }) => void
 }
 

@@ -5,6 +5,7 @@ import fsp from 'node:fs/promises'
 import { dirname, join } from 'pathe'
 import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
+import { broadcastTerminalExit } from './terminals'
 
 const COLON_RE = /:/g
 
@@ -40,6 +41,8 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
     initalized = undefined
     promise = Promise.resolve(session.getResult())
       .then((result) => {
+        // Surface the exit so the client's "Building…" state can settle.
+        broadcastTerminalExit(ctx, processId, result?.exitCode)
         if (result.exitCode && result.exitCode !== 0) {
           ctx.notify({
             message: `Build analysis "${name}" failed`,

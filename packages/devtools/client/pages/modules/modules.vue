@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { definePageMeta } from '#imports'
+import { rpc } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { useInstalledModules } from '~/composables/state-modules'
-import { useCurrentTerminalId } from '~/composables/state-routes'
 
 definePageMeta({
   icon: 'carbon-3d-mpr-toggle',
@@ -13,7 +13,6 @@ definePageMeta({
 
 const installModuleOpen = ref(false)
 const installedModules = useInstalledModules()
-const terminalId = useCurrentTerminalId()
 
 const packageModules = computed(() => installedModules.value.filter(i => i.isPackageModule))
 const userModules = computed(() => installedModules.value.filter(i => !i.isPackageModule))
@@ -46,11 +45,11 @@ registerCommands(() => [
         :key="m.name"
         :mod="m"
       />
-      <NuxtLink
+      <button
         v-for="m of processInstallingModules"
         :key="m.processId" block min-h-30
-        to="/modules/terminals"
-        @click="terminalId = m.processId"
+        title="Open the output in the Terminals dock"
+        @click="rpc.revealTerminal(m.processId)"
       >
         <NCard
           border="1.5 dashed"
@@ -69,7 +68,7 @@ registerCommands(() => [
             <span op75>Installing {{ m.name }}...</span>
           </div>
         </NCard>
-      </NuxtLink>
+      </button>
       <NCard
         border="1.5 dashed"
         min-h-30 p4 transition
