@@ -13,6 +13,11 @@ export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig: () => NuxtOptions
   getServerDebugContext: () => Promise<ServerDebugContext | undefined>
+  /**
+   * @deprecated Replaced by the Data Inspector panel's live `Nuxt Application`
+   * source. Kept as a compatibility shim (emits `NDT_DEP_0009`) for one
+   * migration window and will be removed in a future major.
+   */
   getServerData: () => Promise<NuxtServerData>
   getServerRuntimeConfig: () => Record<string, any>
   getModuleOptions: () => ModuleOptions
@@ -95,6 +100,10 @@ export interface ClientFunctions {
   onTerminalExit: (_: { id: string, code?: number }) => void
 }
 
+/**
+ * @deprecated The payload of the deprecated {@link ServerFunctions.getServerData}
+ * shim. Use the Data Inspector panel's live `Nuxt Application` source instead.
+ */
 export interface NuxtServerData {
   nuxt: NuxtOptions
   nitro?: Nitro['options']

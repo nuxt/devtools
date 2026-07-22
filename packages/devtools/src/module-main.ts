@@ -108,6 +108,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             type: 'group',
             title: 'Nuxt',
             icon: '/__nuxt_devtools__/client/nuxt.svg',
+            category: 'framework',
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
           })
@@ -240,6 +241,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   })
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
+
+  // Data Inspector is always mounted when DevTools is enabled (no module
+  // option): it registers the live `Nuxt Application` source and mounts the
+  // bundled SPA into the Nuxt dock group.
+  await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
 
   if (options.vueDevTools !== false)
     await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))

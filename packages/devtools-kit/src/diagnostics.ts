@@ -69,6 +69,12 @@ export const diagnosticCodes = {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
+  // NDT_DEP_0008 is reserved for the removed `vscode` module option.
+  /** `getServerData()` RPC → the Data Inspector panel's `Nuxt Application` source. */
+  NDT_DEP_0009: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
+  },
 } satisfies Record<string, DiagnosticDefinition<DeprecationParams>>
 
 export type NuxtDiagnosticCode = keyof typeof diagnosticCodes
