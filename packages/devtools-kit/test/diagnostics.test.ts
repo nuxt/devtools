@@ -29,6 +29,7 @@ describe('diagnosticCodes', () => {
       'NDT_DEP_0005',
       'NDT_DEP_0006',
       'NDT_DEP_0007',
+      'NDT_DEP_0009',
     ])
   })
 })

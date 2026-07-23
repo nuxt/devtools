@@ -4,7 +4,7 @@ import type { AsyncDataOptions } from '#app'
 import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import { useSessionStorage } from '@vueuse/core'
 import { relative } from 'pathe'
-import { isRef, triggerRef } from 'vue'
+import { triggerRef } from 'vue'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useNuxtApp } from '#app/nuxt'
 import { useState } from '#imports'
@@ -182,27 +182,6 @@ export function refreshData() {
 
 export function reloadPage() {
   location.reload()
-}
-
-export function jsonStringifyCircular(params: any) {
-  const seen: any[] = []
-  const result = JSON.stringify(params, (key, value) => {
-    if (typeof value === 'function')
-      return value.toString()
-    if (isRef(value))
-      value = value.value
-    if (typeof value === 'object' && value !== null) {
-      if (key === 'devServer') // TODO: do this better
-        return undefined
-      const index = seen.indexOf(value)
-      if (index >= 0)
-        // return structuredClone(seen[index])
-        return `<Circular #${index}>`
-      seen.push(value)
-    }
-    return value
-  })
-  return result
 }
 
 export function useNuxtCompatibilityVersion() {

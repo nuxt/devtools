@@ -32,13 +32,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client",
+    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:client",
     "build:client": "nuxi generate client && node scripts/copy-client.mjs",
     "build:module": "nuxt-build-module build",
-    "build:discovery": "discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
-    "dev:discovery": "discovery -c .discoveryrc.cjs",
     "stub": "nuxt-build-module build --stub",
-    "dev": "pnpm build:discovery && nuxi dev client",
+    "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
@@ -48,6 +46,7 @@
     "vite": "^8.0.14"
   },
   "dependencies": {
+    "@devframes/plugin-data-inspector": "catalog:prod",
     "@nuxt/devtools-kit": "workspace:*",
     "@nuxt/kit": "catalog:prod",
     "@vitejs/devtools": "catalog:buildtools",
@@ -83,8 +82,6 @@
   },
   "devDependencies": {
     "@antfu/utils": "catalog:frontend",
-    "@discoveryjs/cli": "catalog:buildtools",
-    "@discoveryjs/discovery": "catalog:buildtools",
     "@iconify-json/bxl": "catalog:icons",
     "@iconify-json/carbon": "catalog:icons",
     "@iconify-json/logos": "catalog:icons",
