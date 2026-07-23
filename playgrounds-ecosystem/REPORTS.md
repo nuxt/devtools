@@ -114,14 +114,13 @@ cross-referencing this report when implementing Plan 03.
   SideNav overflow menu. Renders its own full UI (Active Scripts / First-Party
   Mode / Registry / Docs sub-tabs).
 - Uses the **legacy** `addCustomTab` API from its own `@nuxt/devtools-kit@^3.2.4`
-  dependency (not the devframe-native APIs Plan 00 introduces) — confirms the
-  shim-first strategy in `plans/vite-devtools-integration/README.md` is the
-  right approach: an old-major `@nuxt/devtools-kit` consumer still works
+  dependency (not the devframe-native APIs) — confirms the compatibility
+  strategy works: an old-major `@nuxt/devtools-kit` consumer still works
   end-to-end against the in-development local devtools, because `addCustomTab`
   ultimately just calls `nuxt.hook('devtools:customTabs', ...)` against the
   single shared Nuxt instance — package-version skew in `@nuxt/devtools-kit`
   itself doesn't break it, as long as `@nuxt/kit`/`useNuxt()` stay deduped
-  (they do here; verify this holds once Plan 00's shims land).
+  (they do here).
 - The panel loaded with **"No scripts loaded"** even though `pages/index.vue`
   registers `js-confetti` via `useScriptNpm` with the default
   `trigger: 'onNuxtReady'` (so it should register on every page load). The

@@ -7,11 +7,8 @@ export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
   componentInspector: true,
   viteInspect: true,
-  vscode: {
+  codeServer: {
     enabled: true,
-    startOnBoot: false,
-    port: 3080,
-    reuseExistingServer: true,
   },
   disableAuthorization: isSandboxed,
 }

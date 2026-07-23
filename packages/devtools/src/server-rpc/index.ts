@@ -237,7 +237,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   // `undefined`, which would permanently freeze every consumer's `ctx.devtoolsKit`
   // to `undefined` even after the kit connects. Return the same live `ctx`
   // object (plus `connectDevToolsKit`) so the getter keeps working for callers
-  // like `module-main.ts`'s integrations (e.g. the VS Code Server launcher).
+  // like `module-main.ts`'s integrations (e.g. the Code Server launcher).
   return {
     connectDevToolsKit,
     ctx,

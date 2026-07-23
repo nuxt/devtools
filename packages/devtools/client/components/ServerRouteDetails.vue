@@ -180,6 +180,7 @@ async function fetchData() {
 
   const f = resolvedSendFrom.value === 'app'
     ? client.value!.app!.$fetch
+
     : $fetch as $Fetch
 
   telemetry('server-routes:fetch', {

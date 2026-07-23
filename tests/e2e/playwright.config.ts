@@ -86,6 +86,9 @@ export default defineConfig({
         // on macOS binds only to IPv6, so 127.0.0.1 requests get refused. We use
         // `localhost` baseURL above to match the Vite DevTools websocket bind.
         HOST: '0.0.0.0',
+        ...(s.playground === 'empty'
+          ? { NUXT_DEVTOOLS_CODE_SERVER_BIN: 'nuxt-devtools-e2e-missing-code-server' }
+          : {}),
       },
     }
   }),

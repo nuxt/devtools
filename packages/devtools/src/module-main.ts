@@ -256,9 +256,7 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
   const integrations = [
-    options.vscode?.enabled
-      ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
-      : null,
+    import('./integrations/code-server').then(({ setup }) => setup(ctx)),
     (options.experimental?.timeline || options.timeline?.enabled)
       ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
       : null,
