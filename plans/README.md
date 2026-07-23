@@ -6,11 +6,6 @@ executor with no prior context. Executor: read the whole plan before starting,
 honor its STOP conditions, run the drift check first, and update your row below
 when done.
 
-> **Related plan set:** the numbered plans below are `improve`-skill audit fixes.
-> The Vite DevTools Kit 0.4.2 / Devframe 0.7.5 integration plans (dock
-> foundation, platform-service cleanup, Code Server, and Data Inspector) live in
-> [`vite-devtools-integration/`](./vite-devtools-integration/README.md).
-
 ## Execution order & status
 
 | Plan | Title | Priority | Effort | Depends on | Status |

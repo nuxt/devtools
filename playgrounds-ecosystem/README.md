@@ -2,8 +2,7 @@
 
 Dogfoods the Nuxt DevTools integrations of three popular Nuxt modules — all in
 one combined app — against the **local** `@nuxt/devtools` (this repo's
-`packages/devtools`), for verification while working through
-[`plans/vite-devtools-integration/`](../plans/vite-devtools-integration/).
+`packages/devtools`) for integration verification.
 
 Modules covered, in [`modules/`](./modules/): `nuxt-og-image`, `@nuxt/scripts`,
 `@nuxt/fonts`. See [`REPORTS.md`](./REPORTS.md) for what was actually found

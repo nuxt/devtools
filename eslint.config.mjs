@@ -11,8 +11,7 @@ export default antfu(
       '**/plans/**/*.md',
       // Its own sealed pnpm workspace (see
       // playgrounds-ecosystem/modules/pnpm-workspace.yaml), opt-in and out of
-      // the main lint/typecheck/test surface — see
-      // plans/vite-devtools-integration/04-ecosystem-playgrounds.md
+      // the main lint/typecheck/test surface.
       '**/playgrounds-ecosystem/**',
     ],
   },
