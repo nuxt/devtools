@@ -21,6 +21,12 @@ import { state } from './state'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
 
+// The `Nuxt` dock group id (see `NUXT_DEVTOOLS_GROUP_ID`). Activating the group
+// auto-opens its `defaultChildId` (the Overview tab). Per-tab dock entries use
+// the `nuxt:devtools:<name>` id prefix.
+const NUXT_DOCK_GROUP_ID = 'nuxt'
+const NUXT_DOCK_ENTRY_PREFIX = 'nuxt:devtools:'
+
 function getViteDevToolsContext() {
   return getDevToolsClientContext() as any
 }
@@ -60,7 +66,7 @@ export async function setupDevToolsClient({
       toggle() {
         const ctx = getViteDevToolsContext()
         if (ctx)
-          ctx.docks.toggleEntry('nuxt:devtools')
+          ctx.docks.toggleEntry(NUXT_DOCK_GROUP_ID)
       },
       close() {
         const ctx = getViteDevToolsContext()
@@ -71,14 +77,14 @@ export async function setupDevToolsClient({
         const ctx = getViteDevToolsContext()
         if (ctx) {
           ctx.panel.store.value.open = true
-          ctx.docks.switchEntry('nuxt:devtools')
+          ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
         }
       },
       async navigate(path: string) {
         const ctx = getViteDevToolsContext()
         if (ctx) {
           ctx.panel.store.value.open = true
-          ctx.docks.switchEntry('nuxt:devtools')
+          ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
         }
         await client.hooks.callHook('host:action:navigate', path)
       },
@@ -287,19 +293,25 @@ export async function setupDevToolsClient({
       client.devtools.toggle()
   })
 
-  // The Nuxt DevTools panel is rendered as an iframe **inside Vite DevTools'
-  // dock**, so we never create it ourselves (`getIframe()` above is legacy).
-  // The `@vue/devtools-kit` iframe messaging channel, however, only talks to
-  // whichever iframe was registered via `setIframeServerContext()` — without
-  // that the in-panel Vue DevTools applets (Pinia, component inspector, …) sit
+  // Each Nuxt DevTools tab is now its own iframe dock entry inside Vite DevTools'
+  // dock, so there is no single hub iframe we create ourselves (`getIframe()`
+  // above is legacy). The `@vue/devtools-kit` iframe messaging channel only
+  // talks to whichever iframe was registered via `setIframeServerContext()` —
+  // without that, the Vue DevTools applets (Pinia, component inspector, …) sit
   // on "Connecting..." forever because the host backend never learns which
-  // iframe to answer. Point it at the dock iframe as soon as Vite DevTools
-  // mounts it (and keep it pointed there if the element is recreated).
+  // iframe to answer. Bind it to whichever Nuxt tab iframe is currently
+  // selected, and rebind when the selection (or the element) changes.
   function bindVueDevToolsIframe() {
     let bound: HTMLIFrameElement | undefined
     const bind = () => {
       const ctx = getViteDevToolsContext()
-      const dockIframe = ctx?.docks?.getStateById?.('nuxt:devtools')?.domElements?.iframe as HTMLIFrameElement | null | undefined
+      const docks = ctx?.docks
+      if (!docks)
+        return
+      const selectedId: string | undefined = docks.selectedId ?? docks.selected?.id
+      if (!selectedId || !selectedId.startsWith(NUXT_DOCK_ENTRY_PREFIX))
+        return
+      const dockIframe = docks.getStateById?.(selectedId)?.domElements?.iframe as HTMLIFrameElement | null | undefined
       if (!dockIframe || dockIframe === bound)
         return
       bound = dockIframe

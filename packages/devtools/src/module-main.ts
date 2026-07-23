@@ -103,6 +103,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         // setup callback too, and would otherwise create a second, inert
         // group + hub member. See `skipInSSR`.
         if (!skipInSSR(ctx)) {
+          // Register only the `Nuxt` group here. Its members — one iframe dock
+          // entry per DevTools tab — are registered on the `devtools:ready` hook
+          // by the `dock-tabs` integration below. The single hub iframe that
+          // used to host the whole client app has been replaced by these
+          // per-tab entries.
           ctx.docks.register({
             id: NUXT_DEVTOOLS_GROUP_ID,
             type: 'group',
@@ -110,17 +115,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             icon: '/__nuxt_devtools__/client/nuxt.svg',
             category: 'framework',
             defaultOrder: -2000,
-            defaultChildId: 'nuxt:devtools',
-          })
-
-          ctx.docks.register({
-            id: 'nuxt:devtools',
-            type: 'iframe',
-            icon: '/__nuxt_devtools__/client/nuxt.svg',
-            title: 'Nuxt DevTools',
-            url: '/__nuxt_devtools__/client/',
-            groupId: NUXT_DEVTOOLS_GROUP_ID,
-            defaultOrder: -300,
+            defaultChildId: 'nuxt:devtools:overview',
           })
         }
 
@@ -210,6 +205,10 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
   const ROUTE_CLIENT = `${ROUTE_PATH}/client`
   const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
+
+  // Project every DevTools tab as its own iframe dock entry inside the `Nuxt`
+  // group (registered above). Members are wired up on the `devtools:ready` hook.
+  await import('./integrations/dock-tabs').then(({ setup }) => setup(ctx, ROUTE_CLIENT))
 
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server) => {

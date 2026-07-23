@@ -5,6 +5,7 @@ import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
+import { isEmbedded } from '~/composables/embed'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
@@ -43,7 +44,9 @@ setupClientRPC()
 const client = useClient()
 const route = useRoute()
 const colorMode = getColorMode()
-const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
+// When embedded as a single dock tab, hide the app shell (SideNav + split pane)
+// so the iframe shows only the tab content.
+const isUtilityView = computed(() => isEmbedded.value || route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 const showDisconnectIndicator = ref(false)
 
