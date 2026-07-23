@@ -22,10 +22,11 @@ import { state } from './state'
 const MULTIPLE_SLASHES_RE = /\/+/g
 
 // The `Nuxt` dock group id (see `NUXT_DEVTOOLS_GROUP_ID`). Activating the group
-// auto-opens its `defaultChildId` (the Overview tab). Per-tab dock entries use
-// the `nuxt:devtools:<name>` id prefix.
+// auto-opens its `defaultChildId` (the shared-frame anchor). The anchor iframe
+// dock (`nuxt:devtools`) hosts the one kept-alive client iframe that all tab
+// members soft-navigate within.
 const NUXT_DOCK_GROUP_ID = 'nuxt'
-const NUXT_DOCK_ENTRY_PREFIX = 'nuxt:devtools:'
+const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
 function getViteDevToolsContext() {
   return getDevToolsClientContext() as any
@@ -293,25 +294,20 @@ export async function setupDevToolsClient({
       client.devtools.toggle()
   })
 
-  // Each Nuxt DevTools tab is now its own iframe dock entry inside Vite DevTools'
-  // dock, so there is no single hub iframe we create ourselves (`getIframe()`
-  // above is legacy). The `@vue/devtools-kit` iframe messaging channel only
-  // talks to whichever iframe was registered via `setIframeServerContext()` —
-  // without that, the Vue DevTools applets (Pinia, component inspector, …) sit
-  // on "Connecting..." forever because the host backend never learns which
-  // iframe to answer. Bind it to whichever Nuxt tab iframe is currently
-  // selected, and rebind when the selection (or the element) changes.
+  // Nuxt DevTools renders inside a single shared-frame anchor iframe in Vite
+  // DevTools' dock (its per-tab members all soft-navigate within that one
+  // iframe), so we never create it ourselves (`getIframe()` above is legacy).
+  // The `@vue/devtools-kit` iframe messaging channel only talks to whichever
+  // iframe was registered via `setIframeServerContext()` — without that, the
+  // Vue DevTools applets (Pinia, component inspector, …) sit on "Connecting..."
+  // forever because the host backend never learns which iframe to answer. Bind
+  // it to the anchor iframe once Vite DevTools mounts it (and keep it pointed
+  // there if the element is recreated).
   function bindVueDevToolsIframe() {
     let bound: HTMLIFrameElement | undefined
     const bind = () => {
       const ctx = getViteDevToolsContext()
-      const docks = ctx?.docks
-      if (!docks)
-        return
-      const selectedId: string | undefined = docks.selectedId ?? docks.selected?.id
-      if (!selectedId || !selectedId.startsWith(NUXT_DOCK_ENTRY_PREFIX))
-        return
-      const dockIframe = docks.getStateById?.(selectedId)?.domElements?.iframe as HTMLIFrameElement | null | undefined
+      const dockIframe = ctx?.docks?.getStateById?.(NUXT_DOCK_ANCHOR_ID)?.domElements?.iframe as HTMLIFrameElement | null | undefined
       if (!dockIframe || dockIframe === bound)
         return
       bound = dockIframe
