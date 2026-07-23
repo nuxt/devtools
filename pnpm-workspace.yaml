@@ -25,6 +25,7 @@ trustPolicyExclude:
 packages:
   - packages/**
   - playgrounds/**
+  - '!playgrounds/**/.output/**'
 
 allowBuilds:
   '@parcel/watcher': true
