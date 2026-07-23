@@ -180,7 +180,7 @@ async function fetchData() {
 
   const f = resolvedSendFrom.value === 'app'
     ? client.value!.app!.$fetch
-
+    // eslint-disable-next-line unimport/auto-insert
     : $fetch as $Fetch
 
   telemetry('server-routes:fetch', {

@@ -244,7 +244,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
         res.end()
       }
       server.middlewares.use(ROUTE_CLIENT, (req, res) => {
-        if (req.url === '/')
+        // Serve the (base-rewritten) SPA index for the root document, ignoring
+        // any query string — e.g. the shared-frame anchor loads `/?embed=1`,
+        // which sirv would otherwise serve as a raw, un-rewritten `index.html`.
+        const pathname = (req.url || '/').split('?')[0]
+        if (pathname === '/' || pathname === '')
           return handleIndex(res)
         return handleStatic(req, res, () => handleIndex(res))
       })

@@ -16,6 +16,7 @@ const ignoredModules = [
 
 export function useModulesList() {
   return useAsyncState('getModulesList', async () => {
+    // eslint-disable-next-line unimport/auto-insert
     const m = await $fetch<{ modules: ModuleStaticInfo[] }>('https://api.nuxt.com/modules?version=3')
     return m.modules
       .filter((item: ModuleStaticInfo) => !ignoredModules.includes(item.npm) && item.compatibility.nuxt.includes('>=3'))
