@@ -5,7 +5,7 @@ import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
-import { isEmbedded } from '~/composables/embed'
+import { isEmbeddedPath } from '~/composables/embed'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
@@ -44,8 +44,9 @@ setupClientRPC()
 const client = useClient()
 const route = useRoute()
 const colorMode = getColorMode()
-// When embedded as a single dock tab, hide the app shell (SideNav + split pane)
-// so the iframe shows only the tab content.
+// When embedded as a single dock tab (`/embed/*`), hide the app shell (SideNav
+// + split pane) so the iframe shows only the tab content.
+const isEmbedded = computed(() => isEmbeddedPath(route.path))
 const isUtilityView = computed(() => isEmbedded.value || route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 const showDisconnectIndicator = ref(false)
@@ -156,7 +157,9 @@ registerCommands(() => [
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20">
+        <!-- Embedded single-tab view: mount the tab content directly, no split pane -->
+        <NuxtPage v-if="isEmbedded" />
+        <NSplitPane v-else storage-key="devtools:split-screen-mode" :min-size="20">
           <template #left>
             <NuxtPage />
           </template>

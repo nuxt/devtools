@@ -89,14 +89,10 @@ function normalizeIcon(icon: string | undefined): string {
 
 /**
  * Projects every Nuxt DevTools tab (built-in + module custom tabs) as its own
- * iframe dock entry inside the `Nuxt` dock group.
- *
- * Each entry loads the client **root** (`<client>/?embed=1&to=<tab route>`) —
- * the only URL the client was ever served/hard-loaded at — and a global route
- * middleware soft-navigates to the target tab. This deliberately avoids
- * hard-loading deep client routes from the server (the client is an `ssr:false`
- * SPA served by a single sirv middleware). The `embed` flag tells the client to
- * hide its own shell (SideNav + split pane) so the iframe shows only the tab.
+ * iframe dock entry inside the `Nuxt` dock group, each pointing at a chromeless
+ * deep link under the client's `/embed/` sub-path (`<client>/embed/modules/<name>`).
+ * The `/embed/*` route mounts just that tab's content — no SideNav, no split
+ * pane — so the tab takes the full iframe.
  *
  * Registration happens on the Node side (`ctx.docks.register` only exists there),
  * so built-in tabs come from the static list above and custom tabs are collected
@@ -116,9 +112,7 @@ export function setup(ctx: NuxtDevtoolsServerContext, routeClient: string): void
   let kit: ViteDevToolsNodeContext | undefined
 
   const entryId = (name: string) => `nuxt:devtools:${name}`
-  // Load the client root and let the client soft-navigate to `to` — never a
-  // deep server URL.
-  const embedUrl = (path: string) => `${routeClient}/?embed=1&to=${encodeURIComponent(path)}`
+  const embedUrl = (path: string) => `${routeClient}/embed${path}`
 
   function upsert(entry: Record<string, unknown> & { id: string }) {
     if (!kit)
