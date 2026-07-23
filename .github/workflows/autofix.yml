@@ -15,11 +15,11 @@ jobs:
       id-token: write
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: pnpm
@@ -27,6 +27,6 @@ jobs:
       - run: corepack enable
       - run: pnpm install
       - run: pnpm lint --fix
-      - uses: autofix-ci/action@ea32e3a12414e6d3183163c3424a7d7a8631ad84
+      - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a
       - run: pnpm build
       - run: pnpm typecheck
