@@ -123,7 +123,9 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   // overridden per-mount: group members do not inherit their group's category.
   const definition = createDataInspectorDevframe({ exampleSource: false })
   onDevtoolsReady((kit) => {
-    return mountDevframe(kit, definition, {
+    // `mountDevframe` is re-exported from the hub package while the hook uses
+    // the Vite kit's enriched context type; they are the same runtime object.
+    return mountDevframe(kit as any, definition, {
       dock: {
         groupId: NUXT_DEVTOOLS_GROUP_ID,
         category: 'framework',

@@ -150,8 +150,8 @@ export default defineNuxtConfig({
   devtools: {
     // Enable devtools (default: true)
     enabled: true,
-    // VS Code Server options
-    vscode: {},
+    // Coder code-server options (enabled by default)
+    codeServer: {},
     // ...other options
   }
 })
