@@ -69,7 +69,11 @@ export const diagnosticCodes = {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
     fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead.`,
   },
-  // NDT_DEP_0008 is reserved for the removed `vscode` module option.
+  /** Removed `vscode` module option → `codeServer`. */
+  NDT_DEP_0008: {
+    why: (p: DeprecationParams) => `\`${p.api}\` is deprecated and its legacy modes are no longer supported.`,
+    fix: (p: DeprecationParams) => `Use \`${p.replacement}\` instead. The legacy value is ignored rather than partially translated.`,
+  },
   /** `getServerData()` RPC → the Data Inspector panel's `Nuxt Application` source. */
   NDT_DEP_0009: {
     why: (p: DeprecationParams) => `\`${p.api}\` is deprecated.`,
