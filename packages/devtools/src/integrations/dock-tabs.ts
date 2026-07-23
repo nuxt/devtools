@@ -22,30 +22,36 @@ interface BuiltinTab {
   icon: string
   /** Lower renders earlier (matches `definePageMeta({ order })`); default 100. */
   order?: number
+  /**
+   * DevTools tab category, mirrored from each page's `definePageMeta`. Because
+   * the entry belongs to the `Nuxt` group, this is reinterpreted by the dock as
+   * an in-group **sub-category** that sub-divides the group popover/sidebar.
+   */
+  category?: string
 }
 
 const BUILTIN_TABS: BuiltinTab[] = [
-  { name: 'overview', title: 'Overview', icon: 'carbon-information', order: -100 },
-  { name: 'pages', title: 'Pages', icon: 'carbon-tree-view-alt', order: 1 },
-  { name: 'components', title: 'Components', icon: 'i-carbon-assembly-cluster', order: 2 },
-  { name: 'imports', title: 'Imports', icon: 'carbon-function', order: 4 },
-  { name: 'modules', title: 'Modules', icon: 'carbon-3d-mpr-toggle', order: 5 },
-  { name: 'runtime-configs', title: 'Runtime Configs', icon: 'carbon-settings-services', order: 6 },
-  { name: 'payload', title: 'Payload', icon: 'carbon-data-set', order: 7 },
-  { name: 'render-tree', title: 'Render Tree', icon: 'i-carbon-category', order: 1 },
-  { name: 'pinia', title: 'Pinia', icon: 'i-logos-pinia' },
-  { name: 'assets', title: 'Assets', icon: 'carbon-image-copy' },
-  { name: 'server-routes', title: 'Server Routes', icon: 'carbon-cloud' },
-  { name: 'server-tasks', title: 'Server Tasks', icon: 'codicon-run-all' },
-  { name: 'storage', title: 'Storage', icon: 'carbon-data-base' },
-  { name: 'open-graph', title: 'Open Graph', icon: 'carbon:image-search' },
-  { name: 'timeline', title: 'Timeline', icon: 'i-carbon-roadmap' },
-  { name: 'analyze-build', title: 'Build Analyze', icon: 'carbon-edge-node' },
-  { name: 'plugins', title: 'Plugins', icon: 'carbon-plug' },
-  { name: 'hooks', title: 'Hooks', icon: 'carbon-ibm-cloud-direct-link-2-connect' },
-  { name: 'virtual-files', title: 'Virtual Files', icon: 'i-carbon-border-none' },
-  { name: 'debug', title: 'Debug', icon: 'i-carbon-debug' },
-  { name: 'error', title: 'Error', icon: 'i-carbon-warning-alt-filled' },
+  { name: 'overview', title: 'Overview', icon: 'carbon-information', order: -100, category: 'app' },
+  { name: 'pages', title: 'Pages', icon: 'carbon-tree-view-alt', order: 1, category: 'app' },
+  { name: 'components', title: 'Components', icon: 'i-carbon-assembly-cluster', order: 2, category: 'app' },
+  { name: 'imports', title: 'Imports', icon: 'carbon-function', order: 4, category: 'app' },
+  { name: 'modules', title: 'Modules', icon: 'carbon-3d-mpr-toggle', order: 5, category: 'app' },
+  { name: 'assets', title: 'Assets', icon: 'carbon-image-copy', category: 'app' },
+  { name: 'error', title: 'Error', icon: 'i-carbon-warning-alt-filled', category: 'app' },
+  { name: 'render-tree', title: 'Render Tree', icon: 'i-carbon-category', order: 1, category: 'vue-devtools' },
+  { name: 'pinia', title: 'Pinia', icon: 'i-logos-pinia', category: 'vue-devtools' },
+  { name: 'runtime-configs', title: 'Runtime Configs', icon: 'carbon-settings-services', order: 6, category: 'analyze' },
+  { name: 'payload', title: 'Payload', icon: 'carbon-data-set', order: 7, category: 'analyze' },
+  { name: 'open-graph', title: 'Open Graph', icon: 'carbon:image-search', category: 'analyze' },
+  { name: 'timeline', title: 'Timeline', icon: 'i-carbon-roadmap', category: 'analyze' },
+  { name: 'analyze-build', title: 'Build Analyze', icon: 'carbon-edge-node', category: 'analyze' },
+  { name: 'plugins', title: 'Plugins', icon: 'carbon-plug', category: 'analyze' },
+  { name: 'server-routes', title: 'Server Routes', icon: 'carbon-cloud', category: 'server' },
+  { name: 'server-tasks', title: 'Server Tasks', icon: 'codicon-run-all', category: 'server' },
+  { name: 'storage', title: 'Storage', icon: 'carbon-data-base', category: 'server' },
+  { name: 'hooks', title: 'Hooks', icon: 'carbon-ibm-cloud-direct-link-2-connect', category: 'advanced' },
+  { name: 'virtual-files', title: 'Virtual Files', icon: 'i-carbon-border-none', category: 'advanced' },
+  { name: 'debug', title: 'Debug', icon: 'i-carbon-debug', category: 'advanced' },
 ]
 
 const FALLBACK_ICON = 'carbon:application'
@@ -84,11 +90,18 @@ function normalizeIcon(icon: string | undefined): string {
 /**
  * Projects every Nuxt DevTools tab (built-in + module custom tabs) as its own
  * iframe dock entry inside the `Nuxt` dock group, each pointing at a chromeless
- * deep link (`<client>/embed/modules/<name>`).
+ * deep link (`<client>/modules/<name>?embed=1`). The `embed` flag tells the
+ * client app to hide its own shell (SideNav + split pane) so the iframe shows
+ * only the tab; it rides on the tab's existing route, so no extra client route
+ * is needed.
  *
  * Registration happens on the Node side (`ctx.docks.register` only exists there),
  * so built-in tabs come from the static list above and custom tabs are collected
  * via the `devtools:customTabs` hook and kept in sync on `devtools:customTabs:refresh`.
+ *
+ * Each entry sets `groupId: 'nuxt'`, so its `category` is reinterpreted by the
+ * dock as an in-group sub-category (`@vitejs/devtools` >= 0.4.4 / `@devframes/hub`
+ * >= 0.7.10) that sub-divides the `Nuxt` group.
  */
 export function setup(ctx: NuxtDevtoolsServerContext, routeClient: string): void {
   const { nuxt, options } = ctx
@@ -100,7 +113,7 @@ export function setup(ctx: NuxtDevtoolsServerContext, routeClient: string): void
   let kit: ViteDevToolsNodeContext | undefined
 
   const entryId = (name: string) => `nuxt:devtools:${name}`
-  const embedUrl = (path: string) => `${routeClient}/embed${path}`
+  const embedUrl = (path: string) => `${routeClient}${path}?embed=1`
 
   function upsert(entry: Record<string, unknown> & { id: string }) {
     if (!kit)
@@ -125,6 +138,8 @@ export function setup(ctx: NuxtDevtoolsServerContext, routeClient: string): void
         icon: normalizeIcon(tab.icon),
         url: embedUrl(`/modules/${tab.name}`),
         groupId: NUXT_DEVTOOLS_GROUP_ID,
+        // in-group sub-category (grouped entry: `category` is the sub-bucket)
+        category: tab.category ?? 'app',
         // dock `defaultOrder`: higher renders earlier; tab `order`: lower first.
         defaultOrder: -(tab.order ?? 100),
       })
@@ -157,6 +172,8 @@ export function setup(ctx: NuxtDevtoolsServerContext, routeClient: string): void
         icon: normalizeIcon(tab.icon),
         url: embedUrl(`/modules/custom-${tab.name}`),
         groupId: NUXT_DEVTOOLS_GROUP_ID,
+        // in-group sub-category; custom tabs default to `modules`
+        category: tab.category || 'modules',
         // keep custom tabs after the built-in set
         defaultOrder: -1000 - index,
       })

@@ -4,13 +4,13 @@ const STORAGE_KEY = 'nuxt-devtools-embedded'
 
 /**
  * "Embedded" mode: the client app is loaded as a single, chromeless tab inside
- * a Vite DevTools dock iframe (via the `/embed/*` route). In this mode the app
- * shell — SideNav and split pane — is hidden so the iframe shows only the tab.
+ * a Vite DevTools dock iframe (each per-tab dock entry points at the tab's own
+ * route with an `?embed=1` flag). In this mode the app shell — SideNav and
+ * split pane — is hidden so the iframe shows only the tab.
  *
- * The `/embed/*` entry route redirects to the real tab route right away, so the
- * URL no longer carries the `/embed/` marker afterwards. We persist the flag in
- * `sessionStorage` (isolated per iframe/browsing-context) so it survives that
- * redirect and any in-iframe reloads.
+ * The flag rides on the existing tab route (no dedicated route needed). We latch
+ * it into `sessionStorage` — isolated per iframe/browsing-context — so it
+ * survives in-iframe navigation that drops the query and any reloads.
  */
 function detect(): boolean {
   if (typeof window === 'undefined')
@@ -20,16 +20,14 @@ function detect(): boolean {
       return true
   }
   catch {}
-  // First paint lands on `/embed/*` before the redirect runs.
-  return /\/embed(?:\/|$)/.test(window.location.pathname)
+  const embedded = new URLSearchParams(window.location.search).get('embed') === '1'
+  if (embedded) {
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, '1')
+    }
+    catch {}
+  }
+  return embedded
 }
 
 export const isEmbedded = ref(detect())
-
-export function markEmbedded(): void {
-  isEmbedded.value = true
-  try {
-    window.sessionStorage.setItem(STORAGE_KEY, '1')
-  }
-  catch {}
-}
