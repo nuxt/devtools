@@ -72,6 +72,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   const codeServerOptions = resolveCodeServerOptions(options.codeServer, nuxt.options.rootDir)
   const definition = createCodeServerDevframe(codeServerOptions)
   let supervisor: CodeServerSupervisor | undefined
+  let setupPromise: Promise<CodeServerSupervisor> | undefined
 
   // The upstream definition delegates only to setupCodeServer, but discards
   // its supervisor. Replace that callback so Nuxt can dispose the child process
@@ -79,11 +80,13 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   const mountedDefinition = {
     ...definition,
     async setup(devframeCtx) {
-      supervisor = await setupCodeServer(devframeCtx, codeServerOptions)
+      setupPromise = setupCodeServer(devframeCtx, codeServerOptions)
+      supervisor = await setupPromise
     },
   } satisfies typeof definition
 
-  nuxt.hook('close', () => {
+  nuxt.hook('close', async () => {
+    await setupPromise
     supervisor?.dispose()
   })
 

@@ -149,6 +149,27 @@ describe('code server setup', () => {
     expect(mocks.dispose).toHaveBeenCalledOnce()
   })
 
+  it('waits for in-flight setup before disposing on close', async () => {
+    let resolveSetup!: (supervisor: { dispose: () => void }) => void
+    mocks.setupCodeServer.mockReturnValueOnce(new Promise((resolve) => {
+      resolveSetup = resolve
+    }))
+
+    const { ctx, nuxt } = fakeContext()
+    setup(ctx)
+
+    const ready = nuxt.callHook('devtools:ready', { id: 'kit' } as any)
+    await vi.waitFor(() => {
+      expect(mocks.setupCodeServer).toHaveBeenCalledOnce()
+    })
+
+    const close = nuxt.callHook('close', nuxt)
+    resolveSetup({ dispose: mocks.dispose })
+
+    await Promise.all([ready, close])
+    expect(mocks.dispose).toHaveBeenCalledOnce()
+  })
+
   it('emits the legacy option diagnostic once and ignores its value', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const { ctx } = fakeContext({
