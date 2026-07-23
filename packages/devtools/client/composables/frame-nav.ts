@@ -1,7 +1,7 @@
 import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRouter } from '#app/composables/router'
-import { useAllTabs } from '~/composables/state-tabs'
+import { useEnabledTabs } from '~/composables/state-tabs'
 
 // `devframe:frame-nav` — the embedded-app half of the shared-iframe soft-nav
 // protocol (devframe#128 / vitejs/devtools#464). The Vite DevTools dock owns
@@ -9,6 +9,11 @@ import { useAllTabs } from '~/composables/state-tabs'
 // DevTools tab and switches views by client-side navigation, so no per-tab
 // iframe/reload is needed. The shim is transport-only: it takes no hub/RPC
 // dependency, just `postMessage`.
+//
+// The announced set comes from `useEnabledTabs()` — the same conditional list
+// the SideNav used — so a tab's `show()` condition, hidden/pinned settings and
+// experimental gating decide whether its dock appears, and the manifest is
+// re-announced whenever that set changes.
 const CHANNEL = 'devframe:frame-nav'
 const VERSION = 1
 // Must match the anchor's `frameId` registered in `module-main.ts`.
@@ -16,6 +21,26 @@ const FRAME_ID = 'nuxt:devtools'
 
 const ICON_CLASS_RE = /\s.*$/
 const FIRST_DASH_RE = /-/
+
+interface FrameNavTab {
+  id: string
+  title: string
+  icon?: string
+  category?: string
+  order?: number
+  navTarget: { path: string }
+}
+
+/** The DevTools settings page, surfaced as its own dock member. */
+const SETTINGS_TAB: FrameNavTab = {
+  id: 'settings',
+  title: 'Settings',
+  icon: 'carbon:settings',
+  category: 'advanced',
+  // sort last within its sub-category (higher `order` renders earlier)
+  order: -1000,
+  navTarget: { path: '/settings' },
+}
 
 /** Normalise a tab icon (UnoCSS `i-carbon-foo` / `carbon-foo`) to iconify `carbon:foo`. */
 function normalizeIcon(icon: string | undefined): string | undefined {
@@ -37,29 +62,30 @@ function tabPath(tab: ModuleBuiltinTab | ModuleCustomTab): string {
 
 /**
  * Start the frame-nav shim. No-op unless running inside an iframe. Announces the
- * tab manifest, answers `navigate` with client-side navigation, and reports
- * `navigated` so the dock highlight follows in-app navigation.
+ * (conditional) tab manifest, answers `navigate` with client-side navigation,
+ * and reports `navigated` so the dock highlight follows in-app navigation.
  */
 export function setupFrameNav(): void {
   if (typeof window === 'undefined' || window.parent === window)
     return
 
   const router = useRouter()
-  const tabs = useAllTabs()
+  const tabs = useEnabledTabs()
 
-  function buildManifest() {
-    return tabs.value.map(tab => ({
+  const manifest = computed<FrameNavTab[]>(() => [
+    ...tabs.value.map(tab => ({
       id: tab.name,
       title: tab.title ?? tab.name,
       icon: normalizeIcon(tab.icon),
       category: tab.category,
       navTarget: { path: tabPath(tab) },
-    }))
-  }
+    })),
+    SETTINGS_TAB,
+  ])
 
   function currentTabId(): string | undefined {
     const path = router.currentRoute.value.path
-    return tabs.value.find(tab => tabPath(tab) === path)?.name
+    return manifest.value.find(entry => entry.navTarget.path === path)?.id
   }
 
   function post(message: Record<string, unknown>) {
@@ -67,7 +93,7 @@ export function setupFrameNav(): void {
   }
 
   function announce(type: 'ready' | 'manifest') {
-    post({ type, tabs: buildManifest(), current: currentTabId() })
+    post({ type, tabs: manifest.value, current: currentTabId() })
   }
 
   window.addEventListener('message', (ev: MessageEvent) => {
@@ -87,8 +113,8 @@ export function setupFrameNav(): void {
   // Announce proactively in case the host attached before this shim loaded.
   announce('ready')
 
-  // Re-announce when the tab set changes.
-  watch(() => tabs.value.map(t => t.name).join(','), () => announce('manifest'))
+  // Re-announce when the conditional tab set changes (show()/settings/etc).
+  watch(() => manifest.value.map(entry => entry.id).join(','), () => announce('manifest'))
 
   // Report in-app navigation so the dock highlight follows.
   watch(() => router.currentRoute.value.path, () => {
