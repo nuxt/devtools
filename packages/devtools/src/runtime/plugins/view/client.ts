@@ -285,7 +285,6 @@ export async function setupDevToolsClient({
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
   bindVueDevToolsIframe()
-  hideAnchorOnceSubTabsReady()
 
   clientRef.value = client
 
@@ -319,38 +318,6 @@ export async function setupDevToolsClient({
     }
     bind()
     setInterval(bind, 500)
-  }
-
-  // The shared-frame anchor (`nuxt:devtools`) must stay a selectable dock entry
-  // long enough to mount its iframe and let the `devframe:frame-nav` shim
-  // announce one member dock per DevTools tab (Overview, every tab, Settings) —
-  // those members are what the user navigates. Once they exist the anchor's own
-  // button is redundant, so we hide it by overriding its entry with a falsy
-  // `when` clause (a client-dock override of the same id, which the hub merges
-  // over the server entry). Overriding — rather than unregistering — keeps the
-  // anchor's `subTabs`/`frameId` intact, so the frame-nav adapter and the shared
-  // iframe are untouched; only the dock button disappears. We wait for members
-  // first so the `Nuxt` group is never momentarily emptied (an empty group hides
-  // itself).
-  function hideAnchorOnceSubTabsReady() {
-    const MEMBER_PREFIX = `${NUXT_DOCK_ANCHOR_ID}:`
-    const timer = setInterval(() => {
-      const ctx = getViteDevToolsContext()
-      const meta = ctx?.docks?.getStateById?.(NUXT_DOCK_ANCHOR_ID)?.entryMeta
-      if (!meta)
-        return
-      if (meta.when === 'false') {
-        clearInterval(timer)
-        return
-      }
-      const hasMembers = (ctx.docks.entries as any[])?.some(
-        entry => typeof entry?.id === 'string' && entry.id.startsWith(MEMBER_PREFIX),
-      )
-      if (hasMembers) {
-        ctx.docks.register({ ...meta, when: 'false' }, true)
-        clearInterval(timer)
-      }
-    }, 500)
   }
 }
 
