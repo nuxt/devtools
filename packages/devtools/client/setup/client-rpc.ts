@@ -31,6 +31,9 @@ export function setupClientRPC() {
       if (router.currentRoute.value?.path !== path)
         router.push(path)
     },
+    async openUrl(url: string) {
+      window.open(url, '_blank')
+    },
   } satisfies ClientFunctions)
 
   // Re-register client functions now that they're populated

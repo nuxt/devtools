@@ -39,6 +39,7 @@ const editorOptions = [
   ['Sublime Text', 'sublime'],
   ['Atom', 'atom'],
   ['Windsurf', 'windsurf'],
+  ['Google Antigravity', 'antigravity'],
 ]
 
 const scaleOptions = [

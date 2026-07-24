@@ -19,12 +19,8 @@ const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
 const FILE_LINE_COL_RE = /^(.*?)(:[:\d]*)$/
 const NUXT_WELCOME_RE = /<NuxtWelcome\s*\/>/
 
-export function setupGeneralRPC({
-  nuxt,
-  options,
-  refresh,
-  openInEditorHooks,
-}: NuxtDevtoolsServerContext) {
+export function setupGeneralRPC(ctx: NuxtDevtoolsServerContext) {
+  const { nuxt, options, refresh, openInEditorHooks } = ctx
   const components: Component[] = []
   const imports: Import[] = []
   const importPresets: Import[] = []
@@ -223,6 +219,10 @@ export function setupGeneralRPC({
         let editor = getOptions()?.behavior.openInEditor ?? undefined
         if (editor === 'auto')
           editor = undefined
+        if (editor === 'antigravity') {
+          ctx.rpc.broadcast.openUrl(`https://antigravity.google/open?file=${path}${suffix}`)
+          return true
+        }
         await import('launch-editor').then(r => (r.default || r)(path + suffix, editor))
         return true
       }
