@@ -18,8 +18,9 @@ test('mounts the Data Inspector in the Nuxt group exposing only the Nuxt source'
     return ctx?.docks?.entries?.some((entry: any) => entry.id === id)
   }, DATA_INSPECTOR_ID, { timeout: 30_000 })
 
-  // Mounted as a member of the `nuxt` group, in the framework category (the
-  // definition defaults to `~builtin`; the per-mount override must win).
+  // Mounted as a member of the `nuxt` group, in the `advanced` in-group
+  // category (the definition defaults to `~builtin`; the per-mount override
+  // must win).
   const entry = await page.evaluate((id) => {
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
     return ctx.docks.entries.find((e: any) => e.id === id)
@@ -28,7 +29,7 @@ test('mounts the Data Inspector in the Nuxt group exposing only the Nuxt source'
     id: DATA_INSPECTOR_ID,
     type: 'iframe',
     groupId: 'nuxt',
-    category: 'framework',
+    category: 'advanced',
   })
 
   // The source picker contains the Nuxt source and NOT the built-in example.

@@ -23,8 +23,7 @@ test('mounts Code Server in the Nuxt group and reports a missing binary without 
     id: CODE_SERVER_DOCK_ID,
     type: 'iframe',
     groupId: 'nuxt',
-    category: 'framework',
-    defaultOrder: -200,
+    category: 'modules',
   })
 
   const status = await page.evaluate(async (rpcName) => {
