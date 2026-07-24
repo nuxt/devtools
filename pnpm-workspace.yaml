@@ -4,6 +4,7 @@ autoInstallPeers: true
 minimumReleaseAgeExclude:
   - '@devframes/hub'
   - '@devframes/json-render'
+  - '@devframes/plugin-a11y'
   - '@devframes/plugin-data-inspector'
   - '@devframes/plugin-code-server'
   - '@devframes/plugin-inspect'
@@ -44,13 +45,13 @@ overrides:
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.7.9
+  '@devframes/hub': ^0.7.11
   '@nuxt/devtools': workspace:*
   '@vue/compiler-core': 3.5.39
   '@vue/compiler-dom': 3.5.39
   '@vue/shared': 3.5.39
   chokidar: ^5.0.0
-  devframe: ^0.7.9
+  devframe: ^0.7.11
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5
@@ -78,7 +79,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.5
     '@unocss/preset-mini': ^66.7.5
     '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.3
+    '@vitejs/devtools': ^0.4.5
     '@vueuse/nuxt': ^14.3.0
     exsolve: ^1.1.0
     lightningcss: ^1.33.0
@@ -165,8 +166,9 @@ catalogs:
   playground:
     '@exampledev/new.css': ^1.1.3
   prod:
-    '@devframes/plugin-code-server': ^0.7.9
-    '@devframes/plugin-data-inspector': ^0.7.9
+    '@devframes/plugin-a11y': ^0.7.11
+    '@devframes/plugin-code-server': ^0.7.11
+    '@devframes/plugin-data-inspector': ^0.7.11
     '@nuxt/kit': ^4.5.0
     '@vue/devtools-kit': ^8.1.5
     consola: ^3.4.2
@@ -194,5 +196,5 @@ catalogs:
     '@types/node': ^26.1.1
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.2.1
-    '@vitejs/devtools-kit': ^0.4.3
+    '@vitejs/devtools-kit': ^0.4.5
     unimport: ^6.3.1

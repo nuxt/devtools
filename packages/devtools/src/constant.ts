@@ -10,6 +10,9 @@ export const defaultOptions: ModuleOptions = {
   codeServer: {
     enabled: true,
   },
+  a11y: {
+    enabled: true,
+  },
   disableAuthorization: isSandboxed,
 }
 

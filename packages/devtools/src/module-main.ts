@@ -258,6 +258,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   const integrations = [
     import('./integrations/code-server').then(({ setup }) => setup(ctx)),
+    // Accessibility inspector; self-gates on `options.a11y.enabled`.
+    import('./integrations/a11y').then(({ setup }) => setup(ctx)),
     (options.experimental?.timeline || options.timeline?.enabled)
       ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
       : null,

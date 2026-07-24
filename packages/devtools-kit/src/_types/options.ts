@@ -24,6 +24,14 @@ export interface ModuleOptions {
   codeServer?: CodeServerIntegrationOptions
 
   /**
+   * Accessibility (a11y) inspector integration options.
+   *
+   * @experimental The underlying `@devframes/plugin-a11y` panel is
+   * experimental and may change without a major version bump.
+   */
+  a11y?: A11yIntegrationOptions
+
+  /**
    * Legacy VS Code Server integration options.
    *
    * @deprecated Use `codeServer`. Legacy modes are no longer supported.
@@ -156,6 +164,20 @@ export interface CodeServerIntegrationOptions {
 
   /** Milliseconds to wait for Code Server to become ready. */
   startTimeout?: number
+}
+
+/**
+ * Options for the accessibility inspector integration, backed by
+ * `@devframes/plugin-a11y`. The panel runs axe-core against the running app
+ * and highlights offending elements in the page.
+ */
+export interface A11yIntegrationOptions {
+  /**
+   * Enable the accessibility inspector.
+   *
+   * @default true
+   */
+  enabled?: boolean
 }
 
 /** @deprecated Use {@link CodeServerIntegrationOptions}. */
