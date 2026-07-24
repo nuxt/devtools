@@ -7,9 +7,24 @@ on:
 
 jobs:
   release:
-    uses: sxzz/workflows/.github/workflows/release.yml@main
-    with:
-      publish: true
+    name: Release
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
+    steps:
+      - name: Setup JS
+        uses: sxzz/workflows/setup-js@main
+        with:
+          fetch-all: true
+          cache: false
+          node-version: 24
+
+      - name: Generate GitHub Changelog
+        run: pnpx changelogithub
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to NPM
+        run: pnpm -r publish --access public --no-git-checks
