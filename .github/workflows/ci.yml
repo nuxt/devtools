@@ -27,9 +27,6 @@ jobs:
       - run: npm install -g corepack@latest
       - run: corepack enable
       - run: pnpm install
-      # Generate the client Nuxt app's `.nuxt` types (incl. its `@nuxt/eslint`
-      # config, which the root ESLint config imports) before linting.
-      - run: pnpm dev:prepare
       - run: pnpm lint
       - run: pnpm build
       - run: pnpm typecheck
