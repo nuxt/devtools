@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
-import { homedir } from 'node:os'
+import { homedir, platform } from 'node:os'
 import { dirname } from 'node:path'
 import { hash } from 'ohash'
 import { join } from 'pathe'
@@ -10,8 +10,19 @@ interface LocalOptionSearchOptions {
   key?: string | boolean
 }
 
-export function getHomeDir() {
-  return process.env.XDG_CONFIG_HOME || homedir()
+export function getOptionsDir() {
+  const home = homedir()
+  const osPlatform = platform()
+
+  // From research, there three are not trying to be XDG compliant. Leave it as before
+  if (osPlatform === 'win32' || osPlatform === 'darwin' || osPlatform === 'haiku') {
+    return join(home, '.nuxt/devtools')
+  }
+
+  // https://specifications.freedesktop.org/basedir/latest/#variables
+  // Check if env var is set, otherwise fallback to $HOME/.config
+  const xdgBase = process.env.XDG_CONFIG_HOME || join(home, '.config')
+  return join(xdgBase, 'nuxt/devtools')
 }
 
 export async function readLocalOptions<T>(defaults: T, options: LocalOptionSearchOptions): Promise<T> {
@@ -44,8 +55,8 @@ function getOptionsFilepath(options: LocalOptionSearchOptions) {
   else
     hashedKey = hash(options.root)
 
-  const home = getHomeDir()
-  const filePath = join(home, '.nuxt/devtools', `${hashedKey}.json`)
+  const dir = getOptionsDir()
+  const filePath = join(dir, `${hashedKey}.json`)
 
   return {
     filePath,
