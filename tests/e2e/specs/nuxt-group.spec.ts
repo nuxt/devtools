@@ -54,17 +54,21 @@ test('registers a single `Nuxt` group with `nuxt:devtools` as its default child'
   expect(memberIds).toContain('nuxt:devtools:settings')
   expect(memberIds.length).toBeGreaterThan(1)
 
-  // The anchor's own dock button is redundant next to those members, so it's
-  // registered with a render-only `visibility: 'false'` (devframe#136): its
-  // button is suppressed while the entry stays registered — keeping its
-  // `subTabs`/`frameId` shared iframe alive and driving the nav loop.
+  // The anchor's own dock button would ideally be suppressed via a
+  // render-only `visibility: 'false'` (devframe#136) since it's redundant
+  // next to those members, but that's currently disabled in `module-main.ts`
+  // — the group button's `defaultChildId` fallback looks the entry up
+  // through the same visibility filter, so hiding the anchor also breaks
+  // clicking into it from the `Nuxt` group button. Once that's fixed
+  // upstream, re-enable `visibility: 'false'` there and restore this
+  // assertion. Until then, the entry stays registered and visible, keeping
+  // its `subTabs`/`frameId` shared iframe alive and driving the nav loop.
   const anchor = await page.evaluate(() => {
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
     return ctx.docks.entries.find((entry: any) => entry.id === 'nuxt:devtools')
   })
   expect(anchor).toMatchObject({
     id: 'nuxt:devtools',
-    visibility: 'false',
     subTabs: { protocol: 'postmessage' },
   })
 })
