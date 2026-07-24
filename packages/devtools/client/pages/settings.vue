@@ -2,6 +2,7 @@
 import { watchEffect } from 'vue'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
+import { isEmbedded } from '~/composables/embed'
 import { rpc } from '~/composables/rpc'
 import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
 import { telemetryEnabled } from '~/composables/telemetry'
@@ -115,7 +116,8 @@ watchEffect(() => {
       text="DevTools Settings"
     />
     <div grid="~ lg:cols-2 gap-x-10 gap-y-3" max-w-300>
-      <div flex="~ col gap-2">
+      <!-- Tab visibility/order is controlled by the Vite DevTools dock when embedded. -->
+      <div v-if="!isEmbedded" flex="~ col gap-2">
         <h3 text-lg>
           Tabs
         </h3>
@@ -175,38 +177,45 @@ watchEffect(() => {
           Appearance
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <div>
-            <NDarkToggle v-slot="{ toggle, isDark }">
-              <NButton n="primary" @click="toggle">
-                <div i-carbon-sun dark:i-carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
-              </NButton>
-            </NDarkToggle>
-          </div>
-          <div mx--2 my1 h-1px border="b base" op75 />
+          <!-- Color mode is driven by Vite DevTools when embedded. -->
+          <template v-if="!isEmbedded">
+            <div>
+              <NDarkToggle v-slot="{ toggle, isDark }">
+                <NButton n="primary" @click="toggle">
+                  <div i-carbon-sun dark:i-carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
+                </NButton>
+              </NDarkToggle>
+            </div>
+            <div mx--2 my1 h-1px border="b base" op75 />
+          </template>
           <p>UI Scale</p>
           <NSelect v-model="scale" n="primary">
             <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
           </NSelect>
-          <div mx--2 my1 h-1px border="b base" op75 />
-          <NCheckbox v-model="sidebarExpanded" n-primary>
-            <span>
-              Expand Sidebar
-            </span>
-          </NCheckbox>
-          <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
-            <span>
-              Scrollable Sidebar
-            </span>
-          </NCheckbox>
+          <!-- The SideNav is hidden when embedded, so its options are moot. -->
+          <template v-if="!isEmbedded">
+            <div mx--2 my1 h-1px border="b base" op75 />
+            <NCheckbox v-model="sidebarExpanded" n-primary>
+              <span>
+                Expand Sidebar
+              </span>
+            </NCheckbox>
+            <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
+              <span>
+                Scrollable Sidebar
+              </span>
+            </NCheckbox>
+          </template>
         </NCard>
 
         <h3 mt2 text-lg>
           Features
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
+          <!-- Panel open/close behaviour is owned by the Vite DevTools dock when embedded. -->
+          <NCheckbox v-if="!isEmbedded" v-model="interactionCloseOnOutsideClick" n-primary>
             <span>Close DevTools when clicking outside</span>
           </NCheckbox>
           <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>

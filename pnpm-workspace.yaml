@@ -44,13 +44,13 @@ overrides:
   # which silently drops the whole `overrides` config and desyncs the
   # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
   # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.7.11
+  '@devframes/hub': ^0.7.12
   '@nuxt/devtools': workspace:*
   '@vue/compiler-core': 3.5.39
   '@vue/compiler-dom': 3.5.39
   '@vue/shared': 3.5.39
   chokidar: ^5.0.0
-  devframe: ^0.7.11
+  devframe: ^0.7.12
   esbuild: ^0.28.1
   rollup: ^4.62.2
   semver: ^7.8.5
@@ -78,7 +78,7 @@ catalogs:
     '@unocss/preset-icons': ^66.7.5
     '@unocss/preset-mini': ^66.7.5
     '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.5
+    '@vitejs/devtools': ^0.4.6
     '@vueuse/nuxt': ^14.3.0
     exsolve: ^1.1.0
     lightningcss: ^1.33.0
@@ -194,5 +194,5 @@ catalogs:
     '@types/node': ^26.1.1
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.2.1
-    '@vitejs/devtools-kit': ^0.4.5
+    '@vitejs/devtools-kit': ^0.4.6
     unimport: ^6.3.1

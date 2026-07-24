@@ -118,6 +118,20 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             category: 'framework',
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
+            // Order the in-group sub-categories (each member's `category`) the
+            // way Nuxt DevTools orders its own tab categories, rather than the
+            // dock's shared default table. Requires `@vitejs/devtools` >= 0.4.6
+            // / `@devframes/hub` >= 0.7.12 (vitejs/devtools#468).
+            categoryOrder: {
+              'pinned': 0,
+              'app': 1,
+              'vue-devtools': 2,
+              'analyze': 3,
+              'server': 4,
+              'modules': 5,
+              'documentation': 6,
+              'advanced': 7,
+            },
           })
 
           ctx.docks.register({

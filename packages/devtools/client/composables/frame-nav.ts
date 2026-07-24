@@ -77,7 +77,9 @@ export function setupFrameNav(): void {
       id: tab.name,
       title: tab.title ?? tab.name,
       icon: normalizeIcon(tab.icon),
-      category: tab.category,
+      // Mirror `getCategorizedTabs`: an uncategorised tab belongs to `app`, so
+      // the `Nuxt` group's `categoryOrder` weights apply to it.
+      category: tab.category || 'app',
       navTarget: { path: tabPath(tab) },
     })),
     SETTINGS_TAB,
