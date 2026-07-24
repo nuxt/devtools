@@ -175,7 +175,6 @@ registerCommands(() => [
         </NSplitPane>
       </NuxtLayout>
       <CommandPalette />
-      <AuthConfirmDialog />
     </div>
     <DisconnectIndicator v-if="showDisconnectIndicator" />
     <RestartDialogs />

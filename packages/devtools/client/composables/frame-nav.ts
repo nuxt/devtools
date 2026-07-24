@@ -27,7 +27,7 @@ interface FrameNavTab {
   title: string
   icon?: string
   category?: string
-  order?: number
+  defaultOrder?: number
   navTarget: { path: string }
 }
 
@@ -36,9 +36,9 @@ const SETTINGS_TAB: FrameNavTab = {
   id: 'settings',
   title: 'Settings',
   icon: 'carbon:settings',
-  category: 'advanced',
+  category: '~builtin',
   // sort last within its sub-category (higher `order` renders earlier)
-  order: -1000,
+  defaultOrder: 1000,
   navTarget: { path: '/settings' },
 }
 
@@ -77,6 +77,7 @@ export function setupFrameNav(): void {
       id: tab.name,
       title: tab.title ?? tab.name,
       icon: normalizeIcon(tab.icon),
+      defaultOrder: 'defaultOrder' in tab ? tab.defaultOrder : undefined,
       // Mirror `getCategorizedTabs`: an uncategorised tab belongs to `app`, so
       // the `Nuxt` group's `categoryOrder` weights apply to it.
       category: tab.category || 'app',
