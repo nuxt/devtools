@@ -146,14 +146,8 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             groupId: NUXT_DEVTOOLS_GROUP_ID,
             frameId: 'nuxt:devtools',
             subTabs: { protocol: 'postmessage' },
-            // The anchor's own dock button is redundant once the frame-nav shim
-            // has announced a member dock per tab (Overview, every tab,
-            // Settings). `visibility: 'false'` hides just that button while the
-            // entry stays registered and reachable, so it keeps hosting the
-            // shared iframe and driving the postMessage nav loop. Requires
-            // `@devframes/hub` >= 0.7.13 / `@vitejs/devtools` >= 0.4.7
-            // (devframe#136 / vitejs/devtools#470); inert on older viewers.
-            visibility: 'false',
+            // TODO: this seems still not working correctly with defaultChildId, enable it back later.
+            // visibility: 'false',
             defaultOrder: -300,
           })
         }
