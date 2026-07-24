@@ -1,5 +1,5 @@
 import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
-import type { Component, NuxtApp, NuxtPage } from 'nuxt/schema'
+import type { Component, NuxtApp, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { Import, Unimport } from 'unimport'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerDebugContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
@@ -86,8 +86,8 @@ export function setupGeneralRPC({
   })
 
   return {
-    getServerConfig() {
-      return nuxt.options
+    getServerConfig(): NuxtOptions {
+      return nuxt.options as unknown as NuxtOptions
     },
     async getServerDebugContext() {
       if (!nuxt._debug)
