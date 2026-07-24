@@ -103,6 +103,13 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         // setup callback too, and would otherwise create a second, inert
         // group + hub member. See `skipInSSR`.
         if (!skipInSSR(ctx)) {
+          // Register the `Nuxt` group and a single **shared-frame anchor**
+          // iframe. The anchor owns one kept-alive iframe (its `frameId`); the
+          // client app ships a `devframe:frame-nav` postMessage shim that
+          // announces one member dock per DevTools tab and soft-navigates
+          // between them within that one iframe — no per-tab reload, and no
+          // Node-side tab list. Requires `@vitejs/devtools` >= 0.4.5 /
+          // `@devframes/hub` >= 0.7.11 (devframe#128 / vitejs/devtools#464).
           ctx.docks.register({
             id: NUXT_DEVTOOLS_GROUP_ID,
             type: 'group',
@@ -111,15 +118,33 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             category: 'framework',
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
+            // Order the in-group sub-categories (each member's `category`) the
+            // way Nuxt DevTools orders its own tab categories, rather than the
+            // dock's shared default table. Requires `@vitejs/devtools` >= 0.4.6
+            // / `@devframes/hub` >= 0.7.12 (vitejs/devtools#468).
+            categoryOrder: {
+              'pinned': 0,
+              'app': 1,
+              'vue-devtools': 2,
+              'analyze': 3,
+              'server': 4,
+              'modules': 5,
+              'documentation': 6,
+              'advanced': 7,
+            },
           })
 
           ctx.docks.register({
             id: 'nuxt:devtools',
             type: 'iframe',
-            icon: '/__nuxt_devtools__/client/nuxt.svg',
             title: 'Nuxt DevTools',
-            url: '/__nuxt_devtools__/client/',
+            icon: '/__nuxt_devtools__/client/nuxt.svg',
+            // `?embed=1` tells the client it is the embedded anchor: hide its
+            // own shell (SideNav/split pane) and start the frame-nav shim.
+            url: '/__nuxt_devtools__/client/?embed=1',
             groupId: NUXT_DEVTOOLS_GROUP_ID,
+            frameId: 'nuxt:devtools',
+            subTabs: { protocol: 'postmessage' },
             defaultOrder: -300,
           })
         }
@@ -233,7 +258,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
         res.end()
       }
       server.middlewares.use(ROUTE_CLIENT, (req, res) => {
-        if (req.url === '/')
+        // Serve the (base-rewritten) SPA index for the root document, ignoring
+        // any query string — e.g. the shared-frame anchor loads `/?embed=1`,
+        // which sirv would otherwise serve as a raw, un-rewritten `index.html`.
+        const pathname = (req.url || '/').split('?')[0]
+        if (pathname === '/' || pathname === '')
           return handleIndex(res)
         return handleStatic(req, res, () => handleIndex(res))
       })

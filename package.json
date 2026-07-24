@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "watch": "turbo watch build",
     "dev": "pnpm run build && pnpm -C packages/devtools dev",
     "lint": "eslint --cache .",
     "release": "pnpm test && bumpp -r --all",
@@ -21,11 +22,11 @@
     "test:e2e:built": "pnpm test:e2e:prebuild && PW_PROJECT='*:built' playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:prebuild": "pnpm -C playgrounds/empty exec nuxt build && pnpm -C playgrounds/spa exec nuxt build && pnpm -C playgrounds/tab-pinia exec nuxt build && pnpm -C playgrounds/tab-seo exec nuxt build",
     "test:e2e:ui": "playwright test --config tests/e2e/playwright.config.ts --ui",
-    "docs": "nuxi dev docs",
-    "docs:build": "CI=true nuxi generate docs",
+    "docs": "pnpm -C docs install && nuxi dev docs",
+    "docs:build": "pnpm -C docs install && CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "simple-git-hooks && pnpm -C docs install && skills-npm",
-    "prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
+    "postinstall": "simple-git-hooks && skills-npm",
+    "dev:prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",

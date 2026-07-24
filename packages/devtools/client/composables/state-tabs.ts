@@ -21,6 +21,7 @@ export function useAllTabs() {
         return {
           name: i.name as string,
           path: i.path,
+          defaultOrder: i.meta.order as number | undefined,
           ...i.meta,
         }
       }),

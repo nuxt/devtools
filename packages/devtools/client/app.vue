@@ -5,6 +5,8 @@ import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
+import { isEmbedded } from '~/composables/embed'
+import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
@@ -43,7 +45,10 @@ setupClientRPC()
 const client = useClient()
 const route = useRoute()
 const colorMode = getColorMode()
-const isUtilityView = computed(() => route.path.startsWith('/__') || route.path === '/')
+// When embedded as the shared-frame anchor (`?embed=1`), hide the app shell
+// (SideNav + split pane) so the iframe shows only the current tab; the dock's
+// per-tab members drive navigation via the frame-nav shim.
+const isUtilityView = computed(() => isEmbedded.value || route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 const showDisconnectIndicator = ref(false)
 
@@ -87,6 +92,11 @@ const { scale, sidebarExpanded } = useDevToolsOptions('ui')
 const dataSchema = useSchemaInput()
 
 onMounted(async () => {
+  // As the shared-frame anchor, announce our tabs to the dock and answer
+  // soft-navigation over postMessage.
+  if (isEmbedded.value)
+    setupFrameNav()
+
   const injectClient = useInjectionClient()
   watchEffect(() => {
     window.__NUXT_DEVTOOLS__ = injectClient.value
@@ -148,12 +158,14 @@ registerCommands(() => [
     </NLoading>
     <div
       v-else
-      :class="isUtilityView ? 'flex' : sidebarExpanded ? 'grid grid-cols-[250px_1fr]' : 'grid grid-cols-[50px_1fr]'"
+      :class="isEmbedded ? 'grid grid-cols-[1fr]' : isUtilityView ? 'flex' : sidebarExpanded ? 'grid grid-cols-[250px_1fr]' : 'grid grid-cols-[50px_1fr]'"
       h-full h-screen of-hidden rounded-xl bg-base font-sans
     >
       <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
       <NuxtLayout>
-        <NSplitPane storage-key="devtools:split-screen-mode" :min-size="20">
+        <!-- Embedded single-tab view: mount the tab content directly, no split pane -->
+        <NuxtPage v-if="isEmbedded" />
+        <NSplitPane v-else storage-key="devtools:split-screen-mode" :min-size="20">
           <template #left>
             <NuxtPage />
           </template>
@@ -163,7 +175,6 @@ registerCommands(() => [
         </NSplitPane>
       </NuxtLayout>
       <CommandPalette />
-      <AuthConfirmDialog />
     </div>
     <DisconnectIndicator v-if="showDisconnectIndicator" />
     <RestartDialogs />

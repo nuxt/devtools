@@ -96,8 +96,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
     return mountDevframe(kit as any, mountedDefinition, {
       dock: {
         groupId: NUXT_DEVTOOLS_GROUP_ID,
-        category: 'framework',
-        defaultOrder: -200,
+        category: 'modules',
       },
     })
   }, nuxt)
