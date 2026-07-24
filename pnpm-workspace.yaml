@@ -37,62 +37,71 @@ allowBuilds:
   unrs-resolver: true
   vue-demi: true
 
-overrides:
-  # NOTE: these must be literal ranges, not `catalog:` refs. pnpm's
-  # `catalog:` protocol inside `overrides` isn't understood by pnpm 9.x
-  # (e.g. the pnpm major Vercel falls back to when corepack isn't active),
-  # which silently drops the whole `overrides` config and desyncs the
-  # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
-  # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.7.12
-  '@nuxt/devtools': workspace:*
-  '@vue/compiler-core': 3.5.39
-  '@vue/compiler-dom': 3.5.39
-  '@vue/shared': 3.5.39
-  chokidar: ^5.0.0
-  devframe: ^0.7.12
-  esbuild: ^0.28.1
-  rollup: ^4.62.2
-  semver: ^7.8.5
-  typescript: ^6.0.3
-  unimport: ^6.3.1
+refs:
+  devframe: &devframe ^0.7.12
+  nuxt: &nuxt ^4.5.0
+  shiki: &shiki ^4.3.1
+  unocss: &unocss ^66.7.5
   # `@vitejs/devtools@0.4.2` still fails under Vite 8.1's reworked
   # WebSocket-upgrade handling: its crossws-based RPC socket ends up calling
   # `server.handleUpgrade()` twice on the same SSR socket, killing the
   # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
   # `@vitejs/devtools` ships working 8.1 support.
-  vite: ~8.0.16
-  # `@vitejs/devtools@0.4.2` requests Vue 3.5.40, but mixing its compiler
-  # internals with the 3.5.39 runtime generates duplicate-import SFC errors.
-  vue: 3.5.39
-  vue-tsc: ^3.3.7
+  vite: &vite ~8.0.16
+
+  vite-devtools: &vite-devtools ^0.4.6
+  vue: &vue ^3.5.40
+  vue-devtools: &vue-devtools ^8.1.5
+  vueuse: &vueuse ^14.3.0
+overrides:
+  '@devframes/hub': *devframe
+  '@devframes/json-render': *devframe
+  '@devframes/plugin-code-server': *devframe
+  '@devframes/plugin-data-inspector': *devframe
+  '@devframes/plugin-inspect': *devframe
+  '@devframes/plugin-messages': *devframe
+  '@devframes/plugin-terminals': *devframe
+  '@nuxt/devtools': workspace:*
+  '@vue/compiler-core': *vue
+  '@vue/compiler-dom': *vue
+  '@vue/shared': *vue
+  chokidar: ^5.0.0
+  devframe: *devframe
+  esbuild: ^0.28.1
+  rollup: ^4.62.2
+  semver: ^7.8.5
+  typescript: ^6.0.3
+  unimport: ^6.3.1
+  vite: *vite
+  vue: *vue
+  vue-tsc: ^3.3.8
 catalogs:
   buildtools:
     '@nuxt/module-builder': ^1.0.2
     '@parcel/watcher': ^2.6.0
     '@pinia/nuxt': ^1.0.1
-    '@unocss/core': ^66.7.5
-    '@unocss/eslint-config': ^66.7.5
-    '@unocss/nuxt': ^66.7.5
-    '@unocss/preset-attributify': ^66.7.5
-    '@unocss/preset-icons': ^66.7.5
-    '@unocss/preset-mini': ^66.7.5
-    '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.6
-    '@vueuse/nuxt': ^14.3.0
+    '@unocss/core': *unocss
+    '@unocss/eslint-config': *unocss
+    '@unocss/nuxt': *unocss
+    '@unocss/preset-attributify': *unocss
+    '@unocss/preset-icons': *unocss
+    '@unocss/preset-mini': *unocss
+    '@unocss/preset-uno': *unocss
+    '@vitejs/devtools': *vite-devtools
+    '@vueuse/nuxt': *vueuse
     exsolve: ^1.1.0
     lightningcss: ^1.33.0
     nitropack: ^2.13.4
-    nuxt: ^4.5.0
-    shiki-codegen: ^4.3.1
+    nuxt: *nuxt
+    shiki-codegen: *shiki
     skills-npm: ^1.2.0
-    turbo: ^2.10.5
+    turbo: ^2.10.6
     unbuild: ^3.6.1
-    unocss: ^66.7.5
+    unocss: *unocss
     unplugin-vue: ^7.2.0
     unplugin-vue-markdown: ^32.0.0
   cli:
-    '@antfu/eslint-config': ^9.1.0
+    '@antfu/eslint-config': ^9.2.0
     '@antfu/ni': ^30.3.0
     '@nuxt/eslint': ^1.16.0
     '@nuxt/test-utils': ^4.0.3
@@ -112,15 +121,15 @@ catalogs:
     tsx: ^4.23.1
     typescript: ^6.0.3
     vitest: ^4.1.10
-    vue-tsc: ^3.3.7
+    vue-tsc: ^3.3.8
   frontend:
     '@antfu/utils': ^9.3.0
-    '@unocss/reset': ^66.7.5
-    '@unocss/runtime': ^66.7.5
-    '@vue/devtools-applet': ^8.1.5
-    '@vue/devtools-core': ^8.1.5
-    '@vueuse/core': ^14.3.0
-    '@vueuse/integrations': ^14.3.0
+    '@unocss/reset': *unocss
+    '@unocss/runtime': *unocss
+    '@vue/devtools-applet': *vue-devtools
+    '@vue/devtools-core': *vue-devtools
+    '@vueuse/core': *vueuse
+    '@vueuse/integrations': *vueuse
     birpc: ^4.0.0
     cronstrue: ^3.24.0
     diff: ^8.0.4
@@ -139,7 +148,7 @@ catalogs:
     pinia: ^4.0.2
     quicktype-core: 22.0.0
     scule: ^1.3.0
-    shiki: ^4.3.1
+    shiki: *shiki
     splitpanes: ^4.1.2
     structured-clone-es: ^2.0.0
     theme-vitesse: ^1.0.0
@@ -149,7 +158,7 @@ catalogs:
     vis-data: ^8.0.4
     vis-network: ^10.1.0
     vite-hot-client: ^2.2.0
-    vue: 3.5.39
+    vue: *vue
     vue-router: ^5.2.0
     vue-virtual-scroller: ^3.0.4
   icons:
@@ -165,10 +174,10 @@ catalogs:
   playground:
     '@exampledev/new.css': ^1.1.3
   prod:
-    '@devframes/plugin-code-server': ^0.7.11
-    '@devframes/plugin-data-inspector': ^0.7.11
-    '@nuxt/kit': ^4.5.0
-    '@vue/devtools-kit': ^8.1.5
+    '@devframes/plugin-code-server': *devframe
+    '@devframes/plugin-data-inspector': *devframe
+    '@nuxt/kit': *nuxt
+    '@vue/devtools-kit': *vue-devtools
     consola: ^3.4.2
     defu: ^6.1.7
     destr: ^2.0.5
@@ -188,11 +197,11 @@ catalogs:
     vite-plugin-vue-tracer: ^1.4.0
     ws: ^8.21.1
   types:
-    '@nuxt/schema': ^4.5.0
+    '@nuxt/schema': *nuxt
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.1.1
     '@types/ws': ^8.18.1
-    '@unhead/schema': ^3.2.1
+    '@unhead/schema': ^3.2.3
     '@vitejs/devtools-kit': ^0.4.6
     unimport: ^6.3.1
