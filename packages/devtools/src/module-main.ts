@@ -139,9 +139,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             type: 'iframe',
             title: 'Nuxt DevTools',
             icon: '/__nuxt_devtools__/client/nuxt.svg',
-            // `?embed=1` tells the client it is the embedded anchor: hide its
-            // own shell (SideNav/split pane) and start the frame-nav shim.
-            url: '/__nuxt_devtools__/client/?embed=1',
+            // The client renders chromelessly as this shared-frame anchor (no
+            // SideNav/split pane) and runs the frame-nav shim, which announces
+            // one member dock per tab and soft-navigates within this one iframe.
+            url: '/__nuxt_devtools__/client/',
             groupId: NUXT_DEVTOOLS_GROUP_ID,
             frameId: 'nuxt:devtools',
             subTabs: { protocol: 'postmessage' },
@@ -259,8 +260,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
       }
       server.middlewares.use(ROUTE_CLIENT, (req, res) => {
         // Serve the (base-rewritten) SPA index for the root document, ignoring
-        // any query string — e.g. the shared-frame anchor loads `/?embed=1`,
-        // which sirv would otherwise serve as a raw, un-rewritten `index.html`.
+        // any query string, which sirv would otherwise serve as a raw,
+        // un-rewritten `index.html`.
         const pathname = (req.url || '/').split('?')[0]
         if (pathname === '/' || pathname === '')
           return handleIndex(res)

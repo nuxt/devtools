@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { useEventListener, useEyeDropper } from '@vueuse/core'
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
-import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
-import { isEmbedded } from '~/composables/embed'
 import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
-import { splitScreenAvailable, splitScreenEnabled } from '~/composables/storage'
 import { wsConnectedOnce } from './composables/rpc'
 import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
@@ -43,12 +40,7 @@ useHead({
 setupClientRPC()
 
 const client = useClient()
-const route = useRoute()
 const colorMode = getColorMode()
-// When embedded as the shared-frame anchor (`?embed=1`), hide the app shell
-// (SideNav + split pane) so the iframe shows only the current tab; the dock's
-// per-tab members drive navigation via the frame-nav shim.
-const isUtilityView = computed(() => isEmbedded.value || route.path.startsWith('/__') || route.path === '/')
 const waiting = computed(() => !client.value && !showConnectionWarning.value)
 const showDisconnectIndicator = ref(false)
 
@@ -88,14 +80,14 @@ useEventListener('keydown', (e) => {
   }
 })
 
-const { scale, sidebarExpanded } = useDevToolsOptions('ui')
+const { scale } = useDevToolsOptions('ui')
 const dataSchema = useSchemaInput()
 
 onMounted(async () => {
-  // As the shared-frame anchor, announce our tabs to the dock and answer
-  // soft-navigation over postMessage.
-  if (isEmbedded.value)
-    setupFrameNav()
+  // Nuxt DevTools always renders as the shared-frame anchor inside the Vite
+  // DevTools dock: announce our tabs to the dock and answer soft-navigation
+  // over postMessage.
+  setupFrameNav()
 
   const injectClient = useInjectionClient()
   watchEffect(() => {
@@ -111,16 +103,6 @@ const copy = useCopy()
 const eyeDropper = useEyeDropper({})
 
 registerCommands(() => [
-  ...(splitScreenAvailable.value
-    ? [{
-        id: 'action:split-screen',
-        title: `${splitScreenEnabled.value ? 'Close' : 'Open'} Split Screen`,
-        icon: 'i-carbon-split-screen',
-        action: () => {
-          splitScreenEnabled.value = !splitScreenEnabled.value
-        },
-      }]
-    : []),
   ...(eyeDropper.isSupported.value
     ? [{
         id: 'action:eye-dropper',
@@ -158,21 +140,14 @@ registerCommands(() => [
     </NLoading>
     <div
       v-else
-      :class="isEmbedded ? 'grid grid-cols-[1fr]' : isUtilityView ? 'flex' : sidebarExpanded ? 'grid grid-cols-[250px_1fr]' : 'grid grid-cols-[50px_1fr]'"
+      id="nuxt-devtools-app"
+      class="grid grid-cols-[1fr]"
       h-full h-screen of-hidden rounded-xl bg-base font-sans
     >
-      <SideNav v-show="!isUtilityView" of-x-hidden of-y-auto />
+      <!-- Single-tab view: the shared-frame anchor mounts the current tab
+           directly; the Vite DevTools dock provides navigation between tabs. -->
       <NuxtLayout>
-        <!-- Embedded single-tab view: mount the tab content directly, no split pane -->
-        <NuxtPage v-if="isEmbedded" />
-        <NSplitPane v-else storage-key="devtools:split-screen-mode" :min-size="20">
-          <template #left>
-            <NuxtPage />
-          </template>
-          <template v-if="!isUtilityView && splitScreenEnabled && splitScreenAvailable" #right>
-            <SplitScreen />
-          </template>
-        </NSplitPane>
+        <NuxtPage />
       </NuxtLayout>
       <CommandPalette />
     </div>

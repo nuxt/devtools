@@ -235,13 +235,10 @@ export interface NuxtDevToolsOptions {
     componentsView: 'list' | 'graph'
     hiddenTabCategories: string[]
     hiddenTabs: string[]
-    interactionCloseOnOutsideClick: boolean
     pinnedTabs: string[]
     scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    sidebarExpanded: boolean
-    sidebarScrollable: boolean
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null

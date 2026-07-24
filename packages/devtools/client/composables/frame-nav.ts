@@ -10,10 +10,9 @@ import { useEnabledTabs } from '~/composables/state-tabs'
 // iframe/reload is needed. The shim is transport-only: it takes no hub/RPC
 // dependency, just `postMessage`.
 //
-// The announced set comes from `useEnabledTabs()` — the same conditional list
-// the SideNav used — so a tab's `show()` condition, hidden/pinned settings and
-// experimental gating decide whether its dock appears, and the manifest is
-// re-announced whenever that set changes.
+// The announced set comes from `useEnabledTabs()` — so a tab's `show()`
+// condition, hidden/pinned settings and experimental gating decide whether its
+// dock appears, and the manifest is re-announced whenever that set changes.
 const CHANNEL = 'devframe:frame-nav'
 const VERSION = 1
 // Must match the anchor's `frameId` registered in `module-main.ts`.
@@ -78,8 +77,8 @@ export function setupFrameNav(): void {
       title: tab.title ?? tab.name,
       icon: normalizeIcon(tab.icon),
       defaultOrder: 'defaultOrder' in tab ? tab.defaultOrder : undefined,
-      // Mirror `getCategorizedTabs`: an uncategorised tab belongs to `app`, so
-      // the `Nuxt` group's `categoryOrder` weights apply to it.
+      // An uncategorised tab belongs to `app`, so the `Nuxt` group's
+      // `categoryOrder` weights apply to it.
       category: tab.category || 'app',
       navTarget: { path: tabPath(tab) },
     })),
