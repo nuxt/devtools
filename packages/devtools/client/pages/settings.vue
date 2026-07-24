@@ -2,6 +2,7 @@
 import { watchEffect } from 'vue'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
+import { ensureDevAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
 import { telemetryEnabled } from '~/composables/telemetry'
@@ -62,7 +63,24 @@ const MinimizeInactiveOptions = [
 
 const categories = getCategorizedTabs(useAllTabs())
 
+// Persisting settings is a token-gated action (see storage-options watcher).
+// When the user deliberately edits a setting on this page, ensure the session
+// is authenticated once so the change is actually written to disk.
+let authEnsured = false
+async function onEdit() {
+  if (authEnsured || isDevAuthed.value)
+    return
+  authEnsured = true
+  try {
+    await ensureDevAuthToken()
+  }
+  catch {
+    authEnsured = false
+  }
+}
+
 function toggleTab(name: string, v?: boolean) {
+  onEdit()
   if (v)
     hiddenTabs.value = hiddenTabs.value.filter(i => i !== name)
   else
@@ -70,6 +88,7 @@ function toggleTab(name: string, v?: boolean) {
 }
 
 function toggleTabCategory(name: string, v?: boolean) {
+  onEdit()
   if (v)
     hiddenTabCategories.value = hiddenTabCategories.value.filter(i => i !== name)
   else
@@ -77,6 +96,7 @@ function toggleTabCategory(name: string, v?: boolean) {
 }
 
 function togglePinTab(name: string) {
+  onEdit()
   if (pinnedTabs.value.includes(name))
     pinnedTabs.value = pinnedTabs.value.filter(i => i !== name)
   else
@@ -84,6 +104,7 @@ function togglePinTab(name: string) {
 }
 
 function pinMove(name: string, delta: number) {
+  onEdit()
   const index = pinnedTabs.value.indexOf(name)
   if (index === -1)
     return
@@ -105,7 +126,7 @@ async function clearOptions() {
       if (key.startsWith('nuxt-devtools-'))
         localStorage.removeItem(key)
     })
-    await rpc.clearOptions()
+    await rpc.clearOptions(await ensureDevAuthToken())
     client.value?.app?.reload?.()
     window.location.reload()
   }
@@ -200,18 +221,18 @@ watchEffect(() => {
           </div>
           <div mx--2 my1 h-1px border="b base" op75 />
           <p>UI Scale</p>
-          <NSelect v-model="scale" n="primary">
+          <NSelect v-model="scale" n="primary" @update:model-value="onEdit">
             <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
           </NSelect>
           <div mx--2 my1 h-1px border="b base" op75 />
-          <NCheckbox v-model="sidebarExpanded" n-primary>
+          <NCheckbox v-model="sidebarExpanded" n-primary @update:model-value="onEdit">
             <span>
               Expand Sidebar
             </span>
           </NCheckbox>
-          <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
+          <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary @update:model-value="onEdit">
             <span>
               Scrollable Sidebar
             </span>
@@ -222,24 +243,24 @@ watchEffect(() => {
           Features
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary>
+          <NCheckbox v-model="interactionCloseOnOutsideClick" n-primary @update:model-value="onEdit">
             <span>Close DevTools when clicking outside</span>
           </NCheckbox>
           <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>
             <span>Show experimental features</span>
           </NCheckbox> -->
-          <NCheckbox v-model="showHelpButtons" n-primary>
+          <NCheckbox v-model="showHelpButtons" n-primary @update:model-value="onEdit">
             <span>Show help buttons</span>
           </NCheckbox>
 
-          <NCheckbox v-model="showPanel" n-primary>
+          <NCheckbox v-model="showPanel" n-primary @update:model-value="onEdit">
             <span>Show the floating panel</span>
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />
 
           <p>Minimize floating panel on inactive</p>
-          <NSelect v-model.number="minimizePanelInactive" n-primary>
+          <NSelect v-model.number="minimizePanelInactive" n-primary @update:model-value="onEdit">
             <option v-for="i of MinimizeInactiveOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
@@ -248,7 +269,7 @@ watchEffect(() => {
           <div mx--2 my1 h-1px border="b base" op75 />
 
           <p>Open In Editor</p>
-          <NSelect v-model="openInEditor" n-primary>
+          <NSelect v-model="openInEditor" n-primary @update:model-value="onEdit">
             <option v-for="i of editorOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>

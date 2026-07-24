@@ -43,7 +43,8 @@
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test:unit": "vitest run"
   },
   "peerDependencies": {
     "@vitejs/devtools": "*",
@@ -139,6 +140,7 @@
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
+    "vitest": "catalog:cli",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"
   }

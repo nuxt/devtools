@@ -191,7 +191,8 @@ export function setupGeneralRPC({
     getServerHooks(): HookInfo[] {
       return Object.values(serverHooks)
     },
-    async openInEditor(input: string): Promise<boolean> {
+    async openInEditor(token: string, input: string): Promise<boolean> {
+      await ensureDevAuthToken(token)
       if (input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input))
         input = resolve(process.cwd(), input)
 

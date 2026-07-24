@@ -8,7 +8,7 @@ export function getOptions() {
   return options
 }
 
-export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupOptionsRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
     if (!options || options[tab]) {
       options = defaultTabOptions
@@ -28,7 +28,8 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
 
   getOptions('ui')
 
-  async function clearOptions() {
+  async function clearOptions(token: string) {
+    await ensureDevAuthToken(token)
     options = undefined
     await clearLocalOptions({
       root: nuxt.options.rootDir,
@@ -36,7 +37,8 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   }
 
   return {
-    async updateOptions(tab, _settings) {
+    async updateOptions(token, tab, _settings) {
+      await ensureDevAuthToken(token)
       const settings = await getOptions(tab)
       Object.assign(settings, _settings)
       await writeLocalOptions(

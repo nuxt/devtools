@@ -31,8 +31,8 @@ export interface ServerFunctions {
 
   // Options
   getOptions: <T extends keyof NuxtDevToolsOptions>(tab: T) => Promise<NuxtDevToolsOptions[T]>
-  updateOptions: <T extends keyof NuxtDevToolsOptions>(tab: T, settings: Partial<NuxtDevToolsOptions[T]>) => Promise<void>
-  clearOptions: () => Promise<void>
+  updateOptions: <T extends keyof NuxtDevToolsOptions>(token: string, tab: T, settings: Partial<NuxtDevToolsOptions[T]>) => Promise<void>
+  clearOptions: (token: string) => Promise<void>
 
   // Updates
   checkForUpdateFor: (name: string) => Promise<PackageUpdateInfo | undefined>
@@ -68,7 +68,7 @@ export interface ServerFunctions {
   telemetryEvent: (payload: object, immediate?: boolean) => void
   customTabAction: (name: string, action: number) => Promise<boolean>
   runWizard: <T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>) => Promise<void>
-  openInEditor: (filepath: string) => Promise<boolean>
+  openInEditor: (token: string, filepath: string) => Promise<boolean>
   restartNuxt: (token: string, hard?: boolean) => Promise<void>
   installNuxtModule: (token: string, name: string, dry?: boolean) => Promise<InstallModuleReturn>
   uninstallNuxtModule: (token: string, name: string, dry?: boolean) => Promise<InstallModuleReturn>
