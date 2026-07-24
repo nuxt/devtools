@@ -1,3 +1,12 @@
+# [3.3.0](https://github.com/nuxt/devtools/compare/v3.2.6...v3.3.0) (2026-07-24)
+
+
+### Bug Fixes
+
+* **devtools:** require dev auth token for openInEditor and options RPC methods ([#1039](https://github.com/nuxt/devtools/issues/1039)) ([a7b2718](https://github.com/nuxt/devtools/commit/a7b2718b930766e1ffb0640259d53f5b041a50b4))
+
+
+
 ## [3.2.6](https://github.com/nuxt/devtools/compare/v3.2.5...v3.2.6) (2026-07-17)
 
 
