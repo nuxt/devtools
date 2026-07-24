@@ -2,6 +2,7 @@ import type { NuxtDevtoolsHostClient } from '@nuxt/devtools-kit/types'
 import { triggerRef } from 'vue'
 import { defineNuxtPlugin, useRouter } from '#imports'
 import { useClient } from '../composables/client'
+import { ensureDevAuthToken } from '../composables/dev-auth'
 import { rpc } from '../composables/rpc'
 
 export default defineNuxtPlugin(() => {
@@ -13,8 +14,8 @@ export default defineNuxtPlugin(() => {
     client.value.revision.value += 1
   }
 
-  function onInspectorClick(path: string) {
-    rpc.openInEditor(path)
+  async function onInspectorClick(path: string) {
+    rpc.openInEditor(await ensureDevAuthToken(), path)
   }
 
   function setupClient(_client: NuxtDevtoolsHostClient) {

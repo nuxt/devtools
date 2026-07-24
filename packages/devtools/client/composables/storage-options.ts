@@ -3,6 +3,7 @@ import type { NuxtDevToolsOptions } from '../../types'
 import { watchDebounced } from '@vueuse/core'
 import { reactive, toRefs } from 'vue'
 import { defaultTabOptions } from '../../src/constant'
+import { devAuthToken, isDevAuthed } from './dev-auth'
 import { rpc } from './rpc'
 
 const cache = new Map<string, any>()
@@ -22,7 +23,12 @@ function getTabOptions<T extends keyof NuxtDevToolsOptions>(tab: T): ToRefs<Nuxt
       watchDebounced(
         source,
         async (options) => {
-          rpc.updateOptions(tab, options)
+          // Persisting options writes to disk and is a token-gated action.
+          // Only persist when the session is already authenticated, and never
+          // trigger an auth prompt from this passive watcher.
+          if (!isDevAuthed.value || !devAuthToken.value)
+            return
+          rpc.updateOptions(devAuthToken.value, tab, options)
         },
         { deep: true, flush: 'post', debounce: 500, maxWait: 1000 },
       )

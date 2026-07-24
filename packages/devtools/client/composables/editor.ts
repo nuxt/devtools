@@ -1,6 +1,7 @@
 import { useClipboard } from '@vueuse/core'
 import { useRouter } from '#app/composables/router'
 import { devtoolsUiShowNotification } from '#imports'
+import { ensureDevAuthToken } from './dev-auth'
 import { rpc } from './rpc'
 import { useServerConfig, useVirtualFiles } from './state'
 import { useCurrentVirtualFile } from './state-routes'
@@ -33,7 +34,7 @@ export function useOpenInEditor() {
       router.push('/modules/virtual-files')
     }
     else {
-      await rpc.openInEditor(filepath)
+      await rpc.openInEditor(await ensureDevAuthToken(), filepath)
     }
   }
 }
