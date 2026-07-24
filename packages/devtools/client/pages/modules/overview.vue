@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 import { useAutoImports, useServerConfig } from '~/composables/state'
 import { useComponents } from '~/composables/state-components'
 import { useInstalledModules } from '~/composables/state-modules'
 import { useAllRoutes } from '~/composables/state-tabs'
-import { isFirstVisit } from '~/composables/storage'
 import { getIsMacOS } from '~/composables/utils'
 import { version } from '../../../package.json'
 import { showConnectionWarning } from '../../composables/client'
@@ -26,12 +24,6 @@ const autoImports = useAutoImports()
 const installedModules = useInstalledModules()
 const routes = useAllRoutes()
 const isMacOS = getIsMacOS()
-
-const router = useRouter()
-function goIntro() {
-  isFirstVisit.value = true
-  router.push('/')
-}
 
 const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
 const metricsLoading = computed(() => client.value?.metrics.loading())
@@ -57,13 +49,13 @@ function authorize() {
         >
           <NuxtLogo h-10 />
         </NuxtLink>
-        <button mb6 mt3 text-center text-sm flex="~ gap-1 wrap" @click="goIntro">
+        <div mb6 mt3 text-center text-sm flex="~ gap-1 wrap">
           <span op40>
             Nuxt DevTools
           </span>
           <code op40>v{{ version }}</code>
           <NpmVersionCheck package-name="@nuxt/devtools" :options="{ dev: true }" :show-version="false" />
-        </button>
+        </div>
       </div>
       <!-- Main Grid -->
       <div flex="~ gap2 wrap">

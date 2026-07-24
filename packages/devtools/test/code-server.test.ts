@@ -135,8 +135,7 @@ describe('code server setup', () => {
       {
         dock: {
           groupId: 'nuxt',
-          category: 'framework',
-          defaultOrder: -200,
+          category: 'modules',
         },
       },
     )

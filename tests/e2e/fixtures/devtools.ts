@@ -23,21 +23,6 @@ export const test = base.extend<DevToolsFixtures>({
     await use(info.project.metadata.mode)
   },
 
-  // Skip the DevTools welcome page on every navigation. Without this,
-  // SideNav is hidden because the route middleware keeps the user on `/`
-  // until they click "Get started".
-  page: async ({ page }, use) => {
-    await page.addInitScript(() => {
-      try {
-        localStorage.setItem('nuxt-devtools-first-visit', 'false')
-      }
-      catch {
-        // Ignore — older sandboxes may block storage on initial nav.
-      }
-    })
-    await use(page)
-  },
-
   openDevTools: async ({ page }, use) => {
     await use(async () => {
       // Wait for the Vite DevTools client context to be injected.
@@ -80,7 +65,7 @@ export const test = base.extend<DevToolsFixtures>({
       // Then wait for the inner app to hydrate. Generous timeout: playgrounds that
       // use `../../local` spawn a separate Nuxt dev subprocess for the devtools
       // client, and its first Vite compile is slow on cold start.
-      await page.frameLocator(IFRAME_SELECTOR).locator('#nuxt-devtools-side-nav').waitFor({ state: 'attached', timeout: 90_000 })
+      await page.frameLocator(IFRAME_SELECTOR).locator('#nuxt-devtools-app').waitFor({ state: 'attached', timeout: 90_000 })
     })
   },
 

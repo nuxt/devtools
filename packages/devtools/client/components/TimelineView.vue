@@ -101,7 +101,6 @@ function toggleView() {
       :model-value="!!selected"
       auto-close
       transition="bottom"
-      left="#nuxt-devtools-side-nav"
       @close="selected = undefined"
     >
       <div min-h-50 px3 py2>

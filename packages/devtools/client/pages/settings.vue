@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { watchEffect } from 'vue'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
-import { isEmbedded } from '~/composables/embed'
 import { rpc } from '~/composables/rpc'
-import { getCategorizedTabs, useAllTabs } from '~/composables/state-tabs'
 import { telemetryEnabled } from '~/composables/telemetry'
 import { useDevToolsOptions } from '../composables/storage-options'
 
@@ -13,14 +10,8 @@ definePageMeta({
 })
 
 const {
-  interactionCloseOnOutsideClick,
   showHelpButtons,
   scale,
-  hiddenTabs,
-  pinnedTabs,
-  hiddenTabCategories,
-  sidebarExpanded,
-  sidebarScrollable,
 } = useDevToolsOptions('ui')
 
 const {
@@ -50,44 +41,6 @@ const scaleOptions = [
   ['Huge', 18 / 15],
 ]
 
-const categories = getCategorizedTabs(useAllTabs())
-
-function toggleTab(name: string, v?: boolean) {
-  if (v)
-    hiddenTabs.value = hiddenTabs.value.filter(i => i !== name)
-  else
-    hiddenTabs.value.push(name)
-}
-
-function toggleTabCategory(name: string, v?: boolean) {
-  if (v)
-    hiddenTabCategories.value = hiddenTabCategories.value.filter(i => i !== name)
-  else
-    hiddenTabCategories.value.push(name)
-}
-
-function togglePinTab(name: string) {
-  if (pinnedTabs.value.includes(name))
-    pinnedTabs.value = pinnedTabs.value.filter(i => i !== name)
-  else
-    pinnedTabs.value.push(name)
-}
-
-function pinMove(name: string, delta: number) {
-  const index = pinnedTabs.value.indexOf(name)
-  if (index === -1)
-    return
-
-  const newIndex = index + delta
-  if (newIndex < 0 || newIndex >= pinnedTabs.value.length)
-    return
-
-  const newPinnedTabs = [...pinnedTabs.value]
-  newPinnedTabs.splice(index, 1)
-  newPinnedTabs.splice(newIndex, 0, name)
-  pinnedTabs.value = newPinnedTabs
-}
-
 async function clearOptions() {
   // eslint-disable-next-line no-alert
   if (confirm('Are you sure you to reset all local settings & state? The app will reload.')) {
@@ -100,12 +53,6 @@ async function clearOptions() {
     window.location.reload()
   }
 }
-
-// sync devtools options with frame state
-watchEffect(() => {
-  if (client.value)
-    client.value.app.frameState.value.closeOnOutsideClick = interactionCloseOnOutsideClick.value
-})
 </script>
 
 <template>
@@ -116,111 +63,23 @@ watchEffect(() => {
       text="DevTools Settings"
     />
     <div grid="~ lg:cols-2 gap-x-10 gap-y-3" max-w-300>
-      <!-- Tab visibility/order is controlled by the Vite DevTools dock when embedded. -->
-      <div v-if="!isEmbedded" flex="~ col gap-2">
-        <h3 text-lg>
-          Tabs
-        </h3>
-        <template v-for="[name, tabs] of categories" :key="name">
-          <NCard
-            v-if="tabs.length" p3 flex="~ col gap-1"
-            :class="hiddenTabCategories.includes(name) ? 'op50 grayscale' : ''"
-          >
-            <NSwitch
-              flex="~ row-reverse" py1 pl2 pr1 n-lime
-              :model-value="!hiddenTabCategories.includes(name)"
-              @update:model-value="(v) => toggleTabCategory(name, v)"
-            >
-              <div flex="~ gap-2" flex-auto items-center justify-start>
-                <span capitalize op75>{{ name }}</span>
-              </div>
-            </NSwitch>
-
-            <div mx--1 my1 h-1px border="b base" op75 />
-
-            <template v-for="tab of tabs" :key="tab.name">
-              <NSwitch
-                flex="~ row-reverse" py1 pl2 pr1 n-primary
-                :model-value="!hiddenTabs.includes(tab.name)"
-                @update:model-value="(v) => toggleTab(tab.name, v)"
-              >
-                <div flex="~ gap-2" flex-auto items-center justify-start of-hidden pr-4 :class="hiddenTabs.includes(tab.name) ? 'op25' : ''">
-                  <TabIcon text-xl :icon="tab.icon" :title="tab.title" />
-                  <span flex-auto overflow-hidden text-ellipsis ws-nowrap>{{ tab.title }}</span>
-                  <template v-if="pinnedTabs.includes(tab.name)">
-                    <NButton
-                      icon="i-carbon-caret-up"
-                      :disabled="pinnedTabs.indexOf(tab.name) === 0"
-                      :border="false"
-                      @click="pinMove(tab.name, -1)"
-                    />
-                    <NButton
-                      icon="i-carbon-caret-down"
-                      :disabled="pinnedTabs.indexOf(tab.name) === pinnedTabs.length - 1"
-                      :border="false"
-                      @click="pinMove(tab.name, 1)"
-                    />
-                  </template>
-                  <NButton
-                    :icon="pinnedTabs.includes(tab.name) ? ' i-carbon-pin-filled rotate--45' : ' i-carbon-pin op50'"
-                    :border="false"
-                    @click="togglePinTab(tab.name)"
-                  />
-                </div>
-              </NSwitch>
-            </template>
-          </NCard>
-        </template>
-      </div>
       <div flex="~ col gap-2">
         <h3 text-lg>
           Appearance
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <!-- Color mode is driven by Vite DevTools when embedded. -->
-          <template v-if="!isEmbedded">
-            <div>
-              <NDarkToggle v-slot="{ toggle, isDark }">
-                <NButton n="primary" @click="toggle">
-                  <div i-carbon-sun dark:i-carbon-moon translate-y--1px /> {{ isDark.value ? 'Dark' : 'Light' }}
-                </NButton>
-              </NDarkToggle>
-            </div>
-            <div mx--2 my1 h-1px border="b base" op75 />
-          </template>
           <p>UI Scale</p>
           <NSelect v-model="scale" n="primary">
             <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
             </option>
           </NSelect>
-          <!-- The SideNav is hidden when embedded, so its options are moot. -->
-          <template v-if="!isEmbedded">
-            <div mx--2 my1 h-1px border="b base" op75 />
-            <NCheckbox v-model="sidebarExpanded" n-primary>
-              <span>
-                Expand Sidebar
-              </span>
-            </NCheckbox>
-            <NCheckbox v-model="sidebarScrollable" :disabled="sidebarExpanded" n-primary>
-              <span>
-                Scrollable Sidebar
-              </span>
-            </NCheckbox>
-          </template>
         </NCard>
 
         <h3 mt2 text-lg>
           Features
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <!-- Panel open/close behaviour is owned by the Vite DevTools dock when embedded. -->
-          <NCheckbox v-if="!isEmbedded" v-model="interactionCloseOnOutsideClick" n-primary>
-            <span>Close DevTools when clicking outside</span>
-          </NCheckbox>
-          <!-- <NCheckbox v-model="showExperimentalFeatures" n-primary>
-            <span>Show experimental features</span>
-          </NCheckbox> -->
           <NCheckbox v-model="showHelpButtons" n-primary>
             <span>Show help buttons</span>
           </NCheckbox>

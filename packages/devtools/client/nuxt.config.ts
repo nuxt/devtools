@@ -17,7 +17,6 @@ const packageBundles = {
 
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/test-utils/module',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
