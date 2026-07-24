@@ -150,8 +150,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             // has announced a member dock per tab (Overview, every tab,
             // Settings). `visibility: 'false'` hides just that button while the
             // entry stays registered and reachable, so it keeps hosting the
-            // shared iframe and driving the postMessage nav loop
-            // (devframe#136 / vitejs/devtools#470, `@devframes/hub` >= 0.7.13).
+            // shared iframe and driving the postMessage nav loop. Requires
+            // `@devframes/hub` >= 0.7.13 / `@vitejs/devtools` >= 0.4.7
+            // (devframe#136 / vitejs/devtools#470); inert on older viewers.
             visibility: 'false',
             defaultOrder: -300,
           })
