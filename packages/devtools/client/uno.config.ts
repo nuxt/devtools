@@ -1,4 +1,4 @@
-import { defineConfig, presetAttributify, presetIcons, presetTypography, presetWebFonts, presetWind3, transformerDirectives } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTypography, presetWind3, transformerDirectives } from 'unocss'
 import { unocssPreset as uiKit } from '../../devtools-ui-kit/src/unocss'
 
 export default defineConfig({
@@ -26,12 +26,6 @@ export default defineConfig({
       extraProperties: {
         'display': 'inline-block',
         'vertical-align': 'middle',
-      },
-    }),
-    presetWebFonts({
-      fonts: {
-        sans: 'DM Sans',
-        mono: 'DM Mono',
       },
     }),
     uiKit(),
