@@ -9,7 +9,6 @@ import {
   presetAttributify,
   presetIcons,
   presetTypography,
-  presetWebFonts,
   presetWind3,
   transformerDirectives,
   transformerVariantGroup,
@@ -180,12 +179,6 @@ export function extendUnocssOptions(user: UnocssNuxtOptions = {}): UnocssNuxtOpt
           'vertical-align': 'middle',
         },
         // ...(user?.icons || {})
-      }),
-      presetWebFonts({
-        fonts: {
-          sans: 'DM Sans',
-          mono: 'DM Mono',
-        },
       }),
       unocssPreset(),
       ...(user.presets || []),
