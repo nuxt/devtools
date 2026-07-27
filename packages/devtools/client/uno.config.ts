@@ -32,7 +32,6 @@ export default defineConfig({
       fonts: {
         sans: 'DM Sans',
         mono: 'DM Mono',
-        stylish: 'Caveat',
       },
     }),
     uiKit(),

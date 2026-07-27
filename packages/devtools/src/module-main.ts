@@ -118,10 +118,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             category: 'framework',
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
-            // Order the in-group sub-categories (each member's `category`) the
-            // way Nuxt DevTools orders its own tab categories, rather than the
-            // dock's shared default table. Requires `@vitejs/devtools` >= 0.4.6
-            // / `@devframes/hub` >= 0.7.12 (vitejs/devtools#468).
             categoryOrder: {
               'pinned': 0,
               'app': 1,
@@ -139,15 +135,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             type: 'iframe',
             title: 'Nuxt DevTools',
             icon: '/__nuxt_devtools__/client/nuxt.svg',
-            // The client renders chromelessly as this shared-frame anchor (no
-            // SideNav/split pane) and runs the frame-nav shim, which announces
-            // one member dock per tab and soft-navigates within this one iframe.
             url: '/__nuxt_devtools__/client/',
             groupId: NUXT_DEVTOOLS_GROUP_ID,
             frameId: 'nuxt:devtools',
             subTabs: { protocol: 'postmessage' },
-            // TODO: this seems still not working correctly with defaultChildId, enable it back later.
-            // visibility: 'false',
+            visibility: 'false',
             defaultOrder: -300,
           })
         }

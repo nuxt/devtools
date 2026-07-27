@@ -38,7 +38,7 @@ allowBuilds:
   vue-demi: true
 
 refs:
-  devframe: &devframe ^0.7.13
+  devframe: &devframe ^0.7.14
   nuxt: &nuxt ^4.5.0
   shiki: &shiki ^4.3.1
   unocss: &unocss ^66.7.5
@@ -48,10 +48,9 @@ refs:
   # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
   # `@vitejs/devtools` ships working 8.1 support.
   vite: &vite ~8.0.16
-
-  vite-devtools: &vite-devtools ^0.4.7
+  vite-devtools: &vite-devtools ^0.4.9
   vue: &vue ^3.5.40
-  vue-devtools: &vue-devtools ^8.1.5
+  vue-devtools: &vue-devtools ^8.2.1
   vueuse: &vueuse ^14.3.0
 overrides:
   '@devframes/hub': *devframe
@@ -77,7 +76,7 @@ overrides:
   vue-tsc: ^3.3.8
 catalogs:
   buildtools:
-    '@nuxt/module-builder': ^1.0.2
+    '@nuxt/module-builder': ^1.0.3
     '@parcel/watcher': ^2.6.0
     '@pinia/nuxt': ^1.0.1
     '@unocss/core': *unocss
@@ -95,7 +94,7 @@ catalogs:
     nuxt: *nuxt
     shiki-codegen: *shiki
     skills-npm: ^1.2.0
-    turbo: ^2.10.6
+    turbo: ^2.10.7
     unbuild: ^3.6.1
     unocss: *unocss
     unplugin-vue: ^7.2.0
@@ -105,10 +104,10 @@ catalogs:
     '@antfu/ni': ^30.3.0
     '@nuxt/eslint': ^1.16.0
     '@nuxt/test-utils': ^4.0.3
-    '@playwright/test': ^1.61.1
+    '@playwright/test': ^1.62.0
     bumpp: ^12.0.0
     cypress: ^15.19.0
-    eslint: ^10.7.0
+    eslint: ^10.8.0
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.2.3
     eslint-plugin-format: ^2.0.1
@@ -153,7 +152,7 @@ catalogs:
     theme-vitesse: ^1.0.0
     ua-parser-modern: ^0.1.1
     v-lazy-show: ^0.3.0
-    vanilla-jsoneditor: ^3.12.0
+    vanilla-jsoneditor: ^3.13.0
     vis-data: ^8.0.4
     vis-network: ^10.1.0
     vite-hot-client: ^2.2.0
@@ -166,7 +165,7 @@ catalogs:
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.91
+    '@iconify-json/simple-icons': ^1.2.92
     '@iconify-json/tabler': ^1.2.37
   inlined:
     package-manager-detector: ^1.8.0
@@ -202,5 +201,5 @@ catalogs:
     '@types/node': ^26.1.1
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.2.3
-    '@vitejs/devtools-kit': ^0.4.7
+    '@vitejs/devtools-kit': *vite-devtools
     unimport: ^6.3.1
