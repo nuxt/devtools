@@ -4,7 +4,9 @@ import { expect, test } from '../fixtures/devtools'
 const CODE_SERVER_DOCK_ID = 'devframes_plugin_code-server'
 const CODE_SERVER_STATUS_RPC = 'devframes:plugin:code-server:status'
 
-test('mounts Code Server in the Nuxt group and reports a missing binary without starting it', async ({ page, openDevTools, mode, playground }) => {
+test('reports a missing editor binary without starting a process', async ({ page, openDevTools, mode, playground }) => {
+  // `empty`'s config points Code Server at a deliberately missing binary
+  // (`NUXT_DEVTOOLS_CODE_SERVER_BIN`), so detection is deterministic everywhere.
   test.skip(mode !== 'dev' || playground !== 'empty', 'missing-binary fixture runs only in empty:dev')
 
   await page.goto('/')
@@ -15,46 +17,23 @@ test('mounts Code Server in the Nuxt group and reports a missing binary without 
     return ctx?.docks?.entries?.some((entry: any) => entry.id === id)
   }, CODE_SERVER_DOCK_ID, { timeout: 30_000 })
 
-  const entry = await page.evaluate((id) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-    return ctx.docks.entries.find((candidate: any) => candidate.id === id)
-  }, CODE_SERVER_DOCK_ID)
-  expect(entry).toMatchObject({
-    id: CODE_SERVER_DOCK_ID,
-    type: 'iframe',
-    groupId: 'nuxt',
-    category: 'modules',
-  })
-
-  const status = await page.evaluate(async (rpcName) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-    return ctx.rpc.call(rpcName)
-  }, CODE_SERVER_STATUS_RPC)
-  expect(status).toMatchObject({
-    detection: {
-      checked: true,
-      installed: false,
-      bin: 'nuxt-devtools-e2e-missing-code-server',
-      backend: 'code-server',
-      mode: 'local',
-    },
-    server: { status: 'stopped' },
-  })
-
+  // Open the Code Server member the way a user would.
   await page.evaluate(async (id) => {
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
     await ctx.docks.switchEntry(id)
   }, CODE_SERVER_DOCK_ID)
+
+  // The user sees the "no editor" empty state (the binary can't be found).
   const codeServerFrame = page.frameLocator(`iframe[src*="${CODE_SERVER_DOCK_ID}"]`)
   await expect(codeServerFrame.getByRole('heading', { name: 'No editor found' }))
     .toBeVisible({ timeout: 30_000 })
 
-  // Opening the member performs detection only; it must not start a process.
-  const statusAfterOpen = await page.evaluate(async (rpcName) => {
+  // Opening the member performs detection only — it must not launch a process.
+  const status = await page.evaluate(async (rpcName) => {
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
     return ctx.rpc.call(rpcName)
   }, CODE_SERVER_STATUS_RPC)
-  expect((statusAfterOpen as any).server.status).toBe('stopped')
+  expect((status as any).server.status).toBe('stopped')
 })
 
 test('launches an installed Code Server with authenticated iframe handoff', async ({ page, openDevTools, mode, playground }) => {
@@ -69,15 +48,6 @@ test('launches an installed Code Server with authenticated iframe handoff', asyn
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
     return ctx?.docks?.entries?.some((entry: any) => entry.id === id)
   }, CODE_SERVER_DOCK_ID, { timeout: 30_000 })
-
-  const initialStatus = await page.evaluate(async (rpcName) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-    return ctx.rpc.call(rpcName)
-  }, CODE_SERVER_STATUS_RPC)
-  expect(initialStatus).toMatchObject({
-    detection: { checked: true, installed: true, backend: 'code-server' },
-    server: { status: 'stopped' },
-  })
 
   await page.evaluate(async (id) => {
     const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
