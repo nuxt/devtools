@@ -1,16 +1,47 @@
-import type { FrameLocator } from '@playwright/test'
+import type { FrameLocator, Page } from '@playwright/test'
 import { test as base, expect } from '@playwright/test'
 
-// Vite DevTools renders the Nuxt DevTools dock entry as an iframe nested inside its
-// own shadow DOM. The iframe has no stable id, so we target by src.
+// The Nuxt DevTools client renders inside an iframe that Vite DevTools mounts in
+// its own shadow DOM. The iframe has no stable id, so we target it by src.
 const IFRAME_SELECTOR = 'iframe[src*="__nuxt_devtools__/client"]'
 
 interface DevToolsFixtures {
   playground: string
   mode: 'dev' | 'built'
+  /** Open the DevTools panel and wait for the client app to hydrate. */
   openDevTools: () => Promise<void>
+  /** Navigate the open DevTools client to a tab route (e.g. `/modules/modules`). */
   navigateTab: (path: string) => Promise<void>
+  /** Locator scoped to the DevTools client iframe. */
   devtoolsFrame: () => FrameLocator
+}
+
+// e2e servers run with `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH=true`, which trusts the
+// *server* peer (so RPC is allowed) but never flips the *client-side* trust flag.
+// Until it does, Vite DevTools never subscribes to the dock list, so no dock —
+// and therefore no Nuxt group — ever appears. Nudge the flag here. This is purely
+// test-environment plumbing; it is not something the tests assert on.
+async function ensureDockReady(page: Page): Promise<void> {
+  await page.waitForFunction(
+    () => Boolean((globalThis as any).__NUXT_DEVTOOLS_HOST__?.devtools),
+    null,
+    { timeout: 30_000 },
+  )
+  await page.waitForFunction(
+    () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.rpc),
+    null,
+    { timeout: 30_000 },
+  )
+  await page.evaluate(() => {
+    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    if (ctx?.rpc && !ctx.rpc.isTrusted)
+      ctx.rpc.events?.emit?.('rpc:is-trusted:updated', true)
+  })
+  await page.waitForFunction(
+    () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.docks?.entries?.length),
+    null,
+    { timeout: 30_000 },
+  )
 }
 
 export const test = base.extend<DevToolsFixtures>({
@@ -25,58 +56,23 @@ export const test = base.extend<DevToolsFixtures>({
 
   openDevTools: async ({ page }, use) => {
     await use(async () => {
-      // Wait for the Vite DevTools client context to be injected.
-      await page.waitForFunction(
-        () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.rpc),
-        null,
-        { timeout: 30_000 },
-      )
-      // Devframe 0.7 only fetches the `devframe:docks` shared state once the
-      // client is marked trusted (via the `rpc:is-trusted:updated` event).
-      // `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH` trusts the *server* peer — so RPC
-      // calls are allowed — but never flips the *client-side* trust flag, so the
-      // dock list would otherwise stay empty forever. Nudge it here so the docks
-      // subscription kicks off. (Built/preview mode uses the static RPC backend,
-      // which is already trusted, so this is a harmless no-op there.)
-      await page.evaluate(() => {
-        const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-        if (ctx?.rpc && !ctx.rpc.isTrusted)
-          ctx.rpc.events?.emit?.('rpc:is-trusted:updated', true)
-      })
-      await page.waitForFunction(
-        () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.docks?.entries?.length),
-        null,
-        { timeout: 30_000 },
-      )
-      // Drive Vite DevTools directly: open the panel, then switch the active
-      // dock entry to nuxt:devtools (idempotent; safe to call when already open).
-      await page.evaluate(async () => {
-        const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-        ctx.panel.store.open = true
-        await ctx.docks.switchEntry('nuxt:devtools')
-      })
-      // Iframe creation is async after switchEntry resolves. Poll the dock entry
-      // state until its DOM iframe is attached.
-      await page.waitForFunction(() => {
-        const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
-        const state = ctx?.docks?.getStateById?.('nuxt:devtools')
-        return Boolean(state?.domElements?.iframe?.isConnected)
-      }, null, { timeout: 30_000 })
-      // Then wait for the inner app to hydrate. Generous timeout: playgrounds that
-      // use `../../local` spawn a separate Nuxt dev subprocess for the devtools
-      // client, and its first Vite compile is slow on cold start.
-      await page.frameLocator(IFRAME_SELECTOR).locator('#nuxt-devtools-app').waitFor({ state: 'attached', timeout: 90_000 })
+      await ensureDockReady(page)
+      // Drive the *public* host API the same way the keyboard shortcut / host app
+      // would — no reaching into Vite DevTools' internal panel/dock state.
+      await page.evaluate(() => (globalThis as any).__NUXT_DEVTOOLS_HOST__.devtools.open())
+      // Wait for the client app inside the iframe to hydrate.
+      await page.frameLocator(IFRAME_SELECTOR)
+        .locator('#nuxt-devtools-app')
+        .waitFor({ state: 'attached', timeout: 60_000 })
     })
   },
 
   navigateTab: async ({ page }, use) => {
     await use(async (path: string) => {
-      // Drive navigation through the documented host hook.
-      // (`__NUXT_DEVTOOLS_HOST__.devtools.navigate` itself currently writes to
-      // `ctx.panel.store.value.open`, which assumes a Vue ref but the kit exposes
-      // a plain object — using the hook avoids that landmine.)
+      // Navigate via the documented host API (`devtools.navigate`) rather than
+      // poking the frame-nav hook or router directly.
       await page.evaluate(
-        p => (window as any).__NUXT_DEVTOOLS_HOST__.hooks.callHook('host:action:navigate', p),
+        p => (globalThis as any).__NUXT_DEVTOOLS_HOST__.devtools.navigate(p),
         path,
       )
     })
