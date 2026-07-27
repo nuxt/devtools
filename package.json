@@ -22,6 +22,7 @@
     "test:e2e:built": "pnpm test:e2e:prebuild && PW_PROJECT='*:built' playwright test --config tests/e2e/playwright.config.ts",
     "test:e2e:prebuild": "pnpm -C playgrounds/empty exec nuxt build && pnpm -C playgrounds/spa exec nuxt build && pnpm -C playgrounds/tab-pinia exec nuxt build && pnpm -C playgrounds/tab-seo exec nuxt build",
     "test:e2e:ui": "playwright test --config tests/e2e/playwright.config.ts --ui",
+    "test:e2e:ecosystem": "playwright test --config playgrounds-ecosystem/tests/playwright.config.ts",
     "docs": "pnpm -C docs install && nuxi dev docs",
     "docs:build": "pnpm -C docs install && CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
