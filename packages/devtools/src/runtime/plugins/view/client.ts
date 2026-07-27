@@ -72,19 +72,19 @@ export async function setupDevToolsClient({
       close() {
         const ctx = getViteDevToolsContext()
         if (ctx)
-          ctx.panel.store.value.open = false
+          ctx.panel.store.open = false
       },
       open() {
         const ctx = getViteDevToolsContext()
         if (ctx) {
-          ctx.panel.store.value.open = true
+          ctx.panel.store.open = true
           ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
         }
       },
       async navigate(path: string) {
         const ctx = getViteDevToolsContext()
         if (ctx) {
-          ctx.panel.store.value.open = true
+          ctx.panel.store.open = true
           ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
         }
         await client.hooks.callHook('host:action:navigate', path)
