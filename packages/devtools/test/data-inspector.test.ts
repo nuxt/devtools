@@ -50,12 +50,12 @@ function fakeViteConfig(overrides: Partial<ResolvedConfig> = {}): ResolvedConfig
   } as unknown as ResolvedConfig
 }
 
-/** Drive Nuxt's `vite:configResolved` hook for one environment. */
-async function captureViteEnv(fake: FakeNuxt, envName: 'client' | 'ssr', config: ResolvedConfig) {
-  await fake.callHook('vite:configResolved', config, {
-    isClient: envName === 'client',
-    isServer: envName === 'ssr',
-  })
+/**
+ * Drive Nuxt's `vite:configResolved` hook. Nuxt 5 unified the client and SSR
+ * Vite servers into a single instance, so this fires once with one config.
+ */
+async function captureVite(fake: FakeNuxt, config: ResolvedConfig) {
+  await fake.callHook('vite:configResolved', config)
 }
 
 beforeEach(() => {
@@ -77,16 +77,18 @@ describe('data-inspector source registration', () => {
     expect(typeof entry!.data).toBe('function')
   })
 
-  it('exposes the four read-only suggested queries with function exclusion', () => {
+  it('exposes the read-only suggested queries with function exclusion', () => {
     const { nuxt } = fakeNuxt()
     setup({ nuxt } as any)
 
     const queries = getDataSource('nuxt:application')!.queries!
     expect(queries).toEqual([
       { title: 'Overview', query: '', excludeFunctions: true },
-      { title: 'Nuxt options', query: 'nuxt', excludeFunctions: true },
-      { title: 'Nitro options', query: 'nitro', excludeFunctions: true },
-      { title: 'Vite configs', query: 'vite', excludeFunctions: true },
+      { title: 'Nuxt modules', query: 'nuxt.modules', excludeFunctions: true },
+      { title: 'Vite plugins', query: 'vite.plugins', excludeFunctions: true },
+      { title: 'Vite config', query: 'vite', excludeFunctions: true },
+      { title: 'Vite environments', query: 'vite.environments', excludeFunctions: true },
+      { title: 'Nitro routes', query: 'nitro.handlers', excludeFunctions: true },
     ])
   })
 
@@ -98,26 +100,23 @@ describe('data-inspector source registration', () => {
     const data = await resolveSourceData(getDataSource('nuxt:application')!) as any
     expect(data.nuxt).toBe(options)
     expect(data.nitro).toBeUndefined()
-    expect(data.vite).toEqual({ client: undefined, ssr: undefined })
+    expect(data.vite).toBeUndefined()
   })
 
-  it('populates Nitro and raw Vite configs after the hooks fire', async () => {
+  it('populates Nitro and the raw unified Vite config after the hooks fire', async () => {
     const fake = fakeNuxt()
     setup({ nuxt: fake.nuxt } as any)
 
     const nitro = { options: { preset: 'node' } }
     await fake.callHook('nitro:build:before', nitro)
 
-    const client = fakeViteConfig({ marker: 'client' } as any)
-    const ssr = fakeViteConfig({ marker: 'ssr' } as any)
-    await captureViteEnv(fake, 'client', client)
-    await captureViteEnv(fake, 'ssr', ssr)
+    const vite = fakeViteConfig({ marker: 'vite' } as any)
+    await captureVite(fake, vite)
 
     const data = await resolveSourceData(getDataSource('nuxt:application')!) as any
     expect(data.nitro).toBe(nitro.options)
-    // The live source hands the RAW config objects to the Data Inspector engine.
-    expect(data.vite.client).toBe(client)
-    expect(data.vite.ssr).toBe(ssr)
+    // The live source hands the RAW config object to the Data Inspector engine.
+    expect(data.vite).toBe(vite)
   })
 
   it('unregisters the source on the Nuxt `close` hook', async () => {
@@ -131,15 +130,14 @@ describe('data-inspector source registration', () => {
 })
 
 describe('getServerData deprecated shim', () => {
-  it('returns the legacy `vite: { server, client }` shape with normalized configs', async () => {
+  it('projects the unified config onto the legacy `vite: { server, client }` shape, normalized', async () => {
     const options = { appId: 'app' }
     const fake = fakeNuxt(options)
     setup({ nuxt: fake.nuxt } as any)
 
     const nitro = { options: { preset: 'node' } }
     await fake.callHook('nitro:build:before', nitro)
-    await captureViteEnv(fake, 'client', fakeViteConfig())
-    await captureViteEnv(fake, 'ssr', fakeViteConfig())
+    await captureVite(fake, fakeViteConfig())
 
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const data = getServerData(fake.nuxt)
@@ -147,12 +145,16 @@ describe('getServerData deprecated shim', () => {
 
     expect(data.nuxt).toBe(options)
     expect(data.nitro).toBe(nitro.options)
-    // Legacy field naming: `ssr` capture maps to `vite.server`.
+    // Nuxt 5 has one Vite instance; the shim projects it onto both fields.
     expect(data.vite).toHaveProperty('server')
     expect(data.vite).toHaveProperty('client')
+    // Each field is normalized independently (separate object identities).
+    expect(data.vite.server).not.toBe(data.vite.client)
     // Normalization strips the live Vite branches for RPC transport.
     expect(data.vite.server!.inlineConfig).toBeNull()
     expect((data.vite.server!.plugins[0] as any).api).toBeUndefined()
+    expect(data.vite.client!.inlineConfig).toBeNull()
+    expect((data.vite.client!.plugins[0] as any).api).toBeUndefined()
   })
 
   it('emits the NDT_DEP_0009 deprecation once per process', () => {

@@ -19,8 +19,7 @@ import { mountDevframe } from '@vitejs/devtools-kit/node'
  */
 interface CapturedServerData {
   nitro?: Nitro
-  viteClient?: ResolvedConfig
-  viteSsr?: ResolvedConfig
+  vite?: ResolvedConfig
 }
 
 const captured: CapturedServerData = {}
@@ -70,18 +69,14 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
     captured.nitro = nitro
   })
 
-  // Capture the raw resolved Vite config for each environment. Nuxt fires
-  // `vite:configResolved` once with `isClient` and once with `isServer`, for
-  // both serial Vite servers and Environment API projections, so the source
-  // contract stays exactly `vite: { client, ssr }`. Nuxt marks this hook
-  // deprecated, but it is the only current host API that reports both configs
-  // semantically; the returned-environment-plugin path is unreliable in Vite 8
-  // (Vite resolves those plugins after top-level `configResolved`).
-  nuxt.hook('vite:configResolved', (config, env) => {
-    if (env.isClient)
-      captured.viteClient = config as unknown as ResolvedConfig
-    if (env.isServer)
-      captured.viteSsr = config as unknown as ResolvedConfig
+  // Capture the raw resolved Vite config. Nuxt 5 unified the former client and
+  // SSR Vite servers into a single dev server instance, so there is exactly one
+  // resolved config to capture; the per-environment (client/ssr) configs live
+  // under `config.environments` and are surfaced by the `Vite environments`
+  // query. Nuxt marks this hook deprecated, but it is the current host API that
+  // reports the resolved config semantically.
+  nuxt.hook('vite:configResolved', (config) => {
+    captured.vite = config as unknown as ResolvedConfig
   })
 
   // Register the single live source early with a non-static factory, so Nuxt
@@ -97,16 +92,15 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
     data: () => ({
       nuxt: nuxt.options,
       nitro: captured.nitro?.options,
-      vite: {
-        client: captured.viteClient,
-        ssr: captured.viteSsr,
-      },
+      vite: captured.vite,
     }),
     queries: [
       { title: 'Overview', query: '', excludeFunctions: true },
-      { title: 'Nuxt options', query: 'nuxt', excludeFunctions: true },
-      { title: 'Nitro options', query: 'nitro', excludeFunctions: true },
-      { title: 'Vite configs', query: 'vite', excludeFunctions: true },
+      { title: 'Nuxt modules', query: 'nuxt.modules', excludeFunctions: true },
+      { title: 'Vite plugins', query: 'vite.plugins', excludeFunctions: true },
+      { title: 'Vite config', query: 'vite', excludeFunctions: true },
+      { title: 'Vite environments', query: 'vite.environments', excludeFunctions: true },
+      { title: 'Nitro routes', query: 'nitro.handlers', excludeFunctions: true },
     ],
   })
 
@@ -114,8 +108,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   nuxt.hook('close', () => {
     unregister()
     captured.nitro = undefined
-    captured.viteClient = undefined
-    captured.viteSsr = undefined
+    captured.vite = undefined
   })
 
   // Mount the Data Inspector's bundled SPA as a member of the Nuxt group. The
@@ -141,8 +134,12 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
  * use; it will be removed in a future major.
  *
  * Unlike the live source, this returns the legacy `NuxtServerData` shape
- * (`vite: { server, client }`) with the Vite configs normalized for RPC
- * transport.
+ * (`vite: { server, client }`) with the Vite config normalized for RPC
+ * transport. Nuxt 5 unified the former client and SSR Vite servers into a
+ * single instance, but the legacy shape predates that; this shim keeps the
+ * old contract alive independently by projecting the one captured config onto
+ * both `server` and `client` (each normalized separately, so consumers that
+ * mutate one field don't affect the other).
  */
 export function getServerData(nuxt: Nuxt): NuxtServerData {
   deprecate(nuxt, 'NDT_DEP_0009', {
@@ -153,8 +150,8 @@ export function getServerData(nuxt: Nuxt): NuxtServerData {
     nuxt: nuxt.options,
     nitro: captured.nitro?.options,
     vite: {
-      server: captured.viteSsr ? normalizeViteConfig(captured.viteSsr) : undefined,
-      client: captured.viteClient ? normalizeViteConfig(captured.viteClient) : undefined,
+      server: captured.vite ? normalizeViteConfig(captured.vite) : undefined,
+      client: captured.vite ? normalizeViteConfig(captured.vite) : undefined,
     },
     // `nuxt.options` is `@nuxt/schema`'s `NuxtOptions` while `NuxtServerData`
     // pins the structurally-identical `nuxt/schema` one; bridge the two.
@@ -166,6 +163,5 @@ export function getServerData(nuxt: Nuxt): NuxtServerData {
  */
 export function resetCapturedServerData(): void {
   captured.nitro = undefined
-  captured.viteClient = undefined
-  captured.viteSsr = undefined
+  captured.vite = undefined
 }
