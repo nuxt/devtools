@@ -1,5 +1,5 @@
 import type { Nuxt } from 'nuxt/schema'
-import type { ResolvedConfig } from 'vite'
+import type { ResolvedConfig, ViteDevServer } from 'vite'
 import {
   getDataSource,
   resetDataSources,
@@ -51,11 +51,22 @@ function fakeViteConfig(overrides: Partial<ResolvedConfig> = {}): ResolvedConfig
 }
 
 /**
- * Drive Nuxt's `vite:configResolved` hook. Nuxt 5 unified the client and SSR
- * Vite servers into a single instance, so this fires once with one config.
+ * Minimal Vite dev server stub. The resolved config lives at `.config`, and the
+ * runtime environments at `.environments`, mirroring `ViteDevServer`.
  */
-async function captureVite(fake: FakeNuxt, config: ResolvedConfig) {
-  await fake.callHook('vite:configResolved', config)
+function fakeViteServer(config: ResolvedConfig = fakeViteConfig()): ViteDevServer {
+  return {
+    config,
+    environments: { client: { name: 'client' }, ssr: { name: 'ssr' } },
+  } as unknown as ViteDevServer
+}
+
+/**
+ * Drive Nuxt's `vite:serverCreated` hook. Nuxt 5 unified the client and SSR
+ * Vite servers into a single instance, so this fires once with one dev server.
+ */
+async function captureVite(fake: FakeNuxt, server: ViteDevServer) {
+  await fake.callHook('vite:serverCreated', server)
 }
 
 beforeEach(() => {
@@ -85,8 +96,8 @@ describe('data-inspector source registration', () => {
     expect(queries).toEqual([
       { title: 'Overview', query: '', excludeFunctions: true },
       { title: 'Nuxt modules', query: 'nuxt.modules', excludeFunctions: true },
-      { title: 'Vite plugins', query: 'vite.plugins', excludeFunctions: true },
-      { title: 'Vite config', query: 'vite', excludeFunctions: true },
+      { title: 'Vite plugins', query: 'vite.config.plugins', excludeFunctions: true },
+      { title: 'Vite config', query: 'vite.config', excludeFunctions: true },
       { title: 'Vite environments', query: 'vite.environments', excludeFunctions: true },
       { title: 'Nitro routes', query: 'nitro.handlers', excludeFunctions: true },
     ])
@@ -103,20 +114,22 @@ describe('data-inspector source registration', () => {
     expect(data.vite).toBeUndefined()
   })
 
-  it('populates Nitro and the raw unified Vite config after the hooks fire', async () => {
+  it('populates Nitro and the raw unified Vite dev server after the hooks fire', async () => {
     const fake = fakeNuxt()
     setup({ nuxt: fake.nuxt } as any)
 
     const nitro = { options: { preset: 'node' } }
     await fake.callHook('nitro:build:before', nitro)
 
-    const vite = fakeViteConfig({ marker: 'vite' } as any)
-    await captureVite(fake, vite)
+    const server = fakeViteServer(fakeViteConfig({ marker: 'vite' } as any))
+    await captureVite(fake, server)
 
     const data = await resolveSourceData(getDataSource('nuxt:application')!) as any
     expect(data.nitro).toBe(nitro.options)
-    // The live source hands the RAW config object to the Data Inspector engine.
-    expect(data.vite).toBe(vite)
+    // The live source hands the RAW dev server instance to the Data Inspector
+    // engine; the resolved config is reachable at `vite.config`.
+    expect(data.vite).toBe(server)
+    expect(data.vite.config).toBe(server.config)
   })
 
   it('unregisters the source on the Nuxt `close` hook', async () => {
@@ -137,7 +150,7 @@ describe('getServerData deprecated shim', () => {
 
     const nitro = { options: { preset: 'node' } }
     await fake.callHook('nitro:build:before', nitro)
-    await captureVite(fake, fakeViteConfig())
+    await captureVite(fake, fakeViteServer())
 
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const data = getServerData(fake.nuxt)
@@ -145,7 +158,8 @@ describe('getServerData deprecated shim', () => {
 
     expect(data.nuxt).toBe(options)
     expect(data.nitro).toBe(nitro.options)
-    // Nuxt 5 has one Vite instance; the shim projects it onto both fields.
+    // Nuxt 5 has one Vite dev server; the shim reads its resolved config
+    // (`server.config`) and projects it onto both fields.
     expect(data.vite).toHaveProperty('server')
     expect(data.vite).toHaveProperty('client')
     // Each field is normalized independently (separate object identities).
