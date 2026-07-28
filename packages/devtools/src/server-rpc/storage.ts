@@ -1,6 +1,8 @@
 import type { StorageMounts } from 'nitropack'
 import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import type { AnyNitro } from '../utils/nitro-compat'
+import { builtinDrivers, createStorage } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
@@ -15,15 +17,40 @@ export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
   let storage: Storage | undefined
   let unwatchStorageMounts: Array<() => Promise<void> | void> = []
 
-  nuxt.hook('nitro:init', (nitro) => {
-    storage = nitro.storage
-
+  nuxt.hook('nitro:init', async (nitro: AnyNitro) => {
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53
-    const mounts = {
+    const mounts: StorageMounts = {
       ...nitro.options.storage,
       ...nitro.options.devStorage,
     }
+
+    // Nitro v3 dropped the `nitro.storage` runtime instance that Nitro v2
+    // (`nitropack`) exposed directly on the Nitro object — storage is now a
+    // build-time virtual module consumed via `useStorage()` from *inside* the
+    // built server, not reachable from this orchestrating process. Build our
+    // own `unstorage` instance from the same mount config instead, mirroring
+    // what nitropack's own `createStorage()` helper does. This works
+    // identically on Nitro v2 and v3, though it is a distinct instance from
+    // whichever one the running server uses — in-memory-driver mounts (e.g.
+    // the default cache) won't reflect the live server's in-process state,
+    // only mounts backed by external state (filesystem, redis, ...) will.
+    const nextStorage = createStorage()
+    for (const [path, opts] of Object.entries(mounts)) {
+      if (!opts?.driver) {
+        nitro.logger.warn(`No \`driver\` set for storage mount point "${path}".`)
+        continue
+      }
+      try {
+        const driverImport = builtinDrivers[opts.driver as keyof typeof builtinDrivers] || opts.driver
+        const driverFactory = await import(driverImport).then(r => r.default || r)
+        nextStorage.mount(path, driverFactory(opts))
+      }
+      catch (err) {
+        nitro.logger.warn(`Failed to mount storage driver "${opts.driver}" for the DevTools storage browser:`, err)
+      }
+    }
+    storage = nextStorage
 
     for (const key of Object.keys(storageMounts))
       delete storageMounts[key]

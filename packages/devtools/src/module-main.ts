@@ -3,6 +3,7 @@ import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
+import type { AnyNitroConfig } from './utils/nitro-compat'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import os from 'node:os'
@@ -169,15 +170,28 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     },
   })
 
-  nuxt.hook('nitro:config', (config) => {
+  nuxt.hook('nitro:config', (config: AnyNitroConfig) => {
     // Check user opted-in for tasks
     if (config.experimental?.tasks)
       setServerTasksEnabledByDefault(true)
 
-    // Inject inline script
-    config.externals = config.externals || {}
-    config.externals.inline = config.externals.inline || []
-    config.externals.inline.push(join(runtimeDir, 'nitro'))
+    // Inject inline script. Force our small runtime plugin to be bundled
+    // rather than externalized as a node_modules import at runtime — Nitro v2
+    // (`nitropack`) and Nitro v3 (`nitro`) expose this via different config
+    // shapes (`externals.inline` vs `noExternals`), so `config`'s type here is
+    // a union of both; handle whichever applies.
+    const inlinePath = join(runtimeDir, 'nitro')
+    if ('externals' in config) {
+      config.externals ||= {}
+      config.externals.inline ||= []
+      config.externals.inline.push(inlinePath)
+    }
+    if ('noExternals' in config && Array.isArray(config.noExternals)) {
+      config.noExternals.push(inlinePath)
+    }
+    else if (!('noExternals' in config) || config.noExternals === undefined) {
+      config.noExternals = [inlinePath]
+    }
     config.virtual = config.virtual || {}
     config.virtual['#nuxt-devtools-inline'] = `export const script = \`
 if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {

@@ -1,7 +1,7 @@
-import type { Nitro } from 'nitropack'
 import type { Nuxt } from 'nuxt/schema'
 import type { ResolvedConfig, ViteDevServer } from 'vite'
 import type { NuxtDevtoolsServerContext, NuxtServerData } from '../types'
+import type { AnyNitro } from '../utils/nitro-compat'
 import { createDataInspectorDevframe, registerDataSource } from '@devframes/plugin-data-inspector'
 import { deprecate, NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
 import { mountDevframe } from '@vitejs/devtools-kit/node'
@@ -18,7 +18,7 @@ import { mountDevframe } from '@vitejs/devtools-kit/node'
  * process is unsupported.
  */
 interface CapturedServerData {
-  nitro?: Nitro
+  nitro?: AnyNitro
   vite?: ViteDevServer
 }
 
@@ -65,7 +65,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   const { nuxt } = ctx
 
   // Capture raw Nitro options once Nitro is created.
-  nuxt.hook('nitro:build:before', (nitro) => {
+  nuxt.hook('nitro:build:before', (nitro: AnyNitro) => {
     captured.nitro = nitro
   })
 
