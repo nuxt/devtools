@@ -1,28 +1,46 @@
 # Ecosystem dogfooding playground
 
-Dogfoods the Nuxt DevTools integrations of three popular Nuxt modules — all in
-one combined app — against the **local** `@nuxt/devtools` (this repo's
+Dogfoods the Nuxt DevTools integrations of popular Nuxt modules — all in one
+combined app — against the **local** `@nuxt/devtools` (this repo's
 `packages/devtools`) for integration verification.
 
-Modules covered, in [`modules/`](./modules/): `nuxt-og-image`, `@nuxt/scripts`,
-`@nuxt/fonts`. See [`REPORTS.md`](./REPORTS.md) for what was actually found
-running each of them — including `@nuxt/content` and `@nuxt/image`, which
-were tried and then removed: neither registers a DevTools tab in the versions
-tested, so there was nothing to dogfood against.
+Modules covered, in [`modules/`](./modules/), in two groups:
 
-> Why one combined playground instead of one per module, and why only three of
-> the originally-considered seven modules? Grouping keeps the review surface
-> small (this repo's own `docs/` app already proves `@nuxt/content` +
-> `@nuxt/fonts` + `@nuxt/image` + `nuxt-og-image` coexist safely). Two were
-> dropped before implementation: `@nuxthub/core` (out of scope) and
-> `@nuxtjs/tailwindcss` (a real version conflict — it hard-depends on
-> Tailwind v3, while `nuxt-og-image` lists Tailwind v4 as an optional peer).
-> Two more, `@nuxt/content` and `@nuxt/image`, were built in and dogfooded
-> first, then dropped once that run showed neither has a DevTools tab to test
-> — see [`REPORTS.md`](./REPORTS.md#modules-removed-after-testing) for the
-> evidence. The former standalone "plan 04" doc this all comes from has since
-> been retired in favor of this directory being the living implementation —
-> see nuxt/devtools#1022 for the full history.
+- **Original trio** (kept from the first dogfooding pass; not in nuxt.com's
+  "Devtools" category): `nuxt-og-image`, `@nuxt/scripts`, `@nuxt/fonts`.
+- **Devtools-category set**, drawn from
+  <https://nuxt.com/modules?category=Devtools> and curated down to the ones
+  that actually register a DevTools tab: `@nuxt/eslint`, `@nuxt/hints`,
+  `@nuxt/a11y`, `@compodium/nuxt`, `@scalar/nuxt`.
+
+Each module has a small fixture in `modules/` so its DevTools surface has real
+data to show: `eslint.config.mjs` (ESLint config inspector),
+`components/DemoButton.vue` (Compodium's component playground),
+`server/api/widgets.get.ts` + `nitro.experimental.openAPI` (Scalar's API
+reference), and a deliberate no-`alt` `<img>` in `pages/index.vue` (an axe
+finding for `@nuxt/a11y`). See [`REPORTS.md`](./REPORTS.md) for what was
+actually found running each of them.
+
+> **Which "Devtools" category modules were left out, and why?** The category
+> lists ~18 modules; most don't register a DevTools tab, so there's nothing to
+> dogfood against. Skipped as no-surface: `@nuxt/test-utils`,
+> `nuxt-typed-router`, `nuxt-prepare`, `nuxt-safe-runtime-config`,
+> `nuxt-ssr-api-logger`, `nuxt-email-renderer`. Skipped as secret-gated (need
+> auth tokens to do anything): `nuxt-doppler`, `@nuxtjs/ngrok`. Skipped as
+> heavy or deprecated: `@nuxtjs/storybook`, `workflow`, `sonda`,
+> `@nuxtjs/eslint-module` (superseded by `@nuxt/eslint`).
+
+> Why one combined playground instead of one per module? Grouping keeps the
+> review surface small (this repo's own `docs/` app already proves
+> `@nuxt/content` + `@nuxt/fonts` + `@nuxt/image` + `nuxt-og-image` coexist
+> safely). `@nuxt/content` and `@nuxt/image` were built in and dogfooded in the
+> first pass, then dropped once that run showed neither has a DevTools tab to
+> test — see [`REPORTS.md`](./REPORTS.md#modules-removed-after-testing) for the
+> evidence. `@nuxthub/core` (out of scope) and `@nuxtjs/tailwindcss` (a real
+> Tailwind v3-vs-v4 version conflict with `nuxt-og-image`) were dropped before
+> implementation. The former standalone "plan 04" doc this all comes from has
+> since been retired in favor of this directory being the living
+> implementation — see nuxt/devtools#1022 for the full history.
 
 ## Opt-in — not part of the main install or CI
 
@@ -80,11 +98,12 @@ Click the Nuxt-logo entry to open the embedded Nuxt DevTools client. From
 there:
 
 - **Overview → `N modules`** lists every installed module with its setup
-  time — confirms all three ecosystem modules loaded.
+  time — confirms all ecosystem modules loaded.
 - Each module's own tab is **not** in the SideNav's visible icon strip — check
-  the **"⋯" overflow menu** at the bottom of the SideNav. As of this report,
-  that's where `nuxt-og-image`, `@nuxt/scripts`, and `@nuxt/fonts`'s tabs
-  live.
+  the **"⋯" overflow menu** at the bottom of the SideNav. That's where the
+  module tabs live: `custom-nuxt-seo-og-image`, `custom-nuxt-scripts`,
+  `custom-fonts`, `custom-eslint-config`, `custom-hints`, `custom-nuxt-a11y`,
+  `custom-compodium`, and `custom-scalar`.
 
 Don't navigate directly to `http://localhost:3000/__nuxt_devtools__/client/`
 in a plain tab expecting the same result — that bypasses the RPC handshake the
@@ -97,14 +116,46 @@ appear, does it load without console errors, does it show any Plan 00
 deprecation diagnostics, and an overall verdict. That report is the raw
 material for upstream issues/PRs to each module.
 
-## Automated smoke check (optional, manual trigger only)
+## Automated checks (optional, manual trigger only)
 
-`.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only — it
-installs the root workspace, stubs `packages/devtools` (`pnpm run prepare`),
-installs this workspace, and runs `nuxt build` as a cheap "did the module
-combo break" signal. It deliberately doesn't run the full `pnpm build` or set
-`NUXT_DEVTOOLS_LOCAL` — DevTools no-ops outside `dev` mode, so build-mode
-can't exercise anything devtools-specific anyway, and the cheap stub is
-enough for the module to resolve. It is **not** part of the default CI path;
-trigger it manually from the Actions tab when you want a sanity check without
-dogfooding by hand.
+`.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only and
+holds two independent tasks (jobs). Neither is part of the default push /
+pull_request CI path; trigger them from the Actions tab.
+
+- **`smoke`** — installs the root workspace, stubs `packages/devtools`
+  (`pnpm run prepare`), installs this workspace, and runs `nuxt build` as a
+  cheap "did the module combo break" signal. It deliberately doesn't run the
+  full `pnpm build` or set `NUXT_DEVTOOLS_LOCAL` — DevTools no-ops outside
+  `dev` mode, so build-mode can't exercise anything devtools-specific anyway,
+  and the cheap stub is enough for the modules to resolve.
+- **`devtools-smoke`** — the heavier task that actually drives the embedded
+  DevTools client: it runs the full `pnpm build` (real static client),
+  installs Playwright's Chromium, then runs the smoke suite
+  (`pnpm run test:e2e:ecosystem`, see [Playwright smoke tests](#playwright-smoke-tests-opt-in)).
+  On failure it uploads the Playwright HTML report as an artifact.
+
+## Playwright smoke tests (opt-in)
+
+[`tests/`](./tests/) holds a Playwright suite that boots the combined app and
+asserts each Devtools-category module registers its custom tab and that tab
+renders against this repo's built devtools client — so "do all the modules'
+DevTools still function?" is a one-command check instead of a manual pass.
+
+Unlike the hand-dogfooding runbook above (which uses `NUXT_DEVTOOLS_LOCAL`),
+this suite runs against the **built** `@nuxt/devtools` static client — the same
+way the repo's main `tests/e2e` suite and CI do — so you must build first.
+It's kept **out** of the default `pnpm test:e2e` because it depends on this
+sealed, opt-in workspace being installed. Run it explicitly from the repo root:
+
+```sh
+pnpm install                                   # repo root
+pnpm run build                                 # real static devtools client
+pnpm -C playgrounds-ecosystem/modules install  # this sealed workspace
+pnpm run test:e2e:ecosystem                    # boots the app + drives devtools
+```
+
+The suite spawns its own dev server (on port 13200 by default; override with
+`PW_ECOSYSTEM_PORT`) with `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH=true`, so no manual
+authorization step is needed. See
+[`tests/ecosystem-modules.spec.ts`](./tests/ecosystem-modules.spec.ts) for the
+per-module tab assertions.
