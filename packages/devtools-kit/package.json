@@ -44,7 +44,13 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
+    "nitropack": "^2.0.0",
     "vite": ">=6.0"
+  },
+  "peerDependenciesMeta": {
+    "nitropack": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@nuxt/kit": "catalog:prod",

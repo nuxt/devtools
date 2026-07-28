@@ -97,9 +97,13 @@ catalogs:
     '@vueuse/nuxt': *vueuse
     exsolve: ^1.1.0
     lightningcss: ^1.33.0
-    # Nuxt 5 nightly's Nitro layer (`@nuxt/nitro-server-nightly`) builds on the
-    # next-gen Nitro v3 engine (package `nitro`, not `nitropack`). We still
-    # depend on `nitropack` for its v2 types where APIs are shared.
+    # Nuxt 5 nightly's Nitro layer (`@nuxt/nitro-server-nightly`) builds on
+    # the next-gen Nitro v3 engine (package `nitro`, not `nitropack`).
+    # `@nuxt/devtools`/`@nuxt/devtools-kit` declare both as *optional* peer
+    # dependencies (a consumer's Nuxt has exactly one or the other), but
+    # still pin a devDependency here too so this monorepo's own build and
+    # typecheck resolve a single, consistent version of each rather than
+    # whatever `autoInstallPeers` would otherwise pick independently.
     nitro: ^3.0.260610-beta
     nitropack: ^2.13.4
     nuxt: *nuxt
