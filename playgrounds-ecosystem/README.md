@@ -116,17 +116,23 @@ appear, does it load without console errors, does it show any Plan 00
 deprecation diagnostics, and an overall verdict. That report is the raw
 material for upstream issues/PRs to each module.
 
-## Automated smoke check (optional, manual trigger only)
+## Automated checks (optional, manual trigger only)
 
-`.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only — it
-installs the root workspace, stubs `packages/devtools` (`pnpm run prepare`),
-installs this workspace, and runs `nuxt build` as a cheap "did the module
-combo break" signal. It deliberately doesn't run the full `pnpm build` or set
-`NUXT_DEVTOOLS_LOCAL` — DevTools no-ops outside `dev` mode, so build-mode
-can't exercise anything devtools-specific anyway, and the cheap stub is
-enough for the module to resolve. It is **not** part of the default CI path;
-trigger it manually from the Actions tab when you want a sanity check without
-dogfooding by hand.
+`.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only and
+holds two independent tasks (jobs). Neither is part of the default push /
+pull_request CI path; trigger them from the Actions tab.
+
+- **`smoke`** — installs the root workspace, stubs `packages/devtools`
+  (`pnpm run prepare`), installs this workspace, and runs `nuxt build` as a
+  cheap "did the module combo break" signal. It deliberately doesn't run the
+  full `pnpm build` or set `NUXT_DEVTOOLS_LOCAL` — DevTools no-ops outside
+  `dev` mode, so build-mode can't exercise anything devtools-specific anyway,
+  and the cheap stub is enough for the modules to resolve.
+- **`devtools-smoke`** — the heavier task that actually drives the embedded
+  DevTools client: it runs the full `pnpm build` (real static client),
+  installs Playwright's Chromium, then runs the smoke suite
+  (`pnpm run test:e2e:ecosystem`, see [Playwright smoke tests](#playwright-smoke-tests-opt-in)).
+  On failure it uploads the Playwright HTML report as an artifact.
 
 ## Playwright smoke tests (opt-in)
 

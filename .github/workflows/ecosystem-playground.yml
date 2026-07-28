@@ -1,8 +1,12 @@
 name: ecosystem-playground
 
-# Manual-trigger only smoke check for playgrounds-ecosystem/modules/ — NOT
-# part of the default push/pull_request CI path. See
-# playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
+# Manual-trigger only checks for playgrounds-ecosystem/modules/ — NOT part of
+# the default push/pull_request CI path. Two independent tasks:
+#   * `smoke`          — cheap "does the module combo still build" signal
+#                        (stub devtools, `nuxt build`).
+#   * `devtools-smoke` — Playwright suite that drives the real embedded DevTools
+#                        client and asserts each module's tab renders.
+# See playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
 # context (nuxt/devtools#1022).
 on:
   workflow_dispatch:
@@ -34,3 +38,43 @@ jobs:
       - run: pnpm -C playgrounds-ecosystem/modules install
       - name: Build the module combo
         run: pnpm -C playgrounds-ecosystem/modules run build
+
+  # Separate, heavier task: actually drive the embedded Nuxt DevTools client and
+  # assert each ecosystem module's custom tab renders (see
+  # playgrounds-ecosystem/tests/). Kept apart from the `smoke` build job above
+  # because it needs the FULL static devtools client (`pnpm build`, not the stub
+  # `prepare`) plus a Playwright browser — and apart from the default e2e
+  # workflow because this sealed, opt-in workspace isn't in the normal CI path.
+  devtools-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      # The smoke test drives the real embedded DevTools client, so — unlike the
+      # `smoke` job's stub `prepare` — it needs the full static client build.
+      - run: pnpm build
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm -C playgrounds-ecosystem/modules install
+      - run: pnpm run test:e2e:ecosystem
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: ecosystem-playwright-report
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
