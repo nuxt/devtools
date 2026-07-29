@@ -3,7 +3,7 @@ import type { ModuleCustomTab } from '~/../src/types'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
-import { isDevAuthed, requestForAuth } from '~/composables/dev-auth'
+import { ensureDevAuthToken, isDevAuthed, requestForAuth } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import { useAllTabs } from '~/composables/state-tabs'
 
@@ -68,7 +68,7 @@ onMounted(() => {
       :title="tab.view.title || tab.title"
       :description="tab.view.description"
       :actions="tab.view.actions"
-      @action="idx => rpc.customTabAction(tab!.name, idx)"
+      @action="async idx => rpc.customTabAction(await ensureDevAuthToken(), tab!.name, idx)"
     />
   </template>
   <template v-else>

@@ -87,7 +87,19 @@ export function setupGeneralRPC({
 
   return {
     getServerConfig(): NuxtOptions {
-      return nuxt.options as unknown as NuxtOptions
+      // This method is intentionally reachable without a dev auth token (the
+      // client reads it eagerly across many views), so strip the private
+      // `runtimeConfig` values — they can hold secrets — from the payload.
+      // The Runtime Config tab reads them separately via the token-gated
+      // `getServerRuntimeConfig`. `public`/`app` are non-secret and kept.
+      const { runtimeConfig, ...rest } = nuxt.options
+      return {
+        ...rest,
+        runtimeConfig: {
+          app: runtimeConfig?.app,
+          public: runtimeConfig?.public,
+        },
+      } as unknown as NuxtOptions
     },
     async getServerDebugContext() {
       if (!nuxt._debug)
@@ -124,7 +136,10 @@ export function setupGeneralRPC({
         ),
       }
     },
-    getServerRuntimeConfig(): Record<string, any> {
+    async getServerRuntimeConfig(token: string): Promise<Record<string, any>> {
+      // Exposes runtimeConfig merged with env vars, which can hold secrets, so
+      // require the dev auth token.
+      await ensureDevAuthToken(token)
       // Ported from https://github.com/unjs/nitro/blob/88e79fcdb2a024c96a3d1fd272d0acbff0405013/src/runtime/config.ts#L31
       // Since this operation happends on the Nitro runtime
       const ENV_PREFIX = 'NITRO_'
@@ -239,13 +254,17 @@ export function setupGeneralRPC({
       logger.info('Restarting Nuxt...')
       return nuxt.callHook('restart', { hard })
     },
-    async requestForAuth(info, origin?) {
+    async requestForAuth(info) {
       if (options.disableAuthorization)
         return
 
       const token = await getDevAuthToken()
 
-      origin ||= `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
+      // Always derive the origin from the dev server config. Never trust a
+      // client-supplied origin here: it is printed next to the real auth token
+      // in an "open this URL" instruction, so an attacker-controlled origin
+      // would turn this into a token-exfiltration lure.
+      const origin = `${nuxt.options.devServer.https ? 'https' : 'http'}://${nuxt.options.devServer.host === '::' ? 'localhost' : (nuxt.options.devServer.host || 'localhost')}:${nuxt.options.devServer.port}`
 
       const ROUTE_AUTH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__/auth`.replace(MULTIPLE_SLASHES_RE, '/')
 

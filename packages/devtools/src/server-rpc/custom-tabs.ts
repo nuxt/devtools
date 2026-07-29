@@ -1,6 +1,6 @@
 import type { ModuleCustomTab, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 
-export function setupCustomTabRPC({ nuxt, options, refresh }: NuxtDevtoolsServerContext) {
+export function setupCustomTabRPC({ nuxt, options, refresh, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   const iframeTabs: ModuleCustomTab[] = []
   const customTabs: ModuleCustomTab[] = []
 
@@ -35,7 +35,8 @@ export function setupCustomTabRPC({ nuxt, options, refresh }: NuxtDevtoolsServer
         return i
       })
     },
-    async customTabAction(name, actionIndex) {
+    async customTabAction(token, name, actionIndex) {
+      await ensureDevAuthToken(token)
       const tab = customTabs.find(i => i.name === name)
       if (!tab)
         return false

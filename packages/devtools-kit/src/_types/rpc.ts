@@ -15,7 +15,7 @@ export interface ServerFunctions {
   getServerConfig: () => NuxtOptions
   getServerDebugContext: () => Promise<ServerDebugContext | undefined>
   getServerData: (token: string) => Promise<NuxtServerData>
-  getServerRuntimeConfig: () => Record<string, any>
+  getServerRuntimeConfig: (token: string) => Promise<Record<string, any>>
   getModuleOptions: () => ModuleOptions
   getComponents: () => Component[]
   getComponentsRelationships: () => Promise<ComponentRelationship[]>
@@ -66,16 +66,16 @@ export interface ServerFunctions {
 
   // Actions
   telemetryEvent: (payload: object, immediate?: boolean) => void
-  customTabAction: (name: string, action: number) => Promise<boolean>
+  customTabAction: (token: string, name: string, action: number) => Promise<boolean>
   runWizard: <T extends WizardActions>(token: string, name: T, ...args: GetWizardArgs<T>) => Promise<void>
   openInEditor: (token: string, filepath: string) => Promise<boolean>
   restartNuxt: (token: string, hard?: boolean) => Promise<void>
   installNuxtModule: (token: string, name: string, dry?: boolean) => Promise<InstallModuleReturn>
   uninstallNuxtModule: (token: string, name: string, dry?: boolean) => Promise<InstallModuleReturn>
-  enableTimeline: (dry: boolean) => Promise<[string, string]>
+  enableTimeline: (token: string, dry: boolean) => Promise<[string, string]>
 
   // Dev Token
-  requestForAuth: (info?: string, origin?: string) => Promise<void>
+  requestForAuth: (info?: string) => Promise<void>
   verifyAuthToken: (token: string) => Promise<boolean>
 }
 
