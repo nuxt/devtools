@@ -7,9 +7,9 @@ import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerF
 import { logger } from '@nuxt/kit'
 import { createBirpcGroup } from 'birpc'
 import { colors } from 'consola/utils'
-import { parse, stringify } from 'structured-clone-es'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
+import { deserializeRpc, serializeRpc } from '../utils/rpc-serialize'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -130,8 +130,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
               catch {}
             })
           },
-          serialize: stringify,
-          deserialize: parse,
+          serialize: serializeRpc,
+          deserialize: deserializeRpc,
         }
         rpc.updateChannels((c) => {
           c.push(channel)
