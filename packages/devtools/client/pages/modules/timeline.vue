@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { createTemplatePromise } from '@vueuse/core'
 import { definePageMeta, devtoolsUiShowNotification } from '#imports'
+import { ensureDevAuthToken } from '~/composables/dev-auth'
 import { useOpenInEditor } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
 import { useModuleOptions, useServerConfig } from '~/composables/state'
@@ -20,10 +21,10 @@ const openInEditor = useOpenInEditor()
 
 async function showPopup() {
   try {
-    const [source, modified] = await rpc.enableTimeline(true)
+    const [source, modified] = await rpc.enableTimeline(await ensureDevAuthToken(), true)
     if (!await Dialog.start(source, modified))
       return
-    await rpc.enableTimeline(false)
+    await rpc.enableTimeline(await ensureDevAuthToken(), false)
   }
   catch {
     devtoolsUiShowNotification({

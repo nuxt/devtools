@@ -224,9 +224,6 @@ catalogs:
     splitpanes:
       specifier: ^4.0.4
       version: 4.0.4
-    structured-clone-es:
-      specifier: ^2.0.0
-      version: 2.0.0
     theme-vitesse:
       specifier: ^1.0.0
       version: 1.0.0
@@ -391,6 +388,7 @@ overrides:
   esbuild: ^0.27.7
   rollup: ^4.60.2
   semver: ^7.7.4
+  structured-clone-es: ^2.0.1
   typescript: ^5.9.3
   unimport: ^6.2.0
   vite: ^8.0.10
@@ -587,8 +585,8 @@ importers:
         specifier: catalog:prod
         version: 3.0.2
       structured-clone-es:
-        specifier: catalog:frontend
-        version: 2.0.0
+        specifier: ^2.0.1
+        version: 2.0.1
       tinyglobby:
         specifier: catalog:prod
         version: 0.2.16
@@ -7989,8 +7987,8 @@ packages:
   strip-literal@3.1.0:
     resolution: {integrity: sha512-8r3mkIM/2+PpjHoOtiAW8Rg3jJLHaV7xPwG+YRGrv6FP0wwk/toTpATxWYOW0BKdWwl82VT2tFYi5DlROa0Mxg==}
 
-  structured-clone-es@2.0.0:
-    resolution: {integrity: sha512-5UuAHmBLXYPCl22xWJrFuGmIhBKQzxISPVz6E7nmTmTcAOpUzlbjKJsRrCE4vADmMQ0dzeCnlWn9XufnAGf76Q==}
+  structured-clone-es@2.0.1:
+    resolution: {integrity: sha512-10ZL5r77LhknxlP1FBiCW+VdnuWOEFLdSS2SKtjyEV+L4qP1hUEIMIZW94LC3jKxRmT/Dj7KkD1mqh/IY6lhKQ==}
 
   style-mod@4.1.2:
     resolution: {integrity: sha512-wnD1HyVqpJUI2+eKZ+eo1UwghftP6yuFheBqqe+bWCotBjC2K1YnteJILRMs3SM4V/0dLEW1SC27MWP5y+mwmw==}
@@ -11841,7 +11839,7 @@ snapshots:
       publint: 0.3.18
       sirv: 3.0.2
       split2: 4.2.0
-      structured-clone-es: 2.0.0
+      structured-clone-es: 2.0.1
       tinyglobby: 0.2.16
       unconfig: 7.5.0
       unstorage: 1.17.5(@netlify/blobs@9.1.2)(db0@0.3.4)(ioredis@5.10.1)
@@ -11880,7 +11878,7 @@ snapshots:
       logs-sdk: 0.0.6
       ohash: 2.0.11
       p-limit: 7.3.0
-      structured-clone-es: 2.0.0
+      structured-clone-es: 2.0.1
       valibot: 1.3.1(typescript@5.9.3)
       ws: 8.20.0
     transitivePeerDependencies:
@@ -17068,7 +17066,7 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
-  structured-clone-es@2.0.0: {}
+  structured-clone-es@2.0.1: {}
 
   style-mod@4.1.2: {}
 

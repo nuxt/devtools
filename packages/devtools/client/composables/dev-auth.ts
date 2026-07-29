@@ -64,7 +64,7 @@ export async function requestForAuth() {
     userAgentInfo.os.version,
     userAgentInfo.device.type,
   ].filter(i => i).join(' ')
-  return await rpc.requestForAuth(desc, window.location.origin)
+  return await rpc.requestForAuth(desc)
 }
 
 async function authConfirmAction() {
