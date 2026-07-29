@@ -4,6 +4,54 @@ Dogfoods the Nuxt DevTools integrations of three popular Nuxt modules — all in
 one combined app — against the **local** `@nuxt/devtools` (this repo's
 `packages/devtools`) for integration verification.
 
+## Layout
+
+| Directory | What it is |
+| --- | --- |
+| [`modules/`](./modules/) | Multi-module dogfooding app (`nuxt-og-image` + `@nuxt/scripts` + `@nuxt/fonts`) on **Nuxt 4**. See [`REPORTS.md`](./REPORTS.md). |
+| [`nuxt4/`](./nuxt4/) | Minimal production playground on **Nuxt 4** (stable → Nitro v2 / `nitropack`). |
+| [`nuxt5/`](./nuxt5/) | Minimal production playground on **Nuxt 5** (nightly → Nitro v3 / `nitro`). |
+| [`scripts/`](./scripts/) | `check-nitro-type-resolution.mjs` — the single-engine type-resolution check (see below). |
+
+### `nuxt4/` + `nuxt5/` — per-major production playgrounds
+
+Both link the local `@nuxt/devtools` (`link:../../packages/devtools`) into a
+minimal app and are verified with a production build **and** `nuxi typecheck`,
+proving this repo's DevTools loads and type-checks against a consumer on each
+Nuxt major — which matters because Nuxt 4 ships **Nitro v2** (`nitropack`) and
+Nuxt 5 ships **Nitro v3** (`nitro`), and `@nuxt/devtools` /
+`@nuxt/devtools-kit` now declare both as *optional* peer dependencies.
+
+Each is a sealed workspace (own lockfile / `pnpm-workspace.yaml`, like
+`modules/`), so a plain `pnpm install` at the repo root never touches them.
+Run them the same way (root installed + stubbed first):
+
+```sh
+pnpm install ; pnpm run prepare               # repo root
+pnpm -C playgrounds-ecosystem/nuxt5 install
+pnpm -C playgrounds-ecosystem/nuxt5 run typecheck
+pnpm -C playgrounds-ecosystem/nuxt5 run build   # or: run dev
+```
+
+### `scripts/check-nitro-type-resolution.mjs` — only-one-engine type check
+
+A `link:`ed local `@nuxt/devtools` makes Nuxt inject tsconfig `paths` for
+**both** Nitro engines, so the playgrounds above can't isolate the
+one-engine-only scenario a published-npm consumer actually sees. This script
+does, in throwaway temp dirs: it reproduces the shipped `.d.ts` detection with
+only one engine symlinked in and asserts that
+
+- only `nitro` → the Nitro types resolve to the concrete **v3** shape,
+- only `nitropack` → they resolve to the concrete **v2** shape,
+- a naive `NitroV2 | NitroV3` union instead collapses to `any` (why the
+  detection exists).
+
+```sh
+pnpm install                                             # repo root
+node playgrounds-ecosystem/scripts/check-nitro-type-resolution.mjs
+```
+
+
 Modules covered, in [`modules/`](./modules/): `nuxt-og-image`, `@nuxt/scripts`,
 `@nuxt/fonts`. See [`REPORTS.md`](./REPORTS.md) for what was actually found
 running each of them — including `@nuxt/content` and `@nuxt/image`, which

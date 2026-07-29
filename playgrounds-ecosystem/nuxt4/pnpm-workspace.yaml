@@ -1,0 +1,13 @@
+# Sealed off from the root workspace (own lockfile) so a plain `pnpm install`
+# at the repo root never touches this directory — see ../README.md.
+packages:
+  - .
+
+strictPeerDependencies: false
+autoInstallPeers: true
+shamefullyHoist: true
+
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  vue-demi: true

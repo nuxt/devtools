@@ -14,6 +14,8 @@ export default defineBuildConfig({
     'nuxt/schema',
     '@nuxt/schema',
     'nitropack',
+    'nitro',
+    'nitro/types',
     'unimport',
     'unstorage',
     'ofetch',

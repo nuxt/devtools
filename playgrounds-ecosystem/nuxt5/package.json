@@ -1,0 +1,19 @@
+{
+  "name": "playgrounds-ecosystem-nuxt5",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev --host 0.0.0.0",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview",
+    "typecheck": "nuxi typecheck"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "link:../../packages/devtools",
+    "@types/node": "^26.1.1",
+    "nuxt": "npm:nuxt-nightly@5x",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.8"
+  }
+}

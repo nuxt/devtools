@@ -1,7 +1,6 @@
-import type { StorageMounts } from 'nitropack'
 import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import type { AnyNitro } from '../utils/nitro-compat'
+import type { AnyNitro, AnyStorageMounts } from '../utils/nitro-compat'
 import { builtinDrivers, createStorage } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
@@ -12,7 +11,7 @@ function shouldIgnoreStorageKey(key: string) {
 
 export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
   const { nuxt } = ctx
-  const storageMounts: StorageMounts = {}
+  const storageMounts: AnyStorageMounts = {}
 
   let storage: Storage | undefined
   let unwatchStorageMounts: Array<() => Promise<void> | void> = []
@@ -20,7 +19,7 @@ export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
   nuxt.hook('nitro:init', async (nitro: AnyNitro) => {
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53
-    const mounts: StorageMounts = {
+    const mounts: AnyStorageMounts = {
       ...nitro.options.storage,
       ...nitro.options.devStorage,
     }

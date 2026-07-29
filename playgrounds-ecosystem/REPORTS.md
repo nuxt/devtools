@@ -67,6 +67,47 @@ rebased tip:
   all three tabs are still reachable (still only via the SideNav overflow
   menu), and `@nuxt/scripts` still shows "No scripts loaded".
 
+## Nuxt 4 vs Nuxt 5 (per-major playgrounds + Nitro type resolution)
+
+Added alongside the `@nuxt/devtools` optional-peer-dependency change for
+`nitro` (Nitro v3, Nuxt 5) / `nitropack` (Nitro v2, Nuxt 4). Two minimal
+sealed playgrounds — [`../nuxt4/`](./nuxt4) and [`../nuxt5/`](./nuxt5) — link
+the local `@nuxt/devtools` and are checked with a production build **and**
+`nuxi typecheck`.
+
+| Playground | Nuxt | Nitro engine present | `nuxi typecheck` | `nuxi build` |
+| --- | --- | --- | --- | --- |
+| `nuxt4/` | 4.5.1 (stable) | Nitro v2 (`nitropack` 2.13.4) only | pass | pass (`node-server`) |
+| `nuxt5/` | 5.0.0 nightly | Nitro v3 (`nitro` 3.0.x-beta) only | pass | pass (`node-server`, rolldown) |
+
+So this repo's DevTools loads, type-checks, and production-builds cleanly on a
+consumer running **either** Nitro engine.
+
+### How the types resolve when only one of `nitro`/`nitropack` exists
+
+`@nuxt/devtools` and `@nuxt/devtools-kit` reference Nitro types through a small
+detection layer (`packages/*/src/**/nitro-compat.ts`) instead of importing one
+engine directly. A missing optional peer resolves its `import type` to `any`; a
+naive `NitroV2 | NitroV3` union would then collapse the whole thing to `any`
+(`X | any` is `any`), silently dropping type-safety on the engine that *is*
+installed. The detection probes each import for an impossible `'___INVALID'`
+key (which only the `any` fallback matches) and resolves to just the engine
+that actually loaded — the same trick `@nuxt/kit` uses internally.
+
+The playgrounds themselves can't prove this at the type level: a `link:`ed
+local `@nuxt/devtools` makes Nuxt inject tsconfig `paths` for **both** engines,
+so both always resolve there. The published-npm consumer scenario (only one
+engine) is verified instead by
+[`scripts/check-nitro-type-resolution.mjs`](./scripts/check-nitro-type-resolution.mjs),
+which reproduces the shipped `.d.ts` detection in throwaway temp dirs with a
+single engine symlinked in. Result:
+
+| Installed | `AnyNitro` resolves to | Result |
+| --- | --- | --- |
+| only `nitro` (v3) | concrete Nitro **v3** type | ✓ not `any` |
+| only `nitropack` (v2) | concrete Nitro **v2** type | ✓ not `any` |
+| control: naive `NitroV2 \| NitroV3`, v3 absent | `any` | ✓ confirms detection is needed |
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |
