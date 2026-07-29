@@ -1,3 +1,17 @@
+# [3.4.0](https://github.com/nuxt/devtools/compare/v3.3.1...v3.4.0) (2026-07-29)
+
+
+### Bug Fixes
+
+* **devtools:** continue hardening the RPC surface ([#1049](https://github.com/nuxt/devtools/issues/1049)) ([7f072dc](https://github.com/nuxt/devtools/commit/7f072dc4174cd8fd94ef2364d777964bae8e6032))
+
+
+### Features
+
+* upgrade `@vitejs/devtools-kit` to v0.4.10 ([5cea1a1](https://github.com/nuxt/devtools/commit/5cea1a1694299bfcc67f286d4372d429ab3ad76a))
+
+
+
 ## [3.3.1](https://github.com/nuxt/devtools/compare/v3.3.0...v3.3.1) (2026-07-24)
 
 
