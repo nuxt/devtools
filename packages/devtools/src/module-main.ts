@@ -1,4 +1,4 @@
-import type { PluginWithDevTools } from '@vitejs/devtools-kit'
+import type { PluginWithDevTools, ViteDevToolsNodeContext } from '@vitejs/devtools-kit'
 import type { ServerResponse } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
@@ -69,7 +69,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     addVitePlugin(defineViteDevToolsPlugin({
       name: 'nuxt:devtools',
       devtools: {
-        setup(ctx: any) {
+        setup(ctx: ViteDevToolsNodeContext) {
           ctx.docks.register({
             id: 'nuxt:devtools',
             type: 'iframe',
