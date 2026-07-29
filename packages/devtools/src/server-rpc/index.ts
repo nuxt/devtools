@@ -7,9 +7,9 @@ import type { ClientFunctions, ModuleOptions, NuxtDevtoolsServerContext, ServerF
 import { logger } from '@nuxt/kit'
 import { createBirpcGroup } from 'birpc'
 import { colors } from 'consola/utils'
+import { parse, stringify } from 'structured-clone-es'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
-import { deserializeRpc, serializeRpc } from '../utils/rpc-serialize'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -47,6 +47,16 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
           colors.yellow(`[nuxt-devtools] RPC error on executing "${colors.bold(name)}":\n`)
           + colors.red(error?.message || ''),
         )
+      },
+      // A malformed or hostile frame over the (unauthenticated) HMR socket can
+      // make deserialization throw. Swallow it here so a bad frame is dropped
+      // rather than surfacing as an unhandled rejection that crashes dev.
+      onGeneralError(error) {
+        logger.error(
+          colors.yellow('[nuxt-devtools] RPC channel error:\n')
+          + colors.red((error as Error)?.message || String(error)),
+        )
+        return true
       },
       timeout: 120_000,
     },
@@ -130,8 +140,8 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
               catch {}
             })
           },
-          serialize: serializeRpc,
-          deserialize: deserializeRpc,
+          serialize: stringify,
+          deserialize: parse,
         }
         rpc.updateChannels((c) => {
           c.push(channel)
