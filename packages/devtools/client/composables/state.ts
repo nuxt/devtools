@@ -4,6 +4,7 @@ import { objectPick } from '@antfu/utils'
 import { computed } from 'vue'
 import { useFetch } from '#app/composables/fetch'
 import { useClientRouter } from './client'
+import { ensureDevAuthToken } from './dev-auth'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'
 
@@ -44,7 +45,7 @@ export function useServerDebugContext() {
 }
 
 export function useServerRuntimeConfig() {
-  return useAsyncState('getServerRuntimeConfig', () => rpc.getServerRuntimeConfig())
+  return useAsyncState('getServerRuntimeConfig', async () => rpc.getServerRuntimeConfig(await ensureDevAuthToken()))
 }
 
 export function useModuleOptions() {

@@ -1,4 +1,5 @@
 import type { ChannelOptions } from 'birpc'
+import type { IncomingMessage } from 'node:http'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
 
@@ -10,6 +11,7 @@ import { colors } from 'consola/utils'
 import { parse, stringify } from 'structured-clone-es'
 import { WS_EVENT_NAME } from '../constant'
 import { getDevAuthToken } from '../dev-auth'
+import { isAllowedRpcOrigin } from '../utils/rpc-origin'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
@@ -47,6 +49,16 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
           colors.yellow(`[nuxt-devtools] RPC error on executing "${colors.bold(name)}":\n`)
           + colors.red(error?.message || ''),
         )
+      },
+      // A malformed or hostile frame over the (unauthenticated) HMR socket can
+      // make deserialization throw. Swallow it here so a bad frame is dropped
+      // rather than surfacing as an unhandled rejection that crashes dev.
+      onGeneralError(error) {
+        logger.error(
+          colors.yellow('[nuxt-devtools] RPC channel error:\n')
+          + colors.red((error as Error)?.message || String(error)),
+        )
+        return true
       },
       timeout: 120_000,
     },
@@ -110,7 +122,17 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const vitePlugin: Plugin = {
     name: 'nuxt:devtools:rpc',
     configureServer(server) {
-      server.ws.on('connection', (ws) => {
+      server.ws.on('connection', (ws: WebSocket, request: IncomingMessage) => {
+        // Cross-site WebSocket hijacking guard: a browser page on another
+        // origin can reach the (origin-less) Vite HMR socket. Only same-origin
+        // browser connections may open a DevTools RPC channel. We leave the
+        // HMR socket itself untouched so normal HMR keeps working.
+        if (!isAllowedRpcOrigin(request?.headers?.origin, request?.headers?.host)) {
+          logger.warn(
+            colors.yellow(`[nuxt-devtools] Ignored a cross-origin RPC connection from origin "${request?.headers?.origin}".`),
+          )
+          return
+        }
         wsClients.add(ws)
         const channel: ChannelOptions = {
           post: d => ws.send(JSON.stringify({

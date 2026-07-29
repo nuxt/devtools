@@ -4,9 +4,10 @@ import { parseModule } from 'magicast'
 import { getDefaultExportOptions } from 'magicast/helpers'
 import { magicastGuard } from '../utils/magicast'
 
-export function setupTimelineRPC({ nuxt }: NuxtDevtoolsServerContext) {
+export function setupTimelineRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
   return {
-    async enableTimeline(dry: boolean) {
+    async enableTimeline(token: string, dry: boolean) {
+      await ensureDevAuthToken(token)
       const filepath = nuxt.options._nuxtConfigFile
       const source = await fs.readFile(filepath, 'utf-8')
       const generated = await magicastGuard(async () => {
