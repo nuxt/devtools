@@ -83,6 +83,21 @@ the local `@nuxt/devtools` and are checked with a production build **and**
 So this repo's DevTools loads, type-checks, and production-builds cleanly on a
 consumer running **either** Nitro engine.
 
+These playgrounds are **build + typecheck only** (no `dev` script) — `nuxi dev`
+is not viable in either sealed workspace, and the failure is **not** a DevTools
+bug: it reproduces with `@nuxt/devtools` removed from the `modules` array.
+
+| Playground | `nuxi dev` (base app, DevTools removed) | Cause |
+| --- | --- | --- |
+| `nuxt4/` | first render hangs, worker OOM (`JS heap out of memory`) | `@nuxt/devtools`'s `vite@^8.1.5` peer + pnpm dedup pull Vite 8.1 into Nuxt 4.5.x, whose dev SSR module runner targets an older Vite |
+| `nuxt5/` | render socket dropped (`socket hang up`) / worker OOM | the sealed workspace lacks the dependency-dedup `overrides` the root `pnpm-workspace.yaml` uses to make the nuxt-nightly/Vite-8.1 dev runtime work |
+
+Both symptoms match what surfaced when running `nuxi dev` directly. The
+production `nuxi build` path doesn't use the Vite dev module runner, so it is
+unaffected — hence build + typecheck are the reliable per-major signal here.
+Interactive dev-mode DevTools dogfooding uses the root-workspace `playgrounds/`
+(`playgrounds/empty`, `playgrounds/v4`), which share the working resolution.
+
 ### How the types resolve when only one of `nitro`/`nitropack` exists
 
 `@nuxt/devtools` and `@nuxt/devtools-kit` reference Nitro types through a small

@@ -16,11 +16,12 @@ one combined app — against the **local** `@nuxt/devtools` (this repo's
 ### `nuxt4/` + `nuxt5/` — per-major production playgrounds
 
 Both link the local `@nuxt/devtools` (`link:../../packages/devtools`) into a
-minimal app and are verified with a production build **and** `nuxi typecheck`,
-proving this repo's DevTools loads and type-checks against a consumer on each
-Nuxt major — which matters because Nuxt 4 ships **Nitro v2** (`nitropack`) and
-Nuxt 5 ships **Nitro v3** (`nitro`), and `@nuxt/devtools` /
-`@nuxt/devtools-kit` now declare both as *optional* peer dependencies.
+minimal app and are verified with a production **`nuxi build`** and
+**`nuxi typecheck`**, proving this repo's DevTools installs, loads, builds, and
+type-checks against a consumer on each Nuxt major — which matters because
+Nuxt 4 ships **Nitro v2** (`nitropack`) and Nuxt 5 ships **Nitro v3** (`nitro`),
+and `@nuxt/devtools` / `@nuxt/devtools-kit` now declare both as *optional* peer
+dependencies.
 
 Each is a sealed workspace (own lockfile / `pnpm-workspace.yaml`, like
 `modules/`), so a plain `pnpm install` at the repo root never touches them.
@@ -30,8 +31,31 @@ Run them the same way (root installed + stubbed first):
 pnpm install ; pnpm run prepare               # repo root
 pnpm -C playgrounds-ecosystem/nuxt5 install
 pnpm -C playgrounds-ecosystem/nuxt5 run typecheck
-pnpm -C playgrounds-ecosystem/nuxt5 run build   # or: run dev
+pnpm -C playgrounds-ecosystem/nuxt5 run build
 ```
+
+#### Why build + typecheck, not `dev`
+
+These sealed workspaces are intentionally build/typecheck-only — they don't
+ship a `dev` script, because `nuxi dev` isn't viable here and the failure is
+**not** a DevTools bug (it reproduces with `@nuxt/devtools` removed from the
+`modules` array):
+
+- **Nuxt 4** — `@nuxt/devtools`'s `vite@^8.1.5` peer (plus pnpm dedup in the
+  sealed workspace) pulls **Vite 8.1** into the Nuxt 4.5.x app, whose dev SSR
+  module runner targets an older Vite. The first render hangs and the dev
+  worker eventually OOMs (`JS heap out of memory`). The production build, which
+  doesn't use the Vite dev module runner, is unaffected.
+- **Nuxt 5** — the sealed workspace resolves its own nuxt-nightly dev runtime
+  without the dependency-dedup `overrides` the root `pnpm-workspace.yaml`
+  relies on, so its dev SSR worker drops the render socket (`socket hang up`) /
+  OOMs. The root `playgrounds/` (which share those overrides) run `dev` fine.
+
+For interactive **dev-mode DevTools dogfooding**, use the root-workspace
+playgrounds instead — `pnpm -C playgrounds/empty dev` (Nuxt 5) or
+`pnpm -C playgrounds/v4 dev` — which share the monorepo's working dependency
+resolution. This directory's job is the per-major *production* compatibility
+signal.
 
 ### `scripts/check-nitro-type-resolution.mjs` — only-one-engine type check
 
