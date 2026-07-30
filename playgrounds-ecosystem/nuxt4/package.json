@@ -3,12 +3,17 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "setup": "node ../scripts/pack-local.mjs && pnpm install --no-frozen-lockfile",
+    "setup:no-build": "node ../scripts/pack-local.mjs --no-build && pnpm install --no-frozen-lockfile",
     "play:dev": "nuxi dev --host 0.0.0.0",
     "play:build": "nuxi build",
     "play:typecheck": "nuxi typecheck"
   },
+  "dependencies": {
+    "@nuxt/devtools": "file:../.tarballs/nuxt-devtools.tgz"
+  },
   "devDependencies": {
-    "@types/node": "catalog:types",
+    "@types/node": "^26.1.1",
     "nuxt": "^4.5.1"
   }
 }

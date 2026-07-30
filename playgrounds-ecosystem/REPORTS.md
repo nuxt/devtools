@@ -84,25 +84,29 @@ So this repo's DevTools loads, type-checks, production-builds, **and dev-mode
 dogfoods** cleanly on a consumer running **either** Nitro engine (`play:dev` on
 both serves the app + the embedded DevTools client with no errors).
 
-### Dev mode: why these are root-workspace members, not sealed
+### Dev mode: why these install DevTools from packed tarballs
 
 The first cut sealed each playground in its own workspace and pulled
 `@nuxt/devtools` via `link:../../packages/devtools`. Build + typecheck passed,
 but **`nuxi dev` failed** — Nuxt 4 OOM'd the render worker (`JS heap out of
 memory`), Nuxt 5 dropped the render socket (`socket hang up`). The cause is
 **not** a DevTools bug (both base apps render fine with DevTools disabled): a
-`link:`ed DevTools resolves its dependency tree from the **root**
+`link:`ed DevTools resolves its dependency tree from the **repo root**
 `node_modules`, while the sealed app has its **own** copies of Vite /
 `@vitejs/devtools`. With two instances, the app's dev SSR ends up transforming
 DevTools' entire dependency tree through a second Vite and the render worker
 blows its heap.
 
-The fix is to make the playgrounds **members of the root pnpm workspace** (they
-were added to the top-level `pnpm-workspace.yaml`; `modules/` stays sealed).
-Then `@nuxt/devtools` resolves — via the root `overrides: '@nuxt/devtools':
-workspace:*` — out of the single root `node_modules`, so the app and DevTools
-share one Vite / `@vitejs/devtools` instance, exactly like the root
-`playgrounds/`. With that, `play:dev` works on both:
+The fix keeps the playgrounds **sealed (own lockfiles)** but installs DevTools
+from **packed tarballs** instead of a `link:` — the same technique as
+[vitejs/devtools' production playground](https://github.com/vitejs/devtools/blob/main/playgrounds/production/README.md).
+[`scripts/pack-local.mjs`](./scripts/pack-local.mjs) `pnpm pack`s
+`@nuxt/devtools` + `@nuxt/devtools-kit` (which rewrites their `workspace:*` /
+`catalog:*` protocols to concrete versions), and each playground's
+`pnpm-workspace.yaml` points both at the tarballs via `overrides`. Everything
+then installs into the playground's single `node_modules`, so the app and
+DevTools share one Vite / `@vitejs/devtools` instance. With that, `play:dev`
+works on both:
 
 | Playground | `play:dev` app | embedded DevTools client |
 | --- | --- | --- |

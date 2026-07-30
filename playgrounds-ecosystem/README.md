@@ -21,34 +21,47 @@ which matters because Nuxt 4 ships **Nitro v2** (`nitropack`) and Nuxt 5 ships
 both as *optional* peer dependencies. They're exercised in **`dev`** (the mode
 DevTools actually runs in), plus `build` + `typecheck`.
 
-Unlike [`modules/`](./modules/), these are **members of the root pnpm
-workspace** (added to the repo's top-level `pnpm-workspace.yaml`), not sealed
-workspaces. That's deliberate and load-bearing for `dev`: `@nuxt/devtools`
-resolves to this repo's own build (via the root
-`overrides: '@nuxt/devtools': workspace:*`) out of the **single** root
-`node_modules`, so the app and DevTools share one Vite / `@vitejs/devtools`
-instance. A sealed workspace + `link:` gives each its own copy — the app's dev
-SSR then has to transform DevTools' whole dependency tree through a second Vite
-and the render worker OOMs (`JS heap out of memory`) or drops the socket
-(`socket hang up`). Being root members, a plain `pnpm install` at the repo root
-sets them up.
+Each is a **sealed pnpm workspace with its own lockfile** (own
+`pnpm-workspace.yaml`, like [`modules/`](./modules/)), so a `pnpm install` at
+the repo root never touches them. Instead of a `workspace:`/`link:` alias to
+source, they install this repo's DevTools from **packed tarballs** — the real
+npm install path, from `dist` — the same technique as
+[vitejs/devtools' production playground](https://github.com/vitejs/devtools/blob/main/playgrounds/production/README.md).
+[`scripts/pack-local.mjs`](./scripts/pack-local.mjs) builds the monorepo and
+`pnpm pack`s `@nuxt/devtools` + `@nuxt/devtools-kit` into `.tarballs/` (`pnpm
+pack` rewrites their `workspace:*` / `catalog:*` protocols into concrete
+versions), and each playground's `pnpm-workspace.yaml` points those two
+packages at the tarballs via `overrides`.
+
+Why tarballs and not a `link:`? Everything then installs into the playground's
+**single** `node_modules`, so the app and DevTools share one Vite /
+`@vitejs/devtools` instance — which `nuxi dev` needs. A sealed workspace that
+`link:`s the local package instead gives each its own copy (the linked package
+resolves its deps from the repo root), and the app's dev SSR ends up
+transforming DevTools' whole dependency tree through a second Vite until the
+render worker OOMs (`JS heap out of memory`) or drops the socket
+(`socket hang up`).
 
 ```sh
-pnpm install ; pnpm run build                          # repo root (build = real DevTools client)
-pnpm -C playgrounds-ecosystem/nuxt5 run play:dev       # dogfood DevTools (Nuxt 5 / Nitro v3)
-pnpm -C playgrounds-ecosystem/nuxt4 run play:dev       # dogfood DevTools (Nuxt 4 / Nitro v2)
-pnpm -C playgrounds-ecosystem/nuxt5 run play:build     # + run play:typecheck
+# From the playground: build the monorepo, pack DevTools, install (own lockfile)
+pnpm -C playgrounds-ecosystem/nuxt5 run setup
+pnpm -C playgrounds-ecosystem/nuxt5 run play:dev        # dogfood DevTools (Nuxt 5 / Nitro v3)
+pnpm -C playgrounds-ecosystem/nuxt5 run play:build      # + run play:typecheck
+
+pnpm -C playgrounds-ecosystem/nuxt4 run setup           # Nuxt 4 / Nitro v2
+pnpm -C playgrounds-ecosystem/nuxt4 run play:dev
 ```
 
-Open the app, then toggle DevTools (Shift+Alt+D) — the embedded client is
-served from the built `packages/devtools/dist/client`, so run `pnpm run build`
-at the root first (a bare `pnpm run prepare`/stub has no client to serve).
+`run setup` rebuilds + repacks + reinstalls; `run setup:no-build` skips the
+rebuild when `dist` is already fresh. After re-packing, pnpm may need
+`pnpm install --no-frozen-lockfile --force` to pick up the new tarball.
+Open the app, then toggle DevTools (Shift+Alt+D).
 
 ### `scripts/check-nitro-type-resolution.mjs` — only-one-engine type check
 
-`@nuxt/devtools` resolving from the root workspace means both Nitro engines are
-present there, so the playgrounds can't isolate the one-engine-only scenario a
-published-npm consumer actually sees. This script
+The playgrounds' DevTools tarball is packed against the repo (where both Nitro
+engines are present), so it can't isolate the one-engine-only scenario a
+published-npm consumer sees. This script
 does, in throwaway temp dirs: it reproduces the shipped `.d.ts` detection with
 only one engine symlinked in and asserts that
 
