@@ -71,32 +71,43 @@ rebased tip:
 
 Added alongside the `@nuxt/devtools` optional-peer-dependency change for
 `nitro` (Nitro v3, Nuxt 5) / `nitropack` (Nitro v2, Nuxt 4). Two minimal
-sealed playgrounds — [`../nuxt4/`](./nuxt4) and [`../nuxt5/`](./nuxt5) — link
-the local `@nuxt/devtools` and are checked with a production build **and**
-`nuxi typecheck`.
+playgrounds — [`../nuxt4/`](./nuxt4) and [`../nuxt5/`](./nuxt5) — that dogfood
+the local `@nuxt/devtools` and are checked with `nuxi dev`, a production
+`nuxi build`, and `nuxi typecheck`.
 
-| Playground | Nuxt | Nitro engine present | `nuxi typecheck` | `nuxi build` |
+| Playground | Nuxt | App's runtime Nitro engine | `nuxi typecheck` | `nuxi build` |
 | --- | --- | --- | --- | --- |
-| `nuxt4/` | 4.5.1 (stable) | Nitro v2 (`nitropack` 2.13.4) only | pass | pass (`node-server`) |
-| `nuxt5/` | 5.0.0 nightly | Nitro v3 (`nitro` 3.0.x-beta) only | pass | pass (`node-server`, rolldown) |
+| `nuxt4/` | 4.5.1 (stable) | Nitro v2 (`nitropack`) | pass | pass (`node-server`) |
+| `nuxt5/` | 5.0.0 nightly | Nitro v3 (`nitro`) | pass | pass (`node-server`, rolldown) |
 
-So this repo's DevTools loads, type-checks, and production-builds cleanly on a
-consumer running **either** Nitro engine.
+So this repo's DevTools loads, type-checks, production-builds, **and dev-mode
+dogfoods** cleanly on a consumer running **either** Nitro engine (`play:dev` on
+both serves the app + the embedded DevTools client with no errors).
 
-These playgrounds are **build + typecheck only** (no `dev` script) — `nuxi dev`
-is not viable in either sealed workspace, and the failure is **not** a DevTools
-bug: it reproduces with `@nuxt/devtools` removed from the `modules` array.
+### Dev mode: why these are root-workspace members, not sealed
 
-| Playground | `nuxi dev` (base app, DevTools removed) | Cause |
+The first cut sealed each playground in its own workspace and pulled
+`@nuxt/devtools` via `link:../../packages/devtools`. Build + typecheck passed,
+but **`nuxi dev` failed** — Nuxt 4 OOM'd the render worker (`JS heap out of
+memory`), Nuxt 5 dropped the render socket (`socket hang up`). The cause is
+**not** a DevTools bug (both base apps render fine with DevTools disabled): a
+`link:`ed DevTools resolves its dependency tree from the **root**
+`node_modules`, while the sealed app has its **own** copies of Vite /
+`@vitejs/devtools`. With two instances, the app's dev SSR ends up transforming
+DevTools' entire dependency tree through a second Vite and the render worker
+blows its heap.
+
+The fix is to make the playgrounds **members of the root pnpm workspace** (they
+were added to the top-level `pnpm-workspace.yaml`; `modules/` stays sealed).
+Then `@nuxt/devtools` resolves — via the root `overrides: '@nuxt/devtools':
+workspace:*` — out of the single root `node_modules`, so the app and DevTools
+share one Vite / `@vitejs/devtools` instance, exactly like the root
+`playgrounds/`. With that, `play:dev` works on both:
+
+| Playground | `play:dev` app | embedded DevTools client |
 | --- | --- | --- |
-| `nuxt4/` | first render hangs, worker OOM (`JS heap out of memory`) | `@nuxt/devtools`'s `vite@^8.1.5` peer + pnpm dedup pull Vite 8.1 into Nuxt 4.5.x, whose dev SSR module runner targets an older Vite |
-| `nuxt5/` | render socket dropped (`socket hang up`) / worker OOM | the sealed workspace lacks the dependency-dedup `overrides` the root `pnpm-workspace.yaml` uses to make the nuxt-nightly/Vite-8.1 dev runtime work |
-
-Both symptoms match what surfaced when running `nuxi dev` directly. The
-production `nuxi build` path doesn't use the Vite dev module runner, so it is
-unaffected — hence build + typecheck are the reliable per-major signal here.
-Interactive dev-mode DevTools dogfooding uses the root-workspace `playgrounds/`
-(`playgrounds/empty`, `playgrounds/v4`), which share the working resolution.
+| `nuxt4/` (Nuxt 4.5.1, Nitro v2) | 200 | 200 |
+| `nuxt5/` (Nuxt 5 nightly, Nitro v3) | 200 | 200 |
 
 ### How the types resolve when only one of `nitro`/`nitropack` exists
 

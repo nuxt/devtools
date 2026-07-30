@@ -3,14 +3,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxi build",
-    "typecheck": "nuxi typecheck"
+    "play:dev": "nuxi dev --host 0.0.0.0",
+    "play:build": "nuxi build",
+    "play:typecheck": "nuxi typecheck"
   },
   "devDependencies": {
-    "@nuxt/devtools": "link:../../packages/devtools",
-    "@types/node": "^26.1.1",
-    "nuxt": "npm:nuxt-nightly@5x",
-    "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.8"
+    "@types/node": "catalog:types",
+    "nuxt": "catalog:buildtools"
   }
 }

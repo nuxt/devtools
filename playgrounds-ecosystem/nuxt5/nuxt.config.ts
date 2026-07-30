@@ -1,15 +1,16 @@
-// Production compatibility playground — Nuxt 5 (nightly).
+// Per-major DevTools dogfooding playground — Nuxt 5 (nightly).
 //
-// Verified with `nuxi build` (production) + `nuxi typecheck` — NOT `nuxi dev`;
-// see `../README.md` ("Why build + typecheck, not dev"). `@nuxt/devtools`
-// links this repo's own build (`link:../../packages/devtools`) and no-ops in
-// production, so the build is a "does the module resolve + the app build on
-// this Nuxt major" smoke test.
+// A member of the ROOT pnpm workspace (see the repo `pnpm-workspace.yaml`), so
+// `@nuxt/devtools` resolves to this repo's own build (via the root
+// `overrides: '@nuxt/devtools': workspace:*`) sharing the single root
+// node_modules — the app and DevTools use one Vite / `@vitejs/devtools`
+// instance, which `nuxi dev` needs. (Sealing it in its own workspace + a
+// `link:` made the app's dev SSR transform DevTools' whole dep tree twice and
+// OOM the render worker.)
 //
-// Nuxt 5 ships the next-gen Nitro v3 engine (the `nitro` package), so this
-// workspace has **only** `nitro` installed — `nitropack` (Nitro v2) is absent.
-// Together with `../nuxt4` (Nuxt 4 → only `nitropack`) it covers a consumer
-// with just one of the two optional-peer Nitro engines.
+// Nuxt 5 ships the next-gen Nitro v3 engine (`nitro`). Run:
+//   pnpm -C playgrounds-ecosystem/nuxt5 run play:dev   # dogfood DevTools
+//   pnpm -C playgrounds-ecosystem/nuxt5 run play:build # + run play:typecheck
 export default defineNuxtConfig({
   modules: [
     '@nuxt/devtools',

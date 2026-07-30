@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Nuxt 5 ecosystem playground</h1>
-    <p>Nitro v3 (package <code>nitro</code>) — <code>nitropack</code> is absent.</p>
+    <h1>Nuxt 5 DevTools playground</h1>
+    <p>Runs on Nitro v3 (the <code>nitro</code> package). Toggle DevTools with Shift+Alt+D.</p>
   </div>
 </template>

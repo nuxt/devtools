@@ -26,6 +26,14 @@ packages:
   - packages/**
   - playgrounds/**
   - '!playgrounds/**/.output/**'
+  # Per-major DevTools dogfooding playgrounds. Members of the root workspace
+  # (not sealed) so `@nuxt/devtools` + its deps resolve from the single root
+  # node_modules — dev mode needs the app and DevTools to share one Vite /
+  # `@vitejs/devtools` instance. `playgrounds-ecosystem/modules` stays sealed
+  # (its own lockfile) and is deliberately NOT included here.
+  - playgrounds-ecosystem/nuxt4
+  - playgrounds-ecosystem/nuxt5
+  - '!playgrounds-ecosystem/**/.output/**'
 
 allowBuilds:
   '@parcel/watcher': true

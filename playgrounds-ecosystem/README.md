@@ -9,59 +9,46 @@ one combined app — against the **local** `@nuxt/devtools` (this repo's
 | Directory | What it is |
 | --- | --- |
 | [`modules/`](./modules/) | Multi-module dogfooding app (`nuxt-og-image` + `@nuxt/scripts` + `@nuxt/fonts`) on **Nuxt 4**. See [`REPORTS.md`](./REPORTS.md). |
-| [`nuxt4/`](./nuxt4/) | Minimal production playground on **Nuxt 4** (stable → Nitro v2 / `nitropack`). |
-| [`nuxt5/`](./nuxt5/) | Minimal production playground on **Nuxt 5** (nightly → Nitro v3 / `nitro`). |
+| [`nuxt4/`](./nuxt4/) | DevTools dogfooding playground on **Nuxt 4** (stable → Nitro v2 / `nitropack`). |
+| [`nuxt5/`](./nuxt5/) | DevTools dogfooding playground on **Nuxt 5** (nightly → Nitro v3 / `nitro`). |
 | [`scripts/`](./scripts/) | `check-nitro-type-resolution.mjs` — the single-engine type-resolution check (see below). |
 
-### `nuxt4/` + `nuxt5/` — per-major production playgrounds
+### `nuxt4/` + `nuxt5/` — per-major DevTools playgrounds
 
-Both link the local `@nuxt/devtools` (`link:../../packages/devtools`) into a
-minimal app and are verified with a production **`nuxi build`** and
-**`nuxi typecheck`**, proving this repo's DevTools installs, loads, builds, and
-type-checks against a consumer on each Nuxt major — which matters because
-Nuxt 4 ships **Nitro v2** (`nitropack`) and Nuxt 5 ships **Nitro v3** (`nitro`),
-and `@nuxt/devtools` / `@nuxt/devtools-kit` now declare both as *optional* peer
-dependencies.
+Minimal apps that dogfood this repo's own `@nuxt/devtools` on each Nuxt major —
+which matters because Nuxt 4 ships **Nitro v2** (`nitropack`) and Nuxt 5 ships
+**Nitro v3** (`nitro`), and `@nuxt/devtools` / `@nuxt/devtools-kit` now declare
+both as *optional* peer dependencies. They're exercised in **`dev`** (the mode
+DevTools actually runs in), plus `build` + `typecheck`.
 
-Each is a sealed workspace (own lockfile / `pnpm-workspace.yaml`, like
-`modules/`), so a plain `pnpm install` at the repo root never touches them.
-Run them the same way (root installed + stubbed first):
+Unlike [`modules/`](./modules/), these are **members of the root pnpm
+workspace** (added to the repo's top-level `pnpm-workspace.yaml`), not sealed
+workspaces. That's deliberate and load-bearing for `dev`: `@nuxt/devtools`
+resolves to this repo's own build (via the root
+`overrides: '@nuxt/devtools': workspace:*`) out of the **single** root
+`node_modules`, so the app and DevTools share one Vite / `@vitejs/devtools`
+instance. A sealed workspace + `link:` gives each its own copy — the app's dev
+SSR then has to transform DevTools' whole dependency tree through a second Vite
+and the render worker OOMs (`JS heap out of memory`) or drops the socket
+(`socket hang up`). Being root members, a plain `pnpm install` at the repo root
+sets them up.
 
 ```sh
-pnpm install ; pnpm run prepare               # repo root
-pnpm -C playgrounds-ecosystem/nuxt5 install
-pnpm -C playgrounds-ecosystem/nuxt5 run typecheck
-pnpm -C playgrounds-ecosystem/nuxt5 run build
+pnpm install ; pnpm run build                          # repo root (build = real DevTools client)
+pnpm -C playgrounds-ecosystem/nuxt5 run play:dev       # dogfood DevTools (Nuxt 5 / Nitro v3)
+pnpm -C playgrounds-ecosystem/nuxt4 run play:dev       # dogfood DevTools (Nuxt 4 / Nitro v2)
+pnpm -C playgrounds-ecosystem/nuxt5 run play:build     # + run play:typecheck
 ```
 
-#### Why build + typecheck, not `dev`
-
-These sealed workspaces are intentionally build/typecheck-only — they don't
-ship a `dev` script, because `nuxi dev` isn't viable here and the failure is
-**not** a DevTools bug (it reproduces with `@nuxt/devtools` removed from the
-`modules` array):
-
-- **Nuxt 4** — `@nuxt/devtools`'s `vite@^8.1.5` peer (plus pnpm dedup in the
-  sealed workspace) pulls **Vite 8.1** into the Nuxt 4.5.x app, whose dev SSR
-  module runner targets an older Vite. The first render hangs and the dev
-  worker eventually OOMs (`JS heap out of memory`). The production build, which
-  doesn't use the Vite dev module runner, is unaffected.
-- **Nuxt 5** — the sealed workspace resolves its own nuxt-nightly dev runtime
-  without the dependency-dedup `overrides` the root `pnpm-workspace.yaml`
-  relies on, so its dev SSR worker drops the render socket (`socket hang up`) /
-  OOMs. The root `playgrounds/` (which share those overrides) run `dev` fine.
-
-For interactive **dev-mode DevTools dogfooding**, use the root-workspace
-playgrounds instead — `pnpm -C playgrounds/empty dev` (Nuxt 5) or
-`pnpm -C playgrounds/v4 dev` — which share the monorepo's working dependency
-resolution. This directory's job is the per-major *production* compatibility
-signal.
+Open the app, then toggle DevTools (Shift+Alt+D) — the embedded client is
+served from the built `packages/devtools/dist/client`, so run `pnpm run build`
+at the root first (a bare `pnpm run prepare`/stub has no client to serve).
 
 ### `scripts/check-nitro-type-resolution.mjs` — only-one-engine type check
 
-A `link:`ed local `@nuxt/devtools` makes Nuxt inject tsconfig `paths` for
-**both** Nitro engines, so the playgrounds above can't isolate the
-one-engine-only scenario a published-npm consumer actually sees. This script
+`@nuxt/devtools` resolving from the root workspace means both Nitro engines are
+present there, so the playgrounds can't isolate the one-engine-only scenario a
+published-npm consumer actually sees. This script
 does, in throwaway temp dirs: it reproduces the shipped `.d.ts` detection with
 only one engine symlinked in and asserts that
 

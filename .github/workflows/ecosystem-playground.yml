@@ -29,24 +29,27 @@ jobs:
       # (packages/devtools/src/module-main.ts), so a `build` here can't
       # exercise anything devtools-specific anyway — this is purely a "does
       # the module combo still build" signal, not a full `pnpm build`.
+      # `nuxt4/` + `nuxt5/` are members of the ROOT workspace, so this installs
+      # them too (and stubs `packages/devtools`). `modules/` is sealed — see
+      # its separate install below.
       - run: pnpm install
-      - run: pnpm run prepare
+      - run: pnpm run build
       # How the optional-peer Nitro types resolve when a consumer has only one
       # of `nitro` (Nitro v3) / `nitropack` (Nitro v2) — fast, self-contained.
       - name: Check nitro/nitropack single-engine type resolution
         run: node playgrounds-ecosystem/scripts/check-nitro-type-resolution.mjs
+      # Per-major DevTools playgrounds: prove @nuxt/devtools type-checks and
+      # builds on a Nuxt 4 (Nitro v2) and a Nuxt 5 (Nitro v3) consumer. (Dev
+      # mode is verified manually — see REPORTS.md — since CI can't drive it.)
+      - name: Nuxt 4 playground (Nitro v2)
+        run: |
+          pnpm -C playgrounds-ecosystem/nuxt4 run play:typecheck
+          pnpm -C playgrounds-ecosystem/nuxt4 run play:build
+      - name: Nuxt 5 playground (Nitro v3)
+        run: |
+          pnpm -C playgrounds-ecosystem/nuxt5 run play:typecheck
+          pnpm -C playgrounds-ecosystem/nuxt5 run play:build
+      # `modules/` stays a sealed workspace (own lockfile).
       - run: pnpm -C playgrounds-ecosystem/modules install
       - name: Build the module combo (Nuxt 4)
         run: pnpm -C playgrounds-ecosystem/modules run build
-      # Per-major production playgrounds: prove @nuxt/devtools builds +
-      # type-checks on a Nuxt 4 (Nitro v2) and a Nuxt 5 (Nitro v3) consumer.
-      - name: Nuxt 4 playground (Nitro v2)
-        run: |
-          pnpm -C playgrounds-ecosystem/nuxt4 install
-          pnpm -C playgrounds-ecosystem/nuxt4 run typecheck
-          pnpm -C playgrounds-ecosystem/nuxt4 run build
-      - name: Nuxt 5 playground (Nitro v3)
-        run: |
-          pnpm -C playgrounds-ecosystem/nuxt5 install
-          pnpm -C playgrounds-ecosystem/nuxt5 run typecheck
-          pnpm -C playgrounds-ecosystem/nuxt5 run build
