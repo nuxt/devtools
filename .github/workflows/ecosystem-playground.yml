@@ -1,8 +1,12 @@
 name: ecosystem-playground
 
-# Manual-trigger only smoke check for playgrounds-ecosystem/modules/ — NOT
-# part of the default push/pull_request CI path. See
-# playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
+# Manual-trigger only checks for playgrounds-ecosystem/modules/ — NOT part of
+# the default push/pull_request CI path. Two independent tasks:
+#   * `smoke`          — cheap "does any of this still build" signal: the
+#                        nuxt4/nuxt5 playgrounds and the `nuxt build` combo.
+#   * `devtools-smoke` — Playwright suite that drives the real embedded DevTools
+#                        client and asserts each module's tab renders.
+# See playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
 # context (nuxt/devtools#1022).
 on:
   workflow_dispatch:
@@ -23,15 +27,15 @@ jobs:
       - run: corepack enable
       # playgrounds-ecosystem/modules/ links @nuxt/devtools via
       # `link:../../packages/devtools` (this repo's own build, not the npm
-      # registry) — so the root workspace needs to be installed + stubbed
-      # first for that path to resolve. `prepare` (stub build) is enough:
-      # Nuxt DevTools no-ops entirely outside `dev` mode
-      # (packages/devtools/src/module-main.ts), so a `build` here can't
-      # exercise anything devtools-specific anyway — this is purely a "does
-      # the module combo still build" signal, not a full `pnpm build`.
-      # Build the monorepo, then pack @nuxt/devtools + @nuxt/devtools-kit into
-      # playgrounds-ecosystem/.tarballs/ — the artifacts the sealed playgrounds
-      # install. (`pnpm run build` also stubs/builds packages/devtools.)
+      # registry), so the root workspace has to be installed and built first
+      # for that path to resolve. The build is needed anyway: it produces the
+      # dist/ that pack-local.mjs turns into the tarballs the sealed nuxt4/
+      # nuxt5 playgrounds install from.
+      #
+      # This job never sets NUXT_DEVTOOLS_LOCAL — Nuxt DevTools no-ops entirely
+      # outside `dev` mode (packages/devtools/src/module-main.ts), so build-mode
+      # can't exercise anything devtools-specific. That's what `devtools-smoke`
+      # below is for; this is purely a "does any of it still build" signal.
       - run: pnpm install
       - run: pnpm run build
       - name: Pack local DevTools tarballs
@@ -58,3 +62,43 @@ jobs:
       - run: pnpm -C playgrounds-ecosystem/modules install
       - name: Build the module combo (Nuxt 4)
         run: pnpm -C playgrounds-ecosystem/modules run build
+
+  # Separate, heavier task: actually drive the embedded Nuxt DevTools client and
+  # assert each ecosystem module's custom tab renders (see
+  # playgrounds-ecosystem/tests/). Kept apart from the `smoke` build job above
+  # because it needs a Playwright browser and a running dev server on top of the
+  # static devtools client — and apart from the default e2e workflow because
+  # this sealed, opt-in workspace isn't in the normal CI path.
+  devtools-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      # The smoke test drives the real embedded DevTools client, so it needs the
+      # full static client at packages/devtools/dist/client.
+      - run: pnpm build
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm -C playgrounds-ecosystem/modules install
+      - run: pnpm run test:e2e:ecosystem
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: ecosystem-playwright-report
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
