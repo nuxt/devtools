@@ -2,8 +2,8 @@ name: ecosystem-playground
 
 # Manual-trigger only checks for playgrounds-ecosystem/modules/ — NOT part of
 # the default push/pull_request CI path. Two independent tasks:
-#   * `smoke`          — cheap "does the module combo still build" signal
-#                        (stub devtools, `nuxt build`).
+#   * `smoke`          — cheap "does any of this still build" signal: the
+#                        nuxt4/nuxt5 playgrounds and the `nuxt build` combo.
 #   * `devtools-smoke` — Playwright suite that drives the real embedded DevTools
 #                        client and asserts each module's tab renders.
 # See playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
@@ -27,24 +27,48 @@ jobs:
       - run: corepack enable
       # playgrounds-ecosystem/modules/ links @nuxt/devtools via
       # `link:../../packages/devtools` (this repo's own build, not the npm
-      # registry) — so the root workspace needs to be installed + stubbed
-      # first for that path to resolve. `prepare` (stub build) is enough:
-      # Nuxt DevTools no-ops entirely outside `dev` mode
-      # (packages/devtools/src/module-main.ts), so a `build` here can't
-      # exercise anything devtools-specific anyway — this is purely a "does
-      # the module combo still build" signal, not a full `pnpm build`.
+      # registry), so the root workspace has to be installed and built first
+      # for that path to resolve. The build is needed anyway: it produces the
+      # dist/ that pack-local.mjs turns into the tarballs the sealed nuxt4/
+      # nuxt5 playgrounds install from.
+      #
+      # This job never sets NUXT_DEVTOOLS_LOCAL — Nuxt DevTools no-ops entirely
+      # outside `dev` mode (packages/devtools/src/module-main.ts), so build-mode
+      # can't exercise anything devtools-specific. That's what `devtools-smoke`
+      # below is for; this is purely a "does any of it still build" signal.
       - run: pnpm install
-      - run: pnpm run prepare
+      - run: pnpm run build
+      - name: Pack local DevTools tarballs
+        run: node playgrounds-ecosystem/scripts/pack-local.mjs --no-build
+      # How the optional-peer Nitro types resolve when a consumer has only one
+      # of `nitro` (Nitro v3) / `nitropack` (Nitro v2) — fast, self-contained.
+      - name: Check nitro/nitropack single-engine type resolution
+        run: node playgrounds-ecosystem/scripts/check-nitro-type-resolution.mjs
+      # Per-major DevTools playgrounds (sealed, install DevTools from the
+      # tarballs above): prove @nuxt/devtools type-checks and builds on a Nuxt 4
+      # (Nitro v2) and a Nuxt 5 (Nitro v3) consumer. Dev mode is verified
+      # manually — see REPORTS.md — since CI can't drive a dev server.
+      - name: Nuxt 4 playground (Nitro v2)
+        run: |
+          pnpm -C playgrounds-ecosystem/nuxt4 install --no-frozen-lockfile
+          pnpm -C playgrounds-ecosystem/nuxt4 run play:typecheck
+          pnpm -C playgrounds-ecosystem/nuxt4 run play:build
+      - name: Nuxt 5 playground (Nitro v3)
+        run: |
+          pnpm -C playgrounds-ecosystem/nuxt5 install --no-frozen-lockfile
+          pnpm -C playgrounds-ecosystem/nuxt5 run play:typecheck
+          pnpm -C playgrounds-ecosystem/nuxt5 run play:build
+      # `modules/` stays a sealed workspace (own lockfile).
       - run: pnpm -C playgrounds-ecosystem/modules install
-      - name: Build the module combo
+      - name: Build the module combo (Nuxt 4)
         run: pnpm -C playgrounds-ecosystem/modules run build
 
   # Separate, heavier task: actually drive the embedded Nuxt DevTools client and
   # assert each ecosystem module's custom tab renders (see
   # playgrounds-ecosystem/tests/). Kept apart from the `smoke` build job above
-  # because it needs the FULL static devtools client (`pnpm build`, not the stub
-  # `prepare`) plus a Playwright browser — and apart from the default e2e
-  # workflow because this sealed, opt-in workspace isn't in the normal CI path.
+  # because it needs a Playwright browser and a running dev server on top of the
+  # static devtools client — and apart from the default e2e workflow because
+  # this sealed, opt-in workspace isn't in the normal CI path.
   devtools-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -60,8 +84,8 @@ jobs:
       - run: npm install -g corepack@latest
       - run: corepack enable
       - run: pnpm install
-      # The smoke test drives the real embedded DevTools client, so — unlike the
-      # `smoke` job's stub `prepare` — it needs the full static client build.
+      # The smoke test drives the real embedded DevTools client, so it needs the
+      # full static client at packages/devtools/dist/client.
       - run: pnpm build
       - name: Cache Playwright browsers
         uses: actions/cache@v5

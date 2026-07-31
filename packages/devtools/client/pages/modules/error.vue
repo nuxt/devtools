@@ -18,7 +18,9 @@ const HTML_TAG_RE = /<.*?>/g
 
 const client = useClient()
 const error = computed(() => {
-  const err = client.value?.nuxt?.payload?.error as {
+  // `NuxtError`'s shape no longer overlaps enough with this loose display
+  // type for a direct cast; go through `unknown` as TS suggests.
+  const err = client.value?.nuxt?.payload?.error as unknown as {
     url?: string
     statusCode?: number
     statusMessage?: string

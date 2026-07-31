@@ -1,11 +1,10 @@
-import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
+import type { AnyNitro } from '../utils/nitro-compat'
 import { debounce } from 'perfect-debounce'
-import { watchStorageMount } from './storage-watch'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let nitro: Nitro
-  let unwatchStorage: (() => Promise<void> | void) | undefined
+  let nitro: AnyNitro | undefined
+  let unhookDevReload: (() => void) | undefined
 
   let cache: ServerRouteInfo[] | null = null
 
@@ -14,26 +13,24 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     refresh('getServerRoutes')
   }, 500)
 
-  nuxt.hook('nitro:init', (_) => {
-    nitro = _
+  nuxt.hook('nitro:init', (_nitro: AnyNitro) => {
+    nitro = _nitro
     cache = null
     refresh('getServerRoutes')
+
+    // Re-scan whenever Nitro reloads (new/changed server route files). This
+    // used to watch Nitro's internal `src` storage mount for finer-grained
+    // `src:api:`/`src:routes:` key events, but Nitro v3 dropped the `.storage`
+    // runtime property that made that mount reachable. `dev:reload` exists on
+    // both Nitro v2 and v3 and fires on any server-dir change, which is a
+    // coarser signal but debounced re-scans are cheap either way.
+    unhookDevReload?.()
+    unhookDevReload = _nitro.hooks.hook('dev:reload', () => refreshDebounced())
   })
 
-  nuxt.hook('ready', async () => {
-    if (!nitro)
-      return
-
-    await unwatchStorage?.()
-    unwatchStorage = await watchStorageMount(nitro.storage, 'src', (_event, key) => {
-      if (key.startsWith('src:api:') || key.startsWith('src:routes:'))
-        refreshDebounced()
-    })
-  })
-
-  nuxt.hook('close', async () => {
-    await unwatchStorage?.()
-    unwatchStorage = undefined
+  nuxt.hook('close', () => {
+    unhookDevReload?.()
+    unhookDevReload = undefined
   })
 
   function scan() {

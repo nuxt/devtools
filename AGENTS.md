@@ -2,6 +2,13 @@
 
 Guidance for contributors and AI agents working in this repo.
 
+## High-Level Instructions
+
+- Right now we are working on Nuxt DevTools v4, which is built on top of [Vite DevTools Kit](https://github.com/vitejs/devtools) and [Devframe](https://github.com/devframes/devframe)
+- Nuxt DevTools v4 will be default in Nuxt 5, while we it should still work with Nuxt 4.
+- There are quite some Nuxt Module built on top of Nuxt DevTools v3's legacy API, we should make sure those modules are still working with Nuxt DevTools v4 (backward compatibility) and provide a migration guide for module authors to migrate to the new vite-devtools-based API.
+- Nuxt 5 introduce Nitro v3 (`nitro@3`) while Nuxt 4 is still using Nitro v2 (`nitropack@2`). We should make sure that Nuxt DevTools v4 works with both Nitro v2 and v3, without introduce hard dependency on either of them.
+
 ## Packages
 
 - `packages/devtools` — the main Nuxt module. Its `client/` directory is a
@@ -10,19 +17,6 @@ Guidance for contributors and AI agents working in this repo.
   browser client.
 - `packages/devtools-kit` — the module-author API, built with `unbuild`.
 - `packages/devtools-ui-kit` — a Nuxt UI component module used by the client.
-
-## Setup & build order
-
-```
-pnpm install
-pnpm prepare   # or: pnpm build
-```
-
-Run `pnpm prepare` (or `pnpm build`) **before** `pnpm typecheck`. The root
-`tsconfig.json` extends a generated file,
-`packages/devtools/client/.nuxt/tsconfig.json`, which only exists after Nuxt
-has prepared the client app. On a fresh clone, `pnpm typecheck` fails until
-this has run.
 
 ## Everyday commands
 

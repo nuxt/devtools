@@ -44,7 +44,17 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
+    "nitro": "^3.0.0-0",
+    "nitropack": "^2.0.0",
     "vite": ">=6.0"
+  },
+  "peerDependenciesMeta": {
+    "nitro": {
+      "optional": true
+    },
+    "nitropack": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@nuxt/kit": "catalog:prod",
@@ -56,6 +66,8 @@
     "birpc": "catalog:frontend",
     "error-stack-parser-es": "catalog:frontend",
     "hookable": "catalog:frontend",
+    "nitro": "catalog:buildtools",
+    "nitropack": "catalog:buildtools",
     "unbuild": "catalog:buildtools",
     "unimport": "catalog:types",
     "vue-router": "catalog:frontend"

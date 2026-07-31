@@ -42,10 +42,23 @@ function getModuleSubpathFromPath(path: string) {
   return match
 }
 
+/**
+ * The `nuxt` package name itself, as it appears in `node_modules` / package
+ * names. Aliased installs (`"nuxt": "npm:nuxt-nightly@5x"`, the older
+ * `nuxt-edge` pre-release channel, ...) physically install under a different
+ * package name, so anything that special-cases "is this Nuxt's own code"
+ * needs to check all of them, not just the literal `'nuxt'` string.
+ */
+export const NUXT_PACKAGE_NAMES = new Set(['nuxt', 'nuxt-nightly', 'nuxt-edge'])
+
+export function isNuxtPackageName(name: string | undefined) {
+  return !!name && NUXT_PACKAGE_NAMES.has(name)
+}
+
 export function isBuiltInModule(name: string | undefined) {
   if (!name)
     return
-  return ['nuxt', '#app', '#head', 'vue'].includes(name)
+  return isNuxtPackageName(name) || ['#app', '#head', 'vue'].includes(name)
 }
 
 export function parseReadablePath(path: string, root: string) {

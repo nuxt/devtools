@@ -1,10 +1,10 @@
-import type { Nitro, StorageMounts } from 'nitropack'
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageValue } from 'unstorage'
 import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { AnyNitro, AnyStorageMounts } from './nitro-compat'
 import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
@@ -47,7 +47,7 @@ export interface ServerFunctions {
   revealTerminal: (id: string) => Promise<boolean>
 
   // Storage
-  getStorageMounts: () => Promise<StorageMounts>
+  getStorageMounts: () => Promise<AnyStorageMounts>
   getStorageKeys: (base?: string) => Promise<string[]>
   getStorageItem: (key: string) => Promise<StorageValue>
   setStorageItem: (key: string, value: StorageValue) => Promise<void>
@@ -106,7 +106,7 @@ export interface ClientFunctions {
  */
 export interface NuxtServerData {
   nuxt: NuxtOptions
-  nitro?: Nitro['options']
+  nitro?: AnyNitro['options']
   vite: {
     server?: ResolvedConfig
     client?: ResolvedConfig

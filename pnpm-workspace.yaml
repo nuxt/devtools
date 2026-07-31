@@ -39,15 +39,14 @@ allowBuilds:
 
 refs:
   devframe: &devframe ^0.7.14
-  nuxt: &nuxt ^4.5.0
+  # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
+  # `vite@^8.1.5`, so this and the `vite` ref below move together.
+  nuxt: &nuxt npm:nuxt-nightly@5x
+  nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5x
+  nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5x
   shiki: &shiki ^4.3.1
   unocss: &unocss ^66.7.5
-  # `@vitejs/devtools@0.4.2` still fails under Vite 8.1's reworked
-  # WebSocket-upgrade handling: its crossws-based RPC socket ends up calling
-  # `server.handleUpgrade()` twice on the same SSR socket, killing the
-  # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
-  # `@vitejs/devtools` ships working 8.1 support.
-  vite: &vite ~8.0.16
+  vite: &vite ^8.1.5
   vite-devtools: &vite-devtools ^0.4.9
   vue: &vue ^3.5.40
   vue-devtools: &vue-devtools ^8.2.1
@@ -73,6 +72,14 @@ overrides:
   unimport: ^6.3.1
   vite: *vite
   vue: *vue
+  # `@nuxt/module-builder@1.0.3` bundles `mkdist@2.4.1`, whose own
+  # `vue-sfc-transformer` dependency is pinned to `^0.1.17` — but
+  # `resolutionMode: highest` otherwise hoists mkdist's copy up to
+  # `@nuxt/module-builder`'s own newer `^0.2.3` want, and mkdist's `.vue`
+  # transform silently breaks under that mismatch (it wrote compiled output
+  # into `packages/devtools/src/runtime/**` instead of `dist/`, clobbering
+  # `auth/index.html` in the process). Pin to what mkdist itself needs.
+  vue-sfc-transformer: ^0.1.17
   vue-tsc: ^3.3.8
 catalogs:
   buildtools:
@@ -90,6 +97,14 @@ catalogs:
     '@vueuse/nuxt': *vueuse
     exsolve: ^1.1.0
     lightningcss: ^1.33.0
+    # Nuxt 5 nightly's Nitro layer (`@nuxt/nitro-server-nightly`) builds on
+    # the next-gen Nitro v3 engine (package `nitro`, not `nitropack`).
+    # `@nuxt/devtools`/`@nuxt/devtools-kit` declare both as *optional* peer
+    # dependencies (a consumer's Nuxt has exactly one or the other), but
+    # still pin a devDependency here too so this monorepo's own build and
+    # typecheck resolve a single, consistent version of each rather than
+    # whatever `autoInstallPeers` would otherwise pick independently.
+    nitro: ^3.0.260610-beta
     nitropack: ^2.13.4
     nuxt: *nuxt
     shiki-codegen: *shiki
@@ -174,7 +189,7 @@ catalogs:
   prod:
     '@devframes/plugin-code-server': *devframe
     '@devframes/plugin-data-inspector': *devframe
-    '@nuxt/kit': *nuxt
+    '@nuxt/kit': *nuxt-kit
     '@vue/devtools-kit': *vue-devtools
     consola: ^3.4.2
     defu: ^6.1.7
@@ -195,7 +210,7 @@ catalogs:
     vite-plugin-vue-tracer: ^1.4.0
     ws: ^8.21.1
   types:
-    '@nuxt/schema': *nuxt
+    '@nuxt/schema': *nuxt-schema
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.1.1

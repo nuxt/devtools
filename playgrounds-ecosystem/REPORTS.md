@@ -101,6 +101,77 @@ driving the devtools client with Playwright (the new opt-in suite in
   auto-signing-secret warning, and the `NDT_DEP_0003` deprecation diagnostics —
   now also fired by more of these modules' `extendServerRpc`/legacy kit usage).
 
+## Nuxt 4 vs Nuxt 5 (per-major playgrounds + Nitro type resolution)
+
+Added alongside the `@nuxt/devtools` optional-peer-dependency change for
+`nitro` (Nitro v3, Nuxt 5) / `nitropack` (Nitro v2, Nuxt 4). Two minimal
+playgrounds — [`../nuxt4/`](./nuxt4) and [`../nuxt5/`](./nuxt5) — that dogfood
+the local `@nuxt/devtools` and are checked with `nuxi dev`, a production
+`nuxi build`, and `nuxi typecheck`.
+
+| Playground | Nuxt | App's runtime Nitro engine | `nuxi typecheck` | `nuxi build` |
+| --- | --- | --- | --- | --- |
+| `nuxt4/` | 4.5.1 (stable) | Nitro v2 (`nitropack`) | pass | pass (`node-server`) |
+| `nuxt5/` | 5.0.0 nightly | Nitro v3 (`nitro`) | pass | pass (`node-server`, rolldown) |
+
+So this repo's DevTools loads, type-checks, production-builds, **and dev-mode
+dogfoods** cleanly on a consumer running **either** Nitro engine (`play:dev` on
+both serves the app + the embedded DevTools client with no errors).
+
+### Dev mode: why these install DevTools from packed tarballs
+
+The first cut sealed each playground in its own workspace and pulled
+`@nuxt/devtools` via `link:../../packages/devtools`. Build + typecheck passed,
+but **`nuxi dev` failed** — Nuxt 4 OOM'd the render worker (`JS heap out of
+memory`), Nuxt 5 dropped the render socket (`socket hang up`). The cause is
+**not** a DevTools bug (both base apps render fine with DevTools disabled): a
+`link:`ed DevTools resolves its dependency tree from the **repo root**
+`node_modules`, while the sealed app has its **own** copies of Vite /
+`@vitejs/devtools`. With two instances, the app's dev SSR ends up transforming
+DevTools' entire dependency tree through a second Vite and the render worker
+blows its heap.
+
+The fix keeps the playgrounds **sealed (own lockfiles)** but installs DevTools
+from **packed tarballs** instead of a `link:` — the same technique as
+[vitejs/devtools' production playground](https://github.com/vitejs/devtools/blob/main/playgrounds/production/README.md).
+[`scripts/pack-local.mjs`](./scripts/pack-local.mjs) `pnpm pack`s
+`@nuxt/devtools` + `@nuxt/devtools-kit` (which rewrites their `workspace:*` /
+`catalog:*` protocols to concrete versions), and each playground's
+`pnpm-workspace.yaml` points both at the tarballs via `overrides`. Everything
+then installs into the playground's single `node_modules`, so the app and
+DevTools share one Vite / `@vitejs/devtools` instance. With that, `play:dev`
+works on both:
+
+| Playground | `play:dev` app | embedded DevTools client |
+| --- | --- | --- |
+| `nuxt4/` (Nuxt 4.5.1, Nitro v2) | 200 | 200 |
+| `nuxt5/` (Nuxt 5 nightly, Nitro v3) | 200 | 200 |
+
+### How the types resolve when only one of `nitro`/`nitropack` exists
+
+`@nuxt/devtools` and `@nuxt/devtools-kit` reference Nitro types through a small
+detection layer (`packages/*/src/**/nitro-compat.ts`) instead of importing one
+engine directly. A missing optional peer resolves its `import type` to `any`; a
+naive `NitroV2 | NitroV3` union would then collapse the whole thing to `any`
+(`X | any` is `any`), silently dropping type-safety on the engine that *is*
+installed. The detection probes each import for an impossible `'___INVALID'`
+key (which only the `any` fallback matches) and resolves to just the engine
+that actually loaded — the same trick `@nuxt/kit` uses internally.
+
+The playgrounds themselves can't prove this at the type level: a `link:`ed
+local `@nuxt/devtools` makes Nuxt inject tsconfig `paths` for **both** engines,
+so both always resolve there. The published-npm consumer scenario (only one
+engine) is verified instead by
+[`scripts/check-nitro-type-resolution.mjs`](./scripts/check-nitro-type-resolution.mjs),
+which reproduces the shipped `.d.ts` detection in throwaway temp dirs with a
+single engine symlinked in. Result:
+
+| Installed | `AnyNitro` resolves to | Result |
+| --- | --- | --- |
+| only `nitro` (v3) | concrete Nitro **v3** type | ✓ not `any` |
+| only `nitropack` (v2) | concrete Nitro **v2** type | ✓ not `any` |
+| control: naive `NitroV2 \| NitroV3`, v3 absent | `any` | ✓ confirms detection is needed |
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |

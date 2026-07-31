@@ -1,0 +1,24 @@
+# SEALED workspace with its own lockfile — this `pnpm-workspace.yaml` stops a
+# `pnpm install` here from being absorbed into the repo's root workspace.
+packages:
+  - .
+
+strictPeerDependencies: false
+autoInstallPeers: true
+shamefullyHoist: true
+verifyDepsBeforeRun: false
+
+# Install this repo's own DevTools from the tarballs built by
+# `../scripts/pack-local.mjs` (run via `pnpm run setup`). `pnpm pack` rewrote
+# `@nuxt/devtools`'s `@nuxt/devtools-kit` `workspace:*` dep into a concrete
+# version, so redirect that inter-package dependency to its tarball too.
+# Everything else (nuxt, vite, @vitejs/devtools, ...) resolves from the registry.
+overrides:
+  '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz
+  '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz
+
+allowBuilds:
+  '@parcel/watcher': true
+  better-sqlite3: true
+  esbuild: true
+  vue-demi: true
