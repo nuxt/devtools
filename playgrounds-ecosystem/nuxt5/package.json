@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "setup": "node ../scripts/pack-local.mjs && pnpm install --no-frozen-lockfile",
-    "dev": "nuxi dev --host 0.0.0.0",
+    "dev": "nuxi dev",
     "build": "nuxi build",
     "typecheck": "nuxi typecheck"
   },
