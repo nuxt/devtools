@@ -6,6 +6,7 @@ packages:
 strictPeerDependencies: false
 autoInstallPeers: true
 shamefullyHoist: true
+verifyDepsBeforeRun: false
 
 # Install this repo's own DevTools from the tarballs built by
 # `../scripts/pack-local.mjs` (run via `pnpm run setup`). `pnpm pack` rewrote
