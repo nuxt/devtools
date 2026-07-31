@@ -5,15 +5,16 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@nuxt/devtools-kit': file:../.tarballs/nuxt-devtools-kit.tgz
+  '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz
+  '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz
 
 importers:
 
   .:
     dependencies:
       '@nuxt/devtools':
-        specifier: file:../.tarballs/nuxt-devtools.tgz
-        version: file:../.tarballs/nuxt-devtools.tgz(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)
+        specifier: file:.tarballs/nuxt-devtools.tgz
+        version: file:.tarballs/nuxt-devtools.tgz(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)
     devDependencies:
       '@types/node':
         specifier: ^26.1.1
@@ -220,9 +221,9 @@ packages:
       '@emnapi/core': ^2.0.0-alpha.3
       '@emnapi/runtime': ^2.0.0-alpha.3
 
-  '@nuxt/cli-nightly@3.38.0-20260729-091025-507487c':
-    resolution: {integrity: sha512-UggzdHXUImQ3GYScwgDqVCVqNoffol1Z7szwknu2c65tybxn53YyD7tWplvrmpEO4YRalb/+F5DTRpDOrDizkw==}
-    engines: {node: ^16.14.0 || >=18.0.0}
+  '@nuxt/cli-nightly@4.0.0-20260729-214555-af14cc8':
+    resolution: {integrity: sha512-zOTNmEdXBZF6aiSp56zg4KeWxcgfxN0oJ7Du1uDGO5FGV2skYa0fVCsr1xHmsnRRFsqZ557eX34H0AJhO/2VZg==}
+    engines: {node: ^22.19.0 || ^24.11.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@nuxt/schema': ^4.5.1
@@ -242,8 +243,8 @@ packages:
       serve:
         optional: true
 
-  '@nuxt/devtools-kit@file:../.tarballs/nuxt-devtools-kit.tgz':
-    resolution: {integrity: sha512-ifPlYCdjM3BePr+Pkhswf43OIldSwDPRkhXeDxP+CWF4oz5uZ/JyLB8GSnXaLSt0gDIXeuSdz6pTeaqNbrQuQw==, tarball: file:../.tarballs/nuxt-devtools-kit.tgz}
+  '@nuxt/devtools-kit@file:.tarballs/nuxt-devtools-kit.tgz':
+    resolution: {integrity: sha512-ifPlYCdjM3BePr+Pkhswf43OIldSwDPRkhXeDxP+CWF4oz5uZ/JyLB8GSnXaLSt0gDIXeuSdz6pTeaqNbrQuQw==, tarball: file:.tarballs/nuxt-devtools-kit.tgz}
     version: 4.0.0-alpha.9
     peerDependencies:
       nitro: ^3.0.0-0
@@ -255,13 +256,8 @@ packages:
       nitropack:
         optional: true
 
-  '@nuxt/devtools@4.0.0-alpha.9':
-    resolution: {integrity: sha512-VT0Vh9ZrvZIg38JLlwDSO6Yrz4UQB+ouat2n3yd2jTILBHlbwnrsWOIphLSH6b82gUxcuR6G1svqSklDit4pRw==}
-    peerDependencies:
-      vite: ^8.0.14
-
-  '@nuxt/devtools@file:../.tarballs/nuxt-devtools.tgz':
-    resolution: {integrity: sha512-eDdDOkzIirg74ZjaYq+cHWXuwVePsxcjTvjkYs72auceqxBAhOcsFgT0kH3jjTy/X2Bk/ZA7YMhpk5pfYn7dBw==, tarball: file:../.tarballs/nuxt-devtools.tgz}
+  '@nuxt/devtools@file:.tarballs/nuxt-devtools.tgz':
+    resolution: {integrity: sha512-eDdDOkzIirg74ZjaYq+cHWXuwVePsxcjTvjkYs72auceqxBAhOcsFgT0kH3jjTy/X2Bk/ZA7YMhpk5pfYn7dBw==, tarball: file:.tarballs/nuxt-devtools.tgz}
     version: 4.0.0-alpha.9
     peerDependencies:
       nitro: ^3.0.0-0
@@ -1474,8 +1470,8 @@ packages:
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
-  seroval@1.5.6:
-    resolution: {integrity: sha512-rVQVWjjSvlINzaQPZH5JFqsqEsIWdTxY3iJZCnTL/5gQbXIRooVZKI60tVCkOVfzcRPejboxO2t0P89dg5mQaA==}
+  seroval@1.6.0:
+    resolution: {integrity: sha512-TBwwKfscTEgnBEWmYKKeCcmCGmrJi0LV6qNUY//WBA3MDesh/zfn+KOMq/ckpxM4gZ0ouAE706A1eenekM2sug==}
     engines: {node: '>=10'}
 
   shell-quote@1.10.0:
@@ -2211,7 +2207,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@nuxt/cli-nightly@3.38.0-20260729-091025-507487c(@nuxt/schema-nightly@5.0.0-29755283.b4586ef2)(cac@7.0.0)(jiti@2.7.0)(oxc-parser@0.140.0)(rolldown@1.2.1)':
+  '@nuxt/cli-nightly@4.0.0-20260729-214555-af14cc8(@nuxt/schema-nightly@5.0.0-29755283.b4586ef2)(cac@7.0.0)(jiti@2.7.0)(oxc-parser@0.140.0)(rolldown@1.2.1)':
     dependencies:
       '@bomb.sh/tab': 0.0.21(cac@7.0.0)(citty@0.2.2)
       '@clack/prompts': 1.7.0
@@ -2251,7 +2247,7 @@ snapshots:
       - cac
       - commander
 
-  '@nuxt/devtools-kit@file:../.tarballs/nuxt-devtools-kit.tgz(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))':
+  '@nuxt/devtools-kit@file:.tarballs/nuxt-devtools-kit.tgz(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@nuxt/kit': '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))'
       nostics: 1.2.0
@@ -2264,87 +2260,11 @@ snapshots:
       - rolldown
       - unplugin
 
-  '@nuxt/devtools@4.0.0-alpha.9(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)':
+  '@nuxt/devtools@file:.tarballs/nuxt-devtools.tgz(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)':
     dependencies:
       '@devframes/plugin-code-server': 0.7.15(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
       '@devframes/plugin-data-inspector': 0.7.15(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@nuxt/devtools-kit': file:../.tarballs/nuxt-devtools-kit.tgz(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@nuxt/kit': 4.5.1(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))
-      '@vitejs/devtools': 0.4.10(crossws@0.4.10(srvx@0.11.22))(srvx@0.11.22)(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@vitejs/devtools-kit': 0.4.10(cac@7.0.0)(srvx@0.11.22)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@vue/devtools-core': 8.2.1(vue@3.5.40)
-      '@vue/devtools-kit': 8.2.1
-      birpc: 4.0.0
-      consola: 3.4.2
-      destr: 2.0.5
-      diff: 8.0.4
-      error-stack-parser-es: 2.0.1
-      fast-npm-meta: 2.2.0
-      hookable: 6.1.1
-      image-meta: 0.2.2
-      launch-editor: 2.14.1
-      local-pkg: 1.2.1
-      magicast: 0.5.3
-      ohash: 2.0.11
-      pathe: 2.0.3
-      perfect-debounce: 2.1.0
-      pkg-types: 2.3.1
-      sirv: 3.0.2
-      structured-clone-es: 2.0.1
-      tinyexec: 1.2.4
-      tinyglobby: 0.2.17
-      unstorage: 1.17.5(db0@0.3.4)
-      verkit: 0.2.0
-      vite: 8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
-      vite-plugin-inspect: 12.0.2(@nuxt/kit@4.5.1(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))))(cac@7.0.0)(srvx@0.11.22)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      vite-plugin-vue-tracer: 1.4.0(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)
-      ws: 8.21.1
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@deno/kv'
-      - '@modelcontextprotocol/sdk'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@upstash/redis'
-      - '@vercel/blob'
-      - '@vercel/functions'
-      - '@vercel/kv'
-      - '@vitejs/devtools-oxc'
-      - '@vitejs/devtools-rolldown'
-      - '@vitejs/devtools-vite'
-      - '@vitejs/devtools-vitest'
-      - aws4fetch
-      - bufferutil
-      - cac
-      - crossws
-      - db0
-      - devframe
-      - idb-keyval
-      - ioredis
-      - magic-string
-      - nitro
-      - nitropack
-      - oxc-parser
-      - rolldown
-      - srvx
-      - typescript
-      - unplugin
-      - uploadthing
-      - utf-8-validate
-      - valibot
-      - vue
-
-  '@nuxt/devtools@file:../.tarballs/nuxt-devtools.tgz(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)':
-    dependencies:
-      '@devframes/plugin-code-server': 0.7.15(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@devframes/plugin-data-inspector': 0.7.15(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@nuxt/devtools-kit': file:../.tarballs/nuxt-devtools-kit.tgz(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
+      '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
       '@nuxt/kit': '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))'
       '@vitejs/devtools': 0.4.10(crossws@0.4.10(srvx@0.11.22))(srvx@0.11.22)(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
       '@vitejs/devtools-kit': 0.4.10(cac@7.0.0)(srvx@0.11.22)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
@@ -2601,7 +2521,7 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 2.3.1
       rolldown-string: 0.3.1(rolldown@1.2.1)
-      seroval: 1.5.6
+      seroval: 1.6.0
       std-env: 4.2.0
       ufo: 1.6.4
       unenv: 2.0.0-rc.24
@@ -3460,8 +3380,8 @@ snapshots:
   nuxt-nightly@5.0.0-29755283.b4586ef2(@types/node@26.1.2)(@vue/compiler-sfc@3.5.40)(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(dotenv@17.4.2)(giget@3.3.1)(lightningcss@1.33.0)(magicast@0.5.3)(nuxt-nightly@5.0.0-29755283.b4586ef2)(oxc-parser@0.140.0)(srvx@0.11.22)(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(yaml@2.9.0):
     dependencies:
       '@dxup/nuxt': 0.5.5(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      '@nuxt/cli': '@nuxt/cli-nightly@3.38.0-20260729-091025-507487c(@nuxt/schema-nightly@5.0.0-29755283.b4586ef2)(cac@7.0.0)(jiti@2.7.0)(oxc-parser@0.140.0)(rolldown@1.2.1)'
-      '@nuxt/devtools': 4.0.0-alpha.9(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)
+      '@nuxt/cli': '@nuxt/cli-nightly@4.0.0-20260729-214555-af14cc8(@nuxt/schema-nightly@5.0.0-29755283.b4586ef2)(cac@7.0.0)(jiti@2.7.0)(oxc-parser@0.140.0)(rolldown@1.2.1)'
+      '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz(cac@7.0.0)(crossws@0.4.10(srvx@0.11.22))(db0@0.3.4)(devframe@0.7.15(cac@7.0.0)(srvx@0.11.22))(magic-string@1.1.0)(oxc-parser@0.140.0)(rolldown@1.2.1)(srvx@0.11.22)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(valibot@1.4.2)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40)
       '@nuxt/kit': '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))'
       '@nuxt/nitro-server': '@nuxt/nitro-server-nightly@5.0.0-29755283.b4586ef2(cac@7.0.0)(chokidar@5.0.0)(db0@0.3.4)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(lightningcss@1.33.0)(magicast@0.5.3)(nuxt-nightly@5.0.0-29755283.b4586ef2)(ofetch@2.0.0-alpha.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))'
       '@nuxt/schema': '@nuxt/schema-nightly@5.0.0-29755283.b4586ef2'
@@ -3801,7 +3721,7 @@ snapshots:
 
   scule@1.3.0: {}
 
-  seroval@1.5.6: {}
+  seroval@1.6.0: {}
 
   shell-quote@1.10.0: {}
 
@@ -4016,26 +3936,6 @@ snapshots:
       vite: 8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
     optionalDependencies:
       '@nuxt/kit': '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))'
-    transitivePeerDependencies:
-      - '@modelcontextprotocol/sdk'
-      - cac
-      - srvx
-      - typescript
-
-  vite-plugin-inspect@12.0.2(@nuxt/kit@4.5.1(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))))(cac@7.0.0)(srvx@0.11.22)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)):
-    dependencies:
-      '@vitejs/devtools-kit': 0.4.10(cac@7.0.0)(srvx@0.11.22)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0))
-      ansis: 4.3.1
-      error-stack-parser-es: 2.0.1
-      obug: 2.1.4
-      ohash: 2.0.11
-      open: 11.0.0
-      perfect-debounce: 2.1.0
-      sirv: 3.0.2
-      unplugin-utils: 0.3.2
-      vite: 8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)
-    optionalDependencies:
-      '@nuxt/kit': 4.5.1(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.1)(unplugin@3.3.0(rolldown@1.2.1)(vite@8.1.5(@types/node@26.1.2)(jiti@2.7.0)(yaml@2.9.0)))
     transitivePeerDependencies:
       - '@modelcontextprotocol/sdk'
       - cac

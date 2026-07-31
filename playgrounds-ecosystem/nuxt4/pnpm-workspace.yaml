@@ -13,7 +13,8 @@ shamefullyHoist: true
 # version, so redirect that inter-package dependency to its tarball too.
 # Everything else (nuxt, vite, @vitejs/devtools, ...) resolves from the registry.
 overrides:
-  '@nuxt/devtools-kit': file:../.tarballs/nuxt-devtools-kit.tgz
+  '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz
+  '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz
 
 allowBuilds:
   '@parcel/watcher': true

@@ -28,10 +28,10 @@ source, they install this repo's DevTools from **packed tarballs** — the real
 npm install path, from `dist` — the same technique as
 [vitejs/devtools' production playground](https://github.com/vitejs/devtools/blob/main/playgrounds/production/README.md).
 [`scripts/pack-local.mjs`](./scripts/pack-local.mjs) builds the monorepo and
-`pnpm pack`s `@nuxt/devtools` + `@nuxt/devtools-kit` into `.tarballs/` (`pnpm
-pack` rewrites their `workspace:*` / `catalog:*` protocols into concrete
-versions), and each playground's `pnpm-workspace.yaml` points those two
-packages at the tarballs via `overrides`.
+`pnpm pack`s `@nuxt/devtools` + `@nuxt/devtools-kit` into each playground's own
+`.tarballs/` (`pnpm pack` rewrites their `workspace:*` / `catalog:*` protocols
+into concrete versions), and each playground's `pnpm-workspace.yaml` points
+those two packages at the tarballs via `overrides`.
 
 Why tarballs and not a `link:`? Everything then installs into the playground's
 **single** `node_modules`, so the app and DevTools share one Vite /
@@ -41,6 +41,11 @@ resolves its deps from the repo root), and the app's dev SSR ends up
 transforming DevTools' whole dependency tree through a second Vite until the
 render worker OOMs (`JS heap out of memory`) or drops the socket
 (`socket hang up`).
+
+> **Run `setup` first — not a bare `pnpm install`.** The tarballs are
+> git-ignored (regenerated from `dist`), so `pnpm install` on a fresh checkout
+> can't find `.tarballs/*.tgz` and fails with `ENOENT`. `setup` packs them
+> first, then installs.
 
 ```sh
 # From the playground: build the monorepo, pack DevTools, install (own lockfile)
