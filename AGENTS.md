@@ -20,14 +20,15 @@ Guidance for contributors and AI agents working in this repo.
 
 ## Everyday commands
 
-| Command               | Purpose                                           |
-| --------------------- | ------------------------------------------------- |
-| `pnpm lint`           | ESLint over the whole repo                        |
-| `pnpm typecheck`      | `vue-tsc --noEmit` (requires prepare/build first) |
-| `pnpm test`           | Runs `pnpm lint && pnpm test:unit`                |
-| `pnpm test:unit`      | Unit tests via `vitest run`                       |
-| `pnpm test:e2e:dev`   | Playwright e2e against the dev server             |
-| `pnpm test:e2e:built` | Playwright e2e against a built app                |
+| Command               | Purpose                                                       |
+| --------------------- | ------------------------------------------------------------- |
+| `pnpm lint`           | ESLint over the whole repo                                    |
+| `pnpm typecheck`      | `vue-tsc --noEmit` (requires prepare/build first)             |
+| `pnpm knip`           | Find unused files/deps/exports (requires prepare/build first) |
+| `pnpm test`           | Runs `pnpm lint && pnpm test:unit`                            |
+| `pnpm test:unit`      | Unit tests via `vitest run`                                   |
+| `pnpm test:e2e:dev`   | Playwright e2e against the dev server                         |
+| `pnpm test:e2e:built` | Playwright e2e against a built app                            |
 
 (`pnpm test:e2e` runs both the dev and built e2e suites; config lives at
 `tests/e2e/playwright.config.ts`.)
