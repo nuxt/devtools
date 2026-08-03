@@ -10,7 +10,10 @@ export default defineNuxtConfig({
   modules: [
     '../../packages/devtools-ui-kit/src/module',
     devtoolsModule,
-    '@pinia/nuxt',
+    // `@pinia/nuxt`'s own compatibility gate doesn't yet know about Nuxt 5;
+    // see modules/pinia-nuxt5-compat.ts for why this wraps it instead of
+    // depending on it directly.
+    './modules/pinia-nuxt5-compat',
   ],
 
   imports: {
