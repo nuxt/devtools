@@ -41,9 +41,23 @@ refs:
   devframe: &devframe ^0.7.14
   # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
   # `vite@^8.1.5`, so this and the `vite` ref below move together.
-  nuxt: &nuxt npm:nuxt-nightly@5x
-  nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5x
-  nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5x
+  #
+  # Pinned to the exact snapshot instead of floating on `5x`: with
+  # `resolutionMode: highest` (below), *any* lockfile-affecting change
+  # anywhere in the workspace — not just to these refs — makes pnpm
+  # re-resolve every floating range to the newest match, including this one.
+  # The next snapshot available at the time this was pinned
+  # (nuxt-nightly@5.0.0-29760455.e6509fdd) fails to build: the SSR/Nitro
+  # build errors on `packages/devtools/client/components/docs/*.md` with
+  # "At least one <template> or <script> is required in a single file
+  # component" — `unplugin-vue-markdown`'s transform isn't applying for that
+  # environment on that snapshot. Bumping past this pin is tracked as its
+  # own follow-up (see the repo's other dedicated `deps/nuxt5-nightly-*`
+  # PRs) once that regression is understood; don't bump it as a drive-by of
+  # an unrelated change.
+  nuxt: &nuxt npm:nuxt-nightly@5.0.0-29755283.b4586ef2
+  nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29755283.b4586ef2
+  nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29755283.b4586ef2
   shiki: &shiki ^4.3.1
   unocss: &unocss ^66.7.5
   vite: &vite ^8.1.5
