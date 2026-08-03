@@ -1,0 +1,110 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreWorkspaces": [
+    "playgrounds/**"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "local.ts",
+        "scripts/*.{js,mjs,ts}",
+        "taze.config.ts",
+        "tests/e2e/**/*.ts"
+      ],
+      "project": [
+        "*.{js,mjs,ts}",
+        "scripts/**/*.{js,mjs,ts}",
+        "tests/**/*.ts"
+      ]
+    },
+    "packages/devtools-kit": {
+      "entry": [
+        "src/index.ts",
+        "src/types.ts",
+        "src/runtime/host-client.ts",
+        "src/runtime/iframe-client.ts"
+      ]
+    },
+    "packages/devtools": {
+      "nuxt": {
+        // Only `client/` is prepared as part of `dev:prepare` (its own
+        // `.nuxt/tsconfig.json` is required just to load the root
+        // `tsconfig.json`/`vitest.config.ts`). `playground/` is a manual,
+        // unprepared smoke-test app — don't have Knip try to load its
+        // `nuxt.config.ts` (see knip.dev/reference/known-issues); its files
+        // are still covered via the explicit `entry` glob below.
+        "config": [
+          "client/nuxt.config.ts"
+        ],
+        "entry": [
+          "client/app.config.ts",
+          "client/app.vue",
+          "client/error.vue",
+          "client/layouts/**/*.vue",
+          "client/middleware/**/*.ts",
+          "client/pages/**/*.vue",
+          "client/plugins/**/*.ts",
+          "client/modules/**/*.ts",
+          "client/server/api/**/*.ts",
+          "client/server/tasks/**/*.ts",
+          // The client Nuxt app auto-imports components and composables by
+          // directory convention, so there's no explicit `import` for Knip to
+          // trace usage through — treat them as entries rather than reporting
+          // the whole directory as unused (see knip.dev/explanations/plugins,
+          // "Nuxt" plugin doesn't resolve implicit component/composable auto-imports).
+          "client/components/**/*.vue",
+          "client/composables/**/*.ts",
+          // `.md` files under `components/docs/` are compiled into components
+          // by `unplugin-vue-markdown` (see `client/modules/markdown.ts`) and
+          // used as auto-imported tags (e.g. `<DocsModules />`) from page
+          // templates — same untraceable auto-import situation as above.
+          "client/components/docs/**/*.md",
+          "playground/app.vue",
+          "playground/nuxt.config.ts"
+        ]
+      },
+      "entry": [
+        "scripts/*.mjs",
+        "src/webcomponents/scripts/*.ts",
+        // Runtime files the module injects into consuming Nuxt apps by
+        // resolved path (`addPlugin`/`addTemplate`/`resolvePath`,
+        // `join(runtimeDir, ...)` in module-main.ts, integrations/*.ts), not
+        // by static `import` — Knip can't trace a dynamically-built path
+        // string back to these files.
+        "src/runtime/plugins/*.ts",
+        "src/runtime/nitro/inline.ts",
+        "src/runtime/use-nuxt-devtools.ts",
+        "src/runtime/vue-devtools-client.ts"
+      ]
+    },
+    "packages/devtools-ui-kit": {
+      "nuxt": {
+        // Same as `packages/devtools/playground` above: unprepared, so don't
+        // load `nuxt.config.ts` — just glob its files as entries directly.
+        "config": [],
+        "entry": [
+          "playground/nuxt.config.ts",
+          "playground/app.vue",
+          "playground/pages/**/*.vue",
+          "playground/components/**/*.vue",
+          // Aliased in `playground/nuxt.config.ts` (`resolver.resolve(...)`),
+          // not statically imported.
+          "playground/stub/**/*.ts"
+        ]
+      },
+      "entry": [
+        "src/module.ts",
+        "src/unocss.ts",
+        // Same auto-import situation as the devtools client above: this
+        // package's components/composables/runtime dirs are consumed by
+        // downstream Nuxt apps through Nuxt's implicit auto-import, not
+        // through static imports Knip can trace. `NButton.ts` is a
+        // `defineComponent`-based component (not a `.vue` SFC), so it needs
+        // the `.ts` extension here too.
+        "src/components/**/*.{vue,ts}",
+        "src/composables/**/*.ts",
+        "src/runtime/**/*.ts"
+      ]
+    }
+  }
+}
