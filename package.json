@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.4.0",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.19.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -57,18 +57,6 @@
     "unocss": "catalog:buildtools",
     "vite-hot-client": "catalog:frontend",
     "vue": "catalog:frontend",
-    "vue-tsc": "catalog:cli"
-  },
-  "resolutions": {
-    "@nuxt/devtools": "workspace:*",
-    "chokidar": "catalog:buildtools",
-    "esbuild": "catalog:buildtools",
-    "rollup": "catalog:buildtools",
-    "semver": "catalog:prod",
-    "structured-clone-es": "catalog:frontend",
-    "typescript": "catalog:cli",
-    "unimport": "catalog:types",
-    "vite": "catalog:buildtools",
     "vue-tsc": "catalog:cli"
   },
   "simple-git-hooks": {
