@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useVModel, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
+import { structuredClone } from 'structured-clone-es'
 import { computed, onMounted, shallowRef } from 'vue'
 import { getColorMode } from '~/composables/client'
 
@@ -35,6 +36,11 @@ function isPrimitive(value: any): boolean {
 // state back into itself under a `{ deep: true }` watcher, so any array or
 // nested object endlessly re-triggered the watcher and froze the whole page
 // (nuxt/devtools#972). Re-cloning into a detached `proxy` avoids that entirely.
+//
+// `structured-clone-es` is used instead of `JSON.parse(JSON.stringify())`: it
+// detaches from Vue reactivity, tolerates circular references (rather than
+// throwing), and preserves richer types (Map/Set/Date/…). `lossy: true` drops
+// functions/symbols instead of throwing on them.
 function clone() {
   error.value = undefined
   if (!isVisible.value)
@@ -42,7 +48,7 @@ function clone() {
   try {
     proxy.value = isPrimitive(props.state)
       ? props.state
-      : JSON.parse(JSON.stringify(props.state ?? {}))
+      : structuredClone(props.state ?? {}, { lossy: true })
   }
   catch (e) {
     console.error(e)
