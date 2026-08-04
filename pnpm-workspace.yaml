@@ -38,7 +38,7 @@ allowBuilds:
   vue-demi: true
 
 refs:
-  devframe: &devframe ^0.7.14
+  devframe: &devframe ^0.8.0
   # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
   # `vite@^8.1.5`, so this and the `vite` ref below move together.
   #
@@ -58,13 +58,13 @@ refs:
   nuxt: &nuxt npm:nuxt-nightly@5.0.0-29755283.b4586ef2
   nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29755283.b4586ef2
   nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29755283.b4586ef2
-  shiki: &shiki ^4.3.1
+  shiki: &shiki ^4.4.1
   unocss: &unocss ^66.7.5
-  vite: &vite ^8.1.5
-  vite-devtools: &vite-devtools ^0.4.9
+  vite: &vite ^8.2.0
+  vite-devtools: &vite-devtools ^0.4.11
   vue: &vue ^3.5.40
   vue-devtools: &vue-devtools ^8.2.1
-  vueuse: &vueuse ^14.3.0
+  vueuse: &vueuse ^14.4.0
 overrides:
   '@devframes/hub': *devframe
   '@devframes/json-render': *devframe
@@ -80,10 +80,10 @@ overrides:
   chokidar: ^5.0.0
   devframe: *devframe
   esbuild: ^0.28.1
-  rollup: ^4.62.2
+  rollup: ^4.62.4
   semver: ^7.8.5
   typescript: ^6.0.3
-  unimport: ^6.3.1
+  unimport: ^6.4.0
   vite: *vite
   vue: *vue
   # `@nuxt/module-builder@1.0.3` bundles `mkdist@2.4.1`, whose own
@@ -93,8 +93,8 @@ overrides:
   # transform silently breaks under that mismatch (it wrote compiled output
   # into `packages/devtools/src/runtime/**` instead of `dist/`, clobbering
   # `auth/index.html` in the process). Pin to what mkdist itself needs.
-  vue-sfc-transformer: ^0.1.17
-  vue-tsc: ^3.3.8
+  vue-sfc-transformer: ^0.2.5
+  vue-tsc: ^3.3.9
 catalogs:
   buildtools:
     '@nuxt/module-builder': ^1.0.3
@@ -109,7 +109,7 @@ catalogs:
     '@unocss/preset-uno': *unocss
     '@vitejs/devtools': *vite-devtools
     '@vueuse/nuxt': *vueuse
-    exsolve: ^1.1.0
+    exsolve: ^1.1.1
     lightningcss: ^1.33.0
     # Nuxt 5 nightly's Nitro layer (`@nuxt/nitro-server-nightly`) builds on
     # the next-gen Nitro v3 engine (package `nitro`, not `nitropack`).
@@ -123,7 +123,7 @@ catalogs:
     nuxt: *nuxt
     shiki-codegen: *shiki
     skills-npm: ^1.2.0
-    turbo: ^2.10.7
+    turbo: ^2.10.8
     unbuild: ^3.6.1
     unocss: *unocss
     unplugin-vue: ^7.2.0
@@ -132,9 +132,9 @@ catalogs:
     '@antfu/eslint-config': ^9.2.0
     '@antfu/ni': ^30.3.0
     '@nuxt/eslint': ^1.16.0
-    '@nuxt/test-utils': ^4.0.3
-    '@playwright/test': ^1.62.0
-    bumpp: ^12.0.0
+    '@nuxt/test-utils': ^4.1.0
+    '@playwright/test': ^1.62.1
+    bumpp: ^12.1.1
     cypress: ^15.19.0
     eslint: ^10.8.0
     eslint-flat-config-utils: ^3.2.0
@@ -146,10 +146,10 @@ catalogs:
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.13.1
     taze: ^19.16.0
-    tsx: ^4.23.1
+    tsx: ^4.23.5
     typescript: ^6.0.3
     vitest: ^4.1.10
-    vue-tsc: ^3.3.8
+    vue-tsc: ^3.3.9
   frontend:
     '@antfu/utils': ^9.3.0
     '@unocss/reset': *unocss
@@ -160,14 +160,14 @@ catalogs:
     '@vueuse/integrations': *vueuse
     birpc: ^4.0.0
     cronstrue: ^3.24.0
-    diff: ^8.0.4
+    diff: ^9.0.0
     error-stack-parser-es: ^2.0.1
     floating-vue: ^5.2.2
     focus-trap: ^8.2.2
     fuse.js: ^7.5.0
     hookable: ^6.1.1
-    json-editor-vue: ^0.18.1
-    markdown-it: ^14.3.0
+    json-editor-vue: ^0.19.1
+    markdown-it: ^15.0.0
     markdown-it-link-attributes: ^4.0.1
     ofetch: ^1.5.1
     ohash: ^2.0.11
@@ -178,7 +178,7 @@ catalogs:
     scule: ^1.3.0
     shiki: *shiki
     splitpanes: ^4.1.2
-    structured-clone-es: ^2.0.0
+    structured-clone-es: ^2.0.1
     theme-vitesse: ^1.0.0
     ua-parser-modern: ^0.1.1
     v-lazy-show: ^0.3.0
@@ -191,12 +191,12 @@ catalogs:
     vue-virtual-scroller: ^3.0.4
   icons:
     '@iconify-json/bxl': ^1.2.4
-    '@iconify-json/carbon': ^1.2.24
+    '@iconify-json/carbon': ^1.2.25
     '@iconify-json/logos': ^1.2.11
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
     '@iconify-json/simple-icons': ^1.2.92
-    '@iconify-json/tabler': ^1.2.37
+    '@iconify-json/tabler': ^1.2.38
   inlined:
     package-manager-detector: ^1.8.0
   playground:
@@ -213,14 +213,14 @@ catalogs:
     image-meta: ^0.2.2
     launch-editor: ^2.14.1
     local-pkg: ^1.2.1
-    magicast: ^0.5.3
+    magicast: ^0.5.4
     nostics: ^1.2.0
     pkg-types: ^2.3.1
     sirv: ^3.0.2
-    tinyexec: ^1.2.4
+    tinyexec: ^1.3.0
     tinyglobby: ^0.2.17
     unstorage: ^1.17.5
-    verkit: ^0.2.0
+    verkit: ^0.3.1
     vite-plugin-inspect: ^12.0.2
     vite-plugin-vue-tracer: ^1.4.0
     ws: ^8.21.1
@@ -228,8 +228,12 @@ catalogs:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^26.1.1
+    '@types/node': ^26.1.2
     '@types/ws': ^8.18.1
     '@unhead/schema': ^3.2.3
     '@vitejs/devtools-kit': *vite-devtools
-    unimport: ^6.3.1
+    unimport: ^6.4.0
+
+update:
+  ignoreDeps:
+    - typescript@7
