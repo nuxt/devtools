@@ -1,3 +1,12 @@
+## [3.4.1](https://github.com/nuxt/devtools/compare/v3.4.0...v3.4.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* **devtools:** prevent StateEditor from freezing the page on live state ([#1058](https://github.com/nuxt/devtools/issues/1058)) ([0624919](https://github.com/nuxt/devtools/commit/0624919588c4bef3be630ee351cbe049bcf753bb))
+
+
+
 # [3.4.0](https://github.com/nuxt/devtools/compare/v3.3.1...v3.4.0) (2026-07-29)
 
 
