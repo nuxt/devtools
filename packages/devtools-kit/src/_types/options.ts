@@ -43,7 +43,12 @@ export interface ModuleOptions {
   vueDevTools?: boolean
 
   /**
-   * Enable vite-plugin-inspect
+   * Enable the Vite Inspect integration.
+   *
+   * `vite-plugin-inspect` is an optional peer dependency. When it isn't
+   * installed, DevTools shows an install launcher in its place (like Vite Plus
+   * DevTools); once installed, the real Inspect view is mounted. Set this to
+   * `false` to disable the integration (and its launcher) entirely.
    *
    * @default true
    */

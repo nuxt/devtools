@@ -3,16 +3,49 @@ import type { ViteInspectOptions } from 'vite-plugin-inspect'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { onDevtoolsReady } from '@nuxt/devtools-kit'
 import { addVitePlugin, logger } from '@nuxt/kit'
+import { createInstallLauncher } from '@vitejs/devtools-kit/node'
+import { isPackageExists } from 'local-pkg'
 import { RPC_NAMESPACE } from '../rpc-namespace'
 
 const VERSION_QUERY_RE = /\?v=\w+$/
 const VUE_EXT_RE = /\.vue($|\?v=)/
+
+// `vite-plugin-inspect` registers its own dock under this id/title/icon. The
+// install launcher we mount when the package is absent reuses them so the rail
+// slot stays stable before and after the user installs it.
+const INSPECT_DOCK_ID = 'vite-plugin-inspect'
+const INSPECT_DOCK_TITLE = 'Inspect'
+const INSPECT_DOCK_ICON = 'ph:magnifying-glass-duotone'
+
+/**
+ * Whether the optional `vite-plugin-inspect` peer dependency is installed in
+ * the user's project.
+ */
+export function isVitePluginInspectAvailable(rootDir: string): boolean {
+  return isPackageExists('vite-plugin-inspect', { paths: [rootDir] })
+}
 
 export async function createVitePluginInspect(options?: ViteInspectOptions): Promise<Plugin> {
   return await import('vite-plugin-inspect').then(r => r.default(options))
 }
 
 export async function setup(ctx: NuxtDevtoolsServerContext) {
+  // `vite-plugin-inspect` is an optional peer dependency. When the user hasn't
+  // installed it, mount a discovery/install launcher in its dock slot (the same
+  // UX as Vite Plus DevTools' built-in integration launchers) instead of the
+  // real Inspect view. Clicking it installs the package as a tracked terminal
+  // session, then asks for a dev-server restart to activate the real plugin.
+  if (!isVitePluginInspectAvailable(ctx.nuxt.options.rootDir)) {
+    addVitePlugin(createInstallLauncher({
+      id: INSPECT_DOCK_ID,
+      title: INSPECT_DOCK_TITLE,
+      icon: INSPECT_DOCK_ICON,
+      label: 'Vite Inspect',
+      install: ['vite-plugin-inspect'],
+    }))
+    return
+  }
+
   const plugin = await createVitePluginInspect()
   addVitePlugin(plugin)
 
