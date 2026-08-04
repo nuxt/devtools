@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { watchPausable } from '@vueuse/core'
-import { useVModel } from '@vueuse/core'
+import { useVModel, watchDebounced } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
-import { nextTick, onMounted, shallowRef, watch } from 'vue'
+import { structuredClone } from 'structured-clone-es'
+import { computed, onMounted, shallowRef } from 'vue'
 import { getColorMode } from '~/composables/client'
 
 const props = defineProps<{
@@ -22,16 +22,33 @@ const colorMode = getColorMode()
 const proxy = shallowRef()
 const error = shallowRef()
 
+// A named editor is collapsible; only the visible ones need a fresh snapshot.
+const isVisible = computed(() => !props.name || !!isOpen.value)
+
 function isPrimitive(value: any): boolean {
   return ['number', 'bigint', 'string', 'boolean'].includes(typeof value)
 }
 
+// Produce a plain, non-reactive snapshot of the state for the JSON editor.
+//
+// This must NEVER mutate `props.state`: it is the live reactive Nuxt payload /
+// app config / `useState` data. The previous implementation deep-synced the
+// state back into itself under a `{ deep: true }` watcher, so any array or
+// nested object endlessly re-triggered the watcher and froze the whole page
+// (nuxt/devtools#972). Re-cloning into a detached `proxy` avoids that entirely.
+//
+// `structured-clone-es` is used instead of `JSON.parse(JSON.stringify())`: it
+// detaches from Vue reactivity, tolerates circular references (rather than
+// throwing), and preserves richer types (Map/Set/Date/…). `lossy: true` drops
+// functions/symbols instead of throwing on them.
 function clone() {
   error.value = undefined
+  if (!isVisible.value)
+    return
   try {
     proxy.value = isPrimitive(props.state)
       ? props.state
-      : JSON.parse(JSON.stringify(props.state || {}))
+      : structuredClone(props.state ?? {}, { lossy: true })
   }
   catch (e) {
     console.error(e)
@@ -39,39 +56,20 @@ function clone() {
   }
 }
 
-let watcher: ReturnType<typeof watchPausable> | undefined
+onMounted(clone)
 
-onMounted(() => {
+// `revision` is bumped by DevTools whenever host reactivity updates, so it is a
+// sufficient change signal — we don't need (and must not use) a deep watcher on
+// the potentially huge state object. Debounced to avoid thrashing on rapid
+// updates.
+watchDebounced(
+  () => [props.revision, props.state, isVisible.value],
+  clone,
+  { debounce: 100, maxWait: 500 },
+)
+
+function refresh() {
   clone()
-
-  watch(
-    () => [props.revision, props.state],
-    ([_, state]) => {
-      if (!isPrimitive(state))
-        deepSync(state, props.state)
-      else
-        proxy.value = props.state
-    },
-    { deep: true },
-  )
-})
-
-function deepSync(from: any, to: any) {
-  for (const key in from) {
-    if (Array.isArray(from[key]))
-      to[key] = from[key].slice()
-    else if (typeof from[key] === 'object' && from[key] !== null)
-      deepSync(from[key], to[key])
-    else
-      to[key] = from[key]
-  }
-}
-
-async function refresh() {
-  watcher?.pause()
-  clone()
-  await nextTick()
-  watcher?.resume()
 }
 </script>
 
