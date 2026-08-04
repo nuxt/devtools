@@ -45,13 +45,17 @@
   "peerDependencies": {
     "nitro": "^3.0.0-0",
     "nitropack": "^2.0.0",
-    "vite": "^8.1.5"
+    "vite": "^8.1.5",
+    "vite-plugin-inspect": "catalog:prod"
   },
   "peerDependenciesMeta": {
     "nitro": {
       "optional": true
     },
     "nitropack": {
+      "optional": true
+    },
+    "vite-plugin-inspect": {
       "optional": true
     }
   },
@@ -85,7 +89,6 @@
     "tinyglobby": "catalog:prod",
     "unstorage": "catalog:prod",
     "verkit": "catalog:prod",
-    "vite-plugin-inspect": "catalog:prod",
     "vite-plugin-vue-tracer": "catalog:prod",
     "ws": "catalog:prod"
   },
@@ -136,6 +139,7 @@
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
+    "vite-plugin-inspect": "catalog:prod",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"
   }
