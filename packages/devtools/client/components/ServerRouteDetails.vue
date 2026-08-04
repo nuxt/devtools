@@ -5,6 +5,7 @@ import { createReusableTemplate, useLocalStorage, watchDebounced } from '@vueuse
 import JsonEditorVue from 'json-editor-vue'
 import { computed, reactive, ref, watchEffect } from 'vue'
 import { useCookie } from '#app/composables/cookie'
+import { $fetch } from '#imports'
 import { getColorMode, useClient } from '~/composables/client'
 import { ComposablesDocs } from '~/composables/constants'
 import { useOpenInEditor } from '~/composables/editor'

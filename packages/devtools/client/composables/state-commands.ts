@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 import { randomStr } from '@antfu/utils'
 import { computed, onUnmounted, reactive, toValue } from 'vue'
 import { useRouter } from '#app/composables/router'
+import { $fetch } from '#imports'
 import { useEnabledTabs } from './state-tabs'
 
 export interface CommandItem {
