@@ -12,7 +12,7 @@ const packageBundles = {
   'json-editor-vue': ['json-editor-vue', 'ajv', 'vanilla-picker', 'vanilla-jsoneditor'],
   'vis': ['vis-data', 'vis-network'],
   'unocss': ['@unocss', 'unocss'],
-  'markdown-it': ['markdown-it'],
+  'markdown-exit': ['markdown-exit'],
 }
 
 export default defineNuxtConfig({

@@ -1,7 +1,7 @@
-import type MarkdownIt from 'markdown-it'
+import type { MarkdownExit } from 'markdown-exit'
 import { shallowRef } from 'vue'
 
-const md = shallowRef<MarkdownIt>()
+const md = shallowRef<MarkdownExit>()
 
 let promise: Promise<void> | undefined
 
@@ -10,8 +10,8 @@ function init() {
     return
 
   promise = (async () => {
-    const { default: MarkdownIt } = await import('markdown-it')
-    md.value = new MarkdownIt({
+    const { createMarkdownExit } = await import('markdown-exit')
+    md.value = createMarkdownExit({
       html: true,
       linkify: true,
       breaks: true,
