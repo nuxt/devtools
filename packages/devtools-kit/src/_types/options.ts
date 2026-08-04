@@ -50,6 +50,14 @@ export interface ModuleOptions {
   viteInspect?: boolean
 
   /**
+   * Enable the Data Inspector integration, which registers the live
+   * `Nuxt Application` data source and mounts the Data Inspector panel.
+   *
+   * @default true
+   */
+  dataInspector?: boolean
+
+  /**
    * Disable the DevTools client authorization prompt, allowing any browser to
    * connect without approving it first.
    *

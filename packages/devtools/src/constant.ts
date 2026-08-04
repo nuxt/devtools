@@ -7,6 +7,7 @@ export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
   componentInspector: true,
   viteInspect: true,
+  dataInspector: true,
   codeServer: {
     enabled: true,
   },

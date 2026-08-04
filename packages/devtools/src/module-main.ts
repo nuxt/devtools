@@ -7,7 +7,7 @@ import type { AnyNitroConfig } from './utils/nitro-compat'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import os from 'node:os'
-import { NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
+import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { join } from 'pathe'
@@ -277,10 +277,8 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
 
-  // Data Inspector is always mounted when DevTools is enabled (no module
-  // option): it registers the live `Nuxt Application` source and mounts the
-  // bundled SPA into the Nuxt dock group.
-  await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
+  if (options.dataInspector !== false)
+    await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
 
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
@@ -288,8 +286,17 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   if (options.componentInspector !== false)
     await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
+  if (options.codeServer?.enabled === false && options.vscode !== undefined) {
+    deprecate(nuxt, 'NDT_DEP_0008', {
+      api: 'devtools.vscode',
+      replacement: 'devtools.codeServer',
+    })
+  }
+
   const integrations = [
-    import('./integrations/code-server').then(({ setup }) => setup(ctx)),
+    options.codeServer?.enabled !== false
+      ? import('./integrations/code-server').then(({ setup }) => setup(ctx))
+      : null,
     (options.experimental?.timeline || options.timeline?.enabled)
       ? import('./integrations/timeline').then(({ setup }) => setup(ctx))
       : null,

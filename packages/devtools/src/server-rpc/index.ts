@@ -5,7 +5,6 @@ import type { ModuleOptions, NuxtDevtoolsServerContext, ServerFunctions } from '
 import { deprecate, registerHostDiagnostics } from '@nuxt/devtools-kit'
 import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
-import { getServerData } from '../integrations/data-inspector'
 import { RPC_NAMESPACE } from '../rpc-namespace'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupAssetsRPC } from './assets'
@@ -165,7 +164,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     // Deprecated compat shim (NDT_DEP_0009). The capture + live source now live
     // in the Data Inspector integration; `getServerConfig` is served by the
     // canonical `setupGeneralRPC` above.
-    getServerData: async () => getServerData(nuxt),
+    getServerData: async () => import('../integrations/data-inspector').then(({ getServerData }) => getServerData(nuxt)),
   } as ServerFunctions)
 
   /**
