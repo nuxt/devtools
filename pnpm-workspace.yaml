@@ -80,6 +80,12 @@ overrides:
   chokidar: ^5.0.0
   devframe: *devframe
   esbuild: ^0.28.1
+  # `unplugin-vue-markdown@32.0.0` depends on its own `markdown-exit
+  # ^1.0.0-beta.9`, a different prerelease tuple than the `^1.1.0-beta.2`
+  # `packages/devtools` depends on directly — semver won't let one satisfy
+  # the other, so without this override pnpm resolves and ships two copies
+  # of the engine. Force both onto the version this workspace uses directly.
+  markdown-exit: ^1.1.0-beta.2
   rollup: ^4.62.4
   semver: ^7.8.5
   typescript: ^6.0.3
@@ -167,7 +173,7 @@ catalogs:
     fuse.js: ^7.5.0
     hookable: ^6.1.1
     json-editor-vue: ^0.19.1
-    markdown-it: ^15.0.0
+    markdown-exit: ^1.1.0-beta.2
     markdown-it-link-attributes: ^4.0.1
     ofetch: ^1.5.1
     ohash: ^2.0.11
@@ -226,7 +232,6 @@ catalogs:
     ws: ^8.21.1
   types:
     '@nuxt/schema': *nuxt-schema
-    '@types/markdown-it': ^14.1.2
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.1.2
     '@types/ws': ^8.18.1
