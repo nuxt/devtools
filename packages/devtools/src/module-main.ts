@@ -75,8 +75,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
     nuxt.options.vite.optimizeDeps.include.push(
-      'nuxt > @nuxt/devtools > @vue/devtools-kit',
-      'nuxt > @nuxt/devtools > @vue/devtools-core',
       'nuxt > @nuxt/devtools > @vitejs/devtools/client/inject',
       'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
       'nuxt > @nuxt/devtools > error-stack-parser-es',
@@ -120,14 +118,13 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
             categoryOrder: {
-              'pinned': 0,
-              'app': 1,
-              'vue-devtools': 2,
-              'analyze': 3,
-              'server': 4,
-              'modules': 5,
-              'documentation': 6,
-              'advanced': 7,
+              pinned: 0,
+              app: 1,
+              analyze: 2,
+              server: 3,
+              modules: 4,
+              documentation: 5,
+              advanced: 6,
             },
           })
 
@@ -284,9 +281,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   // option): it registers the live `Nuxt Application` source and mounts the
   // bundled SPA into the Nuxt dock group.
   await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
-
-  if (options.vueDevTools !== false)
-    await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
 
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))

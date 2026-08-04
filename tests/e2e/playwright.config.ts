@@ -5,7 +5,7 @@ import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
-const PLAYGROUNDS = ['empty', 'spa', 'tab-pinia', 'tab-seo'] as const
+const PLAYGROUNDS = ['empty', 'spa', 'tab-seo'] as const
 const MODES = ['dev', 'built'] as const
 
 type Mode = typeof MODES[number]
@@ -14,9 +14,9 @@ type Playground = typeof PLAYGROUNDS[number]
 // Dev mode exercises the DevTools UI on every playground. Built (production
 // preview) mode only checks the app still renders — Nuxt DevTools no-ops
 // outside dev — so we run it on just the two distinct rendering targets:
-// `empty` (SSR) and `spa` (ssr:false). Building `tab-pinia`/`tab-seo` too, only
-// to load a page, is wasted time (and `tab-seo`'s prod build has a known
-// auto-import bug). `tab-pinia`/`tab-seo` are therefore dev-only playgrounds.
+// `empty` (SSR) and `spa` (ssr:false). Building `tab-seo` too, only to load a
+// page, is wasted time (and its prod build has a known auto-import bug).
+// `tab-seo` is therefore a dev-only playground.
 const BUILT_PLAYGROUNDS = new Set<Playground>(['empty', 'spa'])
 
 interface Spec {

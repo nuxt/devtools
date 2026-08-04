@@ -6,7 +6,6 @@ import type { Ref } from 'vue'
 import type { Router } from 'vue-router'
 import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { getDevToolsClientContext } from '@vitejs/devtools-kit/client'
-import { setIframeServerContext } from '@vue/devtools-kit'
 
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
@@ -26,7 +25,6 @@ const MULTIPLE_SLASHES_RE = /\/+/g
 // dock (`nuxt:devtools`) hosts the one kept-alive client iframe that all tab
 // members soft-navigate within.
 const NUXT_DOCK_GROUP_ID = 'nuxt'
-const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
 function getViteDevToolsContext() {
   return getDevToolsClientContext() as any
@@ -152,7 +150,6 @@ export async function setupDevToolsClient({
       iframe.src = initialUrl
       iframe.onload = async () => {
         try {
-          setIframeServerContext(iframe!)
           await waitForClientInjection()
           client.syncClient()
         }
@@ -284,7 +281,6 @@ export async function setupDevToolsClient({
 
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
-  bindVueDevToolsIframe()
 
   clientRef.value = client
 
@@ -293,32 +289,6 @@ export async function setupDevToolsClient({
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
-
-  // Nuxt DevTools renders inside a single shared-frame anchor iframe in Vite
-  // DevTools' dock (its per-tab members all soft-navigate within that one
-  // iframe), so we never create it ourselves (`getIframe()` above is legacy).
-  // The `@vue/devtools-kit` iframe messaging channel only talks to whichever
-  // iframe was registered via `setIframeServerContext()` — without that, the
-  // Vue DevTools applets (Pinia, component inspector, …) sit on "Connecting..."
-  // forever because the host backend never learns which iframe to answer. Bind
-  // it to the anchor iframe once Vite DevTools mounts it (and keep it pointed
-  // there if the element is recreated).
-  function bindVueDevToolsIframe() {
-    let bound: HTMLIFrameElement | undefined
-    const bind = () => {
-      const ctx = getViteDevToolsContext()
-      const dockIframe = ctx?.docks?.getStateById?.(NUXT_DOCK_ANCHOR_ID)?.domElements?.iframe as HTMLIFrameElement | null | undefined
-      if (!dockIframe || dockIframe === bound)
-        return
-      bound = dockIframe
-      iframe = dockIframe
-      // The channel reads `.contentWindow` lazily on every message, so binding
-      // the element once is enough even across in-iframe navigations/reloads.
-      setIframeServerContext(dockIframe)
-    }
-    bind()
-    setInterval(bind, 500)
-  }
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

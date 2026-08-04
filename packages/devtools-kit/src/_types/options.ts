@@ -38,11 +38,6 @@ export interface ModuleOptions {
   componentInspector?: boolean
 
   /**
-   * Enable Vue DevTools integration
-   */
-  vueDevTools?: boolean
-
-  /**
    * Enable the Vite Inspect integration.
    *
    * `vite-plugin-inspect` is an optional peer dependency. When it isn't
