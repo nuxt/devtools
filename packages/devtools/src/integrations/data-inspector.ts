@@ -83,7 +83,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   // options are immediately queryable and the Nitro/Vite fields populate as the
   // hooks above run. The registry is process-global and shared with the mounted
   // definition, so no context threading is required.
-  const unregister = registerDataSource({
+  const dataSource = registerDataSource({
     id: 'nuxt:application',
     title: 'Nuxt Application',
     description: 'Live Nuxt, Nitro, and Vite configuration',
@@ -106,7 +106,7 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
 
   // Avoid leaking a process-global source (e.g. across test fixtures).
   nuxt.hook('close', () => {
-    unregister()
+    dataSource.unregister()
     captured.nitro = undefined
     captured.vite = undefined
   })
