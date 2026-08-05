@@ -24,7 +24,7 @@ const data = computed(() => ({
 const iconBase = 'https://ipx.nuxt.com/s_80,f_webp/gh/nuxt/modules/main/icons/'
 const avatarBase = 'https://ipx.nuxt.com/s_44,f_webp/gh_avatar/'
 const githubBase = 'https://github.com/'
-const npmBase = 'https://www.npmjs.com/package/'
+const npmxBase = 'https://npmx.dev/package/'
 
 const { format: formatNumber } = Intl.NumberFormat(navigator.language || 'en', { notation: 'compact', maximumFractionDigits: 1 })
 
@@ -41,7 +41,7 @@ const openInEditor = useOpenInEditor()
         <div gap-1t flex items-center text-ellipsis ws-nowrap text-lg>
           <NuxtLink
             v-if="mod.isPackageModule"
-            :to="npmBase + (data.npm || data.name)"
+            :to="npmxBase + (data.npm || data.name)"
             target="_blank"
             hover="underline text-primary"
           >
