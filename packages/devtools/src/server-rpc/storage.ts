@@ -4,12 +4,7 @@ import type { AnyNitro, AnyNitroConfig, AnyStorageMounts } from '../utils/nitro-
 import { join } from 'pathe'
 import { getDevAuthToken } from '../dev-auth'
 import { runtimeDir } from '../dirs'
-import { DEVTOOLS_STORAGE_ROUTE } from '../runtime/nitro/storage-bridge'
-
-const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache', 'assets']
-function shouldIgnoreStorageKey(key: string) {
-  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
-}
+import { DEVTOOLS_STORAGE_ROUTE, shouldIgnoreStorageKey } from '../runtime/nitro/storage-bridge'
 
 const WATCH_POLL_INTERVAL = 1000
 

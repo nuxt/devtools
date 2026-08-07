@@ -1,5 +1,14 @@
 export const DEVTOOLS_STORAGE_ROUTE = '/__nuxt_devtools__/storage'
 
+/**
+ * Mounts Nitro adds for its own bookkeeping.
+ */
+export const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache', 'assets']
+
+export function shouldIgnoreStorageKey(key: string) {
+  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
+}
+
 export type StorageBridgeMethod = 'getKeys' | 'getItem' | 'setItem' | 'removeItem' | 'pullWatchEvents'
 
 export interface StorageBridgeRequest {
@@ -29,7 +38,12 @@ export interface StorageBridgeStorage {
   getItem: (key: string) => Promise<unknown>
   setItem: (key: string, value: any) => Promise<void>
   removeItem: (key: string) => Promise<void>
-  watch: (callback: (event: 'update' | 'remove', key: string) => void) => Promise<unknown> | unknown
+  getMounts?: () => Array<{
+    base: string
+    driver: {
+      watch?: (callback: (event: 'update' | 'remove', key: string) => void) => Promise<unknown> | unknown
+    }
+  }>
 }
 
 const MAX_BUFFERED_EVENTS = 500
@@ -51,16 +65,23 @@ async function ensureWatcher(storage: StorageBridgeStorage): Promise<WatchState>
     nextId: 1,
   }
   watchState = state
-  try {
-    await storage.watch((event, key) => {
-      state.events.push({ id: state.nextId++, event, key })
-      if (state.events.length > MAX_BUFFERED_EVENTS)
-        state.events.splice(0, state.events.length - MAX_BUFFERED_EVENTS)
-    })
-  }
-  catch {
-    // Some drivers don't support watching; polling clients simply see no events.
-  }
+
+  const mounts = storage.getMounts?.() ?? []
+  await Promise.all(mounts.map(async ({ base, driver }) => {
+    if (!driver?.watch || shouldIgnoreStorageKey(base))
+      return
+    try {
+      await driver.watch((event, key) => {
+        state.events.push({ id: state.nextId++, event, key: base + key })
+        if (state.events.length > MAX_BUFFERED_EVENTS)
+          state.events.splice(0, state.events.length - MAX_BUFFERED_EVENTS)
+      })
+    }
+    catch {
+      // Some drivers don't support watching; polling clients see no events for them.
+    }
+  }))
+
   return state
 }
 
