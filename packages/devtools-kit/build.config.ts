@@ -17,7 +17,6 @@ export default defineBuildConfig({
     'nitro',
     'nitro/types',
     'unimport',
-    'unstorage',
     'ofetch',
     'vue',
     'vue-router',
