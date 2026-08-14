@@ -177,6 +177,8 @@ Nuxt DevTools collects anonymous telemetry data about general usage. This helps 
 
 Nuxt DevTools' telemetry data is piped through [Nuxt Telemetry](https://github.com/nuxt/telemetry), meaning that Nuxt DevTools will respect your local and global Nuxt Telemetry settings. You can also opt-out Nuxt DevTools' telemetry in the Nuxt DevTools settings.
 
+Nuxt DevTools also respects the [`DO_NOT_TRACK`](https://donottrack.sh/) environment variable convention — set `DO_NOT_TRACK=1` in your environment to disable Nuxt DevTools telemetry regardless of any other setting.
+
 The data we collect is completely anonymous, not traceable to the source (using hash+seed), and only meaningful in aggregate form. No data we collect is personally identifiable or trackable.
 
 ### Events
