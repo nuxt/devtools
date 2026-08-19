@@ -4,7 +4,6 @@ import type { CodeServerIntegrationOptions, NuxtDevtoolsServerContext } from '..
 import { createCodeServerDevframe } from '@devframes/plugin-code-server'
 import { setupCodeServer } from '@devframes/plugin-code-server/node'
 import { deprecate, NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
-import { mountDevframe } from '@vitejs/devtools-kit/node'
 
 const RESERVED_ARGS = ['--auth', '--bind-addr', '--cookie-suffix'] as const
 const RESERVED_ENV = ['PASSWORD', 'HASHED_PASSWORD'] as const
@@ -91,9 +90,9 @@ export function setup(ctx: NuxtDevtoolsServerContext): void {
   })
 
   onDevtoolsReady((kit) => {
-    // `mountDevframe` is re-exported from the hub package while the hook uses
-    // the Vite kit's enriched context type; they are the same runtime object.
-    return mountDevframe(kit as any, mountedDefinition, {
+    // `ctx.install` (from the hub context the Vite kit extends) serves the
+    // definition's SPA, synthesizes its iframe dock, and runs its `setup`.
+    return kit.install(mountedDefinition, {
       dock: {
         groupId: NUXT_DEVTOOLS_GROUP_ID,
         category: 'modules',

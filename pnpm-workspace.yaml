@@ -15,6 +15,10 @@ minimumReleaseAgeExclude:
   - devframe
   - verkit@0.1.2
   - vite-plugin-inspect@12.0.2
+  - '@devframes/hub-ui'
+  - '@devframes/json-render-ui'
+  - '@devframes/service-open'
+  - '@devframes/vite'
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
@@ -37,7 +41,7 @@ allowBuilds:
   vue-demi: true
 
 refs:
-  devframe: &devframe ^0.8.0
+  devframe: &devframe ^0.9.2
   # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
   # `vite@^8.1.5`, so this and the `vite` ref below move together.
   #
@@ -60,7 +64,7 @@ refs:
   shiki: &shiki ^4.4.1
   unocss: &unocss ^66.7.5
   vite: &vite ^8.2.0
-  vite-devtools: &vite-devtools ^0.4.11
+  vite-devtools: &vite-devtools ^0.5.0
   vue: &vue ^3.5.40
   vueuse: &vueuse ^14.4.0
 overrides:
@@ -72,6 +76,17 @@ overrides:
   '@devframes/plugin-messages': *devframe
   '@devframes/plugin-terminals': *devframe
   '@nuxt/devtools': workspace:*
+  # `vite@8.2.0` declares its `@vitejs/devtools` optional peer as `^0.4.0`,
+  # which predates the 0.5.x line this workspace runs. In subtrees where
+  # `@vitejs/devtools` isn't otherwise fixed (e.g. the standalone
+  # `@devframes/plugin-*`), pnpm would satisfy that stale peer range with the
+  # highest `^0.4.x`, minting a *second* `vite` peer-variant whose types are
+  # structurally unrelated to the 0.5.x one — breaking `vue-tsc` where a
+  # `PluginWithDevTools` from the 0.5 kit meets Nuxt kit's `addVitePlugin`.
+  # Pin the whole `@vitejs/devtools*` family to the single `vite-devtools` ref
+  # so only one version — and thus one `vite` variant — can ever resolve.
+  '@vitejs/devtools': *vite-devtools
+  '@vitejs/devtools-kit': *vite-devtools
   '@vue/compiler-core': *vue
   '@vue/compiler-dom': *vue
   '@vue/shared': *vue

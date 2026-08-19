@@ -6,7 +6,7 @@ import { resolveCodeServerOptions, setup } from '../src/integrations/code-server
 
 const mocks = vi.hoisted(() => ({
   createCodeServerDevframe: vi.fn(),
-  mountDevframe: vi.fn(),
+  install: vi.fn(),
   setupCodeServer: vi.fn(),
   dispose: vi.fn(),
 }))
@@ -17,10 +17,6 @@ vi.mock('@devframes/plugin-code-server', () => ({
 
 vi.mock('@devframes/plugin-code-server/node', () => ({
   setupCodeServer: mocks.setupCodeServer,
-}))
-
-vi.mock('@vitejs/devtools-kit/node', () => ({
-  mountDevframe: mocks.mountDevframe,
 }))
 
 function fakeContext(moduleOptions: Record<string, any> = {}) {
@@ -52,7 +48,7 @@ beforeEach(() => {
     setup: vi.fn(),
   }))
   mocks.setupCodeServer.mockResolvedValue({ dispose: mocks.dispose })
-  mocks.mountDevframe.mockImplementation(async (_kit, definition) => {
+  mocks.install.mockImplementation(async (definition) => {
     await definition.setup({ cwd: '/project' })
   })
 })
@@ -114,7 +110,7 @@ describe('code server setup', () => {
     await nuxt.callHook('devtools:ready', {} as any)
 
     expect(mocks.createCodeServerDevframe).not.toHaveBeenCalled()
-    expect(mocks.mountDevframe).not.toHaveBeenCalled()
+    expect(mocks.install).not.toHaveBeenCalled()
   })
 
   it('mounts the plugin in the Nuxt group and disposes its supervisor on close', async () => {
@@ -127,10 +123,9 @@ describe('code server setup', () => {
       serverPort: 9090,
     }))
 
-    const kit = { id: 'kit' }
+    const kit = { id: 'kit', install: mocks.install }
     await nuxt.callHook('devtools:ready', kit as any)
-    expect(mocks.mountDevframe).toHaveBeenCalledWith(
-      kit,
+    expect(mocks.install).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'devframes_plugin_code-server' }),
       {
         dock: {
@@ -157,7 +152,7 @@ describe('code server setup', () => {
     const { ctx, nuxt } = fakeContext()
     setup(ctx)
 
-    const ready = nuxt.callHook('devtools:ready', { id: 'kit' } as any)
+    const ready = nuxt.callHook('devtools:ready', { id: 'kit', install: mocks.install } as any)
     await vi.waitFor(() => {
       expect(mocks.setupCodeServer).toHaveBeenCalledOnce()
     })
