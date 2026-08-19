@@ -10,8 +10,8 @@ import os from 'node:os'
 import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
+import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
 import { join } from 'pathe'
-import sirv from 'sirv'
 import { searchForWorkspaceRoot } from 'vite'
 import { version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
@@ -249,14 +249,13 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   nuxt.hook('vite:serverCreated', (server) => {
     const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
-    server.middlewares.use(ROUTE_ANALYZE, sirv(devtoolsAnalyzeDir, { single: false, dev: true, dotfiles: true, ignores: false }))
+    server.middlewares.use(ROUTE_ANALYZE, serveStaticNodeMiddleware(devtoolsAnalyzeDir, { single: false }))
 
     // Serve the front end in production
     if (clientDirExists) {
       const indexHtmlPath = join(clientDir, 'index.html')
       const indexContent = fs.readFile(indexHtmlPath, 'utf-8')
-      const handleStatic = sirv(clientDir, {
-        dev: true,
+      const handleStatic = serveStaticNodeMiddleware(clientDir, {
         single: false,
       })
       // We replace the base URL in the index.html based on user's settings

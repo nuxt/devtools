@@ -1,11 +1,14 @@
 import type { NuxtAnalyzeMeta } from '@nuxt/schema'
 import type { AnalyzeBuildMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { execFile } from 'node:child_process'
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
+import { promisify } from 'node:util'
 import { dirname, join } from 'pathe'
-import { x } from 'tinyexec'
 import { glob } from 'tinyglobby'
 import { createUniqueSessionId } from '../utils/session-id'
+
+const execFileAsync = promisify(execFile)
 
 const COLON_RE = /:/g
 
@@ -128,8 +131,8 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
   }
 
   async function git(...args: string[]): Promise<string> {
-    const result = await x('git', args, { nodeOptions: { cwd: nuxt.options.rootDir }, throwOnError: true })
-    return result.stdout.trim()
+    const { stdout } = await execFileAsync('git', args, { cwd: nuxt.options.rootDir })
+    return stdout.trim()
   }
 
   async function generateAnalyzeBuildName() {
