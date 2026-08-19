@@ -75,7 +75,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
     nuxt.options.vite.optimizeDeps.include.push(
-      'nuxt > @nuxt/devtools > @vitejs/devtools/client/inject',
+      // Vite DevTools 0.5's embedded client is served by the hub as an external
+      // `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
+      // is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
+      // pre-bundle here.
       'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
       'nuxt > @nuxt/devtools > error-stack-parser-es',
       'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
