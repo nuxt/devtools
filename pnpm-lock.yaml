@@ -479,9 +479,6 @@ importers:
       '@nuxt/devtools-kit':
         specifier: workspace:*
         version: link:../devtools-kit
-      '@nuxt/kit':
-        specifier: catalog:prod
-        version: '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.2.0)(magicast@0.5.4)(oxc-parser@0.143.0)(rolldown@1.2.4)(unplugin@3.3.0(esbuild@0.28.2)(rolldown@1.2.4)(rollup@4.62.4)(vite@8.2.1)(webpack@5.109.2(cssnano@7.1.9(postcss@8.5.26))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)))'
       '@vitejs/devtools':
         specifier: ^0.5.0
         version: 0.5.0(@devframes/json-render@0.9.2(@devframes/hub@0.9.2(crossws@0.4.10(srvx@0.11.22))(devframe@0.9.2(cac@7.0.0)(srvx@0.11.22)))(devframe@0.9.2(cac@7.0.0)(srvx@0.11.22)))(crossws@0.4.10(srvx@0.11.22))(srvx@0.11.22)(vite@8.2.1)
@@ -582,6 +579,9 @@ importers:
       '@iconify-json/tabler':
         specifier: catalog:icons
         version: 1.2.38
+      '@nuxt/kit':
+        specifier: catalog:prod
+        version: '@nuxt/kit-nightly@5.0.0-29755283.b4586ef2(magic-string@1.2.0)(magicast@0.5.4)(oxc-parser@0.143.0)(rolldown@1.2.4)(unplugin@3.3.0(esbuild@0.28.2)(rolldown@1.2.4)(rollup@4.62.4)(vite@8.2.1)(webpack@5.109.2(cssnano@7.1.9(postcss@8.5.26))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)))'
       '@parcel/watcher':
         specifier: catalog:buildtools
         version: 2.6.0
