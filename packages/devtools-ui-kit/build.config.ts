@@ -1,7 +1,7 @@
 import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
-  declaration: true,
+  declaration: 'node16',
   entries: [
     { input: 'src/module', format: 'esm' },
     { input: 'src/unocss', format: 'esm' },

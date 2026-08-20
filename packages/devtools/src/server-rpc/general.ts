@@ -223,7 +223,7 @@ export function setupGeneralRPC({
         let editor = getOptions()?.behavior.openInEditor ?? undefined
         if (editor === 'auto')
           editor = undefined
-        await import('launch-editor').then(r => (r.default || r)(path + suffix, editor))
+        await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }
       catch (e) {

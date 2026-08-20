@@ -128,7 +128,7 @@ export default defineNuxtConfig({
         'error-stack-parser-es',
         'fuse.js',
         'json-editor-vue',
-        'ohash',
+        'devframe/utils/hash',
         'perfect-debounce',
         'scule',
         'vue-virtual-scroller',

@@ -4,9 +4,8 @@
   "private": true,
   "exports": {
     ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
     }
   },
   "scripts": {
@@ -21,15 +20,18 @@
     "test": "vitest run",
     "test:watch": "vitest watch"
   },
+  "peerDependencies": {
+    "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0"
+  },
   "dependencies": {
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:prod",
     "sirv": "catalog:prod"
   },
   "devDependencies": {
     "@iconify-json/carbon": "catalog:icons",
     "@nuxt/devtools": "workspace:*",
     "@nuxt/devtools-ui-kit": "workspace:*",
+    "@nuxt/kit": "catalog:prod",
     "@nuxt/module-builder": "catalog:buildtools",
     "@nuxt/schema": "catalog:types",
     "@nuxt/test-utils": "catalog:cli",

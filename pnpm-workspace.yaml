@@ -84,11 +84,6 @@ overrides:
   chokidar: ^5.0.0
   devframe: *devframe
   esbuild: ^0.28.2
-  # `unplugin-vue-markdown@32.0.0` depends on its own `markdown-exit
-  # ^1.0.0-beta.9`, a different prerelease tuple than the `^1.1.0-beta.2`
-  # `packages/devtools` depends on directly — semver won't let one satisfy
-  # the other, so without this override pnpm resolves and ships two copies
-  # of the engine. Force both onto the version this workspace uses directly.
   markdown-exit: ^1.1.0-beta.2
   rollup: ^4.62.4
   semver: ^7.8.5
@@ -96,13 +91,6 @@ overrides:
   unimport: ^6.4.0
   vite: *vite
   vue: *vue
-  # `@nuxt/module-builder@1.0.3` bundles `mkdist@2.4.1`, whose own
-  # `vue-sfc-transformer` dependency is pinned to `^0.1.17` — but
-  # `resolutionMode: highest` otherwise hoists mkdist's copy up to
-  # `@nuxt/module-builder`'s own newer `^0.2.3` want, and mkdist's `.vue`
-  # transform silently breaks under that mismatch (it wrote compiled output
-  # into `packages/devtools/src/runtime/**` instead of `dist/`, clobbering
-  # `auth/index.html` in the process). Pin to what mkdist itself needs.
   vue-sfc-transformer: ^0.2.5
   vue-tsc: ^3.3.10
 catalogs:
@@ -176,7 +164,6 @@ catalogs:
     markdown-exit: ^1.1.0-beta.2
     markdown-it-link-attributes: ^4.0.1
     ofetch: ^1.5.1
-    ohash: ^2.0.12
     pathe: ^2.0.3
     perfect-debounce: ^2.1.0
     quicktype-core: 22.0.0
@@ -211,9 +198,9 @@ catalogs:
     consola: ^3.4.2
     defu: ^6.1.7
     destr: ^2.0.5
+    devframe: *devframe
     fast-npm-meta: ^2.2.0
     image-meta: ^0.2.2
-    launch-editor: ^2.14.1
     local-pkg: ^1.2.1
     magicast: ^0.5.4
     nostics: ^1.2.0
@@ -225,12 +212,10 @@ catalogs:
     verkit: ^0.4.0
     vite-plugin-inspect: ^12.0.2
     vite-plugin-vue-tracer: ^1.5.0
-    ws: ^8.21.3
   types:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.2.0
-    '@types/ws': ^8.18.1
     '@unhead/schema': ^3.3.2
     '@vitejs/devtools-kit': *vite-devtools
     unimport: ^6.4.0

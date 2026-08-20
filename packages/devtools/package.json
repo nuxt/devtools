@@ -11,24 +11,13 @@
     "directory": "packages/devtools"
   },
   "exports": {
-    ".": {
-      "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs"
-    },
-    "./webcomponents": {
-      "types": "./dist/webcomponents/index.d.mts",
-      "import": "./dist/webcomponents/index.mjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.mts"
-    },
+    ".": "./dist/module.mjs",
+    "./webcomponents": "./dist/webcomponents/index.mjs",
+    "./types": "./dist/types.mjs",
     "./*": "./*"
   },
   "types": "./dist/module.d.mts",
   "files": [
-    "*.cjs",
-    "*.d.ts",
-    "*.mjs",
     "dist"
   ],
   "scripts": {
@@ -66,28 +55,22 @@
     "@nuxt/devtools-kit": "workspace:*",
     "@vitejs/devtools": "catalog:buildtools",
     "@vitejs/devtools-kit": "catalog:types",
-    "birpc": "catalog:frontend",
     "consola": "catalog:prod",
     "destr": "catalog:prod",
+    "devframe": "catalog:prod",
     "error-stack-parser-es": "catalog:frontend",
     "fast-npm-meta": "catalog:prod",
     "hookable": "catalog:frontend",
     "image-meta": "catalog:prod",
-    "launch-editor": "catalog:prod",
     "local-pkg": "catalog:prod",
     "magicast": "catalog:prod",
-    "ohash": "catalog:frontend",
     "pathe": "catalog:frontend",
     "perfect-debounce": "catalog:frontend",
     "pkg-types": "catalog:prod",
-    "sirv": "catalog:prod",
-    "structured-clone-es": "catalog:frontend",
-    "tinyexec": "catalog:prod",
     "tinyglobby": "catalog:prod",
     "unstorage": "catalog:prod",
     "verkit": "catalog:prod",
-    "vite-plugin-vue-tracer": "catalog:prod",
-    "ws": "catalog:prod"
+    "vite-plugin-vue-tracer": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/utils": "catalog:frontend",
@@ -126,6 +109,7 @@
     "scule": "catalog:frontend",
     "shiki": "catalog:frontend",
     "shiki-codegen": "catalog:buildtools",
+    "structured-clone-es": "catalog:frontend",
     "theme-vitesse": "catalog:frontend",
     "tsx": "catalog:cli",
     "ua-parser-modern": "catalog:frontend",
