@@ -88,6 +88,7 @@ export interface ClientFunctions {
   refresh: (event: ClientUpdateEvent) => void
   callHook: (hook: string, ...args: any[]) => Promise<void>
   navigateTo: (path: string) => void
+  openUrl: (url: string) => void
 
   /**
    * Minimal server→client completion signal for generic package updates only
