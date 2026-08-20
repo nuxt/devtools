@@ -11,24 +11,13 @@
     "directory": "packages/devtools"
   },
   "exports": {
-    ".": {
-      "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs"
-    },
-    "./webcomponents": {
-      "types": "./dist/webcomponents/index.d.mts",
-      "import": "./dist/webcomponents/index.mjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.mts"
-    },
+    ".": "./dist/module.mjs",
+    "./webcomponents": "./dist/webcomponents/index.mjs",
+    "./types": "./dist/types.mjs",
     "./*": "./*"
   },
   "types": "./dist/module.d.mts",
   "files": [
-    "*.cjs",
-    "*.d.ts",
-    "*.mjs",
     "dist"
   ],
   "scripts": {

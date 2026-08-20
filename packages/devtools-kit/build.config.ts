@@ -4,7 +4,8 @@ export default defineBuildConfig({
   entries: [
     'src/index',
     'src/types',
-    { input: 'src/runtime/', outDir: 'dist/runtime', format: 'esm' },
+    'src/runtime/iframe-client',
+    'src/runtime/host-client',
   ],
   externals: [
     '@nuxt/kit',
@@ -28,8 +29,5 @@ export default defineBuildConfig({
     'shiki',
     '@vitejs/devtools-kit',
   ],
-  declaration: true,
-  rollup: {
-    emitCJS: true,
-  },
+  declaration: 'node16',
 })

@@ -11,21 +11,12 @@
     "directory": "packages/devtools-ui-kit"
   },
   "exports": {
-    ".": {
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
-    },
-    "./module": {
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
-    },
-    "./unocss": {
-      "import": "./dist/unocss.mjs"
-    }
+    ".": "./dist/module.mjs",
+    "./module": "./dist/module.mjs",
+    "./unocss": "./dist/unocss.mjs"
   },
   "main": "./dist/module.mjs",
   "files": [
-    "*.cjs",
     "dist"
   ],
   "scripts": {
