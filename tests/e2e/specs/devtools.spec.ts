@@ -23,7 +23,7 @@ test('registers a single Nuxt entry (no duplicate from the SSR Vite context)', a
   // group. There is no user-visible proxy for "how many groups registered", so
   // this is the one place we read the dock registry — kept to a single count.
   const nuxtGroups = await page.evaluate(() => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     return ctx.docks.entries.filter((entry: any) => entry.id === 'nuxt').length
   })
   expect(nuxtGroups).toBe(1)

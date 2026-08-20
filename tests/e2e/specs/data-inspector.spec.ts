@@ -8,7 +8,7 @@ const EXAMPLE_SOURCE_ID = 'devframes:plugin:data-inspector:example'
 
 async function inspectorSources(page: any): Promise<string[]> {
   return page.evaluate(async () => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     const sources = await ctx.rpc.call('devframes:plugin:data-inspector:sources')
     return (sources as { id: string }[]).map(s => s.id)
   })
@@ -29,7 +29,7 @@ test('exposes the live Nuxt application as a data source and hides the demo sour
 
   // Querying the live source returns data (the integration is wired end to end).
   const results = await page.evaluate(async (sourceId) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     const nuxt = await ctx.rpc.call('devframes:plugin:data-inspector:query', sourceId, 'nuxt')
     const vite = await ctx.rpc.call('devframes:plugin:data-inspector:query', sourceId, 'vite')
     return { nuxt, vite }
