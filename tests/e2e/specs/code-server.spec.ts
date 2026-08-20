@@ -13,13 +13,13 @@ test('reports a missing editor binary without starting a process', async ({ page
   await openDevTools()
 
   await page.waitForFunction((id) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     return ctx?.docks?.entries?.some((entry: any) => entry.id === id)
   }, CODE_SERVER_DOCK_ID, { timeout: 30_000 })
 
   // Open the Code Server member the way a user would.
   await page.evaluate(async (id) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     await ctx.docks.switchEntry(id)
   }, CODE_SERVER_DOCK_ID)
 
@@ -30,7 +30,7 @@ test('reports a missing editor binary without starting a process', async ({ page
 
   // Opening the member performs detection only — it must not launch a process.
   const status = await page.evaluate(async (rpcName) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     return ctx.rpc.call(rpcName)
   }, CODE_SERVER_STATUS_RPC)
   expect((status as any).server.status).toBe('stopped')
@@ -45,12 +45,12 @@ test('launches an installed Code Server with authenticated iframe handoff', asyn
   await page.goto('/')
   await openDevTools()
   await page.waitForFunction((id) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     return ctx?.docks?.entries?.some((entry: any) => entry.id === id)
   }, CODE_SERVER_DOCK_ID, { timeout: 30_000 })
 
   await page.evaluate(async (id) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     await ctx.docks.switchEntry(id)
   }, CODE_SERVER_DOCK_ID)
   const launcher = page.frameLocator(`iframe[src*="${CODE_SERVER_DOCK_ID}"]`)
@@ -58,7 +58,7 @@ test('launches an installed Code Server with authenticated iframe handoff', asyn
 
   await expect.poll(async () => {
     return page.evaluate(async (rpcName) => {
-      const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+      const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
       return ctx.rpc.call(rpcName)
     }, CODE_SERVER_STATUS_RPC)
   }, { timeout: 60_000 }).toMatchObject({
@@ -67,7 +67,7 @@ test('launches an installed Code Server with authenticated iframe handoff', asyn
   })
 
   const runningStatus = await page.evaluate(async (rpcName) => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     return ctx.rpc.call(rpcName)
   }, CODE_SERVER_STATUS_RPC) as any
   const serverPort = String(runningStatus.server.port)

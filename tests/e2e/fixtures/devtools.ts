@@ -28,17 +28,17 @@ async function ensureDockReady(page: Page): Promise<void> {
     { timeout: 30_000 },
   )
   await page.waitForFunction(
-    () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.rpc),
+    () => Boolean((globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__?.rpc),
     null,
     { timeout: 30_000 },
   )
   await page.evaluate(() => {
-    const ctx = (globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__
+    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
     if (ctx?.rpc && !ctx.rpc.isTrusted)
       ctx.rpc.events?.emit?.('rpc:is-trusted:updated', true)
   })
   await page.waitForFunction(
-    () => Boolean((globalThis as any).__VITE_DEVTOOLS_CLIENT_CONTEXT__?.docks?.entries?.length),
+    () => Boolean((globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__?.docks?.entries?.length),
     null,
     { timeout: 30_000 },
   )
