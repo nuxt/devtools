@@ -36,7 +36,8 @@
     "playground:build": "nuxi generate playground"
   },
   "peerDependencies": {
-    "@nuxt/devtools": "workspace:*"
+    "@nuxt/devtools": "workspace:*",
+    "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0"
   },
   "dependencies": {
     "@iconify-json/carbon": "catalog:icons",
@@ -44,7 +45,6 @@
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:prod",
     "@unocss/core": "catalog:buildtools",
     "@unocss/nuxt": "catalog:buildtools",
     "@unocss/preset-attributify": "catalog:buildtools",
@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "workspace:*",
+    "@nuxt/kit": "catalog:prod",
     "nuxt": "catalog:buildtools",
     "unbuild": "catalog:buildtools"
   },
