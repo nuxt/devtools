@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AssetInfo } from '~/../src/types'
 import { useStyleTag } from '@vueuse/core'
-import { hash } from 'ohash'
+import { hash } from 'devframe/utils/hash'
 import { computed } from 'vue'
 
 const props = defineProps<{
