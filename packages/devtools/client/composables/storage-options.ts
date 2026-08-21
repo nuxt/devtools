@@ -22,10 +22,22 @@ function getTabOptions<T extends keyof NuxtDevToolsOptions>(tab: T): ToRefs<Nuxt
       watchDebounced(
         source,
         async (options) => {
-          rpc.updateOptions(tab, options)
+          // Best-effort persistence: a transient RPC failure here (e.g. the
+          // connection was torn down and re-established after a dev-server
+          // reload) shouldn't surface as an uncaught error — the next change
+          // will simply retry the write.
+          rpc.updateOptions(tab, options).catch((error) => {
+            console.error(`[nuxt-devtools] Failed to persist "${String(tab)}" options`, error)
+          })
         },
         { deep: true, flush: 'post', debounce: 500, maxWait: 1000 },
       )
+    })
+    .catch((error) => {
+      // Same as above: don't let a transient disconnect (e.g. right after a
+      // Nuxt dev-server reload) throw an uncaught error — fall back to the
+      // in-memory defaults already seeded above and keep the UI usable.
+      console.error(`[nuxt-devtools] Failed to load "${String(tab)}" options`, error)
     })
 
   return refs

@@ -16,5 +16,10 @@ export function telemetry(event: string, payload?: object, immediate = false) {
     osVersion: userAgentInfo.os.version,
     deviceType: userAgentInfo.device.type,
     ...payload,
-  }, immediate)
+  }, immediate).catch((error) => {
+    // Telemetry is best-effort: a transient RPC failure (e.g. the connection
+    // was torn down and re-established after a dev-server reload) should
+    // never surface to the user as an uncaught error.
+    console.error('[nuxt-devtools] Failed to send telemetry event', error)
+  })
 }
