@@ -45,16 +45,6 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  Object.defineProperty(window, '__NUXT_DEVTOOLS_VIEW__', {
-    value: {
-      setClient(_client) {
-        setupClient(_client)
-      },
-    } as typeof window['__NUXT_DEVTOOLS_VIEW__'],
-    enumerable: false,
-    configurable: true,
-  })
-
   connectParent()
   setTimeout(connectParent, 1000)
 

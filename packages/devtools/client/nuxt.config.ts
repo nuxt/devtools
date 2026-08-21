@@ -61,6 +61,13 @@ export default defineNuxtConfig({
       // We set a placeholder for the middleware to be replaced with the correct base URL
       baseURL: '/__NUXT_DEVTOOLS_BASE__/',
     },
+    router: {
+      options: {
+        // Hash routing keeps the document URL at the mount root, so relative
+        // asset URLs always resolve regardless of the active tab route.
+        hashMode: true,
+      },
+    },
   },
 
   ssr: false,

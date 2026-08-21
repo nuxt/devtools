@@ -63,6 +63,13 @@
           "playground/nuxt.config.ts"
         ]
       },
+      // The assets package is never imported: it only satisfies the runtime
+      // package resolution of the client UI's remote-assets source (see
+      // `resolveClientAssetsSource` in `src/module-main.ts`), keeping the
+      // monorepo/e2e flows serving the local build with zero network.
+      "ignoreDependencies": [
+        "@nuxt/devtools-assets"
+      ],
       "entry": [
         "scripts/*.mjs",
         "src/webcomponents/scripts/*.ts",

@@ -1,0 +1,23 @@
+{
+  "name": "@nuxt/devtools-assets",
+  "type": "module",
+  "version": "4.0.0-alpha.12",
+  "description": "Pre-built client UI assets for Nuxt DevTools, resolved on demand.",
+  "license": "MIT",
+  "homepage": "https://devtools.nuxt.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxt/devtools.git",
+    "directory": "packages/devtools-assets"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm -C ../devtools run build:client",
+    "prepack": "turbo run build --filter=@nuxt/devtools-assets"
+  }
+}

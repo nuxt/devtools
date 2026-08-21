@@ -13,12 +13,9 @@ import { events as inspectorEvents, hasData as inspectorHasData, state as inspec
 import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
-import { useAppConfig, useRuntimeConfig } from '#imports'
+import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import { state } from './state'
-
-const MULTIPLE_SLASHES_RE = /\/+/g
 
 // The `Nuxt` dock group id (see `NUXT_DEVTOOLS_GROUP_ID`). Activating the group
 // auto-opens its `defaultChildId` (the shared-frame anchor). The anchor iframe
@@ -47,7 +44,6 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
-  let iframe: HTMLIFrameElement | undefined
   let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
 
   const colorMode = useClientColorMode()
@@ -57,9 +53,6 @@ export async function setupDevToolsClient({
     nuxt: markRaw(nuxt as any),
     hooks: createHooks(),
     inspector: getInspectorInstance(),
-
-    getIframe,
-    syncClient,
 
     devtools: {
       toggle() {
@@ -104,7 +97,6 @@ export async function setupDevToolsClient({
           router.push(path)
       },
       colorMode,
-      frameState: state,
       $fetch: globalThis.$fetch as $Fetch,
     },
 
@@ -119,78 +111,6 @@ export async function setupDevToolsClient({
   })
 
   window.__NUXT_DEVTOOLS_HOST__ = client
-
-  function syncClient() {
-    if (!client.inspector)
-      client.inspector = getInspectorInstance()
-
-    try {
-      iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
-    }
-    catch (e) {
-      // cross-origin
-      console.error('[nuxt-devtools] Failed to connect view', e)
-    }
-    return client
-  }
-
-  function getIframe() {
-    if (!iframe) {
-      const runtimeConfig = useRuntimeConfig()
-      const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(MULTIPLE_SLASHES_RE, '/')
-      const initialUrl = CLIENT_PATH + state.value.route
-      iframe = document.createElement('iframe')
-
-      // custom iframe props
-      for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
-        iframe.setAttribute(key, String(value))
-
-      iframe.id = 'nuxt-devtools-iframe'
-      iframe.src = initialUrl
-      iframe.onload = async () => {
-        try {
-          await waitForClientInjection()
-          client.syncClient()
-        }
-        catch (e) {
-          console.error('Nuxt DevTools client injection failed')
-          console.error(e)
-        }
-      }
-    }
-
-    return iframe
-  }
-
-  function waitForClientInjection(retry = 20, timeout = 300) {
-    let lastError: any
-    const test = () => {
-      try {
-        return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
-      }
-      catch (e) {
-        lastError = e
-      }
-      return false
-    }
-
-    if (test())
-      return
-
-    return new Promise<void>((resolve, reject) => {
-      const interval = setInterval(() => {
-        if (test()) {
-          clearInterval(interval)
-          resolve()
-        }
-        else if (retry-- <= 0) {
-          clearInterval(interval)
-          reject(lastError)
-        }
-      }, timeout)
-    })
-  }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
     if (inspector)
@@ -399,9 +319,5 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   // trigger update for app mounted
   client.nuxt.hook('app:mounted', () => {
     refreshReactivity()
-  })
-  // record last route
-  client.hooks.hook('devtools:navigate', (path) => {
-    state.value.route = path
   })
 }
