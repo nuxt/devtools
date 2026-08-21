@@ -29,7 +29,7 @@
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "pnpm build"
+    "prepack": "turbo run build --filter=@nuxt/devtools"
   },
   "peerDependencies": {
     "@nuxt/devtools-assets": "workspace:*",
