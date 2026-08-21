@@ -18,6 +18,9 @@ node_modules
 # Generated dirs
 dist
 
+# `pnpm pack` staging dir, left behind in the packed package's directory
+packages/*/package/
+
 # Nuxt
 .nuxt
 .output

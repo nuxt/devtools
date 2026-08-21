@@ -88,7 +88,7 @@ jobs:
       # full static client at packages/devtools/dist/client.
       - run: pnpm build
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}

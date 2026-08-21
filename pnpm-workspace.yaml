@@ -28,6 +28,10 @@ trustPolicyExclude:
 
 packages:
   - packages/**
+  # `pnpm pack` stages into `<pkg>/package/`; a leftover one would otherwise be
+  # discovered as a second workspace with the same name as its parent package.
+  - '!packages/*/package'
+  - '!packages/*/package/**'
   - playgrounds/**
   - '!playgrounds/**/.output/**'
 
@@ -62,8 +66,8 @@ refs:
   nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29755283.b4586ef2
   nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29755283.b4586ef2
   shiki: &shiki ^4.4.3
-  unocss: &unocss ^66.7.5
-  vite: &vite ^8.2.1
+  unocss: &unocss ^66.8.0
+  vite: &vite ^8.2.2
   vite-devtools: &vite-devtools ^0.5.1
   vue: &vue ^3.5.41
   vueuse: &vueuse ^14.4.0
@@ -93,6 +97,9 @@ overrides:
   vue: *vue
   vue-sfc-transformer: ^0.2.5
   vue-tsc: ^3.3.10
+update:
+  ignoreDeps:
+    - typescript@7
 catalogs:
   buildtools:
     '@nuxt/module-builder': ^1.0.3
@@ -120,7 +127,7 @@ catalogs:
     nuxt: *nuxt
     shiki-codegen: *shiki
     skills-npm: ^1.2.0
-    turbo: ^2.10.10
+    turbo: ^2.10.11
     unbuild: ^3.6.1
     unocss: *unocss
     unplugin-vue: ^7.2.0
@@ -144,7 +151,7 @@ catalogs:
     taze: ^21.1.0
     tsx: ^4.23.12
     typescript: ^6.0.3
-    vitest: ^4.1.10
+    vitest: ^4.1.11
     vue-tsc: ^3.3.10
   frontend:
     '@antfu/utils': ^9.3.0
@@ -152,7 +159,7 @@ catalogs:
     '@unocss/runtime': *unocss
     '@vueuse/core': *vueuse
     '@vueuse/integrations': *vueuse
-    birpc: ^4.1.0
+    birpc: ^4.2.0
     cronstrue: ^3.24.0
     diff: ^9.0.0
     error-stack-parser-es: ^2.0.1
@@ -176,7 +183,7 @@ catalogs:
     v-lazy-show: ^0.3.0
     vanilla-jsoneditor: ^3.13.0
     vis-data: ^8.0.5
-    vis-network: ^10.1.1
+    vis-network: ^10.1.2
     vite-hot-client: ^2.2.0
     vue: *vue
     vue-router: ^5.2.0
@@ -219,7 +226,3 @@ catalogs:
     '@unhead/schema': ^3.3.2
     '@vitejs/devtools-kit': *vite-devtools
     unimport: ^6.4.0
-
-update:
-  ignoreDeps:
-    - typescript@7
