@@ -18,6 +18,6 @@
   ],
   "scripts": {
     "build": "pnpm -C ../devtools run build:client",
-    "prepack": "turbo run build --filter=@nuxt/devtools-assets"
+    "prepack": "turbo run build --filter=."
   }
 }
