@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { AnalyzeBuildMeta } from '~/../src/types'
+import type { AnalyzeBuildMeta, ServerFunctions } from '~/../src/types'
 import { createTemplatePromise, formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { definePageMeta } from '#imports'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { satisfyNuxtVersion } from '~/composables/npm'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useAnalyzeBuildInfo } from '~/composables/state'
 import { registerCommands } from '~/composables/state-commands'
 import { telemetry } from '~/composables/telemetry'
@@ -32,7 +33,8 @@ const shouldRevealTerminal = ref(false)
 const buildNameInput = ref('')
 const buildNameConflicted = computed(() => info.value?.builds.some(b => b.name === buildNameInput.value.trim()))
 async function start() {
-  buildNameInput.value = await rpc.generateAnalyzeBuildName()
+  const client = rpcClient.value || await connectPromise
+  buildNameInput.value = await client.call(`${RPC_NAMESPACE}:generateAnalyzeBuildName` as any) as Awaited<ReturnType<ServerFunctions['generateAnalyzeBuildName']>>
 
   if (!await PromiseConfirm.start())
     return
@@ -42,18 +44,20 @@ async function start() {
   // `startAnalyzeBuild` refreshes `getAnalyzeBuildInfo` as soon as the session
   // registers, so `info.isBuilding` / `info.activeSessionId` drive the UI. It
   // also returns the id so we can reveal the dock immediately.
-  const sessionId = await rpc.startAnalyzeBuild(buildNameInput.value)
+  const sessionId = await client.call(`${RPC_NAMESPACE}:startAnalyzeBuild` as any, buildNameInput.value) as Awaited<ReturnType<ServerFunctions['startAnalyzeBuild']>>
   if (shouldRevealTerminal.value)
-    rpc.revealTerminal(sessionId)
+    client.call(`${RPC_NAMESPACE}:revealTerminal` as any, sessionId)
 }
 
 function getDuration(build: AnalyzeBuildMeta) {
   return `${((build.endTime - build.startTime) / 1000).toFixed(1)}s`
 }
 
-function revealTerminal() {
-  if (info.value?.activeSessionId)
-    rpc.revealTerminal(info.value.activeSessionId)
+async function revealTerminal() {
+  if (info.value?.activeSessionId) {
+    const client = rpcClient.value || await connectPromise
+    await client.call(`${RPC_NAMESPACE}:revealTerminal` as any, info.value.activeSessionId)
+  }
 }
 
 registerCommands(() => [

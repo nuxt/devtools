@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { ModuleActionType, ModuleStaticInfo } from '../../src/types'
+import type { ModuleActionType, ModuleStaticInfo, ServerFunctions } from '../../src/types'
 import { computed } from 'vue'
 import { ModuleDialog } from '~/composables/dialog'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useInstalledModules } from '~/composables/state-modules'
 import { processInstallingModules } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 const props = defineProps<{
   item: ModuleStaticInfo
@@ -18,9 +19,14 @@ const installedInfo = computed(() => installedModules.value.find(i => i.name ===
 const isInstalled = computed(() => installedInfo.value && installedInfo.value.isPackageModule)
 const isUninstallable = computed(() => installedInfo.value && installedInfo.value.isPackageModule && installedInfo.value.isUninstallable)
 
+async function callModuleAction(type: ModuleActionType, name: string, dry: boolean, sessionId?: string) {
+  const client = rpcClient.value || await connectPromise
+  const method = type === 'install' ? 'installNuxtModule' : 'uninstallNuxtModule'
+  return client.call(`${RPC_NAMESPACE}:${method}` as any, name, dry, sessionId) as Promise<Awaited<ReturnType<ServerFunctions['installNuxtModule']>>>
+}
+
 async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
-  const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
-  const result = await method(item.npm, true)
+  const result = await callModuleAction(type, item.npm, true)
 
   telemetry(`modules:${type}`, {
     moduleName: item.npm,
@@ -45,7 +51,7 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
     // server registers the very session we're tracking. The execution RPC
     // awaits the process, so clearing the pending entry here (no `onTerminalExit`
     // needed) settles the UI whether it succeeds or throws.
-    await method(item.npm, false, result.processId)
+    await callModuleAction(type, item.npm, false, result.processId)
   }
   finally {
     const index = processInstallingModules.value.findIndex(i => i.processId === result.processId)

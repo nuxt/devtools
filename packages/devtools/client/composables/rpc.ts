@@ -22,6 +22,12 @@ export const connectPromise = connectDevToolsRpc()
 /**
  * Proxy-based RPC object that provides backward-compatible `rpc.functionName()` interface.
  * Server functions are called via Vite DevTools Kit's RPC client.
+ *
+ * Kept solely for the public, non-deprecated `NuxtDevtoolsClient.rpc` surface
+ * consumed by third-party module custom tabs (`devtools.rpc.xxx()`). Internal
+ * app code no longer uses this — it calls `rpcClient.value?.call(...)` /
+ * `connectPromise` directly (devframe-native style), the same way this Proxy
+ * does underneath.
  */
 export const rpc = new Proxy({} as AsyncServerFunctions, {
   get: (_, method: string) => {

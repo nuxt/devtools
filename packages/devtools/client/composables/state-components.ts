@@ -1,14 +1,19 @@
 import type { Component } from 'nuxt/schema'
+import type { ServerFunctions } from '../../src/types'
 import { computed } from 'vue'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 import { useClient } from './client'
-import { rpc } from './rpc'
+import { connectPromise, rpcClient } from './rpc'
 import { useAsyncState } from './utils'
 
 const LAZY_COMPONENT_RE = /^Lazy[A-Z]/
 
 export function useComponents() {
   const client = useClient()
-  const serverComponents = useAsyncState('getComponents', () => rpc.getComponents())
+  const serverComponents = useAsyncState('getComponents', async () => {
+    const rpcClientInstance = rpcClient.value || await connectPromise
+    return rpcClientInstance.call(`${RPC_NAMESPACE}:getComponents` as any) as Promise<Awaited<ReturnType<ServerFunctions['getComponents']>>>
+  })
 
   const globalComponents = computed(() =>
     Object
@@ -29,5 +34,8 @@ export function useComponents() {
 }
 
 export function useComponentsRelationships() {
-  return useAsyncState('getComponentsRelationships', () => rpc.getComponentsRelationships())
+  return useAsyncState('getComponentsRelationships', async () => {
+    const client = rpcClient.value || await connectPromise
+    return client.call(`${RPC_NAMESPACE}:getComponentsRelationships` as any) as Promise<Awaited<ReturnType<ServerFunctions['getComponentsRelationships']>>>
+  })
 }

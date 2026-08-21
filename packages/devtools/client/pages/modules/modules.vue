@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { definePageMeta } from '#imports'
-import { rpc } from '~/composables/rpc'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { useInstalledModules } from '~/composables/state-modules'
 
@@ -29,6 +30,11 @@ registerCommands(() => [
     },
   },
 ])
+
+async function revealTerminal(id: string) {
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:revealTerminal` as any, id)
+}
 </script>
 
 <template>
@@ -49,7 +55,7 @@ registerCommands(() => [
         v-for="m of processInstallingModules"
         :key="m.processId" block min-h-30
         title="Open the output in the Terminals dock"
-        @click="rpc.revealTerminal(m.processId)"
+        @click="revealTerminal(m.processId)"
       >
         <NCard
           border="1.5 dashed"

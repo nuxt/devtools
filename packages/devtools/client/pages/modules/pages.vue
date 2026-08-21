@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { definePageMeta } from '#imports'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { useClient, useClientRoute, useClientRouter } from '~/composables/client'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useLayouts, useMergedRouteList, useServerApp, useServerConfig } from '~/composables/state'
 import { useNuxtCompatibilityVersion } from '~/composables/utils'
 
@@ -64,6 +66,11 @@ function navigateToRoute(path: string) {
 const compatibilityVersion = useNuxtCompatibilityVersion()
 
 const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}pages/index.vue`)
+
+async function enablePages() {
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:enablePages` as any)
+}
 </script>
 
 <template>
@@ -181,7 +188,7 @@ const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}p
       {
         label: 'Enable Routing',
         async handle() {
-          return rpc.enablePages()
+          return enablePages()
         },
       },
     ]"

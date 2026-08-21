@@ -1,8 +1,9 @@
 import type { NuxtDevtoolsHostClient } from '@nuxt/devtools-kit/types'
 import { triggerRef } from 'vue'
 import { defineNuxtPlugin, useRouter } from '#imports'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 import { useClient } from '../composables/client'
-import { rpc } from '../composables/rpc'
+import { connectPromise, rpcClient } from '../composables/rpc'
 
 export default defineNuxtPlugin(() => {
   const client = useClient()
@@ -13,8 +14,9 @@ export default defineNuxtPlugin(() => {
     client.value.revision.value += 1
   }
 
-  function onInspectorClick(path: string) {
-    rpc.openInEditor(path)
+  async function onInspectorClick(path: string) {
+    const rpcClientInstance = rpcClient.value || await connectPromise
+    await rpcClientInstance.call(`${RPC_NAMESPACE}:openInEditor` as any, path)
   }
 
   function setupClient(_client: NuxtDevtoolsHostClient) {

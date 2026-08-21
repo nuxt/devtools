@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { InstalledModuleInfo } from '../../src/types'
 import { computed } from 'vue'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 const props = defineProps<{
   mod: InstalledModuleInfo
@@ -13,6 +14,11 @@ const data = computed(() => ({
   ...props.mod,
   ...staticInfo.value,
 }))
+
+async function revealTerminal(id: string) {
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:revealTerminal` as any, id)
+}
 </script>
 
 <template>
@@ -30,7 +36,7 @@ const data = computed(() => ({
             v-if="state === 'running'" flex="~ gap-2"
             animate-pulse items-center
             :title="id ? 'Open the output in the Terminals dock' : undefined"
-            @click="id ? rpc.revealTerminal(id) : undefined"
+            @click="id ? revealTerminal(id) : undefined"
           >
             <span i-carbon-circle-dash flex-none animate-spin text-lg op50 />
             <code text-sm op50>Upgrading...</code>

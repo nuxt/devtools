@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { AssetInfo, CodeSnippet } from '~/../src/types'
+import type { AssetInfo, CodeSnippet, ServerFunctions } from '~/../src/types'
 import { computedAsync, useTimeAgo, useVModel } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { devtoolsUiShowNotification } from '#imports'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { useCopy, useOpenInEditor } from '~/composables/editor'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useServerConfig } from '~/composables/state'
 
 const props = defineProps<{
@@ -17,7 +18,8 @@ const asset = useVModel(props, 'modelValue', emit, { passive: true })
 const imageMeta = computedAsync(async () => {
   if (asset.value.type !== 'image')
     return undefined
-  return rpc.getImageMeta(asset.value.filePath)
+  const client = rpcClient.value || await connectPromise
+  return client.call(`${RPC_NAMESPACE}:getImageMeta` as any, asset.value.filePath) as Promise<Awaited<ReturnType<ServerFunctions['getImageMeta']>>>
 })
 
 const editDialog = ref(false)
@@ -30,7 +32,8 @@ const textContent = computedAsync(async () => {
   // eslint-disable-next-line ts/no-unused-expressions
   textContentCounter.value
 
-  const content = await rpc.getTextAssetContent(asset.value.filePath)
+  const client = rpcClient.value || await connectPromise
+  const content = await client.call(`${RPC_NAMESPACE}:getTextAssetContent` as any, asset.value.filePath) as Awaited<ReturnType<ServerFunctions['getTextAssetContent']>>
   newTextContent.value = content
   return content
 })
@@ -38,7 +41,8 @@ const textContent = computedAsync(async () => {
 async function saveTextContent() {
   if (textContent.value !== newTextContent.value) {
     try {
-      await rpc.writeStaticAssets([{
+      const client = rpcClient.value || await connectPromise
+      await client.call(`${RPC_NAMESPACE}:writeStaticAssets` as any, [{
         path: asset.value.path,
         content: newTextContent.value,
         override: true,
@@ -133,7 +137,8 @@ const supportsPreview = computed(() => {
 const deleteDialog = ref(false)
 async function deleteAsset() {
   try {
-    await rpc.deleteStaticAsset(asset.value.filePath)
+    const client = rpcClient.value || await connectPromise
+    await client.call(`${RPC_NAMESPACE}:deleteStaticAsset` as any, asset.value.filePath)
     asset.value = undefined as any
     deleteDialog.value = false
     devtoolsUiShowNotification({
@@ -169,7 +174,8 @@ async function renameAsset() {
   try {
     const extension = parts.slice(-1)[0]?.split('.').slice(-1)[0]
     const fullPath = `${parts.slice(0, -1).join('/')}/${newName.value}.${extension}`
-    await rpc.renameStaticAsset(asset.value.filePath, fullPath)
+    const client = rpcClient.value || await connectPromise
+    await client.call(`${RPC_NAMESPACE}:renameStaticAsset` as any, asset.value.filePath, fullPath)
     asset.value = undefined as any
     renameDialog.value = false
     devtoolsUiShowNotification({

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { telemetryEnabled } from '~/composables/telemetry'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 import { useDevToolsOptions } from '../composables/storage-options'
 
 definePageMeta({
@@ -48,7 +49,8 @@ async function clearOptions() {
       if (key.startsWith('nuxt-devtools-'))
         localStorage.removeItem(key)
     })
-    await rpc.clearOptions()
+    const rpcClientInstance = rpcClient.value || await connectPromise
+    await rpcClientInstance.call(`${RPC_NAMESPACE}:clearOptions` as any)
     client.value?.app?.reload?.()
     window.location.reload()
   }

@@ -3,8 +3,9 @@ import type { ModuleCustomTab } from '~/../src/types'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { isDevAuthed, requestForAuth } from '~/composables/dev-auth'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useAllTabs } from '~/composables/state-tabs'
 
 const props = defineProps<{
@@ -33,6 +34,11 @@ onMounted(() => {
     requestForAuth()
   }
 })
+
+async function customTabAction(name: string, action: number) {
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:customTabAction` as any, name, action)
+}
 </script>
 
 <template>
@@ -68,7 +74,7 @@ onMounted(() => {
       :title="tab.view.title || tab.title"
       :description="tab.view.description"
       :actions="tab.view.actions"
-      @action="idx => rpc.customTabAction(tab!.name, idx)"
+      @action="idx => customTabAction(tab!.name, idx)"
     />
   </template>
   <template v-else>

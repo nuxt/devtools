@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import type { ServerFunctions } from '~/../src/types'
 import { useEventListener } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 import { computed, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useRouter } from '#app/composables/router'
 import { useNuxtApp } from '#app/nuxt'
+import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { getColorMode } from '~/composables/client'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
 import { useSessionState } from '~/composables/utils'
 
 const colorMode = getColorMode()
@@ -18,10 +20,15 @@ const currentStorage = useSessionState<string>('storage:current', '')
 const currentItem = ref()
 const fileKey = useSessionState<string>('storage:file:state', '')
 
-const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.getStorageMounts())
+const { data: storageMounts } = await useAsyncData('storageMounts', async () => {
+  const client = rpcClient.value || await connectPromise
+  return client.call(`${RPC_NAMESPACE}:getStorageMounts` as any) as Promise<Awaited<ReturnType<ServerFunctions['getStorageMounts']>>>
+})
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
-  if (currentStorage.value)
-    return await rpc.getStorageKeys(currentStorage.value)
+  if (currentStorage.value) {
+    const client = rpcClient.value || await connectPromise
+    return await client.call(`${RPC_NAMESPACE}:getStorageKeys` as any, currentStorage.value) as Awaited<ReturnType<ServerFunctions['getStorageKeys']>>
+  }
   return []
 })
 
@@ -70,7 +77,8 @@ const filteredKeys = computed(() => {
 })
 
 async function fetchItem(key: string) {
-  const content = await rpc.getStorageItem(key)
+  const client = rpcClient.value || await connectPromise
+  const content = await client.call(`${RPC_NAMESPACE}:getStorageItem` as any, key) as Awaited<ReturnType<ServerFunctions['getStorageItem']>>
   currentItem.value = {
     key,
     updatedKey: keyName(key),
@@ -85,8 +93,10 @@ async function saveNewItem() {
     return
   // If does not exists
   const key = `${currentStorage.value}:${newKey.value}`
-  if (!storageKeys.value?.includes(key))
-    await rpc.setStorageItem(key, '')
+  if (!storageKeys.value?.includes(key)) {
+    const client = rpcClient.value || await connectPromise
+    await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, key, '')
+  }
 
   router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
@@ -95,14 +105,16 @@ async function saveNewItem() {
 async function saveCurrentItem() {
   if (!currentItem.value)
     return
-  await rpc.setStorageItem(currentItem.value.key, currentItem.value.updatedContent)
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, currentItem.value.key, currentItem.value.updatedContent)
   await fetchItem(currentItem.value.key)
 }
 
 async function removeCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
-  await rpc.removeStorageItem(currentItem.value.key)
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:removeStorageItem` as any, currentItem.value.key)
   currentItem.value = null
 }
 
@@ -110,8 +122,9 @@ async function renameCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
-  await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
-  await rpc.removeStorageItem(currentItem.value.key)
+  const client = rpcClient.value || await connectPromise
+  await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, renamedKey, currentItem.value.updatedContent)
+  await client.call(`${RPC_NAMESPACE}:removeStorageItem` as any, currentItem.value.key)
   router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>

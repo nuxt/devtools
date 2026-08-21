@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { AnalyzeBuildMeta } from '../../src/types'
+import type { AnalyzeBuildMeta, ServerFunctions } from '../../src/types'
 import { formatTimeAgo } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useRuntimeConfig } from '#imports'
-import { rpc } from '~/composables/rpc'
+import { connectPromise, rpcClient } from '~/composables/rpc'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 const props = defineProps<{
   current: AnalyzeBuildMeta
@@ -45,7 +46,8 @@ function formatFileSize(bytes: number) {
 }
 
 async function clear(name: string) {
-  return rpc.clearAnalyzeBuilds([name])
+  const client = rpcClient.value || await connectPromise
+  return client.call(`${RPC_NAMESPACE}:clearAnalyzeBuilds` as any, [name]) as Promise<Awaited<ReturnType<ServerFunctions['clearAnalyzeBuilds']>>>
 }
 </script>
 

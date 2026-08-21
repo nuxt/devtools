@@ -1,7 +1,8 @@
 import { useClipboard } from '@vueuse/core'
 import { useRouter } from '#app/composables/router'
 import { devtoolsUiShowNotification } from '#imports'
-import { rpc } from './rpc'
+import { RPC_NAMESPACE } from '../../src/rpc-namespace'
+import { connectPromise, rpcClient } from './rpc'
 import { useServerConfig, useVirtualFiles } from './state'
 import { useCurrentVirtualFile } from './state-routes'
 import { telemetry } from './telemetry'
@@ -33,7 +34,8 @@ export function useOpenInEditor() {
       router.push('/modules/virtual-files')
     }
     else {
-      await rpc.openInEditor(filepath)
+      const client = rpcClient.value || await connectPromise
+      await client.call(`${RPC_NAMESPACE}:openInEditor` as any, filepath)
     }
   }
 }
