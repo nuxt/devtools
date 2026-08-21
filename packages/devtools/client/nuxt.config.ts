@@ -140,6 +140,20 @@ export default defineNuxtConfig({
       hmr: {
         clientPort: process.env.PORT ? +process.env.PORT : undefined,
       },
+      // Local standalone dev only (`pnpm dev` -> `nuxi dev client`): this app
+      // dogfoods the DevTools module on itself, so the Vite DevTools hub serves
+      // the devframe connection meta at `/__devtools/__connection.json`. But the
+      // client SPA (RPC client) resolves `__connection.json` relative to its
+      // current route (e.g. `/__nuxt_devtools__/client/modules/__connection.json`),
+      // which the hub never serves. Proxy those relative lookups back to the hub
+      // so the standalone client can connect to a live RPC backend.
+      proxy: {
+        '^/__nuxt_devtools__/client/.*__connection\\.json(\\?.*)?$': {
+          target: `http://localhost:${process.env.PORT || 3000}`,
+          changeOrigin: true,
+          rewrite: () => '/__devtools/__connection.json',
+        },
+      },
     },
   },
 
