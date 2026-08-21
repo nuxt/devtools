@@ -45,7 +45,7 @@ allowBuilds:
   vue-demi: true
 
 refs:
-  devframe: &devframe ^0.9.4
+  devframe: &devframe ^0.9.5
   # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
   # `vite@^8.1.5`, so this and the `vite` ref below move together.
   #
@@ -68,7 +68,7 @@ refs:
   shiki: &shiki ^4.4.3
   unocss: &unocss ^66.8.0
   vite: &vite ^8.2.2
-  vite-devtools: &vite-devtools ^0.5.1
+  vite-devtools: &vite-devtools ^0.5.2
   vue: &vue ^3.5.41
   vueuse: &vueuse ^14.4.0
 overrides:

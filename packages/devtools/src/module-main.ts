@@ -130,7 +130,16 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       publicDevServerOrigin = new URL(listener.url).origin
   })
 
-  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
+  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({
+    branding: {
+      productName: 'Nuxt DevTools',
+      tagline: 'DevTools for Nuxt',
+      primaryColor: '#099e61',
+      logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+      wordmark: 'https://nuxt.com/assets/design-kit/logo-green-white.svg',
+      windowTitle: 'Nuxt DevTools',
+    },
+  }))
   addVitePlugin(DevTools)
 
   // Deferred: will be set when Vite DevTools plugin setup runs
