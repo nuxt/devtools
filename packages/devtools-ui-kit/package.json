@@ -23,7 +23,7 @@
     "build": "nuxt-build-module build",
     "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev playground",
-    "prepack": "turbo run build --filter=@nuxt/devtools-ui-kit",
+    "prepack": "turbo run build --filter=.",
     "playground:build": "nuxi generate playground"
   },
   "peerDependencies": {
