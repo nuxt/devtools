@@ -1,109 +1,66 @@
 import type { Ref } from 'vue'
-import type { HookInfo, RouteInfo, ServerFunctions } from '../../src/types'
+import type { HookInfo, RouteInfo } from '../../src/types'
 import { objectPick } from '@antfu/utils'
 import { computed } from 'vue'
 import { useFetch } from '#app/composables/fetch'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 import { useClientRouter } from './client'
-import { connectPromise, rpcClient } from './rpc'
+import { useDevtoolsRpc } from './rpc'
 import { useAsyncState } from './utils'
 
 export function useServerPages() {
-  return useAsyncState('getServerPages', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerPages` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerPages']>>>
-  })
+  return useAsyncState('getServerPages', async () => (await useDevtoolsRpc()).call('getServerPages'))
 }
 
 export function useServerRoutes() {
-  return useAsyncState('getServerRoutes', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerRoutes` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerRoutes']>>>
-  })
+  return useAsyncState('getServerRoutes', async () => (await useDevtoolsRpc()).call('getServerRoutes'))
 }
 
 export function useServerTasks() {
-  return useAsyncState('getServerTasks', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerTasks` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerTasks']>>>
-  })
+  return useAsyncState('getServerTasks', async () => (await useDevtoolsRpc()).call('getServerTasks'))
 }
 
 export function useServerHooks() {
-  return useAsyncState('getServerHooks', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerHooks` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerHooks']>>>
-  }) as Ref<HookInfo[] | undefined>
+  return useAsyncState('getServerHooks', async () => (await useDevtoolsRpc()).call('getServerHooks')) as Ref<HookInfo[] | undefined>
 }
 
 export function useLayouts() {
-  return useAsyncState('getServerLayouts', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerLayouts` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerLayouts']>>>
-  })
+  return useAsyncState('getServerLayouts', async () => (await useDevtoolsRpc()).call('getServerLayouts'))
 }
 
 export function useAutoImports() {
-  return useAsyncState('getAutoImports', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getAutoImports` as any) as Promise<Awaited<ReturnType<ServerFunctions['getAutoImports']>>>
-  })
+  return useAsyncState('getAutoImports', async () => (await useDevtoolsRpc()).call('getAutoImports'))
 }
 
 export function useStaticAssets() {
-  return useAsyncState('getStaticAssets', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getStaticAssets` as any) as Promise<Awaited<ReturnType<ServerFunctions['getStaticAssets']>>>
-  })
+  return useAsyncState('getStaticAssets', async () => (await useDevtoolsRpc()).call('getStaticAssets'))
 }
 
 export function useServerConfig() {
-  return useAsyncState('getServerConfig', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerConfig` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerConfig']>>>
-  })
+  return useAsyncState('getServerConfig', async () => (await useDevtoolsRpc()).call('getServerConfig'))
 }
 
 export function useServerDebugContext() {
-  return useAsyncState('getServerDebugContext', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerDebugContext` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerDebugContext']>>>
-  })
+  return useAsyncState('getServerDebugContext', async () => (await useDevtoolsRpc()).call('getServerDebugContext'))
 }
 
 export function useServerRuntimeConfig() {
-  return useAsyncState('getServerRuntimeConfig', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerRuntimeConfig` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerRuntimeConfig']>>>
-  })
+  return useAsyncState('getServerRuntimeConfig', async () => (await useDevtoolsRpc()).call('getServerRuntimeConfig'))
 }
 
 export function useModuleOptions() {
-  return useAsyncState('getModuleOptions', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getModuleOptions` as any) as Promise<Awaited<ReturnType<ServerFunctions['getModuleOptions']>>>
-  })
+  return useAsyncState('getModuleOptions', async () => (await useDevtoolsRpc()).call('getModuleOptions'))
 }
 
 export function useServerApp() {
-  return useAsyncState('getServerApp', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getServerApp` as any) as Promise<Awaited<ReturnType<ServerFunctions['getServerApp']>>>
-  })
+  return useAsyncState('getServerApp', async () => (await useDevtoolsRpc()).call('getServerApp'))
 }
 
 export function useCustomTabs() {
-  return useAsyncState('getCustomTabs', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getCustomTabs` as any) as Promise<Awaited<ReturnType<ServerFunctions['getCustomTabs']>>>
-  })
+  return useAsyncState('getCustomTabs', async () => (await useDevtoolsRpc()).call('getCustomTabs'))
 }
 
 export function useAnalyzeBuildInfo() {
-  return useAsyncState('getAnalyzeBuildInfo', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getAnalyzeBuildInfo` as any) as Promise<Awaited<ReturnType<ServerFunctions['getAnalyzeBuildInfo']>>>
-  })
+  return useAsyncState('getAnalyzeBuildInfo', async () => (await useDevtoolsRpc()).call('getAnalyzeBuildInfo'))
 }
 
 export interface VfsData {

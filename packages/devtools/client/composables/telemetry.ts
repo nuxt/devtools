@@ -1,6 +1,5 @@
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 import { userAgentInfo } from './dev-auth'
-import { connectPromise, rpcClient } from './rpc'
+import { useDevtoolsRpc } from './rpc'
 import { useDevToolsOptions } from './storage-options'
 
 export const telemetryEnabled = useDevToolsOptions('behavior').telemetry
@@ -10,8 +9,7 @@ export function telemetry(event: string, payload?: object, immediate = false) {
     return
 
   const send = async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:telemetryEvent` as any, {
+    return (await useDevtoolsRpc()).call('telemetryEvent', {
       event,
       browser: userAgentInfo.browser.name,
       browserVersion: userAgentInfo.browser.version,

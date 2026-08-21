@@ -1,5 +1,5 @@
 import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
-import type { AsyncServerFunctions, ClientFunctions } from '../../src/types'
+import type { AsyncServerFunctions, ClientFunctions, ServerFunctions } from '../../src/types'
 import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import { useDebounce } from '@vueuse/core'
 import { ref, shallowRef } from 'vue'
@@ -39,6 +39,43 @@ export const rpc = new Proxy({} as AsyncServerFunctions, {
     }
   },
 })
+
+/**
+ * Nuxt DevTools' server RPC surface, scoped to the `nuxt:devtools:` namespace
+ * and typed against our own {@link ServerFunctions}.
+ *
+ * This is the shape devframe's native `client.scope(ns).rpc` returns — every id
+ * is auto-prefixed with the namespace, so methods are called by their bare
+ * name (`call('getServerPages')` → `nuxt:devtools:getServerPages`). devframe
+ * types its scoped surface against the global function registry, which Nuxt
+ * DevTools does not augment, so we re-type it here against `ServerFunctions` to
+ * keep full argument/return inference at every call site.
+ */
+export interface DevtoolsScopedRpc {
+  /** Call a server function by its bare (unprefixed) name. */
+  call: <T extends keyof ServerFunctions>(method: T, ...args: Parameters<ServerFunctions[T]>) => Promise<Awaited<ReturnType<ServerFunctions[T]>>>
+  /** Fire-and-forget a server function; no response is awaited. */
+  callEvent: <T extends keyof ServerFunctions>(method: T, ...args: Parameters<ServerFunctions[T]>) => void
+  /** Call a server function that resolves `undefined` when it isn't registered. */
+  callOptional: <T extends keyof ServerFunctions>(method: T, ...args: Parameters<ServerFunctions[T]>) => Promise<Awaited<ReturnType<ServerFunctions[T]>> | undefined>
+}
+
+/**
+ * Resolve the connected devframe RPC client and return its view scoped to the
+ * `nuxt:devtools:` namespace (devframe-native `client.scope(...)`).
+ *
+ * Collapses the `rpcClient.value || await connectPromise` connect dance and the
+ * namespace prefixing into one call, so internal app code does:
+ *
+ * ```ts
+ * const rpc = await useDevtoolsRpc()
+ * const pages = await rpc.call('getServerPages')
+ * ```
+ */
+export async function useDevtoolsRpc(): Promise<DevtoolsScopedRpc> {
+  const client = rpcClient.value || await connectPromise
+  return client.scope(RPC_NAMESPACE).rpc as unknown as DevtoolsScopedRpc
+}
 
 async function connectDevToolsRpc(): Promise<DevToolsRpcClient> {
   try {

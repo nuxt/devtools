@@ -3,8 +3,7 @@ import type { AssetEntry } from '~/../src/types'
 import { useEventListener, useVModel } from '@vueuse/core'
 import { ref } from 'vue'
 import { devtoolsUiShowNotification } from '#imports'
-import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
-import { connectPromise, rpcClient, wsConnecting, wsError } from '~/composables/rpc'
+import { useDevtoolsRpc, wsConnecting, wsError } from '~/composables/rpc'
 import { telemetry } from '~/composables/telemetry'
 
 const props = defineProps({
@@ -95,8 +94,7 @@ async function uploadFiles() {
       content,
     })
   }
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:writeStaticAssets` as any, [...uploadFiles], props.folder).then(() => {
+  await (await useDevtoolsRpc()).call('writeStaticAssets', [...uploadFiles], props.folder).then(() => {
     close()
     devtoolsUiShowNotification({
       message: 'Files uploaded successfully!',

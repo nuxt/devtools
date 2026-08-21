@@ -4,9 +4,8 @@ import { createTemplatePromise } from '@vueuse/core'
 import { ref } from 'vue'
 import { useRestartDialogs } from '~/composables/dialog'
 import { usePackageUpdate } from '~/composables/npm'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { telemetry } from '~/composables/telemetry'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 const props = withDefaults(
   defineProps<{
@@ -49,10 +48,8 @@ async function updateWithConfirm() {
       message: `${props.packageName} has been updated. Do you want to restart the Nuxt server now?`,
     })
   }
-  if (processId && shouldRevealTerminal.value) {
-    const client = rpcClient.value || await connectPromise
-    client.call(`${RPC_NAMESPACE}:revealTerminal` as any, processId)
-  }
+  if (processId && shouldRevealTerminal.value)
+    (await useDevtoolsRpc()).call('revealTerminal', processId)
 }
 </script>
 

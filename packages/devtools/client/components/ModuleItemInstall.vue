@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { ModuleActionType, ModuleStaticInfo, ServerFunctions } from '../../src/types'
+import type { ModuleActionType, ModuleStaticInfo } from '../../src/types'
 import { computed } from 'vue'
 import { ModuleDialog } from '~/composables/dialog'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { useInstalledModules } from '~/composables/state-modules'
 import { processInstallingModules } from '~/composables/state-subprocess'
 import { telemetry } from '~/composables/telemetry'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
 
 const props = defineProps<{
   item: ModuleStaticInfo
@@ -20,9 +19,9 @@ const isInstalled = computed(() => installedInfo.value && installedInfo.value.is
 const isUninstallable = computed(() => installedInfo.value && installedInfo.value.isPackageModule && installedInfo.value.isUninstallable)
 
 async function callModuleAction(type: ModuleActionType, name: string, dry: boolean, sessionId?: string) {
-  const client = rpcClient.value || await connectPromise
+  const rpc = await useDevtoolsRpc()
   const method = type === 'install' ? 'installNuxtModule' : 'uninstallNuxtModule'
-  return client.call(`${RPC_NAMESPACE}:${method}` as any, name, dry, sessionId) as Promise<Awaited<ReturnType<ServerFunctions['installNuxtModule']>>>
+  return rpc.call(method, name, dry, sessionId)
 }
 
 async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { definePageMeta } from '#imports'
-import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { useInstalledModules } from '~/composables/state-modules'
 
@@ -32,8 +31,7 @@ registerCommands(() => [
 ])
 
 async function revealTerminal(id: string) {
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:revealTerminal` as any, id)
+  await (await useDevtoolsRpc()).call('revealTerminal', id)
 }
 </script>
 

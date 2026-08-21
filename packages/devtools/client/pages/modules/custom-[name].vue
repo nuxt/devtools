@@ -3,9 +3,8 @@ import type { ModuleCustomTab } from '~/../src/types'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
-import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { isDevAuthed, requestForAuth } from '~/composables/dev-auth'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { useAllTabs } from '~/composables/state-tabs'
 
 const props = defineProps<{
@@ -36,8 +35,7 @@ onMounted(() => {
 })
 
 async function customTabAction(name: string, action: number) {
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:customTabAction` as any, name, action)
+  await (await useDevtoolsRpc()).call('customTabAction', name, action)
 }
 </script>
 

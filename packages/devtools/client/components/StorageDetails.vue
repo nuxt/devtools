@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { ServerFunctions } from '~/../src/types'
 import { useEventListener } from '@vueuse/core'
 import JsonEditorVue from 'json-editor-vue'
 import { computed, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useRouter } from '#app/composables/router'
 import { useNuxtApp } from '#app/nuxt'
-import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { getColorMode } from '~/composables/client'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { useSessionState } from '~/composables/utils'
 
 const colorMode = getColorMode()
@@ -20,15 +18,10 @@ const currentStorage = useSessionState<string>('storage:current', '')
 const currentItem = ref()
 const fileKey = useSessionState<string>('storage:file:state', '')
 
-const { data: storageMounts } = await useAsyncData('storageMounts', async () => {
-  const client = rpcClient.value || await connectPromise
-  return client.call(`${RPC_NAMESPACE}:getStorageMounts` as any) as Promise<Awaited<ReturnType<ServerFunctions['getStorageMounts']>>>
-})
+const { data: storageMounts } = await useAsyncData('storageMounts', async () => (await useDevtoolsRpc()).call('getStorageMounts'))
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
-  if (currentStorage.value) {
-    const client = rpcClient.value || await connectPromise
-    return await client.call(`${RPC_NAMESPACE}:getStorageKeys` as any, currentStorage.value) as Awaited<ReturnType<ServerFunctions['getStorageKeys']>>
-  }
+  if (currentStorage.value)
+    return (await useDevtoolsRpc()).call('getStorageKeys', currentStorage.value)
   return []
 })
 
@@ -77,8 +70,7 @@ const filteredKeys = computed(() => {
 })
 
 async function fetchItem(key: string) {
-  const client = rpcClient.value || await connectPromise
-  const content = await client.call(`${RPC_NAMESPACE}:getStorageItem` as any, key) as Awaited<ReturnType<ServerFunctions['getStorageItem']>>
+  const content = await (await useDevtoolsRpc()).call('getStorageItem', key)
   currentItem.value = {
     key,
     updatedKey: keyName(key),
@@ -93,10 +85,8 @@ async function saveNewItem() {
     return
   // If does not exists
   const key = `${currentStorage.value}:${newKey.value}`
-  if (!storageKeys.value?.includes(key)) {
-    const client = rpcClient.value || await connectPromise
-    await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, key, '')
-  }
+  if (!storageKeys.value?.includes(key))
+    await (await useDevtoolsRpc()).call('setStorageItem', key, '')
 
   router.replace({ query: { storage: currentStorage.value, key } })
   newKey.value = ''
@@ -105,16 +95,14 @@ async function saveNewItem() {
 async function saveCurrentItem() {
   if (!currentItem.value)
     return
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, currentItem.value.key, currentItem.value.updatedContent)
+  await (await useDevtoolsRpc()).call('setStorageItem', currentItem.value.key, currentItem.value.updatedContent)
   await fetchItem(currentItem.value.key)
 }
 
 async function removeCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:removeStorageItem` as any, currentItem.value.key)
+  await (await useDevtoolsRpc()).call('removeStorageItem', currentItem.value.key)
   currentItem.value = null
 }
 
@@ -122,9 +110,9 @@ async function renameCurrentItem() {
   if (!currentItem.value || !currentStorage.value)
     return
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:setStorageItem` as any, renamedKey, currentItem.value.updatedContent)
-  await client.call(`${RPC_NAMESPACE}:removeStorageItem` as any, currentItem.value.key)
+  const rpc = await useDevtoolsRpc()
+  await rpc.call('setStorageItem', renamedKey, currentItem.value.updatedContent)
+  await rpc.call('removeStorageItem', currentItem.value.key)
   router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
 }
 </script>

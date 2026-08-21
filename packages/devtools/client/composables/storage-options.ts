@@ -1,11 +1,9 @@
 import type { ToRefs } from 'vue'
-import type { ServerFunctions } from '../../src/types'
 import type { NuxtDevToolsOptions } from '../../types'
 import { watchDebounced } from '@vueuse/core'
 import { reactive, toRefs } from 'vue'
 import { createDefaultTabOptions } from '../../src/constant'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
-import { connectPromise, rpcClient } from './rpc'
+import { useDevtoolsRpc } from './rpc'
 
 const cache = new Map<string, any>()
 
@@ -18,13 +16,11 @@ function getTabOptions<T extends keyof NuxtDevToolsOptions>(tab: T): ToRefs<Nuxt
   cache.set(tab, refs)
 
   async function loadOptions() {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:getOptions` as any, tab) as Promise<Awaited<ReturnType<ServerFunctions['getOptions']>>>
+    return (await useDevtoolsRpc()).call('getOptions', tab)
   }
 
   async function persistOptions(options: NuxtDevToolsOptions[T]) {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:updateOptions` as any, tab, options) as Promise<Awaited<ReturnType<ServerFunctions['updateOptions']>>>
+    return (await useDevtoolsRpc()).call('updateOptions', tab, options)
   }
 
   loadOptions()

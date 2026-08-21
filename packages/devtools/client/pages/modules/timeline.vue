@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { ServerFunctions } from '~/../src/types'
 import { createTemplatePromise } from '@vueuse/core'
 import { definePageMeta, devtoolsUiShowNotification } from '#imports'
-import { RPC_NAMESPACE } from '~/../src/rpc-namespace'
 import { useOpenInEditor } from '~/composables/editor'
-import { connectPromise, rpcClient } from '~/composables/rpc'
+import { useDevtoolsRpc } from '~/composables/rpc'
 import { useModuleOptions, useServerConfig } from '~/composables/state'
 
 definePageMeta({
@@ -22,11 +20,11 @@ const openInEditor = useOpenInEditor()
 
 async function showPopup() {
   try {
-    const client = rpcClient.value || await connectPromise
-    const [source, modified] = await client.call(`${RPC_NAMESPACE}:enableTimeline` as any, true) as Awaited<ReturnType<ServerFunctions['enableTimeline']>>
+    const rpc = await useDevtoolsRpc()
+    const [source, modified] = await rpc.call('enableTimeline', true)
     if (!await Dialog.start(source, modified))
       return
-    await client.call(`${RPC_NAMESPACE}:enableTimeline` as any, false)
+    await rpc.call('enableTimeline', false)
   }
   catch {
     devtoolsUiShowNotification({

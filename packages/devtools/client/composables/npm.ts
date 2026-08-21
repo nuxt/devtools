@@ -1,9 +1,8 @@
-import type { NpmCommandOptions, ServerFunctions } from '../../src/types'
+import type { NpmCommandOptions } from '../../src/types'
 import { satisfies } from 'verkit'
 import { computed, ref } from 'vue'
 import { useNuxtApp } from '#app/nuxt'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
-import { connectPromise, rpcClient } from './rpc'
+import { useDevtoolsRpc } from './rpc'
 import { useAsyncState } from './utils'
 
 export type PackageUpdateState = 'idle' | 'running' | 'updated'
@@ -18,10 +17,7 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
 }
 
 export function useNuxtVersion() {
-  return useAsyncState('npm:check:nuxt', async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:checkForUpdateFor` as any, 'nuxt') as Promise<Awaited<ReturnType<ServerFunctions['checkForUpdateFor']>>>
-  })
+  return useAsyncState('npm:check:nuxt', async () => (await useDevtoolsRpc()).call('checkForUpdateFor', 'nuxt'))
 }
 
 export function satisfyNuxtVersion(range: string) {
@@ -35,10 +31,7 @@ export function satisfyNuxtVersion(range: string) {
 
 function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   const nuxt = useNuxtApp()
-  const info = useAsyncState(`npm:check:${name}`, async () => {
-    const client = rpcClient.value || await connectPromise
-    return client.call(`${RPC_NAMESPACE}:checkForUpdateFor` as any, name) as Promise<Awaited<ReturnType<ServerFunctions['checkForUpdateFor']>>>
-  })
+  const info = useAsyncState(`npm:check:${name}`, async () => (await useDevtoolsRpc()).call('checkForUpdateFor', name))
 
   const state = ref<PackageUpdateState>('idle')
 
@@ -56,8 +49,8 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
     if (state.value !== 'idle')
       return
 
-    const client = rpcClient.value || await connectPromise
-    const command = await client.call(`${RPC_NAMESPACE}:getNpmCommand` as any, 'update', name, options) as Awaited<ReturnType<ServerFunctions['getNpmCommand']>>
+    const rpc = await useDevtoolsRpc()
+    const command = await rpc.call('getNpmCommand', 'update', name, options)
     if (!command)
       return
 
@@ -66,8 +59,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
     state.value = 'running'
 
-    const result = await client.call(`${RPC_NAMESPACE}:runNpmCommand` as any, 'update', name, options) as Awaited<ReturnType<ServerFunctions['runNpmCommand']>>
-    processId.value = result?.processId
+    processId.value = (await rpc.call('runNpmCommand', 'update', name, options))?.processId
 
     return processId.value
   }
@@ -75,8 +67,7 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
   async function restart() {
     if (state.value !== 'updated')
       return
-    const client = rpcClient.value || await connectPromise
-    await client.call(`${RPC_NAMESPACE}:restartNuxt` as any)
+    await (await useDevtoolsRpc()).call('restartNuxt')
   }
 
   return {

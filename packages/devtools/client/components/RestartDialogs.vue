@@ -3,8 +3,7 @@ import { createTemplatePromise } from '@vueuse/core'
 import { useNuxtApp } from '#app/nuxt'
 import { useClient } from '~/composables/client'
 import { useRestartDialogs } from '~/composables/dialog'
-import { connectPromise, rpcClient } from '~/composables/rpc'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
+import { useDevtoolsRpc } from '~/composables/rpc'
 
 const nuxt = useNuxtApp()
 const state = useRestartDialogs()
@@ -22,8 +21,7 @@ nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
         .start(dialog.message)
         .then(async (result) => {
           if (result) {
-            const rpcClientInstance = rpcClient.value || await connectPromise
-            rpcClientInstance.call(`${RPC_NAMESPACE}:restartNuxt` as any)
+            (await useDevtoolsRpc()).call('restartNuxt')
             setTimeout(() => {
               client.value?.app.reload()
             }, 500)

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { InstalledModuleInfo } from '../../src/types'
 import { computed } from 'vue'
-import { connectPromise, rpcClient } from '~/composables/rpc'
-import { RPC_NAMESPACE } from '../../src/rpc-namespace'
+import { useDevtoolsRpc } from '~/composables/rpc'
 
 const props = defineProps<{
   mod: InstalledModuleInfo
@@ -16,8 +15,7 @@ const data = computed(() => ({
 }))
 
 async function revealTerminal(id: string) {
-  const client = rpcClient.value || await connectPromise
-  await client.call(`${RPC_NAMESPACE}:revealTerminal` as any, id)
+  await (await useDevtoolsRpc()).call('revealTerminal', id)
 }
 </script>
 
