@@ -1,4 +1,4 @@
-import type { LoadingTimeMetric, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
+import type { LoadingTimeMetric, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, PluginMetric, TimelineMetrics } from '.'
 
 declare global {
   interface Window {
@@ -11,13 +11,6 @@ declare global {
      * Nuxt DevTools client for host app
      */
     __NUXT_DEVTOOLS_HOST__?: NuxtDevtoolsHostClient
-
-    /**
-     * Nuxt DevTools for receiving host client
-     *
-     * @internal
-     */
-    __NUXT_DEVTOOLS_VIEW__?: NuxtDevtoolsViewGlobal
 
     /**
      * Metrics for plugin loading time
