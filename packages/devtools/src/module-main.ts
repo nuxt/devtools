@@ -9,7 +9,7 @@ import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
-import { join } from 'pathe'
+import { join, resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
 import { peerDependencies, version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
@@ -29,20 +29,14 @@ const MULTIPLE_SLASHES_RE = /\/+/g
 const ASSETS_PACKAGE = '@nuxt/devtools-assets'
 
 /**
- * Resolve the `StaticAssetsSource` for the client UI, honoring the
- * `clientAssets` module option (`false` = don't mount, a string = serve that
- * local directory).
+ * Resolve the `StaticAssetsSource` for the client UI.
  *
  * Nightly releases rename workspace packages through `npm:<name>-nightly@<v>`
  * alias ranges (see `scripts/bump-nightly.ts`), so the real assets package
  * name is read back from our own peer-dependency entry — a nightly build then
  * fetches its matching nightly assets.
  */
-function resolveClientAssetsSource(options: ModuleOptions): StaticAssetsSource | undefined {
-  if (options.clientAssets === false)
-    return undefined
-  if (typeof options.clientAssets === 'string')
-    return options.clientAssets
+function resolveClientAssetsSource(): StaticAssetsSource {
   const range: string = (peerDependencies as Record<string, string>)[ASSETS_PACKAGE] ?? ''
   const name = range.startsWith('npm:')
     ? range.slice('npm:'.length, range.lastIndexOf('@'))
@@ -120,10 +114,14 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   const ROUTE_CLIENT = `${ROUTE_PATH}/client`
   const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
 
-  const clientAssetsSource = resolveClientAssetsSource(options)
-  // Where the client UI lives from the browser's point of view. With
-  // `clientAssets: false` the app under development *is* the client (the
-  // dogfooding `nuxi dev client` flow), already served live on its own base.
+  // In the dogfooding `nuxi dev client` flow the app under development *is*
+  // the client — already served live on its own base — so don't mount the
+  // built assets (whose stale copy would otherwise be what the dock opens).
+  // The client app only exists in this repo, never next to the published
+  // package, so the check can't misfire for users.
+  const isSelfClient = resolve(nuxt.options.rootDir) === resolve(packageDir, 'client')
+  const clientAssetsSource = isSelfClient ? undefined : resolveClientAssetsSource()
+  // Where the client UI lives from the browser's point of view.
   const clientUrl = clientAssetsSource
     ? `${ROUTE_CLIENT}/`
     : `${nuxt.options.app.baseURL || '/'}/`.replace(MULTIPLE_SLASHES_RE, '/')

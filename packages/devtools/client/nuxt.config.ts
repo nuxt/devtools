@@ -72,13 +72,6 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  devtools: {
-    // This app *is* the DevTools client — its dev server serves the live
-    // client on the very base path the module would otherwise mount the
-    // built assets on.
-    clientAssets: false,
-  },
-
   app: {
     baseURL: '/__nuxt_devtools__/client/',
   },
