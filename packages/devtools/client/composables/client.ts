@@ -3,7 +3,7 @@ import type { Unhead } from '@unhead/schema'
 import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import type { ComputedRef } from 'vue'
 import type { useRoute, useRouter } from '#imports'
-import { useColorMode } from '@vueuse/core'
+import { usePreferredDark } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useState } from '#imports'
 import { renderMarkdown } from './client-services/markdown'
@@ -54,10 +54,37 @@ export const showConnectionWarning = computed(() => {
   return connectionTimeout.value && !useClient().value
 })
 
-export function getColorMode() {
-  return useColorMode({
-    storageKey: 'nuxt-devtools-color-mode',
-  })
+export type ColorScheme = 'dark' | 'light'
+
+/**
+ * Color scheme pushed down by whatever embeds this client — the host app's
+ * resolved scheme (`useClientColorMode`), or a custom-tab iframe carrying its
+ * own toggle.
+ *
+ * Deliberately *not* persisted. This mirrors someone else's state, so storing
+ * it overwrote our own "follow the OS" default, permanently: nothing ever wrote
+ * `auto` back. Every surface without an embedder (the standalone hub UI, the
+ * client opened directly, `nuxi dev client`) was then frozen on whatever the OS
+ * happened to be the last time an embedder was attached.
+ */
+const embedderColorMode = ref<ColorScheme>()
+
+export function setEmbedderColorMode(mode: ColorScheme | undefined) {
+  embedderColorMode.value = mode
+}
+
+let colorMode: ComputedRef<ColorScheme> | undefined
+
+/**
+ * The scheme the DevTools UI renders in: the embedder's when there is one,
+ * otherwise the live OS `prefers-color-scheme`.
+ */
+export function getColorMode(): ComputedRef<ColorScheme> {
+  if (!colorMode) {
+    const preferredDark = usePreferredDark()
+    colorMode = computed(() => embedderColorMode.value ?? (preferredDark.value ? 'dark' : 'light'))
+  }
+  return colorMode
 }
 
 export function useInjectionClient(): ComputedRef<NuxtDevtoolsIframeClient> {

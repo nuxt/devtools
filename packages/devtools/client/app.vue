@@ -2,7 +2,7 @@
 import { useEventListener, useEyeDropper } from '@vueuse/core'
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { useHead } from '#imports'
-import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
+import { getColorMode, setEmbedderColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
 import { useCopy } from '~/composables/editor'
 import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
@@ -63,14 +63,26 @@ function onConnected() {
   }, WS_DEBOUNCE_TIME)
 }
 
+// Mirror the host app's scheme while we are embedded in one, so DevTools matches
+// the app it inspects. Passing `undefined` through (no host) hands control back
+// to the OS preference rather than pinning the last host value.
 watch(
   () => client.value?.app.colorMode.value,
   (mode) => {
-    if (mode)
-      colorMode.value = mode
+    setEmbedderColorMode(mode)
   },
   { immediate: true },
 )
+
+// The resolved scheme is derived, not stored, so applying it to the document is
+// ours to do.
+watchEffect(() => {
+  if (!import.meta.client)
+    return
+  const isDark = colorMode.value === 'dark'
+  document.documentElement.classList.toggle('dark', isDark)
+  document.documentElement.classList.toggle('light', !isDark)
+})
 
 useEventListener('keydown', (e) => {
   if (e.code === 'KeyD' && e.altKey) {
