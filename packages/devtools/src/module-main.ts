@@ -121,6 +121,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     ? `${ROUTE_CLIENT}/`
     : `${nuxt.options.app.baseURL || '/'}/`.replace(MULTIPLE_SLASHES_RE, '/')
 
+  // Nuxt serves the app through its own public listener while Vite runs on an
+  // internal port behind it. Keep the public origin from Nuxt's listener so
+  // Devframe's auth URL does not expose Vite's internal port.
+  let publicDevServerOrigin: string | undefined
+  nuxt.hook('listen', (_server, listener) => {
+    if (listener?.url)
+      publicDevServerOrigin = new URL(listener.url).origin
+  })
+
   const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
   addVitePlugin(DevTools)
 
@@ -141,6 +150,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         // setup callback too, and would otherwise create a second, inert
         // group + hub member. See `skipInSSR`.
         if (!skipInSSR(ctx)) {
+          const resolveViteOrigin = ctx.host.resolveOrigin.bind(ctx.host)
+          ctx.host.resolveOrigin = () => publicDevServerOrigin || resolveViteOrigin()
+
           if (clientAssetsSource) {
             // The client SPA ships relative asset URLs (mount-path portable),
             // which only resolve on the directory URL — send `…/client` to
