@@ -32,23 +32,10 @@ test('lists Nuxt built-in components even with no user components', async ({ pag
   await page.goto('/')
   await openDevTools()
   await navigateTab('/modules/components')
-  // `empty` has no user components, but Nuxt always ships built-ins. Each
-  // row's name (`NuxtPage`/`NuxtLink`/...) would normally show inside a
-  // `<VDropdown>` trigger (`ComponentItem.vue`), but that dropdown's default
-  // slot currently fails to render under this stack: floating-vue's
-  // `Popper` component throws `Cannot destructure property 'popperId' of
-  // 'undefined'` invoking its own scoped slot (confirmed live — the row's
-  // `<button>`/`<ComponentName>` never mounts, leaving only the neighbouring
-  // `FilepathItem` badge, i.e. the shared `nuxt-nightly` package name,
-  // repeated once per row instead of the component's own name). This is the
-  // same "known remaining issue" `#1048` flagged but didn't fix — it affects
-  // every component/composable/route name rendered inside a dropdown
-  // trigger, not just this list. So assert on the section heading and count
-  // (rendered directly by `ComponentsList.vue`, not through the broken
-  // dropdown) rather than specific component names. Restore the name
-  // assertion once floating-vue renders `<VDropdown>`'s default slot again.
   await expect(devtoolsFrame().locator('body'))
     .toContainText(/Built-in components/i, { timeout: 15_000 })
   await expect(devtoolsFrame().locator('body'))
     .toContainText(/Total components: \d+/i, { timeout: 15_000 })
+  await expect(devtoolsFrame().locator('body'))
+    .toContainText('NuxtLink', { timeout: 15_000 })
 })

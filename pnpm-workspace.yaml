@@ -199,6 +199,7 @@ catalogs:
   inlined:
     package-manager-detector: ^1.8.0
   prod:
+    '@devframes/hub': *devframe
     '@devframes/plugin-code-server': *devframe
     '@devframes/plugin-data-inspector': *devframe
     '@nuxt/kit': *nuxt-kit

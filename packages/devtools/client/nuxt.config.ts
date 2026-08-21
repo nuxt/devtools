@@ -102,6 +102,14 @@ export default defineNuxtConfig({
 
   vite: {
     warmupEntry: false,
+    vue: {
+      // floating-vue still implements its poppers with Options API mixins,
+      // computed properties, and methods. Keep that runtime enabled even when
+      // Nuxt's application defaults change.
+      features: {
+        optionsAPI: true,
+      },
+    },
     $client: {
       build: {
         target: 'esnext',

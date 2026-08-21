@@ -4,8 +4,8 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 
 import type { Router } from 'vue-router'
+import { getDevframeClientContext } from '@devframes/hub/client'
 import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
-import { getDevToolsClientContext } from '@vitejs/devtools-kit/client'
 
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
@@ -17,14 +17,14 @@ import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
 
-// The `Nuxt` dock group id (see `NUXT_DEVTOOLS_GROUP_ID`). Activating the group
-// auto-opens its `defaultChildId` (the shared-frame anchor). The anchor iframe
-// dock (`nuxt:devtools`) hosts the one kept-alive client iframe that all tab
-// members soft-navigate within.
-const NUXT_DOCK_GROUP_ID = 'nuxt'
+// Host controls must update the visible Devframe viewer context, rather than
+// Vite's separate dock-registration context. Target the shared-frame anchor
+// explicitly so open/navigate always mounts the one kept-alive client iframe
+// used by every Nuxt tab.
+const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
-function getViteDevToolsContext() {
-  return getDevToolsClientContext() as any
+function getDevframeContext() {
+  return getDevframeClientContext() as any
 }
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -56,27 +56,27 @@ export async function setupDevToolsClient({
 
     devtools: {
       toggle() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx)
-          ctx.docks.toggleEntry(NUXT_DOCK_GROUP_ID)
+          ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
       },
       close() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx)
-          ctx.panel.store.open = false
+          ctx.panel.session.open = false
       },
       open() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx) {
-          ctx.panel.store.open = true
-          ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
+          ctx.panel.session.open = true
+          ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
         }
       },
       async navigate(path: string) {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx) {
-          ctx.panel.store.open = true
-          ctx.docks.switchEntry(NUXT_DOCK_GROUP_ID)
+          ctx.panel.session.open = true
+          ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
         }
         await client.hooks.callHook('host:action:navigate', path)
       },

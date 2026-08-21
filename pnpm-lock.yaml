@@ -452,6 +452,9 @@ importers:
 
   packages/devtools:
     dependencies:
+      '@devframes/hub':
+        specifier: ^0.9.4
+        version: 0.9.4(crossws@0.4.10(srvx@0.11.22))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22))
       '@devframes/plugin-code-server':
         specifier: ^0.9.4
         version: 0.9.4(@devframes/hub-ui@0.9.4(@devframes/hub@0.9.4(crossws@0.4.10(srvx@0.11.22))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22)))(@devframes/json-render@0.9.4(@devframes/hub@0.9.4(crossws@0.4.10(srvx@0.11.22))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22)))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22)))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22)))(@devframes/hub@0.9.4(crossws@0.4.10(srvx@0.11.22))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22)))(devframe@0.9.4(cac@7.0.0)(srvx@0.11.22))(vite@8.2.2)
