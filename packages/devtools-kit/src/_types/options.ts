@@ -75,6 +75,22 @@ export interface ModuleOptions {
   iframeProps?: Record<string, string | boolean>
 
   /**
+   * Where the DevTools client UI (the SPA rendered in the DevTools frame) is
+   * served from.
+   *
+   * - `undefined` (default): resolve the version-locked `@nuxt/devtools-assets`
+   *   package — a locally installed copy when present (zero network; install
+   *   it explicitly for offline or air-gapped use), otherwise streamed on
+   *   demand from a CDN mirror of npm and cached on disk.
+   * - a directory path: serve a local build of the client UI from that
+   *   directory.
+   * - `false`: don't mount the client UI at all. Used by the DevTools client
+   *   app itself, whose dev server already serves the live client on the same
+   *   base path.
+   */
+  clientAssets?: string | false
+
+  /**
    * Experimental features
    */
   experimental?: {

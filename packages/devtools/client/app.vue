@@ -32,7 +32,9 @@ useHead({
     {
       rel: 'icon',
       type: 'image/svg+xml',
-      href: '/nuxt.svg',
+      // Relative: resolves against the document URL, which is always the
+      // client's mount root (the production build uses hash routing).
+      href: './nuxt.svg',
     },
   ],
 })

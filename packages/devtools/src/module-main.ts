@@ -1,11 +1,9 @@
 import type { PluginWithDevTools } from '@vitejs/devtools-kit'
-import type { ServerResponse } from 'node:http'
+import type { StaticAssetsSource } from 'devframe'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
 import type { AnyNitroConfig } from './utils/nitro-compat'
-import { existsSync } from 'node:fs'
-import fs from 'node:fs/promises'
 import os from 'node:os'
 import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
@@ -13,15 +11,48 @@ import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
 import { join } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
-import { version } from '../package.json'
+import { peerDependencies, version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
-import { clientDir, packageDir, runtimeDir } from './dirs'
+import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { skipInSSR } from './server-rpc/skip-in-ssr'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
-const DEVTOOLS_BASE_RE = /\/__NUXT_DEVTOOLS_BASE__\//g
+
+/**
+ * The published package holding the built client UI, version-locked to this
+ * package and declared as an optional peer dependency. Served as devframe
+ * remote assets: a locally installed copy wins (zero network — the monorepo
+ * and air-gapped installs), then the on-disk cache, then a CDN mirror of npm.
+ */
+const ASSETS_PACKAGE = '@nuxt/devtools-assets'
+
+/**
+ * Resolve the `StaticAssetsSource` for the client UI, honoring the
+ * `clientAssets` module option (`false` = don't mount, a string = serve that
+ * local directory).
+ *
+ * Nightly releases rename workspace packages through `npm:<name>-nightly@<v>`
+ * alias ranges (see `scripts/bump-nightly.ts`), so the real assets package
+ * name is read back from our own peer-dependency entry — a nightly build then
+ * fetches its matching nightly assets.
+ */
+function resolveClientAssetsSource(options: ModuleOptions): StaticAssetsSource | undefined {
+  if (options.clientAssets === false)
+    return undefined
+  if (typeof options.clientAssets === 'string')
+    return options.clientAssets
+  const range: string = (peerDependencies as Record<string, string>)[ASSETS_PACKAGE] ?? ''
+  const name = range.startsWith('npm:')
+    ? range.slice('npm:'.length, range.lastIndexOf('@'))
+    : ASSETS_PACKAGE
+  return {
+    package: name,
+    version,
+    resolveFrom: import.meta.url,
+  }
+}
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -85,6 +116,18 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     )
   }
 
+  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
+  const ROUTE_CLIENT = `${ROUTE_PATH}/client`
+  const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
+
+  const clientAssetsSource = resolveClientAssetsSource(options)
+  // Where the client UI lives from the browser's point of view. With
+  // `clientAssets: false` the app under development *is* the client (the
+  // dogfooding `nuxi dev client` flow), already served live on its own base.
+  const clientUrl = clientAssetsSource
+    ? `${ROUTE_CLIENT}/`
+    : `${nuxt.options.app.baseURL || '/'}/`.replace(MULTIPLE_SLASHES_RE, '/')
+
   const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
   addVitePlugin(DevTools)
 
@@ -105,6 +148,33 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
         // setup callback too, and would otherwise create a second, inert
         // group + hub member. See `skipInSSR`.
         if (!skipInSSR(ctx)) {
+          if (clientAssetsSource) {
+            // The client SPA ships relative asset URLs (mount-path portable),
+            // which only resolve on the directory URL — send `…/client` to
+            // `…/client/` before the static mount sees it.
+            ctx.viteServer?.middlewares.use((req, res, next) => {
+              const [pathname = '', search = ''] = (req.url ?? '').split('?')
+              if (pathname !== ROUTE_CLIENT)
+                return next()
+              res.statusCode = 302
+              res.setHeader('Location', `${ROUTE_CLIENT}/${search ? `?${search}` : ''}`)
+              res.end()
+            })
+            // Serve `__connection.json` on the client's base (registered
+            // before the static mount so its SPA fallback doesn't swallow the
+            // route) — the same mounting the hub does for each devframe it
+            // installs. Inside the hub's iframe the injected parent connection
+            // wins; this makes a *direct* navigation to the client discover
+            // the RPC endpoint too.
+            if (ctx.host.mountConnectionMeta)
+              await ctx.host.mountConnectionMeta(`${ROUTE_CLIENT}/`)
+            // devframe's own static hosting: a local directory is served
+            // directly; the default remote source resolves per request from a
+            // locally installed `@nuxt/devtools-assets`, the on-disk cache, or
+            // its CDN back-proxy (https://devfra.me/guide/client-assets.html).
+            ctx.views.hostStatic(ROUTE_CLIENT, clientAssetsSource)
+          }
+
           // Register the `Nuxt` group and a single **shared-frame anchor**
           // iframe. The anchor owns one kept-alive iframe (its `frameId`); the
           // client app ships a `devframe:frame-nav` postMessage shim that
@@ -116,7 +186,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             id: NUXT_DEVTOOLS_GROUP_ID,
             type: 'group',
             title: 'Nuxt',
-            icon: '/__nuxt_devtools__/client/nuxt.svg',
+            icon: `${clientUrl}nuxt.svg`,
             category: 'framework',
             defaultOrder: -2000,
             defaultChildId: 'nuxt:devtools',
@@ -135,8 +205,8 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
             id: 'nuxt:devtools',
             type: 'iframe',
             title: 'Nuxt DevTools',
-            icon: '/__nuxt_devtools__/client/nuxt.svg',
-            url: '/__nuxt_devtools__/client/',
+            icon: `${clientUrl}nuxt.svg`,
+            url: clientUrl,
             groupId: NUXT_DEVTOOLS_GROUP_ID,
             frameId: 'nuxt:devtools',
             subTabs: { protocol: 'postmessage' },
@@ -218,8 +288,6 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   connectDevToolsKit = _connectDevToolsKit
 
-  const clientDirExists = existsSync(clientDir)
-
   extendViteConfig((config) => {
     config.server ||= {}
     config.server.fs ||= {}
@@ -241,40 +309,11 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     from: join(runtimeDir, 'use-nuxt-devtools'),
   })
 
-  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
-  const ROUTE_CLIENT = `${ROUTE_PATH}/client`
-  const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
-
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server) => {
     const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
     server.middlewares.use(ROUTE_ANALYZE, serveStaticNodeMiddleware(devtoolsAnalyzeDir, { single: false }))
-
-    // Serve the front end in production
-    if (clientDirExists) {
-      const indexHtmlPath = join(clientDir, 'index.html')
-      const indexContent = fs.readFile(indexHtmlPath, 'utf-8')
-      const handleStatic = serveStaticNodeMiddleware(clientDir, {
-        single: false,
-      })
-      // We replace the base URL in the index.html based on user's settings
-      const handleIndex = async (res: ServerResponse) => {
-        res.setHeader('Content-Type', 'text/html')
-        res.statusCode = 200
-        res.write((await indexContent).replace(DEVTOOLS_BASE_RE, `${ROUTE_CLIENT}/`))
-        res.end()
-      }
-      server.middlewares.use(ROUTE_CLIENT, (req, res) => {
-        // Serve the (base-rewritten) SPA index for the root document, ignoring
-        // any query string, which sirv would otherwise serve as a raw,
-        // un-rewritten `index.html`.
-        const pathname = (req.url || '/').split('?')[0]
-        if (pathname === '/' || pathname === '')
-          return handleIndex(res)
-        return handleStatic(req, res, () => handleIndex(res))
-      })
-    }
   })
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))

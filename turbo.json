@@ -12,6 +12,22 @@
       "outputs": [
         "dist/**"
       ]
+    },
+    "@nuxt/devtools-assets#build": {
+      // Generates the client app that lives in `packages/devtools`
+      // (`client/**` dogfooding `src/module`) into this package's `dist/`.
+      // Those inputs are outside this package, so the task can't be hashed —
+      // never cache it. The explicit dep replaces `^build` (this package has
+      // no real workspace dependencies). Only `@nuxt/devtools-kit`'s dist is
+      // required: the client app consumes `@nuxt/devtools` and
+      // `@nuxt/devtools-ui-kit` from source (and `build:client` self-stubs
+      // the module via `dev:prepare`) — depending on their builds here would
+      // be a cycle, since `@nuxt/devtools` dev-depends on this package.
+      "dependsOn": [
+        "@nuxt/devtools-kit#build"
+      ],
+      "outputLogs": "new-only",
+      "cache": false
     }
   }
 }
