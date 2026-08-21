@@ -152,7 +152,7 @@ registerCommands(() => [
       Connecting....
     </NLoading>
     <div
-      v-else
+      v-show="!waiting"
       id="nuxt-devtools-app"
       class="grid grid-cols-[1fr]"
       h-full h-screen of-hidden rounded-xl bg-base font-sans

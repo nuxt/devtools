@@ -17,7 +17,7 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
 }
 
 export function useNuxtVersion() {
-  return useAsyncState('npm:check:nuxt', () => rpc.checkForUpdateFor('nuxt'))
+  return usePackageUpdate('nuxt').info
 }
 
 export function satisfyNuxtVersion(range: string) {

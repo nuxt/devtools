@@ -1,6 +1,9 @@
+import { writeFile } from 'node:fs/promises'
 import { defineBuildConfig } from 'unbuild'
 import Vue from 'unplugin-vue/rollup'
 import { buildCSS } from './src/webcomponents/scripts/build-css'
+
+const WEB_COMPONENTS_STUB = new URL('./dist/webcomponents/index.mjs', import.meta.url)
 
 export default defineBuildConfig({
   entries: [
@@ -38,6 +41,17 @@ export default defineBuildConfig({
       if (ctx.options.stub)
         return
       options.plugins.push(Vue())
+    },
+    'build:done': async (ctx) => {
+      if (!ctx.options.stub)
+        return
+
+      // unbuild's default stub loads TypeScript through jiti. This entry is
+      // imported by the browser-side inspector plugin, where that Node-only
+      // loader cannot run. Vite can transform the source entry directly while
+      // developing this workspace; published builds still receive the bundled
+      // web component above.
+      await writeFile(WEB_COMPONENTS_STUB, `export * from '../../src/webcomponents/index.ts'\n`)
     },
   },
 })

@@ -17,10 +17,10 @@ interface DevToolsFixtures {
 }
 
 // e2e servers run with `VITE_DEVTOOLS_DISABLE_CLIENT_AUTH=true`, which trusts the
-// *server* peer (so RPC is allowed) but never flips the *client-side* trust flag.
-// Until it does, Vite DevTools never subscribes to the dock list, so no dock —
-// and therefore no Nuxt group — ever appears. Nudge the flag here. This is purely
-// test-environment plumbing; it is not something the tests assert on.
+// *server* peer (so RPC is allowed), but the client can still initialize before
+// that state is reflected locally. Complete the handshake through Devframe's
+// public API before waiting for docks. This is purely test-environment plumbing;
+// it is not something the tests assert on.
 async function ensureDockReady(page: Page): Promise<void> {
   await page.waitForFunction(
     () => Boolean((globalThis as any).__NUXT_DEVTOOLS_HOST__?.devtools),
@@ -32,11 +32,16 @@ async function ensureDockReady(page: Page): Promise<void> {
     null,
     { timeout: 30_000 },
   )
-  await page.evaluate(() => {
-    const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
-    if (ctx?.rpc && !ctx.rpc.isTrusted)
-      ctx.rpc.events?.emit?.('rpc:is-trusted:updated', true)
+  await page.evaluate(async () => {
+    const rpc = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__?.rpc
+    if (rpc && !rpc.isTrusted)
+      await rpc.requestTrust()
   })
+  await page.waitForFunction(
+    () => Boolean((globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__?.rpc?.isTrusted),
+    null,
+    { timeout: 30_000 },
+  )
   await page.waitForFunction(
     () => Boolean((globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__?.docks?.entries?.length),
     null,
