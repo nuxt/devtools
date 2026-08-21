@@ -136,7 +136,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       tagline: 'DevTools for Nuxt',
       primaryColor: '#099e61',
       logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-      wordmark: 'https://nuxt.com/assets/design-kit/logo-green-white.svg',
+      wordmark: {
+        light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
+        dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
+      },
       windowTitle: 'Nuxt DevTools',
     },
   }))
