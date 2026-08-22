@@ -24,6 +24,7 @@ overrides:
   '@nuxt/devtools': workspace:*
   chokidar: catalog:buildtools
   esbuild: catalog:buildtools
+  mkdist: catalog:buildtools
   rollup: catalog:buildtools
   semver: catalog:prod
   structured-clone-es: catalog:frontend
@@ -52,6 +53,7 @@ catalogs:
     esbuild: ^0.28.1
     exsolve: ^1.1.1
     lightningcss: ^1.33.0
+    mkdist: ^2.4.1
     nitropack: ^2.13.4
     nuxt: ^4.5.1
     rollup: ^4.62.4
