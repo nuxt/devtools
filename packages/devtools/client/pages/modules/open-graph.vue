@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import type { HeadTag, Unhead } from '@unhead/vue'
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
+import { resolveTags } from '@unhead/vue/utils'
 import { computedAsync, until } from '@vueuse/core'
 import { computed, nextTick, ref } from 'vue'
 import { definePageMeta } from '#imports'
@@ -22,10 +24,19 @@ definePageMeta({
 const counter = ref(0)
 const head = useClientHead()
 
+// unhead v2 apps expose tag resolution as an async instance method; v3 removed it in
+// favour of the standalone `resolveTags` util, and the inspected app may be on either.
+async function resolveHeadTags(instance: Unhead): Promise<HeadTag[]> {
+  const legacy = instance as Partial<{ resolveTags: () => Promise<HeadTag[]> }>
+  if (typeof legacy.resolveTags === 'function')
+    return await legacy.resolveTags()
+  return resolveTags(instance)
+}
+
 const headTags = computedAsync(async () => {
   // eslint-disable-next-line ts/no-unused-expressions
   counter.value // for force refresh
-  const tags = await head.value?.resolveTags()
+  const tags = head.value ? await resolveHeadTags(head.value) : []
   return tags.map((tag): NormalizedHeadTag => {
     const props = tag.props || {}
     if (tag.tag === 'htmlAttrs' && props.lang) {
