@@ -1,3 +1,4 @@
+import type { $Fetch } from 'ofetch'
 import type { InstalledModuleInfo, ModuleStaticInfo } from '../../src/types'
 import { computed } from 'vue'
 import { $fetch, useState } from '#imports'
@@ -16,7 +17,7 @@ const ignoredModules = [
 
 export function useModulesList() {
   return useAsyncState('getModulesList', async () => {
-    const m = await $fetch<{ modules: ModuleStaticInfo[] }>('https://api.nuxt.com/modules?version=3')
+    const m = await ($fetch as $Fetch)<{ modules: ModuleStaticInfo[] }>('https://api.nuxt.com/modules?version=3')
     return m.modules
       .filter((item: ModuleStaticInfo) => !ignoredModules.includes(item.npm) && item.compatibility.nuxt.includes('>=3'))
   })

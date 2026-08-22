@@ -1,3 +1,4 @@
+import type { $Fetch } from 'ofetch'
 import type { MaybeRefOrGetter } from 'vue'
 import { randomStr } from '@antfu/utils'
 import { computed, onUnmounted, reactive, toValue } from 'vue'
@@ -77,7 +78,7 @@ let _nuxtDocsCommands: CommandItem[] | undefined
 
 export async function getNuxtDocsCommands() {
   if (!_nuxtDocsCommands) {
-    const list = await $fetch<any[]>('https://nuxt.com/api/search.json', {
+    const list = await ($fetch as $Fetch)<any[]>('https://nuxt.com/api/search.json', {
       query: {
         select: '_path,title,description,navigation',
       },

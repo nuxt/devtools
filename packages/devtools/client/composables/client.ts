@@ -1,5 +1,5 @@
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient } from '@nuxt/devtools-kit/types'
-import type { Unhead } from '@unhead/schema'
+import type { Unhead } from '@unhead/vue'
 import type { ComputedRef } from 'vue'
 import type { useRoute, useRouter } from '#imports'
 import { useColorMode } from '@vueuse/core'
