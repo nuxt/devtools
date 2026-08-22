@@ -1,3 +1,13 @@
+## [3.4.2](https://github.com/nuxt/devtools/compare/v3.4.1...v3.4.2) (2026-08-22)
+
+
+### Bug Fixes
+
+* **devtools:** update client for unhead v3 and restore $fetch types ([#1077](https://github.com/nuxt/devtools/issues/1077)) ([0fcb59a](https://github.com/nuxt/devtools/commit/0fcb59a542c6ea873163075bd283954027a2b5b6))
+* **ui-kit:** dedupe mkdist so dist ships .vue SFCs ([#1078](https://github.com/nuxt/devtools/issues/1078)) ([48a93c7](https://github.com/nuxt/devtools/commit/48a93c75ec43f9156b03271a11e413d63bcbe728))
+
+
+
 ## [3.4.1](https://github.com/nuxt/devtools/compare/v3.4.0...v3.4.1) (2026-08-04)
 
 
