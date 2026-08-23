@@ -29,7 +29,8 @@
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "turbo run build --filter=."
+    "prepack": "turbo run build --filter=.",
+    "test": "vitest run"
   },
   "peerDependencies": {
     "@nuxt/devtools-assets": "workspace:*",
@@ -64,15 +65,19 @@
     "destr": "catalog:prod",
     "devframe": "catalog:prod",
     "error-stack-parser-es": "catalog:frontend",
+    "escape-string-regexp": "catalog:prod",
     "fast-npm-meta": "catalog:prod",
     "hookable": "catalog:frontend",
     "image-meta": "catalog:prod",
     "local-pkg": "catalog:prod",
+    "magic-string": "catalog:prod",
     "magicast": "catalog:prod",
+    "mlly": "catalog:prod",
     "pathe": "catalog:frontend",
     "perfect-debounce": "catalog:frontend",
     "pkg-types": "catalog:prod",
     "tinyglobby": "catalog:prod",
+    "unplugin": "catalog:prod",
     "unstorage": "catalog:prod",
     "verkit": "catalog:prod",
     "vite-plugin-vue-tracer": "catalog:prod"
@@ -88,6 +93,7 @@
     "@iconify-json/tabler": "catalog:icons",
     "@nuxt/devtools-assets": "workspace:*",
     "@nuxt/kit": "catalog:prod",
+    "@nuxt/schema": "catalog:types",
     "@parcel/watcher": "catalog:buildtools",
     "@types/markdown-it-link-attributes": "catalog:types",
     "@unhead/schema": "catalog:types",
@@ -128,6 +134,7 @@
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
     "vite-plugin-inspect": "catalog:prod",
+    "vitest": "catalog:cli",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"
   }

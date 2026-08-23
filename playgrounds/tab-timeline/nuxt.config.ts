@@ -11,7 +11,6 @@ export default defineNuxtConfig({
     clearScreen: false,
   },
   devtools: {
-    enabled: false,
     experimental: {
       timeline: true,
     },
