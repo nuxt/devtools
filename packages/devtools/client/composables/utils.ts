@@ -4,7 +4,7 @@ import type { AsyncDataOptions } from '#app'
 import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
 import { useSessionStorage } from '@vueuse/core'
 import { relative } from 'pathe'
-import { isRef, triggerRef } from 'vue'
+import { triggerRef } from 'vue'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useNuxtApp } from '#app/nuxt'
 import { useState } from '#imports'
@@ -42,10 +42,23 @@ function getModuleSubpathFromPath(path: string) {
   return match
 }
 
+/**
+ * The `nuxt` package name itself, as it appears in `node_modules` / package
+ * names. Aliased installs (`"nuxt": "npm:nuxt-nightly@5x"`, the older
+ * `nuxt-edge` pre-release channel, ...) physically install under a different
+ * package name, so anything that special-cases "is this Nuxt's own code"
+ * needs to check all of them, not just the literal `'nuxt'` string.
+ */
+export const NUXT_PACKAGE_NAMES = new Set(['nuxt', 'nuxt-nightly', 'nuxt-edge'])
+
+export function isNuxtPackageName(name: string | undefined) {
+  return !!name && NUXT_PACKAGE_NAMES.has(name)
+}
+
 export function isBuiltInModule(name: string | undefined) {
   if (!name)
     return
-  return ['nuxt', '#app', '#head', 'vue'].includes(name)
+  return isNuxtPackageName(name) || ['#app', '#head', 'vue'].includes(name)
 }
 
 export function parseReadablePath(path: string, root: string) {
@@ -182,27 +195,6 @@ export function refreshData() {
 
 export function reloadPage() {
   location.reload()
-}
-
-export function jsonStringifyCircular(params: any) {
-  const seen: any[] = []
-  const result = JSON.stringify(params, (key, value) => {
-    if (typeof value === 'function')
-      return value.toString()
-    if (isRef(value))
-      value = value.value
-    if (typeof value === 'object' && value !== null) {
-      if (key === 'devServer') // TODO: do this better
-        return undefined
-      const index = seen.indexOf(value)
-      if (index >= 0)
-        // return structuredClone(seen[index])
-        return `<Circular #${index}>`
-      seen.push(value)
-    }
-    return value
-  })
-  return result
 }
 
 export function useNuxtCompatibilityVersion() {

@@ -1,19 +1,23 @@
-import type { Nitro, StorageMounts } from 'nitropack'
 import type { Component, NuxtApp, NuxtLayout, NuxtOptions, NuxtPage } from 'nuxt/schema'
 import type { StorageValue } from 'unstorage'
 import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { AnyNitro, AnyStorageMounts } from './nitro-compat'
 import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
 import type { InstallModuleReturn, ServerDebugContext } from './server-ctx'
-import type { TerminalAction, TerminalInfo } from './terminals'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
   getServerConfig: () => NuxtOptions
   getServerDebugContext: () => Promise<ServerDebugContext | undefined>
+  /**
+   * @deprecated Replaced by the Data Inspector panel's live `Nuxt Application`
+   * source. Kept as a compatibility shim (emits `NDT_DEP_0009`) for one
+   * migration window and will be removed in a future major.
+   */
   getServerData: () => Promise<NuxtServerData>
   getServerRuntimeConfig: () => Record<string, any>
   getModuleOptions: () => ModuleOptions
@@ -40,12 +44,10 @@ export interface ServerFunctions {
   runNpmCommand: (command: NpmCommandType, packageName: string, options?: NpmCommandOptions) => Promise<{ processId: string } | undefined>
 
   // Terminal
-  getTerminals: () => TerminalInfo[]
-  getTerminalDetail: (id: string) => Promise<TerminalInfo | undefined>
-  runTerminalAction: (id: string, action: TerminalAction) => Promise<boolean>
+  revealTerminal: (id: string) => Promise<boolean>
 
   // Storage
-  getStorageMounts: () => Promise<StorageMounts>
+  getStorageMounts: () => Promise<AnyStorageMounts>
   getStorageKeys: (base?: string) => Promise<string[]>
   getStorageItem: (key: string) => Promise<StorageValue>
   setStorageItem: (key: string, value: StorageValue) => Promise<void>
@@ -73,8 +75,8 @@ export interface ServerFunctions {
   enablePages: () => Promise<void>
   openInEditor: (filepath: string) => Promise<boolean>
   restartNuxt: (hard?: boolean) => Promise<void>
-  installNuxtModule: (name: string, dry?: boolean) => Promise<InstallModuleReturn>
-  uninstallNuxtModule: (name: string, dry?: boolean) => Promise<InstallModuleReturn>
+  installNuxtModule: (name: string, dry?: boolean, sessionId?: string) => Promise<InstallModuleReturn>
+  uninstallNuxtModule: (name: string, dry?: boolean, sessionId?: string) => Promise<InstallModuleReturn>
   enableTimeline: (dry: boolean) => Promise<[string, string]>
 
   // Dev Token
@@ -87,13 +89,24 @@ export interface ClientFunctions {
   callHook: (hook: string, ...args: any[]) => Promise<void>
   navigateTo: (path: string) => void
 
-  onTerminalData: (_: { id: string, data: string }) => void
+  /**
+   * Minimal server→client completion signal for generic package updates only
+   * (`runNpmCommand`): the run RPC returns before the process exits, so this
+   * lets `usePackageUpdate` and the restart prompt settle once it finishes. It
+   * carries only `{ id, code }` and is not a terminal-data transport. Module
+   * install/uninstall and analyze-build no longer rely on it — they clear their
+   * UI from the awaited RPC / refreshed info instead.
+   */
   onTerminalExit: (_: { id: string, code?: number }) => void
 }
 
+/**
+ * @deprecated The payload of the deprecated {@link ServerFunctions.getServerData}
+ * shim. Use the Data Inspector panel's live `Nuxt Application` source instead.
+ */
 export interface NuxtServerData {
   nuxt: NuxtOptions
-  nitro?: Nitro['options']
+  nitro?: AnyNitro['options']
   vite: {
     server?: ResolvedConfig
     client?: ResolvedConfig

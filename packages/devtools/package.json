@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools",
   "type": "module",
-  "version": "4.0.0-alpha.7",
+  "version": "4.0.0-alpha.15",
   "description": "The Nuxt DevTools gives you insights and transparency about your Nuxt App.",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com",
@@ -11,84 +11,79 @@
     "directory": "packages/devtools"
   },
   "exports": {
-    ".": {
-      "types": "./dist/module.d.mts",
-      "import": "./dist/module.mjs"
-    },
-    "./webcomponents": {
-      "types": "./dist/webcomponents/index.d.mts",
-      "import": "./dist/webcomponents/index.mjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.mts"
-    },
+    ".": "./dist/module.mjs",
+    "./webcomponents": "./dist/webcomponents/index.mjs",
+    "./types": "./dist/types.mjs",
     "./*": "./*"
   },
   "types": "./dist/module.d.mts",
   "files": [
-    "*.cjs",
-    "*.d.ts",
-    "*.mjs",
     "dist"
   ],
   "scripts": {
-    "build": "pnpm dev:prepare && pnpm build:module && pnpm build:discovery && pnpm build:client",
-    "build:client": "nuxi generate client && node scripts/copy-client.mjs",
+    "build": "pnpm dev:prepare && pnpm build:module",
+    "build:client": "pnpm dev:prepare && nuxi generate client && node scripts/copy-client.mjs",
     "build:module": "nuxt-build-module build",
-    "build:discovery": "discovery-build -c .discoveryrc.cjs -s -o client/public/discovery",
-    "dev:discovery": "discovery -c .discoveryrc.cjs",
     "stub": "nuxt-build-module build --stub",
-    "dev": "pnpm build:discovery && nuxi dev client",
+    "dev": "nuxi dev client",
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "pnpm build",
+    "prepack": "turbo run build --filter=.",
     "test": "vitest run"
   },
   "peerDependencies": {
-    "vite": ">=6.0"
+    "@nuxt/devtools-assets": "workspace:*",
+    "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0",
+    "nitro": "^3.0.0-0",
+    "nitropack": "^2.0.0",
+    "vite": "^8.1.5",
+    "vite-plugin-inspect": "catalog:prod"
+  },
+  "peerDependenciesMeta": {
+    "@nuxt/devtools-assets": {
+      "optional": true
+    },
+    "nitro": {
+      "optional": true
+    },
+    "nitropack": {
+      "optional": true
+    },
+    "vite-plugin-inspect": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@devframes/hub": "catalog:prod",
+    "@devframes/plugin-code-server": "catalog:prod",
+    "@devframes/plugin-data-inspector": "catalog:prod",
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:prod",
     "@vitejs/devtools": "catalog:buildtools",
     "@vitejs/devtools-kit": "catalog:types",
-    "@vue/devtools-core": "catalog:frontend",
-    "@vue/devtools-kit": "catalog:prod",
-    "birpc": "catalog:frontend",
     "consola": "catalog:prod",
     "destr": "catalog:prod",
+    "devframe": "catalog:prod",
     "error-stack-parser-es": "catalog:frontend",
     "escape-string-regexp": "catalog:prod",
     "fast-npm-meta": "catalog:prod",
-    "get-port-please": "catalog:prod",
     "hookable": "catalog:frontend",
     "image-meta": "catalog:prod",
-    "launch-editor": "catalog:prod",
     "local-pkg": "catalog:prod",
     "magic-string": "catalog:prod",
     "magicast": "catalog:prod",
     "mlly": "catalog:prod",
-    "ohash": "catalog:frontend",
     "pathe": "catalog:frontend",
     "perfect-debounce": "catalog:frontend",
     "pkg-types": "catalog:prod",
-    "semver": "catalog:prod",
-    "sirv": "catalog:prod",
-    "structured-clone-es": "catalog:frontend",
-    "tinyexec": "catalog:prod",
     "tinyglobby": "catalog:prod",
     "unplugin": "catalog:prod",
     "unstorage": "catalog:prod",
-    "vite-plugin-inspect": "catalog:prod",
-    "vite-plugin-vue-tracer": "catalog:prod",
-    "which": "catalog:prod",
-    "ws": "catalog:prod"
+    "verkit": "catalog:prod",
+    "vite-plugin-vue-tracer": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/utils": "catalog:frontend",
-    "@discoveryjs/cli": "catalog:buildtools",
-    "@discoveryjs/discovery": "catalog:buildtools",
     "@iconify-json/bxl": "catalog:icons",
     "@iconify-json/carbon": "catalog:icons",
     "@iconify-json/logos": "catalog:icons",
@@ -96,8 +91,9 @@
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/simple-icons": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
+    "@nuxt/devtools-assets": "workspace:*",
+    "@nuxt/kit": "catalog:prod",
     "@nuxt/schema": "catalog:types",
-    "@nuxt/test-utils": "catalog:cli",
     "@parcel/watcher": "catalog:buildtools",
     "@types/markdown-it-link-attributes": "catalog:types",
     "@unhead/schema": "catalog:types",
@@ -106,19 +102,17 @@
     "@unocss/preset-uno": "catalog:buildtools",
     "@unocss/runtime": "catalog:frontend",
     "@vitejs/devtools": "catalog:buildtools",
-    "@vitest/ui": "catalog:cli",
-    "@vue/devtools-applet": "catalog:frontend",
     "@vueuse/nuxt": "catalog:buildtools",
-    "@xterm/addon-fit": "catalog:frontend",
-    "@xterm/xterm": "catalog:frontend",
     "cronstrue": "catalog:frontend",
+    "diff": "catalog:frontend",
     "exsolve": "catalog:buildtools",
     "floating-vue": "catalog:frontend",
     "fuse.js": "catalog:frontend",
     "json-editor-vue": "catalog:frontend",
     "lightningcss": "catalog:buildtools",
-    "markdown-it": "catalog:frontend",
+    "markdown-exit": "catalog:frontend",
     "markdown-it-link-attributes": "catalog:frontend",
+    "nitro": "catalog:buildtools",
     "nitropack": "catalog:buildtools",
     "nuxt": "catalog:buildtools",
     "ofetch": "catalog:frontend",
@@ -127,9 +121,11 @@
     "scule": "catalog:frontend",
     "shiki": "catalog:frontend",
     "shiki-codegen": "catalog:buildtools",
+    "structured-clone-es": "catalog:frontend",
     "theme-vitesse": "catalog:frontend",
     "tsx": "catalog:cli",
     "ua-parser-modern": "catalog:frontend",
+    "unbuild": "catalog:buildtools",
     "unimport": "catalog:types",
     "unocss": "catalog:buildtools",
     "unplugin-vue": "catalog:buildtools",
@@ -137,6 +133,7 @@
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
+    "vite-plugin-inspect": "catalog:prod",
     "vitest": "catalog:cli",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"

@@ -2,6 +2,7 @@ import type { Import } from 'unimport'
 import type { ModuleCustomTab } from './custom-tabs'
 import type { ServerRouteInfo, ServerRouteInput, ServerTaskInfo } from './integrations'
 
+/** @deprecated Part of the removed `vscode` integration. */
 export type CodeServerType = 'ms-code-cli' | 'ms-code-server' | 'coder-code-server'
 
 export interface ModuleOptions {
@@ -19,8 +20,13 @@ export interface ModuleOptions {
    */
   customTabs?: ModuleCustomTab[]
 
+  /** Code Server integration options. */
+  codeServer?: CodeServerIntegrationOptions
+
   /**
-   * VS Code Server integration options.
+   * Legacy VS Code Server integration options.
+   *
+   * @deprecated Use `codeServer`. Legacy modes are no longer supported.
    */
   vscode?: VSCodeIntegrationOptions
 
@@ -32,16 +38,24 @@ export interface ModuleOptions {
   componentInspector?: boolean
 
   /**
-   * Enable Vue DevTools integration
-   */
-  vueDevTools?: boolean
-
-  /**
-   * Enable vite-plugin-inspect
+   * Enable the Vite Inspect integration.
+   *
+   * `vite-plugin-inspect` is an optional peer dependency. When it isn't
+   * installed, DevTools shows an install launcher in its place (like Vite Plus
+   * DevTools); once installed, the real Inspect view is mounted. Set this to
+   * `false` to disable the integration (and its launcher) entirely.
    *
    * @default true
    */
   viteInspect?: boolean
+
+  /**
+   * Enable the Data Inspector integration, which registers the live
+   * `Nuxt Application` data source and mounts the Data Inspector panel.
+   *
+   * @default true
+   */
+  dataInspector?: boolean
 
   /**
    * Disable the DevTools client authorization prompt, allowing any browser to
@@ -54,11 +68,6 @@ export interface ModuleOptions {
    * your server and filesystem. Only disable it in trusted environments.
    */
   disableAuthorization?: boolean
-
-  /**
-   * Props for the iframe element, useful for environment with stricter CSP
-   */
-  iframeProps?: Record<string, string | boolean>
 
   /**
    * Experimental features
@@ -119,6 +128,40 @@ export interface ModuleOptions {
   telemetry?: boolean
 }
 
+export interface CodeServerIntegrationOptions {
+  /**
+   * Enable the Code Server integration.
+   *
+   * @default true
+   */
+  enabled?: boolean
+
+  /** Path or command name for Coder's `code-server` binary. */
+  bin?: string
+
+  /** Workspace opened by Code Server. Defaults to the Nuxt root directory. */
+  cwd?: string
+
+  /** Port for the Code Server process. Defaults to the plugin's free-port behavior. */
+  serverPort?: number
+
+  /** Host for the Code Server process. Defaults to the plugin's loopback host. */
+  host?: string
+
+  /** Additional safe arguments passed to `code-server`. */
+  args?: string[]
+
+  /** Additional safe environment variables passed to `code-server`. */
+  env?: Record<string, string>
+
+  /** Suffix used to isolate the authenticated Code Server session cookie. */
+  cookieSuffix?: string
+
+  /** Milliseconds to wait for Code Server to become ready. */
+  startTimeout?: number
+}
+
+/** @deprecated Use {@link CodeServerIntegrationOptions}. */
 export interface VSCodeIntegrationOptions {
   /**
    * Enable VS Code Server integration
@@ -171,6 +214,7 @@ export interface VSCodeIntegrationOptions {
   host?: string
 }
 
+/** @deprecated Tunnels are not supported by the Code Server integration. */
 export interface VSCodeTunnelOptions {
   /**
    * the machine name for port forwarding service
@@ -194,13 +238,10 @@ export interface NuxtDevToolsOptions {
     componentsView: 'list' | 'graph'
     hiddenTabCategories: string[]
     hiddenTabs: string[]
-    interactionCloseOnOutsideClick: boolean
     pinnedTabs: string[]
     scale: number
     showExperimentalFeatures: boolean
     showHelpButtons: boolean
-    sidebarExpanded: boolean
-    sidebarScrollable: boolean
   }
   serverRoutes: {
     selectedRoute: ServerRouteInfo | null

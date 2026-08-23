@@ -1,12 +1,8 @@
 import { defineNuxtRouteMiddleware, navigateTo } from '#imports'
-import { isFirstVisit } from '~/composables/storage'
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (isFirstVisit.value) {
-    if (to.path !== '/')
-      return navigateTo('/')
-  }
-  else if (to.path === '/') {
+  // The client is always the shared-frame anchor: land on a real tab so the
+  // frame-nav shim has something to report as the current view.
+  if (to.path === '/')
     return navigateTo('/modules/overview')
-  }
 })

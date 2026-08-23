@@ -3,10 +3,12 @@ import type { AnalyzeBuildMeta, ModuleOptions } from '../types'
 import { addVitePlugin } from '@nuxt/kit'
 import { join } from 'pathe'
 import { getFolderSize } from '../utils/fs'
-import { createVitePluginInspect } from './vite-inspect'
+import { createVitePluginInspect, isVitePluginInspectAvailable } from './vite-inspect'
 
 export async function setup(nuxt: Nuxt, options: ModuleOptions) {
-  if (options.viteInspect !== false) {
+  // Only wire the Vite Inspect build report when the optional
+  // `vite-plugin-inspect` peer dependency is actually installed.
+  if (options.viteInspect !== false && isVitePluginInspectAvailable(nuxt.options.rootDir)) {
     addVitePlugin(
       await createVitePluginInspect({
         build: true,

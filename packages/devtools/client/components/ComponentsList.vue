@@ -4,7 +4,7 @@ import type { ComponentRelationship, ComponentWithRelationships } from '../../ty
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
 import { DETAILS_MAX_ITEMS } from '~/composables/constants'
-import { getComponentRelationships, getModuleNameFromPath, isNodeModulePath } from '~/composables/utils'
+import { getComponentRelationships, getModuleNameFromPath, isNodeModulePath, isNuxtPackageName } from '~/composables/utils'
 
 const props = defineProps<{
   components: Component[]
@@ -73,7 +73,7 @@ const filtered = computed(() => {
         const name = getModuleNameFromPath(c.filePath)
         if (!name)
           return
-        if (name === 'nuxt') {
+        if (isNuxtPackageName(name)) {
           c.meta ??= {}
           c.meta.docs ??= builtinComponentDocs?.[c.pascalName as keyof typeof builtinComponentDocs]
           builtin.push(component)

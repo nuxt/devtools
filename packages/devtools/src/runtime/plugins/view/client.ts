@@ -4,9 +4,8 @@ import type { $Fetch } from 'ofetch'
 import type { Ref } from 'vue'
 
 import type { Router } from 'vue-router'
+import { getDevframeClientContext } from '@devframes/hub/client'
 import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
-import { getDevToolsClientContext } from '@vitejs/devtools-kit/client'
-import { setIframeServerContext } from '@vue/devtools-kit'
 
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
@@ -14,15 +13,18 @@ import { events as inspectorEvents, hasData as inspectorHasData, state as inspec
 import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
-import { useAppConfig, useRuntimeConfig } from '#imports'
+import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import { state } from './state'
 
-const MULTIPLE_SLASHES_RE = /\/+/g
+// Host controls must update the visible Devframe viewer context, rather than
+// Vite's separate dock-registration context. Target the shared-frame anchor
+// explicitly so open/navigate always mounts the one kept-alive client iframe
+// used by every Nuxt tab.
+const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
-function getViteDevToolsContext() {
-  return getDevToolsClientContext() as any
+function getDevframeContext() {
+  return getDevframeClientContext() as any
 }
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -42,7 +44,6 @@ export async function setupDevToolsClient({
   timeMetric: any
   router: Router
 }) {
-  let iframe: HTMLIFrameElement | undefined
   let inspector: NuxtDevtoolsHostClient['inspector'] | undefined
 
   const colorMode = useClientColorMode()
@@ -53,32 +54,29 @@ export async function setupDevToolsClient({
     hooks: createHooks(),
     inspector: getInspectorInstance(),
 
-    getIframe,
-    syncClient,
-
     devtools: {
       toggle() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx)
-          ctx.docks.toggleEntry('nuxt:devtools')
+          ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
       },
       close() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx)
-          ctx.panel.store.value.open = false
+          ctx.panel.session.open = false
       },
       open() {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx) {
-          ctx.panel.store.value.open = true
-          ctx.docks.switchEntry('nuxt:devtools')
+          ctx.panel.session.open = true
+          ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
         }
       },
       async navigate(path: string) {
-        const ctx = getViteDevToolsContext()
+        const ctx = getDevframeContext()
         if (ctx) {
-          ctx.panel.store.value.open = true
-          ctx.docks.switchEntry('nuxt:devtools')
+          ctx.panel.session.open = true
+          ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
         }
         await client.hooks.callHook('host:action:navigate', path)
       },
@@ -99,7 +97,6 @@ export async function setupDevToolsClient({
           router.push(path)
       },
       colorMode,
-      frameState: state,
       $fetch: globalThis.$fetch as $Fetch,
     },
 
@@ -114,79 +111,6 @@ export async function setupDevToolsClient({
   })
 
   window.__NUXT_DEVTOOLS_HOST__ = client
-
-  function syncClient() {
-    if (!client.inspector)
-      client.inspector = getInspectorInstance()
-
-    try {
-      iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__?.setClient(client)
-    }
-    catch (e) {
-      // cross-origin
-      console.error('[nuxt-devtools] Failed to connect view', e)
-    }
-    return client
-  }
-
-  function getIframe() {
-    if (!iframe) {
-      const runtimeConfig = useRuntimeConfig()
-      const CLIENT_BASE = '/__nuxt_devtools__/client'
-      const CLIENT_PATH = `${runtimeConfig.app.baseURL.replace(CLIENT_BASE, '/')}${CLIENT_BASE}`.replace(MULTIPLE_SLASHES_RE, '/')
-      const initialUrl = CLIENT_PATH + state.value.route
-      iframe = document.createElement('iframe')
-
-      // custom iframe props
-      for (const [key, value] of Object.entries(runtimeConfig.app.devtools?.iframeProps || {}))
-        iframe.setAttribute(key, String(value))
-
-      iframe.id = 'nuxt-devtools-iframe'
-      iframe.src = initialUrl
-      iframe.onload = async () => {
-        try {
-          setIframeServerContext(iframe!)
-          await waitForClientInjection()
-          client.syncClient()
-        }
-        catch (e) {
-          console.error('Nuxt DevTools client injection failed')
-          console.error(e)
-        }
-      }
-    }
-
-    return iframe
-  }
-
-  function waitForClientInjection(retry = 20, timeout = 300) {
-    let lastError: any
-    const test = () => {
-      try {
-        return !!iframe?.contentWindow?.__NUXT_DEVTOOLS_VIEW__
-      }
-      catch (e) {
-        lastError = e
-      }
-      return false
-    }
-
-    if (test())
-      return
-
-    return new Promise<void>((resolve, reject) => {
-      const interval = setInterval(() => {
-        if (test()) {
-          clearInterval(interval)
-          resolve()
-        }
-        else if (retry-- <= 0) {
-          clearInterval(interval)
-          reject(lastError)
-        }
-      }, timeout)
-    })
-  }
 
   function getInspectorInstance(): NuxtDevtoolsHostClient['inspector'] {
     if (inspector)
@@ -277,7 +201,6 @@ export async function setupDevToolsClient({
 
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
-  bindVueDevToolsIframe()
 
   clientRef.value = client
 
@@ -286,31 +209,6 @@ export async function setupDevToolsClient({
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
-
-  // The Nuxt DevTools panel is rendered as an iframe **inside Vite DevTools'
-  // dock**, so we never create it ourselves (`getIframe()` above is legacy).
-  // The `@vue/devtools-kit` iframe messaging channel, however, only talks to
-  // whichever iframe was registered via `setIframeServerContext()` — without
-  // that the in-panel Vue DevTools applets (Pinia, component inspector, …) sit
-  // on "Connecting..." forever because the host backend never learns which
-  // iframe to answer. Point it at the dock iframe as soon as Vite DevTools
-  // mounts it (and keep it pointed there if the element is recreated).
-  function bindVueDevToolsIframe() {
-    let bound: HTMLIFrameElement | undefined
-    const bind = () => {
-      const ctx = getViteDevToolsContext()
-      const dockIframe = ctx?.docks?.getStateById?.('nuxt:devtools')?.domElements?.iframe as HTMLIFrameElement | null | undefined
-      if (!dockIframe || dockIframe === bound)
-        return
-      bound = dockIframe
-      iframe = dockIframe
-      // The channel reads `.contentWindow` lazily on every message, so binding
-      // the element once is enough even across in-iframe navigations/reloads.
-      setIframeServerContext(dockIframe)
-    }
-    bind()
-    setInterval(bind, 500)
-  }
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {
@@ -421,9 +319,5 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   // trigger update for app mounted
   client.nuxt.hook('app:mounted', () => {
     refreshReactivity()
-  })
-  // record last route
-  client.hooks.hook('devtools:navigate', (path) => {
-    state.value.route = path
   })
 }

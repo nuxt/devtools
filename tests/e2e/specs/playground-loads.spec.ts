@@ -1,17 +1,8 @@
 import { expect, test } from '../fixtures/devtools'
 
-// Runs for every project (both dev and built) — sanity check that the playground
-// itself boots and renders. In built mode this is the only thing we verify, since
-// Nuxt DevTools only attaches in dev.
-
-// tab-seo's production build currently throws `useNuxtDevTools is not defined`
-// (auto-import provided by `../../local` doesn't bake into the prod bundle).
-// Skip until that bug is fixed in `local.ts` / module-main; the dev-mode tests
-// for tab-seo still run.
-test.skip(
-  ({ playground, mode }) => playground === 'tab-seo' && mode === 'built',
-  'tab-seo prod build has a known auto-import issue (useNuxtDevTools not defined)',
-)
+// Runs for every project (both dev and built) — a sanity check that the
+// playground itself boots and renders. In built mode this is the only thing we
+// verify, since Nuxt DevTools only attaches in dev.
 
 test('playground page renders without errors', async ({ page }) => {
   const consoleErrors: string[] = []

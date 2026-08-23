@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { InstalledModuleInfo } from '../../src/types'
 import { computed } from 'vue'
-import { useCurrentTerminalId } from '~/composables/state-routes'
+import { rpc } from '~/composables/rpc'
 
 const props = defineProps<{
   mod: InstalledModuleInfo
@@ -13,7 +13,6 @@ const data = computed(() => ({
   ...props.mod,
   ...staticInfo.value,
 }))
-const terminalId = useCurrentTerminalId()
 </script>
 
 <template>
@@ -27,15 +26,15 @@ const terminalId = useCurrentTerminalId()
       <!-- NPM Version bump -->
       <NpmVersionCheck v-if="data.npm" :key="data.npm" :package-name="data.npm" :options="{ dev: true }">
         <template #default="{ info, update, state, id, restart }">
-          <NuxtLink
+          <button
             v-if="state === 'running'" flex="~ gap-2"
             animate-pulse items-center
-            :to="id ? '/modules/terminals' : undefined"
-            @click="id ? terminalId = id : undefined"
+            :title="id ? 'Open the output in the Terminals dock' : undefined"
+            @click="id ? rpc.revealTerminal(id) : undefined"
           >
             <span i-carbon-circle-dash flex-none animate-spin text-lg op50 />
             <code text-sm op50>Upgrading...</code>
-          </NuxtLink>
+          </button>
           <div v-else-if="state === 'updated'" mx--2>
             <button
               flex="~ gap-2"

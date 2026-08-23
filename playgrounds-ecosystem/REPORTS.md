@@ -67,6 +67,111 @@ rebased tip:
   all three tabs are still reachable (still only via the SideNav overflow
   menu), and `@nuxt/scripts` still shows "No scripts loaded".
 
+**Addendum 3 — Devtools-category modules added:** the playground was expanded
+beyond the original trio to cover modules from
+<https://nuxt.com/modules?category=Devtools>. That category lists ~18 modules;
+most register no DevTools tab, so — per the same methodology that dropped
+`@nuxt/content`/`@nuxt/image` — only the five that expose a real tab were kept:
+`@nuxt/eslint`, `@nuxt/hints`, `@nuxt/a11y`, `@compodium/nuxt`, `@scalar/nuxt`
+(see [`README.md`](./README.md) for the full skip-list and rationale). Verified
+by booting the combined app against this repo's **built** `@nuxt/devtools` and
+driving the devtools client with Playwright (the new opt-in suite in
+[`tests/`](./tests/) — `pnpm run test:e2e:ecosystem`). Findings:
+
+- **All five register their custom tab and it renders** — `custom-eslint-config`
+  (launch), `custom-hints`, `custom-nuxt-a11y`, `custom-compodium`, and
+  `custom-scalar` (all iframe). Per-module notes in
+  [Per-module findings](#per-module-findings) below.
+- **Environment: the sealed workspace had to be aligned to Vite 8.** Nuxt's
+  default (`nuxt@4.4.8` → Vite 7.3.6) made the linked `@nuxt/devtools`'s
+  `@vitejs/devtools@0.4.9` **crash the dev server at startup** — it eagerly
+  fails to resolve `@vitejs/devtools-rolldown`. Bumping the workspace to
+  `nuxt@^4.5.0` and adding a `vite: ~8.0.16` override (mirroring the root
+  `pnpm-workspace.yaml`, which pins Vite 8 for exactly this reason) fixed it.
+  This is a packaging/version-alignment issue, not a fault in any of the five
+  modules — but worth noting that `@vitejs/devtools@0.4.9` hard-requires Vite 8.
+- **`@scalar/nuxt`'s `/docs` page (its tab's iframe target) 500s under SSR** on
+  this Nuxt 4.5 / Vite 8 stack: *"Cannot destructure property 'mod' of
+  'threads.workerData' as it is undefined."* The API reference is a
+  client-rendered app, so `routeRules: { '/docs/**': { ssr: false } }`
+  sidesteps the crash with no loss of functionality. Good candidate for an
+  upstream issue to `@scalar/nuxt` about SSR under Vite 8.
+- **Console noise** is the same pre-existing/environmental set as before
+  (`DTK0008` auth-disabled warning in the e2e config, the OG-image
+  auto-signing-secret warning, and the `NDT_DEP_0003` deprecation diagnostics —
+  now also fired by more of these modules' `extendServerRpc`/legacy kit usage).
+
+## Nuxt 4 vs Nuxt 5 (per-major playgrounds + Nitro type resolution)
+
+Added alongside the `@nuxt/devtools` optional-peer-dependency change for
+`nitro` (Nitro v3, Nuxt 5) / `nitropack` (Nitro v2, Nuxt 4). Two minimal
+playgrounds — [`../nuxt4/`](./nuxt4) and [`../nuxt5/`](./nuxt5) — that dogfood
+the local `@nuxt/devtools` and are checked with `nuxi dev`, a production
+`nuxi build`, and `nuxi typecheck`.
+
+| Playground | Nuxt | App's runtime Nitro engine | `nuxi typecheck` | `nuxi build` |
+| --- | --- | --- | --- | --- |
+| `nuxt4/` | 4.5.1 (stable) | Nitro v2 (`nitropack`) | pass | pass (`node-server`) |
+| `nuxt5/` | 5.0.0 nightly | Nitro v3 (`nitro`) | pass | pass (`node-server`, rolldown) |
+
+So this repo's DevTools loads, type-checks, production-builds, **and dev-mode
+dogfoods** cleanly on a consumer running **either** Nitro engine (`play:dev` on
+both serves the app + the embedded DevTools client with no errors).
+
+### Dev mode: why these install DevTools from packed tarballs
+
+The first cut sealed each playground in its own workspace and pulled
+`@nuxt/devtools` via `link:../../packages/devtools`. Build + typecheck passed,
+but **`nuxi dev` failed** — Nuxt 4 OOM'd the render worker (`JS heap out of
+memory`), Nuxt 5 dropped the render socket (`socket hang up`). The cause is
+**not** a DevTools bug (both base apps render fine with DevTools disabled): a
+`link:`ed DevTools resolves its dependency tree from the **repo root**
+`node_modules`, while the sealed app has its **own** copies of Vite /
+`@vitejs/devtools`. With two instances, the app's dev SSR ends up transforming
+DevTools' entire dependency tree through a second Vite and the render worker
+blows its heap.
+
+The fix keeps the playgrounds **sealed (own lockfiles)** but installs DevTools
+from **packed tarballs** instead of a `link:` — the same technique as
+[vitejs/devtools' production playground](https://github.com/vitejs/devtools/blob/main/playgrounds/production/README.md).
+[`scripts/pack-local.mjs`](./scripts/pack-local.mjs) `pnpm pack`s
+`@nuxt/devtools` + `@nuxt/devtools-kit` (which rewrites their `workspace:*` /
+`catalog:*` protocols to concrete versions), and each playground's
+`pnpm-workspace.yaml` points both at the tarballs via `overrides`. Everything
+then installs into the playground's single `node_modules`, so the app and
+DevTools share one Vite / `@vitejs/devtools` instance. With that, `play:dev`
+works on both:
+
+| Playground | `play:dev` app | embedded DevTools client |
+| --- | --- | --- |
+| `nuxt4/` (Nuxt 4.5.1, Nitro v2) | 200 | 200 |
+| `nuxt5/` (Nuxt 5 nightly, Nitro v3) | 200 | 200 |
+
+### How the types resolve when only one of `nitro`/`nitropack` exists
+
+`@nuxt/devtools` and `@nuxt/devtools-kit` reference Nitro types through a small
+detection layer (`packages/*/src/**/nitro-compat.ts`) instead of importing one
+engine directly. A missing optional peer resolves its `import type` to `any`; a
+naive `NitroV2 | NitroV3` union would then collapse the whole thing to `any`
+(`X | any` is `any`), silently dropping type-safety on the engine that *is*
+installed. The detection probes each import for an impossible `'___INVALID'`
+key (which only the `any` fallback matches) and resolves to just the engine
+that actually loaded — the same trick `@nuxt/kit` uses internally.
+
+The playgrounds themselves can't prove this at the type level: a `link:`ed
+local `@nuxt/devtools` makes Nuxt inject tsconfig `paths` for **both** engines,
+so both always resolve there. The published-npm consumer scenario (only one
+engine) is verified instead by
+[`scripts/check-nitro-type-resolution.mjs`](./scripts/check-nitro-type-resolution.mjs),
+which reproduces the shipped `.d.ts` detection in throwaway temp dirs with a
+single engine symlinked in. Result:
+
+| Installed | `AnyNitro` resolves to | Result |
+| --- | --- | --- |
+| only `nitro` (v3) | concrete Nitro **v3** type | ✓ not `any` |
+| only `nitropack` (v2) | concrete Nitro **v2** type | ✓ not `any` |
+| control: naive `NitroV2 \| NitroV3`, v3 absent | `any` | ✓ confirms detection is needed |
+
 ## Summary
 
 | Module | Version | Devtools surface? | Verdict |
@@ -74,9 +179,16 @@ rebased tip:
 | `nuxt-og-image` | 6.7.2 | Custom tab (`custom-nuxt-seo-og-image`) | Works — lazy-installs a companion panel |
 | `@nuxt/scripts` | 1.3.1 | Custom tab (`custom-nuxt-scripts`) | Works |
 | `@nuxt/fonts` | 0.14.0 | Custom tab (`custom-fonts`) | Works |
+| `@nuxt/eslint` | 1.16.0 | Custom tab (`custom-eslint-config`, launch) | Works — launches the ESLint config inspector on demand |
+| `@nuxt/hints` | 1.1.4 | Custom tab (`custom-hints`, iframe) | Works |
+| `@nuxt/a11y` | 1.0.0-alpha.1 | Custom tab (`custom-nuxt-a11y`, iframe) | Works |
+| `@compodium/nuxt` | 0.1.0-beta.13 | Custom tab (`custom-compodium`, iframe) | Works |
+| `@scalar/nuxt` | 0.6.59 | Custom tab (`custom-scalar`, iframe) | Works — but its `/docs` page needs `ssr: false` on this stack (see [Addendum 3](#addendum-3--devtools-category-modules-added)) |
 
-No console errors were caused by any of the three modules themselves. The only
+No console errors were caused by the first three modules themselves. The only
 console noise was pre-existing / environmental (see [Other observations](#other-observations)).
+The five Devtools-category modules were added and verified later — see
+[Addendum 3](#addendum-3--devtools-category-modules-added).
 
 ### A UX trap during verification, worth flagging on its own
 
@@ -114,14 +226,13 @@ cross-referencing this report when implementing Plan 03.
   SideNav overflow menu. Renders its own full UI (Active Scripts / First-Party
   Mode / Registry / Docs sub-tabs).
 - Uses the **legacy** `addCustomTab` API from its own `@nuxt/devtools-kit@^3.2.4`
-  dependency (not the devframe-native APIs Plan 00 introduces) — confirms the
-  shim-first strategy in `plans/vite-devtools-integration/README.md` is the
-  right approach: an old-major `@nuxt/devtools-kit` consumer still works
+  dependency (not the devframe-native APIs) — confirms the compatibility
+  strategy works: an old-major `@nuxt/devtools-kit` consumer still works
   end-to-end against the in-development local devtools, because `addCustomTab`
   ultimately just calls `nuxt.hook('devtools:customTabs', ...)` against the
   single shared Nuxt instance — package-version skew in `@nuxt/devtools-kit`
   itself doesn't break it, as long as `@nuxt/kit`/`useNuxt()` stay deduped
-  (they do here; verify this holds once Plan 00's shims land).
+  (they do here).
 - The panel loaded with **"No scripts loaded"** even though `pages/index.vue`
   registers `js-confetti` via `useScriptNpm` with the default
   `trigger: 'onNuxtReady'` (so it should register on every page load). The
@@ -144,6 +255,49 @@ cross-referencing this report when implementing Plan 03.
   font-family used in `assets/main.css` was auto-detected and self-hosted, and
   the panel renders a live "Aa" preview of it.
 - No console errors.
+
+### `@nuxt/eslint` 1.16.0 — works (lazy launcher)
+
+- Registers a custom tab `eslint-config` ("ESLint Config"), reachable via the
+  SideNav overflow menu (route `/modules/custom-eslint-config`).
+- Its `config.devtools.enabled` defaults to `"lazy"`, so the tab renders a
+  **launch panel** ("Start ESLint config inspector to analyze the local ESLint
+  configs") rather than eagerly booting `@eslint/config-inspector`. Clicking
+  Launch starts the inspector and swaps the tab to an iframe. The fixture
+  `eslint.config.mjs` re-exports the generated `.nuxt/eslint.config.mjs` so the
+  inspector has a real config to introspect.
+
+### `@nuxt/hints` 1.1.4 — works
+
+- Registers a custom tab `hints` ("Hints", `category: analyze`, iframe →
+  `/__nuxt-hints`). Embeds its performance/security/hydration hints UI; no
+  per-page fixture needed since it inspects the app itself.
+
+### `@nuxt/a11y` 1.0.0-alpha.1 — works
+
+- Registers a custom tab `nuxt-a11y` ("Nuxt a11y", iframe →
+  `/__nuxt-a11y-client`) with its real-time axe-core accessibility panel.
+- `pages/index.vue` carries a deliberate no-`alt` `<img>` (a classic
+  `image-alt` violation) so the panel has a real finding to surface. Alpha
+  release; worked without incident in this run.
+
+### `@compodium/nuxt` 0.1.0-beta.13 — works
+
+- Registers a custom tab `compodium` ("Compodium", iframe →
+  `/__compodium__/devtools`) — a component playground. Scans the app's
+  `components/` dir, so the fixture `components/DemoButton.vue` gives it a
+  prop-driven component to preview. Beta release; worked without incident.
+
+### `@scalar/nuxt` 0.6.59 — works, with an SSR caveat
+
+- Registers a custom tab `scalar` ("Scalar", `category: server`, iframe →
+  `/docs`) rendering its API reference from Nitro's OpenAPI document
+  (`nitro.experimental.openAPI: true` + the `defineRouteMeta({ openAPI })` on
+  `server/api/widgets.get.ts`; the spec is served at `/_openapi.json`).
+- **Caveat:** `/docs` throws a 500 under SSR on the Nuxt 4.5 / Vite 8 stack
+  (see [Addendum 3](#addendum-3--devtools-category-modules-added)); the fixture
+  sets `routeRules: { '/docs/**': { ssr: false } }` to render it client-side
+  instead. Flagged as an upstream candidate.
 
 ## Modules removed after testing
 
@@ -233,3 +387,12 @@ playground anymore.
 6. Re-run after Plan 01 (Messages) lands to see whether `@nuxt/scripts`'s
    "No scripts loaded" / "Not connected to the client app" gap resolves once
    more of the client bridge is exercised.
+7. File an upstream issue to `@scalar/nuxt` about its `/docs` page 500ing under
+   SSR on Vite 8 (*"Cannot destructure property 'mod' of 'threads.workerData'"*);
+   the playground works around it with `routeRules: { '/docs/**': { ssr: false } }`
+   (see [Addendum 3](#addendum-3--devtools-category-modules-added)).
+8. `@vitejs/devtools@0.4.9` (pulled in by the linked `@nuxt/devtools`)
+   hard-requires Vite 8 — on Vite 7 it crashes the dev server trying to resolve
+   `@vitejs/devtools-rolldown`. Not a bug in any ecosystem module, but a sharp
+   edge for anyone consuming this devtools alpha on a Vite-7 app; worth a
+   clearer error or a documented peer requirement.

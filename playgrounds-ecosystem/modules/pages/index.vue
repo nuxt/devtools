@@ -16,7 +16,9 @@ interface JSConfettiApi {
   }
 }
 declare global {
-  interface Window extends JSConfettiApi {}
+  interface Window {
+    JSConfetti: JSConfettiApi['JSConfetti']
+  }
 }
 const { onLoaded } = useScriptNpm<JSConfettiApi>({
   packageName: 'js-confetti',
@@ -36,6 +38,11 @@ function celebrate() {
     confetti.addConfetti({ emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸'] })
   })
 }
+
+// @nuxt/hints analyses this page for performance/security/hydration hints in
+// its DevTools tab; no per-page code is needed — it inspects the app itself.
+// @nuxt/eslint contributes the "ESLint Config" tab (launches the config
+// inspector against eslint.config.mjs); no page code needed either.
 </script>
 
 <template>
@@ -55,6 +62,21 @@ function celebrate() {
     <button type="button" @click="celebrate">
       🎉 Celebrate (loads js-confetti via @nuxt/scripts)
     </button>
+
+    <!-- @compodium/nuxt — a component from components/ that its playground can
+         render in isolation; the DemoButton is auto-imported. -->
+    <DemoButton label="A component Compodium can preview" />
+
+    <!-- @nuxt/a11y — DELIBERATE accessibility violation so the a11y DevTools
+         panel has a real finding to surface: an <img> with no alt text is a
+         classic axe-core "image-alt" violation. Do not "fix" this — it exists
+         precisely so the a11y tab isn't empty when dogfooding. A 1x1 inline
+         data URI is used so Vite doesn't try to resolve it as an asset. -->
+    <img
+      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+      width="1"
+      height="1"
+    >
   </div>
 </template>
 

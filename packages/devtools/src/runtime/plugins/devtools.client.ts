@@ -15,11 +15,6 @@ export default defineNuxtPlugin((nuxt: any) => {
   try {
     if (window.__NUXT_DEVTOOLS_DISABLE__ || window.parent?.__NUXT_DEVTOOLS_DISABLE__)
       return
-
-    if (parent && window.self !== parent) {
-      if (parent.__NUXT_DEVTOOLS_VIEW__)
-        return
-    }
   }
   catch (e) {
     console.error('Nuxt DevTools: Failed to check parent window')

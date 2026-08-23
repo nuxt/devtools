@@ -1,11 +1,10 @@
-import type { Nitro } from 'nitropack'
 import type { NuxtDevtoolsServerContext, ScannedNitroTasks, ServerFunctions } from '../types'
+import type { AnyNitro } from '../utils/nitro-compat'
 import { debounce } from 'perfect-debounce'
-import { watchStorageMount } from './storage-watch'
 
 export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
-  let nitro: Nitro
-  let unwatchStorage: (() => Promise<void> | void) | undefined
+  let nitro: AnyNitro | undefined
+  let unhookDevReload: (() => void) | undefined
 
   let cache: ScannedNitroTasks | null = null
 
@@ -14,26 +13,20 @@ export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext
     refresh('getServerTasks')
   }, 500)
 
-  nuxt.hook('nitro:init', (_) => {
-    nitro = _
+  nuxt.hook('nitro:init', (_nitro: AnyNitro) => {
+    nitro = _nitro
     cache = null
     refresh('getServerTasks')
+
+    // See the equivalent comment in `server-routes.ts`: this used to watch
+    // Nitro's internal `src` storage mount, which Nitro v3 no longer exposes.
+    unhookDevReload?.()
+    unhookDevReload = _nitro.hooks.hook('dev:reload', () => refreshDebounced())
   })
 
-  nuxt.hook('ready', async () => {
-    if (!nitro)
-      return
-
-    await unwatchStorage?.()
-    unwatchStorage = await watchStorageMount(nitro.storage, 'src', (_event, key) => {
-      if (key.startsWith('src:tasks:'))
-        refreshDebounced()
-    })
-  })
-
-  nuxt.hook('close', async () => {
-    await unwatchStorage?.()
-    unwatchStorage = undefined
+  nuxt.hook('close', () => {
+    unhookDevReload?.()
+    unhookDevReload = undefined
   })
 
   function scan() {
@@ -48,7 +41,15 @@ export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext
         }
       }
       return {
-        tasks: nitro.options.tasks,
+        // Nitro v3's task config types `handler`/`description` as optional
+        // (they're always populated in practice by Nitro's own task scanner),
+        // so normalize with fallbacks to satisfy `ScannedNitroTasks`.
+        tasks: Object.fromEntries(
+          Object.entries(nitro.options.tasks ?? {}).map(([name, task]) => [
+            name,
+            { handler: task.handler ?? '', description: task.description ?? '' },
+          ]),
+        ),
         scheduledTasks: Object.entries(nitro.options.scheduledTasks ?? {})
           .reduce<Record<string, string[]>>((acc, [cron, tasks]) => {
             acc[cron] = Array.isArray(tasks) ? tasks : [tasks]

@@ -7,6 +7,8 @@ import { detect } from 'package-manager-detector/detect'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 import { removeNuxtModuleFromCode } from '../utils/nuxt-config'
+import { createUniqueSessionId } from '../utils/session-id'
+import { broadcastTerminalExit } from './terminals'
 
 export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
   const { nuxt } = ctx
@@ -59,9 +61,11 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
     if (!args)
       return
 
-    const processId = `npm:${command}:${packageName}`
+    // A fresh id per run — completed sessions linger in the dock, so a fixed id
+    // would collide (`DF8200`) on the next update.
+    const processId = createUniqueSessionId(`npm:${command}:${packageName}`)
 
-    await getTerminals().startChildProcess({
+    const session = await getTerminals().startChildProcess({
       command: args[0]!,
       args: args.slice(1),
     }, {
@@ -69,6 +73,14 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
       title: `${command} ${packageName}`,
       icon: 'i-logos-npm-icon',
     })
+
+    // The run RPC returns immediately (before the process exits); a detached
+    // completion task emits the minimal `onTerminalExit` event so the generic
+    // package-update UI (`usePackageUpdate` + the restart prompt) can settle.
+    // The client already knows this `processId` from our return value.
+    void Promise.resolve(session.getResult()).then((result) => {
+      broadcastTerminalExit(ctx, processId, result.exitCode)
+    }).catch(() => {})
 
     return {
       processId,
@@ -88,7 +100,7 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
     async runNpmCommand(...args) {
       return runNpmCommand(...args)
     },
-    async installNuxtModule(name: string, dry = true) {
+    async installNuxtModule(name: string, dry = true, sessionId?: string) {
       const commands = (await getNpmCommand('install', name, { dev: true }))!
 
       const filepath = nuxt.options._nuxtConfigFile
@@ -103,7 +115,10 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
 
         return mod.generate().code
       })
-      const processId = `nuxt:add-module:${name}`
+      // Dry-run mints the unique id and hands it back to the client; the client
+      // threads that same id into the execution call so the session it tracks
+      // and the one we register are identical (no `onTerminalExit` needed).
+      const processId = sessionId ?? createUniqueSessionId(`nuxt:add-module:${name}`)
 
       if (!dry) {
         latestGenerated = generated // cache the latest generated config
@@ -159,7 +174,7 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
         processId,
       }
     },
-    async uninstallNuxtModule(name: string, dry = true) {
+    async uninstallNuxtModule(name: string, dry = true, sessionId?: string) {
       const commands = (await getNpmCommand('uninstall', name))!
 
       const filepath = nuxt.options._nuxtConfigFile
@@ -168,7 +183,8 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
         return removeNuxtModuleFromCode(source, name, filepath)
       })
 
-      const processId = `nuxt:remove-module:${name}`
+      // Dry-run mints the unique id; the client threads it back on execution.
+      const processId = sessionId ?? createUniqueSessionId(`nuxt:remove-module:${name}`)
 
       if (!dry) {
         const session = await getTerminals().startChildProcess({

@@ -7,11 +7,9 @@ export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
   componentInspector: true,
   viteInspect: true,
-  vscode: {
+  dataInspector: true,
+  codeServer: {
     enabled: true,
-    startOnBoot: false,
-    port: 3080,
-    reuseExistingServer: true,
   },
   disableAuthorization: isSandboxed,
 }
@@ -53,15 +51,12 @@ export function createDefaultTabOptions(): NuxtDevToolsOptions {
       componentsGraphShowPages: false,
       componentsGraphShowLayouts: false,
       componentsGraphShowWorkspace: true,
-      interactionCloseOnOutsideClick: false,
       showExperimentalFeatures: false,
       showHelpButtons: true,
       scale: 1,
       hiddenTabs: [],
       pinnedTabs: [],
       hiddenTabCategories: [],
-      sidebarExpanded: false,
-      sidebarScrollable: false,
     },
     serverRoutes: {
       selectedRoute: null,

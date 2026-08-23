@@ -1,0 +1,19 @@
+{
+  "name": "playgrounds-ecosystem-nuxt5",
+  "type": "module",
+  "packageManager": "pnpm@11.13.0",
+  "private": true,
+  "scripts": {
+    "setup": "node ../scripts/pack-local.mjs && pnpm install --no-frozen-lockfile",
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "typecheck": "nuxi typecheck"
+  },
+  "dependencies": {
+    "@nuxt/devtools": "file:.tarballs/nuxt-devtools.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "nuxt": "npm:nuxt-nightly@5x"
+  }
+}

@@ -1,24 +1,52 @@
 import type { PluginWithDevTools } from '@vitejs/devtools-kit'
-import type { ServerResponse } from 'node:http'
+import type { StaticAssetsSource } from 'devframe'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
 import type { ModuleOptions, NuxtDevToolsOptions } from './types'
-import { existsSync } from 'node:fs'
-import fs from 'node:fs/promises'
+import type { AnyNitroConfig } from './utils/nitro-compat'
 import os from 'node:os'
+import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
-import { join } from 'pathe'
-import sirv from 'sirv'
+import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
+import { join, resolve } from 'pathe'
 import { searchForWorkspaceRoot } from 'vite'
-import { version } from '../package.json'
+import { peerDependencies, version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
-import { clientDir, packageDir, runtimeDir } from './dirs'
+import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
+import { skipInSSR } from './server-rpc/skip-in-ssr'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
-const DEVTOOLS_BASE_RE = /\/__NUXT_DEVTOOLS_BASE__\//g
+
+/**
+ * The published package holding the built client UI, version-locked to this
+ * package and declared as an optional peer dependency. Served as devframe
+ * remote assets: a locally installed copy wins (zero network — the monorepo
+ * and air-gapped installs), then the on-disk cache, then a CDN mirror of npm.
+ */
+const ASSETS_PACKAGE = '@nuxt/devtools-assets'
+
+/**
+ * Resolve the `StaticAssetsSource` for the client UI.
+ *
+ * Nightly releases rename workspace packages through `npm:<name>-nightly@<v>`
+ * alias ranges (see `scripts/bump-nightly.ts`), so the real assets package
+ * name is read back from our own peer-dependency entry — a nightly build then
+ * fetches its matching nightly assets.
+ */
+function resolveClientAssetsSource(): StaticAssetsSource {
+  const range: string = (peerDependencies as Record<string, string>)[ASSETS_PACKAGE] ?? ''
+  const name = range.startsWith('npm:')
+    ? range.slice('npm:'.length, range.lastIndexOf('@'))
+    : ASSETS_PACKAGE
+  return {
+    package: name,
+    version,
+    resolveFrom: import.meta.url,
+  }
+}
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
@@ -49,11 +77,6 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     })
   }
 
-  if (options.iframeProps) {
-    nuxt.options.runtimeConfig.app.devtools ||= {}
-    nuxt.options.runtimeConfig.app.devtools.iframeProps = options.iframeProps
-  }
-
   // Make unimport exposing more information, like the usage of each auto imported function
   nuxt.options.imports.collectMeta = true
 
@@ -72,16 +95,54 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
     nuxt.options.vite.optimizeDeps.include.push(
-      'nuxt > @nuxt/devtools > @vue/devtools-kit',
-      'nuxt > @nuxt/devtools > @vue/devtools-core',
-      'nuxt > @nuxt/devtools > @vitejs/devtools/client/inject',
+      // Vite DevTools 0.5's embedded client is served by the hub as an external
+      // `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
+      // is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
+      // pre-bundle here.
       'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
       'nuxt > @nuxt/devtools > error-stack-parser-es',
       'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
     )
   }
 
-  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools())
+  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
+  const ROUTE_CLIENT = `${ROUTE_PATH}/client`
+  const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
+
+  // In the dogfooding `nuxi dev client` flow the app under development *is*
+  // the client — already served live on its own base — so don't mount the
+  // built assets (whose stale copy would otherwise be what the dock opens).
+  // The client app only exists in this repo, never next to the published
+  // package, so the check can't misfire for users.
+  const isSelfClient = resolve(nuxt.options.rootDir) === resolve(packageDir, 'client')
+  const clientAssetsSource = isSelfClient ? undefined : resolveClientAssetsSource()
+  // Where the client UI lives from the browser's point of view.
+  const clientUrl = clientAssetsSource
+    ? `${ROUTE_CLIENT}/`
+    : `${nuxt.options.app.baseURL || '/'}/`.replace(MULTIPLE_SLASHES_RE, '/')
+
+  // Nuxt serves the app through its own public listener while Vite runs on an
+  // internal port behind it. Keep the public origin from Nuxt's listener so
+  // Devframe's auth URL does not expose Vite's internal port.
+  let publicDevServerOrigin: string | undefined
+  nuxt.hook('listen', (_server, listener) => {
+    if (listener?.url)
+      publicDevServerOrigin = new URL(listener.url).origin
+  })
+
+  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({
+    branding: {
+      productName: 'Nuxt DevTools',
+      tagline: 'DevTools for Nuxt',
+      primaryColor: '#099e61',
+      logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+      wordmark: {
+        light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
+        dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
+      },
+      windowTitle: 'Nuxt DevTools',
+    },
+  }))
   addVitePlugin(DevTools)
 
   // Deferred: will be set when Vite DevTools plugin setup runs
@@ -96,14 +157,80 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     name: 'nuxt:devtools',
     devtools: {
       async setup(ctx) {
-        ctx.docks.register({
-          id: 'nuxt:devtools',
-          type: 'iframe',
-          icon: '/__nuxt_devtools__/client/nuxt.svg',
-          title: 'Nuxt DevTools',
-          url: '/__nuxt_devtools__/client/',
-          defaultOrder: -2000,
-        })
+        // Only the browser-serving client Vite context registers the `Nuxt`
+        // group and its hub member — Nuxt's SSR Vite instance runs this same
+        // setup callback too, and would otherwise create a second, inert
+        // group + hub member. See `skipInSSR`.
+        if (!skipInSSR(ctx)) {
+          const resolveViteOrigin = ctx.host.resolveOrigin.bind(ctx.host)
+          ctx.host.resolveOrigin = () => publicDevServerOrigin || resolveViteOrigin()
+
+          if (clientAssetsSource) {
+            // The client SPA ships relative asset URLs (mount-path portable),
+            // which only resolve on the directory URL — send `…/client` to
+            // `…/client/` before the static mount sees it.
+            ctx.viteServer?.middlewares.use((req, res, next) => {
+              const [pathname = '', search = ''] = (req.url ?? '').split('?')
+              if (pathname !== ROUTE_CLIENT)
+                return next()
+              res.statusCode = 302
+              res.setHeader('Location', `${ROUTE_CLIENT}/${search ? `?${search}` : ''}`)
+              res.end()
+            })
+            // Serve `__connection.json` on the client's base (registered
+            // before the static mount so its SPA fallback doesn't swallow the
+            // route) — the same mounting the hub does for each devframe it
+            // installs. Inside the hub's iframe the injected parent connection
+            // wins; this makes a *direct* navigation to the client discover
+            // the RPC endpoint too.
+            if (ctx.host.mountConnectionMeta)
+              await ctx.host.mountConnectionMeta(`${ROUTE_CLIENT}/`)
+            // devframe's own static hosting: a local directory is served
+            // directly; the default remote source resolves per request from a
+            // locally installed `@nuxt/devtools-assets`, the on-disk cache, or
+            // its CDN back-proxy (https://devfra.me/guide/client-assets.html).
+            ctx.views.hostStatic(ROUTE_CLIENT, clientAssetsSource)
+          }
+
+          // Register the `Nuxt` group and a single **shared-frame anchor**
+          // iframe. The anchor owns one kept-alive iframe (its `frameId`); the
+          // client app ships a `devframe:frame-nav` postMessage shim that
+          // announces one member dock per DevTools tab and soft-navigates
+          // between them within that one iframe — no per-tab reload, and no
+          // Node-side tab list. Requires `@vitejs/devtools` >= 0.4.5 /
+          // `@devframes/hub` >= 0.7.11 (devframe#128 / vitejs/devtools#464).
+          ctx.docks.register({
+            id: NUXT_DEVTOOLS_GROUP_ID,
+            type: 'group',
+            title: 'Nuxt',
+            icon: `${clientUrl}nuxt.svg`,
+            category: 'framework',
+            defaultOrder: -2000,
+            defaultChildId: 'nuxt:devtools',
+            categoryOrder: {
+              pinned: 0,
+              app: 1,
+              analyze: 2,
+              server: 3,
+              modules: 4,
+              documentation: 5,
+              advanced: 6,
+            },
+          })
+
+          ctx.docks.register({
+            id: 'nuxt:devtools',
+            type: 'iframe',
+            title: 'Nuxt DevTools',
+            icon: `${clientUrl}nuxt.svg`,
+            url: clientUrl,
+            groupId: NUXT_DEVTOOLS_GROUP_ID,
+            frameId: 'nuxt:devtools',
+            subTabs: { protocol: 'postmessage' },
+            visibility: 'false',
+            defaultOrder: -300,
+          })
+        }
 
         // Connect Nuxt DevTools to Vite DevTools Kit context
         await connectDevToolsKit?.(ctx)
@@ -130,15 +257,28 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     },
   })
 
-  nuxt.hook('nitro:config', (config) => {
+  nuxt.hook('nitro:config', (config: AnyNitroConfig) => {
     // Check user opted-in for tasks
     if (config.experimental?.tasks)
       setServerTasksEnabledByDefault(true)
 
-    // Inject inline script
-    config.externals = config.externals || {}
-    config.externals.inline = config.externals.inline || []
-    config.externals.inline.push(join(runtimeDir, 'nitro'))
+    // Inject inline script. Force our small runtime plugin to be bundled
+    // rather than externalized as a node_modules import at runtime — Nitro v2
+    // (`nitropack`) and Nitro v3 (`nitro`) expose this via different config
+    // shapes (`externals.inline` vs `noExternals`), so `config`'s type here is
+    // a union of both; handle whichever applies.
+    const inlinePath = join(runtimeDir, 'nitro')
+    if ('externals' in config) {
+      config.externals ||= {}
+      config.externals.inline ||= []
+      config.externals.inline.push(inlinePath)
+    }
+    if ('noExternals' in config && Array.isArray(config.noExternals)) {
+      config.noExternals.push(inlinePath)
+    }
+    else if (!('noExternals' in config) || config.noExternals === undefined) {
+      config.noExternals = [inlinePath]
+    }
     config.virtual = config.virtual || {}
     config.virtual['#nuxt-devtools-inline'] = `export const script = \`
 if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
@@ -154,14 +294,16 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     config.plugins.unshift(join(runtimeDir, 'nitro/inline'))
   })
 
+  // Destructure `ctx` as a nested property rather than spreading it
+  // (`...ctx`): `ctx.devtoolsKit` is a live getter, and spreading it into a
+  // new object would freeze it to its pre-connect (`undefined`) value for
+  // every integration below (see the comment in `server-rpc/index.ts`).
   const {
     connectDevToolsKit: _connectDevToolsKit,
-    ...ctx
+    ctx,
   } = setupRPC(nuxt, options)
 
   connectDevToolsKit = _connectDevToolsKit
-
-  const clientDirExists = existsSync(clientDir)
 
   extendViteConfig((config) => {
     config.server ||= {}
@@ -184,43 +326,17 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
     from: join(runtimeDir, 'use-nuxt-devtools'),
   })
 
-  const ROUTE_PATH = `${nuxt.options.app.baseURL || '/'}/__nuxt_devtools__`.replace(MULTIPLE_SLASHES_RE, '/')
-  const ROUTE_CLIENT = `${ROUTE_PATH}/client`
-  const ROUTE_ANALYZE = `${ROUTE_PATH}/analyze`
-
   // TODO: Use WS from nitro server when possible
   nuxt.hook('vite:serverCreated', (server) => {
     const devtoolsAnalyzeDir = join(nuxt.options.rootDir, 'node_modules/.cache/nuxt-devtools/analyze')
 
-    server.middlewares.use(ROUTE_ANALYZE, sirv(devtoolsAnalyzeDir, { single: false, dev: true, dotfiles: true, ignores: false }))
-
-    // Serve the front end in production
-    if (clientDirExists) {
-      const indexHtmlPath = join(clientDir, 'index.html')
-      const indexContent = fs.readFile(indexHtmlPath, 'utf-8')
-      const handleStatic = sirv(clientDir, {
-        dev: true,
-        single: false,
-      })
-      // We replace the base URL in the index.html based on user's settings
-      const handleIndex = async (res: ServerResponse) => {
-        res.setHeader('Content-Type', 'text/html')
-        res.statusCode = 200
-        res.write((await indexContent).replace(DEVTOOLS_BASE_RE, `${ROUTE_CLIENT}/`))
-        res.end()
-      }
-      server.middlewares.use(ROUTE_CLIENT, (req, res) => {
-        if (req.url === '/')
-          return handleIndex(res)
-        return handleStatic(req, res, () => handleIndex(res))
-      })
-    }
+    server.middlewares.use(ROUTE_ANALYZE, serveStaticNodeMiddleware(devtoolsAnalyzeDir, { single: false }))
   })
 
   await import('./integrations/plugin-metrics').then(({ setup }) => setup(ctx))
 
-  if (options.vueDevTools !== false)
-    await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
+  if (options.dataInspector !== false)
+    await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
 
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
@@ -228,9 +344,16 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   if (options.componentInspector !== false)
     await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
+  if (options.codeServer?.enabled === false && options.vscode !== undefined) {
+    deprecate(nuxt, 'NDT_DEP_0008', {
+      api: 'devtools.vscode',
+      replacement: 'devtools.codeServer',
+    })
+  }
+
   const integrations = [
-    options.vscode?.enabled
-      ? import('./integrations/vscode').then(({ setup }) => setup(ctx))
+    options.codeServer?.enabled !== false
+      ? import('./integrations/code-server').then(({ setup }) => setup(ctx))
       : null,
     (options.experimental?.timeline || options.timeline?.enabled)
       ? import('./integrations/timeline').then(({ setup }) => setup(ctx))

@@ -133,6 +133,7 @@ async function fetchData() {
   })
 
   try {
+    // eslint-disable-next-line unimport/auto-insert
     response.data = await ($fetch as $Fetch)(finalURL.value, {
       method: 'POST', // routeMethod.value.toUpperCase() as any,
       headers: parsedHeader.value,

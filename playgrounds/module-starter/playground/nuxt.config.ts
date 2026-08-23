@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     /**
      * Start a sub Nuxt Server for developing the client
      *
-     * The terminal output can be found in the Terminals tab of the devtools.
+     * The terminal output can be found in the built-in Terminals dock of the devtools.
      */
     defineNuxtModule({
       setup(_, nuxt) {

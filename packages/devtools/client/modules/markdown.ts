@@ -61,6 +61,11 @@ export default defineNuxtModule({
           }
         },
       })
-    }, { server: false, client: true })
+    // `prepend: true` because Nuxt's `addVitePlugin` hard-codes `enforce`
+    // to `post` for non-isomorphic (client-only/server-only) plugins unless
+    // prepended — which would otherwise discard `unplugin-vue-markdown`'s
+    // own `enforce: 'pre'` and let `@vitejs/plugin-vue` see raw markdown
+    // before it's transformed into a Vue SFC.
+    }, { server: false, client: true, prepend: true })
   },
 })

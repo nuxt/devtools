@@ -2,12 +2,23 @@ ignoreWorkspaceRootCheck: true
 strictPeerDependencies: false
 autoInstallPeers: true
 minimumReleaseAgeExclude:
-  - '@vitejs/devtools-kit@0.4.0 || 0.4.1'
-  - '@vitejs/devtools-rolldown@0.4.0 || 0.4.1'
-  - '@vitejs/devtools@0.4.0 || 0.4.1'
+  - '@devframes/hub'
+  - '@devframes/json-render'
+  - '@devframes/plugin-data-inspector'
+  - '@devframes/plugin-code-server'
+  - '@devframes/plugin-inspect'
+  - '@devframes/plugin-messages'
+  - '@devframes/plugin-terminals'
+  - '@vitejs/devtools-kit'
+  - '@vitejs/devtools-rolldown'
+  - '@vitejs/devtools'
+  - devframe
+  - verkit@0.1.2
   - vite-plugin-inspect@12.0.2
-  - '@devframes/hub@0.6.1'
-  - devframe@0.6.1
+  - '@devframes/hub-ui'
+  - '@devframes/json-render-ui'
+  - '@devframes/service-open'
+  - '@devframes/vite'
 resolutionMode: highest
 shamefullyHoist: true
 shellEmulator: true
@@ -17,182 +28,206 @@ trustPolicyExclude:
 
 packages:
   - packages/**
+  # `pnpm pack` stages into `<pkg>/package/`; a leftover one would otherwise be
+  # discovered as a second workspace with the same name as its parent package.
+  - '!packages/*/package'
+  - '!packages/*/package/**'
   - playgrounds/**
+  - '!playgrounds/**/.output/**'
 
 allowBuilds:
   '@parcel/watcher': true
   better-sqlite3: true
-  cypress: true
   esbuild: true
   json-editor-vue: true
   simple-git-hooks: true
   unrs-resolver: true
   vue-demi: true
 
+refs:
+  devframe: &devframe ^0.9.5
+  # Nuxt 5 nightly. Its own `@nuxt/vite-builder-nightly` already requires
+  # `vite@^8.1.5`, so this and the `vite` ref below move together.
+  #
+  # Pinned to the exact snapshot instead of floating on `5x`: with
+  # `resolutionMode: highest` (below), *any* lockfile-affecting change
+  # anywhere in the workspace — not just to these refs — makes pnpm
+  # re-resolve every floating range to the newest match, including this one.
+  # The next snapshot available at the time this was pinned
+  # (nuxt-nightly@5.0.0-29760455.e6509fdd) fails to build: the SSR/Nitro
+  # build errors on `packages/devtools/client/components/docs/*.md` with
+  # "At least one <template> or <script> is required in a single file
+  # component" — `unplugin-vue-markdown`'s transform isn't applying for that
+  # environment on that snapshot. Bumping past this pin is tracked as its
+  # own follow-up (see the repo's other dedicated `deps/nuxt5-nightly-*`
+  # PRs) once that regression is understood; don't bump it as a drive-by of
+  # an unrelated change.
+  nuxt: &nuxt npm:nuxt-nightly@5.0.0-29755283.b4586ef2
+  nuxt-kit: &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29755283.b4586ef2
+  nuxt-schema: &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29755283.b4586ef2
+  shiki: &shiki ^4.4.3
+  unocss: &unocss ^66.8.0
+  vite: &vite ^8.2.2
+  vite-devtools: &vite-devtools ^0.5.2
+  vue: &vue ^3.5.41
+  vueuse: &vueuse ^14.4.0
 overrides:
-  # NOTE: these must be literal ranges, not `catalog:` refs. pnpm's
-  # `catalog:` protocol inside `overrides` isn't understood by pnpm 9.x
-  # (e.g. the pnpm major Vercel falls back to when corepack isn't active),
-  # which silently drops the whole `overrides` config and desyncs the
-  # lockfile, breaking `pnpm install --frozen-lockfile`. Keep these in sync
-  # with the matching catalog entries below by hand.
-  '@devframes/hub': ^0.6.1
+  '@devframes/hub': *devframe
+  '@devframes/json-render': *devframe
+  '@devframes/plugin-code-server': *devframe
+  '@devframes/plugin-data-inspector': *devframe
+  '@devframes/plugin-inspect': *devframe
+  '@devframes/plugin-messages': *devframe
+  '@devframes/plugin-terminals': *devframe
   '@nuxt/devtools': workspace:*
+  '@vitejs/devtools': *vite-devtools
+  '@vitejs/devtools-kit': *vite-devtools
+  '@vue/compiler-core': *vue
+  '@vue/compiler-dom': *vue
+  '@vue/shared': *vue
   chokidar: ^5.0.0
-  devframe: ^0.6.1
-  esbuild: ^0.28.1
-  rollup: ^4.62.2
+  devframe: *devframe
+  esbuild: ^0.28.2
+  markdown-exit: ^1.1.0-beta.2
+  rollup: ^4.62.4
   semver: ^7.8.5
   typescript: ^6.0.3
-  unimport: ^6.3.0
-  # `@vitejs/devtools@0.4` has no Vite 8.1-compatible release yet (peer
-  # `vite: *`, still built against 8.0): under Vite 8.1's reworked
-  # WebSocket-upgrade handling, its crossws-based RPC socket ends up calling
-  # `server.handleUpgrade()` twice on the same SSR socket, killing the
-  # DevTools socket and every SSR playground e2e. Pin to 8.0.x until
-  # `@vitejs/devtools` ships 8.1 support.
-  vite: ~8.0.14
-  # `@vitejs/devtools@0.4` requires vue `^3.5.39`; dedupe the whole tree onto a
-  # single vue (and thus a single `@vue/compiler-sfc`) to avoid duplicate-import
-  # SFC codegen errors from mixed compiler versions.
-  vue: ^3.5.39
-  vue-tsc: ^3.3.7
+  unimport: ^6.4.0
+  vite: *vite
+  vue: *vue
+  vue-sfc-transformer: ^0.2.5
+  vue-tsc: ^3.3.10
+update:
+  ignoreDeps:
+    - typescript@7
 catalogs:
   buildtools:
-    '@discoveryjs/cli': ^2.15.0
-    '@discoveryjs/discovery': 1.0.0-beta.92
-    '@nuxt/module-builder': ^1.0.2
-    '@parcel/watcher': ^2.5.6
-    '@pinia/nuxt': ^0.11.3
-    '@unocss/core': ^66.7.5
-    '@unocss/eslint-config': ^66.7.5
-    '@unocss/nuxt': ^66.7.5
-    '@unocss/preset-attributify': ^66.7.5
-    '@unocss/preset-icons': ^66.7.5
-    '@unocss/preset-mini': ^66.7.5
-    '@unocss/preset-uno': ^66.7.5
-    '@vitejs/devtools': ^0.4.1
-    '@vueuse/nuxt': ^14.3.0
-    exsolve: ^1.1.0
-    lightningcss: ^1.32.0
+    '@nuxt/module-builder': ^1.0.3
+    '@parcel/watcher': ^2.6.0
+    '@unocss/core': *unocss
+    '@unocss/eslint-config': *unocss
+    '@unocss/nuxt': *unocss
+    '@unocss/preset-attributify': *unocss
+    '@unocss/preset-icons': *unocss
+    '@unocss/preset-mini': *unocss
+    '@unocss/preset-uno': *unocss
+    '@vitejs/devtools': *vite-devtools
+    '@vueuse/nuxt': *vueuse
+    exsolve: ^1.1.1
+    lightningcss: ^1.33.0
+    # Nuxt 5 nightly's Nitro layer (`@nuxt/nitro-server-nightly`) builds on
+    # the next-gen Nitro v3 engine (package `nitro`, not `nitropack`).
+    # `@nuxt/devtools`/`@nuxt/devtools-kit` declare both as *optional* peer
+    # dependencies (a consumer's Nuxt has exactly one or the other), but
+    # still pin a devDependency here too so this monorepo's own build and
+    # typecheck resolve a single, consistent version of each rather than
+    # whatever `autoInstallPeers` would otherwise pick independently.
+    nitro: ^3.0.260610-beta
     nitropack: ^2.13.4
-    nuxt: ^4.4.8
-    shiki-codegen: ^4.3.1
+    nuxt: *nuxt
+    shiki-codegen: *shiki
     skills-npm: ^1.2.0
-    turbo: ^2.10.4
+    turbo: ^2.10.11
     unbuild: ^3.6.1
-    unocss: ^66.7.5
+    unocss: *unocss
     unplugin-vue: ^7.2.0
     unplugin-vue-markdown: ^32.0.0
   cli:
-    '@antfu/eslint-config': ^9.1.0
-    '@antfu/ni': ^30.2.0
-    '@nuxt/eslint': ^1.16.0
-    '@nuxt/test-utils': ^4.0.3
-    '@playwright/test': ^1.61.1
-    '@vitest/ui': ^4.1.10
-    bumpp: ^11.1.0
-    cypress: ^15.18.1
-    eslint: ^10.7.0
+    '@antfu/eslint-config': ^9.3.0
+    '@antfu/ni': ^30.5.0
+    '@nuxt/eslint': ^1.17.0
+    '@nuxt/test-utils': ^4.1.0
+    '@playwright/test': ^1.62.1
+    bumpp: ^12.2.1
+    eslint: ^10.8.1
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.2.3
     eslint-plugin-format: ^2.0.1
     eslint-typegen: ^2.3.1
+    knip: ^6.32.2
     nano-staged: ^1.0.2
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.13.1
-    taze: ^19.14.1
-    tsx: ^4.23.1
+    taze: ^21.1.0
+    tsx: ^4.23.12
     typescript: ^6.0.3
-    vitest: ^4.1.10
-    vue-tsc: ^3.3.7
+    vitest: ^4.1.11
+    vue-tsc: ^3.3.10
   frontend:
     '@antfu/utils': ^9.3.0
-    '@unocss/reset': ^66.7.5
-    '@unocss/runtime': ^66.7.5
-    '@vue/devtools-applet': ^8.1.5
-    '@vue/devtools-core': ^8.1.5
-    '@vueuse/core': ^14.3.0
-    '@vueuse/integrations': ^14.3.0
-    '@xterm/addon-fit': ^0.11.0
-    '@xterm/xterm': ^6.0.0
-    birpc: ^4.0.0
+    '@unocss/reset': *unocss
+    '@unocss/runtime': *unocss
+    '@vueuse/core': *vueuse
+    '@vueuse/integrations': *vueuse
+    birpc: ^4.2.0
     cronstrue: ^3.24.0
+    diff: ^9.0.0
     error-stack-parser-es: ^2.0.1
     floating-vue: ^5.2.2
     focus-trap: ^8.2.2
-    fuse.js: ^7.4.2
+    fuse.js: ^7.5.0
     hookable: ^6.1.1
-    json-editor-vue: ^0.18.1
-    markdown-it: ^14.3.0
+    json-editor-vue: ^0.19.1
+    markdown-exit: ^1.1.0-beta.2
     markdown-it-link-attributes: ^4.0.1
     ofetch: ^1.5.1
-    ohash: ^2.0.11
     pathe: ^2.0.3
     perfect-debounce: ^2.1.0
-    pinia: ^3.0.4
     quicktype-core: 22.0.0
     scule: ^1.3.0
-    shiki: ^4.3.1
+    shiki: *shiki
     splitpanes: ^4.1.2
-    structured-clone-es: ^2.0.0
+    structured-clone-es: ^2.0.1
     theme-vitesse: ^1.0.0
     ua-parser-modern: ^0.1.1
     v-lazy-show: ^0.3.0
-    vanilla-jsoneditor: ^3.12.0
-    vis-data: ^8.0.4
-    vis-network: ^10.1.0
+    vanilla-jsoneditor: ^3.13.0
+    vis-data: ^8.0.5
+    vis-network: ^10.1.2
     vite-hot-client: ^2.2.0
-    vue: ^3.5.39
-    vue-router: ^5.1.0
-    vue-virtual-scroller: ^3.0.4
+    vue: *vue
+    vue-router: ^5.2.0
+    vue-virtual-scroller: ^3.0.5
   icons:
     '@iconify-json/bxl': ^1.2.4
-    '@iconify-json/carbon': ^1.2.24
-    '@iconify-json/logos': ^1.2.11
+    '@iconify-json/carbon': ^1.2.25
+    '@iconify-json/logos': ^1.2.13
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.90
-    '@iconify-json/tabler': ^1.2.35
+    '@iconify-json/simple-icons': ^1.2.93
+    '@iconify-json/tabler': ^1.2.38
   inlined:
-    package-manager-detector: ^1.7.0
-  playground:
-    '@exampledev/new.css': ^1.1.3
+    package-manager-detector: ^1.8.0
   prod:
-    '@nuxt/kit': ^4.4.8
-    '@vue/devtools-kit': ^8.1.5
+    '@devframes/hub': *devframe
+    '@devframes/plugin-code-server': *devframe
+    '@devframes/plugin-data-inspector': *devframe
+    '@nuxt/kit': *nuxt-kit
     consola: ^3.4.2
     defu: ^6.1.7
     destr: ^2.0.5
+    devframe: *devframe
     escape-string-regexp: ^5.0.0
-    fast-npm-meta: ^2.1.0
-    get-port-please: ^3.2.0
+    fast-npm-meta: ^2.2.0
     image-meta: ^0.2.2
-    launch-editor: ^2.14.1
     local-pkg: ^1.2.1
     magic-string: ^0.30.21
-    magicast: ^0.5.3
+    magicast: ^0.5.4
     mlly: ^1.8.1
-    nostics: ^1.1.4
+    nostics: ^1.2.0
     pkg-types: ^2.3.1
-    semver: ^7.8.5
     sirv: ^3.0.2
-    tinyexec: ^1.2.4
+    tinyexec: ^1.3.0
     tinyglobby: ^0.2.17
     unplugin: ^2.3.11
     unstorage: ^1.17.5
+    verkit: ^0.4.0
     vite-plugin-inspect: ^12.0.2
-    vite-plugin-vue-tracer: ^1.4.0
-    which: ^7.0.0
-    ws: ^8.21.0
+    vite-plugin-vue-tracer: ^1.5.0
   types:
-    '@nuxt/schema': ^4.4.8
-    '@types/markdown-it': ^14.1.2
+    '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^26.1.1
-    '@types/semver': ^7.7.1
-    '@types/which': ^3.0.4
-    '@types/ws': ^8.18.1
-    '@unhead/schema': ^3.1.8
-    '@vitejs/devtools-kit': ^0.4.1
-    unimport: ^6.3.0
+    '@types/node': ^26.2.0
+    '@unhead/schema': ^3.3.2
+    '@vitejs/devtools-kit': *vite-devtools
+    unimport: ^6.4.0

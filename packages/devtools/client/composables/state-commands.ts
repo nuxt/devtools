@@ -76,6 +76,7 @@ let _nuxtDocsCommands: CommandItem[] | undefined
 
 export async function getNuxtDocsCommands() {
   if (!_nuxtDocsCommands) {
+    // eslint-disable-next-line unimport/auto-insert
     const list = await $fetch<any[]>('https://nuxt.com/api/search.json', {
       query: {
         select: '_path,title,description,navigation',

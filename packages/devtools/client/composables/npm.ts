@@ -1,5 +1,5 @@
 import type { NpmCommandOptions } from '../../src/types'
-import semver from 'semver'
+import { satisfies } from 'verkit'
 import { computed, ref } from 'vue'
 import { useNuxtApp } from '#app/nuxt'
 import { rpc } from './rpc'
@@ -17,7 +17,7 @@ export function usePackageUpdate(name: string, options?: NpmCommandOptions): Ret
 }
 
 export function useNuxtVersion() {
-  return useAsyncState('npm:check:nuxt', () => rpc.checkForUpdateFor('nuxt'))
+  return usePackageUpdate('nuxt').info
 }
 
 export function satisfyNuxtVersion(range: string) {
@@ -25,7 +25,7 @@ export function satisfyNuxtVersion(range: string) {
   return computed(() => {
     if (!nuxt?.value?.current)
       return false
-    return semver.satisfies(nuxt.value.current, range)
+    return satisfies(nuxt.value.current, range)
   })
 }
 
@@ -39,7 +39,8 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
 
   // @ts-expect-error missing hooks type
   nuxt.hook('devtools:terminal:exit', ({ id, code }) => {
-    if (id !== processId || !processId)
+    // Compare against the tracked id value, not the ref object.
+    if (!processId.value || id !== processId.value)
       return
     state.value = code === 0 ? 'updated' : 'idle'
   })

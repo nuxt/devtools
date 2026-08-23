@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NormalizedHeadTag } from '~/../src/types/ui-state'
 import { computedAsync, until } from '@vueuse/core'
+import { resolveTags } from 'unhead/utils'
 import { computed, nextTick, ref } from 'vue'
 import { definePageMeta } from '#imports'
 import { useClient, useClientHead, useClientRoute, useClientRouter } from '~/composables/client'
@@ -25,7 +26,7 @@ const head = useClientHead()
 const headTags = computedAsync(async () => {
   // eslint-disable-next-line ts/no-unused-expressions
   counter.value // for force refresh
-  const tags = await head.value?.resolveTags()
+  const tags = head.value ? resolveTags(head.value) : []
   return tags.map((tag): NormalizedHeadTag => {
     const props = tag.props || {}
     if (tag.tag === 'htmlAttrs' && props.lang) {

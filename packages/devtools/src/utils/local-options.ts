@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { dirname } from 'node:path'
-import { hash } from 'ohash'
+import { hash } from 'devframe/utils/hash'
 import { join } from 'pathe'
 
 interface LocalOptionSearchOptions {

@@ -11,18 +11,6 @@ import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ServerFunctions } from './rpc'
 import type { TimelineMetrics } from './timeline-metrics'
 
-export interface DevToolsFrameState {
-  width: number
-  height: number
-  top: number
-  left: number
-  open: boolean
-  route: string
-  position: 'left' | 'right' | 'bottom' | 'top'
-  closeOnOutsideClick: boolean
-  minimizePanelInactive: number
-}
-
 export interface NuxtDevtoolsClientHooks {
   /**
    * When the DevTools navigates, used for persisting the current tab
@@ -57,8 +45,6 @@ export interface NuxtDevtoolsHostClient {
   nuxt: NuxtApp
   hooks: Hookable<NuxtDevtoolsClientHooks>
 
-  getIframe: () => HTMLIFrameElement | undefined
-
   inspector?: {
     enable: () => void
     disable: () => void
@@ -80,7 +66,6 @@ export interface NuxtDevtoolsHostClient {
     navigate: (path: string, hard?: boolean) => void
     appConfig: AppConfig
     colorMode: Ref<'dark' | 'light'>
-    frameState: Ref<DevToolsFrameState>
     $fetch: $Fetch
   }
 
@@ -95,12 +80,6 @@ export interface NuxtDevtoolsHostClient {
    * A counter to trigger reactivity updates
    */
   revision: Ref<number>
-
-  /**
-   * Update client
-   * @internal
-   */
-  syncClient: () => NuxtDevtoolsHostClient
 }
 
 export interface CodeHighlightOptions {
@@ -151,8 +130,4 @@ export interface NuxtDevtoolsClient {
 export interface NuxtDevtoolsIframeClient {
   host: NuxtDevtoolsHostClient
   devtools: NuxtDevtoolsClient
-}
-
-export interface NuxtDevtoolsGlobal {
-  setClient: (client: NuxtDevtoolsHostClient) => void
 }

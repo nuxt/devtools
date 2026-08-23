@@ -1,3 +1,5 @@
+import { defineTask } from 'nitro/task'
+
 export default defineTask({
   meta: {
     name: 'collection:2',

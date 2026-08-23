@@ -40,7 +40,18 @@ async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
 
   emit('start')
 
-  await method(item.npm, false)
+  try {
+    // Thread the dry-run's unique session id into the execution call so the
+    // server registers the very session we're tracking. The execution RPC
+    // awaits the process, so clearing the pending entry here (no `onTerminalExit`
+    // needed) settles the UI whether it succeeds or throws.
+    await method(item.npm, false, result.processId)
+  }
+  finally {
+    const index = processInstallingModules.value.findIndex(i => i.processId === result.processId)
+    if (index !== -1)
+      processInstallingModules.value.splice(index, 1)
+  }
 }
 
 const anyObj = {} as any

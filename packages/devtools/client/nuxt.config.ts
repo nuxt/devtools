@@ -10,15 +10,13 @@ const packageBundles = {
   'shiki': ['shiki', '@shikijs'],
   'quicktype-core': ['quicktype-core'],
   'json-editor-vue': ['json-editor-vue', 'ajv', 'vanilla-picker', 'vanilla-jsoneditor'],
-  'xterm': ['xterm', '@xterm'],
   'vis': ['vis-data', 'vis-network'],
   'unocss': ['@unocss', 'unocss'],
-  'markdown-it': ['markdown-it'],
+  'markdown-exit': ['markdown-exit'],
 }
 
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/test-utils/module',
     '~/modules/markdown',
     DevToolsUiKit,
     DevTools,
@@ -63,6 +61,13 @@ export default defineNuxtConfig({
       // We set a placeholder for the middleware to be replaced with the correct base URL
       baseURL: '/__NUXT_DEVTOOLS_BASE__/',
     },
+    router: {
+      options: {
+        // Hash routing keeps the document URL at the mount root, so relative
+        // asset URLs always resolve regardless of the active tab route.
+        hashMode: true,
+      },
+    },
   },
 
   ssr: false,
@@ -97,6 +102,14 @@ export default defineNuxtConfig({
 
   vite: {
     warmupEntry: false,
+    vue: {
+      // floating-vue still implements its poppers with Options API mixins,
+      // computed properties, and methods. Keep that runtime enabled even when
+      // Nuxt's application defaults change.
+      features: {
+        optionsAPI: true,
+      },
+    },
     $client: {
       build: {
         target: 'esnext',
@@ -130,20 +143,31 @@ export default defineNuxtConfig({
         'error-stack-parser-es',
         'fuse.js',
         'json-editor-vue',
-        'ohash',
+        'devframe/utils/hash',
         'perfect-debounce',
         'scule',
         'vue-virtual-scroller',
         'vis-data',
         'vis-network',
-        '@vue/devtools-applet',
-        '@xterm/xterm',
-        '@xterm/addon-fit',
       ],
     },
     server: {
       hmr: {
         clientPort: process.env.PORT ? +process.env.PORT : undefined,
+      },
+      // Local standalone dev only (`pnpm dev` -> `nuxi dev client`): this app
+      // dogfoods the DevTools module on itself, so the Vite DevTools hub serves
+      // the devframe connection meta at `/__devtools/__connection.json`. But the
+      // client SPA (RPC client) resolves `__connection.json` relative to its
+      // current route (e.g. `/__nuxt_devtools__/client/modules/__connection.json`),
+      // which the hub never serves. Proxy those relative lookups back to the hub
+      // so the standalone client can connect to a live RPC backend.
+      proxy: {
+        '^/__nuxt_devtools__/client/.*__connection\\.json(\\?.*)?$': {
+          target: `http://localhost:${process.env.PORT || 3000}`,
+          changeOrigin: true,
+          rewrite: () => '/__devtools/__connection.json',
+        },
       },
     },
   },

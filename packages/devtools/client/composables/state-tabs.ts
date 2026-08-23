@@ -1,7 +1,6 @@
-import type { ComputedRef, MaybeRef } from 'vue'
-import type { CategorizedTabs, ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
+import type { ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '../../src/types'
 import { objectPick } from '@antfu/utils'
-import { computed, toValue, unref } from 'vue'
+import { computed, toValue } from 'vue'
 import { useRouter } from '#app/composables/router'
 import { useClientRouter } from './client'
 import { useCustomTabs, useServerPages } from './state'
@@ -21,6 +20,7 @@ export function useAllTabs() {
         return {
           name: i.name as string,
           path: i.path,
+          defaultOrder: i.meta.order as number | undefined,
           ...i.meta,
         }
       }),
@@ -52,44 +52,14 @@ export function useAllTabs() {
 
 function getCategorizedRecord(): Record<TabCategory, (ModuleCustomTab | ModuleBuiltinTab)[]> {
   return {
-    'pinned': [],
-    'app': [],
-    'vue-devtools': [],
-    'analyze': [],
-    'server': [],
-    'modules': [],
-    'documentation': [],
-    'advanced': [],
+    pinned: [],
+    app: [],
+    analyze: [],
+    server: [],
+    modules: [],
+    documentation: [],
+    advanced: [],
   }
-}
-
-export function getCategorizedTabs(tabs: MaybeRef<(ModuleCustomTab | ModuleBuiltinTab)[]>): ComputedRef<CategorizedTabs> {
-  const {
-    pinnedTabs,
-  } = useDevToolsOptions('ui')
-
-  return computed(() => {
-    const categories = getCategorizedRecord()
-    for (const tab of unref(tabs)) {
-      let category = (tab.category || 'app')
-      if (pinnedTabs.value.includes(tab.name))
-        category = 'pinned'
-      if (!categories[category])
-        console.warn(`Unknown tab category: ${category}`)
-      else
-        categories[category].push(tab)
-    }
-
-    for (const key of Object.keys(categories)) {
-      if (categories[key as TabCategory].length === 0)
-        delete categories[key as TabCategory]
-    }
-
-    if (categories.pinned?.length)
-      categories.pinned.sort((a, b) => pinnedTabs.value.indexOf(a.name) - pinnedTabs.value.indexOf(b.name))
-
-    return Object.entries(categories) as CategorizedTabs
-  })
 }
 
 export function useEnabledTabs() {

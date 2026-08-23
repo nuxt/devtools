@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TreeNode } from '~/composables/tree'
+import { computed } from 'vue'
 import { useRoute } from '#app/composables/router'
 
 withDefaults(defineProps<{
@@ -10,6 +11,10 @@ withDefaults(defineProps<{
 })
 
 const route = useRoute()
+// This generic tree node renders on several routes; only some carry an `id`
+// param, so Nuxt's typed-routes union for `route.params` doesn't include it.
+// Read it defensively rather than assuming the current route's param shape.
+const activeId = computed(() => (route.params as { id?: string }).id)
 </script>
 
 <template>
@@ -35,7 +40,7 @@ const route = useRoute()
 
         p="x2 y1"
         block rounded text-sm
-        :class="{ 'bg-gray/10': i.file === route.params.id }"
+        :class="{ 'bg-gray/10': i.file === activeId }"
       >
         <FileIcon :id="i.file" />
         <span ml-1>

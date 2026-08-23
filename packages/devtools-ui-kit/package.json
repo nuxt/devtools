@@ -1,8 +1,9 @@
 {
   "name": "@nuxt/devtools-ui-kit",
   "type": "module",
-  "version": "4.0.0-alpha.7",
+  "version": "4.0.0-alpha.15",
   "license": "MIT",
+  "deprecated": "This package is deprecated and no longer recommended for use. See https://devtools.nuxt.com/module/ui-kit for details.",
   "homepage": "https://devtools.nuxt.com/module/ui-kit",
   "repository": {
     "type": "git",
@@ -10,32 +11,24 @@
     "directory": "packages/devtools-ui-kit"
   },
   "exports": {
-    ".": {
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
-    },
-    "./module": {
-      "import": "./dist/module.mjs",
-      "require": "./module.cjs"
-    },
-    "./unocss": {
-      "import": "./dist/unocss.mjs"
-    }
+    ".": "./dist/module.mjs",
+    "./module": "./dist/module.mjs",
+    "./unocss": "./dist/unocss.mjs"
   },
   "main": "./dist/module.mjs",
   "files": [
-    "*.cjs",
     "dist"
   ],
   "scripts": {
     "build": "nuxt-build-module build",
     "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev playground",
-    "prepack": "pnpm build",
+    "prepack": "turbo run build --filter=.",
     "playground:build": "nuxi generate playground"
   },
   "peerDependencies": {
-    "@nuxt/devtools": "workspace:*"
+    "@nuxt/devtools": "workspace:*",
+    "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0"
   },
   "dependencies": {
     "@iconify-json/carbon": "catalog:icons",
@@ -43,7 +36,6 @@
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
     "@nuxt/devtools-kit": "workspace:*",
-    "@nuxt/kit": "catalog:prod",
     "@unocss/core": "catalog:buildtools",
     "@unocss/nuxt": "catalog:buildtools",
     "@unocss/preset-attributify": "catalog:buildtools",
@@ -61,7 +53,9 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "workspace:*",
-    "nuxt": "catalog:buildtools"
+    "@nuxt/kit": "catalog:prod",
+    "nuxt": "catalog:buildtools",
+    "unbuild": "catalog:buildtools"
   },
   "publishConfig": {
     "access": "public"

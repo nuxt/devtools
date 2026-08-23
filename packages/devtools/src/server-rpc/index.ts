@@ -13,12 +13,12 @@ import { setupGeneralRPC } from './general'
 import { createNotifier, setupMessagesRPC } from './messages'
 import { setupNpmRPC } from './npm'
 import { setupOptionsRPC } from './options'
-import { setupServerDataRPC } from './server-data'
 import { setupServerRoutesRPC } from './server-routes'
 import { setupServerTasksRPC } from './server-tasks'
+import { skipInSSR } from './skip-in-ssr'
 import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
-import { setupTerminalRPC } from './terminals'
+import { setupTerminalsBridge } from './terminals'
 import { setupTimelineRPC } from './timeline'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
@@ -41,7 +41,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
 
   /**
    * Compatibility broadcast proxy that supports the old birpc-style API:
-   * `rpc.broadcast.refresh.asEvent(event)` and `rpc.broadcast.onTerminalData.asEvent({ id, data })`
+   * `rpc.broadcast.refresh.asEvent(event)` and `rpc.broadcast.onTerminalExit.asEvent({ id, code })`
    */
   function createBroadcastProxy(prefix = ''): any {
     return new Proxy({}, {
@@ -150,28 +150,35 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupStorageRPC(ctx),
     ...setupAssetsRPC(ctx),
     ...setupNpmRPC(ctx),
-    ...setupTerminalRPC(ctx),
+    // Bridge the `devtools:terminal:*` hooks onto the Vite DevTools terminals
+    // host so module terminals surface in the built-in Terminals dock. Also
+    // registers its own hook listeners (including `devtools:ready`) as a side
+    // effect, and contributes the `revealTerminal` RPC.
+    ...setupTerminalsBridge(ctx),
     ...setupServerRoutesRPC(ctx),
     ...setupServerTasksRPC(ctx),
     ...setupAnalyzeBuildRPC(ctx),
     ...setupOptionsRPC(ctx),
     ...setupTimelineRPC(ctx),
     ...setupTelemetryRPC(ctx),
-    ...setupServerDataRPC(ctx),
+    // Deprecated compat shim (NDT_DEP_0009). The capture + live source now live
+    // in the Data Inspector integration; `getServerConfig` is served by the
+    // canonical `setupGeneralRPC` above.
+    getServerData: async () => import('../integrations/data-inspector').then(({ getServerData }) => getServerData(nuxt)),
   } as ServerFunctions)
 
   /**
    * Connect to Vite DevTools Kit context.
    * Called from the Vite DevTools plugin setup callback.
+   *
+   * Nuxt creates two Vite instances (client and SSR); only the browser-serving
+   * client instance has WebSocket peers, so we skip the SSR candidate (see
+   * `skipInSSR`) rather than relying on setup order.
    */
   async function connectDevToolsKit(kitCtx: ViteDevToolsNodeContext) {
-    /**
-     * guarded to keep the first connection (client Vite), since Nuxt creates
-     * two Vite instances and the second (server) one has 0 WebSocket clients.
-     * If we don't guard this, the server connection will overwrite the client connection and break all RPC calls from server to client.
-     */
-    if (devtoolsKitCtx)
+    if (devtoolsKitCtx || skipInSSR(kitCtx))
       return
+
     devtoolsKitCtx = kitCtx
     const host = kitCtx.rpc
 
@@ -221,8 +228,17 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     await nuxt.callHook('devtools:ready', kitCtx)
   }
 
+  // NOTE: do not spread `ctx` here (`{ ...ctx }`) — `ctx.devtoolsKit` is a
+  // getter backed by the `devtoolsKitCtx` closure variable above, and object
+  // spread/`Object.assign` read a getter's *current* value into a plain
+  // property on the new object. At this point (synchronous module setup,
+  // before the Vite DevTools plugin has connected) that value is always
+  // `undefined`, which would permanently freeze every consumer's `ctx.devtoolsKit`
+  // to `undefined` even after the kit connects. Return the same live `ctx`
+  // object (plus `connectDevToolsKit`) so the getter keeps working for callers
+  // like `module-main.ts`'s integrations (e.g. the Code Server launcher).
   return {
     connectDevToolsKit,
-    ...ctx,
+    ctx,
   }
 }
