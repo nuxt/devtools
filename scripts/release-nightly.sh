@@ -17,11 +17,21 @@ if [[ ! -z ${NODE_AUTH_TOKEN} ]] ; then
 fi
 
 # Release packages
+# One package failing to publish (e.g. a brand-new package pending npm
+# trusted-publisher setup) must not stop the rest from publishing.
+failed=()
 for p in packages/* ; do
   pushd $p
   echo "Publishing $p"
   cp ../../LICENSE .
   cp ../../README.md .
-  pnpm publish --access public --no-git-checks --tag latest
+  if ! pnpm publish --access public --no-git-checks --tag latest; then
+    failed+=("$p")
+  fi
   popd
 done
+
+if [[ ${#failed[@]} -gt 0 ]]; then
+  echo "Failed to publish: ${failed[*]}" >&2
+  exit 1
+fi
