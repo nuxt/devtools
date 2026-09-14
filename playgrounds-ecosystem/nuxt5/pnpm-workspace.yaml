@@ -16,6 +16,10 @@ verifyDepsBeforeRun: false
 overrides:
   '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz
   '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz
+  # Vite 8.3+ auto-registers the Vite DevTools integration from the `devtools`
+  # config option (vitejs/vite#23333) — this playground exercises that path
+  # (nuxt4/ stays on the pre-8.3 manual-plugin fallback).
+  vite: ^8.3.0
 
 allowBuilds:
   '@parcel/watcher': true
