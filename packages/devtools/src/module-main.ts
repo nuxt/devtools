@@ -1,4 +1,5 @@
 import type { PluginWithDevTools } from '@vitejs/devtools-kit'
+import type { DevToolsConfig } from '@vitejs/devtools/config'
 import type { StaticAssetsSource } from 'devframe'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
@@ -10,7 +11,8 @@ import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, lo
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
 import { join, resolve } from 'pathe'
-import { searchForWorkspaceRoot } from 'vite'
+import { isGreaterOrEqual } from 'verkit'
+import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { packageDir, runtimeDir } from './dirs'
@@ -70,10 +72,8 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // resolved value is used (default `isSandboxed`), so sandboxes keep
   // auto-bypassing the prompt.
   if (options.disableAuthorization) {
-    extendViteConfig((config) => {
-      const devtoolsConfig = ((config as any).devtools ||= {})
-      if (devtoolsConfig.clientAuth === undefined)
-        devtoolsConfig.clientAuth = false
+    extendViteDevToolsConfig((devtools) => {
+      devtools.clientAuth ??= false
     })
   }
 
@@ -130,20 +130,32 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       publicDevServerOrigin = new URL(listener.url).origin
   })
 
-  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({
-    branding: {
-      productName: 'Nuxt DevTools',
-      tagline: 'DevTools for Nuxt',
-      primaryColor: '#099e61',
-      logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-      wordmark: {
-        light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
-        dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
-      },
-      windowTitle: 'Nuxt DevTools',
+  const branding: DevToolsConfig['branding'] = {
+    productName: 'Nuxt DevTools',
+    tagline: 'DevTools for Nuxt',
+    primaryColor: '#099e61',
+    logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+    wordmark: {
+      light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
+      dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
     },
-  }))
-  addVitePlugin(DevTools)
+    windowTitle: 'Nuxt DevTools',
+  }
+
+  // Vite 8.3+ registers the Vite DevTools integration itself from the
+  // top-level `devtools` config option (vitejs/vite#23333), which keeps the
+  // toggle in user hands (`vite: { devtools: false }` in `nuxt.config`).
+  // Older Vite has no serve-mode integration, so fall back to installing the
+  // `DevTools()` plugin manually.
+  if (isGreaterOrEqual(viteVersion, '8.3.0')) {
+    extendViteDevToolsConfig((devtools) => {
+      devtools.branding ??= branding
+    })
+  }
+  else {
+    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({ branding }))
+    addVitePlugin(DevTools)
+  }
 
   // Deferred: will be set when Vite DevTools plugin setup runs
   let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined
@@ -384,4 +396,22 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
 function defineViteDevToolsPlugin(plugin: PluginWithDevTools): Plugin<any> {
   return plugin as any
+}
+
+/**
+ * Extend the `devtools` option of the Vite config — the Vite DevTools
+ * integration config, read by Vite core since 8.3 (vitejs/vite#23333).
+ * Respects a user opt-out (`devtools: false`) and normalizes `true`/missing
+ * to an object.
+ */
+function extendViteDevToolsConfig(extend: (devtools: DevToolsConfig) => void) {
+  extendViteConfig((config) => {
+    if (config.devtools === false)
+      return
+    const devtools: DevToolsConfig = typeof config.devtools === 'object' ? config.devtools : {}
+    extend(devtools)
+    // Vite bundles its `devtools` option type from an older `@vitejs/devtools`
+    // than the one installed here; the installed version is what reads it.
+    config.devtools = devtools as typeof config.devtools
+  })
 }
