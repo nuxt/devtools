@@ -14,6 +14,7 @@ import { join, resolve } from 'pathe'
 import { isGreaterOrEqual } from 'verkit'
 import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
+import { createTerminalAuthBanner } from './auth-banner'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
@@ -74,6 +75,24 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (options.disableAuthorization) {
     extendViteDevToolsConfig((devtools) => {
       devtools.clientAuth ??= false
+    })
+  }
+
+  // Route the client-auth banner through Nuxt's terminal host where this Nuxt
+  // has one (`useTerminal`, @nuxt/kit >= 4.6): the Nuxt CLI 4 TUI shows a
+  // dismissible notice, plain terminals get its boxed-log fallback. A static
+  // named import would throw on older kit, hence the dynamic feature check —
+  // there, Vite DevTools' default stdout banner keeps printing.
+  const kit = await import('@nuxt/kit')
+  if ('useTerminal' in kit) {
+    const { banner, onTrusted } = createTerminalAuthBanner(kit.useTerminal)
+    extendViteDevToolsConfig((devtools) => {
+      devtools.banner ??= banner
+      // `onTrusted` exists in devframe's `createInteractiveAuth` but is not
+      // yet forwarded from this config by @vitejs/devtools — typed locally so
+      // the notice starts auto-retracting once upstream forwards it.
+      const withTrusted = devtools as DevToolsConfig & { onTrusted?: () => void }
+      withTrusted.onTrusted ??= onTrusted
     })
   }
 
