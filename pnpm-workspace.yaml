@@ -30,8 +30,8 @@ minimumReleaseAgeExclude:
   - '@iconify-json/logos@1.2.14'
   - '@iconify-json/simple-icons@1.2.96'
   - '@nuxt/test-utils@4.3.2'
-  - '@types/node@26.5.0'
   - zod@4.6.5
+  - '@devframes/agentic@0.10.0'
 
 resolutionMode: highest
 
@@ -56,17 +56,21 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/hub': &devframe ^0.9.19
+  '@devframes/hub': &devframe ^0.10.0
+  '@devframes/hub-ui': *devframe
   '@devframes/json-render': *devframe
+  '@devframes/json-render-ui': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
   '@devframes/plugin-inspect': *devframe
   '@devframes/plugin-messages': *devframe
   '@devframes/plugin-terminals': *devframe
+  '@devframes/service-open': *devframe
+  '@devframes/vite': *devframe
   '@nuxt/devtools': workspace:*
   '@nuxt/kit': &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29806258.d070492f
   '@nuxt/schema': &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29806258.d070492f
-  '@vitejs/devtools': &vite-devtools ^0.7.3
+  '@vitejs/devtools': &vite-devtools ^0.7.4
   '@vitejs/devtools-kit': *vite-devtools
   '@vue/compiler-core': &vue ^3.5.42
   '@vue/compiler-dom': *vue
