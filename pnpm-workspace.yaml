@@ -30,8 +30,36 @@ minimumReleaseAgeExclude:
   - '@iconify-json/logos@1.2.14'
   - '@iconify-json/simple-icons@1.2.96'
   - '@nuxt/test-utils@4.3.2'
-  - '@types/node@26.5.0'
   - zod@4.6.5
+  - '@devframes/agentic@0.10.0'
+  - '@unocss/cli@66.10.3'
+  - '@unocss/config@66.10.3'
+  - '@unocss/core@66.10.3'
+  - '@unocss/eslint-config@66.10.3'
+  - '@unocss/eslint-plugin@66.10.3'
+  - '@unocss/extractor-arbitrary-variants@66.10.3'
+  - '@unocss/inspector@66.10.3'
+  - '@unocss/nuxt@66.10.3'
+  - '@unocss/preset-attributify@66.10.3'
+  - '@unocss/preset-icons@66.10.3'
+  - '@unocss/preset-mini@66.10.3'
+  - '@unocss/preset-tagify@66.10.3'
+  - '@unocss/preset-typography@66.10.3'
+  - '@unocss/preset-uno@66.10.3'
+  - '@unocss/preset-web-fonts@66.10.3'
+  - '@unocss/preset-wind3@66.10.3'
+  - '@unocss/preset-wind4@66.10.3'
+  - '@unocss/preset-wind@66.10.3'
+  - '@unocss/reset@66.10.3'
+  - '@unocss/rollup@66.10.3'
+  - '@unocss/rule-utils@66.10.3'
+  - '@unocss/transformer-attributify-jsx@66.10.3'
+  - '@unocss/transformer-compile-class@66.10.3'
+  - '@unocss/transformer-directives@66.10.3'
+  - '@unocss/transformer-variant-group@66.10.3'
+  - '@unocss/vite@66.10.3'
+  - '@unocss/webpack@66.10.3'
+  - unocss@66.10.3
 
 resolutionMode: highest
 
@@ -56,7 +84,7 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/hub': &devframe ^0.9.19
+  '@devframes/hub': &devframe ^0.10.0
   '@devframes/json-render': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
@@ -66,7 +94,7 @@ overrides:
   '@nuxt/devtools': workspace:*
   '@nuxt/kit': &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29806258.d070492f
   '@nuxt/schema': &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29806258.d070492f
-  '@vitejs/devtools': &vite-devtools ^0.7.3
+  '@vitejs/devtools': &vite-devtools ^0.7.4
   '@vitejs/devtools-kit': *vite-devtools
   '@vue/compiler-core': &vue ^3.5.42
   '@vue/compiler-dom': *vue
@@ -82,7 +110,7 @@ overrides:
   shiki: &shiki ^4.4.3
   typescript: ^6.0.3
   unimport: ^7.0.2
-  unocss: &unocss ^66.10.2
+  unocss: &unocss ^66.10.3
   vite: &vite ^8.3.0
   vue: *vue
   vue-sfc-transformer: ^0.3.0
