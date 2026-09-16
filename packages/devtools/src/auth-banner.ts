@@ -1,4 +1,5 @@
 import type { NuxtTerminal, NuxtTerminalNotice } from '@nuxt/kit'
+import { colors } from 'consola/utils'
 
 export interface TerminalAuthBanner {
   banner: (info: { code: string, url: string }) => void
@@ -20,8 +21,8 @@ export function createTerminalAuthBanner(terminal: () => NuxtTerminal): Terminal
     banner({ code, url }) {
       notice?.dismiss()
       notice = terminal().notify({
-        title: 'Nuxt DevTools',
-        message: `Authorize the DevTools connection with code ${code} or open ${url}`,
+        title: colors.green('Nuxt DevTools'),
+        message: `Authorize with code ${colors.inverse(colors.green(colors.bold(` ${code} `)))} or open ${colors.cyan(url)}\n`,
       })
     },
     onTrusted() {
