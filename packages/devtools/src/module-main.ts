@@ -88,11 +88,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     const { banner, onTrusted } = createTerminalAuthBanner(kit.useTerminal)
     extendViteDevToolsConfig((devtools) => {
       devtools.banner ??= banner
-      // `onTrusted` exists in devframe's `createInteractiveAuth` but is not
-      // yet forwarded from this config by @vitejs/devtools — typed locally so
-      // the notice starts auto-retracting once upstream forwards it.
-      const withTrusted = devtools as DevToolsConfig & { onTrusted?: () => void }
-      withTrusted.onTrusted ??= onTrusted
+      devtools.onTrusted ??= onTrusted
     })
   }
 
