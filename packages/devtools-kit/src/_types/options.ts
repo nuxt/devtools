@@ -38,6 +38,14 @@ export interface ModuleOptions {
   componentInspector?: boolean
 
   /**
+   * Enable the Vue DevTools integration, which registers Vue DevTools'
+   * own dock entry next to the Nuxt one.
+   *
+   * @default true
+   */
+  vueDevTools?: boolean
+
+  /**
    * Enable the Vite Inspect integration.
    *
    * `vite-plugin-inspect` is an optional peer dependency. When it isn't

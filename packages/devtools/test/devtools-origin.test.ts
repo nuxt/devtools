@@ -71,6 +71,7 @@ describe('vite DevTools origin', () => {
       dataInspector: false,
       viteInspect: false,
       componentInspector: false,
+      vueDevTools: false,
       codeServer: { enabled: false },
     } as any, nuxt)
 

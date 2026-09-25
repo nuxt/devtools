@@ -116,6 +116,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       // pre-bundle here.
       'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
       'nuxt > @nuxt/devtools > error-stack-parser-es',
+      'nuxt > @nuxt/devtools > vite-plugin-vue-devtools/client',
       'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
     )
   }
@@ -370,6 +371,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
   if (options.componentInspector !== false)
     await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
+
+  if (options.vueDevTools !== false)
+    await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
 
   if (options.codeServer?.enabled === false && options.vscode !== undefined) {
     deprecate(nuxt, 'NDT_DEP_0008', {
