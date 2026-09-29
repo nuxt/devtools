@@ -1,20 +1,22 @@
-import type { PackageManager } from 'nypm'
+import type { DetectResult } from 'package-manager-detector'
 import type { NpmCommandOptions, NpmCommandType, NuxtDevtoolsServerContext, PackageUpdateInfo, ServerFunctions } from '../types'
+import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { startSubprocess } from '@nuxt/devtools-kit'
 import isInstalledGlobally from 'is-installed-globally'
 import { parseModule } from 'magicast'
 import { addNuxtModule, getDefaultExportOptions } from 'magicast/helpers'
-import { detectPackageManager } from 'nypm'
+import { detect, resolveCommand } from 'package-manager-detector'
+import { join } from 'pathe'
 import { checkForUpdateOf } from '../npm'
 import { magicastGuard } from '../utils/magicast'
 
 export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerContext) {
-  let detectPromise: Promise<PackageManager | undefined> | undefined
+  let detectPromise: Promise<DetectResult | null> | undefined
   const updatesPromise = new Map<string, Promise<PackageUpdateInfo | undefined>>()
 
   function getPackageManager() {
-    detectPromise ||= detectPackageManager(nuxt.options.rootDir)
+    detectPromise ||= detect({ cwd: nuxt.options.rootDir }).catch(() => null)
     return detectPromise
   }
 
@@ -23,30 +25,38 @@ export function setupNpmRPC({ nuxt, ensureDevAuthToken }: NuxtDevtoolsServerCont
       dev = true,
       global = (packageName === '@nuxt/devtools' && isInstalledGlobally),
     } = options
-    const agent = await getPackageManager()
-
-    const name = agent?.name || 'npm'
+    const detected = await getPackageManager()
+    const agent = detected?.agent || 'npm'
+    const name = agent === 'deno' ? `npm:${packageName}` : packageName
+    const pnpmFlags = agent === 'pnpm'
+      ? [
+          ...!global && existsSync(join(nuxt.options.rootDir, 'pnpm-workspace.yaml')) ? ['--workspace-root'] : [],
+          '--config.confirm-modules-purge=false',
+          '--config.strict-dep-builds=false',
+        ]
+      : []
 
     // TODO: smartly detect dev/global installs as default
     if (command === 'install' || command === 'update') {
+      const resolved = global
+        ? resolveCommand(agent, 'global', [`${name}@latest`])
+        : resolveCommand(agent, 'add', [`${name}@latest`, ...dev ? ['-D'] : []])
+      if (!resolved)
+        return
       return [
-        name,
-        name === 'npm' ? 'install' : 'add',
-        `${packageName}@latest`,
-        dev ? '-D' : '',
-        global ? '-g' : '',
+        resolved.command,
+        ...resolved.args,
+        ...pnpmFlags,
         // In yarn berry, `--ignore-scripts` is removed
-        (name === 'yarn' && !agent?.version?.startsWith('1.')) ? '' : '--ignore-scripts',
+        agent === 'yarn@berry' ? '' : '--ignore-scripts',
       ].filter(Boolean)
     }
 
     if (command === 'uninstall') {
-      return [
-        name,
-        name === 'npm' ? 'uninstall' : 'remove',
-        packageName,
-        global ? '-g' : '',
-      ].filter(Boolean)
+      const resolved = resolveCommand(agent, global ? 'global_uninstall' : 'uninstall', [name])
+      if (!resolved)
+        return
+      return [resolved.command, ...resolved.args, ...pnpmFlags]
     }
   }
 
