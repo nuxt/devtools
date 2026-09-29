@@ -25,7 +25,7 @@ const activeId = computed(() => (route.params as { id?: string }).id)
       flex="~ gap2"
     >
       <div carbon-arrow />
-      <div :class="icon" />
+      <NIcon :icon="icon" />
       {{ node.name }}
     </summary>
 

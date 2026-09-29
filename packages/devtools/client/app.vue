@@ -17,9 +17,6 @@ import 'vanilla-jsoneditor/themes/jse-theme-dark.css'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import './styles/global.css'
 
-if (import.meta.client)
-  import('./setup/unocss-runtime')
-
 useHead({
   title: 'Nuxt DevTools',
   meta: [

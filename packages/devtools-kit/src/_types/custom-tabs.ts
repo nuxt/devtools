@@ -31,10 +31,8 @@ export interface ModuleCustomTab {
   extraTabVNode?: VNode
 
   /**
-   * Require local authentication to access the tab
-   * It's highly recommended to enable this if the tab have sensitive information or have access to the OS
-   *
-   * @default false
+   * @deprecated No longer enforced client-side. Access to sensitive RPC
+   * methods is gated by Vite DevTools' own connection authorization instead.
    */
   requireAuth?: boolean
 }

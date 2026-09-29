@@ -90,8 +90,13 @@ export function setupFrameNav(): void {
     return manifest.value.find(entry => entry.navTarget.path === path)?.id
   }
 
+  // The host page and this client are always served same-origin by the Nuxt
+  // dev server (this frame is embedded via an iframe on the app's own origin),
+  // so the host's origin is exactly our own — never '*'.
+  const hostOrigin = window.location.origin
+
   function post(message: Record<string, unknown>) {
-    window.parent.postMessage({ channel: CHANNEL, v: VERSION, frameId: FRAME_ID, from: 'frame', ...message }, '*')
+    window.parent.postMessage({ channel: CHANNEL, v: VERSION, frameId: FRAME_ID, from: 'frame', ...message }, hostOrigin)
   }
 
   function announce(type: 'ready' | 'manifest') {
@@ -99,6 +104,8 @@ export function setupFrameNav(): void {
   }
 
   window.addEventListener('message', (ev: MessageEvent) => {
+    if (ev.origin !== hostOrigin || ev.source !== window.parent)
+      return
     const data = ev.data
     if (!data || data.channel !== CHANNEL || data.v !== VERSION || data.frameId !== FRAME_ID || data.from !== 'host')
       return

@@ -17,5 +17,5 @@ const icon = computed(() => {
 </script>
 
 <template>
-  <div :class="icon" />
+  <NIcon :icon="icon" />
 </template>

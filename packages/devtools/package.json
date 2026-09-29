@@ -1,7 +1,7 @@
 {
   "name": "@nuxt/devtools",
   "type": "module",
-  "version": "4.0.0-alpha.15",
+  "version": "4.0.0-beta.2",
   "description": "The Nuxt DevTools gives you insights and transparency about your Nuxt App.",
   "license": "MIT",
   "homepage": "https://devtools.nuxt.com",
@@ -80,6 +80,7 @@
     "unplugin": "catalog:prod",
     "unstorage": "catalog:prod",
     "verkit": "catalog:prod",
+    "vite-plugin-vue-devtools": "catalog:prod",
     "vite-plugin-vue-tracer": "catalog:prod"
   },
   "devDependencies": {
@@ -100,11 +101,11 @@
     "@unocss/nuxt": "catalog:buildtools",
     "@unocss/preset-icons": "catalog:buildtools",
     "@unocss/preset-uno": "catalog:buildtools",
-    "@unocss/runtime": "catalog:frontend",
     "@vitejs/devtools": "catalog:buildtools",
     "@vueuse/nuxt": "catalog:buildtools",
     "cronstrue": "catalog:frontend",
     "diff": "catalog:frontend",
+    "dompurify": "catalog:frontend",
     "exsolve": "catalog:buildtools",
     "floating-vue": "catalog:frontend",
     "fuse.js": "catalog:frontend",

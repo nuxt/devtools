@@ -27,10 +27,6 @@ const isMacOS = getIsMacOS()
 
 const vueVersion = computed(() => client.value?.nuxt.vueApp.version)
 const metricsLoading = computed(() => client.value?.metrics.loading())
-
-function authorize() {
-  // Auth is now handled by Vite DevTools
-}
 </script>
 
 <template>
@@ -130,11 +126,6 @@ function authorize() {
         <NTip v-if="showConnectionWarning" n="yellow5" icon="carbon-unlink" justify-center>
           Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
         </NTip>
-        <button title="Authorize" @click="authorize">
-          <NTip v-if="!isDevAuthed" n="orange5" icon="i-carbon-locked" justify-center>
-            Access from an untrusted browser, some features are limited. Click to authorize now.
-          </NTip>
-        </button>
       </div>
       <div flex="~ gap-6 wrap" mt-5 items-center justify-center>
         <a

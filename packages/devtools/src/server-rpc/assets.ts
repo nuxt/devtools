@@ -2,7 +2,7 @@ import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerCon
 import fsp from 'node:fs/promises'
 import { parse, relative } from 'node:path'
 import { imageMeta } from 'image-meta'
-import { join, resolve } from 'pathe'
+import { dirname, join, resolve } from 'pathe'
 import { debounce } from 'perfect-debounce'
 import { glob } from 'tinyglobby'
 import { defaultAllowedExtensions } from '../constant'
@@ -100,12 +100,24 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       }
     },
     async writeStaticAssets(files: AssetEntry[], folder: string) {
-      const baseDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public + folder)
+      // Strip any leading slashes so an absolute-looking `folder`/`path` is
+      // always treated as relative, then verify the resolved target is still
+      // contained — resolving against a string-concatenated, unchecked base
+      // (the previous approach) let `folder` escape the public directory
+      // before the containment check ever ran.
+      const baseDir = resolve(publicDir, folder.replace(/^[/\\]+/, ''))
+      if (baseDir !== publicDir && !baseDir.startsWith(`${publicDir}/`))
+        throw new Error(`[Nuxt DevTools] Folder ${folder} is not allowed to upload, it's outside of the public directory`)
+
+      // Canonicalize once so the per-file realpath check below is comparing
+      // against the same resolved boundary (publicDir itself may sit behind
+      // a symlink, e.g. macOS's /tmp -> /private/tmp).
+      const realPublicDir = await realpathOfNearestAncestor(publicDir)
 
       return await Promise.all(
         files.map(async ({ path, content, encoding, override }) => {
-          let finalPath = resolve(baseDir, path)
-          if (!finalPath.startsWith(baseDir))
+          let finalPath = resolve(baseDir, path.replace(/^[/\\]+/, ''))
+          if (finalPath !== baseDir && !finalPath.startsWith(`${baseDir}/`))
             throw new Error(`[Nuxt DevTools] File ${path} is not allowed to upload, it's outside of the public directory`)
 
           const { ext } = parse(finalPath)
@@ -113,6 +125,17 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
             if (!extensions.includes(ext.toLowerCase().slice(1)))
               throw new Error(`[Nuxt DevTools] File extension ${ext} is not allowed to upload, allowed extensions are: ${extensions.join(', ')}\nYou can configure it in Nuxt config at \`devtools.assets.uploadExtensions\`.`)
           }
+
+          // Lexical containment doesn't stop `fsp.writeFile` from following a
+          // symlink out of the public directory: canonicalize the nearest
+          // existing ancestor and reject if it (or an existing target itself)
+          // escapes.
+          const realParentDir = await realpathOfNearestAncestor(dirname(finalPath))
+          if (realParentDir !== realPublicDir && !realParentDir.startsWith(`${realPublicDir}/`))
+            throw new Error(`[Nuxt DevTools] File ${path} is not allowed to upload, it's outside of the public directory`)
+          const targetStat = await fsp.lstat(finalPath).catch(() => undefined)
+          if (targetStat?.isSymbolicLink())
+            throw new Error(`[Nuxt DevTools] File ${path} is not allowed to upload, it's a symbolic link`)
 
           if (!override) {
             try {
@@ -144,6 +167,23 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       return await fsp.rename(oldPath, newPath)
     },
   } satisfies Partial<ServerFunctions>
+}
+
+/**
+ * Resolve the real (symlink-free) path of `dir`, or of its nearest existing
+ * ancestor if `dir` itself doesn't exist yet — so callers can still verify
+ * containment before creating a new file/folder there.
+ */
+async function realpathOfNearestAncestor(dir: string): Promise<string> {
+  try {
+    return await fsp.realpath(dir)
+  }
+  catch {
+    const parent = dirname(dir)
+    if (parent === dir)
+      return dir
+    return realpathOfNearestAncestor(parent)
+  }
 }
 
 const reImage = /\.(?:png|jpe?g|jxl|gif|svg|webp|avif|ico|bmp|tiff?)$/i

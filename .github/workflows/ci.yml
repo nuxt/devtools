@@ -10,7 +10,70 @@ on:
   #     - main
 
 jobs:
-  ci:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: latest
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: build-dist
+          path: packages/*/dist
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: latest
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm lint
+
+  typecheck:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: latest
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      - uses: actions/download-artifact@v8
+        with:
+          name: build-dist
+          path: packages
+      - run: pnpm -C packages/devtools run dev:prepare
+      - run: pnpm typecheck
+
+  release-nightly:
+    needs:
+      - lint
+      - typecheck
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message,
+      '[skip-release]')
     permissions:
       id-token: write
       contents: read
@@ -27,9 +90,5 @@ jobs:
       - run: npm install -g corepack@latest
       - run: corepack enable
       - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm build
-      - run: pnpm typecheck
       - name: Release Nightly
-        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-release]')
         run: ./scripts/release-nightly.sh

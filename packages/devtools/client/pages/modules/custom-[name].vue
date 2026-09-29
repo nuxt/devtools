@@ -3,7 +3,6 @@ import type { ModuleCustomTab } from '~/../src/types'
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from '#app/composables/router'
 import { definePageMeta } from '#imports'
-import { isDevAuthed, requestForAuth } from '~/composables/dev-auth'
 import { rpc } from '~/composables/rpc'
 import { useAllTabs } from '~/composables/state-tabs'
 
@@ -29,9 +28,6 @@ onMounted(() => {
         router.push('/modules/overview')
     }, 2000)
   }
-  else if (tab.value.requireAuth && !isDevAuthed.value) {
-    requestForAuth()
-  }
 })
 </script>
 
@@ -51,9 +47,6 @@ onMounted(() => {
         </p>
       </div>
     </NPanelGrids>
-  </template>
-  <template v-else-if="tab.requireAuth && !isDevAuthed">
-    <AuthRequiredPanel />
   </template>
   <template v-else-if="tab.view.type === 'iframe'">
     <IframeView :tab="tab" />

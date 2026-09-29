@@ -137,7 +137,6 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: [
         '@unocss/preset-icons/browser',
-        '@unocss/runtime',
         'cronstrue',
         'diff',
         'error-stack-parser-es',

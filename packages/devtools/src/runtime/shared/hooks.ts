@@ -1,7 +1,11 @@
 import type { HookInfo } from '@nuxt/devtools/types'
-import type { Hookable } from 'hookable'
 
-export function setupHooksDebug<T extends Hookable<any>>(hooks: T) {
+interface HookableLike {
+  beforeEach: (fn: (event: { name: string }) => void) => void
+  afterEach: (fn: (event: { name: string }) => void) => void
+}
+
+export function setupHooksDebug<T extends HookableLike>(hooks: T) {
   const serverHooks: Record<string, HookInfo> = {}
 
   // maybe run in node or browser env

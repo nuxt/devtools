@@ -1,8 +1,8 @@
 import type { Ref } from 'vue'
 import type { HookInfo, RouteInfo } from '../../src/types'
 import { objectPick } from '@antfu/utils'
+import { $fetch } from 'ofetch'
 import { computed } from 'vue'
-import { useFetch } from '#app/composables/fetch'
 import { useClientRouter } from './client'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'
@@ -77,12 +77,7 @@ export interface VfsFile {
 }
 
 export function useVirtualFiles() {
-  const { data } = useFetch<VfsData>('/_vfs.json', {
-    key: 'vfs-list',
-    baseURL: '/',
-    responseType: 'json',
-  })
-  return data
+  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs.json', { baseURL: '/', responseType: 'json' }))
 }
 
 export function useMergedRouteList() {

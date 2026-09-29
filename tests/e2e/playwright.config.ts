@@ -66,6 +66,7 @@ export default defineConfig({
     use: {
       ...devices['Desktop Chrome'],
       baseURL: `http://localhost:${s.port}`,
+      viewport: { width: 1280, height: 2000 },
     },
     metadata: { playground: s.playground, mode: s.mode },
   })),

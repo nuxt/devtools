@@ -6,6 +6,7 @@ const isSandboxed = provider === 'stackblitz' || provider === 'codesandbox'
 export const defaultOptions: ModuleOptions = {
   enabled: undefined, // determine multiple conditions
   componentInspector: true,
+  vueDevTools: true,
   viteInspect: true,
   dataInspector: true,
   codeServer: {

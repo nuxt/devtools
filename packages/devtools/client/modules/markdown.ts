@@ -1,5 +1,5 @@
 import type { BuiltinLanguage } from 'shiki'
-import { addVitePlugin, defineNuxtModule, logger } from '@nuxt/kit'
+import { defineNuxtModule, logger } from '@nuxt/kit'
 import { consola } from 'consola'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { createHighlighter } from 'shiki'
@@ -28,7 +28,7 @@ export default defineNuxtModule({
 
     nuxt.options.extensions.push('.md')
 
-    addVitePlugin(() => {
+    const markdownPlugin = () => {
       return Markdown({
         frontmatter: false,
         async markdownItSetup(md) {
@@ -61,11 +61,18 @@ export default defineNuxtModule({
           }
         },
       })
-    // `prepend: true` because Nuxt's `addVitePlugin` hard-codes `enforce`
-    // to `post` for non-isomorphic (client-only/server-only) plugins unless
-    // prepended — which would otherwise discard `unplugin-vue-markdown`'s
-    // own `enforce: 'pre'` and let `@vitejs/plugin-vue` see raw markdown
-    // before it's transformed into a Vue SFC.
-    }, { server: false, client: true, prepend: true })
+    }
+
+    // Registered directly on `vite:extend` (rather than via `@nuxt/kit`'s
+    // `addVitePlugin`) and unshifted onto `config.plugins` so it lands
+    // before `@vitejs/plugin-vue` regardless of its `enforce` tier.
+    // `addVitePlugin`'s environment-scoping (`{ server: false, client: true }`)
+    // doesn't reliably apply the plugin under Vite 8's rolldown-based builder:
+    // `.md` files were reaching `@vitejs/plugin-vue` untransformed, so it
+    // parsed raw markdown as a Vue SFC and failed.
+    nuxt.hook('vite:extend', ({ config }) => {
+      config.plugins ||= []
+      config.plugins.unshift(markdownPlugin())
+    })
   },
 })

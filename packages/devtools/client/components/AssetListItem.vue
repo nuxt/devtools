@@ -46,7 +46,7 @@ const icon = computed(() => {
       border="b base"
       @click="isCollection ? open = !open : model = item"
     >
-      <div :class="icon" />
+      <NIcon :icon="icon" />
       <span :class="{ 'flex items-center': isCollection }" flex-auto text-start text-sm font-mono>
         {{ item.path }}
         <NIcon v-if="item.layer" icon="i-carbon-layers" bg-primary />

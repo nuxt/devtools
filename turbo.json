@@ -16,18 +16,40 @@
     "@nuxt/devtools-assets#build": {
       // Generates the client app that lives in `packages/devtools`
       // (`client/**` dogfooding `src/module`) into this package's `dist/`.
-      // Those inputs are outside this package, so the task can't be hashed —
-      // never cache it. The explicit dep replaces `^build` (this package has
-      // no real workspace dependencies). Only `@nuxt/devtools-kit`'s dist is
-      // required: the client app consumes `@nuxt/devtools` and
-      // `@nuxt/devtools-ui-kit` from source (and `build:client` self-stubs
-      // the module via `dev:prepare`) — depending on their builds here would
-      // be a cycle, since `@nuxt/devtools` dev-depends on this package.
+      // Those inputs are outside this package, so `$TURBO_DEFAULT$` alone
+      // can't hash them — list them explicitly via `$TURBO_ROOT$` so the
+      // task caches correctly instead of always rerunning. The explicit dep
+      // replaces `^build` (this package has no real workspace dependencies).
+      // The client app consumes `@nuxt/devtools` and `@nuxt/devtools-ui-kit`
+      // from source, but `build:client` also self-stubs the module via
+      // `dev:prepare` (`nuxt-build-module build --stub`), which writes into
+      // `packages/devtools/dist`. `@nuxt/devtools#build` stubs/builds that
+      // same directory, so without an explicit dependency here turbo runs
+      // both in parallel and they race on `dist` (e.g. EEXIST on the
+      // `dist/runtime` symlink). Depending on `@nuxt/devtools#build` isn't a
+      // cycle: that task's own `dependsOn` below is pinned to just the kit,
+      // not `^build`, so it never depends back on this package.
       "dependsOn": [
-        "@nuxt/devtools-kit#build"
+        "@nuxt/devtools-kit#build",
+        "@nuxt/devtools#build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/packages/devtools/client/**",
+        "!$TURBO_ROOT$/packages/devtools/client/.nuxt/**",
+        "!$TURBO_ROOT$/packages/devtools/client/.output/**",
+        "!$TURBO_ROOT$/packages/devtools/client/node_modules/**",
+        "!$TURBO_ROOT$/packages/devtools/client/dist",
+        "$TURBO_ROOT$/packages/devtools/src/**",
+        "$TURBO_ROOT$/packages/devtools/scripts/**",
+        "$TURBO_ROOT$/packages/devtools/build.config.ts",
+        "$TURBO_ROOT$/packages/devtools/tsconfig.json",
+        "$TURBO_ROOT$/packages/devtools-ui-kit/src/**"
       ],
       "outputLogs": "new-only",
-      "cache": false
+      "outputs": [
+        "dist/**"
+      ]
     },
     "@nuxt/devtools#build": {
       // The `@nuxt/devtools` *module* only depends on `@nuxt/devtools-kit`;

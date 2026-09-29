@@ -1,4 +1,5 @@
 import type { PluginWithDevTools } from '@vitejs/devtools-kit'
+import type { DevToolsConfig } from '@vitejs/devtools/config'
 import type { StaticAssetsSource } from 'devframe'
 import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
@@ -10,8 +11,10 @@ import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, lo
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
 import { join, resolve } from 'pathe'
-import { searchForWorkspaceRoot } from 'vite'
+import { isGreaterOrEqual } from 'verkit'
+import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
+import { createTerminalAuthBanner } from './auth-banner'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
@@ -70,10 +73,22 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // resolved value is used (default `isSandboxed`), so sandboxes keep
   // auto-bypassing the prompt.
   if (options.disableAuthorization) {
-    extendViteConfig((config) => {
-      const devtoolsConfig = ((config as any).devtools ||= {})
-      if (devtoolsConfig.clientAuth === undefined)
-        devtoolsConfig.clientAuth = false
+    extendViteDevToolsConfig((devtools) => {
+      devtools.clientAuth ??= false
+    })
+  }
+
+  // Route the client-auth banner through Nuxt's terminal host where this Nuxt
+  // has one (`useTerminal`, @nuxt/kit >= 4.6): the Nuxt CLI 4 TUI shows a
+  // dismissible notice, plain terminals get its boxed-log fallback. A static
+  // named import would throw on older kit, hence the dynamic feature check —
+  // there, Vite DevTools' default stdout banner keeps printing.
+  const kit = await import('@nuxt/kit')
+  if ('useTerminal' in kit) {
+    const { banner, onTrusted } = createTerminalAuthBanner(kit.useTerminal)
+    extendViteDevToolsConfig((devtools) => {
+      devtools.banner ??= banner
+      devtools.onTrusted ??= onTrusted
     })
   }
 
@@ -101,6 +116,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       // pre-bundle here.
       'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
       'nuxt > @nuxt/devtools > error-stack-parser-es',
+      'nuxt > @nuxt/devtools > vite-plugin-vue-devtools/client',
       'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
     )
   }
@@ -130,20 +146,32 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       publicDevServerOrigin = new URL(listener.url).origin
   })
 
-  const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({
-    branding: {
-      productName: 'Nuxt DevTools',
-      tagline: 'DevTools for Nuxt',
-      primaryColor: '#099e61',
-      logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-      wordmark: {
-        light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
-        dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
-      },
-      windowTitle: 'Nuxt DevTools',
+  const branding: DevToolsConfig['branding'] = {
+    productName: 'Nuxt DevTools',
+    tagline: 'DevTools for Nuxt',
+    primaryColor: '#099e61',
+    logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+    wordmark: {
+      light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
+      dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
     },
-  }))
-  addVitePlugin(DevTools)
+    windowTitle: 'Nuxt DevTools',
+  }
+
+  // Vite 8.3+ registers the Vite DevTools integration itself from the
+  // top-level `devtools` config option (vitejs/vite#23333), which keeps the
+  // toggle in user hands (`vite: { devtools: false }` in `nuxt.config`).
+  // Older Vite has no serve-mode integration, so fall back to installing the
+  // `DevTools()` plugin manually.
+  if (isGreaterOrEqual(viteVersion, '8.3.0')) {
+    extendViteDevToolsConfig((devtools) => {
+      devtools.branding ??= branding
+    })
+  }
+  else {
+    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({ branding }))
+    addVitePlugin(DevTools)
+  }
 
   // Deferred: will be set when Vite DevTools plugin setup runs
   let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined
@@ -344,6 +372,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   if (options.componentInspector !== false)
     await import('./integrations/vue-tracer').then(({ setup }) => setup(ctx))
 
+  if (options.vueDevTools !== false)
+    await import('./integrations/vue-devtools').then(({ setup }) => setup(ctx))
+
   if (options.codeServer?.enabled === false && options.vscode !== undefined) {
     deprecate(nuxt, 'NDT_DEP_0008', {
       api: 'devtools.vscode',
@@ -384,4 +415,22 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 
 function defineViteDevToolsPlugin(plugin: PluginWithDevTools): Plugin<any> {
   return plugin as any
+}
+
+/**
+ * Extend the `devtools` option of the Vite config — the Vite DevTools
+ * integration config, read by Vite core since 8.3 (vitejs/vite#23333).
+ * Respects a user opt-out (`devtools: false`) and normalizes `true`/missing
+ * to an object.
+ */
+function extendViteDevToolsConfig(extend: (devtools: DevToolsConfig) => void) {
+  extendViteConfig((config) => {
+    if (config.devtools === false)
+      return
+    const devtools: DevToolsConfig = typeof config.devtools === 'object' ? config.devtools : {}
+    extend(devtools)
+    // Vite bundles its `devtools` option type from an older `@vitejs/devtools`
+    // than the one installed here; the installed version is what reads it.
+    config.devtools = devtools as typeof config.devtools
+  })
 }

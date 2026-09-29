@@ -1,0 +1,15 @@
+diff --git a/dist/vite.mjs b/dist/vite.mjs
+index d8633aa8e81f4c9631a43764f344625e2c2358d7..2a97aecf23827faf5421e0055eef46fbf9ada4d9 100644
+--- a/dist/vite.mjs
++++ b/dist/vite.mjs
+@@ -117,7 +117,9 @@ async function buildEnvironments(ctx, builder) {
+ 	}
+ 	ctx.nitro.routing.sync();
+ 	await prerender(nitro);
+-	const output = await builder.build(builder.environments.nitro);
++	const nitroEnvironment = builder.environments.nitro;
++	const hasNitroEntry = Boolean(nitroEnvironment.config.build.rollupOptions.input || nitroEnvironment.config.build.rolldownOptions?.input);
++	const output = hasNitroEntry ? await builder.build(nitroEnvironment) : void 0;
+ 	await nitro.close();
+ 	await nitro.hooks.callHook("compiled", nitro);
+ 	await writeBuildInfo(nitro, output);

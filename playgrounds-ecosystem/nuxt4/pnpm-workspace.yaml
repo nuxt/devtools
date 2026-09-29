@@ -22,3 +22,20 @@ allowBuilds:
   better-sqlite3: true
   esbuild: true
   vue-demi: true
+
+minimumReleaseAgeExclude:
+  - '@devframes/hub-ui@0.9.16'
+  - '@devframes/hub@0.9.16'
+  - '@devframes/json-render-ui@0.9.16'
+  - '@devframes/json-render@0.9.16'
+  - '@devframes/plugin-code-server@0.9.16'
+  - '@devframes/plugin-data-inspector@0.9.16'
+  - '@devframes/plugin-inspect@0.9.16'
+  - '@devframes/plugin-messages@0.9.16'
+  - '@devframes/plugin-terminals@0.9.16'
+  - '@devframes/service-open@0.9.16'
+  - '@devframes/vite@0.9.16'
+  - '@vitejs/devtools-kit@0.7.3'
+  - '@vitejs/devtools@0.7.3'
+  - devframe@0.9.16
+  - pkg-types@2.3.3
