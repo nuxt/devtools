@@ -6,6 +6,8 @@ await callOnce(async () => {
 })
 
 const { data } = await useAsyncData(() => Promise.resolve('async data'))
+
+const { data: api } = await useApiData<{ msg: string }>('/api/data')
 </script>
 
 <template>
@@ -15,6 +17,9 @@ const { data } = await useAsyncData(() => Promise.resolve('async data'))
     </div>
     <div data-testid="data">
       {{ data }}
+    </div>
+    <div data-testid="api">
+      {{ api?.msg }}
     </div>
   </div>
 </template>

@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { TRANSFORM_ID_EXCLUDE, TRANSFORM_ID_INCLUDE, wrapTimelineImports } from '../src/integrations/timeline-wrap'
-
-function shouldTransform(id: string): boolean {
-  return TRANSFORM_ID_INCLUDE.some(re => re.test(id)) && !TRANSFORM_ID_EXCLUDE.some(re => re.test(id))
-}
+import { importKey, TimelineWrapPlugin, wrapTimelineImports } from '../src/integrations/timeline-wrap'
 
 const HELPER_PATH = '/runtime/function-metrics-helpers'
 
+function keys(wrappable: [source: string, name: string][]) {
+  return new Set(wrappable.map(([source, name]) => importKey(source, name)))
+}
+
 function wrap(code: string, wrappable: [source: string, name: string][]) {
-  return wrapTimelineImports(
-    code,
-    (source, name) => wrappable.some(([s, n]) => s === source && n === name),
-    HELPER_PATH,
-  )?.code
+  return wrapTimelineImports(code, keys(wrappable), HELPER_PATH)?.code
 }
 
 describe('wrapTimelineImports', () => {
@@ -76,15 +72,19 @@ describe('wrapTimelineImports', () => {
     `)
   })
 
-  it('keeps default imports untouched while wrapping named ones', () => {
+  it('keeps default and namespace imports untouched while wrapping named ones', () => {
     const result = wrap(
-      `import myDefault, { useState } from '#app/composables/state';`,
+      [
+        `import myDefault, { useState } from '#app/composables/state';`,
+        `import * as ns from '#app/composables/state';`,
+      ].join('\n'),
       [['#app/composables/state', 'useState']],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
       const useState = __nuxtTimelineWrap("useState", _$__useState);
-      import myDefault, { useState as _$__useState } from '#app/composables/state';"
+      import myDefault, { useState as _$__useState } from '#app/composables/state';
+      import * as ns from '#app/composables/state';"
     `)
   })
 
@@ -114,8 +114,15 @@ describe('wrapTimelineImports', () => {
     )).toBeUndefined()
   })
 
-  it('ignores code without imports', () => {
-    expect(wrap('const useState = () => {}', [['#app/composables/state', 'useState']])).toBeUndefined()
+  it('ignores imports inside comments and strings', () => {
+    expect(wrap(
+      [
+        `// import { useState } from '#app/composables/state'`,
+        `/* import { useState } from '#app/composables/state' */`,
+        `const s = "import { useState } from '#app/composables/state'"`,
+      ].join('\n'),
+      [['#app/composables/state', 'useState']],
+    )).toBeUndefined()
   })
 
   it('is idempotent', () => {
@@ -130,20 +137,43 @@ describe('wrapTimelineImports', () => {
   })
 })
 
-describe('shouldTransform', () => {
+describe('timelineWrapPlugin', () => {
+  // Rollup < 4.40 has no native hook filters, so unplugin applies ours before calling the handler
+  const [plugin] = [TimelineWrapPlugin({
+    helperPath: HELPER_PATH,
+    exclude: [/^\/devtools-runtime\//],
+    getWrappable: async () => keys([['#app/composables/state', 'useState']]),
+  }).rollup()].flat()
+
+  const code = `import { useState } from '#app/composables/state'`
+
+  async function transform(id: string) {
+    const hook = plugin!.transform!
+    const handler = typeof hook === 'function' ? hook : hook.handler
+    // the plugin never touches the Rollup context, so an empty one suffices
+    const result = await handler.call({} as never, code, id)
+    return typeof result === 'string' ? result : result?.code
+  }
+
   it.each([
-    ['/app/pages/index.vue', true],
-    ['/app/pages/index.vue?vue&type=script&setup=true&lang.ts', true],
-    ['/app/composables/foo.ts', true],
-    ['/app/utils/bar.mjs', true],
-    ['/app/pages/index.vue?vue&type=style&index=0&lang.css', false],
-    ['/app/composables/foo.ts?macro=true', false],
-    ['/node_modules/some-lib/dist/index.mjs', false],
-    ['\0virtual:my-module', false],
-    ['/app/assets/style.css', false],
+    '/app/pages/index.vue',
+    '/app/pages/index.vue?vue&type=script&setup=true&lang.ts',
+    '/app/composables/foo.ts',
+    '/app/utils/bar.mjs',
+  ])('transforms %s', async (id) => {
+    await expect(transform(id)).resolves.toContain('__nuxtTimelineWrap("useState", _$__useState)')
+  })
+
+  it.each([
+    '/app/pages/index.vue?vue&type=style&index=0&lang.css',
+    '/app/composables/foo.ts?macro=true',
+    '/node_modules/some-lib/dist/index.mjs',
+    '\0virtual:my-module',
+    '/app/assets/style.css',
     // a code extension in the query string must not match a non-code pathname
-    ['/app/assets/icon.svg?import&fallback=x.js', false],
-  ])('%s -> %s', (id, expected) => {
-    expect(shouldTransform(id)).toBe(expected)
+    '/app/assets/icon.svg?import&fallback=x.js',
+    '/devtools-runtime/plugins/view.ts',
+  ])('skips %s', async (id) => {
+    await expect(transform(id)).resolves.toBeUndefined()
   })
 })

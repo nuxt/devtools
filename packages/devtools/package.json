@@ -29,8 +29,7 @@
     "dev:playground": "pnpm build && nuxi dev playground",
     "dev:prepare": "pnpm run stub && nuxi prepare client",
     "prepare": "tsx scripts/prepare.ts",
-    "prepack": "turbo run build --filter=.",
-    "test": "vitest run"
+    "prepack": "turbo run build --filter=."
   },
   "peerDependencies": {
     "@nuxt/devtools-assets": "workspace:*",
@@ -135,7 +134,6 @@
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",
     "vite-plugin-inspect": "catalog:prod",
-    "vitest": "catalog:cli",
     "vue-tsc": "catalog:cli",
     "vue-virtual-scroller": "catalog:frontend"
   }

@@ -1,43 +1,71 @@
 import type { SourceMap } from 'magic-string'
 import MagicString from 'magic-string'
 import { findStaticImports, parseStaticImport } from 'mlly'
+import { createUnplugin } from 'unplugin'
 
-export const HELPER_NAME = '__nuxtTimelineWrap'
-export const HELPER_NAME_RE = /__nuxtTimelineWrap/
+const HELPER_NAME = '__nuxtTimelineWrap'
 const RENAME_PREFIX = '_$__'
 
-export const TRANSFORM_ID_INCLUDE: RegExp[] = [
-  /^[^?]*\.(?:m?[jt]sx?|vue)(?:$|\?)/,
-]
-export const TRANSFORM_ID_EXCLUDE: RegExp[] = [
-  /^\0/,
-  /[\\/]node_modules[\\/]/,
-  /[?&]macro=true/,
-  /[?&]type=(?:style|template|custom)\b/,
-]
+export function importKey(source: string, name: string): string {
+  return `${source}\0${name}`
+}
+
+export interface TimelineWrapOptions {
+  helperPath: string
+  /** Module ids that must never be wrapped, on top of the built-in excludes. */
+  exclude?: RegExp[]
+  /** Keys built with {@link importKey} for every import that should be wrapped. */
+  getWrappable: () => Promise<ReadonlySet<string>>
+}
+
+// must run AFTER Nuxt's key injection and keyed function factory macro rewriting,
+// so the caller is responsible for registering it after those plugins
+export function TimelineWrapPlugin(options: TimelineWrapOptions) {
+  return createUnplugin(() => ({
+    name: 'nuxt:devtools:timeline-function-wrap',
+    enforce: 'post',
+    transform: {
+      filter: {
+        id: {
+          include: [/^[^?]*\.(?:m?[jt]sx?|vue)(?:$|\?)/],
+          exclude: [
+            /^\0/,
+            /[\\/]node_modules[\\/]/,
+            /[?&]macro=true/,
+            /[?&]type=(?:style|template|custom)\b/,
+            ...options.exclude ?? [],
+          ],
+        },
+        code: { include: /\bimport\b/ },
+      },
+      async handler(code) {
+        const wrappable = await options.getWrappable()
+        if (!wrappable.size)
+          return
+        return wrapTimelineImports(code, wrappable, options.helperPath)
+      },
+    },
+  }))
+}
 
 export function wrapTimelineImports(
   code: string,
-  isWrappable: (source: string, name: string) => boolean,
+  wrappable: ReadonlySet<string>,
   helperPath: string,
 ): { code: string, map: SourceMap } | undefined {
-  if (!code.includes('import') || code.includes(HELPER_NAME))
-    return
-
-  const staticImports = findStaticImports(code)
-  if (!staticImports.length)
+  if (code.includes(HELPER_NAME))
     return
 
   const s = new MagicString(code)
   const wrappers: string[] = []
 
-  for (const imp of staticImports) {
+  for (const imp of findStaticImports(code)) {
     const { specifier, defaultImport, namespacedImport, namedImports } = parseStaticImport(imp)
     let wrapped = false
 
-    // returns the local binding for an imported name, renamed when it gets wrapped
-    const bind = (name: string, local: string): string => {
-      if (!isWrappable(specifier, name))
+    // the local binding to import under: renamed when wrapped so the original name can hold the wrapper
+    const importAs = (name: string, local: string): string => {
+      if (!wrappable.has(importKey(specifier, name)))
         return local
       wrapped = true
       // a default import has no meaningful exported name, record it under its local name
@@ -47,11 +75,11 @@ export function wrapTimelineImports(
 
     const clause: string[] = []
     if (defaultImport)
-      clause.push(bind('default', defaultImport))
+      clause.push(importAs('default', defaultImport))
     if (namespacedImport)
       clause.push(`* as ${namespacedImport}`)
     const named = Object.entries(namedImports ?? {}).map(([name, local]) => {
-      const bound = bind(name, local)
+      const bound = importAs(name, local)
       return name === bound ? name : `${name} as ${bound}`
     })
 
