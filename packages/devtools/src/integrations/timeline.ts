@@ -1,13 +1,11 @@
 import type { Import, Unimport } from 'unimport'
 import type { NuxtDevtoolsServerContext } from '../types'
 import { addBuildPlugin } from '@nuxt/kit'
-import escapeRE from 'escape-string-regexp'
 import { resolve } from 'pathe'
 import { runtimeDir } from '../dirs'
 import { importKey, TimelineWrapPlugin } from './timeline-wrap'
 
 const DEFINE_UPPER_RE = /^define[A-Z]/
-const RUNTIME_DIR_RE = new RegExp(`^${escapeRE(runtimeDir)}`)
 
 export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
   const helperPath = resolve(runtimeDir, 'function-metrics-helpers')
@@ -42,37 +40,25 @@ export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
     unimport = ctx
   })
 
-  // cached until unimport rebuilds its import list
-  const wrappableCache = new WeakMap<Import[], Set<string>>()
-
   async function getWrappable(): Promise<ReadonlySet<string>> {
     if (!unimport)
       return new Set()
     const imports = await unimport.getImports()
-    let wrappable = wrappableCache.get(imports)
-    if (!wrappable) {
-      // keyed function factories (`createUseFetch`, etc.) are compiler macros, calling them through a wrapper breaks them
-      // (optional chaining: the option only exists since Nuxt 4.4)
-      const factoryNames = new Set(nuxt.options.optimization.keyedComposableFactories?.map(f => f.name))
-      wrappable = new Set(
-        imports
-          .filter(i => filter(i) && !factoryNames.has(i.name))
-          .map(i => importKey(i.from, i.name)),
-      )
-      wrappableCache.set(imports, wrappable)
-    }
-    return wrappable
+    // keyed function factories (`createUseFetch`, etc.) are compiler macros, calling them through a wrapper breaks them
+    // (optional chaining: the option only exists since Nuxt 4.4)
+    const factoryNames = new Set(nuxt.options.optimization.keyedComposableFactories?.map(f => f.name))
+    return new Set(
+      imports
+        .filter(i => filter(i) && !factoryNames.has(i.name))
+        .map(i => importKey(i.from, i.name)),
+    )
   }
 
   // Nuxt registers its key injection plugins in `build:before` during core module setup, which runs after
   // this module's setup, so ours is queued from `modules:done` to land after them
   nuxt.hook('modules:done', () => {
     nuxt.hook('build:before', () => {
-      addBuildPlugin(TimelineWrapPlugin({
-        helperPath,
-        exclude: [RUNTIME_DIR_RE],
-        getWrappable,
-      }))
+      addBuildPlugin(TimelineWrapPlugin({ helperPath, getWrappable }))
     })
   })
 }

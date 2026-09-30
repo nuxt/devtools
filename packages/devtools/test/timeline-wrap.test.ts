@@ -1,4 +1,6 @@
+import { join } from 'pathe'
 import { describe, expect, it } from 'vitest'
+import { runtimeDir } from '../src/dirs'
 import { importKey, TimelineWrapPlugin, wrapTimelineImports } from '../src/integrations/timeline-wrap'
 
 const HELPER_PATH = '/runtime/function-metrics-helpers'
@@ -141,7 +143,6 @@ describe('timelineWrapPlugin', () => {
   // Rollup < 4.40 has no native hook filters, so unplugin applies ours before calling the handler
   const [plugin] = [TimelineWrapPlugin({
     helperPath: HELPER_PATH,
-    exclude: [/^\/devtools-runtime\//],
     getWrappable: async () => keys([['#app/composables/state', 'useState']]),
   }).rollup()].flat()
 
@@ -172,7 +173,7 @@ describe('timelineWrapPlugin', () => {
     '/app/assets/style.css',
     // a code extension in the query string must not match a non-code pathname
     '/app/assets/icon.svg?import&fallback=x.js',
-    '/devtools-runtime/plugins/view.ts',
+    join(runtimeDir, 'plugins/devtools.client.ts'),
   ])('skips %s', async (id) => {
     await expect(transform(id)).resolves.toBeUndefined()
   })

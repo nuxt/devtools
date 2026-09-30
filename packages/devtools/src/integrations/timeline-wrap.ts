@@ -1,10 +1,14 @@
 import type { SourceMap } from 'magic-string'
+import escapeRE from 'escape-string-regexp'
 import MagicString from 'magic-string'
 import { findStaticImports, parseStaticImport } from 'mlly'
 import { createUnplugin } from 'unplugin'
+import { runtimeDir } from '../dirs'
 
 const HELPER_NAME = '__nuxtTimelineWrap'
 const RENAME_PREFIX = '_$__'
+// our own runtime calls these composables too, keep them out of the user's timeline
+const RUNTIME_DIR_RE = new RegExp(`^${escapeRE(runtimeDir)}`)
 
 export function importKey(source: string, name: string): string {
   return `${source}\0${name}`
@@ -12,8 +16,6 @@ export function importKey(source: string, name: string): string {
 
 export interface TimelineWrapOptions {
   helperPath: string
-  /** Module ids that must never be wrapped, on top of the built-in excludes. */
-  exclude?: RegExp[]
   /** Keys built with {@link importKey} for every import that should be wrapped. */
   getWrappable: () => Promise<ReadonlySet<string>>
 }
@@ -33,7 +35,7 @@ export function TimelineWrapPlugin(options: TimelineWrapOptions) {
             /[\\/]node_modules[\\/]/,
             /[?&]macro=true/,
             /[?&]type=(?:style|template|custom)\b/,
-            ...options.exclude ?? [],
+            RUNTIME_DIR_RE,
           ],
         },
         code: { include: /\bimport\b/ },
