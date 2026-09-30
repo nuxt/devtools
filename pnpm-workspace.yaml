@@ -18,49 +18,15 @@ minimumReleaseAgeExclude:
   - '@devframes/json-render-ui'
   - '@devframes/service-open'
   - '@devframes/vite'
-  - '@vitest/mocker@5.0.0'
-  - '@vitest/spy@5.0.0'
   - bumpp@12.3.0
-  - pkg-types@2.3.2 || 2.3.3
+  - pkg-types@2.3.3
   - tinyexec@1.3.1
-  - vitest@5.0.0
   - db0@0.4.1
-  - h3@2.0.1-rc.31
   - srvx@1.0.3
-  - skills-npm@1.2.1
-  - '@iconify-json/logos@1.2.14'
-  - '@iconify-json/simple-icons@1.2.96'
   - '@nuxt/test-utils@4.3.2'
   - zod@4.6.5
   - '@devframes/agentic@1.0.0'
-  - '@unocss/cli@66.10.3'
-  - '@unocss/config@66.10.3'
-  - '@unocss/core@66.10.3'
-  - '@unocss/eslint-config@66.10.3'
-  - '@unocss/eslint-plugin@66.10.3'
-  - '@unocss/extractor-arbitrary-variants@66.10.3'
-  - '@unocss/inspector@66.10.3'
-  - '@unocss/nuxt@66.10.3'
-  - '@unocss/preset-attributify@66.10.3'
-  - '@unocss/preset-icons@66.10.3'
-  - '@unocss/preset-mini@66.10.3'
-  - '@unocss/preset-tagify@66.10.3'
-  - '@unocss/preset-typography@66.10.3'
-  - '@unocss/preset-uno@66.10.3'
-  - '@unocss/preset-web-fonts@66.10.3'
-  - '@unocss/preset-wind3@66.10.3'
-  - '@unocss/preset-wind4@66.10.3'
-  - '@unocss/preset-wind@66.10.3'
-  - '@unocss/reset@66.10.3'
-  - '@unocss/rollup@66.10.3'
-  - '@unocss/rule-utils@66.10.3'
-  - '@unocss/transformer-attributify-jsx@66.10.3'
-  - '@unocss/transformer-compile-class@66.10.3'
-  - '@unocss/transformer-directives@66.10.3'
-  - '@unocss/transformer-variant-group@66.10.3'
-  - '@unocss/vite@66.10.3'
-  - '@unocss/webpack@66.10.3'
-  - unocss@66.10.3
+  - '@unhead/schema@3.4.2'
 
 resolutionMode: highest
 
@@ -85,7 +51,7 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/hub': &devframe ^1.0.0
+  '@devframes/hub': &devframe ^1.1.0
   '@devframes/json-render': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
@@ -95,24 +61,24 @@ overrides:
   '@nuxt/devtools': workspace:*
   '@nuxt/kit': &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-29806258.d070492f
   '@nuxt/schema': &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-29806258.d070492f
-  '@vitejs/devtools': &vite-devtools ^0.7.5
+  '@vitejs/devtools': &vite-devtools ^0.7.6
   '@vitejs/devtools-kit': *vite-devtools
-  '@vue/compiler-core': &vue ^3.5.42
+  '@vue/compiler-core': &vue ^3.5.43
   '@vue/compiler-dom': *vue
   '@vue/shared': *vue
-  '@vueuse/core': &vueuse ^14.4.0
+  '@vueuse/core': &vueuse ^15.0.0
   chokidar: ^5.0.0
   devframe: *devframe
   esbuild: ^0.28.2
   markdown-exit: ^1.3.0
   nuxt: &nuxt npm:nuxt-nightly@5.0.0-29806258.d070492f
-  rollup: ^4.63.2
+  rollup: ^4.63.5
   semver: ^7.8.5
   shiki: &shiki ^4.4.3
   typescript: ^6.0.3
   unimport: ^7.0.2
-  unocss: &unocss ^66.10.3
-  vite: &vite ^8.3.0
+  unocss: &unocss ^66.10.5
+  vite: &vite ^8.3.1
   vue: *vue
   vue-sfc-transformer: ^0.3.0
   vue-tsc: ^3.3.11
@@ -151,36 +117,36 @@ catalogs:
     # still pin a devDependency here too so this monorepo's own build and
     # typecheck resolve a single, consistent version of each rather than
     # whatever `autoInstallPeers` would otherwise pick independently.
-    nitro: ^3.0.260610-beta
+    nitro: ^3.0.260903-beta
     nitropack: ^2.13.4
     nuxt: *nuxt
     shiki-codegen: *shiki
-    skills-npm: ^1.2.1
-    turbo: ^2.10.12
+    skills-npm: ^4.0.0
+    turbo: ^2.11.5
     unbuild: ^3.6.1
     unocss: *unocss
-    unplugin-vue: ^7.2.0
+    unplugin-vue: ^8.0.0
     unplugin-vue-markdown: ^32.1.1
   cli:
     '@antfu/eslint-config': ^9.5.1
-    '@antfu/ni': ^30.5.0
+    '@antfu/ni': ^30.6.0
     '@nuxt/eslint': ^1.17.0
     '@nuxt/test-utils': ^4.3.2
     '@playwright/test': ^1.63.0
     bumpp: ^12.3.0
-    eslint: ^10.10.0
+    eslint: ^10.11.0
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.2.3
     eslint-plugin-format: ^2.0.1
     eslint-typegen: ^2.3.1
-    knip: ^6.35.1
+    knip: ^6.38.0
     nano-staged: ^1.0.2
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.14.0
-    taze: ^21.1.0
-    tsx: ^4.23.13
+    taze: ^21.2.0
+    tsx: ^4.23.15
     typescript: ^6.0.3
-    vitest: ^5.0.0
+    vitest: ^5.0.2
     vue-tsc: ^3.3.11
   frontend:
     '@antfu/utils': ^9.3.0
@@ -188,14 +154,14 @@ catalogs:
     '@vueuse/core': *vueuse
     '@vueuse/integrations': *vueuse
     birpc: ^4.2.0
-    cronstrue: ^3.26.0
+    cronstrue: ^3.27.0
     diff: ^9.0.0
-    dompurify: ^3.4.15
+    dompurify: ^3.4.16
     error-stack-parser-es: ^2.0.1
     floating-vue: ^5.4.0
     focus-trap: ^8.2.2
     fuse.js: ^7.5.0
-    hookable: ^6.1.1
+    hookable: ^6.1.2
     json-editor-vue: ^0.19.2
     markdown-exit: ^1.3.0
     markdown-it-link-attributes: ^4.0.1
@@ -219,12 +185,12 @@ catalogs:
     vue-virtual-scroller: ^3.0.5
   icons:
     '@iconify-json/bxl': ^1.2.4
-    '@iconify-json/carbon': ^1.2.27
-    '@iconify-json/logos': ^1.2.14
+    '@iconify-json/carbon': ^1.2.28
+    '@iconify-json/logos': ^1.2.15
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.96
-    '@iconify-json/tabler': ^1.2.38
+    '@iconify-json/simple-icons': ^1.2.98
+    '@iconify-json/tabler': ^1.2.41
   inlined:
     package-manager-detector: ^1.8.0
   prod:
@@ -240,20 +206,20 @@ catalogs:
     image-meta: ^0.2.2
     local-pkg: ^1.2.1
     magicast: ^0.5.5
-    nostics: ^1.2.0
+    nostics: ^1.3.0
     pkg-types: ^2.3.3
     sirv: ^3.0.2
     tinyexec: ^1.3.1
     tinyglobby: ^0.2.17
     unstorage: ^1.17.5
-    verkit: ^0.4.0
+    verkit: ^0.4.1
     vite-plugin-inspect: ^12.0.2
     vite-plugin-vue-devtools: ^9.0.0-beta.0
     vite-plugin-vue-tracer: ^1.5.0
   types:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^26.5.1
-    '@unhead/schema': ^3.4.0
+    '@types/node': ^26.6.3
+    '@unhead/schema': ^3.4.2
     '@vitejs/devtools-kit': *vite-devtools
     unimport: ^7.0.2

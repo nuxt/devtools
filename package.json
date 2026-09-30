@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.0.0-beta.2",
   "private": true,
-  "packageManager": "pnpm@12.4.1",
+  "packageManager": "pnpm@12.8.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -27,7 +27,7 @@
     "docs": "pnpm -C docs install && nuxi dev docs",
     "docs:build": "pnpm -C docs install && CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "simple-git-hooks && skills-npm",
+    "postinstall": "simple-git-hooks && skills-npm -r",
     "dev:prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
@@ -70,6 +70,6 @@
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm exec nano-staged"
   },
   "nano-staged": {
-    "*": "eslint --fix"
+    "*.{js,mjs,cjs,ts,mts,cts,tsx,jsx,vue,json,jsonc,json5,md,yaml,yml,toml,css,html}": "eslint --fix"
   }
 }
