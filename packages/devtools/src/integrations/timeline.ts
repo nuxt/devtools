@@ -1,8 +1,9 @@
-import type { Import } from 'unimport'
+import type { Import, Unimport } from 'unimport'
 import type { NuxtDevtoolsServerContext } from '../types'
+import { addBuildPlugin } from '@nuxt/kit'
 import { resolve } from 'pathe'
-import { isGreaterOrEqual } from 'verkit'
 import { runtimeDir } from '../dirs'
+import { importKey, TimelineWrapPlugin } from './timeline-wrap'
 
 const DEFINE_UPPER_RE = /^define[A-Z]/
 
@@ -34,50 +35,30 @@ export function setup({ nuxt, options }: NuxtDevtoolsServerContext) {
     return true
   }
 
-  nuxt.hook('imports:context', (unimport) => {
-    const ctx = unimport.getInternalContext()
+  let unimport: Unimport | undefined
+  nuxt.hook('imports:context', (ctx) => {
+    unimport = ctx
+  })
 
-    if (!ctx.version || !isGreaterOrEqual(ctx.version, '3.1.0'))
-      throw new Error(`[Nuxt DevTools] The timeline feature requires \`unimport\` >= v3.1.0, but got \`${ctx.version || '(unknown)'}\`. Please upgrade using \`nuxi upgrade --force\`.`)
-
-    ctx.addons.push(
-      {
-        injectImportsResolved(imports, _code, id) {
-          if (id?.includes('?macro=true'))
-            return
-          return imports.map((i) => {
-            if (!filter(i))
-              return i
-
-            const name = i.as || i.name
-
-            return {
-              ...i,
-              meta: {
-                wrapperOriginalAs: name,
-              },
-              as: `_$__${name}`,
-            }
-          })
-        },
-        injectImportsStringified(str, imports, s, id) {
-          if (id?.includes('?macro=true'))
-            return
-          const code = s.toString()
-          const injected = imports.filter(i => i.meta?.wrapperOriginalAs)
-          if (injected.length) {
-            const result = [
-              str,
-              code.includes('__nuxtTimelineWrap')
-                ? ''
-                : `import { __nuxtTimelineWrap } from ${JSON.stringify(helperPath)}`,
-              ...injected.map(i => `const ${i.meta!.wrapperOriginalAs} = __nuxtTimelineWrap(${JSON.stringify(i.name)}, ${i.as})`),
-              '',
-            ].join(';')
-            return result
-          }
-        },
-      },
+  async function getWrappable(): Promise<ReadonlySet<string>> {
+    if (!unimport)
+      return new Set()
+    const imports = await unimport.getImports()
+    // keyed function factories (`createUseFetch`, etc.) are compiler macros, calling them through a wrapper breaks them
+    // (optional chaining: the option only exists since Nuxt 4.4)
+    const factoryNames = new Set(nuxt.options.optimization.keyedComposableFactories?.map(f => f.name))
+    return new Set(
+      imports
+        .filter(i => filter(i) && !factoryNames.has(i.name))
+        .map(i => importKey(i.from, i.name)),
     )
+  }
+
+  // Nuxt registers its key injection plugins in `build:before` during core module setup, which runs after
+  // this module's setup, so ours is queued from `modules:done` to land after them
+  nuxt.hook('modules:done', () => {
+    nuxt.hook('build:before', () => {
+      addBuildPlugin(TimelineWrapPlugin({ helperPath, getWrappable }))
+    })
   })
 }
