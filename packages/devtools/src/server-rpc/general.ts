@@ -190,8 +190,7 @@ export function setupGeneralRPC({
       return Object.values(serverHooks)
     },
     async openInEditor(input: string): Promise<boolean> {
-      if (input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input))
-        input = resolve(process.cwd(), input)
+      const isRelative = input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input)
 
       // separate line and column syntax
       const match = input.match(FILE_LINE_COL_RE)
@@ -201,16 +200,18 @@ export function setupGeneralRPC({
         suffix = match[2]!
       }
 
+      const candidates = isRelative
+        ? [...new Set([process.cwd(), nuxt.options.rootDir, nuxt.options.workspaceDir].filter(Boolean))]
+            .map(dir => resolve(dir, input))
+        : [input]
+
       // search for existing path
-      const path = [
-        input,
-        `${input}.js`,
-        `${input}.mjs`,
-        `${input}.ts`,
-      ].find(i => existsSync(i))
+      const path = candidates
+        .flatMap(i => [i, `${i}.js`, `${i}.mjs`, `${i}.ts`])
+        .find(i => existsSync(i))
 
       if (!path) {
-        console.error('File not found:', input)
+        console.error('File not found:', candidates[0])
         return false
       }
 
