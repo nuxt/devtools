@@ -13,7 +13,6 @@ minimumReleaseAgeExclude:
   - '@vitejs/devtools'
   - devframe
   - vite-plugin-inspect@12.0.2
-  - vite-plugin-vue-devtools@9.0.0-beta.0
   - '@devframes/hub-ui'
   - '@devframes/json-render-ui'
   - '@devframes/service-open'
@@ -22,11 +21,46 @@ minimumReleaseAgeExclude:
   - pkg-types@2.3.3
   - tinyexec@1.3.1
   - db0@0.4.1
-  - srvx@1.0.3
   - '@nuxt/test-utils@4.3.2'
   - zod@4.6.5
-  - '@devframes/agentic@1.0.0'
   - '@unhead/schema@3.4.2'
+  - '@rollup/rollup-android-arm-eabi@4.63.6'
+  - '@rollup/rollup-android-arm64@4.63.6'
+  - '@rollup/rollup-darwin-arm64@4.63.6'
+  - '@rollup/rollup-darwin-x64@4.63.6'
+  - '@rollup/rollup-freebsd-arm64@4.63.6'
+  - '@rollup/rollup-freebsd-x64@4.63.6'
+  - '@rollup/rollup-linux-arm-gnueabihf@4.63.6'
+  - '@rollup/rollup-linux-arm-musleabihf@4.63.6'
+  - '@rollup/rollup-linux-arm64-gnu@4.63.6'
+  - '@rollup/rollup-linux-arm64-musl@4.63.6'
+  - '@rollup/rollup-linux-loong64-gnu@4.63.6'
+  - '@rollup/rollup-linux-loong64-musl@4.63.6'
+  - '@rollup/rollup-linux-ppc64-gnu@4.63.6'
+  - '@rollup/rollup-linux-ppc64-musl@4.63.6'
+  - '@rollup/rollup-linux-riscv64-gnu@4.63.6'
+  - '@rollup/rollup-linux-riscv64-musl@4.63.6'
+  - '@rollup/rollup-linux-s390x-gnu@4.63.6'
+  - '@rollup/rollup-linux-x64-gnu@4.63.6'
+  - '@rollup/rollup-linux-x64-musl@4.63.6'
+  - '@rollup/rollup-openbsd-x64@4.63.6'
+  - '@rollup/rollup-openharmony-arm64@4.63.6'
+  - '@rollup/rollup-win32-arm64-msvc@4.63.6'
+  - '@rollup/rollup-win32-ia32-msvc@4.63.6'
+  - '@rollup/rollup-win32-x64-gnu@4.63.6'
+  - '@rollup/rollup-win32-x64-msvc@4.63.6'
+  - '@shikijs/core@4.5.0'
+  - '@shikijs/engine-javascript@4.5.0'
+  - '@shikijs/engine-oniguruma@4.5.0'
+  - '@shikijs/langs@4.5.0'
+  - '@shikijs/primitive@4.5.0'
+  - '@shikijs/themes@4.5.0'
+  - '@shikijs/types@4.5.0'
+  - '@types/node@26.6.4'
+  - rollup@4.63.6
+  - shiki-codegen@4.5.0
+  - shiki@4.5.0
+  - vite@8.3.2
 
 resolutionMode: highest
 
@@ -51,7 +85,7 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/hub': &devframe ^1.1.0
+  '@devframes/hub': &devframe ^1.2.0
   '@devframes/json-render': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
@@ -72,13 +106,13 @@ overrides:
   esbuild: ^0.28.2
   markdown-exit: ^1.3.0
   nuxt: &nuxt npm:nuxt-nightly@5.0.0-29806258.d070492f
-  rollup: ^4.63.5
+  rollup: ^4.63.6
   semver: ^7.8.5
-  shiki: &shiki ^4.4.3
+  shiki: &shiki ^4.5.0
   typescript: ^6.0.3
   unimport: ^7.0.2
   unocss: &unocss ^66.10.5
-  vite: &vite ^8.3.1
+  vite: &vite ^8.3.2
   vue: *vue
   vue-sfc-transformer: ^0.3.0
   vue-tsc: ^3.3.11
@@ -122,7 +156,7 @@ catalogs:
     nuxt: *nuxt
     shiki-codegen: *shiki
     skills-npm: ^4.0.0
-    turbo: ^2.11.5
+    turbo: ^2.11.6
     unbuild: ^3.6.1
     unocss: *unocss
     unplugin-vue: ^8.0.0
@@ -138,15 +172,16 @@ catalogs:
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.2.3
     eslint-plugin-format: ^2.0.1
+    eslint-plugin-unimport: ^2.0.0
     eslint-typegen: ^2.3.1
-    knip: ^6.38.0
+    knip: ^6.39.0
     nano-staged: ^1.0.2
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.14.0
-    taze: ^21.2.0
+    taze: ^21.3.0
     tsx: ^4.23.15
     typescript: ^6.0.3
-    vitest: ^5.0.2
+    vitest: ^5.0.3
     vue-tsc: ^3.3.11
   frontend:
     '@antfu/utils': ^9.3.0
@@ -218,12 +253,12 @@ catalogs:
     unstorage: ^1.17.5
     verkit: ^0.4.1
     vite-plugin-inspect: ^12.0.2
-    vite-plugin-vue-devtools: ^9.0.0-beta.0
+    vite-plugin-vue-devtools: ^9.0.0-beta.1
     vite-plugin-vue-tracer: ^1.5.0
   types:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
-    '@types/node': ^26.6.3
+    '@types/node': ^26.6.4
     '@unhead/schema': ^3.4.2
     '@vitejs/devtools-kit': *vite-devtools
     unimport: ^7.0.2
