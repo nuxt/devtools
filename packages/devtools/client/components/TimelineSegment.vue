@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UseTimeAgoOptions } from '@vueuse/core'
 import type { TimelineEvent, TimelineEventNormalized, TimelineEventsSegment } from '../../types'
-import { useTimeAgo } from '@vueuse/core'
+import { useIntervalFn, useTimeAgo } from '@vueuse/core'
 
 const props = defineProps<{
   segment: TimelineEventsSegment
@@ -12,7 +12,7 @@ const emit = defineEmits<{
 }>()
 
 const timeAgo = useTimeAgo(() => props.segment.start, {
-  updateInterval: 1000,
+  scheduler: cb => useIntervalFn(cb, 1000),
   showSecond: true,
   controls: false,
   messages: ({

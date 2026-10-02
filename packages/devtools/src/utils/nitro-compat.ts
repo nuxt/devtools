@@ -43,3 +43,9 @@ export type AnyNitroConfig = HasNitroV2 extends true
 export type AnyStorageMounts = HasNitroV2 extends true
   ? (HasNitroV3 extends true ? StorageMountsV2 | StorageMountsV3 : StorageMountsV2)
   : StorageMountsV3
+
+/** `nitro.hooks.hook` is a union of two generic signatures when both engines are installed, which TS can't call. */
+export function onDevReload(nitro: AnyNitro, callback: () => void): () => void {
+  // `dev:reload` exists on both Nitro v2 and v3.
+  return (nitro.hooks as NitroV2['hooks']).hook('dev:reload', callback)
+}
