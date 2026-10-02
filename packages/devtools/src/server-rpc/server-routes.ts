@@ -1,6 +1,7 @@
 import type { NuxtDevtoolsServerContext, ServerFunctions, ServerRouteInfo } from '../types'
 import type { AnyNitro } from '../utils/nitro-compat'
 import { debounce } from 'perfect-debounce'
+import { onDevReload } from '../utils/nitro-compat'
 
 export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   let nitro: AnyNitro | undefined
@@ -25,7 +26,7 @@ export function setupServerRoutesRPC({ nuxt, refresh }: NuxtDevtoolsServerContex
     // both Nitro v2 and v3 and fires on any server-dir change, which is a
     // coarser signal but debounced re-scans are cheap either way.
     unhookDevReload?.()
-    unhookDevReload = _nitro.hooks.hook('dev:reload', () => refreshDebounced())
+    unhookDevReload = onDevReload(_nitro, () => refreshDebounced())
   })
 
   nuxt.hook('close', () => {

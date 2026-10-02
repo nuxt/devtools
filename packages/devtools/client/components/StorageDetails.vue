@@ -222,7 +222,7 @@ async function renameCurrentItem() {
     >
       <span font-bold>{{ name }}</span><br>
       <span text-sm>{{ storage.driver }} driver</span><br>
-      <FilepathItem v-if="storage.base" text-xs :filepath="storage.base" />
+      <FilepathItem v-if="'base' in storage && storage.base" text-xs :filepath="storage.base" />
     </NCard>
   </NPanelGrids>
 </template>

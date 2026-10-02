@@ -1,6 +1,7 @@
 import type { NuxtDevtoolsServerContext, ScannedNitroTasks, ServerFunctions } from '../types'
 import type { AnyNitro } from '../utils/nitro-compat'
 import { debounce } from 'perfect-debounce'
+import { onDevReload } from '../utils/nitro-compat'
 
 export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext) {
   let nitro: AnyNitro | undefined
@@ -21,7 +22,7 @@ export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext
     // See the equivalent comment in `server-routes.ts`: this used to watch
     // Nitro's internal `src` storage mount, which Nitro v3 no longer exposes.
     unhookDevReload?.()
-    unhookDevReload = _nitro.hooks.hook('dev:reload', () => refreshDebounced())
+    unhookDevReload = onDevReload(_nitro, () => refreshDebounced())
   })
 
   nuxt.hook('close', () => {
