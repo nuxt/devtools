@@ -17,7 +17,7 @@ when done.
 | 005 | Harden assets RPC (path containment + collision-filename bug) | P1 | S–M | 001 | TODO |
 | 006 | Enforce storage denylist on item access (not just listing) | P1 | S | 001 | TODO |
 | 007 | Fix fn-metric metadata + server-data `environments` bug | P2 | S | 001 | TODO |
-| 008 | Fix v4 migration guide `enablePages` example | P2 | S | — | TODO |
+| 008 | Fix v4 migration guide `enablePages` example | P2 | S | — | DONE |
 | 009 | Remove dead auth-migration code | P2 | S | 001 | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (one-line reason) | REJECTED (one-line rationale)

@@ -24,15 +24,15 @@ Unleash Nuxt Developer Experience.
 </p>
 
 > [!NOTE]
-> You are current at the `main` branch for v4 development. The latest stable branch is [`v3`](https://github.com/nuxt/devtools/tree/v3).
+> You are at the `main` branch for v4. The v3 branch is [`v3`](https://github.com/nuxt/devtools/tree/v3).
 
 <br>
 
 ## Installation
 
-> Nuxt DevTools v2 requires **Nuxt v3.15.0 or higher**.
+> Nuxt DevTools v4 requires **Nuxt v4.5.0 or higher** (Vite 8). It is built on [Vite DevTools](https://github.com/vitejs/devtools) and shows up as the `Nuxt` group inside the Vite DevTools panel.
 
-Nuxt DevTools is **enabled by default** in Nuxt v3.8.0. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
+Nuxt DevTools is **enabled by default**. You can press <kbd>Shift</kbd> + <kbd>Alt</kbd> / <kbd>⇧ Shift</kbd> + <kbd>⌥ Option</kbd> + <kbd>D</kbd> in your app to open it up.
 
 If you want to explicitly enable or disable Nuxt DevTools, you can update your `nuxt.config` with:
 
@@ -44,52 +44,9 @@ export default defineNuxtConfig({
 })
 ```
 
-### Opting in to v4.0
+### Nuxt 4
 
-Nuxt DevTools v4.0 is currently in alpha. Since Nuxt ships with a built-in version of DevTools, you can opt-in to v4.0 by using package manager resolutions to override the bundled version:
-
-<details>
-<summary>npm</summary>
-
-```json
-{
-  "overrides": {
-    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>yarn</summary>
-
-```json
-{
-  "resolutions": {
-    "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>pnpm</summary>
-
-```json
-{
-  "pnpm": {
-    "overrides": {
-      "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
-    }
-  }
-}
-```
-
-</details>
-
-Remove lockfile (`package-lock.json`, `yarn.lock`, or `pnpm-lock.yaml`) and reinstall dependencies.
+Nuxt 5 ships with Nuxt DevTools v4. Nuxt 4.5+ still bundles v3; override `@nuxt/devtools` to `^4.0.0` with your package manager (`overrides` for npm and pnpm, `resolutions` for yarn), remove your lockfile and reinstall. See the [upgrade guide](https://devtools.nuxt.com/guide/upgrading-to-v4) for details and for what changed.
 
 ### Nightly Release Channel
 
