@@ -6,8 +6,8 @@
 // this workspace's single node_modules, the app and DevTools share one Vite /
 // `@vitejs/devtools` instance, which `nuxi dev` needs. Run:
 //   pnpm -C playgrounds-ecosystem/nuxt4 run setup     # build + pack + install
-//   pnpm -C playgrounds-ecosystem/nuxt4 run play:dev  # dogfood DevTools
-//   pnpm -C playgrounds-ecosystem/nuxt4 run play:build   # + run play:typecheck
+//   pnpm -C playgrounds-ecosystem/nuxt4 run dev       # dogfood DevTools
+//   pnpm -C playgrounds-ecosystem/nuxt4 run build     # + run typecheck
 //
 // Nuxt 4 ships Nitro v2 (the `nitropack` package). See ../README.md.
 export default defineNuxtConfig({
