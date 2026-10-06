@@ -44,9 +44,22 @@ export default defineNuxtConfig({
     '@nuxt/a11y',
     '@compodium/nuxt',
     '@scalar/nuxt',
+    // A local module on the published @nuxt/devtools-kit v3 (see legacy-kit-v3/)
+    'legacy-kit-v3',
   ],
 
   css: ['~/assets/main.css'],
+
+  // nuxt-og-image picks its browser renderer by probing for a resolvable
+  // `playwright`, and from this nested workspace it finds the repo root's e2e
+  // copy. Keep it on Satori so nothing here ever launches a browser.
+  ogImage: {
+    compatibility: {
+      dev: { browser: false },
+      prerender: { browser: false },
+      runtime: { browser: false },
+    },
+  },
 
   // @scalar/nuxt renders its API reference (and its DevTools "Scalar" tab)
   // from Nitro's auto-generated OpenAPI document — see server/api/*.ts, which

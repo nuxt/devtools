@@ -35,6 +35,12 @@ async function gotoAppRoot(page: import('@playwright/test').Page) {
 }
 
 const MODULE_TABS: ModuleTab[] = [
+  // nuxt-og-image ships a placeholder panel that offers to install its devtools layer.
+  { module: 'nuxt-og-image', name: 'nuxt-seo-og-image', view: 'iframe', iframeSrc: '__nuxt-seo-devtools/og-image' },
+  // @nuxt/scripts embeds its scripts panel.
+  { module: '@nuxt/scripts', name: 'nuxt-scripts', view: 'iframe', iframeSrc: '__nuxt-scripts' },
+  // @nuxt/fonts embeds its fonts panel.
+  { module: '@nuxt/fonts', name: 'fonts', view: 'iframe', iframeSrc: '__nuxt-devtools-fonts' },
   // @nuxt/eslint contributes a lazy launcher for the ESLint config inspector.
   { module: '@nuxt/eslint', name: 'eslint-config', view: 'launch', text: /config inspector/i },
   // @nuxt/hints embeds its performance/security/hydration hints UI.
@@ -67,4 +73,34 @@ test.describe('ecosystem module devtools tabs', () => {
       }
     })
   }
+})
+
+// `legacy-kit-v3/` is a module written against the published
+// @nuxt/devtools-kit v3 — what most of the Nuxt 4 ecosystem still ships. It
+// must keep working through the v4 shims, end to end, not just register.
+test.describe('legacy @nuxt/devtools-kit v3 module', () => {
+  test('tab, iframe client, RPC and terminal all work through the shims', async ({ page, openDevTools, navigateTab, devtoolsFrame }) => {
+    await gotoAppRoot(page)
+    await openDevTools()
+    await navigateTab('/modules/custom-legacy-kit-v3')
+
+    // `useDevtoolsClient()` connected (the Nuxt client injected `__NUXT_DEVTOOLS__`)
+    // and `client.host` reaches the app.
+    const view = devtoolsFrame().frameLocator('iframe[src*="__legacy-kit-v3"]')
+    await expect(view.getByTestId('connected')).toHaveText('connected: yes', { timeout: 30_000 })
+    await expect(view.getByTestId('host-vue')).toContainText(/host vue: \d+\.\d+/)
+
+    // `extendServerRpc` → `extendClientRpc` round trip, and a server→client broadcast.
+    await expect(view.getByTestId('echo')).toHaveText('echo: PING [from v3 rpc]')
+    await expect(view.getByTestId('greeted')).toHaveText('greeted: legacy')
+
+    // `startSubprocess` is bridged onto the Vite DevTools terminals host, which
+    // suffixes each run of a legacy id (`legacy-kit-v3:echo#1`).
+    const terminals = await page.evaluate(async () => {
+      const ctx = (globalThis as any).__DEVFRAME_HUB_CLIENT_CONTEXT__
+      const list: { id: string }[] = await ctx.rpc.call('devframes:plugin:terminals:list')
+      return list.map(t => t.id)
+    })
+    expect(terminals.some(id => id.startsWith('legacy-kit-v3:echo'))).toBe(true)
+  })
 })

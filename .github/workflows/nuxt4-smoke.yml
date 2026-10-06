@@ -1,0 +1,42 @@
+name: nuxt4-smoke
+
+# The monorepo itself develops against the Nuxt 5 nightly, so nothing in the
+# default CI path runs DevTools on Nuxt 4 (Nitro v2). This installs the packed
+# `@nuxt/devtools` into the sealed Nuxt 4 playground the way a user would and
+# checks it type-checks, builds, and — the only mode DevTools does anything in —
+# boots in dev with the client served. See playgrounds-ecosystem/README.md.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+jobs:
+  nuxt4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - run: npm install -g corepack@latest
+      - run: corepack enable
+      - run: pnpm install
+      - run: pnpm run build
+      - name: Pack local DevTools tarballs
+        run: node playgrounds-ecosystem/scripts/pack-local.mjs --no-build
+      - name: Install the Nuxt 4 playground
+        run: pnpm -C playgrounds-ecosystem/nuxt4 install --no-frozen-lockfile
+      - run: pnpm -C playgrounds-ecosystem/nuxt4 run typecheck
+      - run: pnpm -C playgrounds-ecosystem/nuxt4 run build
+      - name: Boot the dev server and the DevTools client
+        run: node playgrounds-ecosystem/scripts/check-dev-boot.mjs playgrounds-ecosystem/nuxt4

@@ -101,6 +101,45 @@ driving the devtools client with Playwright (the new opt-in suite in
   auto-signing-secret warning, and the `NDT_DEP_0003` deprecation diagnostics —
   now also fired by more of these modules' `extendServerRpc`/legacy kit usage).
 
+## Addendum 4 — v4 stable readiness pass (DevTools `4.0.0-beta.3` + fixes, Nuxt `4.5.2`)
+
+Re-ran everything with the Playwright suite against the built client, plus the
+new `legacy-kit-v3/` fixture. Stack: Nuxt 4.5.2 (Vite 8.3.2, `nitropack` 2.13.4),
+`@vitejs/devtools` 0.7.6, devframe 1.2.0.
+
+- **All eight module tabs render** (the suite now covers `nuxt-og-image`,
+  `@nuxt/scripts` and `@nuxt/fonts` too, not only the Devtools-category five).
+- **Which kit the ecosystem actually ships:** `@nuxt/fonts` 0.14, `@nuxt/scripts`
+  1.3, `@nuxt/eslint` 1.16, `@nuxt/hints` 1.1 and `@nuxt/a11y` 1.0 all depend on
+  `@nuxt/devtools-kit@^3.2`; `@compodium/nuxt` pins `4.0.0-alpha.7` and
+  `nuxtseo-shared` pins `4.0.0-alpha.3`. The shims are the common path for Nuxt 4
+  users, not the exception, which is why `legacy-kit-v3/` exists: against the
+  published `@nuxt/devtools-kit@3.4.2`, the tab renders, `useDevtoolsClient()`
+  connects with `client.host` reaching the app, `extendServerRpc` ↔
+  `extendClientRpc` round-trips, a server→client broadcast arrives, and the
+  `startSubprocess` session appears in the Terminals dock (as
+  `legacy-kit-v3:echo#1`, the bridge's per-run id).
+- **Bug found and fixed — Nitro v2 lost externalization.** `module-main.ts`'s
+  `nitro:config` hook set `noExternals = [<inline path>]` whenever the key was
+  absent. On `nitropack` (Nuxt 4) `noExternals` is a *boolean*, so the array was
+  truthy and Nitro inlined every dependency into the dev server bundle. The
+  minimal `nuxt4/` playground survived that (slowly); this combined app did not:
+  `nuxt-og-image` found the repo root's `playwright` and Nitro failed on
+  `electron/index.js`, and even without it the inlined `vite-node` `debug`
+  shim crashed with `globalNamespaces.trim is not a function`. Fixed by only
+  touching `externals.inline` when the config has `externals` (Nitro v2) and
+  `noExternals` otherwise (Nitro v3). Both engines boot afterwards
+  (`check-dev-boot.mjs` on `nuxt4/` and `nuxt5/`).
+- **Environment:** `nuxt4/` and `nuxt5/` pinned `packageManager: pnpm@11.13.0`,
+  which pnpm now refuses as a broken release; both moved to the root's
+  `pnpm@12.8.1`. `modules/` dropped its `vite: ~8.0.16` override (DevTools now
+  peers on `^8.1.5`, and Nuxt 4.5 brings Vite 8.3 itself) and keeps
+  `nuxt-og-image` on Satori so the leaked root `playwright` never launches a
+  browser from this nested workspace.
+- **Still true from earlier runs:** `@scalar/nuxt`'s `/docs` needs `ssr: false`;
+  `NDT_DEP_0003` fires six times from `@nuxt/fonts` and `nuxtseo-shared`; module
+  tabs sit in the `Nuxt` group's *Modules* category.
+
 ## Nuxt 4 vs Nuxt 5 (per-major playgrounds + Nitro type resolution)
 
 Added alongside the `@nuxt/devtools` optional-peer-dependency change for
@@ -177,6 +216,7 @@ single engine symlinked in. Result:
 | Module | Version | Devtools surface? | Verdict |
 |---|---|---|---|
 | `nuxt-og-image` | 6.7.2 | Custom tab (`custom-nuxt-seo-og-image`) | Works — lazy-installs a companion panel |
+| `legacy-kit-v3` (local) | kit 3.4.2 | Custom tab + `extendServerRpc` + `startSubprocess` + v3 iframe client | Works through the v4 shims — see [Addendum 4](#addendum-4--v4-stable-readiness-pass-devtools-400-beta3--fixes-nuxt-452) |
 | `@nuxt/scripts` | 1.3.1 | Custom tab (`custom-nuxt-scripts`) | Works |
 | `@nuxt/fonts` | 0.14.0 | Custom tab (`custom-fonts`) | Works |
 | `@nuxt/eslint` | 1.16.0 | Custom tab (`custom-eslint-config`, launch) | Works — launches the ESLint config inspector on demand |
@@ -188,7 +228,9 @@ single engine symlinked in. Result:
 No console errors were caused by the first three modules themselves. The only
 console noise was pre-existing / environmental (see [Other observations](#other-observations)).
 The five Devtools-category modules were added and verified later — see
-[Addendum 3](#addendum-3--devtools-category-modules-added).
+[Addendum 3](#addendum-3--devtools-category-modules-added) — and the whole set
+plus the legacy-kit fixture was re-verified for v4 stable in
+[Addendum 4](#addendum-4--v4-stable-readiness-pass-devtools-400-beta3--fixes-nuxt-452).
 
 ### A UX trap during verification, worth flagging on its own
 
