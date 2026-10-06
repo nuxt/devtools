@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-const devtoolsModule = process.env.NUXT_DEVTOOLS_LOCAL ? '../../local' : '@nuxt/devtools'
+// `@nuxt/devtools-onboard` is the entry point Nuxt 5 ships; it loads the
+// installed `@nuxt/devtools`, so this playground covers that hand-off.
+const devtoolsModule = process.env.NUXT_DEVTOOLS_LOCAL ? '../../local' : '@nuxt/devtools-onboard'
 
 export default defineNuxtConfig({
   modules: [

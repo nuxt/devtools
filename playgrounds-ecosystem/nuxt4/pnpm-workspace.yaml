@@ -17,6 +17,7 @@ overrides:
   '@nuxt/devtools': file:.tarballs/nuxt-devtools.tgz
   '@nuxt/devtools-kit': file:.tarballs/nuxt-devtools-kit.tgz
   '@nuxt/devtools-assets': file:.tarballs/nuxt-devtools-assets.tgz
+  '@nuxt/devtools-onboard': file:.tarballs/nuxt-devtools-onboard.tgz
 
 allowBuilds:
   '@parcel/watcher': true
@@ -40,3 +41,4 @@ minimumReleaseAgeExclude:
   - '@vitejs/devtools@0.7.3'
   - devframe@0.9.16
   - pkg-types@2.3.3
+  - '@devframes/hub-ui-onboard@1.2.1'
