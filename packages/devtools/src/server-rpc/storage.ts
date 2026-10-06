@@ -4,6 +4,8 @@ import type { AnyNitro, AnyStorageMounts } from '../utils/nitro-compat'
 import { builtinDrivers, createStorage } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
+// Mounts backed by the project itself (`root`/`src` are the filesystem) stay
+// off limits for listing and for every item operation alike.
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 function shouldIgnoreStorageKey(key: string) {
   return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
@@ -95,17 +97,17 @@ export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
       }
     },
     async getStorageItem(key: string) {
-      if (!storage)
+      if (!storage || shouldIgnoreStorageKey(key))
         return null
       return await storage.getItem(key)
     },
     async setStorageItem(key: string, value: StorageValue) {
-      if (!storage)
+      if (!storage || shouldIgnoreStorageKey(key))
         return
       return await storage.setItem(key, value)
     },
     async removeStorageItem(key: string) {
-      if (!storage)
+      if (!storage || shouldIgnoreStorageKey(key))
         return
       return await storage.removeItem(key)
     },

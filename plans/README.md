@@ -14,8 +14,8 @@ when done.
 | 002 | Add a root AGENTS.md | P2 | S | — | DONE |
 | 003 | Fix `uninstallNuxtModule` (removes wrong module → config data loss) | P1 | S | 001 | DONE |
 | 004 | Fix options RPC cache (inverted guard + shared-constant mutation) | P1 | S | 001 | DONE |
-| 005 | Harden assets RPC (path containment + collision-filename bug) | P1 | S–M | 001 | TODO |
-| 006 | Enforce storage denylist on item access (not just listing) | P1 | S | 001 | TODO |
+| 005 | Harden assets RPC (path containment + collision-filename bug) | P1 | S–M | 001 | DONE |
+| 006 | Enforce storage denylist on item access (not just listing) | P1 | S | 001 | DONE |
 | 007 | Fix fn-metric metadata + server-data `environments` bug | P2 | S | 001 | TODO |
 | 008 | Fix v4 migration guide `enablePages` example | P2 | S | — | TODO |
 | 009 | Remove dead auth-migration code | P2 | S | 001 | TODO |

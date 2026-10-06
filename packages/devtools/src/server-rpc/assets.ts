@@ -2,10 +2,12 @@ import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerCon
 import fsp from 'node:fs/promises'
 import { parse, relative } from 'node:path'
 import { imageMeta } from 'image-meta'
-import { dirname, join, resolve } from 'pathe'
+import { dirname, extname, join, resolve } from 'pathe'
 import { debounce } from 'perfect-debounce'
 import { glob } from 'tinyglobby'
 import { defaultAllowedExtensions } from '../constant'
+
+const MAX_TEXT_PREVIEW = 10_000
 
 export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerContext) {
   const _imageMetaCache = new Map<string, ImageMeta | undefined>()
@@ -14,6 +16,15 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
   const extensions = options.assets?.uploadExtensions || defaultAllowedExtensions
   const publicDir = resolve(nuxt.options.srcDir, nuxt.options.dir.public)
   const layerDirs = [publicDir, ...nuxt.options._layers.map(layer => resolve(layer.cwd, 'public'))]
+
+  // Every path-taking RPC below is called from the browser; only files under
+  // a scanned public directory are fair game.
+  function assertInsideAssets(path: string, action: string): string {
+    const resolved = resolve(path)
+    if (!layerDirs.some(dir => resolved === dir || resolved.startsWith(`${dir}/`)))
+      throw new Error(`[Nuxt DevTools] File ${path} is not allowed to ${action}, it's outside of the public directory`)
+    return resolved
+  }
 
   const refreshDebounced = debounce(() => {
     cache = null
@@ -76,6 +87,7 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       return await scan()
     },
     async getImageMeta(filepath: string) {
+      filepath = assertInsideAssets(filepath, 'read')
       if (_imageMetaCache.has(filepath))
         return _imageMetaCache.get(filepath)
       try {
@@ -90,9 +102,10 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       }
     },
     async getTextAssetContent(filepath: string, limit = 300) {
+      filepath = assertInsideAssets(filepath, 'read')
       try {
         const content = await fsp.readFile(filepath, 'utf-8')
-        return content.slice(0, limit)
+        return content.slice(0, Math.min(limit, MAX_TEXT_PREVIEW))
       }
       catch (e) {
         console.error(e)
@@ -137,19 +150,8 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
           if (targetStat?.isSymbolicLink())
             throw new Error(`[Nuxt DevTools] File ${path} is not allowed to upload, it's a symbolic link`)
 
-          if (!override) {
-            try {
-              await fsp.stat(finalPath)
-              const base = finalPath.slice(0, finalPath.length - ext.length - 1)
-              let i = 1
-              while (await fsp.access(`${base}-${i}.${ext}`).then(() => true).catch(() => false))
-                i++
-              finalPath = `${base}-${i}.${ext}`
-            }
-            catch {
-              // Ignore error if file doesn't exist
-            }
-          }
+          if (!override)
+            finalPath = await collisionFreePath(finalPath)
           await fsp.writeFile(finalPath, content, {
             encoding: encoding ?? 'utf-8',
           })
@@ -158,15 +160,29 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       )
     },
     async deleteStaticAsset(path: string) {
-      return await fsp.unlink(path)
+      return await fsp.unlink(assertInsideAssets(path, 'delete'))
     },
     async renameStaticAsset(oldPath: string, newPath: string) {
+      oldPath = assertInsideAssets(oldPath, 'rename')
+      newPath = assertInsideAssets(newPath, 'rename to')
       const exist = cache?.find(asset => asset.filePath === newPath)
       if (exist)
         throw new Error(`[Nuxt DevTools] File ${newPath} already exists, failed to rename`)
       return await fsp.rename(oldPath, newPath)
     },
   } satisfies Partial<ServerFunctions>
+}
+
+/** `logo.png` → `logo-1.png` (then `-2`, …) while the target exists. */
+export async function collisionFreePath(path: string, exists = (p: string) => fsp.access(p).then(() => true, () => false)): Promise<string> {
+  if (!await exists(path))
+    return path
+  const ext = extname(path)
+  const stem = path.slice(0, path.length - ext.length)
+  let i = 1
+  while (await exists(`${stem}-${i}${ext}`))
+    i++
+  return `${stem}-${i}${ext}`
 }
 
 /**
