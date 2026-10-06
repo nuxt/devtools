@@ -40,8 +40,10 @@ const PLAYGROUNDS = ['nuxt4', 'nuxt5']
  * and overridden together. `@nuxt/devtools-assets` carries the pre-built client
  * UI; it is an optional peer, so without it the client is fetched from the CDN
  * (which 404s for an unpublished local version) — the playgrounds install it
- * directly. `@nuxt/devtools-ui-kit` is not a dependency of
- * either, so it isn't packed.
+ * directly. `@nuxt/devtools-onboard` is the entry point Nuxt 5 ships; the
+ * playgrounds list it in `modules` so it hands off to the installed
+ * `@nuxt/devtools`. `@nuxt/devtools-ui-kit` is not a dependency of any of
+ * them, so it isn't packed.
  *
  * @type {Array<{ name: string, dir: string, out: string }>}
  */
@@ -49,6 +51,7 @@ const PACKAGES = [
   { name: '@nuxt/devtools', dir: 'packages/devtools', out: 'nuxt-devtools.tgz' },
   { name: '@nuxt/devtools-kit', dir: 'packages/devtools-kit', out: 'nuxt-devtools-kit.tgz' },
   { name: '@nuxt/devtools-assets', dir: 'packages/devtools-assets', out: 'nuxt-devtools-assets.tgz' },
+  { name: '@nuxt/devtools-onboard', dir: 'packages/devtools-onboard', out: 'nuxt-devtools-onboard.tgz' },
 ]
 
 const skipBuild = process.argv.includes('--no-build')

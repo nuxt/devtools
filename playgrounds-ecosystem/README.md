@@ -20,6 +20,8 @@ One minimal app per Nuxt major, because Nuxt 4 ships Nitro v2 and Nuxt 5 ships
 Nitro v3, and `@nuxt/devtools` / `@nuxt/devtools-kit` declare both as *optional*
 peers. Each is a sealed pnpm workspace with its own lockfile, and installs
 DevTools from **packed tarballs** — the real npm install path, from `dist`.
+Both list `@nuxt/devtools-onboard` in `modules`, the entry point Nuxt 5 ships,
+so they also cover its hand-off to the installed `@nuxt/devtools`.
 
 ```sh
 # Build the monorepo, pack DevTools into .tarballs/, install

@@ -11,8 +11,9 @@
 //
 // Nuxt 4 ships Nitro v2 (the `nitropack` package). See ../README.md.
 export default defineNuxtConfig({
+  // The entry point Nuxt 5 ships: it loads the installed `@nuxt/devtools`.
   modules: [
-    '@nuxt/devtools',
+    '@nuxt/devtools-onboard',
   ],
 
   compatibilityDate: '2024-09-19',
