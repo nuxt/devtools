@@ -45,6 +45,17 @@ describe('assets RPC path containment', () => {
     expect(await fsp.readFile(secret, 'utf-8')).toBe('top secret')
   })
 
+  it('does not follow symlinks out of the public directory', async () => {
+    await fsp.symlink(join(root, 'secret.txt'), join(publicDir, 'linked.txt'))
+    await fsp.symlink(root, join(publicDir, 'linked-dir'))
+
+    await expect(rpc.getTextAssetContent(join(publicDir, 'linked.txt'))).rejects.toThrow(/outside of the public directory/)
+    await expect(rpc.getTextAssetContent(join(publicDir, 'linked-dir', 'secret.txt'))).rejects.toThrow(/outside of the public directory/)
+    await expect(rpc.deleteStaticAsset(join(publicDir, 'linked-dir', 'secret.txt'))).rejects.toThrow(/outside of the public directory/)
+
+    expect(await fsp.readFile(join(root, 'secret.txt'), 'utf-8')).toBe('top secret')
+  })
+
   it('serves files inside public and caps the text preview', async () => {
     const content = await rpc.getTextAssetContent(join(publicDir, 'notes.txt'), 1_000_000)
     expect(content).toHaveLength(10_000)

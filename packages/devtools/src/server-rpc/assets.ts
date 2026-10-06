@@ -1,4 +1,5 @@
 import type { AssetEntry, AssetInfo, AssetType, ImageMeta, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
+import { existsSync } from 'node:fs'
 import fsp from 'node:fs/promises'
 import { parse, relative } from 'node:path'
 import { imageMeta } from 'image-meta'
@@ -18,10 +19,14 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
   const layerDirs = [publicDir, ...nuxt.options._layers.map(layer => resolve(layer.cwd, 'public'))]
 
   // Every path-taking RPC below is called from the browser; only files under
-  // a scanned public directory are fair game.
-  function assertInsideAssets(path: string, action: string): string {
+  // a scanned public directory are fair game. Compare canonical paths so a
+  // symlink inside `public/` cannot redirect the operation, and skip roots that
+  // don't exist yet rather than letting them canonicalise to their parent.
+  async function assertInsideAssets(path: string, action: string): Promise<string> {
     const resolved = resolve(path)
-    if (!layerDirs.some(dir => resolved === dir || resolved.startsWith(`${dir}/`)))
+    const real = await realpathOfNearestAncestor(resolved)
+    const realLayerDirs = await Promise.all(layerDirs.filter(dir => existsSync(dir)).map(dir => fsp.realpath(dir)))
+    if (!realLayerDirs.some(dir => real === dir || real.startsWith(`${dir}/`)))
       throw new Error(`[Nuxt DevTools] File ${path} is not allowed to ${action}, it's outside of the public directory`)
     return resolved
   }
@@ -87,7 +92,7 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       return await scan()
     },
     async getImageMeta(filepath: string) {
-      filepath = assertInsideAssets(filepath, 'read')
+      filepath = await assertInsideAssets(filepath, 'read')
       if (_imageMetaCache.has(filepath))
         return _imageMetaCache.get(filepath)
       try {
@@ -102,7 +107,7 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       }
     },
     async getTextAssetContent(filepath: string, limit = 300) {
-      filepath = assertInsideAssets(filepath, 'read')
+      filepath = await assertInsideAssets(filepath, 'read')
       try {
         const content = await fsp.readFile(filepath, 'utf-8')
         return content.slice(0, Math.min(limit, MAX_TEXT_PREVIEW))
@@ -160,11 +165,11 @@ export function setupAssetsRPC({ nuxt, refresh, options }: NuxtDevtoolsServerCon
       )
     },
     async deleteStaticAsset(path: string) {
-      return await fsp.unlink(assertInsideAssets(path, 'delete'))
+      return await fsp.unlink(await assertInsideAssets(path, 'delete'))
     },
     async renameStaticAsset(oldPath: string, newPath: string) {
-      oldPath = assertInsideAssets(oldPath, 'rename')
-      newPath = assertInsideAssets(newPath, 'rename to')
+      oldPath = await assertInsideAssets(oldPath, 'rename')
+      newPath = await assertInsideAssets(newPath, 'rename to')
       const exist = cache?.find(asset => asset.filePath === newPath)
       if (exist)
         throw new Error(`[Nuxt DevTools] File ${newPath} already exists, failed to rename`)

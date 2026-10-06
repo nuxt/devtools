@@ -1,14 +1,15 @@
 import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import type { AnyNitro, AnyStorageMounts } from '../utils/nitro-compat'
-import { builtinDrivers, createStorage } from 'unstorage'
+import { builtinDrivers, createStorage, normalizeKey } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
 // Mounts backed by the project itself (`root`/`src` are the filesystem) stay
-// off limits for listing and for every item operation alike.
+// off limits for listing and for every item operation alike. Normalise first:
+// unstorage routes `/root:x`, `:root:x` and `root/x` to the `root` mount too.
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
 function shouldIgnoreStorageKey(key: string) {
-  return IGNORE_STORAGE_MOUNTS.includes(key.split(':')[0]!)
+  return IGNORE_STORAGE_MOUNTS.includes(normalizeKey(key).split(':')[0]!)
 }
 
 export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
