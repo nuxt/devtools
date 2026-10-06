@@ -6,8 +6,8 @@
 // this workspace's single node_modules, the app and DevTools share one Vite /
 // `@vitejs/devtools` instance, which `nuxi dev` needs. Run:
 //   pnpm -C playgrounds-ecosystem/nuxt5 run setup     # build + pack + install
-//   pnpm -C playgrounds-ecosystem/nuxt5 run play:dev  # dogfood DevTools
-//   pnpm -C playgrounds-ecosystem/nuxt5 run play:build   # + run play:typecheck
+//   pnpm -C playgrounds-ecosystem/nuxt5 run dev       # dogfood DevTools
+//   pnpm -C playgrounds-ecosystem/nuxt5 run build     # + run typecheck
 //
 // Nuxt 5 ships the next-gen Nitro v3 engine (`nitro`). See ../README.md.
 export default defineNuxtConfig({

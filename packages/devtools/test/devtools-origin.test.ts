@@ -1,9 +1,7 @@
-import type { Nuxt } from 'nuxt/schema'
 import type { Plugin } from 'vite'
-import { fileURLToPath } from 'node:url'
 import { buildOtpAuthUrl } from 'devframe/node/auth'
-import { createHooks } from 'hookable'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { fakeNuxt } from './fake-nuxt'
 
 const mocks = vi.hoisted(() => ({
   vitePlugins: [] as Plugin[],
@@ -26,34 +24,6 @@ vi.mock('@nuxt/kit', async (importOriginal) => {
     extendViteConfig: vi.fn(),
   }
 })
-
-function fakeNuxt(): Nuxt {
-  const hooks = createHooks()
-  const clientDir = fileURLToPath(new URL('../client', import.meta.url))
-  return {
-    options: {
-      rootDir: clientDir,
-      srcDir: clientDir,
-      builder: '@nuxt/vite-builder',
-      dev: true,
-      test: false,
-      dir: { public: 'public', app: 'app' },
-      app: { baseURL: '/' },
-      _layers: [],
-      analyzeDir: '/tmp/fixture-app/.nuxt/analyze',
-      runtimeConfig: {},
-      future: { compatibilityVersion: 4 },
-      _nuxtConfigFile: '/tmp/fixture-app/nuxt.config.ts',
-      build: {},
-      imports: {},
-      vite: {},
-    },
-    vfs: {},
-    hooks,
-    hook: hooks.hook.bind(hooks),
-    callHook: hooks.callHook.bind(hooks),
-  } as unknown as Nuxt
-}
 
 afterEach(() => {
   mocks.vitePlugins.length = 0

@@ -8,9 +8,9 @@ copy) against real apps. Opt-in: none of them are in the root
 | --- | --- |
 | [`nuxt4/`](./nuxt4/) | DevTools on **Nuxt 4** (Nitro v2 / `nitropack`). |
 | [`nuxt5/`](./nuxt5/) | DevTools on **Nuxt 5** nightly (Nitro v3 / `nitro`). |
-| [`modules/`](./modules/) | Combined app dogfooding eight ecosystem modules' DevTools tabs on Nuxt 4. |
+| [`modules/`](./modules/) | Combined app dogfooding eight ecosystem modules' DevTools tabs on Nuxt 4, plus a module on the published `@nuxt/devtools-kit` v3. |
 | [`tests/`](./tests/) | Opt-in Playwright suite that drives `modules/`'s DevTools tabs. |
-| [`scripts/`](./scripts/) | `pack-local.mjs` (packs DevTools tarballs), `check-nitro-type-resolution.mjs`. |
+| [`scripts/`](./scripts/) | `pack-local.mjs` (packs DevTools tarballs), `check-dev-boot.mjs`, `check-nitro-type-resolution.mjs`. |
 
 Findings go in [`REPORTS.md`](./REPORTS.md).
 
@@ -54,6 +54,14 @@ in two groups:
   <https://nuxt.com/modules?category=Devtools> and curated down to the ones
   that actually register a DevTools tab: `@nuxt/eslint`, `@nuxt/hints`,
   `@nuxt/a11y`, `@compodium/nuxt`, `@scalar/nuxt`.
+
+[`modules/legacy-kit-v3/`](./modules/legacy-kit-v3/) is a third group of one: a
+local module written against the **published `@nuxt/devtools-kit` v3**
+(`addCustomTab`, `extendServerRpc`, `startSubprocess`, and the v3 iframe
+client). Most of the Nuxt 4 ecosystem still ships that kit (`@nuxt/fonts`,
+`@nuxt/scripts`, `@nuxt/eslint`, `@nuxt/hints`, `@nuxt/a11y` all depend on
+`^3.2`), so the v4 compatibility shims have to work end to end against the real
+thing, not just against this repo's own kit.
 
 Each module has a small fixture so its DevTools surface has real data to show:
 `eslint.config.mjs` (ESLint config inspector), `components/DemoButton.vue`
@@ -119,9 +127,12 @@ for the embedded client.
 ## Playwright smoke tests (opt-in)
 
 [`tests/`](./tests/) holds a Playwright suite that boots the combined app and
-asserts each Devtools-category module registers its custom tab and that tab
-renders against this repo's built devtools client — so "do all the modules'
-DevTools still function?" is a one-command check instead of a manual pass.
+asserts each of the eight modules registers its custom tab and that tab renders
+against this repo's built devtools client — so "do all the modules' DevTools
+still function?" is a one-command check instead of a manual pass. For
+`legacy-kit-v3/` it goes further: the v3 iframe client connects, reaches the
+host app, round-trips an `extendServerRpc` call, receives a broadcast, and the
+`startSubprocess` session shows up in the Terminals dock.
 
 Unlike the hand-dogfooding runbook above (which uses `NUXT_DEVTOOLS_LOCAL`),
 this suite runs against the **built** `@nuxt/devtools` static client — the same
@@ -142,6 +153,17 @@ authorization step is needed. See
 [`tests/ecosystem-modules.spec.ts`](./tests/ecosystem-modules.spec.ts) for the
 per-module tab assertions.
 
+## `scripts/check-dev-boot.mjs`
+
+DevTools only does anything in `dev`, so a green `nuxt build` says nothing
+about it. This boots a playground's `nuxt dev`, waits for the app and for the
+embedded DevTools client (`/__nuxt_devtools__/client/`) to answer, and shuts it
+down again:
+
+```sh
+node playgrounds-ecosystem/scripts/check-dev-boot.mjs playgrounds-ecosystem/nuxt4
+```
+
 ## `scripts/check-nitro-type-resolution.mjs`
 
 The playgrounds are packed against a repo where *both* Nitro engines exist, so
@@ -159,16 +181,20 @@ node playgrounds-ecosystem/scripts/check-nitro-type-resolution.mjs
 
 ## CI
 
-`.github/workflows/ecosystem-playground.yml` is `workflow_dispatch`-only and
-holds two independent jobs. Neither is part of the default push / pull_request
-CI path; trigger them from the Actions tab.
+`.github/workflows/nuxt4-smoke.yml` runs on every push to `main` and every
+pull request: root build → pack the tarballs → install the `nuxt4/` playground
+→ `typecheck` → `build` → `check-dev-boot.mjs`. The monorepo itself develops
+against the Nuxt 5 nightly, so this is the one place the default CI path runs
+DevTools on Nuxt 4 / Nitro v2.
+
+`.github/workflows/ecosystem-playground.yml` runs weekly and on
+`workflow_dispatch`, and holds two independent jobs.
 
 - **`smoke`** — root install → `pnpm run build` → pack the DevTools tarballs →
-  `check-nitro-type-resolution.mjs` → `typecheck` + `build` the `nuxt4/` and
-  `nuxt5/` playgrounds → `nuxt build` the `modules/` combo. A cheap "did any of
-  this break" signal. It doesn't set `NUXT_DEVTOOLS_LOCAL`, since DevTools
-  no-ops outside `dev` mode — build-mode can't exercise anything
-  devtools-specific anyway.
+  `check-nitro-type-resolution.mjs` → `typecheck` + `build` + `check-dev-boot`
+  the `nuxt4/` and `nuxt5/` playgrounds → `nuxt build` the `modules/` combo. It
+  doesn't set `NUXT_DEVTOOLS_LOCAL`, since DevTools no-ops outside `dev` mode —
+  build-mode can't exercise anything devtools-specific anyway.
 - **`devtools-smoke`** — the heavier job that actually drives the embedded
   DevTools client: full `pnpm build` (real static client), Playwright's
   Chromium, then the smoke suite (`pnpm run test:e2e:ecosystem`, see

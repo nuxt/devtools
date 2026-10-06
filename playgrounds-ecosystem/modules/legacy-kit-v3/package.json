@@ -1,0 +1,12 @@
+{
+  "name": "legacy-kit-v3",
+  "type": "module",
+  "private": true,
+  "description": "A module written against the published @nuxt/devtools-kit v3 API, to prove the v4 compatibility shims against a real old kit.",
+  "exports": {
+    ".": "./src/module.ts"
+  },
+  "dependencies": {
+    "@nuxt/devtools-kit": "^3.4.2"
+  }
+}

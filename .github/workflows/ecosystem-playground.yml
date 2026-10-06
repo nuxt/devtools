@@ -1,15 +1,19 @@
 name: ecosystem-playground
 
-# Manual-trigger only checks for playgrounds-ecosystem/modules/ — NOT part of
-# the default push/pull_request CI path. Two independent tasks:
+# Weekly / manual checks for playgrounds-ecosystem/ — NOT part of the default
+# push/pull_request CI path (the lighter Nuxt 4 check that is lives in
+# nuxt4-smoke.yml). Two independent tasks:
 #   * `smoke`          — cheap "does any of this still build" signal: the
 #                        nuxt4/nuxt5 playgrounds and the `nuxt build` combo.
 #   * `devtools-smoke` — Playwright suite that drives the real embedded DevTools
-#                        client and asserts each module's tab renders.
+#                        client and asserts each module's tab renders, plus a
+#                        module on the published @nuxt/devtools-kit v3.
 # See playgrounds-ecosystem/README.md and playgrounds-ecosystem/REPORTS.md for
 # context (nuxt/devtools#1022).
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
 
 jobs:
   smoke:
@@ -45,19 +49,20 @@ jobs:
       - name: Check nitro/nitropack single-engine type resolution
         run: node playgrounds-ecosystem/scripts/check-nitro-type-resolution.mjs
       # Per-major DevTools playgrounds (sealed, install DevTools from the
-      # tarballs above): prove @nuxt/devtools type-checks and builds on a Nuxt 4
-      # (Nitro v2) and a Nuxt 5 (Nitro v3) consumer. Dev mode is verified
-      # manually — see REPORTS.md — since CI can't drive a dev server.
+      # tarballs above): prove @nuxt/devtools type-checks, builds and boots in
+      # dev on a Nuxt 4 (Nitro v2) and a Nuxt 5 (Nitro v3) consumer.
       - name: Nuxt 4 playground (Nitro v2)
         run: |
           pnpm -C playgrounds-ecosystem/nuxt4 install --no-frozen-lockfile
-          pnpm -C playgrounds-ecosystem/nuxt4 run play:typecheck
-          pnpm -C playgrounds-ecosystem/nuxt4 run play:build
+          pnpm -C playgrounds-ecosystem/nuxt4 run typecheck
+          pnpm -C playgrounds-ecosystem/nuxt4 run build
+          node playgrounds-ecosystem/scripts/check-dev-boot.mjs playgrounds-ecosystem/nuxt4
       - name: Nuxt 5 playground (Nitro v3)
         run: |
           pnpm -C playgrounds-ecosystem/nuxt5 install --no-frozen-lockfile
-          pnpm -C playgrounds-ecosystem/nuxt5 run play:typecheck
-          pnpm -C playgrounds-ecosystem/nuxt5 run play:build
+          pnpm -C playgrounds-ecosystem/nuxt5 run typecheck
+          pnpm -C playgrounds-ecosystem/nuxt5 run build
+          node playgrounds-ecosystem/scripts/check-dev-boot.mjs playgrounds-ecosystem/nuxt5
       # `modules/` stays a sealed workspace (own lockfile).
       - run: pnpm -C playgrounds-ecosystem/modules install
       - name: Build the module combo (Nuxt 4)
@@ -85,7 +90,7 @@ jobs:
       - run: corepack enable
       - run: pnpm install
       # The smoke test drives the real embedded DevTools client, so it needs the
-      # full static client at packages/devtools/dist/client.
+      # full static client built into packages/devtools-assets/dist.
       - run: pnpm build
       - name: Cache Playwright browsers
         uses: actions/cache@v6
