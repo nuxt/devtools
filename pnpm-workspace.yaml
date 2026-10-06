@@ -3,6 +3,7 @@ ignoreWorkspaceRootCheck: true
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@devframes/hub'
+  - '@devframes/hub-ui-onboard'
   - '@devframes/json-render'
   - '@devframes/plugin-data-inspector'
   - '@devframes/plugin-code-server'
@@ -93,6 +94,7 @@ packages:
 
 overrides:
   '@devframes/hub': &devframe ^1.2.0
+  '@devframes/hub-ui-onboard': *devframe
   '@devframes/json-render': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
@@ -234,6 +236,7 @@ catalogs:
     package-manager-detector: ^1.8.0
   prod:
     '@devframes/hub': *devframe
+    '@devframes/hub-ui-onboard': *devframe
     '@devframes/plugin-code-server': *devframe
     '@devframes/plugin-data-inspector': *devframe
     '@nuxt/kit': *nuxt-kit

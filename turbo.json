@@ -49,6 +49,16 @@
         "dist/**"
       ]
     },
+    "@nuxt/devtools-onboard#build": {
+      // `@nuxt/devtools` is only an optional peer resolved at run time from
+      // the user's project; nothing of it is imported, so its build is not
+      // needed here.
+      "dependsOn": [],
+      "outputLogs": "new-only",
+      "outputs": [
+        "dist/**"
+      ]
+    },
     "@nuxt/devtools#build": {
       // The `@nuxt/devtools` *module* only depends on `@nuxt/devtools-kit`;
       // `@nuxt/devtools-assets` and `@nuxt/devtools-ui-kit` are workspace
