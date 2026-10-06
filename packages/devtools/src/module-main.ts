@@ -291,20 +291,21 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       setServerTasksEnabledByDefault(true)
 
     // Inject inline script. Force our small runtime plugin to be bundled
-    // rather than externalized as a node_modules import at runtime — Nitro v2
-    // (`nitropack`) and Nitro v3 (`nitro`) expose this via different config
-    // shapes (`externals.inline` vs `noExternals`), so `config`'s type here is
-    // a union of both; handle whichever applies.
+    // rather than externalized as a node_modules import at runtime. Nitro v2
+    // (`nitropack`, Nuxt 4) spells this `externals.inline` and its
+    // `noExternals` is a boolean, so it must never receive an array: a
+    // non-empty one is truthy and inlines every dependency. Nitro v3 (`nitro`,
+    // Nuxt 5) has no `externals` and takes a `noExternals` list instead.
     const inlinePath = join(runtimeDir, 'nitro')
     if ('externals' in config) {
       config.externals ||= {}
       config.externals.inline ||= []
       config.externals.inline.push(inlinePath)
     }
-    if ('noExternals' in config && Array.isArray(config.noExternals)) {
+    else if (Array.isArray(config.noExternals)) {
       config.noExternals.push(inlinePath)
     }
-    else if (!('noExternals' in config) || config.noExternals === undefined) {
+    else if (config.noExternals === undefined) {
       config.noExternals = [inlinePath]
     }
     config.virtual = config.virtual || {}
