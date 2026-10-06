@@ -1,6 +1,7 @@
 import type { Resolver } from '@nuxt/kit'
 import type { Nuxt } from 'nuxt/schema'
 import { existsSync } from 'node:fs'
+import { NUXT_DEVTOOLS_GROUP_ID, onDevtoolsReady } from '@nuxt/devtools-kit'
 
 const DEVTOOLS_UI_ROUTE = '/__my-module'
 const DEVTOOLS_UI_LOCAL_PORT = 3300
@@ -33,19 +34,19 @@ export function setupDevToolsUI(nuxt: Nuxt, resolver: Resolver) {
     })
   }
 
-  nuxt.hook('devtools:customTabs', (tabs) => {
-    tabs.push({
+  onDevtoolsReady((ctx) => {
+    ctx.docks.register({
       // unique identifier
-      name: 'my-module',
-      // title to display in the tab
+      id: 'my-module',
+      // title to display in the dock
       title: 'My Module',
       // any icon from Iconify, or a URL to an image
       icon: 'carbon:apps',
       // iframe view
-      view: {
-        type: 'iframe',
-        src: DEVTOOLS_UI_ROUTE,
-      },
+      type: 'iframe',
+      url: DEVTOOLS_UI_ROUTE,
+      // show it inside the `Nuxt` group, next to the built-in tabs
+      groupId: NUXT_DEVTOOLS_GROUP_ID,
     })
   })
 }

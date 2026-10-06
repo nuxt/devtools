@@ -1,7 +1,3 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
   <NTip
     n="teal"
@@ -10,14 +6,17 @@
     <p class="font-bold">
       Note for module authors:
     </p>
-    Nuxt DevTools is in early preview and the API is subject to change.
-    Which means the setup in this template is only presenting the current state of the API.
-    We suggest following closely to the changes in the <NLink
-      href="https://github.com/nuxt/devtools"
+    This template uses the Nuxt DevTools v4 API (Vite DevTools docks and RPC). See the <NLink
+      href="https://devtools.nuxt.com/module/guide"
       target="_blank"
     >
-      nuxt/devtools
-    </NLink> repository.<br>
+      module authors guide
+    </NLink> and the <NLink
+      href="https://devtools.nuxt.com/module/migration-v4"
+      target="_blank"
+    >
+      migration guide
+    </NLink> if you are coming from v3.<br>
     The UI components are coming from <NLink
       href="https://github.com/nuxt/devtools/tree/main/packages/devtools-ui-kit"
       target="_blank"

@@ -1,5 +1,4 @@
-import type { ClientFunctions, ServerFunctions } from '../types'
-import { extendServerRpc, onDevToolsInitialized } from '@nuxt/devtools-kit'
+import { onDevtoolsReady } from '@nuxt/devtools-kit'
 import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { setupDevToolsUI } from './devtools'
 
@@ -31,10 +30,16 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.devtools)
       setupDevToolsUI(nuxt, resolver)
 
-    onDevToolsInitialized(() => {
-      const rpc = extendServerRpc<ClientFunctions, ServerFunctions>('custom-rpc', {
-        toUpperCase(t: string) {
-          rpc.broadcast.greeting('world')
+    onDevtoolsReady((ctx) => {
+      // Everything registered through the scope is prefixed with `my-module:`
+      const { rpc } = ctx.scope('my-module')
+
+      rpc.register({
+        name: 'to-upper-case',
+        type: 'query',
+        handler(t: string) {
+          // call the client function registered by the iframe
+          rpc.broadcast({ method: 'greeting', args: ['world'], event: true })
           return `${t.toUpperCase()} [from server]`
         },
       })

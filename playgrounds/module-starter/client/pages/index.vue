@@ -1,21 +1,29 @@
 <script setup lang="ts">
-import type { ClientFunctions, ServerFunctions } from '../../types'
-import { onDevtoolsClientConnected, useDevtoolsClient } from '@nuxt/devtools-kit/iframe-client'
+import type { NuxtDevtoolsHostClient } from '@nuxt/devtools-kit/types'
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
+import { getDevToolsRpcClient } from '@vitejs/devtools-kit/client'
 
-const client = useDevtoolsClient()
+const kit = shallowRef<DevToolsRpcClient>()
+const result = ref<string>()
 
-onDevtoolsClientConnected((client) => {
-  const rpc = client.devtools.extendClientRpc<ServerFunctions, ClientFunctions>('custom-rpc', {
-    greeting(t: string) {
+// The host app injects its client on the parent window; same-origin iframes can read it.
+const host = (window.parent as Window & { __NUXT_DEVTOOLS_HOST__?: NuxtDevtoolsHostClient }).__NUXT_DEVTOOLS_HOST__
+
+onMounted(async () => {
+  kit.value = await getDevToolsRpcClient()
+  // Everything registered or called through the scope is prefixed with `my-module:`
+  const { rpc } = kit.value.scope('my-module')
+
+  rpc.register({
+    name: 'greeting',
+    type: 'event',
+    handler(t: string) {
       // eslint-disable-next-line no-console
-      console.log(`[custom-rpc] Hello ${t}!`)
+      console.log(`[my-module] Hello ${t}!`)
     },
   })
 
-  rpc.toUpperCase('[custom-rpc] hello')
-    // eslint-disable-next-line no-console
-    .then(console.log)
-    .catch(console.error)
+  result.value = await rpc.call('to-upper-case', '[my-module] hello')
 })
 </script>
 
@@ -28,24 +36,27 @@ onDevtoolsClientConnected((client) => {
       Nuxt DevTools Integration
     </div>
     <div
-      v-if="client"
+      v-if="kit"
       class="flex flex-col gap-2"
     >
       <NTip
         n="green"
         icon="carbon-checkmark"
       >
-        Nuxt DevTools is connected
+        Connected to Vite DevTools RPC
       </NTip>
       <div>
+        Server says: <code class="text-green">{{ result }}</code>
+      </div>
+      <div v-if="host">
         The current app is using
-        <code class="text-green">vue@{{ client.host.nuxt.vueApp.version }}</code>
+        <code class="text-green">vue@{{ host.nuxt.vueApp.version }}</code>
       </div>
       <div>
         <NButton
           n="green"
           class="mt-4"
-          @click="client!.host.close()"
+          @click="host?.devtools.close()"
         >
           Close DevTools
         </NButton>
@@ -53,7 +64,7 @@ onDevtoolsClientConnected((client) => {
     </div>
     <div v-else>
       <NTip n="yellow">
-        Failed to connect to the client. Did you open this page inside Nuxt DevTools?
+        Connecting to Vite DevTools…
       </NTip>
     </div>
 

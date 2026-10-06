@@ -1,7 +1,8 @@
-import { startSubprocess } from '@nuxt/devtools-kit'
+import { onDevtoolsReady } from '@nuxt/devtools-kit'
 import { createResolver, defineNuxtModule } from 'nuxt/kit'
 
 const resolver = createResolver(import.meta.url)
+const devtoolsModule = process.env.NUXT_DEVTOOLS_LOCAL ? '../../../local' : '@nuxt/devtools'
 
 export default defineNuxtConfig({
   modules: [
@@ -9,7 +10,7 @@ export default defineNuxtConfig({
      * My module
      */
     '../src/module',
-    '../../../local',
+    devtoolsModule,
     /**
      * Start a sub Nuxt Server for developing the client
      *
@@ -20,18 +21,19 @@ export default defineNuxtConfig({
         if (!nuxt.options.dev || nuxt.options.test)
           return
 
-        const _process = startSubprocess(
-          {
-            command: 'npx',
-            args: ['nuxi', 'dev', '--port', '3300'],
-            cwd: resolver.resolve('../client'),
-          },
-          {
-            id: 'my-module:client',
-            name: 'My Module Client Dev',
-          },
-          nuxt,
-        )
+        onDevtoolsReady((ctx) => {
+          ctx.terminals.startChildProcess(
+            {
+              command: 'npx',
+              args: ['nuxi', 'dev', '--port', '3300'],
+              cwd: resolver.resolve('../client'),
+            },
+            {
+              id: 'my-module:client',
+              title: 'My Module Client Dev',
+            },
+          )
+        })
       },
     }),
   ],
