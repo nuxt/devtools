@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "pnpm dev:prepare && pnpm build:module",
-    "build:client": "pnpm dev:prepare && nuxi generate client && node scripts/copy-client.mjs",
+    "build:client": "nuxi generate client && node scripts/copy-client.mjs",
     "build:module": "nuxt-build-module build",
     "stub": "nuxt-build-module build --stub",
     "dev": "nuxi dev client",

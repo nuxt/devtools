@@ -21,14 +21,12 @@
       // task caches correctly instead of always rerunning. The explicit dep
       // replaces `^build` (this package has no real workspace dependencies).
       // The client app consumes `@nuxt/devtools` and `@nuxt/devtools-ui-kit`
-      // from source, but `build:client` also self-stubs the module via
-      // `dev:prepare` (`nuxt-build-module build --stub`), which writes into
-      // `packages/devtools/dist`. `@nuxt/devtools#build` stubs/builds that
-      // same directory, so without an explicit dependency here turbo runs
-      // both in parallel and they race on `dist` (e.g. EEXIST on the
-      // `dist/runtime` symlink). Depending on `@nuxt/devtools#build` isn't a
-      // cycle: that task's own `dependsOn` below is pinned to just the kit,
-      // not `^build`, so it never depends back on this package.
+      // from source, but resolves `@nuxt/devtools/*` types through
+      // `packages/devtools/dist`, so the module must be built first. (It must
+      // not re-stub it either: a stub left in `dist` is what the ecosystem
+      // playgrounds would then pack.) Depending on `@nuxt/devtools#build`
+      // isn't a cycle: that task's own `dependsOn` below is pinned to just
+      // the kit, not `^build`, so it never depends back on this package.
       "dependsOn": [
         "@nuxt/devtools-kit#build",
         "@nuxt/devtools#build"
