@@ -1,5 +1,5 @@
 import type { TimelineServerState } from '@nuxt/devtools/types'
-
+import type { Plugin } from 'nuxt/app'
 import type { Router } from 'vue-router'
 import { shallowReactive, watchEffect } from 'vue'
 
@@ -8,7 +8,9 @@ import { shallowReactive, watchEffect } from 'vue'
 import { defineNuxtPlugin, useRouter, useState } from '#imports'
 import { setupHooksDebug } from '../shared/hooks'
 
-export default defineNuxtPlugin((nuxt: any) => {
+// Annotated so Nuxt's injection typing (`typeof import(this).default`) does
+// not have to infer through the composables this plugin calls.
+const plugin: Plugin = defineNuxtPlugin((nuxt: any) => {
   if (typeof document === 'undefined' || typeof window === 'undefined')
     return
 
@@ -69,3 +71,5 @@ export default defineNuxtPlugin((nuxt: any) => {
       )
     })
 })
+
+export default plugin
