@@ -5,10 +5,12 @@ minimumReleaseAgeExclude:
   - '@devframes/hub'
   - '@devframes/hub-ui-onboard'
   - '@devframes/json-render'
+  - '@devframes/plugin-assets'
   - '@devframes/plugin-data-inspector'
   - '@devframes/plugin-code-server'
   - '@devframes/plugin-inspect'
   - '@devframes/plugin-messages'
+  - '@devframes/plugin-og'
   - '@devframes/plugin-terminals'
   - '@vitejs/devtools-kit'
   - '@vitejs/devtools'
@@ -24,7 +26,6 @@ minimumReleaseAgeExclude:
   - db0@0.4.1
   - '@nuxt/test-utils@4.3.2'
   - zod@4.6.5
-  - '@unhead/schema@3.4.2'
   - '@rollup/rollup-android-arm-eabi@4.63.6'
   - '@rollup/rollup-android-arm64@4.63.6'
   - '@rollup/rollup-darwin-arm64@4.63.6'
@@ -96,10 +97,12 @@ overrides:
   '@devframes/hub': &devframe ^1.2.0
   '@devframes/hub-ui-onboard': *devframe
   '@devframes/json-render': *devframe
+  '@devframes/plugin-assets': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
   '@devframes/plugin-inspect': *devframe
   '@devframes/plugin-messages': *devframe
+  '@devframes/plugin-og': *devframe
   '@devframes/plugin-terminals': *devframe
   '@nuxt/devtools': workspace:*
   '@nuxt/kit': &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-2610052343-36eafab
@@ -237,8 +240,10 @@ catalogs:
   prod:
     '@devframes/hub': *devframe
     '@devframes/hub-ui-onboard': *devframe
+    '@devframes/plugin-assets': *devframe
     '@devframes/plugin-code-server': *devframe
     '@devframes/plugin-data-inspector': *devframe
+    '@devframes/plugin-og': *devframe
     '@nuxt/kit': *nuxt-kit
     consola: ^3.4.2
     defu: ^6.1.7
@@ -266,6 +271,5 @@ catalogs:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.6.4
-    '@unhead/schema': ^3.4.2
     '@vitejs/devtools-kit': *vite-devtools
     unimport: ^7.0.2

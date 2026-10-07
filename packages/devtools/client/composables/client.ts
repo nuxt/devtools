@@ -1,5 +1,4 @@
 import type { NuxtDevtoolsClient, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient } from '@nuxt/devtools-kit/types'
-import type { Unhead } from '@unhead/schema'
 import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
 import type { ComputedRef } from 'vue'
 import type { useRoute, useRouter } from '#imports'
@@ -38,11 +37,6 @@ export function useClientRoute(): ComputedRef<ReturnType<typeof useRoute>> {
 export function useClientRouter(): ComputedRef<ReturnType<typeof useRouter>> {
   const client = useClient()
   return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$router)
-}
-
-export function useClientHead() {
-  const client = useClient()
-  return computed(() => client.value?.nuxt.vueApp.config.globalProperties?.$head as Unhead)
 }
 
 const connectionTimeout = ref(false)

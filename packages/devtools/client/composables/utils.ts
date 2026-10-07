@@ -1,7 +1,7 @@
 import type { Component } from 'nuxt/schema'
 import type { Ref } from 'vue'
 import type { AsyncDataOptions } from '#app'
-import type { ComponentRelationship, ComponentWithRelationships, NormalizedHeadTag, SocialPreviewCard, SocialPreviewResolved } from '~/../src/types'
+import type { ComponentRelationship, ComponentWithRelationships } from '~/../src/types'
 import { useSessionStorage } from '@vueuse/core'
 import { relative } from 'pathe'
 import { triggerRef } from 'vue'
@@ -120,28 +120,6 @@ const requestMethodClass: Record<string, string> = {
 
 export function getRequestMethodClass(method: string) {
   return requestMethodClass[method.toLowerCase()] || requestMethodClass.default
-}
-
-export function getSocialPreviewCard(
-  rawTags: NormalizedHeadTag[],
-  tags: SocialPreviewCard,
-): SocialPreviewResolved {
-  const resolvedTags: { [key: string]: string | undefined } = {}
-
-  for (const [key, value] of Object.entries(tags)) {
-    for (const tag of value) {
-      const tagValue = rawTags.find(item => item.tag === tag.tag && (tag.name ? item.name === tag.name : true))?.value
-      if (tagValue) {
-        resolvedTags[key] = tagValue
-        break
-      }
-    }
-  }
-
-  return {
-    url: window.location.host,
-    ...resolvedTags,
-  }
 }
 
 export function formatDuration(ms: number | string) {

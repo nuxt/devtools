@@ -51,6 +51,7 @@ describe('vite DevTools origin', () => {
     const ctx = {
       viteConfig: { command: 'serve', build: { ssr: false } },
       host: { resolveOrigin: () => 'http://localhost:5173' },
+      install: vi.fn(),
       docks: { register: vi.fn() },
       rpc: {
         register: vi.fn(),

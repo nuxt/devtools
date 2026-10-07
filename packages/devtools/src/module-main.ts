@@ -367,6 +367,9 @@ window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
   if (options.dataInspector !== false)
     await import('./integrations/data-inspector').then(({ setup }) => setup(ctx))
 
+  await import('./integrations/assets').then(({ setup }) => setup(ctx))
+  await import('./integrations/og').then(({ setup }) => setup(ctx))
+
   if (options.viteInspect !== false)
     await import('./integrations/vite-inspect').then(({ setup }) => setup(ctx))
 
