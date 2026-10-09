@@ -7,7 +7,6 @@ import { logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { RPC_NAMESPACE } from '../rpc-namespace'
 import { setupAnalyzeBuildRPC } from './analyze-build'
-import { setupAssetsRPC } from './assets'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
 import { createNotifier, setupMessagesRPC } from './messages'
@@ -148,7 +147,6 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupMessagesRPC(ctx),
     ...setupCustomTabRPC(ctx),
     ...setupStorageRPC(ctx),
-    ...setupAssetsRPC(ctx),
     ...setupNpmRPC(ctx),
     // Bridge the `devtools:terminal:*` hooks onto the Vite DevTools terminals
     // host so module terminals surface in the built-in Terminals dock. Also

@@ -82,6 +82,12 @@ export default defineNuxtConfig({
     '@nuxt/devtools-kit': resolver.resolve('../../devtools-kit/src/index'),
   },
 
+  // A static SPA has no use for server sourcemaps, and Nuxt's Vite builder
+  // writes them to `<cwd>/dist`, i.e. into the published `@nuxt/devtools` dist.
+  sourcemap: {
+    server: false,
+  },
+
   experimental: {
     watcher: 'parcel',
     payloadExtraction: 'client',

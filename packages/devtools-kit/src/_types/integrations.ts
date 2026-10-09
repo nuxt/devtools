@@ -11,14 +11,6 @@ export interface HookInfo {
   executions: number[]
 }
 
-export interface ImageMeta {
-  width: number
-  height: number
-  orientation?: number
-  type?: string
-  mimeType?: string
-}
-
 export interface PackageUpdateInfo {
   name: string
   current: string
@@ -195,25 +187,6 @@ export interface VueInspectorClient {
 }
 
 export type VueInspectorData = VueInspectorClient['linkParams'] & Partial<VueInspectorClient['position']>
-
-export type AssetType = 'image' | 'font' | 'video' | 'audio' | 'text' | 'json' | 'other'
-
-export interface AssetInfo {
-  path: string
-  type: AssetType
-  publicPath: string
-  filePath: string
-  size: number
-  mtime: number
-  layer?: string
-}
-
-export interface AssetEntry {
-  path: string
-  content: string
-  encoding?: BufferEncoding
-  override?: boolean
-}
 
 export interface CodeSnippet {
   code: string
