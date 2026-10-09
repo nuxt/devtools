@@ -637,6 +637,9 @@ importers:
       '@devframes/plugin-og':
         specifier: ^1.2.3
         version: 1.2.3(devframe@1.2.3)(vite@8.3.4)
+      '@nuxt/devtools-assets':
+        specifier: workspace:*
+        version: link:../devtools-assets
       '@nuxt/devtools-kit':
         specifier: workspace:*
         version: link:../devtools-kit
@@ -740,9 +743,6 @@ importers:
       '@iconify-json/tabler':
         specifier: catalog:icons
         version: 1.2.42
-      '@nuxt/devtools-assets':
-        specifier: workspace:*
-        version: link:../devtools-assets
       '@nuxt/schema':
         specifier: npm:@nuxt/schema-nightly@5.0.0-2610052343-36eafab
         version: '@nuxt/schema-nightly@5.0.0-2610052343-36eafab'

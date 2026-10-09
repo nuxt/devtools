@@ -32,7 +32,6 @@
     "prepack": "turbo run build --filter=."
   },
   "peerDependencies": {
-    "@nuxt/devtools-assets": "workspace:*",
     "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0",
     "nitro": "*",
     "nitropack": "^2.0.0",
@@ -40,9 +39,6 @@
     "vite-plugin-inspect": "catalog:prod"
   },
   "peerDependenciesMeta": {
-    "@nuxt/devtools-assets": {
-      "optional": true
-    },
     "nitro": {
       "optional": true
     },
@@ -59,6 +55,7 @@
     "@devframes/plugin-code-server": "catalog:prod",
     "@devframes/plugin-data-inspector": "catalog:prod",
     "@devframes/plugin-og": "catalog:prod",
+    "@nuxt/devtools-assets": "workspace:*",
     "@nuxt/devtools-kit": "workspace:*",
     "@vitejs/devtools": "catalog:buildtools",
     "@vitejs/devtools-kit": "catalog:types",
