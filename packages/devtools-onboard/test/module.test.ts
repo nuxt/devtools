@@ -88,7 +88,8 @@ describe('@nuxt/devtools-onboard', () => {
     const status = await viteMiddlewareFetch(nuxt, '/__devtools/__onboard/status').then(r => r.json())
     expect(status.state).toBe('idle')
     // No lockfile in the fixture, so the package manager falls back to npm.
-    expect(status.command).toBe('npm i -D @nuxt/devtools@^4.0.0-beta.3')
+    expect(status.command.slice(0, 3)).toEqual(['npm', 'i', '-D'])
+    expect(status.command[3]).toMatch(/^@nuxt\/devtools@\^4\./)
     expect(status.branding.productName).toBe('Nuxt DevTools')
   }, 60_000)
 

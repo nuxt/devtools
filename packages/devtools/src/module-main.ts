@@ -11,7 +11,7 @@ import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, lo
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
 import { join, resolve } from 'pathe'
-import { isGreaterOrEqual } from 'verkit'
+import { isGreaterThanOrEqual } from 'verkit'
 import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
 import { createTerminalAuthBanner } from './auth-banner'
@@ -163,7 +163,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // toggle in user hands (`vite: { devtools: false }` in `nuxt.config`).
   // Older Vite has no serve-mode integration, so fall back to installing the
   // `DevTools()` plugin manually.
-  if (isGreaterOrEqual(viteVersion, '8.3.0')) {
+  if (isGreaterThanOrEqual(viteVersion, '8.3.0')) {
     extendViteDevToolsConfig((devtools) => {
       devtools.branding ??= branding
     })

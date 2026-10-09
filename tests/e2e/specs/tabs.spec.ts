@@ -14,7 +14,6 @@ const TABS = [
   { path: '/modules/runtime-configs', title: 'Runtime Configs', content: /public|app/i },
   { path: '/modules/hooks', title: 'Hooks', content: /hook|server|client/i },
   { path: '/modules/plugins', title: 'Plugins', content: /plugin/i },
-  { path: '/modules/open-graph', title: 'Open Graph', content: /open graph|meta|preview/i },
 ] as const
 
 test.describe('main tabs', () => {

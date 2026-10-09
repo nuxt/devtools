@@ -5,13 +5,18 @@ test.skip(
   'tab-seo playground, dev mode only',
 )
 
-test('Open Graph tab shows page title from playground', async ({ page, openDevTools, navigateTab, devtoolsFrame }) => {
+test('Open Graph tab shows page title from playground', async ({ page, openDevTools }) => {
   await page.goto('/')
   await openDevTools()
-  await navigateTab('/modules/open-graph')
+  // Open Graph is a standalone Devframe dock (@devframes/plugin-og).
+  const showMore = page.getByRole('button', { name: 'Show more', exact: true })
+  const dock = page.getByRole('button', { name: /open graph/i })
+  if (!await dock.isVisible())
+    await showMore.click()
+  await dock.click()
   // index.vue sets useHead({ title: 'Home page' }) plus og:title / og:description.
-  // The Open Graph tab renders these meta values.
-  await expect(devtoolsFrame().locator('body'))
+  // The viewer mounts in its own iframe, separate from the Nuxt client.
+  await expect(page.frameLocator('iframe[src*="devframes_plugin_og"]').locator('body'))
     .toContainText('Home page', { timeout: 15_000 })
 })
 
