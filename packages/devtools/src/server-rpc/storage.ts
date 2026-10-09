@@ -1,25 +1,35 @@
 import type { Storage, StorageValue } from 'unstorage'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import type { AnyNitro, AnyStorageMounts } from '../utils/nitro-compat'
-import { builtinDrivers, createStorage, normalizeKey } from 'unstorage'
 import { watchStorageMount } from './storage-watch'
 
 // Mounts backed by the project itself (`root`/`src` are the filesystem) stay
 // off limits for listing and for every item operation alike. Normalise first:
 // unstorage routes `/root:x`, `:root:x` and `root/x` to the `root` mount too.
 const IGNORE_STORAGE_MOUNTS = ['root', 'build', 'src', 'cache']
-function shouldIgnoreStorageKey(key: string) {
-  return IGNORE_STORAGE_MOUNTS.includes(normalizeKey(key).split(':')[0]!)
-}
 
 export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
   const { nuxt } = ctx
   const storageMounts: AnyStorageMounts = {}
 
+  let unstorage: typeof import('unstorage') | undefined
   let storage: Storage | undefined
   let unwatchStorageMounts: Array<() => Promise<void> | void> = []
 
+  function shouldIgnoreStorageKey(key: string) {
+    return !unstorage || IGNORE_STORAGE_MOUNTS.includes(unstorage.normalizeKey(key).split(':')[0]!)
+  }
+
   nuxt.hook('nitro:init', async (nitro: AnyNitro) => {
+    // `unstorage` is a relaxed optional peer: use the copy the project's Nitro
+    // brings (v1 with `nitropack`, v2 with `nitro`) instead of shipping our own.
+    const loaded = await import('unstorage').catch((err) => {
+      nitro.logger.warn('Failed to load `unstorage`, the DevTools storage browser is disabled:', err)
+    })
+    if (!loaded)
+      return
+    unstorage = loaded
+
     // Taken from https://github.com/unjs/nitro/blob/d83f2b65165d7ba996e7ef129ea99ff5b551dccc/src/storage.ts#L7-L10
     // Waiting for https://github.com/unjs/unstorage/issues/53
     const mounts: AnyStorageMounts = {
@@ -37,14 +47,14 @@ export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
     // whichever one the running server uses — in-memory-driver mounts (e.g.
     // the default cache) won't reflect the live server's in-process state,
     // only mounts backed by external state (filesystem, redis, ...) will.
-    const nextStorage = createStorage()
+    const nextStorage = unstorage.createStorage()
     for (const [path, opts] of Object.entries(mounts)) {
       if (!opts?.driver) {
         nitro.logger.warn(`No \`driver\` set for storage mount point "${path}".`)
         continue
       }
       try {
-        const driverImport = builtinDrivers[opts.driver as keyof typeof builtinDrivers] || opts.driver
+        const driverImport = unstorage.builtinDrivers[opts.driver as keyof typeof unstorage.builtinDrivers] || opts.driver
         const driverFactory = await import(driverImport).then(r => r.default || r)
         nextStorage.mount(path, driverFactory(opts))
       }

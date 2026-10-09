@@ -61,7 +61,7 @@ onMounted(() => {
       :title="tab.view.title || tab.title"
       :description="tab.view.description"
       :actions="tab.view.actions"
-      @action="idx => rpc.customTabAction(tab!.name, idx)"
+      @action="rpc.customTabAction(tab!.name, $event)"
     />
   </template>
   <template v-else>
