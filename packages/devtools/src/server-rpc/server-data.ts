@@ -34,9 +34,9 @@ export function setupServerDataRPC({
 
   nuxt.hook('vite:serverCreated', (server, { isClient, isServer }) => {
     if (isClient)
-      viteClient = normalizeViteConfig({ ...server.config, ...server.environments.client.config })
+      viteClient = normalizeViteConfig({ ...server.config, ...server.environments.client.config, plugins: server.environments.client.plugins })
     if (isServer)
-      viteServer = normalizeViteConfig({ ...server.config, ...server.environments.ssr.config })
+      viteServer = normalizeViteConfig({ ...server.config, ...server.environments.ssr.config, plugins: server.environments.ssr.plugins })
   })
 
   return {
