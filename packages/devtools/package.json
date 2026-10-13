@@ -35,6 +35,7 @@
     "@nuxt/kit": "^4.0.0-0 || ^5.0.0-0",
     "nitro": "*",
     "nitropack": "^2.0.0",
+    "unstorage": "^1.0.0 || ^2.0.0-0",
     "vite": "^8.1.5",
     "vite-plugin-inspect": "catalog:prod"
   },
@@ -43,6 +44,9 @@
       "optional": true
     },
     "nitropack": {
+      "optional": true
+    },
+    "unstorage": {
       "optional": true
     },
     "vite-plugin-inspect": {
@@ -66,17 +70,14 @@
     "escape-string-regexp": "catalog:prod",
     "fast-npm-meta": "catalog:prod",
     "hookable": "catalog:frontend",
-    "image-meta": "catalog:prod",
     "local-pkg": "catalog:prod",
     "magic-string": "catalog:prod",
     "magicast": "catalog:prod",
     "mlly": "catalog:prod",
     "pathe": "catalog:frontend",
     "perfect-debounce": "catalog:frontend",
-    "pkg-types": "catalog:prod",
     "tinyglobby": "catalog:prod",
     "unplugin": "catalog:prod",
-    "unstorage": "catalog:prod",
     "verkit": "catalog:prod",
     "vite-plugin-vue-devtools": "catalog:prod",
     "vite-plugin-vue-tracer": "catalog:prod"
@@ -90,7 +91,6 @@
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/simple-icons": "catalog:icons",
     "@iconify-json/tabler": "catalog:icons",
-    "@nuxt/devtools-assets": "workspace:*",
     "@nuxt/kit": "catalog:prod",
     "@nuxt/schema": "catalog:types",
     "@parcel/watcher": "catalog:buildtools",
@@ -98,7 +98,6 @@
     "@unocss/nuxt": "catalog:buildtools",
     "@unocss/preset-icons": "catalog:buildtools",
     "@unocss/preset-uno": "catalog:buildtools",
-    "@vitejs/devtools": "catalog:buildtools",
     "@vueuse/nuxt": "catalog:buildtools",
     "cronstrue": "catalog:frontend",
     "diff": "catalog:frontend",
@@ -128,6 +127,7 @@
     "unocss": "catalog:buildtools",
     "unplugin-vue": "catalog:buildtools",
     "unplugin-vue-markdown": "catalog:buildtools",
+    "unstorage": "catalog:types",
     "vanilla-jsoneditor": "catalog:frontend",
     "vis-data": "catalog:frontend",
     "vis-network": "catalog:frontend",

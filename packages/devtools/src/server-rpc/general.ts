@@ -1,6 +1,6 @@
 import type { ModuleOptions, NuxtLayout } from '@nuxt/schema'
 import type { Component, NuxtApp, NuxtOptions, NuxtPage } from 'nuxt/schema'
-import type { Import, Unimport } from 'unimport'
+import type { Unimport } from 'unimport'
 import type { AutoImportsWithMetadata, HookInfo, NuxtDevtoolsServerContext, ServerDebugContext, ServerFunctions } from '../types'
 import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
@@ -8,8 +8,6 @@ import { logger } from '@nuxt/kit'
 import destr from 'destr'
 import { dirname, join, resolve } from 'pathe'
 import { snakeCase } from 'scule'
-
-import { resolveBuiltinPresets } from 'unimport'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
@@ -26,8 +24,6 @@ export function setupGeneralRPC({
   openInEditorHooks,
 }: NuxtDevtoolsServerContext) {
   const components: Component[] = []
-  const imports: Import[] = []
-  const importPresets: Import[] = []
   let importDirs: string[] = []
   const serverPages: NuxtPage[] = []
   let serverApp: NuxtApp | undefined
@@ -44,9 +40,7 @@ export function setupGeneralRPC({
     components.sort((a, b) => a.pascalName.localeCompare(b.pascalName))
     refresh('getComponents')
   })
-  nuxt.hook('imports:extend', (v) => {
-    imports.length = 0
-    imports.push(...v)
+  nuxt.hook('imports:extend', () => {
     refresh('getAutoImports')
   })
   nuxt.hook('pages:extend', (v) => {
@@ -66,12 +60,6 @@ export function setupGeneralRPC({
   })
   nuxt.hook('app:resolve', (app) => {
     serverApp = app
-  })
-  nuxt.hook('imports:sources', async (v) => {
-    const result = (await resolveBuiltinPresets(v)).flat()
-    importPresets.length = 0
-    importPresets.push(...result)
-    refresh('getAutoImports')
   })
   nuxt.hook('imports:context', (_unimport: any) => {
     unimport = _unimport as Unimport
@@ -173,12 +161,10 @@ export function setupGeneralRPC({
     getServerPages(): NuxtPage[] {
       return serverPages
     },
-    getAutoImports(): AutoImportsWithMetadata {
+    async getAutoImports(): Promise<AutoImportsWithMetadata> {
       return {
-        imports: [
-          ...imports,
-          ...importPresets,
-        ],
+        // presets, config `imports` and scanned dirs, as Nuxt resolves them
+        imports: await unimport?.getImports() ?? [],
         metadata: unimport?.getMetadata(),
         dirs: importDirs,
       }

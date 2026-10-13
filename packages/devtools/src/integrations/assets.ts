@@ -6,8 +6,7 @@ import { defaultAllowedExtensions } from '../constant'
 
 /**
  * Mount the Assets Devframe into the Nuxt dock group. It replaces the removed
- * built-in Assets tab; the legacy asset RPC functions stay for modules that
- * still call them.
+ * built-in Assets tab.
  */
 export function setup({ nuxt, options }: NuxtDevtoolsServerContext): void {
   const definition = createAssetsDevframe({

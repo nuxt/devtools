@@ -3,7 +3,7 @@ import type { StorageValue } from 'unstorage'
 import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AssetEntry, AssetInfo, AutoImportsWithMetadata, ComponentRelationship, HookInfo, ImageMeta, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { AutoImportsWithMetadata, ComponentRelationship, HookInfo, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
 import type { AnyNitro, AnyStorageMounts } from './nitro-compat'
 import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
@@ -23,12 +23,11 @@ export interface ServerFunctions {
   getModuleOptions: () => ModuleOptions
   getComponents: () => Component[]
   getComponentsRelationships: () => Promise<ComponentRelationship[]>
-  getAutoImports: () => AutoImportsWithMetadata
+  getAutoImports: () => Promise<AutoImportsWithMetadata>
   getServerPages: () => NuxtPage[]
   getCustomTabs: () => ModuleCustomTab[]
   getServerHooks: () => HookInfo[]
   getServerLayouts: () => NuxtLayout[]
-  getStaticAssets: () => Promise<AssetInfo[]>
   getServerRoutes: () => ServerRouteInfo[]
   getServerTasks: () => ScannedNitroTasks | null
   getServerApp: () => NuxtApp | undefined
@@ -58,13 +57,6 @@ export interface ServerFunctions {
   generateAnalyzeBuildName: () => Promise<string>
   startAnalyzeBuild: (name: string) => Promise<string>
   clearAnalyzeBuilds: (names?: string[]) => Promise<void>
-
-  // Queries
-  getImageMeta: (filepath: string) => Promise<ImageMeta | undefined>
-  getTextAssetContent: (filepath: string, limit?: number) => Promise<string | undefined>
-  writeStaticAssets: (file: AssetEntry[], folder: string) => Promise<string[]>
-  deleteStaticAsset: (filepath: string) => Promise<void>
-  renameStaticAsset: (oldPath: string, newPath: string) => Promise<void>
 
   // Notifications
   notify: (input: NuxtDevtoolsNotifyInput) => Promise<void>
