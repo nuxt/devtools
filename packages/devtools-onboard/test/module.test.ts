@@ -1,6 +1,6 @@
 import type { Nuxt, NuxtConfig } from '@nuxt/schema'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -15,14 +15,24 @@ afterEach(async () => {
   await Promise.all(cleanups.splice(0).map(fn => fn()))
 })
 
+/** A stand-in DevTools package whose module records its name in `appConfig`. */
+async function installStandIn(rootDir: string, name: string) {
+  const dir = join(rootDir, 'node_modules', name)
+  await mkdir(dir, { recursive: true })
+  await writeFile(join(dir, 'package.json'), JSON.stringify({ name, type: 'module', exports: './module.mjs' }))
+  await writeFile(join(dir, 'module.mjs'), `export default (_, nuxt) => { nuxt.options.appConfig.loadedDevtools = ${JSON.stringify(name)} }`)
+}
+
 /**
  * Nuxt core pushes the bare `@nuxt/devtools` name into `_modules`; aliasing
  * it to this module reproduces what Nuxt 5 does with `@nuxt/devtools-onboard`.
  * `withoutDevtools` drops every `node_modules` Nuxt can resolve from, which is
- * the situation of a Nuxt that no longer depends on `@nuxt/devtools` itself.
+ * the situation of a Nuxt that no longer depends on `@nuxt/devtools` itself;
+ * `installed` then puts stand-in packages back into the project.
  */
-async function bootNuxt(overrides: NuxtConfig, { withoutDevtools = false } = {}): Promise<Nuxt> {
+async function bootNuxt(overrides: NuxtConfig, { withoutDevtools = false, installed = [] }: { withoutDevtools?: boolean, installed?: string[] } = {}): Promise<Nuxt> {
   const rootDir = await mkdtemp(join(tmpdir(), 'devtools-onboard-'))
+  await Promise.all(installed.map(name => installStandIn(rootDir, name)))
   const nuxt = await loadNuxt({
     cwd: rootDir,
     ready: false,
@@ -77,6 +87,12 @@ describe('@nuxt/devtools-onboard', () => {
   it('loads @nuxt/devtools when it is installed', async () => {
     const nuxt = await bootNuxt({})
     expect(nuxt.options._requiredModules['@nuxt/devtools']).toBe(true)
+    expect(onboardScripts(nuxt)).toHaveLength(0)
+  }, 60_000)
+
+  it('loads @nuxt/devtools-nightly installed under its own name, over @nuxt/devtools', async () => {
+    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true, installed: ['@nuxt/devtools', '@nuxt/devtools-nightly'] })
+    expect(nuxt.options.appConfig.loadedDevtools).toBe('@nuxt/devtools-nightly')
     expect(onboardScripts(nuxt)).toHaveLength(0)
   }, 60_000)
 

@@ -5,9 +5,17 @@ import { defineNuxtModule, installModule, tryResolveModule } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 
 const DEVTOOLS = '@nuxt/devtools'
+const DEVTOOLS_NIGHTLY = `${DEVTOOLS}-nightly`
 
 /** The names Nuxt itself recognizes as DevTools in `modules` (see `loadNuxt` in nuxt core). */
-const DEVTOOLS_MODULES = new Set([DEVTOOLS, `${DEVTOOLS}-nightly`, `${DEVTOOLS}-edge`])
+const DEVTOOLS_MODULES = new Set([DEVTOOLS, DEVTOOLS_NIGHTLY, `${DEVTOOLS}-edge`])
+
+/**
+ * The packages loaded when installed, any major. A nightly under its own name
+ * is always a deliberate opt-in, while `@nuxt/devtools` may come along with
+ * another dependency, so the nightly wins.
+ */
+const DEVTOOLS_PACKAGES = [DEVTOOLS_NIGHTLY, DEVTOOLS]
 
 function listsDevtools(modules: NuxtOptions['modules']): boolean {
   return modules.some((entry) => {
@@ -19,7 +27,9 @@ function listsDevtools(modules: NuxtOptions['modules']): boolean {
 /**
  * The spec the button installs. Versions are released in lockstep, so a caret
  * on our own version pins the matching DevTools; a nightly build carries an
- * `npm:@nuxt/devtools-nightly@…` alias in its peer range instead.
+ * `npm:@nuxt/devtools-nightly@…` alias in its peer range instead. Otherwise
+ * the peer range is `*`: it must not conflict with an installed v3 or nightly,
+ * and npm only matches prereleases against `*`.
  */
 async function devtoolsSpec(): Promise<string> {
   const { version, peerDependencies } = await readPackageJSON(fileURLToPath(import.meta.url))
@@ -38,9 +48,11 @@ export default defineNuxtModule({
     if (listsDevtools(nuxt.options.modules))
       return
 
-    const installed = await tryResolveModule(DEVTOOLS, nuxt.options.modulesDir)
-    if (installed)
-      return installModule(installed)
+    for (const name of DEVTOOLS_PACKAGES) {
+      const installed = await tryResolveModule(name, nuxt.options.modulesDir)
+      if (installed)
+        return installModule(installed)
+    }
     if (!nuxt.options.dev)
       return
 
