@@ -20,6 +20,11 @@ const name = computed(() => props.name ?? route.params.name)
 const tabs = useAllTabs()
 const tab = computed(() => tabs.value.find(i => i.name === name.value) as ModuleCustomTab | undefined)
 
+function onLaunchAction(idx: number) {
+  if (tab.value)
+    return rpc.customTabAction(tab.value.name, idx)
+}
+
 onMounted(() => {
   // if the tab is not found and passed a certain timeout, redirect to the overview page
   if (!tab.value) {
@@ -61,7 +66,7 @@ onMounted(() => {
       :title="tab.view.title || tab.title"
       :description="tab.view.description"
       :actions="tab.view.actions"
-      @action="rpc.customTabAction(tab!.name, $event)"
+      @action="onLaunchAction"
     />
   </template>
   <template v-else>
