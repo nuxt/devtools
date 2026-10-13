@@ -1,7 +1,6 @@
 import type { Nitro } from 'nitropack'
 import type { ResolvedConfig } from 'vite'
 import type { NuxtDevtoolsServerContext, ServerFunctions } from '../types'
-import { addVitePlugin } from '@nuxt/kit'
 
 export function setupServerDataRPC({
   nuxt,
@@ -33,28 +32,11 @@ export function setupServerDataRPC({
     nitro = _nitro
   })
 
-  addVitePlugin({
-    name: 'nuxt:devtools:config',
-    applyToEnvironment(environment) {
-      if (environment.name === 'ssr') {
-        return {
-          name: 'nuxt:devtools:config-retriever',
-          enforce: 'post',
-          configResolved(config) {
-            viteServer = normalizeViteConfig(config)
-          },
-        }
-      }
-      if (environment.name === 'client') {
-        return {
-          name: 'nuxt:devtools:config-retriever',
-          enforce: 'post',
-          configResolved(config) {
-            viteClient = normalizeViteConfig(config)
-          },
-        }
-      }
-    },
+  nuxt.hook('vite:serverCreated', (server, { isClient, isServer }) => {
+    if (isClient)
+      viteClient = normalizeViteConfig({ ...server.config, ...server.environments.client.config, plugins: server.environments.client.plugins })
+    if (isServer)
+      viteServer = normalizeViteConfig({ ...server.config, ...server.environments.ssr.config, plugins: server.environments.ssr.plugins })
   })
 
   return {
