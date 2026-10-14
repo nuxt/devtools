@@ -1,12 +1,12 @@
 import type { Nuxt, NuxtConfig } from '@nuxt/schema'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
-import { createServer } from 'node:http'
+import { createServer, request } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadNuxt } from 'nuxt'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const onboardModule = fileURLToPath(new URL('../src/module.ts', import.meta.url))
 
@@ -58,7 +58,8 @@ function onboardScripts(nuxt: Nuxt) {
 
 type Middleware = (req: IncomingMessage, res: ServerResponse, next: () => void) => void
 
-async function viteMiddlewareFetch(nuxt: Nuxt, path: string): Promise<Response> {
+/** Serves what the module mounts on the client Vite server; resolves to its origin. */
+async function serveViteMiddleware(nuxt: Nuxt): Promise<string> {
   const mounted: Middleware[] = []
   // Only `middlewares.use` is read; the rest of a real ViteDevServer is irrelevant here.
   const viteServer = { middlewares: { use: (fn: Middleware) => mounted.push(fn) } } as never
@@ -74,7 +75,19 @@ async function viteMiddlewareFetch(nuxt: Nuxt, path: string): Promise<Response> 
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
   cleanups.push(() => new Promise(resolve => server.close(() => resolve())))
   const { port } = server.address() as { port: number } // listening on a TCP port, never a pipe
-  return fetch(`http://127.0.0.1:${port}${path}`)
+  return `http://127.0.0.1:${port}`
+}
+
+const onboardStatus = (origin: string) => fetch(`${origin}/__devtools/__onboard/status`).then(r => r.json())
+
+/** `fetch` always sends the real `Host`; a tunnel on this machine forwards its public one. */
+function postWithHost(url: string, host: string): Promise<number | undefined> {
+  return new Promise((resolve, reject) => {
+    request(url, { method: 'POST', headers: { host } }, (res) => {
+      res.resume()
+      resolve(res.statusCode)
+    }).on('error', reject).end()
+  })
 }
 
 describe('@nuxt/devtools-onboard', () => {
@@ -101,12 +114,35 @@ describe('@nuxt/devtools-onboard', () => {
     expect(nuxt.options._requiredModules['@nuxt/devtools']).toBeUndefined()
     expect(onboardScripts(nuxt)).toHaveLength(1)
 
-    const status = await viteMiddlewareFetch(nuxt, '/__devtools/__onboard/status').then(r => r.json())
+    const status = await onboardStatus(await serveViteMiddleware(nuxt))
     expect(status.state).toBe('idle')
     // No lockfile in the fixture, so the package manager falls back to npm.
     expect(status.command.slice(0, 3)).toEqual(['npm', 'i', '-D'])
     expect(status.command[3]).toMatch(/^@nuxt\/devtools@\^4\./)
     expect(status.branding.productName).toBe('Nuxt DevTools')
+  }, 60_000)
+
+  it('installs on one click from this machine', async () => {
+    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
+    // Offline with an empty cache, so the install fails fast instead of downloading DevTools.
+    vi.stubEnv('npm_config_offline', 'true')
+    vi.stubEnv('npm_config_cache', join(nuxt.options.rootDir, '.npm-cache'))
+    cleanups.push(async () => {
+      vi.unstubAllEnvs()
+    })
+    const origin = await serveViteMiddleware(nuxt)
+
+    const install = await fetch(`${origin}/__devtools/__onboard/install`, { method: 'POST' })
+    expect(install.status).toBe(202)
+    await vi.waitFor(async () => expect((await onboardStatus(origin)).state).toBe('error'), { timeout: 30_000, interval: 200 })
+  }, 60_000)
+
+  it('refuses an install that does not come from this machine', async () => {
+    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
+    const origin = await serveViteMiddleware(nuxt)
+
+    expect(await postWithHost(`${origin}/__devtools/__onboard/install`, 'my-app.trycloudflare.com')).toBe(403)
+    expect((await onboardStatus(origin)).state).toBe('idle')
   }, 60_000)
 
   it('stays out of the way outside nuxt dev when @nuxt/devtools is missing', async () => {

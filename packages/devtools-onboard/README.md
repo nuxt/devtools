@@ -7,6 +7,8 @@ The entry point of [Nuxt DevTools](https://devtools.nuxt.com). It is a tiny Nuxt
 
 Nothing is injected outside `nuxt dev`.
 
+The button installs only for a browser on the machine that runs `nuxt dev`. Other devices can reach a dev server bound to the network (for example with `--host`), or through a tunnel. There the install is refused, and the panel shows the command to run yourself.
+
 ## Turning it off
 
 - `devtools: false` (or `devtools: { enabled: false }`) in `nuxt.config` disables both the button and DevTools.
