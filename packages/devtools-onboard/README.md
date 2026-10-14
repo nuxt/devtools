@@ -7,7 +7,7 @@ The entry point of [Nuxt DevTools](https://devtools.nuxt.com). It is a tiny Nuxt
 
 Nothing is injected outside `nuxt dev`.
 
-Because the dev server can be reachable from other devices, each install from the button waits until you type `y` and press Enter in the terminal that runs `nuxt dev`. Without an interactive terminal the install is refused, and the panel shows the command to run yourself.
+The button installs only for a browser on the machine that runs `nuxt dev`. Other devices can reach a dev server bound to the network (for example with `--host`), or through a tunnel. There the install is refused, and the panel shows the command to run yourself.
 
 ## Turning it off
 
