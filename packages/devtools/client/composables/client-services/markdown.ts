@@ -1,4 +1,4 @@
-import type MarkdownIt from 'markdown-it'
+import type { MarkdownIt } from 'markdown-it'
 import { shallowRef } from 'vue'
 
 const md = shallowRef<MarkdownIt>()
