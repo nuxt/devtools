@@ -1,3 +1,17 @@
+## [3.4.3](https://github.com/nuxt/devtools/compare/v3.4.2...v3.4.3) (2026-10-14)
+
+
+### Bug Fixes
+
+* **devtools:** require the dev auth token for server config and storage mounts ([#1124](https://github.com/nuxt/devtools/issues/1124)) ([0383cd7](https://github.com/nuxt/devtools/commit/0383cd7590a326331071897e4ed029a2055c34d4))
+
+
+### Performance Improvements
+
+* replace `nypm` with `package-manager-detector` ([#1102](https://github.com/nuxt/devtools/issues/1102)) ([21904b9](https://github.com/nuxt/devtools/commit/21904b9b1b441120f296c592a0f8354589eb2de4))
+
+
+
 ## [3.4.2](https://github.com/nuxt/devtools/compare/v3.4.1...v3.4.2) (2026-08-22)
 
 
