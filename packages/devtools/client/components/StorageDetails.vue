@@ -19,10 +19,10 @@ const currentStorage = useSessionState<string>('storage:current', '')
 const currentItem = ref()
 const fileKey = useSessionState<string>('storage:file:state', '')
 
-const { data: storageMounts } = await useAsyncData('storageMounts', () => rpc.getStorageMounts())
+const { data: storageMounts } = await useAsyncData('storageMounts', async () => rpc.getStorageMounts(await ensureDevAuthToken()))
 const { data: storageKeys, refresh: refreshStorageKeys } = await useAsyncData('storageKeys', async () => {
   if (currentStorage.value)
-    return await rpc.getStorageKeys(currentStorage.value)
+    return await rpc.getStorageKeys(await ensureDevAuthToken(), currentStorage.value)
   return []
 })
 

@@ -55,10 +55,13 @@ export function setupStorageRPC({
   })
 
   return {
-    async getStorageMounts() {
+    async getStorageMounts(token: string) {
+      // Mount options carry driver credentials (passwords, access keys).
+      await ensureDevAuthToken(token)
       return storageMounts
     },
-    async getStorageKeys(base?: string) {
+    async getStorageKeys(token: string, base?: string) {
+      await ensureDevAuthToken(token)
       if (!storage)
         return []
       try {

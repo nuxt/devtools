@@ -44,7 +44,12 @@ function authorize() {
 
 <template>
   <NPanelGrids h-screen w-full flex>
-    <div v-if="!config">
+    <button v-if="!config && !isDevAuthed" title="Authorize" @click="authorize">
+      <NTip n="orange5" icon="i-carbon-locked" justify-center>
+        Project data requires authorization. Click to authorize this browser.
+      </NTip>
+    </button>
+    <div v-else-if="!config">
       Loading...
     </div>
     <div v-else flex="~ col gap2" ma h-full max-w-300 w-full p5 px5 md:px20>

@@ -4,7 +4,7 @@ import { objectPick } from '@antfu/utils'
 import { computed } from 'vue'
 import { useFetch } from '#app/composables/fetch'
 import { useClientRouter } from './client'
-import { ensureDevAuthToken } from './dev-auth'
+import { ensureDevAuthToken, isDevAuthed } from './dev-auth'
 import { rpc } from './rpc'
 import { useAsyncState } from './utils'
 
@@ -37,7 +37,8 @@ export function useStaticAssets() {
 }
 
 export function useServerConfig() {
-  return useAsyncState('getServerConfig', () => rpc.getServerConfig())
+  // Refetch once authorized, e.g. after the initial prompt was dismissed.
+  return useAsyncState('getServerConfig', async () => rpc.getServerConfig(await ensureDevAuthToken()), { watch: [isDevAuthed] })
 }
 
 export function useServerDebugContext() {
