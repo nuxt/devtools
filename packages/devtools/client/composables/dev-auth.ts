@@ -73,7 +73,7 @@ async function authConfirmAction() {
 
   const result = await Promise.race([
     AuthConfirm.start(),
-    until(devAuthToken.value).toBeTruthy(),
+    until(devAuthToken).toBeTruthy(),
   ])
 
   if (result === false) {
