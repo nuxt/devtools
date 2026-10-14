@@ -86,20 +86,13 @@ export function setupGeneralRPC({
   })
 
   return {
-    getServerConfig(): NuxtOptions {
-      // This method is intentionally reachable without a dev auth token (the
-      // client reads it eagerly across many views), so strip the private
-      // `runtimeConfig` values — they can hold secrets — from the payload.
-      // The Runtime Config tab reads them separately via the token-gated
-      // `getServerRuntimeConfig`. `public`/`app` are non-secret and kept.
-      const { runtimeConfig, ...rest } = nuxt.options
-      return {
-        ...rest,
-        runtimeConfig: {
-          app: runtimeConfig?.app,
-          public: runtimeConfig?.public,
-        },
-      } as unknown as NuxtOptions
+    async getServerConfig(token: string): Promise<NuxtOptions> {
+      // Secrets live all over the resolved options (runtimeConfig and its
+      // `nitro` copy, `_layers[].config`, module options, storage drivers), so
+      // the whole object is gated rather than redacted.
+      await ensureDevAuthToken(token)
+      // `@nuxt/schema` and `nuxt/schema` resolve to copies with different module augmentations
+      return nuxt.options as unknown as NuxtOptions
     },
     async getServerDebugContext() {
       if (!nuxt._debug)

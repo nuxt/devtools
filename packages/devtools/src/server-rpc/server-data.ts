@@ -58,9 +58,6 @@ export function setupServerDataRPC({
   })
 
   return {
-    getServerConfig() {
-      return nuxt.options
-    },
     async getServerData(token: string) {
       await ensureDevAuthToken(token)
       return {

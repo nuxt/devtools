@@ -12,7 +12,7 @@ import type { GetWizardArgs, WizardActions } from './wizard'
 
 export interface ServerFunctions {
   // Static RPCs (can be provide on production build in the future)
-  getServerConfig: () => NuxtOptions
+  getServerConfig: (token: string) => Promise<NuxtOptions>
   getServerDebugContext: () => Promise<ServerDebugContext | undefined>
   getServerData: (token: string) => Promise<NuxtServerData>
   getServerRuntimeConfig: (token: string) => Promise<Record<string, any>>
@@ -45,8 +45,8 @@ export interface ServerFunctions {
   runTerminalAction: (token: string, id: string, action: TerminalAction) => Promise<boolean>
 
   // Storage
-  getStorageMounts: () => Promise<StorageMounts>
-  getStorageKeys: (base?: string) => Promise<string[]>
+  getStorageMounts: (token: string) => Promise<StorageMounts>
+  getStorageKeys: (token: string, base?: string) => Promise<string[]>
   getStorageItem: (token: string, key: string) => Promise<StorageValue>
   setStorageItem: (token: string, key: string, value: StorageValue) => Promise<void>
   removeStorageItem: (token: string, key: string) => Promise<void>
