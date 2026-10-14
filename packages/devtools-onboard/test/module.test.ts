@@ -58,7 +58,7 @@ function onboardScripts(nuxt: Nuxt) {
 
 type Middleware = (req: IncomingMessage, res: ServerResponse, next: () => void) => void
 
-async function viteMiddlewareFetch(nuxt: Nuxt, path: string): Promise<Response> {
+async function viteMiddlewareFetch(nuxt: Nuxt, path: string, init?: RequestInit): Promise<Response> {
   const mounted: Middleware[] = []
   // Only `middlewares.use` is read; the rest of a real ViteDevServer is irrelevant here.
   const viteServer = { middlewares: { use: (fn: Middleware) => mounted.push(fn) } } as never
@@ -74,7 +74,7 @@ async function viteMiddlewareFetch(nuxt: Nuxt, path: string): Promise<Response> 
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
   cleanups.push(() => new Promise(resolve => server.close(() => resolve())))
   const { port } = server.address() as { port: number } // listening on a TCP port, never a pipe
-  return fetch(`http://127.0.0.1:${port}${path}`)
+  return fetch(`http://127.0.0.1:${port}${path}`, init)
 }
 
 describe('@nuxt/devtools-onboard', () => {
@@ -107,6 +107,16 @@ describe('@nuxt/devtools-onboard', () => {
     expect(status.command.slice(0, 3)).toEqual(['npm', 'i', '-D'])
     expect(status.command[3]).toMatch(/^@nuxt\/devtools@\^4\./)
     expect(status.branding.productName).toBe('Nuxt DevTools')
+  }, 60_000)
+
+  it('refuses to install when nobody confirms it in the terminal', async () => {
+    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
+    // Vitest workers get a piped stdin, so no terminal can answer the prompt.
+    const install = await viteMiddlewareFetch(nuxt, '/__devtools/__onboard/install', { method: 'POST' })
+    expect(install.status).toBe(403)
+
+    const status = await viteMiddlewareFetch(nuxt, '/__devtools/__onboard/status').then(r => r.json())
+    expect(status.state).toBe('idle')
   }, 60_000)
 
   it('stays out of the way outside nuxt dev when @nuxt/devtools is missing', async () => {
