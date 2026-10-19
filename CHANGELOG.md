@@ -1,3 +1,12 @@
+## [3.4.4](https://github.com/nuxt/devtools/compare/v3.4.3...v3.4.4) (2026-10-19)
+
+
+### Bug Fixes
+
+* **devtools:** read vite configs from `vite:serverCreated` hook ([#1123](https://github.com/nuxt/devtools/issues/1123)) ([36d10a1](https://github.com/nuxt/devtools/commit/36d10a12c40ae2abd3c658581ec1cfaa6bc8bc9f))
+
+
+
 ## [3.4.3](https://github.com/nuxt/devtools/compare/v3.4.2...v3.4.3) (2026-10-14)
 
 
