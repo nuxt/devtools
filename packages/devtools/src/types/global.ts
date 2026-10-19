@@ -1,4 +1,13 @@
-import type { LoadingTimeMetric, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
+import type { LoadingTimeMetric, ModuleOptions, NuxtDevtoolsHostClient, NuxtDevtoolsIframeClient, NuxtDevtoolsGlobal as NuxtDevtoolsViewGlobal, PluginMetric, TimelineMetrics } from '.'
+
+declare module '@nuxt/schema' {
+  interface RuntimeConfigApp {
+    /**
+     * @internal
+     */
+    devtools?: Pick<ModuleOptions, 'iframeProps'>
+  }
+}
 
 declare global {
   interface Window {
