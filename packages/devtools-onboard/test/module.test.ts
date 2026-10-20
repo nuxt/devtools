@@ -1,11 +1,12 @@
 import type { Nuxt, NuxtConfig } from '@nuxt/schema'
-import type { IncomingMessage, ServerResponse } from 'node:http'
+import type { ViteDevServer } from 'vite'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadNuxt } from 'nuxt'
+import { createServer as createViteServer } from 'vite'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const onboardModule = fileURLToPath(new URL('../src/module.ts', import.meta.url))
@@ -56,26 +57,24 @@ function onboardScripts(nuxt: Nuxt) {
   return (nuxt.options.app.head.script ?? []).filter(script => typeof script === 'object' && script.src === '/__devtools/embedded.js')
 }
 
-type Middleware = (req: IncomingMessage, res: ServerResponse, next: () => void) => void
-
-/** Serves what the module mounts on the client Vite server; resolves to its origin. */
-async function serveViteMiddleware(nuxt: Nuxt): Promise<string> {
-  const mounted: Middleware[] = []
-  // Only `middlewares.use` is read; the rest of a real ViteDevServer is irrelevant here.
-  const viteServer = { middlewares: { use: (fn: Middleware) => mounted.push(fn) } } as never
+/** Serves what the module mounts on a real client Vite server; resolves to its origin. */
+async function serveViteMiddleware(nuxt: Nuxt): Promise<{ origin: string, viteServer: ViteDevServer }> {
+  const viteServer = await createViteServer({ configFile: false, logLevel: 'silent', server: { middlewareMode: true, ws: false } })
+  cleanups.push(() => viteServer.close())
+  // Mount only what the module adds, not Vite's own transform middlewares.
+  viteServer.middlewares.stack.length = 0
   await nuxt.callHook('vite:serverCreated', viteServer, { isClient: true, isServer: false })
-  const [middleware] = mounted
-  if (!middleware)
-    throw new Error('onboarding middleware was not mounted')
 
-  const server = createServer((req, res) => middleware(req, res, () => {
-    res.statusCode = 404
-    res.end()
-  }))
+  const server = createServer(viteServer.middlewares)
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
   cleanups.push(() => new Promise(resolve => server.close(() => resolve())))
   const { port } = server.address() as { port: number } // listening on a TCP port, never a pipe
-  return `http://127.0.0.1:${port}`
+  return { origin: `http://127.0.0.1:${port}`, viteServer }
+}
+
+/** Nuxt's dev handler only passes a URL to Vite when a middleware is mounted on a path other than `/`. */
+function nuxtRoutesToVite(viteServer: ViteDevServer, url: string) {
+  return viteServer.middlewares.stack.some(({ route }) => route.length > 1 && url.startsWith(route))
 }
 
 const onboardStatus = (origin: string) => fetch(`${origin}/__devtools/__onboard/status`).then(r => r.json())
@@ -104,7 +103,12 @@ describe('@nuxt/devtools-onboard', () => {
     expect(nuxt.options._requiredModules['@nuxt/devtools']).toBeUndefined()
     expect(onboardScripts(nuxt)).toHaveLength(1)
 
-    const status = await onboardStatus(await serveViteMiddleware(nuxt))
+    const { origin, viteServer } = await serveViteMiddleware(nuxt)
+    expect(nuxtRoutesToVite(viteServer, '/__devtools/embedded.js')).toBe(true)
+    const script = await fetch(`${origin}/__devtools/embedded.js`)
+    expect(script.headers.get('content-type')).toMatch(/javascript/)
+
+    const status = await onboardStatus(origin)
     expect(status.state).toBe('idle')
     // No lockfile in the fixture, so the package manager falls back to npm.
     expect(status.command.slice(0, 3)).toEqual(['npm', 'i', '-D'])
@@ -114,7 +118,7 @@ describe('@nuxt/devtools-onboard', () => {
 
   it('refuses to install when nobody can confirm it in the terminal', async () => {
     const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
-    const origin = await serveViteMiddleware(nuxt)
+    const { origin } = await serveViteMiddleware(nuxt)
 
     // Vitest workers get a piped stdin, so no terminal can answer the question.
     const install = await fetch(`${origin}/__devtools/__onboard/install`, { method: 'POST' })
