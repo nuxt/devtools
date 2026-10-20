@@ -18,6 +18,12 @@ const DEVTOOLS_MODULES = new Set([DEVTOOLS, DEVTOOLS_NIGHTLY, `${DEVTOOLS}-edge`
  */
 const DEVTOOLS_PACKAGES = [DEVTOOLS_NIGHTLY, DEVTOOLS]
 
+/**
+ * Where Vite DevTools mounts the hub, so after the restart the real
+ * `embedded.js` answers at the URL the button was loaded from.
+ */
+const BASE = '/__devtools/'
+
 function listsDevtools(modules: NuxtOptions['modules']): boolean {
   return modules.some((entry) => {
     const id = Array.isArray(entry) ? entry[0] : entry
@@ -59,9 +65,7 @@ export default defineNuxtModule({
 
     const onboarding = createOnboarding({
       cwd: nuxt.options.rootDir,
-      // Where Vite DevTools mounts the hub, so after the restart the real
-      // `embedded.js` answers at the URL the button was loaded from.
-      base: '/__devtools/',
+      base: BASE,
       packages: [await devtoolsSpec()],
       branding: {
         productName: 'Nuxt DevTools',
@@ -85,8 +89,16 @@ export default defineNuxtModule({
     })
 
     nuxt.hook('vite:serverCreated', (server, { isClient }) => {
-      if (isClient)
-        server.middlewares.use(onboarding.nodeMiddleware)
+      if (!isClient)
+        return
+      // Nuxt only hands a request to Vite when a middleware is mounted on a
+      // path other than `/`; otherwise it rewrites the URL to `/__skip_vite/…`.
+      // Connect strips the mount path, so restore the full URL the
+      // middleware matches against `base`.
+      server.middlewares.use(BASE.slice(0, -1), (req, res, next) => {
+        req.url = req.originalUrl || req.url
+        onboarding.nodeMiddleware(req, res, next)
+      })
     })
     if (!onboarding.disabled)
       (nuxt.options.app.head.script ??= []).push({ type: 'module', src: onboarding.scriptSrc, tagPosition: 'bodyClose' })
