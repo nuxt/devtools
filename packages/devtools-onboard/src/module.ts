@@ -1,12 +1,11 @@
 import type { NuxtOptions } from '@nuxt/schema'
+import type { IncomingMessage } from 'node:http'
+import { AsyncLocalStorage } from 'node:async_hooks'
 import { fileURLToPath } from 'node:url'
 import { createOnboarding } from '@devframes/hub-ui-onboard'
 import { defineNuxtModule, installModule, tryResolveModule } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
 import { fromThisMachine } from './this-machine'
-
-/** Where Vite DevTools mounts the hub, so after the restart the real `embedded.js` answers at the URL the button was loaded from. */
-const BASE = '/__devtools/'
 
 const DEVTOOLS = '@nuxt/devtools'
 const DEVTOOLS_NIGHTLY = `${DEVTOOLS}-nightly`
@@ -60,9 +59,13 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
+    // `onConfirm` only gets a web `Request`, which has no socket address.
+    const incoming = new AsyncLocalStorage<IncomingMessage>()
     const onboarding = createOnboarding({
       cwd: nuxt.options.rootDir,
-      base: BASE,
+      // Where Vite DevTools mounts the hub, so after the restart the real
+      // `embedded.js` answers at the URL the button was loaded from.
+      base: '/__devtools/',
       packages: [await devtoolsSpec()],
       branding: {
         productName: 'Nuxt DevTools',
@@ -74,10 +77,14 @@ export default defineNuxtModule({
         refused: 'Install from a browser on the machine that runs nuxt dev, or run the command above yourself.',
         restart: 'Installed. Restarting the dev server…',
       },
-      // The middleware below refuses other devices, so a click from this
-      // machine is the developer's consent. The default y/N prompt reads
-      // stdin, which nuxi keeps for its own shortcuts and TUI.
-      onConfirm: () => true,
+      // The dev server can be reachable from other devices, so only a click
+      // from a browser on this machine counts as the developer's; anything
+      // else, including a call outside a request, is refused. The default
+      // y/N prompt reads stdin, which nuxi keeps for its shortcuts and TUI.
+      onConfirm: () => {
+        const req = incoming.getStore()
+        return req !== undefined && fromThisMachine(req)
+      },
       onInstalled() {
         // A Nuxt module only mounts during setup, so the dev server has to
         // start over. Delay past the install response so the panel can show
@@ -87,17 +94,8 @@ export default defineNuxtModule({
     })
 
     nuxt.hook('vite:serverCreated', (server, { isClient }) => {
-      if (!isClient)
-        return
-      server.middlewares.use((req, res, next) => {
-        // Same prefix test as `nodeMiddleware`, so no spelling of its POST routes slips past.
-        if (req.method !== 'GET' && req.method !== 'HEAD' && req.url?.startsWith(BASE) && !fromThisMachine(req)) {
-          res.statusCode = 403
-          res.end()
-          return
-        }
-        onboarding.nodeMiddleware(req, res, next)
-      })
+      if (isClient)
+        server.middlewares.use((req, res, next) => incoming.run(req, () => onboarding.nodeMiddleware(req, res, next)))
     })
     if (!onboarding.disabled)
       (nuxt.options.app.head.script ??= []).push({ type: 'module', src: onboarding.scriptSrc, tagPosition: 'bodyClose' })
