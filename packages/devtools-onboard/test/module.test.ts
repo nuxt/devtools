@@ -1,12 +1,12 @@
 import type { Nuxt, NuxtConfig } from '@nuxt/schema'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
-import { createServer, request } from 'node:http'
+import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadNuxt } from 'nuxt'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 const onboardModule = fileURLToPath(new URL('../src/module.ts', import.meta.url))
 
@@ -80,16 +80,6 @@ async function serveViteMiddleware(nuxt: Nuxt): Promise<string> {
 
 const onboardStatus = (origin: string) => fetch(`${origin}/__devtools/__onboard/status`).then(r => r.json())
 
-/** `fetch` always sends the real `Host`; a tunnel on this machine forwards its public one. */
-function postWithHost(url: string, host: string): Promise<number | undefined> {
-  return new Promise((resolve, reject) => {
-    request(url, { method: 'POST', headers: { host } }, (res) => {
-      res.resume()
-      resolve(res.statusCode)
-    }).on('error', reject).end()
-  })
-}
-
 describe('@nuxt/devtools-onboard', () => {
   it('does nothing when devtools are disabled', async () => {
     const nuxt = await bootNuxt({ devtools: false, modules: [onboardModule] })
@@ -122,26 +112,13 @@ describe('@nuxt/devtools-onboard', () => {
     expect(status.branding.productName).toBe('Nuxt DevTools')
   }, 60_000)
 
-  it('installs on one click from this machine', async () => {
+  it('refuses to install when nobody can confirm it in the terminal', async () => {
     const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
-    // Offline with an empty cache, so the install fails fast instead of downloading DevTools.
-    vi.stubEnv('npm_config_offline', 'true')
-    vi.stubEnv('npm_config_cache', join(nuxt.options.rootDir, '.npm-cache'))
-    cleanups.push(async () => {
-      vi.unstubAllEnvs()
-    })
     const origin = await serveViteMiddleware(nuxt)
 
+    // Vitest workers get a piped stdin, so no terminal can answer the question.
     const install = await fetch(`${origin}/__devtools/__onboard/install`, { method: 'POST' })
-    expect(install.status).toBe(202)
-    await vi.waitFor(async () => expect((await onboardStatus(origin)).state).toBe('error'), { timeout: 30_000, interval: 200 })
-  }, 60_000)
-
-  it('refuses an install that does not come from this machine', async () => {
-    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true })
-    const origin = await serveViteMiddleware(nuxt)
-
-    expect(await postWithHost(`${origin}/__devtools/__onboard/install`, 'my-app.trycloudflare.com')).toBe(403)
+    expect(install.status).toBe(403)
     expect((await onboardStatus(origin)).state).toBe('idle')
   }, 60_000)
 

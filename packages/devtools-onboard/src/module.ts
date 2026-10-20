@@ -1,11 +1,9 @@
 import type { NuxtOptions } from '@nuxt/schema'
-import type { IncomingMessage } from 'node:http'
-import { AsyncLocalStorage } from 'node:async_hooks'
 import { fileURLToPath } from 'node:url'
 import { createOnboarding } from '@devframes/hub-ui-onboard'
-import { defineNuxtModule, installModule, tryResolveModule } from '@nuxt/kit'
+import { defineNuxtModule, installModule, logger, tryResolveModule } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
-import { fromThisMachine } from './this-machine'
+import { confirmInTerminal } from './terminal-confirm'
 
 const DEVTOOLS = '@nuxt/devtools'
 const DEVTOOLS_NIGHTLY = `${DEVTOOLS}-nightly`
@@ -59,8 +57,6 @@ export default defineNuxtModule({
     if (!nuxt.options.dev)
       return
 
-    // `onConfirm` only gets a web `Request`, which has no socket address.
-    const incoming = new AsyncLocalStorage<IncomingMessage>()
     const onboarding = createOnboarding({
       cwd: nuxt.options.rootDir,
       // Where Vite DevTools mounts the hub, so after the restart the real
@@ -73,18 +69,13 @@ export default defineNuxtModule({
         logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
       },
       messages: {
-        confirming: 'Installing…',
-        refused: 'Install from a browser on the machine that runs nuxt dev, or run the command above yourself.',
         restart: 'Installed. Restarting the dev server…',
       },
-      // The dev server can be reachable from other devices, so only a click
-      // from a browser on this machine counts as the developer's; anything
-      // else, including a call outside a request, is refused. The default
-      // y/N prompt reads stdin, which nuxi keeps for its shortcuts and TUI.
-      onConfirm: () => {
-        const req = incoming.getStore()
-        return req !== undefined && fromThisMachine(req)
-      },
+      // Upstream's own question refuses at once under nuxi's TUI (DF9007).
+      onConfirm: ({ command }) => confirmInTerminal(command, {
+        ask: message => logger.box(message),
+        warn: message => logger.warn(message),
+      }),
       onInstalled() {
         // A Nuxt module only mounts during setup, so the dev server has to
         // start over. Delay past the install response so the panel can show
@@ -95,7 +86,7 @@ export default defineNuxtModule({
 
     nuxt.hook('vite:serverCreated', (server, { isClient }) => {
       if (isClient)
-        server.middlewares.use((req, res, next) => incoming.run(req, () => onboarding.nodeMiddleware(req, res, next)))
+        server.middlewares.use(onboarding.nodeMiddleware)
     })
     if (!onboarding.disabled)
       (nuxt.options.app.head.script ??= []).push({ type: 'module', src: onboarding.scriptSrc, tagPosition: 'bodyClose' })
