@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.0.0-beta.5",
   "private": true,
-  "packageManager": "pnpm@12.11.2",
+  "packageManager": "pnpm@12.14.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -27,7 +27,7 @@
     "docs": "pnpm -C docs install && nuxi dev docs",
     "docs:build": "pnpm -C docs install && CI=true nuxi generate docs",
     "typecheck": "vue-tsc --noEmit",
-    "postinstall": "simple-git-hooks && skills-npm -r",
+    "postinstall": "simple-git-hooks && skills experimental_sync -y -r",
     "dev:prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "nuxt-eslint-auto-explicit-import": "catalog:cli",
     "pathe": "catalog:frontend",
     "simple-git-hooks": "catalog:cli",
-    "skills-npm": "catalog:buildtools",
+    "skills": "catalog:buildtools",
     "taze": "catalog:cli",
     "tsx": "catalog:cli",
     "turbo": "catalog:buildtools",
