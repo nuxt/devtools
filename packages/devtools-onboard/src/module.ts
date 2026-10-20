@@ -1,8 +1,9 @@
 import type { NuxtOptions } from '@nuxt/schema'
 import { fileURLToPath } from 'node:url'
 import { createOnboarding } from '@devframes/hub-ui-onboard'
-import { defineNuxtModule, installModule, tryResolveModule } from '@nuxt/kit'
+import { defineNuxtModule, installModule, logger, tryResolveModule } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
+import { confirmInTerminal } from './terminal-confirm'
 
 const DEVTOOLS = '@nuxt/devtools'
 const DEVTOOLS_NIGHTLY = `${DEVTOOLS}-nightly`
@@ -70,6 +71,11 @@ export default defineNuxtModule({
       messages: {
         restart: 'Installed. Restarting the dev server…',
       },
+      // Upstream's own question refuses at once under nuxi's TUI (DF9007).
+      onConfirm: ({ command }) => confirmInTerminal(command, {
+        ask: message => logger.box(message),
+        warn: message => logger.warn(message),
+      }),
       onInstalled() {
         // A Nuxt module only mounts during setup, so the dev server has to
         // start over. Delay past the install response so the panel can show
