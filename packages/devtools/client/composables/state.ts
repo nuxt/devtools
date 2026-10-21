@@ -73,7 +73,8 @@ export interface VfsFile {
 }
 
 export function useVirtualFiles() {
-  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs.json', { baseURL: '/', responseType: 'json' }))
+  // Nitro v3 only serves `/_vfs/**`; the Accept header selects JSON on both Nitro v2 and v3
+  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs/', { baseURL: '/', headers: { accept: 'application/json' }, responseType: 'json' }))
 }
 
 export function useMergedRouteList() {

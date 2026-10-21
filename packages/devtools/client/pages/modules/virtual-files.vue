@@ -23,7 +23,7 @@ const current = ref<VfsFile>()
 watchEffect(() => {
   if (!fileId.value)
     return
-  const url = `/_vfs.json/${encodeURIComponent(fileId.value)}`
+  const url = `/_vfs/${encodeURIComponent(fileId.value)}`
   fetch(url, {
     headers: {
       accept: 'application/json',
