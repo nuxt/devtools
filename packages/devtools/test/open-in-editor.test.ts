@@ -7,15 +7,14 @@ import { createHooks } from 'hookable'
 import { join, normalize } from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupGeneralRPC } from '../src/server-rpc/general'
-import { ensureOptions } from '../src/server-rpc/options'
-import { resolveEditorCommand } from '../src/utils/editor'
+import { getOptions } from '../src/server-rpc/options'
 
 vi.mock('devframe/utils/launch-editor', () => ({
   launchEditor: vi.fn(),
 }))
 
 vi.mock('../src/server-rpc/options', () => ({
-  ensureOptions: vi.fn(),
+  getOptions: vi.fn(),
 }))
 
 function fakeContext(root: string, handledByHook = true) {
@@ -40,29 +39,6 @@ function fakeContext(root: string, handledByHook = true) {
   return { ctx, opened }
 }
 
-describe('resolveEditorCommand', () => {
-  it('lets launch-editor auto-detect the editor when unset or set to auto', () => {
-    expect(resolveEditorCommand(undefined)).toBeUndefined()
-    expect(resolveEditorCommand('auto')).toBeUndefined()
-  })
-
-  it('maps the legacy "sublime" value to the Sublime Text CLI', () => {
-    expect(resolveEditorCommand('sublime')).toBe('subl')
-  })
-
-  it('passes other editors through unchanged', () => {
-    expect(resolveEditorCommand('subl')).toBe('subl')
-    expect(resolveEditorCommand('code')).toBe('code')
-  })
-
-  it('does not resolve inherited object properties as aliases', () => {
-    expect(resolveEditorCommand('valueOf')).toBe('valueOf')
-    expect(resolveEditorCommand('toString')).toBe('toString')
-    expect(resolveEditorCommand('constructor')).toBe('constructor')
-    expect(resolveEditorCommand('__proto__')).toBe('__proto__')
-  })
-})
-
 describe('openInEditor', () => {
   let root: string
 
@@ -71,7 +47,7 @@ describe('openInEditor', () => {
     await fsp.mkdir(join(root, 'apps/web/app/components'), { recursive: true })
     await fsp.writeFile(join(root, 'apps/web/app/components/Foo.vue'), '<template><div /></template>')
     vi.spyOn(process, 'cwd').mockReturnValue(join(root, 'apps/web'))
-    vi.mocked(ensureOptions).mockReset()
+    vi.mocked(getOptions).mockReset()
     vi.mocked(launchEditor).mockClear()
   })
 
@@ -114,9 +90,9 @@ describe('openInEditor', () => {
     expect(opened).toEqual([filepath])
   })
 
-  it('passes the normalized editor command to launchEditor', async () => {
-    vi.mocked(ensureOptions).mockResolvedValue({
-      openInEditor: 'subl',
+  it.each(['subl', 'sublime'])('opens Sublime Text with subl for the %s setting', async (setting) => {
+    vi.mocked(getOptions).mockReturnValue({
+      behavior: { openInEditor: setting },
     } as any)
     const { ctx, opened } = fakeContext(root, false)
     const { openInEditor } = setupGeneralRPC(ctx)
@@ -124,7 +100,6 @@ describe('openInEditor', () => {
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
     expect(opened).toEqual([filepath])
-    expect(ensureOptions).toHaveBeenCalledWith('behavior', ctx.nuxt)
     expect(launchEditor).toHaveBeenCalledWith(filepath, 'subl')
   })
 

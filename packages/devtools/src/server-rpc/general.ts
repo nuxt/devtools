@@ -10,7 +10,7 @@ import { dirname, join, resolve } from 'pathe'
 import { snakeCase } from 'scule'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { toJsLiteral } from '../utils/serialize-js-literal'
-import { ensureOptions } from './options'
+import { getOptions } from './options'
 
 const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
 // eslint-disable-next-line regexp/no-super-linear-backtracking
@@ -207,8 +207,12 @@ export function setupGeneralRPC({
           if (result)
             return true
         }
-        const behavior = await ensureOptions('behavior', nuxt)
-        await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, behavior.openInEditor))
+        let editor = getOptions()?.behavior.openInEditor ?? undefined
+        if (editor === 'auto')
+          editor = undefined
+        else if (editor === 'sublime')
+          editor = 'subl'
+        await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }
       catch (e) {
