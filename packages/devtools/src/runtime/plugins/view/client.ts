@@ -60,10 +60,13 @@ export async function setupDevToolsClient({
         const ctx = getDevframeContext()
         if (!ctx)
           return
-        if (ctx.panel.session.open)
+        if (ctx.panel.session.open) {
           void ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
-        else
+        }
+        else {
+          ctx.panel.session.open = true
           void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
+        }
       },
       close() {
         const ctx = getDevframeContext()
