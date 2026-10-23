@@ -210,6 +210,8 @@ export function setupGeneralRPC({
         let editor = getOptions()?.behavior.openInEditor ?? undefined
         if (editor === 'auto')
           editor = undefined
+        else if (editor === 'sublime')
+          editor = 'subl'
         await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }
