@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 import { useState } from '#imports'
 import { renderMarkdown } from './client-services/markdown'
 import { renderCodeHighlight } from './client-services/shiki'
+import { COLOR_MODE_STORAGE_KEY } from './color-mode'
 import { extendedRpcMap, rpc } from './rpc'
 
 export function useClient() {
@@ -39,7 +40,7 @@ export const showConnectionWarning = computed(() => {
 
 export function getColorMode() {
   return useColorMode({
-    storageKey: 'nuxt-devtools-color-mode',
+    storageKey: COLOR_MODE_STORAGE_KEY,
   })
 }
 

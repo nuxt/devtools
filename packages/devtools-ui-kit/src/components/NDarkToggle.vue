@@ -2,15 +2,22 @@
 import { useColorMode } from '@vueuse/core'
 
 import { computed, nextTick } from 'vue'
+import { COLOR_MODE_OVERRIDE_STORAGE_KEY, COLOR_MODE_STORAGE_KEY } from '../constants'
 
 const mode = useColorMode({
-  storageKey: 'nuxt-devtools-color-mode',
+  storageKey: COLOR_MODE_STORAGE_KEY,
 })
 const isDark = computed<boolean>({
   get() {
     return mode.value === 'dark'
   },
   set() {
+    try {
+      localStorage.setItem(COLOR_MODE_OVERRIDE_STORAGE_KEY, 'true')
+    }
+    catch {
+      // Storage can be unavailable in restricted contexts.
+    }
     mode.value = isDark.value ? 'light' : 'dark'
   },
 })
