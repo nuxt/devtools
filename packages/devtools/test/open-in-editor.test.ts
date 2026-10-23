@@ -54,6 +54,13 @@ describe('resolveEditorCommand', () => {
     expect(resolveEditorCommand('subl')).toBe('subl')
     expect(resolveEditorCommand('code')).toBe('code')
   })
+
+  it('does not resolve inherited object properties as aliases', () => {
+    expect(resolveEditorCommand('valueOf')).toBe('valueOf')
+    expect(resolveEditorCommand('toString')).toBe('toString')
+    expect(resolveEditorCommand('constructor')).toBe('constructor')
+    expect(resolveEditorCommand('__proto__')).toBe('__proto__')
+  })
 })
 
 describe('openInEditor', () => {

@@ -12,5 +12,5 @@ const EDITOR_ALIASES: Record<string, string> = {
 export function resolveEditorCommand(editor: string | undefined): string | undefined {
   if (!editor || editor === 'auto')
     return undefined
-  return EDITOR_ALIASES[editor] ?? editor
+  return Object.hasOwn(EDITOR_ALIASES, editor) ? EDITOR_ALIASES[editor] : editor
 }
