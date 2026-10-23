@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { isDevtoolsShortcut, resolveShortcutCodes } from '../src/runtime/shared/shortcut'
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  const promise = new Promise<T>((r) => {
+    resolve = r
+  })
+  return { promise, resolve }
+}
 
 function createEvent(overrides: Partial<Parameters<typeof isDevtoolsShortcut>[0]> = {}) {
   return {
@@ -83,5 +91,47 @@ describe('resolveShortcutCodes', () => {
 
   it('returns an empty set when the layout has no letter d', () => {
     expect(resolveShortcutCodes(new Map()).size).toBe(0)
+  })
+})
+
+describe('watchShortcutLayoutMap', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.resetModules()
+  })
+
+  it('ignores a stale result from an older layout request', async () => {
+    vi.resetModules()
+    const first = deferred<Map<string, string>>()
+    const second = deferred<Map<string, string>>()
+    const pending = [first.promise, second.promise]
+    let onLayoutChange: (() => void) | undefined
+
+    vi.stubGlobal('navigator', {
+      keyboard: {
+        getLayoutMap: () => pending.shift()!,
+        addEventListener: (_type: string, listener: () => void) => {
+          onLayoutChange = listener
+        },
+      },
+    })
+
+    const { isDevtoolsShortcut: isShortcut, watchShortcutLayoutMap } = await import('../src/runtime/shared/shortcut')
+
+    watchShortcutLayoutMap()
+    onLayoutChange?.()
+
+    // The second request reflects the new layout and resolves first.
+    second.resolve(new Map([['KeyG', 'd']]))
+    await Promise.resolve()
+    await Promise.resolve()
+
+    // The first request belongs to the old layout and resolves last.
+    first.resolve(new Map([['KeyD', 'd']]))
+    await Promise.resolve()
+    await Promise.resolve()
+
+    const colemakD = { altKey: true, shiftKey: true, code: 'KeyG', key: 'x', keyCode: 0 }
+    expect(isShortcut(colemakD, { shift: true })).toBe(true)
   })
 })

@@ -52,6 +52,7 @@ function getKeyboard(): KeyboardLike | undefined {
 }
 
 let watching = false
+let refreshRequest = 0
 
 export function watchShortcutLayoutMap(): void {
   if (watching)
@@ -63,9 +64,12 @@ export function watchShortcutLayoutMap(): void {
     return
 
   const refresh = () => {
+    const request = ++refreshRequest
     try {
       keyboard.getLayoutMap()
         .then((layout) => {
+          if (request !== refreshRequest)
+            return
           const codes = resolveShortcutCodes(layout)
           // Keep the QWERTY fallback if the map unexpectedly has no letter D.
           if (!codes.size)
