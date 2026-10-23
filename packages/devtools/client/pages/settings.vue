@@ -28,7 +28,7 @@ const editorOptions = [
   ['Zed', 'zed'],
   ['Zed (zeditor)', 'zeditor'],
   ['WebStorm', 'webstorm'],
-  ['Sublime Text', 'sublime'],
+  ['Sublime Text', 'subl'],
   ['Atom', 'atom'],
   ['Windsurf', 'windsurf'],
 ]

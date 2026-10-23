@@ -9,6 +9,7 @@ import destr from 'destr'
 import { dirname, join, resolve } from 'pathe'
 import { snakeCase } from 'scule'
 import { setupHooksDebug } from '../runtime/shared/hooks'
+import { resolveEditorCommand } from '../utils/editor'
 import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
 
@@ -207,9 +208,7 @@ export function setupGeneralRPC({
           if (result)
             return true
         }
-        let editor = getOptions()?.behavior.openInEditor ?? undefined
-        if (editor === 'auto')
-          editor = undefined
+        const editor = resolveEditorCommand(getOptions()?.behavior.openInEditor)
         await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }

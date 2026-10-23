@@ -6,6 +6,7 @@ import { createHooks } from 'hookable'
 import { join, normalize } from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupGeneralRPC } from '../src/server-rpc/general'
+import { resolveEditorCommand } from '../src/utils/editor'
 
 function fakeContext(root: string) {
   const hooks = createHooks()
@@ -28,6 +29,22 @@ function fakeContext(root: string) {
   } as unknown as NuxtDevtoolsServerContext
   return { ctx, opened }
 }
+
+describe('resolveEditorCommand', () => {
+  it('lets launch-editor auto-detect the editor when unset or set to auto', () => {
+    expect(resolveEditorCommand(undefined)).toBeUndefined()
+    expect(resolveEditorCommand('auto')).toBeUndefined()
+  })
+
+  it('maps the legacy "sublime" value to the Sublime Text CLI', () => {
+    expect(resolveEditorCommand('sublime')).toBe('subl')
+  })
+
+  it('passes other editors through unchanged', () => {
+    expect(resolveEditorCommand('subl')).toBe('subl')
+    expect(resolveEditorCommand('code')).toBe('code')
+  })
+})
 
 describe('openInEditor', () => {
   let root: string

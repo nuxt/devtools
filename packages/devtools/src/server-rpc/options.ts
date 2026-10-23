@@ -1,5 +1,6 @@
 import type { NuxtDevToolsOptions, NuxtDevtoolsServerContext, ServerFunctions } from '../types'
 import { createDefaultTabOptions } from '../constant'
+import { resolveEditorCommand } from '../utils/editor'
 import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils/local-options'
 
 let options: NuxtDevToolsOptions | undefined
@@ -32,6 +33,8 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
       root: nuxt.options.rootDir,
       key: tab !== 'ui' && tab,
     })
+    if (tab === 'behavior')
+      options!.behavior.openInEditor = resolveEditorCommand(options!.behavior.openInEditor)
     hasReadOnce.add(tab)
     return options
   }
