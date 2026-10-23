@@ -53,11 +53,6 @@ function getKeyboard(): KeyboardLike | undefined {
 
 let watching = false
 
-/**
- * Track the active keyboard layout so the shortcut follows the key that types
- * `d` instead of its physical QWERTY position. The Keyboard API is
- * Chromium-only and may be blocked inside iframes, so failures are ignored.
- */
 export function watchShortcutLayoutMap(): void {
   if (watching)
     return
