@@ -67,8 +67,10 @@ export async function setupDevToolsClient({
       },
       close() {
         const ctx = getDevframeContext()
-        if (ctx)
+        if (ctx) {
+          ctx.panel.session.open = false
           void ctx.docks.switchEntry(null)
+        }
       },
       open() {
         const ctx = getDevframeContext()
