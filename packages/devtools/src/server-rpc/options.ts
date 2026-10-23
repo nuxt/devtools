@@ -6,6 +6,7 @@ import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils
 let options: NuxtDevToolsOptions | undefined
 let optionsRoot: string | undefined
 const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
+const pendingReads = new Map<keyof NuxtDevToolsOptions, Promise<NuxtDevToolsOptions | undefined>>()
 
 export function getOptions() {
   return options
@@ -40,8 +41,14 @@ export async function ensureOptions<T extends keyof NuxtDevToolsOptions>(tab: T)
   // defaults the way sharing a single module-level constant used to.
   if (!options)
     options = createDefaultTabOptions()
-  if (!hasReadOnce.has(tab))
-    await readOptions(tab)
+  if (!hasReadOnce.has(tab)) {
+    let pending = pendingReads.get(tab)
+    if (!pending) {
+      pending = readOptions(tab).finally(() => pendingReads.delete(tab))
+      pendingReads.set(tab, pending)
+    }
+    await pending
+  }
   return options[tab]
 }
 
