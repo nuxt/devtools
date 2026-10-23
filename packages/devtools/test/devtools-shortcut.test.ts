@@ -100,6 +100,32 @@ describe('watchShortcutLayoutMap', () => {
     vi.resetModules()
   })
 
+  it('keeps the shortcut codes empty while a refresh is pending', async () => {
+    vi.resetModules()
+    const pendingMap = deferred<Map<string, string>>()
+    vi.stubGlobal('navigator', {
+      keyboard: {
+        getLayoutMap: () => pendingMap.promise,
+        addEventListener: () => {},
+      },
+    })
+
+    const { isDevtoolsShortcut: isShortcut, watchShortcutLayoutMap } = await import('../src/runtime/shared/shortcut')
+
+    watchShortcutLayoutMap()
+
+    // Nothing is known about the layout yet, so the QWERTY position must not match.
+    const qwertyD = { altKey: true, shiftKey: true, code: 'KeyD', key: 'x', keyCode: 0 }
+    expect(isShortcut(qwertyD, { shift: true })).toBe(false)
+
+    pendingMap.resolve(new Map([['KeyG', 'd']]))
+    await Promise.resolve()
+    await Promise.resolve()
+
+    const colemakD = { altKey: true, shiftKey: true, code: 'KeyG', key: 'x', keyCode: 0 }
+    expect(isShortcut(colemakD, { shift: true })).toBe(true)
+  })
+
   it('ignores a stale result from an older layout request', async () => {
     vi.resetModules()
     const first = deferred<Map<string, string>>()

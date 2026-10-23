@@ -36,6 +36,11 @@ const QWERTY_D_CODE = 'KeyD'
 
 const shortcutCodes = new Set([QWERTY_D_CODE])
 
+function resetToQwertyShortcut() {
+  shortcutCodes.clear()
+  shortcutCodes.add(QWERTY_D_CODE)
+}
+
 export function resolveShortcutCodes(layout: KeyboardLayoutMapLike): Set<string> {
   const codes = new Set<string>()
   layout.forEach((key, code) => {
@@ -66,25 +71,29 @@ export function watchShortcutLayoutMap(): void {
   const refresh = () => {
     const request = ++refreshRequest
     shortcutCodes.clear()
-    shortcutCodes.add(QWERTY_D_CODE)
     try {
       keyboard.getLayoutMap()
         .then((layout) => {
           if (request !== refreshRequest)
             return
           const codes = resolveShortcutCodes(layout)
-          // Keep the QWERTY fallback if the map unexpectedly has no letter D.
-          if (!codes.size)
+          if (!codes.size) {
+            resetToQwertyShortcut()
             return
+          }
           shortcutCodes.clear()
           for (const code of codes)
             shortcutCodes.add(code)
         })
-        .catch(() => {})
+        .catch(() => {
+          if (request === refreshRequest)
+            resetToQwertyShortcut()
+        })
     }
     catch {
       // Blocked by a permissions policy. `code`, `key` and `keyCode` matching
       // still work without the layout map.
+      resetToQwertyShortcut()
     }
   }
 
