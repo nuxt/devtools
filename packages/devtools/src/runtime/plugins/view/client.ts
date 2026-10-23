@@ -28,6 +28,14 @@ function getDevframeContext() {
   return getDevframeClientContext() as any
 }
 
+function closeDevtoolsPanel() {
+  const ctx = getDevframeContext()
+  if (!ctx)
+    return
+  ctx.panel.session.open = false
+  void ctx.docks.switchEntry(null)
+}
+
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
 
 export { clientRef as client }
@@ -60,20 +68,19 @@ export async function setupDevToolsClient({
         const ctx = getDevframeContext()
         if (!ctx)
           return
-        if (ctx.panel.session.open) {
-          void ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
+        if (!ctx.panel.session.open) {
+          ctx.panel.session.open = true
+          void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
+        }
+        else if (ctx.docks.selected?.id === NUXT_DOCK_ANCHOR_ID) {
+          closeDevtoolsPanel()
         }
         else {
-          ctx.panel.session.open = true
           void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
         }
       },
       close() {
-        const ctx = getDevframeContext()
-        if (ctx) {
-          ctx.panel.session.open = false
-          void ctx.docks.switchEntry(null)
-        }
+        closeDevtoolsPanel()
       },
       open() {
         const ctx = getDevframeContext()
