@@ -38,10 +38,11 @@ describe('options concurrency', () => {
     })
 
     const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
-    setupOptionsRPC(createContext())
+    const ctx = createContext()
+    setupOptionsRPC(ctx)
 
-    const first = ensureOptions('behavior')
-    const second = ensureOptions('behavior')
+    const first = ensureOptions('behavior', ctx.nuxt)
+    const second = ensureOptions('behavior', ctx.nuxt)
 
     await Promise.resolve()
     expect(countBehaviorReads()).toBe(1)
@@ -67,9 +68,10 @@ describe('options concurrency', () => {
     })
 
     const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
-    const rpc = setupOptionsRPC(createContext())
+    const ctx = createContext()
+    const rpc = setupOptionsRPC(ctx)
 
-    const initialRead = ensureOptions('behavior')
+    const initialRead = ensureOptions('behavior', ctx.nuxt)
     const update = rpc.updateOptions('behavior', { openInEditor: 'code' })
 
     await Promise.resolve()
@@ -96,29 +98,66 @@ describe('options concurrency', () => {
 
     const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
 
-    setupOptionsRPC(createContext('/root-a'))
-    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
+    const a = createContext('/root-a')
+    const b = createContext('/root-b')
+    setupOptionsRPC(a)
+    expect((await ensureOptions('behavior', a.nuxt)).openInEditor).toBe('subl')
 
-    setupOptionsRPC(createContext('/root-b'))
-    expect((await ensureOptions('behavior')).openInEditor).toBe('code')
+    setupOptionsRPC(b)
+    expect((await ensureOptions('behavior', b.nuxt)).openInEditor).toBe('code')
+    expect((await ensureOptions('behavior', a.nuxt)).openInEditor).toBe('subl')
     expect(countBehaviorReads()).toBe(2)
   })
 
-  it('keeps cached options when the Nuxt root is unchanged', async () => {
+  it('keeps an older RPC bound to its own Nuxt root', async () => {
+    mocks.readLocalOptions.mockImplementation((defaults: any, options: any) => {
+      if (options.key === 'behavior') {
+        return Promise.resolve({
+          telemetry: null,
+          openInEditor: options.root === '/root-a' ? 'sublime' : 'code',
+        })
+      }
+      return Promise.resolve(defaults)
+    })
+
+    const { setupOptionsRPC } = await import('../src/server-rpc/options')
+    const a = setupOptionsRPC(createContext('/root-a'))
+    const b = setupOptionsRPC(createContext('/root-b'))
+
+    expect((await b.getOptions('behavior')).openInEditor).toBe('code')
+    await a.updateOptions('behavior', { openInEditor: 'sublime' })
+
+    expect((await a.getOptions('behavior')).openInEditor).toBe('subl')
+    expect((await b.getOptions('behavior')).openInEditor).toBe('code')
+    expect(mocks.writeLocalOptions.mock.calls[0]![1].root).toBe('/root-a')
+    expect(mocks.writeLocalOptions.mock.calls[0]![0].openInEditor).toBe('subl')
+    expect(countBehaviorReads()).toBe(2)
+  })
+
+  it('re-reads options when an RPC is recreated for the same Nuxt root', async () => {
+    let editor = 'sublime'
     mocks.readLocalOptions.mockImplementation((defaults: any, options: any) => {
       if (options.key === 'behavior')
-        return Promise.resolve({ telemetry: null, openInEditor: 'sublime' })
+        return Promise.resolve({ telemetry: null, openInEditor: editor })
       return Promise.resolve(defaults)
     })
 
     const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
 
-    setupOptionsRPC(createContext('/root-a'))
-    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
+    const a = createContext('/root-a')
+    setupOptionsRPC(a)
+    expect((await ensureOptions('behavior', a.nuxt)).openInEditor).toBe('subl')
 
-    setupOptionsRPC(createContext('/root-a'))
-    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
-    expect(countBehaviorReads()).toBe(1)
+    editor = 'code'
+    const b = createContext('/root-a')
+    setupOptionsRPC(b)
+    expect((await ensureOptions('behavior', b.nuxt)).openInEditor).toBe('code')
+    expect(countBehaviorReads()).toBe(2)
+
+    editor = 'zed'
+    setupOptionsRPC(b)
+    expect((await ensureOptions('behavior', b.nuxt)).openInEditor).toBe('zed')
+    expect(countBehaviorReads()).toBe(3)
   })
 
   it('discards reads that resolve after options are cleared', async () => {
@@ -134,15 +173,16 @@ describe('options concurrency', () => {
     })
 
     const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
-    const rpc = setupOptionsRPC(createContext('/root'))
+    const ctx = createContext('/root')
+    const rpc = setupOptionsRPC(ctx)
 
-    const staleRead = ensureOptions('behavior')
+    const staleRead = ensureOptions('behavior', ctx.nuxt)
     await Promise.resolve()
     expect(reads).toHaveLength(1)
 
     await rpc.clearOptions()
 
-    const freshRead = ensureOptions('behavior')
+    const freshRead = ensureOptions('behavior', ctx.nuxt)
     await Promise.resolve()
     expect(reads).toHaveLength(2)
 
@@ -152,7 +192,7 @@ describe('options concurrency', () => {
     reads[0]!({ telemetry: null, openInEditor: 'sublime' })
     await staleRead
 
-    expect((await ensureOptions('behavior')).openInEditor).toBe('code')
+    expect((await ensureOptions('behavior', ctx.nuxt)).openInEditor).toBe('code')
   })
 })
 

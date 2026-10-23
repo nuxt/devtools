@@ -3,38 +3,47 @@ import { createDefaultTabOptions } from '../constant'
 import { resolveEditorCommand } from '../utils/editor'
 import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils/local-options'
 
-let options: NuxtDevToolsOptions | undefined
-let optionsRoot: string | undefined
-let optionsGeneration = 0
-const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
-const pendingReads = new Map<keyof NuxtDevToolsOptions, Promise<NuxtDevToolsOptions | undefined>>()
-
-export function getOptions() {
-  return options
+interface OptionsCache {
+  root: string
+  options?: NuxtDevToolsOptions
+  generation: number
+  hasReadOnce: Set<keyof NuxtDevToolsOptions>
+  pendingReads: Map<keyof NuxtDevToolsOptions, Promise<void>>
 }
 
-async function readOptions<T extends keyof NuxtDevToolsOptions>(tab: T) {
-  if (!optionsRoot)
-    return options
+const caches = new WeakMap<NuxtDevtoolsServerContext['nuxt'], OptionsCache>()
+let currentCache: OptionsCache | undefined
 
-  const root = optionsRoot
-  const generation = optionsGeneration
+function createOptionsCache(root: string): OptionsCache {
+  return {
+    root,
+    generation: 0,
+    hasReadOnce: new Set(),
+    pendingReads: new Map(),
+  }
+}
+
+export function getOptions() {
+  return currentCache?.options
+}
+
+async function readOptions<T extends keyof NuxtDevToolsOptions>(cache: OptionsCache, tab: T) {
+  const generation = cache.generation
   // Source defaults fresh from `createDefaultTabOptions()` rather than the
   // cached `options![tab]`, so a dynamic default set after the cache was
   // first created — e.g. `serverTasks.enabled` toggled by Nitro's `tasks`
   // feature — is still honored the first time this tab is actually read.
   const loaded = await readLocalOptions<NuxtDevToolsOptions[T]>(createDefaultTabOptions()[tab], {
-    root,
+    root: cache.root,
     key: tab !== 'ui' && tab,
   })
-  if (generation !== optionsGeneration || root !== optionsRoot || !options)
-    return options
+  if (generation !== cache.generation || !cache.options)
+    return
 
-  options[tab] = loaded
+  cache.options[tab] = loaded
   if (tab === 'behavior')
-    options.behavior.openInEditor = resolveEditorCommand(options.behavior.openInEditor)
-  hasReadOnce.add(tab)
-  return options
+    cache.options.behavior.openInEditor = resolveEditorCommand(cache.options.behavior.openInEditor)
+  cache.hasReadOnce.add(tab)
 }
 
 /**
@@ -42,48 +51,57 @@ async function readOptions<T extends keyof NuxtDevToolsOptions>(tab: T) {
  * waits for the on-disk read, so callers cannot observe defaults while
  * `readLocalOptions()` is still pending.
  */
-export async function ensureOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
+export async function ensureOptions<T extends keyof NuxtDevToolsOptions>(tab: T, nuxt: NuxtDevtoolsServerContext['nuxt']): Promise<NuxtDevToolsOptions[T]> {
+  let cache = caches.get(nuxt)
+  if (!cache) {
+    cache = createOptionsCache(nuxt.options.rootDir)
+    caches.set(nuxt, cache)
+  }
+  return readCachedOptions(cache, tab)
+}
+
+async function readCachedOptions<T extends keyof NuxtDevToolsOptions>(cache: OptionsCache, tab: T): Promise<NuxtDevToolsOptions[T]> {
   // `createDefaultTabOptions()` always returns a brand-new object graph, so
   // this can never alias (or leak mutations back into) another instance's
   // defaults the way sharing a single module-level constant used to.
-  if (!options)
-    options = createDefaultTabOptions()
-  if (!hasReadOnce.has(tab)) {
-    let pending = pendingReads.get(tab)
+  if (!cache.options)
+    cache.options = createDefaultTabOptions()
+  if (!cache.hasReadOnce.has(tab)) {
+    let pending = cache.pendingReads.get(tab)
     if (!pending) {
-      pending = readOptions(tab).finally(() => {
-        if (pendingReads.get(tab) === pending)
-          pendingReads.delete(tab)
+      pending = readOptions(cache, tab).finally(() => {
+        if (cache.pendingReads.get(tab) === pending)
+          cache.pendingReads.delete(tab)
       })
-      pendingReads.set(tab, pending)
+      cache.pendingReads.set(tab, pending)
     }
     await pending
   }
-  if (!options)
-    options = createDefaultTabOptions()
-  return options[tab]
+  if (!cache.options)
+    cache.options = createDefaultTabOptions()
+  return cache.options[tab]
 }
 
-function resetOptionsCache() {
-  options = undefined
-  optionsGeneration++
-  hasReadOnce.clear()
-  pendingReads.clear()
+function resetOptionsCache(cache: OptionsCache) {
+  cache.options = undefined
+  cache.generation++
+  cache.hasReadOnce.clear()
+  cache.pendingReads.clear()
 }
 
 export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
-  if (optionsRoot !== nuxt.options.rootDir)
-    resetOptionsCache()
-  optionsRoot = nuxt.options.rootDir
+  const cache = createOptionsCache(nuxt.options.rootDir)
+  caches.set(nuxt, cache)
+  currentCache = cache
 
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
-    return ensureOptions(tab)
+    return readCachedOptions(cache, tab)
   }
 
   getOptions('ui')
 
   async function clearOptions() {
-    resetOptionsCache()
+    resetOptionsCache(cache)
     await clearLocalOptions({
       root: nuxt.options.rootDir,
     })
@@ -93,6 +111,8 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
     async updateOptions(tab, _settings) {
       const settings = await getOptions(tab)
       Object.assign(settings, _settings)
+      if (tab === 'behavior')
+        cache.options!.behavior.openInEditor = resolveEditorCommand(cache.options!.behavior.openInEditor)
       await writeLocalOptions(
         { ...settings },
         {

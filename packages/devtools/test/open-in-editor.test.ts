@@ -114,9 +114,9 @@ describe('openInEditor', () => {
     expect(opened).toEqual([filepath])
   })
 
-  it('passes the resolved legacy editor command to launchEditor', async () => {
+  it('passes the normalized editor command to launchEditor', async () => {
     vi.mocked(ensureOptions).mockResolvedValue({
-      openInEditor: 'sublime',
+      openInEditor: 'subl',
     } as any)
     const { ctx, opened } = fakeContext(root, false)
     const { openInEditor } = setupGeneralRPC(ctx)
@@ -124,7 +124,7 @@ describe('openInEditor', () => {
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
     expect(opened).toEqual([filepath])
-    expect(ensureOptions).toHaveBeenCalledWith('behavior')
+    expect(ensureOptions).toHaveBeenCalledWith('behavior', ctx.nuxt)
     expect(launchEditor).toHaveBeenCalledWith(filepath, 'subl')
   })
 
