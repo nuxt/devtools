@@ -16,6 +16,7 @@ import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef
 import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
+import { isDevtoolsShortcut, watchShortcutLayoutMap } from '../../shared/shortcut'
 
 // Host controls must update the visible Devframe viewer context, rather than
 // Vite's separate dock-registration context. Target the shared-frame anchor
@@ -25,6 +26,14 @@ const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
 function getDevframeContext() {
   return getDevframeClientContext() as any
+}
+
+function closeDevtoolsPanel() {
+  const ctx = getDevframeContext()
+  if (!ctx)
+    return
+  ctx.panel.session.open = false
+  void ctx.docks.switchEntry(null)
 }
 
 const clientRef = shallowRef<NuxtDevtoolsHostClient>()
@@ -57,13 +66,21 @@ export async function setupDevToolsClient({
     devtools: {
       toggle() {
         const ctx = getDevframeContext()
-        if (ctx)
-          ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
+        if (!ctx)
+          return
+        if (!ctx.panel.session.open) {
+          ctx.panel.session.open = true
+          void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
+        }
+        else if (ctx.docks.selected?.id === NUXT_DOCK_ANCHOR_ID) {
+          closeDevtoolsPanel()
+        }
+        else {
+          void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
+        }
       },
       close() {
-        const ctx = getDevframeContext()
-        if (ctx)
-          ctx.panel.session.open = false
+        closeDevtoolsPanel()
       },
       open() {
         const ctx = getDevframeContext()
@@ -205,8 +222,9 @@ export async function setupDevToolsClient({
   clientRef.value = client
 
   // Shortcut to toggle devtools (opens Vite DevTools panel with Nuxt DevTools entry)
+  watchShortcutLayoutMap()
   window.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyD' && e.altKey && e.shiftKey)
+    if (isDevtoolsShortcut(e, { shift: true }))
       client.devtools.toggle()
   })
 }
