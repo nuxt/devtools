@@ -7,7 +7,7 @@ import { createHooks } from 'hookable'
 import { join, normalize } from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupGeneralRPC } from '../src/server-rpc/general'
-import { getOptions } from '../src/server-rpc/options'
+import { ensureOptions } from '../src/server-rpc/options'
 import { resolveEditorCommand } from '../src/utils/editor'
 
 vi.mock('devframe/utils/launch-editor', () => ({
@@ -15,7 +15,7 @@ vi.mock('devframe/utils/launch-editor', () => ({
 }))
 
 vi.mock('../src/server-rpc/options', () => ({
-  getOptions: vi.fn(),
+  ensureOptions: vi.fn(),
 }))
 
 function fakeContext(root: string, handledByHook = true) {
@@ -71,7 +71,7 @@ describe('openInEditor', () => {
     await fsp.mkdir(join(root, 'apps/web/app/components'), { recursive: true })
     await fsp.writeFile(join(root, 'apps/web/app/components/Foo.vue'), '<template><div /></template>')
     vi.spyOn(process, 'cwd').mockReturnValue(join(root, 'apps/web'))
-    vi.mocked(getOptions).mockReset()
+    vi.mocked(ensureOptions).mockReset()
     vi.mocked(launchEditor).mockClear()
   })
 
@@ -115,8 +115,8 @@ describe('openInEditor', () => {
   })
 
   it('passes the resolved legacy editor command to launchEditor', async () => {
-    vi.mocked(getOptions).mockReturnValue({
-      behavior: { openInEditor: 'sublime' },
+    vi.mocked(ensureOptions).mockResolvedValue({
+      openInEditor: 'sublime',
     } as any)
     const { ctx, opened } = fakeContext(root, false)
     const { openInEditor } = setupGeneralRPC(ctx)
@@ -124,6 +124,7 @@ describe('openInEditor', () => {
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
     expect(opened).toEqual([filepath])
+    expect(ensureOptions).toHaveBeenCalledWith('behavior')
     expect(launchEditor).toHaveBeenCalledWith(filepath, 'subl')
   })
 

@@ -11,7 +11,7 @@ import { snakeCase } from 'scule'
 import { setupHooksDebug } from '../runtime/shared/hooks'
 import { resolveEditorCommand } from '../utils/editor'
 import { toJsLiteral } from '../utils/serialize-js-literal'
-import { getOptions } from './options'
+import { ensureOptions } from './options'
 
 const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
 // eslint-disable-next-line regexp/no-super-linear-backtracking
@@ -208,7 +208,8 @@ export function setupGeneralRPC({
           if (result)
             return true
         }
-        const editor = resolveEditorCommand(getOptions()?.behavior.openInEditor)
+        const behavior = await ensureOptions('behavior')
+        const editor = resolveEditorCommand(behavior.openInEditor)
         await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }
