@@ -8,10 +8,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('../src/utils/local-options', () => mocks)
 
-function createContext() {
+function createContext(root = '/root') {
   return {
     nuxt: {
-      options: { rootDir: '/root' },
+      options: { rootDir: root },
       callHook: vi.fn(),
     },
   } as any
@@ -81,6 +81,44 @@ describe('options concurrency', () => {
     expect(countBehaviorReads()).toBe(1)
     expect(mocks.writeLocalOptions).toHaveBeenCalledTimes(1)
     expect(mocks.writeLocalOptions.mock.calls[0]![0].openInEditor).toBe('code')
+  })
+
+  it('resets cached options when the Nuxt root changes', async () => {
+    mocks.readLocalOptions.mockImplementation((defaults: any, options: any) => {
+      if (options.key === 'behavior') {
+        return Promise.resolve({
+          telemetry: null,
+          openInEditor: options.root === '/root-a' ? 'sublime' : 'code',
+        })
+      }
+      return Promise.resolve(defaults)
+    })
+
+    const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
+
+    setupOptionsRPC(createContext('/root-a'))
+    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
+
+    setupOptionsRPC(createContext('/root-b'))
+    expect((await ensureOptions('behavior')).openInEditor).toBe('code')
+    expect(countBehaviorReads()).toBe(2)
+  })
+
+  it('keeps cached options when the Nuxt root is unchanged', async () => {
+    mocks.readLocalOptions.mockImplementation((defaults: any, options: any) => {
+      if (options.key === 'behavior')
+        return Promise.resolve({ telemetry: null, openInEditor: 'sublime' })
+      return Promise.resolve(defaults)
+    })
+
+    const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
+
+    setupOptionsRPC(createContext('/root-a'))
+    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
+
+    setupOptionsRPC(createContext('/root-a'))
+    expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
+    expect(countBehaviorReads()).toBe(1)
   })
 })
 

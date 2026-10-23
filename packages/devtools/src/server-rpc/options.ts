@@ -16,16 +16,21 @@ async function readOptions<T extends keyof NuxtDevToolsOptions>(tab: T) {
   if (!optionsRoot)
     return options
 
+  const root = optionsRoot
   // Source defaults fresh from `createDefaultTabOptions()` rather than the
   // cached `options![tab]`, so a dynamic default set after the cache was
   // first created — e.g. `serverTasks.enabled` toggled by Nitro's `tasks`
   // feature — is still honored the first time this tab is actually read.
-  options![tab] = await readLocalOptions<NuxtDevToolsOptions[T]>(createDefaultTabOptions()[tab], {
-    root: optionsRoot,
+  const loaded = await readLocalOptions<NuxtDevToolsOptions[T]>(createDefaultTabOptions()[tab], {
+    root,
     key: tab !== 'ui' && tab,
   })
+  if (root !== optionsRoot || !options)
+    return options
+
+  options[tab] = loaded
   if (tab === 'behavior')
-    options!.behavior.openInEditor = resolveEditorCommand(options!.behavior.openInEditor)
+    options.behavior.openInEditor = resolveEditorCommand(options.behavior.openInEditor)
   hasReadOnce.add(tab)
   return options
 }
@@ -44,15 +49,28 @@ export async function ensureOptions<T extends keyof NuxtDevToolsOptions>(tab: T)
   if (!hasReadOnce.has(tab)) {
     let pending = pendingReads.get(tab)
     if (!pending) {
-      pending = readOptions(tab).finally(() => pendingReads.delete(tab))
+      pending = readOptions(tab).finally(() => {
+        if (pendingReads.get(tab) === pending)
+          pendingReads.delete(tab)
+      })
       pendingReads.set(tab, pending)
     }
     await pending
   }
+  if (!options)
+    options = createDefaultTabOptions()
   return options[tab]
 }
 
+function resetOptionsCache() {
+  options = undefined
+  hasReadOnce.clear()
+  pendingReads.clear()
+}
+
 export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
+  if (optionsRoot !== nuxt.options.rootDir)
+    resetOptionsCache()
   optionsRoot = nuxt.options.rootDir
 
   async function getOptions<T extends keyof NuxtDevToolsOptions>(tab: T): Promise<NuxtDevToolsOptions[T]> {
@@ -62,8 +80,7 @@ export function setupOptionsRPC({ nuxt }: NuxtDevtoolsServerContext) {
   getOptions('ui')
 
   async function clearOptions() {
-    options = undefined
-    hasReadOnce.clear()
+    resetOptionsCache()
     await clearLocalOptions({
       root: nuxt.options.rootDir,
     })
