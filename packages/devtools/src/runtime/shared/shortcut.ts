@@ -65,6 +65,8 @@ export function watchShortcutLayoutMap(): void {
 
   const refresh = () => {
     const request = ++refreshRequest
+    shortcutCodes.clear()
+    shortcutCodes.add(QWERTY_D_CODE)
     try {
       keyboard.getLayoutMap()
         .then((layout) => {

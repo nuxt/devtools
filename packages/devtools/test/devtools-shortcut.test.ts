@@ -134,4 +134,40 @@ describe('watchShortcutLayoutMap', () => {
     const colemakD = { altKey: true, shiftKey: true, code: 'KeyG', key: 'x', keyCode: 0 }
     expect(isShortcut(colemakD, { shift: true })).toBe(true)
   })
+
+  it('falls back to QWERTY when a layout refresh has no map', async () => {
+    vi.resetModules()
+    const first = deferred<Map<string, string>>()
+    const second = deferred<Map<string, string>>()
+    const pending = [first.promise, second.promise]
+    let onLayoutChange: (() => void) | undefined
+
+    vi.stubGlobal('navigator', {
+      keyboard: {
+        getLayoutMap: () => pending.shift()!,
+        addEventListener: (_type: string, listener: () => void) => {
+          onLayoutChange = listener
+        },
+      },
+    })
+
+    const { isDevtoolsShortcut: isShortcut, watchShortcutLayoutMap } = await import('../src/runtime/shared/shortcut')
+
+    watchShortcutLayoutMap()
+    first.resolve(new Map([['KeyW', 'd'], ['KeyD', 's']]))
+    await Promise.resolve()
+    await Promise.resolve()
+
+    // Physical W types `d` on Workman.
+    const physicalW = { altKey: true, shiftKey: true, code: 'KeyW', key: 'w', keyCode: 87 }
+    expect(isShortcut(physicalW, { shift: true })).toBe(true)
+
+    // The next layout is unknown, so W must no longer match as `d`.
+    onLayoutChange?.()
+    second.resolve(new Map())
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(isShortcut(physicalW, { shift: true })).toBe(false)
+  })
 })
