@@ -33,6 +33,11 @@ describe('isDevtoolsShortcut', () => {
     expect(isDevtoolsShortcut(workmanD, { shift: true, codes })).toBe(true)
   })
 
+  it('ignores the physical QWERTY position when it types another letter', () => {
+    const codes = resolveShortcutCodes(new Map([['KeyD', 's'], ['KeyG', 'd']]))
+    expect(isDevtoolsShortcut(createEvent({ code: 'KeyD', key: 'S', keyCode: 83 }), { shift: true, codes })).toBe(false)
+  })
+
   it('falls back to the legacy key code when the Keyboard API is unavailable', () => {
     expect(isDevtoolsShortcut(workmanD, { shift: true })).toBe(true)
   })
@@ -67,10 +72,16 @@ describe('isDevtoolsShortcut', () => {
 describe('resolveShortcutCodes', () => {
   it('adds every code that types d in the active layout', () => {
     const codes = resolveShortcutCodes(new Map([['KeyW', 'd'], ['KeyG', 'D'], ['KeyS', 's']]))
-    expect([...codes].sort()).toEqual(['KeyD', 'KeyG', 'KeyW'])
+    expect([...codes].sort()).toEqual(['KeyG', 'KeyW'])
   })
 
-  it('keeps the QWERTY position as a fallback', () => {
-    expect(resolveShortcutCodes(new Map()).has('KeyD')).toBe(true)
+  it('does not keep physical positions that do not type d', () => {
+    const codes = resolveShortcutCodes(new Map([['KeyD', 's'], ['KeyG', 'd']]))
+    expect(codes.has('KeyD')).toBe(false)
+    expect(codes.has('KeyG')).toBe(true)
+  })
+
+  it('returns an empty set when the layout has no letter d', () => {
+    expect(resolveShortcutCodes(new Map()).size).toBe(0)
   })
 })

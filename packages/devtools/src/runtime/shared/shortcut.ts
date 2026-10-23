@@ -37,9 +37,7 @@ const QWERTY_D_CODE = 'KeyD'
 const shortcutCodes = new Set([QWERTY_D_CODE])
 
 export function resolveShortcutCodes(layout: KeyboardLayoutMapLike): Set<string> {
-  // Keep the QWERTY position so the shortcut still works when the layout map
-  // is unavailable and for users who deliberately use US key positions.
-  const codes = new Set([QWERTY_D_CODE])
+  const codes = new Set<string>()
   layout.forEach((key, code) => {
     if (key.toLowerCase() === 'd')
       codes.add(code)
@@ -73,8 +71,12 @@ export function watchShortcutLayoutMap(): void {
     try {
       keyboard.getLayoutMap()
         .then((layout) => {
+          const codes = resolveShortcutCodes(layout)
+          // Keep the QWERTY fallback if the map unexpectedly has no letter D.
+          if (!codes.size)
+            return
           shortcutCodes.clear()
-          for (const code of resolveShortcutCodes(layout))
+          for (const code of codes)
             shortcutCodes.add(code)
         })
         .catch(() => {})
