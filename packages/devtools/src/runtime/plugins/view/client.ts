@@ -16,6 +16,7 @@ import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef
 import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
+import { isDevtoolsShortcut, watchShortcutLayoutMap } from '../../shared/shortcut'
 
 // Host controls must update the visible Devframe viewer context, rather than
 // Vite's separate dock-registration context. Target the shared-frame anchor
@@ -205,8 +206,9 @@ export async function setupDevToolsClient({
   clientRef.value = client
 
   // Shortcut to toggle devtools (opens Vite DevTools panel with Nuxt DevTools entry)
+  watchShortcutLayoutMap()
   window.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyD' && e.altKey && e.shiftKey)
+    if (isDevtoolsShortcut(e, { shift: true }))
       client.devtools.toggle()
   })
 }
