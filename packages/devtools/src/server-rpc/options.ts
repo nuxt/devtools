@@ -5,6 +5,7 @@ import { clearLocalOptions, readLocalOptions, writeLocalOptions } from '../utils
 
 let options: NuxtDevToolsOptions | undefined
 let optionsRoot: string | undefined
+let optionsGeneration = 0
 const hasReadOnce = new Set<keyof NuxtDevToolsOptions>()
 const pendingReads = new Map<keyof NuxtDevToolsOptions, Promise<NuxtDevToolsOptions | undefined>>()
 
@@ -17,6 +18,7 @@ async function readOptions<T extends keyof NuxtDevToolsOptions>(tab: T) {
     return options
 
   const root = optionsRoot
+  const generation = optionsGeneration
   // Source defaults fresh from `createDefaultTabOptions()` rather than the
   // cached `options![tab]`, so a dynamic default set after the cache was
   // first created — e.g. `serverTasks.enabled` toggled by Nitro's `tasks`
@@ -25,7 +27,7 @@ async function readOptions<T extends keyof NuxtDevToolsOptions>(tab: T) {
     root,
     key: tab !== 'ui' && tab,
   })
-  if (root !== optionsRoot || !options)
+  if (generation !== optionsGeneration || root !== optionsRoot || !options)
     return options
 
   options[tab] = loaded
@@ -64,6 +66,7 @@ export async function ensureOptions<T extends keyof NuxtDevToolsOptions>(tab: T)
 
 function resetOptionsCache() {
   options = undefined
+  optionsGeneration++
   hasReadOnce.clear()
   pendingReads.clear()
 }

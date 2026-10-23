@@ -120,6 +120,40 @@ describe('options concurrency', () => {
     expect((await ensureOptions('behavior')).openInEditor).toBe('subl')
     expect(countBehaviorReads()).toBe(1)
   })
+
+  it('discards reads that resolve after options are cleared', async () => {
+    const reads: Array<(value: any) => void> = []
+
+    mocks.readLocalOptions.mockImplementation((defaults: any, options: any) => {
+      if (options.key === 'behavior') {
+        return new Promise((resolve) => {
+          reads.push(resolve)
+        })
+      }
+      return Promise.resolve(defaults)
+    })
+
+    const { setupOptionsRPC, ensureOptions } = await import('../src/server-rpc/options')
+    const rpc = setupOptionsRPC(createContext('/root'))
+
+    const staleRead = ensureOptions('behavior')
+    await Promise.resolve()
+    expect(reads).toHaveLength(1)
+
+    await rpc.clearOptions()
+
+    const freshRead = ensureOptions('behavior')
+    await Promise.resolve()
+    expect(reads).toHaveLength(2)
+
+    reads[1]!({ telemetry: null, openInEditor: 'code' })
+    expect((await freshRead).openInEditor).toBe('code')
+
+    reads[0]!({ telemetry: null, openInEditor: 'sublime' })
+    await staleRead
+
+    expect((await ensureOptions('behavior')).openInEditor).toBe('code')
+  })
 })
 
 function countBehaviorReads() {
