@@ -52,6 +52,7 @@ describe('vite DevTools origin', () => {
       viteConfig: { command: 'serve', build: { ssr: false } },
       host: { resolveOrigin: () => 'http://localhost:5173' },
       install: vi.fn(),
+      services: { has: () => false },
       docks: { register: vi.fn() },
       rpc: {
         register: vi.fn(),

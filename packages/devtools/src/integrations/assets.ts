@@ -15,7 +15,12 @@ export function setup({ nuxt, options }: NuxtDevtoolsServerContext): void {
     uploadExtensions: options.assets?.uploadExtensions || defaultAllowedExtensions,
   })
   onDevtoolsReady((kit) => {
-    return kit.install(definition, {
+    // Vite DevTools' built-in devframes install `service-open` and pass the
+    // services barrier before this runs, so re-declaring it can't merge our
+    // `roots` and only warns (DF0066). The public dir sits inside the
+    // workspace root the service already allows.
+    const services = definition.services?.filter(service => !kit.services.has(service.package))
+    return kit.install({ ...definition, services }, {
       dock: {
         groupId: NUXT_DEVTOOLS_GROUP_ID,
         category: 'analyze',
