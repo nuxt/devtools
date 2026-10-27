@@ -37,12 +37,18 @@ describe('isDevtoolsShortcut', () => {
   })
 
   it('matches the key that types d on a non-QWERTY layout', () => {
-    const codes = resolveShortcutCodes(new Map([['KeyW', 'd'], ['KeyD', 's']]))
+    const codes = resolveShortcutCodes(new Map([
+      ['KeyW', 'd'],
+      ['KeyD', 's'],
+    ]))
     expect(isDevtoolsShortcut(workmanD, { shift: true, codes })).toBe(true)
   })
 
   it('ignores the physical QWERTY position when it types another letter', () => {
-    const codes = resolveShortcutCodes(new Map([['KeyD', 's'], ['KeyG', 'd']]))
+    const codes = resolveShortcutCodes(new Map([
+      ['KeyD', 's'],
+      ['KeyG', 'd'],
+    ]))
     expect(isDevtoolsShortcut(createEvent({ code: 'KeyD', key: 'S', keyCode: 83 }), { shift: true, codes })).toBe(false)
   })
 
@@ -79,12 +85,19 @@ describe('isDevtoolsShortcut', () => {
 
 describe('resolveShortcutCodes', () => {
   it('adds every code that types d in the active layout', () => {
-    const codes = resolveShortcutCodes(new Map([['KeyW', 'd'], ['KeyG', 'D'], ['KeyS', 's']]))
+    const codes = resolveShortcutCodes(new Map([
+      ['KeyW', 'd'],
+      ['KeyG', 'D'],
+      ['KeyS', 's'],
+    ]))
     expect([...codes].sort()).toEqual(['KeyG', 'KeyW'])
   })
 
   it('does not keep physical positions that do not type d', () => {
-    const codes = resolveShortcutCodes(new Map([['KeyD', 's'], ['KeyG', 'd']]))
+    const codes = resolveShortcutCodes(new Map([
+      ['KeyD', 's'],
+      ['KeyG', 'd'],
+    ]))
     expect(codes.has('KeyD')).toBe(false)
     expect(codes.has('KeyG')).toBe(true)
   })
@@ -115,14 +128,28 @@ describe('watchShortcutLayoutMap', () => {
     watchShortcutLayoutMap()
 
     // Nothing is known about the layout yet, so the QWERTY position must not match.
-    const qwertyD = { altKey: true, shiftKey: true, code: 'KeyD', key: 'x', keyCode: 0 }
+    const qwertyD = {
+      altKey: true,
+      shiftKey: true,
+      code: 'KeyD',
+      key: 'x',
+      keyCode: 0,
+    }
     expect(isShortcut(qwertyD, { shift: true })).toBe(false)
 
-    pendingMap.resolve(new Map([['KeyG', 'd']]))
+    pendingMap.resolve(new Map([
+      ['KeyG', 'd'],
+    ]))
     await Promise.resolve()
     await Promise.resolve()
 
-    const colemakD = { altKey: true, shiftKey: true, code: 'KeyG', key: 'x', keyCode: 0 }
+    const colemakD = {
+      altKey: true,
+      shiftKey: true,
+      code: 'KeyG',
+      key: 'x',
+      keyCode: 0,
+    }
     expect(isShortcut(colemakD, { shift: true })).toBe(true)
   })
 
@@ -148,16 +175,26 @@ describe('watchShortcutLayoutMap', () => {
     onLayoutChange?.()
 
     // The second request reflects the new layout and resolves first.
-    second.resolve(new Map([['KeyG', 'd']]))
+    second.resolve(new Map([
+      ['KeyG', 'd'],
+    ]))
     await Promise.resolve()
     await Promise.resolve()
 
     // The first request belongs to the old layout and resolves last.
-    first.resolve(new Map([['KeyD', 'd']]))
+    first.resolve(new Map([
+      ['KeyD', 'd'],
+    ]))
     await Promise.resolve()
     await Promise.resolve()
 
-    const colemakD = { altKey: true, shiftKey: true, code: 'KeyG', key: 'x', keyCode: 0 }
+    const colemakD = {
+      altKey: true,
+      shiftKey: true,
+      code: 'KeyG',
+      key: 'x',
+      keyCode: 0,
+    }
     expect(isShortcut(colemakD, { shift: true })).toBe(true)
   })
 
@@ -180,12 +217,21 @@ describe('watchShortcutLayoutMap', () => {
     const { isDevtoolsShortcut: isShortcut, watchShortcutLayoutMap } = await import('../src/runtime/shared/shortcut')
 
     watchShortcutLayoutMap()
-    first.resolve(new Map([['KeyW', 'd'], ['KeyD', 's']]))
+    first.resolve(new Map([
+      ['KeyW', 'd'],
+      ['KeyD', 's'],
+    ]))
     await Promise.resolve()
     await Promise.resolve()
 
     // Physical W types `d` on Workman.
-    const physicalW = { altKey: true, shiftKey: true, code: 'KeyW', key: 'w', keyCode: 87 }
+    const physicalW = {
+      altKey: true,
+      shiftKey: true,
+      code: 'KeyW',
+      key: 'w',
+      keyCode: 87,
+    }
     expect(isShortcut(physicalW, { shift: true })).toBe(true)
 
     // The next layout is unknown, so W must no longer match as `d`.
