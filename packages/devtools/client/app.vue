@@ -4,6 +4,7 @@ import { computed, onMounted, watch, watchEffect } from 'vue'
 import { useRoute } from '#app/composables/router'
 import { useHead } from '#imports'
 import { getColorMode, showConnectionWarning, useClient, useInjectionClient } from '~/composables/client'
+import { shouldApplyHostColorMode } from '~/composables/color-mode'
 import { devAuthToken, isDevAuthed } from '~/composables/dev-auth'
 import { useCopy } from '~/composables/editor'
 import { rpc } from '~/composables/rpc'
@@ -49,8 +50,13 @@ const waiting = computed(() => !client.value && !showConnectionWarning.value)
 watch(
   () => client.value?.app.colorMode.value,
   (mode) => {
-    if (mode)
-      colorMode.value = mode
+    if (!mode)
+      return
+    // Once a theme is picked in DevTools, keep it across reloads instead of
+    // letting the host app's scheme overwrite it again.
+    if (!shouldApplyHostColorMode())
+      return
+    colorMode.value = mode
   },
   { immediate: true },
 )
