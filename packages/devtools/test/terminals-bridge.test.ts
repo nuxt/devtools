@@ -81,7 +81,9 @@ function createHarness() {
     exit: (id: string, code?: number) => nuxt.callHook('devtools:terminal:exit' as any, { id, code }),
     remove: (id: string) => nuxt.callHook('devtools:terminal:remove' as any, { id }),
     /** The unique Devframe session id minted for a legacy id (nth registration). */
-    sessionIds: () => [...host.sessions.keys()],
+    sessionIds: () => [
+      ...host.sessions.keys(),
+    ],
   }
 }
 
@@ -150,7 +152,9 @@ describe('terminals bridge', () => {
     await h.register(term('c'))
     await h.exit('c', 137)
 
-    const byPrefix = (p: string) => h.host.sessions.get([...h.host.sessions.keys()].find(k => k.startsWith(p))!)!
+    const byPrefix = (p: string) => h.host.sessions.get([
+      ...h.host.sessions.keys(),
+    ].find(k => k.startsWith(p))!)!
     expect(byPrefix('a#').status).toBe('stopped')
     expect(byPrefix('b#').status).toBe('stopped')
     expect(byPrefix('c#').status).toBe('error')

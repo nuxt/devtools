@@ -41,7 +41,9 @@ export function segmentTimelineEvents(events: TimelineEvent[]) {
     const layers: number[] = []
 
     segment.duration = duration
-    segment.previousGap = idx > 0 ? segment.start - segments[idx - 1]!.end : 0
+    segment.previousGap = idx > 0
+      ? segment.start - segments[idx - 1]!.end
+      : 0
     segment.events
       .forEach((event) => {
         const end = (event.end || event.start)

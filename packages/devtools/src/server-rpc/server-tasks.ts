@@ -53,7 +53,9 @@ export function setupServerTasksRPC({ nuxt, refresh }: NuxtDevtoolsServerContext
         ),
         scheduledTasks: Object.entries(nitro.options.scheduledTasks ?? {})
           .reduce<Record<string, string[]>>((acc, [cron, tasks]) => {
-            acc[cron] = Array.isArray(tasks) ? tasks : [tasks]
+            acc[cron] = Array.isArray(tasks)
+              ? tasks
+              : [tasks]
             return acc
           }, {}),
       }

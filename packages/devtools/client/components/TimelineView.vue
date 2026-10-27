@@ -16,7 +16,9 @@ function clear() {
 }
 
 function toggleView() {
-  view.value = view.value === 'table' ? 'list' : 'table'
+  view.value = view.value === 'table'
+    ? 'list'
+    : 'table'
 }
 </script>
 

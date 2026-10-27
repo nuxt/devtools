@@ -47,8 +47,14 @@ function fakeKitCtx(viteConfig: ViteDevToolsNodeContext['viteConfig']): ViteDevT
   } as unknown as ViteDevToolsNodeContext
 }
 
-const clientConfig = { command: 'serve', build: { ssr: false } } as ViteDevToolsNodeContext['viteConfig']
-const ssrConfig = { command: 'build', build: { ssr: true } } as ViteDevToolsNodeContext['viteConfig']
+const clientConfig = {
+  command: 'serve',
+  build: { ssr: false },
+} as ViteDevToolsNodeContext['viteConfig']
+const ssrConfig = {
+  command: 'build',
+  build: { ssr: true },
+} as ViteDevToolsNodeContext['viteConfig']
 
 function setup() {
   const nuxt = fakeNuxt()
@@ -60,7 +66,12 @@ function setup() {
   // `setupRPC` assigns the live server context (with a `devtoolsKit` getter)
   // onto `nuxt.devtools` — read the connected kit context back through it.
   const getConnectedKit = () => (nuxt as any).devtools.devtoolsKit as ViteDevToolsNodeContext | undefined
-  return { nuxt, connectDevToolsKit, getConnectedKit, readyContexts }
+  return {
+    nuxt,
+    connectDevToolsKit,
+    getConnectedKit,
+    readyContexts,
+  }
 }
 
 describe('connectDevToolsKit', () => {

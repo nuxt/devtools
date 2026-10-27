@@ -90,7 +90,9 @@ export type NuxtDiagnosticCode = keyof typeof diagnosticCodes
  */
 export const consoleDiagnostics = defineDiagnostics({
   docsBase: diagnosticsDocsBase,
-  reporters: [createConsoleReporter()],
+  reporters: [
+    createConsoleReporter(),
+  ],
   codes: diagnosticCodes,
 })
 
@@ -108,14 +110,18 @@ interface DiagnosticsState {
 
 const stateByCtx = new WeakMap<object, DiagnosticsState>()
 /** Fallback state used when no server context is resolvable yet. */
-const fallbackState: DiagnosticsState = { emitted: new Set() }
+const fallbackState: DiagnosticsState = {
+  emitted: new Set(),
+}
 
 function getState(ctx: object | undefined): DiagnosticsState {
   if (!ctx)
     return fallbackState
   let state = stateByCtx.get(ctx)
   if (!state) {
-    state = { emitted: new Set() }
+    state = {
+      emitted: new Set(),
+    }
     stateByCtx.set(ctx, state)
   }
   return state
@@ -212,7 +218,9 @@ export function defineStandaloneDiagnostics(
 ): ReturnType<typeof defineDiagnostics> {
   return defineDiagnostics({
     ...options,
-    reporters: options.reporters ?? [createConsoleReporter()],
+    reporters: options.reporters ?? [
+      createConsoleReporter(),
+    ],
   })
 }
 

@@ -16,7 +16,10 @@ describe('createDefaultTabOptions', () => {
     // shallow-copied from) a shared defaults object, letting callers corrupt
     // it via nested objects/arrays such as `ui.hiddenTabs`.
     const ctx = {
-      nuxt: { options: { rootDir: '/mock/root' }, callHook: () => {} },
+      nuxt: {
+        options: { rootDir: '/mock/root' },
+        callHook: () => {},
+      },
     } as any
 
     const rpc = setupOptionsRPC(ctx)

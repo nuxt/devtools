@@ -47,7 +47,9 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
       get: (_, method) => {
         if (typeof method !== 'string')
           return
-        const fullMethod = prefix ? `${prefix}:${method}` : method
+        const fullMethod = prefix
+          ? `${prefix}:${method}`
+          : method
         const fn = (...args: any[]) => broadcast(fullMethod, ...args)
         fn.asEvent = (...args: any[]) => broadcast(fullMethod, ...args)
         return fn

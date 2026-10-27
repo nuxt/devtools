@@ -30,7 +30,12 @@ function getTabOptions<T extends keyof NuxtDevToolsOptions>(tab: T): ToRefs<Nuxt
             console.error(`[nuxt-devtools] Failed to persist "${String(tab)}" options`, error)
           })
         },
-        { deep: true, flush: 'post', debounce: 500, maxWait: 1000 },
+        {
+          deep: true,
+          flush: 'post',
+          debounce: 500,
+          maxWait: 1000,
+        },
       )
     })
     .catch((error) => {

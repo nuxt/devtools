@@ -74,7 +74,11 @@ export interface VfsFile {
 
 export function useVirtualFiles() {
   // Nitro v3 only serves `/_vfs/**`; the Accept header selects JSON on both Nitro v2 and v3
-  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs/', { baseURL: '/', headers: { accept: 'application/json' }, responseType: 'json' }))
+  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs/', {
+    baseURL: '/',
+    headers: { accept: 'application/json' },
+    responseType: 'json',
+  }))
 }
 
 export function useMergedRouteList() {
@@ -83,7 +87,13 @@ export function useMergedRouteList() {
 
   return computed((): RouteInfo[] => {
     return (router.value?.getRoutes() || [])
-      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map(i => objectPick(i, [
+        'path',
+        'name',
+        'meta',
+        'props',
+        'children',
+      ]))
       .map((i) => {
         return {
           ...serverPages.value?.find(j => j.name && j.name === i.name),

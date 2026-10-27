@@ -19,7 +19,9 @@ const isInstalled = computed(() => installedInfo.value && installedInfo.value.is
 const isUninstallable = computed(() => installedInfo.value && installedInfo.value.isPackageModule && installedInfo.value.isUninstallable)
 
 async function useModuleAction(item: ModuleStaticInfo, type: ModuleActionType) {
-  const method = type === 'install' ? rpc.installNuxtModule : rpc.uninstallNuxtModule
+  const method = type === 'install'
+    ? rpc.installNuxtModule
+    : rpc.uninstallNuxtModule
   const result = await method(item.npm, true)
 
   telemetry(`modules:${type}`, {

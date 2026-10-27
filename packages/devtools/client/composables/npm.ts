@@ -42,7 +42,9 @@ function getPackageUpdate(name: string, options?: NpmCommandOptions) {
     // Compare against the tracked id value, not the ref object.
     if (!processId.value || id !== processId.value)
       return
-    state.value = code === 0 ? 'updated' : 'idle'
+    state.value = code === 0
+      ? 'updated'
+      : 'idle'
   })
 
   async function update(confirm: (command: string) => Promise<boolean>) {

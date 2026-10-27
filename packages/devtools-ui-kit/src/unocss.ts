@@ -29,26 +29,38 @@ export function unocssPreset(): Preset {
       },
     }),
     rules: [
-      [N_PREFIX_RE, ([, body]: string[], { theme }: RuleContext<Theme>) => {
-        const color = parseColor(body!, theme)
-        if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
-          return {
-            '--nui-c-context': `${color.cssColor.components.join(',')}`,
+      [
+        N_PREFIX_RE,
+        ([, body]: string[], { theme }: RuleContext<Theme>) => {
+          const color = parseColor(body!, theme)
+          if (color?.cssColor?.type === 'rgb' && color.cssColor.components) {
+            return {
+              '--nui-c-context': `${color.cssColor.components.join(',')}`,
+            }
           }
-        }
-      }],
+        },
+      ],
       [N_PREFIX_RE, fonts[1]![1] as any],
-      ['n-dashed', { 'border-style': 'dashed' }],
-      ['n-solid', {
-        'background-color': 'rgba(var(--nui-c-context), 1) !important',
-        'border-color': 'rgba(var(--nui-c-context), 1)',
-        'color': 'white !important',
-      }],
-      ['n-disabled', {
-        'opacity': 0.6,
-        'pointer-events': 'none',
-        'filter': 'saturate(0)',
-      }],
+      [
+        'n-dashed',
+        { 'border-style': 'dashed' },
+      ],
+      [
+        'n-solid',
+        {
+          'background-color': 'rgba(var(--nui-c-context), 1) !important',
+          'border-color': 'rgba(var(--nui-c-context), 1)',
+          'color': 'white !important',
+        },
+      ],
+      [
+        'n-disabled',
+        {
+          'opacity': 0.6,
+          'pointer-events': 'none',
+          'filter': 'saturate(0)',
+        },
+      ],
       /**
        * Credit to Nanda Syahrasyad (https://github.com/narendrasss)
        *
@@ -56,14 +68,20 @@ export function unocssPreset(): Preset {
        * - https://www.nan.fyi/grid.svg
        * - https://www.nan.fyi/grid-dark.svg
        */
-      ['n-panel-grids-light', {
-        'background-image': 'url("data:image/svg+xml,%0A%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' transform=\'scale(3)\'%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'white\'/%3E%3Cpath d=\'M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z\' stroke-width=\'0.2\' stroke=\'hsla(0, 0%25, 98%25, 1)\' fill=\'none\'/%3E%3C/svg%3E")',
-        'background-size': '40px 40px',
-      }],
-      ['n-panel-grids-dark', {
-        'background-image': 'url("data:image/svg+xml,%0A%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' transform=\'scale(3)\'%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'hsl(0, 0%25, 8.5%25)\'/%3E%3Cpath d=\'M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z\' stroke-width=\'0.2\' stroke=\'hsl(0, 0%25, 11.0%25)\' fill=\'none\'/%3E%3C/svg%3E");',
-        'background-size': '40px 40px',
-      }],
+      [
+        'n-panel-grids-light',
+        {
+          'background-image': 'url("data:image/svg+xml,%0A%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' transform=\'scale(3)\'%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'white\'/%3E%3Cpath d=\'M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z\' stroke-width=\'0.2\' stroke=\'hsla(0, 0%25, 98%25, 1)\' fill=\'none\'/%3E%3C/svg%3E")',
+          'background-size': '40px 40px',
+        },
+      ],
+      [
+        'n-panel-grids-dark',
+        {
+          'background-image': 'url("data:image/svg+xml,%0A%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' transform=\'scale(3)\'%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'hsl(0, 0%25, 8.5%25)\'/%3E%3Cpath d=\'M 10,-2.55e-7 V 20 Z M -1.1677362e-8,10 H 20 Z\' stroke-width=\'0.2\' stroke=\'hsl(0, 0%25, 11.0%25)\' fill=\'none\'/%3E%3C/svg%3E");',
+          'background-size': '40px 40px',
+        },
+      ],
     ],
     variants: [
       (input: string) => {

@@ -138,7 +138,9 @@ const filterByCollection = computed(() => {
 })
 
 function toggleView() {
-  view.value = view.value === 'tree' ? 'list' : 'tree'
+  view.value = view.value === 'tree'
+    ? 'list'
+    : 'tree'
 }
 </script>
 

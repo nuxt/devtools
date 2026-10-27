@@ -8,12 +8,21 @@ function fakeCtx(viteConfig: Partial<ViteDevToolsNodeContext['viteConfig']> | un
 
 describe('skipInSSR', () => {
   it('skips a truthy build.ssr, regardless of command', () => {
-    expect(skipInSSR(fakeCtx({ command: 'build', build: { ssr: true } as any }))).toBe(true)
-    expect(skipInSSR(fakeCtx({ command: 'serve', build: { ssr: true } as any }))).toBe(true)
+    expect(skipInSSR(fakeCtx({
+      command: 'build',
+      build: { ssr: true } as any,
+    }))).toBe(true)
+    expect(skipInSSR(fakeCtx({
+      command: 'serve',
+      build: { ssr: true } as any,
+    }))).toBe(true)
   })
 
   it('does not skip a falsy build.ssr', () => {
-    expect(skipInSSR(fakeCtx({ command: 'serve', build: { ssr: false } as any }))).toBe(false)
+    expect(skipInSSR(fakeCtx({
+      command: 'serve',
+      build: { ssr: false } as any,
+    }))).toBe(false)
     expect(skipInSSR(fakeCtx({ command: 'serve', build: {} as any }))).toBe(false)
   })
 

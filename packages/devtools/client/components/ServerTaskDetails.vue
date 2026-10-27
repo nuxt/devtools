@@ -57,8 +57,22 @@ const tabInputs = ['json']
 const selectedTabInput = ref(tabInputs[0])
 
 const routeInputs = reactive({
-  query: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
+  query: [
+    {
+      active: true,
+      key: '',
+      value: '',
+      type: 'string',
+    },
+  ] as ServerRouteInput[],
+  body: [
+    {
+      active: true,
+      key: '',
+      value: '',
+      type: 'string',
+    },
+  ] as ServerRouteInput[],
   headers: [] as ServerRouteInput[],
 })
 
@@ -119,7 +133,9 @@ function parseInputs(inputs: ServerRouteInput[] = []) {
   const formatted = Object.fromEntries(
     inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
-  return Object.entries(formatted).length ? formatted : undefined
+  return Object.entries(formatted).length
+    ? formatted
+    : undefined
 }
 
 async function fetchData() {

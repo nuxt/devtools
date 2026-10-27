@@ -28,7 +28,12 @@ onClickOutside(el, () => {
   if (props.modelValue && props.autoClose)
     emit('close')
 }, {
-  ignore: ['a', 'button', 'summary', '[role="dialog"]'],
+  ignore: [
+    'a',
+    'button',
+    'summary',
+    '[role="dialog"]',
+  ],
 })
 
 const transitionType = {

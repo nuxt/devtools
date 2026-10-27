@@ -54,8 +54,12 @@ for (const file of htmlFiles) {
   html = html.replace(RUNTIME_CONFIG_APP_RE, (_, prefix, existingProps, suffix) => {
     const baseUrlProp = `baseURL:${RUNTIME_CONFIG_BASE_URL}`
     const otherProps = existingProps.replace(RUNTIME_CONFIG_EXISTING_BASE_URL_RE, '')
-    const buildAssetsDirProp = RUNTIME_CONFIG_BUILD_ASSETS_DIR_RE.test(otherProps) ? '' : `,buildAssetsDir:"/${BUILD_ASSETS_DIR}/"`
-    return `${prefix}${otherProps ? `${baseUrlProp},${otherProps}` : baseUrlProp}${buildAssetsDirProp}${suffix}`
+    const buildAssetsDirProp = RUNTIME_CONFIG_BUILD_ASSETS_DIR_RE.test(otherProps)
+      ? ''
+      : `,buildAssetsDir:"/${BUILD_ASSETS_DIR}/"`
+    return `${prefix}${otherProps
+      ? `${baseUrlProp},${otherProps}`
+      : baseUrlProp}${buildAssetsDirProp}${suffix}`
   })
   html = html.replaceAll(PLACEHOLDER, './')
   html = html.replace(SHELL_ASSET_URL_RE, (match, attr, url) => {

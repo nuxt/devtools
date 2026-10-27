@@ -15,7 +15,9 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/plausible',
     'nuxt-og-image',
-    ...(process.env.CI ? [] : ['../local']),
+    ...(process.env.CI
+      ? []
+      : ['../local']),
   ],
 
   css: ['~/assets/css/main.css'],

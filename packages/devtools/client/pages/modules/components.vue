@@ -23,7 +23,9 @@ function openComponentInspector() {
 }
 
 function toggleView() {
-  view.value = view.value === 'list' ? 'graph' : 'list'
+  view.value = view.value === 'list'
+    ? 'graph'
+    : 'list'
 }
 </script>
 

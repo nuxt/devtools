@@ -31,10 +31,12 @@ function fakeContext(root: string, handledByHook = true) {
     } as unknown as Nuxt,
     options: {},
     refresh: () => {},
-    openInEditorHooks: [(filepath: string) => {
-      opened.push(filepath)
-      return handledByHook
-    }],
+    openInEditorHooks: [
+      (filepath: string) => {
+        opened.push(filepath)
+        return handledByHook
+      },
+    ],
   } as unknown as NuxtDevtoolsServerContext
   return { ctx, opened }
 }
@@ -61,7 +63,9 @@ describe('openInEditor', () => {
     const { openInEditor } = setupGeneralRPC(ctx)
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
-    expect(opened).toEqual([join(root, 'apps/web/app/components/Foo.vue')])
+    expect(opened).toEqual([
+      join(root, 'apps/web/app/components/Foo.vue'),
+    ])
   })
 
   it('opens a path relative to the root directory when the cwd holds no such file', async () => {
@@ -70,7 +74,9 @@ describe('openInEditor', () => {
     const { openInEditor } = setupGeneralRPC(ctx)
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
-    expect(opened).toEqual([join(root, 'apps/web/app/components/Foo.vue')])
+    expect(opened).toEqual([
+      join(root, 'apps/web/app/components/Foo.vue'),
+    ])
   })
 
   it('opens a workspace-relative path while the cwd is the package directory', async () => {

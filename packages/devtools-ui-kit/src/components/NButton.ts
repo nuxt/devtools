@@ -27,7 +27,9 @@ export default defineComponent({
       to: props.to,
       ...attrs,
       ...(!props.to && { type: props.type }),
-      ...(props.disabled ? { disabled: true } : { tabindex: 0 }),
+      ...(props.disabled
+        ? { disabled: true }
+        : { tabindex: 0 }),
       class: [
         props.border ? 'n-button-base active:n-button-active focus-visible:n-focus-base hover:n-button-hover' : '',
         slots.default ? '' : 'n-icon-button',

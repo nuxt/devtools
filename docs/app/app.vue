@@ -8,17 +8,21 @@ useHead({
     lang: 'en',
   },
 })
-const links = [{
-  label: 'Documentation',
-  to: '/guide/getting-started',
-}, {
-  label: 'Playground',
-  to: '/playground',
-}, {
-  label: 'Releases',
-  to: 'https://github.com/nuxt/devtools/releases',
-  target: '_blank',
-}]
+const links = [
+  {
+    label: 'Documentation',
+    to: '/guide/getting-started',
+  },
+  {
+    label: 'Playground',
+    to: '/playground',
+  },
+  {
+    label: 'Releases',
+    to: 'https://github.com/nuxt/devtools/releases',
+    target: '_blank',
+  },
+]
 const { version } = useRuntimeConfig().public
 const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'))
 

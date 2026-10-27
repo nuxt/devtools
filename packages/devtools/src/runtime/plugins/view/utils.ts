@@ -3,7 +3,9 @@ import { getCurrentScope, onScopeDispose, ref, watch } from 'vue'
 
 export function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Ref<T> {
   const raw = localStorage.getItem(key)
-  const data = ref(raw ? JSON.parse(raw) : initial)
+  const data = ref(raw
+    ? JSON.parse(raw)
+    : initial)
 
   for (const key in initial) {
     if (data.value[key] === undefined)

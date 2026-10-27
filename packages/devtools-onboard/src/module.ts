@@ -26,7 +26,9 @@ const BASE = '/__devtools/'
 
 function listsDevtools(modules: NuxtOptions['modules']): boolean {
   return modules.some((entry) => {
-    const id = Array.isArray(entry) ? entry[0] : entry
+    const id = Array.isArray(entry)
+      ? entry[0]
+      : entry
     return typeof id === 'string' && DEVTOOLS_MODULES.has(id)
   })
 }
@@ -41,7 +43,9 @@ function listsDevtools(modules: NuxtOptions['modules']): boolean {
 async function devtoolsSpec(): Promise<string> {
   const { version, peerDependencies } = await readPackageJSON(fileURLToPath(import.meta.url))
   const range = peerDependencies?.[DEVTOOLS] ?? ''
-  return `${DEVTOOLS}@${range.startsWith('npm:') ? range : `^${version}`}`
+  return `${DEVTOOLS}@${range.startsWith('npm:')
+    ? range
+    : `^${version}`}`
 }
 
 export default defineNuxtModule({

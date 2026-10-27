@@ -16,10 +16,14 @@ const cache = new Map<string, Promise<string | undefined>>()
 async function fetchIconifySvg(collection: string, icon: string): Promise<string | undefined> {
   const url = `https://api.iconify.design/${collection}/${icon}.svg?color=currentColor&width=1.2em&height=1.2em`
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(10_000) })
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(10_000),
+    })
     if (!res.ok)
       return undefined
-    return DOMPurify.sanitize(await res.text(), { USE_PROFILES: { svg: true } })
+    return DOMPurify.sanitize(await res.text(), {
+      USE_PROFILES: { svg: true },
+    })
   }
   catch {
     // Offline / flaky CDN — degrade to a blank icon rather than throwing out

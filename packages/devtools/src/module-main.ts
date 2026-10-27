@@ -131,7 +131,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // The client app only exists in this repo, never next to the published
   // package, so the check can't misfire for users.
   const isSelfClient = resolve(nuxt.options.rootDir) === resolve(packageDir, 'client')
-  const clientAssetsSource = isSelfClient ? undefined : resolveClientAssetsSource()
+  const clientAssetsSource = isSelfClient
+    ? undefined
+    : resolveClientAssetsSource()
   // Where the client UI lives from the browser's point of view.
   const clientUrl = clientAssetsSource
     ? `${ROUTE_CLIENT}/`
@@ -202,7 +204,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
               if (pathname !== ROUTE_CLIENT)
                 return next()
               res.statusCode = 302
-              res.setHeader('Location', `${ROUTE_CLIENT}/${search ? `?${search}` : ''}`)
+              res.setHeader('Location', `${ROUTE_CLIENT}/${search
+                ? `?${search}`
+                : ''}`)
               res.end()
             })
             // Serve `__connection.json` on the client's base (registered
@@ -431,7 +435,9 @@ function extendViteDevToolsConfig(extend: (devtools: DevToolsConfig) => void) {
   extendViteConfig((config) => {
     if (config.devtools === false)
       return
-    const devtools: DevToolsConfig = typeof config.devtools === 'object' ? config.devtools : {}
+    const devtools: DevToolsConfig = typeof config.devtools === 'object'
+      ? config.devtools
+      : {}
     extend(devtools)
     // Vite bundles its `devtools` option type from an older `@vitejs/devtools`
     // than the one installed here; the installed version is what reads it.

@@ -30,8 +30,11 @@ const closeWatcher = nuxtApp.hook('storage:key:update' as any, async (key: strin
     return
   await refreshStorageKeys()
   if (fileKey.value === key) {
-    if (event === 'remove')
-      return router.replace({ query: { storage: currentStorage.value } })
+    if (event === 'remove') {
+      return router.replace({
+        query: { storage: currentStorage.value },
+      })
+    }
     await fetchItem(fileKey.value)
   }
 })
@@ -88,7 +91,9 @@ async function saveNewItem() {
   if (!storageKeys.value?.includes(key))
     await rpc.setStorageItem(key, '')
 
-  router.replace({ query: { storage: currentStorage.value, key } })
+  router.replace({
+    query: { storage: currentStorage.value, key },
+  })
   newKey.value = ''
 }
 
@@ -112,7 +117,9 @@ async function renameCurrentItem() {
   const renamedKey = `${currentStorage.value}:${currentItem.value.updatedKey}`
   await rpc.setStorageItem(renamedKey, currentItem.value.updatedContent)
   await rpc.removeStorageItem(currentItem.value.key)
-  router.replace({ query: { storage: currentStorage.value, key: renamedKey } })
+  router.replace({
+    query: { storage: currentStorage.value, key: renamedKey },
+  })
 }
 </script>
 

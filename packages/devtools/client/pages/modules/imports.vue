@@ -74,7 +74,11 @@ const filtered = computed(() => {
       if (!map.has(i.from))
         map.set(i.from, [])
       map.get(i.from)!.push(i)
-      count[map === user ? 'user' : map === lib ? 'lib' : 'builtin']++
+      count[map === user
+        ? 'user'
+        : map === lib
+          ? 'lib'
+          : 'builtin']++
     })
 
   return {

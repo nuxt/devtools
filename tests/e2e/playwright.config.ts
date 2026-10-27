@@ -5,7 +5,12 @@ import { matchesProjectFilter } from './shared/glob'
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 
-const PLAYGROUNDS = ['empty', 'spa', 'tab-seo', 'tab-timeline'] as const
+const PLAYGROUNDS = [
+  'empty',
+  'spa',
+  'tab-seo',
+  'tab-timeline',
+] as const
 const MODES = ['dev', 'built'] as const
 
 type Mode = typeof MODES[number]
@@ -33,7 +38,9 @@ const allSpecs: Spec[] = PLAYGROUNDS.flatMap((playground, idx) =>
       name: `${playground}:${mode}`,
       playground,
       mode,
-      port: 13000 + idx * 10 + (mode === 'dev' ? 0 : 1),
+      port: 13000 + idx * 10 + (mode === 'dev'
+        ? 0
+        : 1),
     })),
 )
 
@@ -52,7 +59,14 @@ export default defineConfig({
   // absorbs that startup flake without masking real, reproducible failures.
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI
-    ? [['list'], ['github'], ['html', { open: 'never', outputFolder: 'playwright-report' }]]
+    ? [
+        ['list'],
+        ['github'],
+        [
+          'html',
+          { open: 'never', outputFolder: 'playwright-report' },
+        ],
+      ]
     : 'list',
   timeout: 90_000,
   use: {

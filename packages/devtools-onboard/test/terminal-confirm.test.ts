@@ -2,7 +2,12 @@ import { PassThrough } from 'node:stream'
 import { afterEach, expect, it, vi } from 'vitest'
 import { confirmInTerminal } from '../src/terminal-confirm'
 
-const COMMAND = ['npm', 'i', '-D', '@nuxt/devtools@^4.0.0']
+const COMMAND = [
+  'npm',
+  'i',
+  '-D',
+  '@nuxt/devtools@^4.0.0',
+]
 
 function terminal({ isTTY = true, isRaw = false } = {}) {
   const asked: string[] = []

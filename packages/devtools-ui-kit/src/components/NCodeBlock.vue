@@ -33,7 +33,9 @@ const rendered = computed(() => {
 
 const classes = computed(() => [
   'n-code-block shiki',
-  (props.lines && !props.inline) ? 'n-code-block-lines' : '',
+  (props.lines && !props.inline)
+    ? 'n-code-block-lines'
+    : '',
 ])
 </script>
 

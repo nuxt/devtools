@@ -76,7 +76,9 @@ useEventListener('keydown', (e) => {
     case 'ArrowDown':
     case 'ArrowUp':
       e.preventDefault()
-      moveSelected(e.key === 'ArrowDown' ? 1 : -1)
+      moveSelected(e.key === 'ArrowDown'
+        ? 1
+        : -1)
       break
 
     case 'Enter': {

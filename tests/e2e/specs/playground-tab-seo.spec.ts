@@ -29,7 +29,12 @@ test('leaves the populated Pages dock through the expanded sidebar without empty
 
   const pages = page.getByRole('button', { name: 'Pages', exact: true })
   const showMore = page.getByRole('button', { name: 'Show more', exact: true })
-  for (const sidebarTitle of ['Hooks', 'Virtual Files', 'Debug', 'Data Inspector']) {
+  for (const sidebarTitle of [
+    'Hooks',
+    'Virtual Files',
+    'Debug',
+    'Data Inspector',
+  ]) {
     await pages.click()
     await expect(devtoolsFrame().locator('body'))
       .toContainText(/dynamic-\[name\]|\/full|\/empty/, { timeout: 15_000 })

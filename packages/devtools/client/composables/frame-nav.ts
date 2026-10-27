@@ -56,7 +56,9 @@ function normalizeIcon(icon: string | undefined): string | undefined {
 }
 
 function tabPath(tab: ModuleBuiltinTab | ModuleCustomTab): string {
-  return 'path' in tab && tab.path ? tab.path : `/modules/custom-${tab.name}`
+  return 'path' in tab && tab.path
+    ? tab.path
+    : `/modules/custom-${tab.name}`
 }
 
 /**
@@ -76,11 +78,15 @@ export function setupFrameNav(): void {
       id: tab.name,
       title: tab.title ?? tab.name,
       icon: normalizeIcon(tab.icon),
-      defaultOrder: 'defaultOrder' in tab ? tab.defaultOrder : undefined,
+      defaultOrder: 'defaultOrder' in tab
+        ? tab.defaultOrder
+        : undefined,
       // An uncategorised tab belongs to `app`, so the `Nuxt` group's
       // `categoryOrder` weights apply to it.
       category: tab.category || 'app',
-      navTarget: { path: tabPath(tab) },
+      navTarget: {
+        path: tabPath(tab),
+      },
     })),
     SETTINGS_TAB,
   ])
@@ -96,11 +102,21 @@ export function setupFrameNav(): void {
   const hostOrigin = window.location.origin
 
   function post(message: Record<string, unknown>) {
-    window.parent.postMessage({ channel: CHANNEL, v: VERSION, frameId: FRAME_ID, from: 'frame', ...message }, hostOrigin)
+    window.parent.postMessage({
+      channel: CHANNEL,
+      v: VERSION,
+      frameId: FRAME_ID,
+      from: 'frame',
+      ...message,
+    }, hostOrigin)
   }
 
   function announce(type: 'ready' | 'manifest') {
-    post({ type, tabs: manifest.value, current: currentTabId() })
+    post({
+      type,
+      tabs: manifest.value,
+      current: currentTabId(),
+    })
   }
 
   window.addEventListener('message', (ev: MessageEvent) => {

@@ -106,9 +106,17 @@ const data = computed<Data>(() => {
       shape,
       size: 15 + Math.min(rel.deps.length / 2, 8),
       font: {
-        color: isGrayedOut ? '#8885' : (colorMode.value === 'dark' ? 'white' : 'black'),
+        color: isGrayedOut
+          ? '#8885'
+          : (colorMode.value === 'dark'
+              ? 'white'
+              : 'black'),
       },
-      color: isGrayedOut ? '#8885' : selectedFilter.value?.id === rel.id ? '#82c742' : undefined,
+      color: isGrayedOut
+        ? '#8885'
+        : selectedFilter.value?.id === rel.id
+          ? '#82c742'
+          : undefined,
       // @ts-expect-error additional data
       extra: {
         id: rel.id,

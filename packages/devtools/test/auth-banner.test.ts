@@ -8,7 +8,10 @@ function createFakeTerminal() {
     interactive: true,
     withTerminal: work => work(),
     prompt: async () => undefined,
-    startTask: () => ({ update: () => {}, stop: () => {} }),
+    startTask: () => ({
+      update: () => {},
+      stop: () => {},
+    }),
     notify(notification) {
       const notice = { ...notification, dismissed: false }
       notices.push(notice)

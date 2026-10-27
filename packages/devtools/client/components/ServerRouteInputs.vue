@@ -20,7 +20,13 @@ const DATETIME_LOCAL_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 const params = useVModel(props, 'modelValue', emit, { passive: true })
 
 const filteredKeys = computed(() => {
-  return [...props.keys, 'active', 'key', 'value', 'type']
+  return [
+    ...props.keys,
+    'active',
+    'key',
+    'value',
+    'type',
+  ]
 })
 
 const keysObject = computed(() => {
@@ -30,7 +36,15 @@ const keysObject = computed(() => {
   return obj
 })
 
-const inputTypes = ['string', 'number', 'boolean', 'file', 'date', 'time', 'datetime-local']
+const inputTypes = [
+  'string',
+  'number',
+  'boolean',
+  'file',
+  'date',
+  'time',
+  'datetime-local',
+]
 
 function onFileInputChange(index: number | string, event: Event) {
   const target = event.target as HTMLInputElement
@@ -48,7 +62,9 @@ watch(() => params, (items) => {
   items.value.forEach((item: any) => {
     if (item.type === 'number' && typeof item.value !== 'number') {
       const parsed = Number.parseFloat(item.value)
-      item.value = Number.isNaN(parsed) ? 0 : parsed
+      item.value = Number.isNaN(parsed)
+        ? 0
+        : parsed
     }
     else if (item.type === 'boolean' && typeof item.value !== 'boolean') {
       item.value = true

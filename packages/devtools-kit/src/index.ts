@@ -46,7 +46,11 @@ export function addCustomTab(tab: ModuleCustomTab | (() => ModuleCustomTab | Pro
   deprecate(nuxt, 'NDT_DEP_0005', {
     api: 'addCustomTab',
     replacement: 'onDevtoolsReady((ctx) => ctx.docks.register(...))',
-  }, { key: typeof tab === 'function' ? undefined : tab.name })
+  }, {
+    key: typeof tab === 'function'
+      ? undefined
+      : tab.name,
+  })
 
   nuxt.hook('devtools:customTabs', async (tabs) => {
     if (typeof tab === 'function')
@@ -120,13 +124,22 @@ export function startSubprocess(
       },
     )
 
-    nuxt.callHook('devtools:terminal:write', { id, data: `> ${[execaOptions.command, ...execaOptions.args || []].join(' ')}\n\n` })
+    nuxt.callHook('devtools:terminal:write', { id, data: `> ${[
+      execaOptions.command,
+      ...execaOptions.args || [],
+    ].join(' ')}\n\n` })
 
     proc.process?.stdout?.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
+      nuxt.callHook('devtools:terminal:write', {
+        id,
+        data: data.toString(),
+      })
     })
     proc.process?.stderr?.on('data', (data) => {
-      nuxt.callHook('devtools:terminal:write', { id, data: data.toString() })
+      nuxt.callHook('devtools:terminal:write', {
+        id,
+        data: data.toString(),
+      })
     })
     proc.process?.on('exit', (code) => {
       if (!restarting) {
@@ -170,8 +183,12 @@ export function startSubprocess(
 
   function register() {
     nuxt.callHook('devtools:terminal:register', {
-      onActionRestart: tabOptions.restartable === false ? undefined : restart,
-      onActionTerminate: tabOptions.terminatable === false ? undefined : terminate,
+      onActionRestart: tabOptions.restartable === false
+        ? undefined
+        : restart,
+      onActionTerminate: tabOptions.terminatable === false
+        ? undefined
+        : terminate,
       isTerminated: false,
       ...tabOptions,
     })
