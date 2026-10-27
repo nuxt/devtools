@@ -63,7 +63,9 @@ function navigateToRoute(path: string) {
 
 const compatibilityVersion = useNuxtCompatibilityVersion()
 
-const pagesPath = computed(() => `./${compatibilityVersion === 4 ? 'app/' : ''}pages/index.vue`)
+const pagesPath = computed(() => `./${compatibilityVersion === 4
+  ? 'app/'
+  : ''}pages/index.vue`)
 </script>
 
 <template>

@@ -44,10 +44,14 @@ function getNameRest(name: string) {
 }
 
 function toggleSortedBy(by: SortBy) {
-  if (sortby.value === by)
-    direction.value = direction.value === 'asc' ? 'desc' : 'asc'
-  else
+  if (sortby.value === by) {
+    direction.value = direction.value === 'asc'
+      ? 'desc'
+      : 'asc'
+  }
+  else {
     sortby.value = by
+  }
 }
 </script>
 

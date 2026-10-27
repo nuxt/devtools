@@ -6,7 +6,9 @@ import { getModuleNameFromPath, isBuiltInModule } from '~/composables/utils'
 const config = useAutoImports()
 
 const modules = computed(() => {
-  return [...new Set(config.value?.imports.map(i => getModuleNameFromPath(i.from)).filter(x => Boolean(x) && !isBuiltInModule(x)))]
+  return [
+    ...new Set(config.value?.imports.map(i => getModuleNameFromPath(i.from)).filter(x => Boolean(x) && !isBuiltInModule(x))),
+  ]
 })
 </script>
 

@@ -13,7 +13,10 @@ export default defineConfig({
       'border-base': 'border-#8882',
       'ring-base': 'ring-#8882',
     },
-    [/^bg-glass(:\d+)?$/, ([, opacity = ':75']) => `bg-white${opacity} dark:bg-#111${opacity} backdrop-blur-5`],
+    [
+      /^bg-glass(:\d+)?$/,
+      ([, opacity = ':75']) => `bg-white${opacity} dark:bg-#111${opacity} backdrop-blur-5`,
+    ],
   ],
   presets: [
     presetWind3({

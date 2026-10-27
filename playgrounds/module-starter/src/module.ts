@@ -39,7 +39,11 @@ export default defineNuxtModule<ModuleOptions>({
         type: 'query',
         handler(t: string) {
           // call the client function registered by the iframe
-          rpc.broadcast({ method: 'greeting', args: ['world'], event: true })
+          rpc.broadcast({
+            method: 'greeting',
+            args: ['world'],
+            event: true,
+          })
           return `${t.toUpperCase()} [from server]`
         },
       })

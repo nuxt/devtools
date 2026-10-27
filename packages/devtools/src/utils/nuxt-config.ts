@@ -8,7 +8,9 @@ import { getDefaultExportOptions } from 'magicast/helpers'
  * unchanged.
  */
 export function removeNuxtModuleFromCode(source: string, name: string, filepath?: string): string {
-  const mod = parseModule(source, filepath ? { sourceFileName: filepath } : undefined)
+  const mod = parseModule(source, filepath
+    ? { sourceFileName: filepath }
+    : undefined)
   const config = getDefaultExportOptions(mod)
   if (!Array.isArray(config.modules))
     return mod.generate().code

@@ -9,7 +9,12 @@ const CAMEL_TO_KEBAB_RE = /([a-z0-9])([A-Z])/g
 const packageBundles = {
   'shiki': ['shiki', '@shikijs'],
   'quicktype-core': ['quicktype-core'],
-  'json-editor-vue': ['json-editor-vue', 'ajv', 'vanilla-picker', 'vanilla-jsoneditor'],
+  'json-editor-vue': [
+    'json-editor-vue',
+    'ajv',
+    'vanilla-picker',
+    'vanilla-jsoneditor',
+  ],
   'vis': ['vis-data', 'vis-network'],
   'unocss': ['@unocss', 'unocss'],
   'markdown-exit': ['markdown-exit'],
@@ -158,7 +163,9 @@ export default defineNuxtConfig({
     },
     server: {
       hmr: {
-        clientPort: process.env.PORT ? +process.env.PORT : undefined,
+        clientPort: process.env.PORT
+          ? +process.env.PORT
+          : undefined,
       },
       // Local standalone dev only (`pnpm dev` -> `nuxi dev client`): this app
       // dogfoods the DevTools module on itself, so the Vite DevTools hub serves

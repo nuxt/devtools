@@ -151,8 +151,12 @@ export function getServerData(nuxt: Nuxt): NuxtServerData {
     nuxt: nuxt.options,
     nitro: captured.nitro?.options,
     vite: {
-      server: config ? normalizeViteConfig(config) : undefined,
-      client: config ? normalizeViteConfig(config) : undefined,
+      server: config
+        ? normalizeViteConfig(config)
+        : undefined,
+      client: config
+        ? normalizeViteConfig(config)
+        : undefined,
     },
     // `nuxt.options` is `@nuxt/schema`'s `NuxtOptions` while `NuxtServerData`
     // pins the structurally-identical `nuxt/schema` one; bridge the two.

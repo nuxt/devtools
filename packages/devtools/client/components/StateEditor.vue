@@ -26,7 +26,12 @@ const error = shallowRef()
 const isVisible = computed(() => !props.name || !!isOpen.value)
 
 function isPrimitive(value: any): boolean {
-  return ['number', 'bigint', 'string', 'boolean'].includes(typeof value)
+  return [
+    'number',
+    'bigint',
+    'string',
+    'boolean',
+  ].includes(typeof value)
 }
 
 // Produce a plain, non-reactive snapshot of the state for the JSON editor.

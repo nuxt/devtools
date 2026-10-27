@@ -19,7 +19,9 @@ const plugins = computed((): PluginInfoWithMetic[] => {
   const metics = client.value?.metrics.clientPlugins() || []
 
   return plugins.map((plugin) => {
-    const p = typeof plugin === 'string' ? { src: plugin } : plugin
+    const p = typeof plugin === 'string'
+      ? { src: plugin }
+      : plugin
     return {
       ...p,
       metric: metics.find(m => m.src === p.src || m.src.startsWith(p.src)),

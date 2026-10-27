@@ -38,18 +38,24 @@ export function setupNpmRPC(ctx: NuxtDevtoolsServerContext) {
     if (command === 'install' || command === 'update') {
       return [
         name,
-        name === 'npm' ? 'install' : 'add',
+        name === 'npm'
+          ? 'install'
+          : 'add',
         `${packageName}@latest`,
         dev ? '-D' : '',
         // In yarn berry, `--ignore-scripts` is removed
-        (name === 'yarn' && !agent?.version?.startsWith('1.')) ? '' : '--ignore-scripts',
+        (name === 'yarn' && !agent?.version?.startsWith('1.'))
+          ? ''
+          : '--ignore-scripts',
       ].filter(Boolean)
     }
 
     if (command === 'uninstall') {
       return [
         name,
-        name === 'npm' ? 'uninstall' : 'remove',
+        name === 'npm'
+          ? 'uninstall'
+          : 'remove',
         packageName,
       ].filter(Boolean)
     }

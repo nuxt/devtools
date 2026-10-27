@@ -39,7 +39,13 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
 
     const session = await kit.terminals.startChildProcess({
       command: 'npx',
-      args: ['nuxi', 'analyze', '--no-serve', '--name', name],
+      args: [
+        'nuxi',
+        'analyze',
+        '--no-serve',
+        '--name',
+        name,
+      ],
       cwd: nuxt.options.rootDir,
     }, {
       id: sessionId,
@@ -76,7 +82,9 @@ export function setupAnalyzeBuildRPC(ctx: NuxtDevtoolsServerContext) {
         ctx.notify({
           message: `Build analysis "${name}" failed`,
           level: 'error',
-          description: error instanceof Error ? error.message : String(error),
+          description: error instanceof Error
+            ? error.message
+            : String(error),
           category: 'build',
           notify: true,
         })

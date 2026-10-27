@@ -18,7 +18,12 @@ test('applies both key injection and timeline wrapping to the module', async ({ 
   const res = await page.request.get('/_nuxt/pages/keyed.vue')
   expect(res.ok()).toBe(true)
   const code = await res.text()
-  for (const fn of ['useState', 'callOnce', 'useAsyncData', 'useApiData'])
+  for (const fn of [
+    'useState',
+    'callOnce',
+    'useAsyncData',
+    'useApiData',
+  ])
     expect(code).toContain(`__nuxtTimelineWrap("${fn}", _$__${fn})`)
   // one injected key per keyed call above
   expect(code.match(/\/\* nuxt-injected \*\//g)).toHaveLength(4)

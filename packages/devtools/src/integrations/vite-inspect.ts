@@ -22,7 +22,9 @@ const INSPECT_DOCK_ICON = 'ph:magnifying-glass-duotone'
  * the user's project.
  */
 export function isVitePluginInspectAvailable(rootDir: string): boolean {
-  return isPackageExists('vite-plugin-inspect', { paths: [rootDir] })
+  return isPackageExists('vite-plugin-inspect', {
+    paths: [rootDir],
+  })
 }
 
 export async function createVitePluginInspect(options?: ViteInspectOptions): Promise<Plugin> {

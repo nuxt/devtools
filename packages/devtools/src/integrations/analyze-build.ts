@@ -21,7 +21,10 @@ export async function setup(nuxt: Nuxt, options: ModuleOptions) {
     const _meta = meta as AnalyzeBuildMeta
     _meta.size = _meta.size || {}
 
-    const dirs = [join(meta.buildDir, 'dist/client'), meta.outDir]
+    const dirs = [
+      join(meta.buildDir, 'dist/client'),
+      meta.outDir,
+    ]
     const [clientBundleSize, nitroBundleSize] = await Promise.all(dirs.map(getFolderSize))
 
     _meta.size.clientBundle = clientBundleSize

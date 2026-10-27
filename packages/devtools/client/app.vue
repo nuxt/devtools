@@ -117,16 +117,18 @@ const eyeDropper = useEyeDropper({})
 
 registerCommands(() => [
   ...(eyeDropper.isSupported.value
-    ? [{
-        id: 'action:eye-dropper',
-        title: 'Color Picker',
-        icon: 'i-carbon-eyedropper',
-        action: async () => {
-          const { sRGBHex } = await eyeDropper.open() || {}
-          if (sRGBHex)
-            copy(sRGBHex)
+    ? [
+        {
+          id: 'action:eye-dropper',
+          title: 'Color Picker',
+          icon: 'i-carbon-eyedropper',
+          action: async () => {
+            const { sRGBHex } = await eyeDropper.open() || {}
+            if (sRGBHex)
+              copy(sRGBHex)
+          },
         },
-      }]
+      ]
     : []),
   ...[
     {

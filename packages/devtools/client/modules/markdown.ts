@@ -50,7 +50,9 @@ export default defineNuxtModule({
           })
 
           md.options.highlight = (code, lang) => {
-            const _lang = (highlighter.getLoadedLanguages().includes(lang) ? lang : 'text') as BuiltinLanguage
+            const _lang = (highlighter.getLoadedLanguages().includes(lang)
+              ? lang
+              : 'text') as BuiltinLanguage
             return highlighter.codeToHtml(code, {
               lang: _lang || 'text',
               themes: {

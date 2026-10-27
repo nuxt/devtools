@@ -76,7 +76,14 @@ export function createDefaultTabOptions(): NuxtDevToolsOptions {
       inputDefaults: {
         query: [],
         body: [],
-        headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }],
+        headers: [
+          {
+            active: true,
+            key: 'Content-Type',
+            value: 'application/json',
+            type: 'string',
+          },
+        ],
       },
     },
     assets: {

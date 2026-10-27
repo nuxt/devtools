@@ -63,7 +63,9 @@ test('launches an installed Code Server with authenticated iframe handoff', asyn
     }, CODE_SERVER_STATUS_RPC)
   }, { timeout: 60_000 }).toMatchObject({
     server: { status: 'running' },
-    connect: { cookie: { name: 'code-server-session' } },
+    connect: {
+      cookie: { name: 'code-server-session' },
+    },
   })
 
   const runningStatus = await page.evaluate(async (rpcName) => {

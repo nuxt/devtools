@@ -2,12 +2,22 @@ import type { Nuxt } from 'nuxt/schema'
 import type { NuxtDevtoolsServerContext } from '../src/types'
 import fsp from 'node:fs/promises'
 import { tmpdir } from 'node:os'
+import { launchEditor } from 'devframe/utils/launch-editor'
 import { createHooks } from 'hookable'
 import { join, normalize } from 'pathe'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupGeneralRPC } from '../src/server-rpc/general'
+import { getOptions } from '../src/server-rpc/options'
 
-function fakeContext(root: string) {
+vi.mock('devframe/utils/launch-editor', () => ({
+  launchEditor: vi.fn(),
+}))
+
+vi.mock('../src/server-rpc/options', () => ({
+  getOptions: vi.fn(),
+}))
+
+function fakeContext(root: string, handledByHook = true) {
   const hooks = createHooks()
   const opened: string[] = []
   const ctx = {
@@ -21,10 +31,12 @@ function fakeContext(root: string) {
     } as unknown as Nuxt,
     options: {},
     refresh: () => {},
-    openInEditorHooks: [(filepath: string) => {
-      opened.push(filepath)
-      return true
-    }],
+    openInEditorHooks: [
+      (filepath: string) => {
+        opened.push(filepath)
+        return handledByHook
+      },
+    ],
   } as unknown as NuxtDevtoolsServerContext
   return { ctx, opened }
 }
@@ -37,6 +49,8 @@ describe('openInEditor', () => {
     await fsp.mkdir(join(root, 'apps/web/app/components'), { recursive: true })
     await fsp.writeFile(join(root, 'apps/web/app/components/Foo.vue'), '<template><div /></template>')
     vi.spyOn(process, 'cwd').mockReturnValue(join(root, 'apps/web'))
+    vi.mocked(getOptions).mockReset()
+    vi.mocked(launchEditor).mockClear()
   })
 
   afterEach(async () => {
@@ -49,7 +63,9 @@ describe('openInEditor', () => {
     const { openInEditor } = setupGeneralRPC(ctx)
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
-    expect(opened).toEqual([join(root, 'apps/web/app/components/Foo.vue')])
+    expect(opened).toEqual([
+      join(root, 'apps/web/app/components/Foo.vue'),
+    ])
   })
 
   it('opens a path relative to the root directory when the cwd holds no such file', async () => {
@@ -58,7 +74,9 @@ describe('openInEditor', () => {
     const { openInEditor } = setupGeneralRPC(ctx)
 
     await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
-    expect(opened).toEqual([join(root, 'apps/web/app/components/Foo.vue')])
+    expect(opened).toEqual([
+      join(root, 'apps/web/app/components/Foo.vue'),
+    ])
   })
 
   it('opens a workspace-relative path while the cwd is the package directory', async () => {
@@ -76,6 +94,19 @@ describe('openInEditor', () => {
 
     await expect(openInEditor(filepath)).resolves.toBe(true)
     expect(opened).toEqual([filepath])
+  })
+
+  it.each(['subl', 'sublime'])('opens Sublime Text with subl for the %s setting', async (setting) => {
+    vi.mocked(getOptions).mockReturnValue({
+      behavior: { openInEditor: setting },
+    } as any)
+    const { ctx, opened } = fakeContext(root, false)
+    const { openInEditor } = setupGeneralRPC(ctx)
+    const filepath = join(root, 'apps/web/app/components/Foo.vue')
+
+    await expect(openInEditor('app/components/Foo.vue')).resolves.toBe(true)
+    expect(opened).toEqual([filepath])
+    expect(launchEditor).toHaveBeenCalledWith(filepath, 'subl')
   })
 
   it('reports a path that exists under none of the base directories', async () => {

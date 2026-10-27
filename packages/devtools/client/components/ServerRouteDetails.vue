@@ -78,9 +78,30 @@ const paramNames = computed(() => parsedRoute.value?.filter(i => i.startsWith(':
 const routeMethod = ref(props.route.method || 'GET')
 const routeParams = ref<{ [key: string]: string }>({})
 const routeInputs = reactive({
-  query: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  body: [{ active: true, key: '', value: '', type: 'string' }] as ServerRouteInput[],
-  headers: [{ active: true, key: 'Content-Type', value: 'application/json', type: 'string' }] as ServerRouteInput[],
+  query: [
+    {
+      active: true,
+      key: '',
+      value: '',
+      type: 'string',
+    },
+  ] as ServerRouteInput[],
+  body: [
+    {
+      active: true,
+      key: '',
+      value: '',
+      type: 'string',
+    },
+  ] as ServerRouteInput[],
+  headers: [
+    {
+      active: true,
+      key: 'Content-Type',
+      value: 'application/json',
+      type: 'string',
+    },
+  ] as ServerRouteInput[],
 })
 const routeInputBodyJSON = ref<any>({})
 const {
@@ -94,7 +115,14 @@ const resolvedSendFrom = computed(() => {
   return sendFrom.value
 })
 
-const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD']
+const methods = [
+  'GET',
+  'POST',
+  'PUT',
+  'PATCH',
+  'DELETE',
+  'HEAD',
+]
 // https://github.com/unjs/h3/blob/main/src/utils/body.ts#L19
 const bodyPayloadMethods = ['PATCH', 'POST', 'PUT', 'DELETE']
 const hasBody = computed(() => bodyPayloadMethods.includes(routeMethod.value.toUpperCase()))
@@ -169,7 +197,9 @@ function parseInputs(inputs: ServerRouteInput[] = []) {
   const formatted = Object.fromEntries(
     inputs.filter(({ active, key, value }) => active && key && value !== undefined).map(({ key, value }) => [key, value]),
   )
-  return Object.entries(formatted).length ? formatted : undefined
+  return Object.entries(formatted).length
+    ? formatted
+    : undefined
 }
 
 async function fetchData() {
@@ -335,7 +365,9 @@ watchDebounced([routeInputs, activeTab], () => {
       tab: paramNames.value.length ? 'params' : 'query',
       inputs: {
         ...routeInputs,
-        ...(paramNames.value.length ? { params: routeParams.value } : {}),
+        ...(paramNames.value.length
+          ? { params: routeParams.value }
+          : {}),
       },
     }
     savedRouteInputs.value.push(newEntry)

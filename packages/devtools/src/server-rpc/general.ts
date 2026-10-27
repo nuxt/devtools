@@ -127,11 +127,17 @@ export function setupGeneralRPC({
 
       function _applyEnv(obj: any, parentKey = '') {
         for (const key in obj) {
-          const subKey = parentKey ? `${parentKey}_${key}` : key
+          const subKey = parentKey
+            ? `${parentKey}_${key}`
+            : key
           const envValue = _getEnv(subKey)
           if (_isObject(obj[key])) {
-            if (_isObject(envValue))
-              obj[key] = { ...obj[key], ...(envValue as any) }
+            if (_isObject(envValue)) {
+              obj[key] = {
+                ...obj[key],
+                ...(envValue as any),
+              }
+            }
 
             _applyEnv(obj[key], subKey)
           }
@@ -187,7 +193,13 @@ export function setupGeneralRPC({
       }
 
       const candidates = isRelative
-        ? [...new Set([process.cwd(), nuxt.options.rootDir, nuxt.options.workspaceDir].filter(Boolean))]
+        ? [
+            ...new Set([
+              process.cwd(),
+              nuxt.options.rootDir,
+              nuxt.options.workspaceDir,
+            ].filter(Boolean)),
+          ]
             .map(dir => resolve(dir, input))
         : [input]
 
@@ -210,6 +222,8 @@ export function setupGeneralRPC({
         let editor = getOptions()?.behavior.openInEditor ?? undefined
         if (editor === 'auto')
           editor = undefined
+        else if (editor === 'sublime')
+          editor = 'subl'
         await import('devframe/utils/launch-editor').then(r => r.launchEditor(path + suffix, editor))
         return true
       }
@@ -219,7 +233,9 @@ export function setupGeneralRPC({
       }
     },
     async enablePages() {
-      const baseDir = nuxt.options.future.compatibilityVersion === 4 ? nuxt.options.dir.app : nuxt.options.srcDir
+      const baseDir = nuxt.options.future.compatibilityVersion === 4
+        ? nuxt.options.dir.app
+        : nuxt.options.srcDir
       const pathApp = join(baseDir, 'app.vue')
       const pathPageIndex = join(baseDir, 'pages/index.vue')
 

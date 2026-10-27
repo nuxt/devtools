@@ -93,19 +93,25 @@ describe('code server options', () => {
     '--cookie-suffix',
     '--cookie-suffix=other',
   ])('rejects reserved argument %s', (arg) => {
-    expect(() => resolveCodeServerOptions({ args: [arg] }, '/project'))
+    expect(() => resolveCodeServerOptions({
+      args: [arg],
+    }, '/project'))
       .toThrow(`codeServer.args cannot override ${arg.split('=')[0]}`)
   })
 
   it.each(['PASSWORD', 'HASHED_PASSWORD'])('rejects reserved environment key %s', (key) => {
-    expect(() => resolveCodeServerOptions({ env: { [key]: 'secret' } }, '/project'))
+    expect(() => resolveCodeServerOptions({
+      env: { [key]: 'secret' },
+    }, '/project'))
       .toThrow(`codeServer.env cannot set ${key}`)
   })
 })
 
 describe('code server setup', () => {
   it('does not create or mount a definition when disabled', async () => {
-    const { ctx, nuxt } = fakeContext({ codeServer: { enabled: false } })
+    const { ctx, nuxt } = fakeContext({
+      codeServer: { enabled: false },
+    })
     setup(ctx)
     await nuxt.callHook('devtools:ready', {} as any)
 
@@ -114,7 +120,9 @@ describe('code server setup', () => {
   })
 
   it('mounts the plugin in the Nuxt group and disposes its supervisor on close', async () => {
-    const { ctx, nuxt } = fakeContext({ codeServer: { serverPort: 9090 } })
+    const { ctx, nuxt } = fakeContext({
+      codeServer: { serverPort: 9090 },
+    })
     setup(ctx)
 
     expect(mocks.createCodeServerDevframe).toHaveBeenCalledWith(expect.objectContaining({

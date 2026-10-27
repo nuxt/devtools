@@ -33,11 +33,22 @@ function getLatencyColor(latency: number | undefined) {
 const units = computed(() => {
   if (!props.duration || props.duration < 1)
     return ['<1', 'ms']
-  if (props.duration < 1000)
-    return [props.duration.toFixed(0), 'ms']
-  if (props.duration < 1000 * 60)
-    return [(props.duration / 1000).toFixed(1), 's']
-  return [(props.duration / 1000 / 60).toFixed(1), 'min']
+  if (props.duration < 1000) {
+    return [
+      props.duration.toFixed(0),
+      'ms',
+    ]
+  }
+  if (props.duration < 1000 * 60) {
+    return [
+      (props.duration / 1000).toFixed(1),
+      's',
+    ]
+  }
+  return [
+    (props.duration / 1000 / 60).toFixed(1),
+    'min',
+  ]
 })
 </script>
 

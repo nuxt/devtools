@@ -20,7 +20,9 @@ describe('wrapTimelineImports', () => {
         `import { useState } from '#app/composables/state';`,
         `const counter = useState(() => 0, '$key123' /* nuxt-injected */);`,
       ].join('\n'),
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
@@ -33,7 +35,9 @@ describe('wrapTimelineImports', () => {
   it('wraps an aliased import under its local name', () => {
     const result = wrap(
       `import { useState as myState } from '#app/composables/state';`,
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
@@ -45,7 +49,9 @@ describe('wrapTimelineImports', () => {
   it('only wraps matched specifiers within an import statement', () => {
     const result = wrap(
       `import { ref, useState, useStateFoo } from '#app/composables/state';`,
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
@@ -80,7 +86,9 @@ describe('wrapTimelineImports', () => {
         `import myDefault, { useState } from '#app/composables/state';`,
         `import * as ns from '#app/composables/state';`,
       ].join('\n'),
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
@@ -93,7 +101,9 @@ describe('wrapTimelineImports', () => {
   it('wraps a default import under its local name', () => {
     const result = wrap(
       `import myComposable from '~/composables/myComposable';`,
-      [['~/composables/myComposable', 'default']],
+      [
+        ['~/composables/myComposable', 'default'],
+      ],
     )
     expect(result).toMatchInlineSnapshot(`
       "import { __nuxtTimelineWrap } from "/runtime/function-metrics-helpers";
@@ -105,14 +115,18 @@ describe('wrapTimelineImports', () => {
   it('ignores imports from other sources', () => {
     expect(wrap(
       `import { useState } from '@vueuse/core';`,
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )).toBeUndefined()
   })
 
   it('ignores re-exports', () => {
     expect(wrap(
       `export { useState } from '#app/composables/state';`,
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )).toBeUndefined()
   })
 
@@ -123,7 +137,9 @@ describe('wrapTimelineImports', () => {
         `/* import { useState } from '#app/composables/state' */`,
         `const s = "import { useState } from '#app/composables/state'"`,
       ].join('\n'),
-      [['#app/composables/state', 'useState']],
+      [
+        ['#app/composables/state', 'useState'],
+      ],
     )).toBeUndefined()
   })
 
@@ -132,7 +148,9 @@ describe('wrapTimelineImports', () => {
       `import { useState } from '#app/composables/state';`,
       `useState();`,
     ].join('\n')
-    const wrappable: [string, string][] = [['#app/composables/state', 'useState']]
+    const wrappable: [string, string][] = [
+      ['#app/composables/state', 'useState'],
+    ]
     const once = wrap(code, wrappable)
     expect(once).toBeDefined()
     expect(wrap(once!, wrappable)).toBeUndefined()
@@ -141,19 +159,27 @@ describe('wrapTimelineImports', () => {
 
 describe('timelineWrapPlugin', () => {
   // Rollup < 4.40 has no native hook filters, so unplugin applies ours before calling the handler
-  const [plugin] = [TimelineWrapPlugin({
-    helperPath: HELPER_PATH,
-    getWrappable: async () => keys([['#app/composables/state', 'useState']]),
-  }).rollup()].flat()
+  const [plugin] = [
+    TimelineWrapPlugin({
+      helperPath: HELPER_PATH,
+      getWrappable: async () => keys([
+        ['#app/composables/state', 'useState'],
+      ]),
+    }).rollup(),
+  ].flat()
 
   const code = `import { useState } from '#app/composables/state'`
 
   async function transform(id: string) {
     const hook = plugin!.transform!
-    const handler = typeof hook === 'function' ? hook : hook.handler
+    const handler = typeof hook === 'function'
+      ? hook
+      : hook.handler
     // the plugin never touches the Rollup context, so an empty one suffices
     const result = await handler.call({} as never, code, id)
-    return typeof result === 'string' ? result : result?.code
+    return typeof result === 'string'
+      ? result
+      : result?.code
   }
 
   it.each([

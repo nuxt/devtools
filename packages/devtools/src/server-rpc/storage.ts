@@ -81,7 +81,11 @@ export function setupStorageRPC(ctx: NuxtDevtoolsServerContext) {
     await Promise.all(unwatchStorageMounts.map(unwatch => unwatch()))
     unwatchStorageMounts = await Promise.all(Object.keys(storageMounts).map(mountName =>
       watchStorageMount(activeStorage, mountName, (event, key) => {
-        ctx.devtoolsKit?.rpc.broadcast({ method: 'callHook', args: ['storage:key:update', key, event], event: true } as any)
+        ctx.devtoolsKit?.rpc.broadcast({
+          method: 'callHook',
+          args: ['storage:key:update', key, event],
+          event: true,
+        } as any)
       })))
   })
 

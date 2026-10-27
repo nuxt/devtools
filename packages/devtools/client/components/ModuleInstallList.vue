@@ -12,7 +12,12 @@ const emit = defineEmits(['close'])
 const collection = useModulesList()
 const installedModules = useInstalledModules()
 
-const sortingOptions = ['downloads', 'stars', 'updated', 'created'] as const
+const sortingOptions = [
+  'downloads',
+  'stars',
+  'updated',
+  'created',
+] as const
 const ascendingOrder = ref(false)
 const selectedSortingOption = ref<typeof sortingOptions[number]>(sortingOptions[0])
 const excludeInstalled = ref(true)
@@ -25,7 +30,9 @@ const sortingFactors: Record<typeof sortingOptions[number], SortingFunction<Modu
 }
 
 const sortedItems = computed(() => collection.value
-  ?.toSorted((a, b) => sortingFactors[selectedSortingOption.value](a, b) * (ascendingOrder.value ? 1 : -1)))
+  ?.toSorted((a, b) => sortingFactors[selectedSortingOption.value](a, b) * (ascendingOrder.value
+    ? 1
+    : -1)))
 
 const search = ref('')
 const fuse = computed(() => new Fuse(collection.value || [], {
@@ -38,8 +45,11 @@ const fuse = computed(() => new Fuse(collection.value || [], {
   sortFn: (a, b) => {
     const itemA = collection.value?.[a.idx]
     const itemB = collection.value?.[b.idx]
-    if (itemA && itemB)
-      return sortingFactors[selectedSortingOption.value](itemA, itemB) * (ascendingOrder.value ? 1 : -1)
+    if (itemA && itemB) {
+      return sortingFactors[selectedSortingOption.value](itemA, itemB) * (ascendingOrder.value
+        ? 1
+        : -1)
+    }
     return (a.score - b.score)
   },
   threshold: 0.2,

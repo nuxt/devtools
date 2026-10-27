@@ -71,7 +71,9 @@ export function wrapTimelineImports(
         return local
       wrapped = true
       // a default import has no meaningful exported name, record it under its local name
-      wrappers.push(`const ${local} = ${HELPER_NAME}(${JSON.stringify(name === 'default' ? local : name)}, ${RENAME_PREFIX}${local});`)
+      wrappers.push(`const ${local} = ${HELPER_NAME}(${JSON.stringify(name === 'default'
+        ? local
+        : name)}, ${RENAME_PREFIX}${local});`)
       return RENAME_PREFIX + local
     }
 
@@ -82,7 +84,9 @@ export function wrapTimelineImports(
       clause.push(`* as ${namespacedImport}`)
     const named = Object.entries(namedImports ?? {}).map(([name, local]) => {
       const bound = importAs(name, local)
-      return name === bound ? name : `${name} as ${bound}`
+      return name === bound
+        ? name
+        : `${name} as ${bound}`
     })
 
     if (named.length)

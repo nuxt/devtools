@@ -90,7 +90,13 @@ export function useAllRoutes() {
   const serverPages = useServerPages()
   return computed((): RouteInfo[] => {
     return (router.value?.getRoutes() || [])
-      .map(i => objectPick(i, ['path', 'name', 'meta', 'props', 'children']))
+      .map(i => objectPick(i, [
+        'path',
+        'name',
+        'meta',
+        'props',
+        'children',
+      ]))
       .map((i) => {
         return {
           ...serverPages.value?.find(j => j.name && j.name === i.name),

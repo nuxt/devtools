@@ -19,7 +19,9 @@ vi.mock('@nuxt/kit', async (importOriginal) => {
     addPlugin: vi.fn(),
     addTemplate: vi.fn(),
     addVitePlugin: vi.fn((plugin: Plugin | Plugin[]) => {
-      mocks.vitePlugins.push(...(Array.isArray(plugin) ? plugin : [plugin]))
+      mocks.vitePlugins.push(...(Array.isArray(plugin)
+        ? plugin
+        : [plugin]))
     }),
     extendViteConfig: vi.fn(),
   }
@@ -49,10 +51,20 @@ describe('vite DevTools origin', () => {
 
     const plugin = mocks.vitePlugins.find(plugin => plugin.name === 'nuxt:devtools') as any
     const ctx = {
-      viteConfig: { command: 'serve', build: { ssr: false } },
-      host: { resolveOrigin: () => 'http://localhost:5173' },
+      viteConfig: {
+        command: 'serve',
+        build: { ssr: false },
+      },
+      host: {
+        resolveOrigin: () => 'http://localhost:5173',
+      },
       install: vi.fn(),
-      docks: { register: vi.fn() },
+      services: {
+        has: () => false,
+      },
+      docks: {
+        register: vi.fn(),
+      },
       rpc: {
         register: vi.fn(),
         has: vi.fn(() => false),

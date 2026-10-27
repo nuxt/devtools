@@ -43,7 +43,12 @@ function fakeNuxt(options: Record<string, any> = { appId: 'test' }): FakeNuxt {
 function fakeViteConfig(overrides: Partial<ResolvedConfig> = {}): ResolvedConfig {
   return {
     env: { MODE: 'test' },
-    plugins: [{ name: 'p', api: { secret: 1 } }],
+    plugins: [
+      {
+        name: 'p',
+        api: { secret: 1 },
+      },
+    ],
     inlineConfig: { some: 'thing' },
     marker: 'raw',
     ...overrides,
@@ -57,7 +62,10 @@ function fakeViteConfig(overrides: Partial<ResolvedConfig> = {}): ResolvedConfig
 function fakeViteServer(config: ResolvedConfig = fakeViteConfig()): ViteDevServer {
   return {
     config,
-    environments: { client: { name: 'client' }, ssr: { name: 'ssr' } },
+    environments: {
+      client: { name: 'client' },
+      ssr: { name: 'ssr' },
+    },
   } as unknown as ViteDevServer
 }
 
@@ -118,7 +126,9 @@ describe('data-inspector source registration', () => {
     const fake = fakeNuxt()
     setup({ nuxt: fake.nuxt } as any)
 
-    const nitro = { options: { preset: 'node' } }
+    const nitro = {
+      options: { preset: 'node' },
+    }
     await fake.callHook('nitro:build:before', nitro)
 
     const server = fakeViteServer(fakeViteConfig({ marker: 'vite' } as any))
@@ -148,7 +158,9 @@ describe('getServerData deprecated shim', () => {
     const fake = fakeNuxt(options)
     setup({ nuxt: fake.nuxt } as any)
 
-    const nitro = { options: { preset: 'node' } }
+    const nitro = {
+      options: { preset: 'node' },
+    }
     await fake.callHook('nitro:build:before', nitro)
     await captureVite(fake, fakeViteServer())
 

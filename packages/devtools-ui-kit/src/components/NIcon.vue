@@ -9,7 +9,9 @@ const props = defineProps<{
 const svg = ref<string | undefined>()
 
 watchEffect(async () => {
-  svg.value = props.icon ? await getIconifySvg(props.icon) : undefined
+  svg.value = props.icon
+    ? await getIconifySvg(props.icon)
+    : undefined
 })
 </script>
 

@@ -13,7 +13,13 @@ type DevframeTerminalSession = Parameters<TerminalsHost['register']>[0]
  * use it. Safe to call before the kit connects (it no-ops).
  */
 export function broadcastTerminalExit(ctx: NuxtDevtoolsServerContext, id: string, code?: number) {
-  ctx.devtoolsKit?.rpc.broadcast({ method: 'onTerminalExit', args: [{ id, code }], event: true } as any)
+  ctx.devtoolsKit?.rpc.broadcast({
+    method: 'onTerminalExit',
+    args: [
+      { id, code },
+    ],
+    event: true,
+  } as any)
 }
 
 /**
@@ -46,7 +52,9 @@ interface BridgedRun {
  * non-zero code.
  */
 function statusForExit(code?: number): DevframeTerminalSession['status'] {
-  return code == null || code === 0 ? 'stopped' : 'error'
+  return code == null || code === 0
+    ? 'stopped'
+    : 'error'
 }
 
 /**

@@ -159,7 +159,9 @@ export function getComponentRelationships(component: Component, relationships?: 
 }
 
 export function pluralizeByCount(count: number, singular: string, plural = `${singular}s`) {
-  return `${count} ${count <= 1 ? singular : plural}`
+  return `${count} ${count <= 1
+    ? singular
+    : plural}`
 }
 
 export function refreshData() {

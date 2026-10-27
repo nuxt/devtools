@@ -201,9 +201,15 @@ async function copyAgentInfo() {
     const info = [
       `Page URL: ${pageUrl}`,
       `Viewport: ${viewport}`,
-      selectedText ? `Selected Text: ${selectedText}` : null,
-      selector ? `Selector: ${selector}` : null,
-      componentTree ? `Component Tree: ${componentTree}` : null,
+      selectedText
+        ? `Selected Text: ${selectedText}`
+        : null,
+      selector
+        ? `Selector: ${selector}`
+        : null,
+      componentTree
+        ? `Component Tree: ${componentTree}`
+        : null,
       `File: ${fileLocation}`,
     ].filter(Boolean).join('\n')
 

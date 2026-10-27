@@ -24,7 +24,11 @@ const box = reactive(useElementBounding(anchor))
 onMounted(() => {
   const view = props.tab.view as ModuleIframeView
   const isPersistent = view.persistent !== false
-  const allowedPermissions = ['clipboard-write', 'clipboard-read', ...(view.permissions || [])]
+  const allowedPermissions = [
+    'clipboard-write',
+    'clipboard-read',
+    ...(view.permissions || []),
+  ]
 
   if (iframeCacheMap.get(key.value) && isPersistent) {
     iframeEl.value = iframeCacheMap.get(key.value)!
@@ -84,14 +88,19 @@ function syncColorMode() {
     observedDocuments.add(html)
 
     const ob = new MutationObserver(() => {
-      const tabScheme = html.classList.contains('dark') ? 'dark' : 'light'
+      const tabScheme = html.classList.contains('dark')
+        ? 'dark'
+        : 'light'
       // The push above trips this observer too. Only a *divergence* from what we
       // render means the tab picked a scheme of its own; treating our own write
       // as a choice would pin the UI to it and stop it following the OS.
       if (tabScheme !== colorMode.value)
         setEmbedderColorMode(tabScheme)
     })
-    ob.observe(html, { attributes: true, attributeFilter: ['class'] })
+    ob.observe(html, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
   }
   catch (e) {
   }

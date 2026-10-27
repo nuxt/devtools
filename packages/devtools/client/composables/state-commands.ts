@@ -44,10 +44,14 @@ export function useCommands() {
         title: i.title || i.name,
         icon: i.icon,
         action: () => {
-          if ('onClick' in i && i.onClick)
+          if ('onClick' in i && i.onClick) {
             i.onClick()
-          else
-            router.push(('path' in i && i.path) ? i.path : `/modules/custom-${i.name}`)
+          }
+          else {
+            router.push(('path' in i && i.path)
+              ? i.path
+              : `/modules/custom-${i.name}`)
+          }
         },
       }
     }))
@@ -56,7 +60,9 @@ export function useCommands() {
     return [
       ...fixedCommands,
       ...tabCommands.value,
-      ...[...registeredCommands.values()]
+      ...[
+        ...registeredCommands.values(),
+      ]
         .flatMap(i => toValue(i)),
     ]
   })

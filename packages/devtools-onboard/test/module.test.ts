@@ -47,8 +47,11 @@ async function bootNuxt(overrides: NuxtConfig, { withoutDevtools = false, instal
     await nuxt.close()
     await rm(rootDir, { recursive: true, force: true })
   })
-  if (withoutDevtools)
-    nuxt.options.modulesDir = [join(rootDir, 'node_modules')]
+  if (withoutDevtools) {
+    nuxt.options.modulesDir = [
+      join(rootDir, 'node_modules'),
+    ]
+  }
   await nuxt.ready()
   return nuxt
 }
@@ -59,7 +62,11 @@ function onboardScripts(nuxt: Nuxt) {
 
 /** Serves what the module mounts on a real client Vite server; resolves to its origin. */
 async function serveViteMiddleware(nuxt: Nuxt): Promise<{ origin: string, viteServer: ViteDevServer }> {
-  const viteServer = await createViteServer({ configFile: false, logLevel: 'silent', server: { middlewareMode: true, ws: false } })
+  const viteServer = await createViteServer({
+    configFile: false,
+    logLevel: 'silent',
+    server: { middlewareMode: true, ws: false },
+  })
   cleanups.push(() => viteServer.close())
   // Mount only what the module adds, not Vite's own transform middlewares.
   viteServer.middlewares.stack.length = 0
@@ -81,7 +88,10 @@ const onboardStatus = (origin: string) => fetch(`${origin}/__devtools/__onboard/
 
 describe('@nuxt/devtools-onboard', () => {
   it('does nothing when devtools are disabled', async () => {
-    const nuxt = await bootNuxt({ devtools: false, modules: [onboardModule] })
+    const nuxt = await bootNuxt({
+      devtools: false,
+      modules: [onboardModule],
+    })
     expect(nuxt.options._requiredModules['@nuxt/devtools']).toBeUndefined()
     expect(onboardScripts(nuxt)).toHaveLength(0)
   }, 60_000)
@@ -93,7 +103,10 @@ describe('@nuxt/devtools-onboard', () => {
   }, 60_000)
 
   it('loads @nuxt/devtools-nightly installed under its own name, over @nuxt/devtools', async () => {
-    const nuxt = await bootNuxt({ dev: true }, { withoutDevtools: true, installed: ['@nuxt/devtools', '@nuxt/devtools-nightly'] })
+    const nuxt = await bootNuxt({ dev: true }, {
+      withoutDevtools: true,
+      installed: ['@nuxt/devtools', '@nuxt/devtools-nightly'],
+    })
     expect(nuxt.options.appConfig.loadedDevtools).toBe('@nuxt/devtools-nightly')
     expect(onboardScripts(nuxt)).toHaveLength(0)
   }, 60_000)

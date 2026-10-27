@@ -20,7 +20,9 @@ const timeAgo = useTimeAgo(() => props.segment.start, {
     past: s => s,
     future: s => s,
     invalid: '-',
-    second: s => s ? `${s}s` : '',
+    second: s => s
+      ? `${s}s`
+      : '',
     minute: m => `${m}m`,
     hour: h => `${h}h`,
     week: w => `${w}w`,

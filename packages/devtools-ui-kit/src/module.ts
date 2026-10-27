@@ -28,7 +28,9 @@ export default defineNuxtModule<ModuleOptions>({
     addImportsDir(rPath('./composables'))
 
     // Standard components
-    addComponentsDir({ path: rPath('./components') })
+    addComponentsDir({
+      path: rPath('./components'),
+    })
 
     nuxt.options.css.unshift(rPath('assets/styles.css'))
 

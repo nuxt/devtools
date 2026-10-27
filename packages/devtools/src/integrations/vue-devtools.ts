@@ -24,7 +24,9 @@ export function setup({ nuxt }: NuxtDevtoolsServerContext) {
       devtools: {
         ...devtools,
         setup: (ctx: Parameters<typeof devtools.setup>[0]) =>
-          skipInSSR(ctx) ? undefined : devtools.setup(ctx),
+          skipInSSR(ctx)
+            ? undefined
+            : devtools.setup(ctx),
       },
     }
   })

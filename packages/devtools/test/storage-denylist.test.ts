@@ -19,15 +19,24 @@ beforeEach(async () => {
   await fsp.writeFile(join(projectDir, 'nuxt.config.ts'), 'original')
 
   const hooks = createHooks()
-  rpc = setupStorageRPC({ nuxt: { hook: hooks.hook.bind(hooks) } } as unknown as NuxtDevtoolsServerContext)
+  rpc = setupStorageRPC({
+    nuxt: {
+      hook: hooks.hook.bind(hooks),
+    },
+  } as unknown as NuxtDevtoolsServerContext)
   await hooks.callHook('nitro:init', {
     options: {
       storage: {
         root: { driver: 'fs', base: projectDir },
-        db: { driver: 'fs', base: join(root, 'db') },
+        db: {
+          driver: 'fs',
+          base: join(root, 'db'),
+        },
       },
     },
-    logger: { warn: () => {} },
+    logger: {
+      warn: () => {},
+    },
   })
 })
 
@@ -37,7 +46,13 @@ const readProjectConfig = () => fsp.readFile(join(projectDir, 'nuxt.config.ts'),
 
 describe('storage mount denylist', () => {
   // Every spelling unstorage routes to the `root` mount.
-  const deniedKeys = ['root:nuxt.config.ts', '/root:nuxt.config.ts', ':root:nuxt.config.ts', 'root/nuxt.config.ts', '\\root\\nuxt.config.ts']
+  const deniedKeys = [
+    'root:nuxt.config.ts',
+    '/root:nuxt.config.ts',
+    ':root:nuxt.config.ts',
+    'root/nuxt.config.ts',
+    '\\root\\nuxt.config.ts',
+  ]
 
   it.each(deniedKeys)('refuses to read, write or remove %s', async (key) => {
     expect(await rpc.getStorageItem(key)).toBeNull()
