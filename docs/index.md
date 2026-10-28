@@ -69,7 +69,7 @@ export default defineNuxtConfig({
 
 ## Opening the DevTools
 
-Run `nuxt dev` and open your app in the browser. Click the Vite DevTools trigger at the bottom of the page, or press :kbd{value="Shift"} + :kbd{value="Alt"} / :kbd{value="⇧ Shift"} + :kbd{value="⌥ Option"} + :kbd{value="D"}, to toggle the panel.
+Run `nuxt dev` and open your app in the browser. Click the **Nuxt** button in the Vite DevTools dock at the bottom of the page, or press :kbd{value="Shift"} + :kbd{value="Alt"} / :kbd{value="⇧ Shift"} + :kbd{value="⌥ Option"} + :kbd{value="D"}, to toggle the panel.
 
 Vite DevTools can run commands and read files on your machine, so the first time you open it, it asks you to **authorize the browser** with the code printed in the terminal running `nuxt dev`. The prompt is skipped in sandboxes such as StackBlitz and CodeSandbox. To skip it elsewhere, set `devtools.disableAuthorization: true`; only do this on a machine you trust, as any browser that reaches the dev server then gets access.
 
