@@ -7,12 +7,12 @@
       Note for module authors:
     </p>
     This template uses the Nuxt DevTools v4 API (Vite DevTools docks and RPC). See the <NLink
-      href="https://devtools.nuxt.com/module/guide"
+      href="https://nuxt.com/modules/devtools/module-authors"
       target="_blank"
     >
       module authors guide
     </NLink> and the <NLink
-      href="https://devtools.nuxt.com/module/migration-v4"
+      href="https://nuxt.com/modules/devtools/module-migration"
       target="_blank"
     >
       migration guide

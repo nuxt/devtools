@@ -15,7 +15,7 @@ function fakeNuxt(devtools: unknown = {}): Nuxt {
 describe('diagnosticsDocsBase', () => {
   it('builds per-code migration-guide anchors (lowercased)', () => {
     expect(diagnosticsDocsBase('NDT_DEP_0001')).toBe(
-      'https://devtools.nuxt.com/module/migration-v4#ndt_dep_0001',
+      'https://nuxt.com/modules/devtools/module-migration#ndt_dep_0001',
     )
   })
 })
@@ -45,7 +45,7 @@ describe('deprecate', () => {
     expect(output).toContain('NDT_DEP_0001')
     expect(output).toContain('`a()` is deprecated')
     expect(output).toContain('Use `b()` instead')
-    expect(output).toContain('migration-v4#ndt_dep_0001')
+    expect(output).toContain('module-migration#ndt_dep_0001')
     expect(diagnostic).toBeInstanceOf(Error)
     warn.mockRestore()
   })

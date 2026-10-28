@@ -186,7 +186,7 @@ describe('code server setup', () => {
     warn.mockRestore()
     expect(outputs).toHaveLength(1)
     expect(outputs[0]).toContain('`devtools.vscode` is deprecated')
-    expect(outputs[0]).toContain('migration-v4#ndt_dep_0008')
+    expect(outputs[0]).toContain('module-migration#ndt_dep_0008')
     expect(mocks.createCodeServerDevframe).not.toHaveBeenCalled()
   })
 })

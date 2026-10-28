@@ -41,7 +41,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
       <div flex="~ col" mt-5 items-center md:mt-20>
         <NuxtLink
           flex="~" mt--10 items-center justify-center
-          to="https://devtools.nuxt.com/" target="_blank"
+          to="https://nuxt.com/modules/devtools" target="_blank"
         >
           <NuxtLogo h-10 />
         </NuxtLink>

@@ -10,10 +10,10 @@ export { createConsoleReporter, defineDiagnostics }
  * Canonical docs URL for a Nuxt DevTools diagnostic code.
  *
  * Each code links to a per-code anchor in the v4 migration guide, e.g.
- * `NDT_DEP_0001` → `.../module/migration-v4#ndt_dep_0001`.
+ * `NDT_DEP_0001` → `.../modules/devtools/module-migration#ndt_dep_0001`.
  */
 export function diagnosticsDocsBase(code: string | number): string {
-  return `https://devtools.nuxt.com/module/migration-v4#${String(code).toLowerCase()}`
+  return `https://nuxt.com/modules/devtools/module-migration#${String(code).toLowerCase()}`
 }
 
 /**
