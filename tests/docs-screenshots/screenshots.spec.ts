@@ -83,6 +83,8 @@ const SHOTS: Shot[] = [
       for (const tab of ['/modules/overview', '/modules/timeline'])
         await page.evaluate(tab => (globalThis as any).__NUXT_DEVTOOLS_HOST__.devtools.navigate(tab), tab)
       await expect(frame.locator('body')).toContainText('/products/4')
+      // Zoom in (Alt + wheel) so the function names fit their segments.
+      await frame.locator('[of-x-scroll][n-panel-grids]').dispatchEvent('wheel', { deltaY: 300, altKey: true })
     },
   },
   {
