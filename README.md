@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 
 ### Nuxt 4
 
-Nuxt 5 ships with Nuxt DevTools v4. Nuxt 4.5+ still bundles v3; override `@nuxt/devtools` to `^4.0.0` with your package manager (`overrides` for npm and pnpm, `resolutions` for yarn), remove your lockfile and reinstall. See the [upgrade guide](https://nuxt.com/modules/devtools/upgrading-to-v4) for details and for what changed.
+Nuxt 5 ships `@nuxt/devtools-onboard`, which offers to install Nuxt DevTools v4 the first time you run `nuxt dev`; you can also install `@nuxt/devtools` with your package manager. Nuxt 4.5+ still bundles v3; override `@nuxt/devtools` to `^4.0.0` with your package manager (`overrides` in `package.json` for npm, in `pnpm-workspace.yaml` for pnpm, `resolutions` for yarn), remove your lockfile and reinstall. See the [upgrade guide](https://nuxt.com/modules/devtools/upgrading-to-v4) for details and for what changed.
 
 ### Nightly Release Channel
 
@@ -83,14 +83,10 @@ You can opt-in to the nightly release channel by using package manager resolutio
 <details>
 <summary>pnpm</summary>
 
-```json
-{
-  "pnpm": {
-    "overrides": {
-      "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
-    }
-  }
-}
+```yaml
+# pnpm-workspace.yaml
+overrides:
+  '@nuxt/devtools': 'npm:@nuxt/devtools-nightly@latest'
 ```
 
 </details>

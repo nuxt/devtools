@@ -47,14 +47,10 @@ Nuxt 4 still bundles DevTools v3. Override the bundled version with your package
 }
 ```
 
-```json [pnpm]
-{
-  "pnpm": {
-    "overrides": {
-      "@nuxt/devtools": "^4.0.0"
-    }
-  }
-}
+```yaml [pnpm]
+# pnpm-workspace.yaml
+overrides:
+  '@nuxt/devtools': ^4.0.0
 ```
 
 ::
@@ -119,6 +115,8 @@ On Nuxt 5, install it next to your app's dependencies; it takes precedence over 
 npm i -D @nuxt/devtools-nightly
 ```
 
+If your `nuxt.config` lists `@nuxt/devtools` in `modules`, replace it with `@nuxt/devtools-nightly`.
+
 On Nuxt 4, alias it with your package manager's overrides:
 
 ::code-group
@@ -139,14 +137,10 @@ On Nuxt 4, alias it with your package manager's overrides:
 }
 ```
 
-```json [pnpm]
-{
-  "pnpm": {
-    "overrides": {
-      "@nuxt/devtools": "npm:@nuxt/devtools-nightly@latest"
-    }
-  }
-}
+```yaml [pnpm]
+# pnpm-workspace.yaml
+overrides:
+  '@nuxt/devtools': 'npm:@nuxt/devtools-nightly@latest'
 ```
 
 ::
