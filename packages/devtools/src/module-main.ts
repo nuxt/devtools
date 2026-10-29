@@ -51,6 +51,65 @@ function resolveClientAssetsSource(): StaticAssetsSource {
   }
 }
 
+interface ListenerUrlEntry {
+  url: string
+}
+
+/**
+ * Check if a hostname is a loopback address (localhost / 127.x / ::1).
+ */
+function isLoopbackHost(hostname: string): boolean {
+  const h = hostname.replace(/^\[|\]$/g, '')
+  return h === 'localhost'
+    || h.endsWith('.localhost')
+    || h === '::1'
+    || /^127(?:\.\d{1,3}){3}$/.test(h)
+}
+
+/**
+ * Collect non-loopback origins from the Nuxt listener and push them
+ * into `target`. Supports an explicit override via the
+ * `NUXT_DEVTOOLS_ALLOWED_ORIGINS` env var (comma-separated).
+ */
+async function collectAllowedOrigins(
+  listener: { getURLs?: () => Promise<ListenerUrlEntry[]> } | undefined,
+  target: string[],
+): Promise<string[]> {
+  const explicit = process.env.NUXT_DEVTOOLS_ALLOWED_ORIGINS
+    ?.split(',')
+    .map(v => v.trim())
+    .filter(Boolean)
+  if (explicit?.length) {
+    target.push(...explicit.filter(origin => !target.includes(origin)))
+    return target
+  }
+
+  if (typeof listener?.getURLs !== 'function')
+    return target
+
+  let urls: ListenerUrlEntry[]
+  try {
+    urls = await listener.getURLs()
+  }
+  catch {
+    return target
+  }
+
+  for (const { url } of urls || []) {
+    try {
+      const { origin, hostname } = new URL(url)
+      if (isLoopbackHost(hostname) || target.includes(origin))
+        continue
+      target.push(origin)
+    }
+    catch {
+      // skip malformed URLs
+    }
+  }
+
+  return target
+}
+
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Disable in test mode
   if (process.env.TEST || process.env.NODE_ENV === 'test' || nuxt.options.test)
@@ -142,10 +201,16 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Nuxt serves the app through its own public listener while Vite runs on an
   // internal port behind it. Keep the public origin from Nuxt's listener so
   // Devframe's auth URL does not expose Vite's internal port.
+  // When the server is exposed on LAN (--public / --host), also collect
+  // non-loopback origins so Vite DevTools' WebSocket allows them.
   let publicDevServerOrigin: string | undefined
-  nuxt.hook('listen', (_server, listener) => {
+  const lanAllowedOrigins: string[] = []
+  nuxt.hook('listen', async (_server, listener) => {
     if (listener?.url)
       publicDevServerOrigin = new URL(listener.url).origin
+    await collectAllowedOrigins(listener, lanAllowedOrigins)
+    if (lanAllowedOrigins.length)
+      publicDevServerOrigin = lanAllowedOrigins[0]
   })
 
   const branding: DevToolsConfig['branding'] = {
@@ -168,10 +233,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (isGreaterThanOrEqual(viteVersion, '8.3.0')) {
     extendViteDevToolsConfig((devtools) => {
       devtools.branding ??= branding
+      if (lanAllowedOrigins.length)
+        devtools.allowedOrigins = lanAllowedOrigins
     })
   }
   else {
-    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({ branding }))
+    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({
+      branding,
+      allowedOrigins: lanAllowedOrigins,
+    }))
     addVitePlugin(DevTools)
   }
 
