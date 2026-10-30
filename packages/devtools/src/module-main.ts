@@ -148,10 +148,15 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Nuxt serves the app through its own public listener while Vite runs on an
   // internal port behind it. Keep the public origin from Nuxt's listener so
   // Devframe's auth URL does not expose Vite's internal port.
+  // Also allow every origin Nuxt listens on (e.g. LAN IPs with `--host`), so
+  // Vite DevTools does not reject them as non-loopback.
   let publicDevServerOrigin: string | undefined
-  nuxt.hook('listen', (_server, listener) => {
+  const allowedOrigins: string[] = []
+  nuxt.hook('listen', async (_server, listener) => {
     if (listener?.url)
       publicDevServerOrigin = new URL(listener.url).origin
+    const urls: { url: string }[] = await listener?.getURLs?.() ?? []
+    allowedOrigins.push(...urls.map(({ url }) => new URL(url).origin))
   })
 
   const branding: DevToolsConfig['branding'] = {
@@ -167,6 +172,7 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   }
 
   viteDevToolsDefaults.branding = branding
+  viteDevToolsDefaults.allowedOrigins = allowedOrigins
 
   // Vite 8.3+ registers the Vite DevTools integration itself from the
   // top-level `devtools` config option (vitejs/vite#23333), which keeps the
@@ -177,6 +183,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // to it directly.
   if (isGreaterThanOrEqual(viteVersion, '8.3.0')) {
     extendViteDevToolsConfig((devtools) => {
+      // Merged rather than defaulted, so user origins don't drop the listener's.
+      devtools.allowedOrigins = [
+        ...devtools.allowedOrigins ?? [],
+        ...allowedOrigins,
+      ]
       for (const [key, value] of Object.entries(viteDevToolsDefaults))
         (devtools as Record<string, unknown>)[key] ??= value
     })
