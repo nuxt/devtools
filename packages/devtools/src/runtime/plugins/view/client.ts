@@ -10,7 +10,7 @@ import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef } from 'vue'
+import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
