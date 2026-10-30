@@ -78,6 +78,22 @@ export interface ModuleOptions {
   disableAuthorization?: boolean
 
   /**
+   * Expose the Vite DevTools MCP endpoint (`/__devtools/__mcp`), which
+   * lets AI agents call the DevTools' agent tools over the Model Context
+   * Protocol.
+   *
+   * - `'auto'`: mount the endpoint once any DevTools integration exposes an
+   *   agent tool.
+   * - `true`: always mount it.
+   * - `false`: never mount it.
+   *
+   * Same as setting `vite.devtools.mcp`, which takes precedence.
+   *
+   * @default 'auto'
+   */
+  mcp?: boolean | 'auto'
+
+  /**
    * Experimental features
    */
   experimental?: {
