@@ -10,7 +10,7 @@ import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
+import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
@@ -349,14 +349,25 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   }, 100, { trailing: true })
 
   // trigger update for reactivity
-  watch(() => [
-    client.nuxt.payload,
-    client.app.colorMode.value,
-    client.metrics.loading(),
-    timeMetric,
-  ], () => {
-    refreshReactivity()
-  }, { deep: true })
+  //
+  // Not a `watch(..., { deep: true })`: that re-traverses the whole payload
+  // on every single mutation, so with a large payload each tick of a slider
+  // bound to `useState` froze the page. Here a mutation only schedules the
+  // refresh; the sources are traversed again (re-collecting dependencies)
+  // once, when the changes settle.
+  const runner = effect(() => {
+    traverse([
+      client.nuxt.payload,
+      client.app.colorMode.value,
+      client.metrics.loading(),
+      timeMetric,
+    ])
+  }, {
+    scheduler: debounce(() => {
+      runner()
+      client.hooks.callHook('host:update:reactivity')
+    }, 100, { trailing: true }),
+  })
 
   // trigger update for route change
   router?.afterEach(() => {
@@ -366,4 +377,28 @@ function setupReactivity(client: NuxtDevtoolsHostClient, router: Router | undefi
   client.nuxt.hook('app:mounted', () => {
     refreshReactivity()
   })
+}
+
+/**
+ * Read every nested value, so the running effect tracks all of them. Same
+ * coverage as a deep `watch`: refs, arrays, Maps, Sets and plain objects.
+ */
+function traverse(value: unknown, seen = new Set<unknown>()): void {
+  if (!value || typeof value !== 'object' || seen.has(value) || (value as any).__v_skip)
+    return
+  seen.add(value)
+  if (isRef(value)) {
+    traverse(value.value, seen)
+  }
+  else if (Array.isArray(value)) {
+    for (const item of value)
+      traverse(item, seen)
+  }
+  else if (value instanceof Map || value instanceof Set) {
+    value.forEach((item: unknown) => traverse(item, seen))
+  }
+  else if (Object.prototype.toString.call(value) === '[object Object]') {
+    for (const key in value)
+      traverse((value as Record<string, unknown>)[key], seen)
+  }
 }

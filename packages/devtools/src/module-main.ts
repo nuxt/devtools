@@ -69,14 +69,22 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
 
   await nuxt.callHook('devtools:before')
 
+  // Vite DevTools options Nuxt DevTools provides. They only fill in what the
+  // user left unset in `vite.devtools`, and are applied in one place below so
+  // both the Vite 8.3+ integration and the manual `DevTools()` plugin see them.
+  const viteDevToolsDefaults: DevToolsConfig = {}
+
   // `disableAuthorization` disables the Vite DevTools client-auth prompt. The
   // resolved value is used (default `isSandboxed`), so sandboxes keep
   // auto-bypassing the prompt.
-  if (options.disableAuthorization) {
-    extendViteDevToolsConfig((devtools) => {
-      devtools.clientAuth ??= false
-    })
-  }
+  if (options.disableAuthorization)
+    viteDevToolsDefaults.clientAuth = false
+
+  // `mcp` controls the aggregate MCP endpoint (`<base>__mcp`) Vite DevTools
+  // mounts over every devframe's agent tools. Left `undefined` it follows
+  // Vite DevTools' own default (`'auto'`).
+  if (options.mcp !== undefined)
+    viteDevToolsDefaults.mcp = options.mcp
 
   // Route the client-auth banner through Nuxt's terminal host where this Nuxt
   // has one (`useTerminal`, @nuxt/kit >= 4.6): the Nuxt CLI 4 TUI shows a
@@ -86,10 +94,8 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   const kit = await import('@nuxt/kit')
   if ('useTerminal' in kit) {
     const { banner, onTrusted } = createTerminalAuthBanner(kit.useTerminal)
-    extendViteDevToolsConfig((devtools) => {
-      devtools.banner ??= banner
-      devtools.onTrusted ??= onTrusted
-    })
+    viteDevToolsDefaults.banner = banner
+    viteDevToolsDefaults.onTrusted = onTrusted
   }
 
   // Make unimport exposing more information, like the usage of each auto imported function
@@ -160,18 +166,23 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     windowTitle: 'Nuxt DevTools',
   }
 
+  viteDevToolsDefaults.branding = branding
+
   // Vite 8.3+ registers the Vite DevTools integration itself from the
   // top-level `devtools` config option (vitejs/vite#23333), which keeps the
   // toggle in user hands (`vite: { devtools: false }` in `nuxt.config`).
   // Older Vite has no serve-mode integration, so fall back to installing the
-  // `DevTools()` plugin manually.
+  // `DevTools()` plugin manually. That plugin resolves its config from its own
+  // options and overwrites `config.devtools`, so the defaults must be passed
+  // to it directly.
   if (isGreaterThanOrEqual(viteVersion, '8.3.0')) {
     extendViteDevToolsConfig((devtools) => {
-      devtools.branding ??= branding
+      for (const [key, value] of Object.entries(viteDevToolsDefaults))
+        (devtools as Record<string, unknown>)[key] ??= value
     })
   }
   else {
-    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools({ branding }))
+    const DevTools = await import('@vitejs/devtools').then(r => r.DevTools(viteDevToolsDefaults))
     addVitePlugin(DevTools)
   }
 

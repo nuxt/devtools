@@ -90,18 +90,19 @@ export default defineNuxtConfig({
 })
 ```
 
-| Option                    | Default | Description                                                                                                 |
-| ------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| `enabled`                 | `true`  | Enable Nuxt DevTools.                                                                                       |
-| `componentInspector`      | `true`  | Inspect the DOM to find the component rendering it.                                                         |
-| `vueDevTools`             | `true`  | Register the Vue DevTools dock next to the `Nuxt` group.                                                    |
-| `viteInspect`             | `true`  | Register the [Inspect](/modules/devtools/features#inspect) dock, or its install launcher.                   |
-| `dataInspector`           | `true`  | Register the [Data Inspector](/modules/devtools/features#data-inspector) panel.                             |
-| `codeServer`              |         | [Code Server](/modules/devtools/features#code-server) options; `codeServer.enabled: false` removes it.      |
-| `timeline`                |         | [Timeline](/modules/devtools/features#timeline) options; `timeline.enabled` defaults to `false`.            |
-| `assets.uploadExtensions` |         | File extensions the [Assets](/modules/devtools/features#assets) panel accepts for upload, or `'*'` for any. |
-| `disableAuthorization`    |         | Skip the browser authorization prompt. On by default in sandboxes.                                          |
-| `telemetry`               |         | Anonymous telemetry. Follows your Nuxt telemetry setting; set to `false` to opt out.                        |
+| Option                    | Default  | Description                                                                                                   |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `enabled`                 | `true`   | Enable Nuxt DevTools.                                                                                         |
+| `componentInspector`      | `true`   | Inspect the DOM to find the component rendering it.                                                           |
+| `vueDevTools`             | `true`   | Register the Vue DevTools dock next to the `Nuxt` group.                                                      |
+| `viteInspect`             | `true`   | Register the [Inspect](/modules/devtools/features#inspect) dock, or its install launcher.                     |
+| `dataInspector`           | `true`   | Register the [Data Inspector](/modules/devtools/features#data-inspector) panel.                               |
+| `codeServer`              |          | [Code Server](/modules/devtools/features#code-server) options; `codeServer.enabled: false` removes it.        |
+| `timeline`                |          | [Timeline](/modules/devtools/features#timeline) options; `timeline.enabled` defaults to `false`.              |
+| `assets.uploadExtensions` |          | File extensions the [Assets](/modules/devtools/features#assets) panel accepts for upload, or `'*'` for any.   |
+| `disableAuthorization`    |          | Skip the browser authorization prompt. On by default in sandboxes.                                            |
+| `mcp`                     | `'auto'` | Expose the Vite DevTools [MCP](https://modelcontextprotocol.io) endpoint for AI agents; `false` turns it off. |
+| `telemetry`               |          | Anonymous telemetry. Follows your Nuxt telemetry setting; set to `false` to opt out.                          |
 
 For every option, see the TSDocs in your IDE or the [type definition file](https://github.com/nuxt/devtools/blob/main/packages/devtools-kit/src/_types/options.ts).
 
