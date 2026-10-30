@@ -10,7 +10,7 @@ import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef } from 'vue'
+import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
@@ -63,7 +63,7 @@ export async function setupDevToolsClient({
       close() {
         const ctx = getDevframeContext()
         if (ctx)
-          ctx.panel.session.open = false
+          closePanel(ctx)
       },
       open() {
         const ctx = getDevframeContext()
@@ -201,6 +201,7 @@ export async function setupDevToolsClient({
 
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
+  setupInspectorPanelVisibility()
 
   clientRef.value = client
 
@@ -208,6 +209,51 @@ export async function setupDevToolsClient({
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
+  })
+}
+
+/**
+ * Close the Devframe panel the way its own close button does: the panel stays
+ * on screen while an entry is selected, so `session.open` alone only collapses
+ * the dock bar.
+ */
+function closePanel(ctx: any) {
+  ctx.docks.switchEntry(null)
+  ctx.panel.session.open = false
+}
+
+/**
+ * Hide the DevTools panel while the component inspector is picking, so it
+ * does not cover the page, and bring it back once the inspector is closed
+ * (after a pick, that is when its inspect panel is dismissed).
+ */
+function setupInspectorPanelVisibility() {
+  // The dock that was showing when the panel got hidden, if any.
+  let restoreDockId: string | undefined
+
+  watch(() => inspectorState.isEnabled, (enabled) => {
+    if (!enabled || restoreDockId)
+      return
+    const ctx = getDevframeContext()
+    const selected = ctx?.docks.selected
+    // Nothing showing, or started from a dock action (e.g. vue-tracer's),
+    // which is not a view to come back to.
+    if (!ctx?.panel.session.open || !selected || selected.type === 'action')
+      return
+    restoreDockId = selected.id
+    closePanel(ctx)
+  })
+
+  watch(() => inspectorState.isVisible, (visible) => {
+    if (visible || !restoreDockId)
+      return
+    const id = restoreDockId
+    restoreDockId = undefined
+    const ctx = getDevframeContext()
+    if (!ctx)
+      return
+    ctx.panel.session.open = true
+    ctx.docks.switchEntry(id)
   })
 }
 
