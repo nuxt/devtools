@@ -6,4 +6,4 @@
 
 UI kit for module authors to build embedded views for Nuxt DevTools.
 
-Please refer to the [DevTools UI Kit](https://devtools.nuxt.com/module/ui-kit) for more details.
+Please refer to the [DevTools UI Kit](https://nuxt.com/modules/devtools/ui-kit) for more details.
