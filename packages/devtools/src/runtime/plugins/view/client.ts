@@ -10,7 +10,7 @@ import { NuxtDevtoolsInspectPanel } from '@nuxt/devtools/webcomponents'
 import { createHooks } from 'hookable'
 import { debounce } from 'perfect-debounce'
 import { events as inspectorEvents, hasData as inspectorHasData, state as inspectorState } from 'vite-plugin-vue-tracer/client/overlay'
-import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef, watch } from 'vue'
+import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReactive, shallowRef, toRef } from 'vue'
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-ignore tsconfig
 import { useAppConfig } from '#imports'
@@ -22,6 +22,11 @@ import { initTimelineMetrics } from '../../function-metrics-helpers'
 // explicitly so open/navigate always mounts the one kept-alive client iframe
 // used by every Nuxt tab.
 const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
+
+// The "Inspect Vue component" dock action registered by vite-plugin-vue-tracer.
+// It is an on/off tool: while it is on, the hub hides the DevTools panel, and
+// brings it back once the tool is turned off (after a pick, or on Escape).
+const VUE_TRACER_DOCK_ID = 'vue-tracer'
 
 function getDevframeContext() {
   return getDevframeClientContext() as any
@@ -181,27 +186,29 @@ export async function setupDevToolsClient({
       })
     }
 
+    // Drive the inspector through the dock action when it is there, so the
+    // hub moves the panel out of the way; fall back to the overlay itself.
+    function setActive(active: boolean) {
+      const ctx = getDevframeContext()
+      if (ctx?.docks.getStateById(VUE_TRACER_DOCK_ID)) {
+        ctx.docks.setActionActive(VUE_TRACER_DOCK_ID, active)
+        return
+      }
+      inspectorState.isVisible = active
+      inspectorState.isEnabled = active
+    }
+
     return inspector = markRaw({
       isAvailable,
       isEnabled: toRef(inspectorState, 'isVisible'),
-      enable: () => {
-        inspectorState.isVisible = true
-        inspectorState.isEnabled = true
-      },
-      disable: () => {
-        inspectorState.isVisible = false
-        inspectorState.isEnabled = false
-      },
-      toggle: () => {
-        inspectorState.isEnabled = !inspectorState.isEnabled
-        inspectorState.isVisible = inspectorState.isEnabled
-      },
+      enable: () => setActive(true),
+      disable: () => setActive(false),
+      toggle: () => setActive(!inspectorState.isEnabled),
     })
   }
 
   setupRouteTracking(timeline, router)
   setupReactivity(client, router, timeline)
-  setupInspectorPanelVisibility()
 
   clientRef.value = client
 
@@ -220,41 +227,6 @@ export async function setupDevToolsClient({
 function closePanel(ctx: any) {
   ctx.docks.switchEntry(null)
   ctx.panel.session.open = false
-}
-
-/**
- * Hide the DevTools panel while the component inspector is picking, so it
- * does not cover the page, and bring it back once the inspector is closed
- * (after a pick, that is when its inspect panel is dismissed).
- */
-function setupInspectorPanelVisibility() {
-  // The dock that was showing when the panel got hidden, if any.
-  let restoreDockId: string | undefined
-
-  watch(() => inspectorState.isEnabled, (enabled) => {
-    if (!enabled || restoreDockId)
-      return
-    const ctx = getDevframeContext()
-    const selected = ctx?.docks.selected
-    // Nothing showing, or started from a dock action (e.g. vue-tracer's),
-    // which is not a view to come back to.
-    if (!ctx?.panel.session.open || !selected || selected.type === 'action')
-      return
-    restoreDockId = selected.id
-    closePanel(ctx)
-  })
-
-  watch(() => inspectorState.isVisible, (visible) => {
-    if (visible || !restoreDockId)
-      return
-    const id = restoreDockId
-    restoreDockId = undefined
-    const ctx = getDevframeContext()
-    if (!ctx)
-      return
-    ctx.panel.session.open = true
-    ctx.docks.switchEntry(id)
-  })
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {
