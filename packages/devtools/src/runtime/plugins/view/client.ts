@@ -135,6 +135,32 @@ export async function setupDevToolsClient({
       left: '0',
       top: '0',
     })
+    // Keep the inspect panel in the browser's top layer, above the DevTools
+    // dock and panel whatever their z-index: once a pick ends, the hub brings
+    // the panel back while this one is still showing. It renders nothing
+    // without a pick, so it can stay there. Browsers without the Popover API
+    // fall back to the z-index above.
+    const supportsTopLayer = typeof component.showPopover === 'function'
+    function raiseToTopLayer() {
+      if (!supportsTopLayer)
+        return
+      if (component.matches(':popover-open'))
+        component.hidePopover()
+      component.showPopover()
+    }
+    if (supportsTopLayer) {
+      component.popover = 'manual'
+      // Undo the UA styles of `[popover]`
+      Object.assign(component.style, {
+        inset: 'auto',
+        margin: '0',
+        padding: '0',
+        border: 'none',
+        background: 'transparent',
+        overflow: 'visible',
+      })
+      raiseToTopLayer()
+    }
     component.addEventListener('close', () => {
       props.matched = undefined
       inspectorState.isEnabled = false
@@ -177,6 +203,8 @@ export async function setupDevToolsClient({
 
       props.matched = info
       props.mouse = { x: e.clientX, y: e.clientY }
+      // Above anything that entered the top layer since
+      raiseToTopLayer()
     })
 
     const isAvailable = ref(inspectorHasData())
