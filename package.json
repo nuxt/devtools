@@ -3,7 +3,7 @@
   "type": "module",
   "version": "4.0.0",
   "private": true,
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -27,7 +27,7 @@
     "docs:screenshots": "playwright test --config tests/docs-screenshots/playwright.config.ts",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "simple-git-hooks && skills experimental_sync -y -r",
-    "dev:prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
+    "dev:prepare": "pnpm -C packages/devtools-onboard run dev:prepare && pnpm -r --filter=\"./packages/*\" --filter=\"!@nuxt/devtools-onboard\" run dev:prepare"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",
