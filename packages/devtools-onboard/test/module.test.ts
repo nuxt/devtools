@@ -25,8 +25,8 @@ async function installStandIn(rootDir: string, name: string) {
 }
 
 /**
- * Nuxt core pushes the bare `@nuxt/devtools` name into `_modules`; aliasing
- * it to this module reproduces what Nuxt 5 does with `@nuxt/devtools-onboard`.
+ * Nuxt 5 core pushes the bare `@nuxt/devtools-onboard` name into `_modules`;
+ * aliasing it to this module's source tests it the way Nuxt loads it.
  * `withoutDevtools` drops every `node_modules` Nuxt can resolve from, which is
  * the situation of a Nuxt that no longer depends on `@nuxt/devtools` itself;
  * `installed` then puts stand-in packages back into the project.
@@ -38,7 +38,7 @@ async function bootNuxt(overrides: NuxtConfig, { withoutDevtools = false, instal
     cwd: rootDir,
     ready: false,
     overrides: {
-      alias: { '@nuxt/devtools': onboardModule },
+      alias: { '@nuxt/devtools-onboard': onboardModule },
       telemetry: false,
       ...overrides,
     },
