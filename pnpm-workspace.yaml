@@ -76,6 +76,34 @@ minimumReleaseAgeExclude:
   - focus-trap@8.2.4
   - magic-string@1.4.5
   - vite-plugin-vue-tracer@1.7.0
+  - '@rollup/rollup-android-arm-eabi@4.67.4'
+  - '@rollup/rollup-android-arm64@4.67.4'
+  - '@rollup/rollup-android-x64@4.67.4'
+  - '@rollup/rollup-darwin-arm64@4.67.4'
+  - '@rollup/rollup-darwin-x64@4.67.4'
+  - '@rollup/rollup-freebsd-arm64@4.67.4'
+  - '@rollup/rollup-freebsd-x64@4.67.4'
+  - '@rollup/rollup-linux-arm-gnueabihf@4.67.4'
+  - '@rollup/rollup-linux-arm-musleabihf@4.67.4'
+  - '@rollup/rollup-linux-arm64-gnu@4.67.4'
+  - '@rollup/rollup-linux-arm64-musl@4.67.4'
+  - '@rollup/rollup-linux-loong64-gnu@4.67.4'
+  - '@rollup/rollup-linux-loong64-musl@4.67.4'
+  - '@rollup/rollup-linux-ppc64-gnu@4.67.4'
+  - '@rollup/rollup-linux-ppc64-musl@4.67.4'
+  - '@rollup/rollup-linux-riscv64-gnu@4.67.4'
+  - '@rollup/rollup-linux-riscv64-musl@4.67.4'
+  - '@rollup/rollup-linux-s390x-gnu@4.67.4'
+  - '@rollup/rollup-linux-x64-gnu@4.67.4'
+  - '@rollup/rollup-linux-x64-musl@4.67.4'
+  - '@rollup/rollup-openbsd-x64@4.67.4'
+  - '@rollup/rollup-openharmony-arm64@4.67.4'
+  - '@rollup/rollup-win32-arm64-msvc@4.67.4'
+  - '@rollup/rollup-win32-ia32-msvc@4.67.4'
+  - '@rollup/rollup-win32-x64-gnu@4.67.4'
+  - '@rollup/rollup-win32-x64-msvc@4.67.4'
+  - local-pkg@2.0.0
+  - rollup@4.67.4
 
 resolutionMode: highest
 
@@ -100,7 +128,7 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/agentic': &devframe ^1.3.1
+  '@devframes/agentic': &devframe ^1.3.2
   '@devframes/hub': *devframe
   '@devframes/hub-ui': *devframe
   '@devframes/hub-ui-onboard': *devframe
@@ -128,7 +156,7 @@ overrides:
   esbuild: ^0.28.2
   markdown-exit: ^1.3.0
   nuxt: &nuxt npm:nuxt-nightly@5.0.0-2611010234-c709ec8
-  rollup: ^4.67.3
+  rollup: ^4.67.4
   semver: ^7.8.5
   shiki: &shiki ^4.5.0
   typescript: ^6.0.3
@@ -266,7 +294,7 @@ catalogs:
     devframe: *devframe
     escape-string-regexp: ^5.0.0
     fast-npm-meta: ^2.2.0
-    local-pkg: ^1.2.1
+    local-pkg: ^2.0.0
     magic-string: ^1.4.5
     magicast: ^0.5.5
     mlly: ^1.8.2
