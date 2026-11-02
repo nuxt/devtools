@@ -161,10 +161,31 @@ export async function setupDevToolsClient({
       })
       raiseToTopLayer()
     }
+    // Keep the DevTools panel hidden while the inspect panel is showing. A
+    // pick ends vue-tracer's dock tool, and the hub brings the DevTools panel
+    // back right away; hide it again until the inspect panel is closed.
+    let reopenPanelOnClose = false
+    function holdPanelWhileInspecting() {
+      // After vue-tracer's own `click` listener, which ends the tool
+      queueMicrotask(() => {
+        const ctx = getDevframeContext()
+        if (!props.matched || !ctx?.panel.session.open)
+          return
+        ctx.panel.session.open = false
+        reopenPanelOnClose = true
+      })
+    }
+
     component.addEventListener('close', () => {
       props.matched = undefined
       inspectorState.isEnabled = false
       inspectorState.isVisible = false
+      if (reopenPanelOnClose) {
+        reopenPanelOnClose = false
+        const ctx = getDevframeContext()
+        if (ctx)
+          ctx.panel.session.open = true
+      }
     })
     component.addEventListener('selectParent', () => {
       const parent = inspectorState.main?.getParent()
@@ -205,6 +226,7 @@ export async function setupDevToolsClient({
       props.mouse = { x: e.clientX, y: e.clientY }
       // Above anything that entered the top layer since
       raiseToTopLayer()
+      holdPanelWhileInspecting()
     })
 
     const isAvailable = ref(inspectorHasData())
