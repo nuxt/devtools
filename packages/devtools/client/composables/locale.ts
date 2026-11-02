@@ -1,8 +1,9 @@
-import type { ComputedRef } from 'vue'
+import type { DevToolsRpcClient } from '@vitejs/devtools-kit/client'
+import type { ComputedRef, Ref } from 'vue'
 import type { DevToolsLocale } from '../i18n/locales'
 import { matchLocale } from '@devframes/hub'
 import { useLocalStorage, useNavigatorLanguage } from '@vueuse/core'
-import { computed, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { DEFAULT_LOCALE, DEVFRAME_LOCALE_STORAGE_KEY, DEVTOOLS_LOCALES, LOCALE_AUTO } from '../i18n/locales'
 import { rpcClient } from './rpc'
 
@@ -19,21 +20,40 @@ export function matchDevToolsLocale(tag: string | undefined | null): DevToolsLoc
  * `localStorage` key, so a change in the hub reaches DevTools live via the
  * `storage` event.
  */
-function useLocalePreference() {
-  return useLocalStorage<string>(DEVFRAME_LOCALE_STORAGE_KEY, LOCALE_AUTO, {
-    // Never write: an absent key already means `auto` to the hub.
-    writeDefaults: false,
-    listenToStorageChanges: true,
-  })
-}
-
-/** The raw stored pick, read directly so it reflects the moment of the call. */
-function readStoredPreference(): string {
+function useLocalePreference(): Ref<string> {
   try {
-    return localStorage.getItem(DEVFRAME_LOCALE_STORAGE_KEY) || LOCALE_AUTO
+    return useLocalStorage<string>(DEVFRAME_LOCALE_STORAGE_KEY, LOCALE_AUTO, {
+      // Never write: an absent key already means `auto` to the hub.
+      writeDefaults: false,
+      listenToStorageChanges: true,
+    })
   }
   catch {
-    return LOCALE_AUTO
+    // Reading `window.localStorage` throws when the browser blocks storage.
+    // Fall back to `auto` rather than failing the whole client at startup.
+    return ref(LOCALE_AUTO)
+  }
+}
+
+/**
+ * The host's default language, as the server published it in
+ * `__connection.json` (`createUi({ locale })` → `configs.ui.locale`).
+ *
+ * The live `client.connectionMeta` can't be used for this: the running hub UI
+ * overwrites `configs.ui.locale` there with the language it resolved, and an
+ * embedded frame shares the hub's connection object (devframe reads it from
+ * the parent window). Fetching the descriptor again gives the untouched value.
+ */
+async function fetchHostDefault(client: DevToolsRpcClient): Promise<DevToolsLocale | undefined> {
+  try {
+    const response = await fetch(client.connection.metaBaseUrl)
+    if (!response.ok)
+      return undefined
+    const meta = await response.json() as { configs?: { ui?: { locale?: string } } }
+    return matchDevToolsLocale(meta.configs?.ui?.locale)
+  }
+  catch {
+    return undefined
   }
 }
 
@@ -44,7 +64,7 @@ let resolved: ComputedRef<DevToolsLocale> | undefined
  * resolves its own:
  *
  * 1. the visitor's pick in the hub settings (unless `auto`);
- * 2. the host's default, from `configs.ui.locale` in the connection meta;
+ * 2. the host's default, `configs.ui.locale` in `__connection.json`;
  * 3. the browser language;
  * 4. English.
  */
@@ -55,21 +75,13 @@ export function useDevToolsLocale(): ComputedRef<DevToolsLocale> {
   const pick = useLocalePreference()
   const { language } = useNavigatorLanguage()
 
-  // `configs.ui.locale` is not a stable host default: the running hub UI
-  // overwrites it with the language it resolved, and an embedded frame shares
-  // the hub's connection object (devframe reads it from the parent window).
-  // Capture it once, on connect, and only while the pick is `auto`: then the
-  // value is exactly the hub's own auto result (host default, else browser),
-  // never a leftover explicit pick. The value is not reactive, so later
-  // writes by the hub are ignored on purpose.
   const hostDefault = shallowRef<DevToolsLocale>()
-  watch(rpcClient, (client) => {
-    if (!client || hostDefault.value)
+  let hostDefaultRequested = false
+  watch(rpcClient, async (client) => {
+    if (!client || hostDefaultRequested)
       return
-    if (readStoredPreference() !== LOCALE_AUTO)
-      return
-    const configs = client.connectionMeta?.configs as { ui?: { locale?: string } } | undefined
-    hostDefault.value = matchDevToolsLocale(configs?.ui?.locale)
+    hostDefaultRequested = true
+    hostDefault.value = await fetchHostDefault(client)
   }, { immediate: true })
 
   resolved = computed<DevToolsLocale>(() => {
