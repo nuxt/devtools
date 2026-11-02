@@ -23,6 +23,11 @@ import { initTimelineMetrics } from '../../function-metrics-helpers'
 // used by every Nuxt tab.
 const NUXT_DOCK_ANCHOR_ID = 'nuxt:devtools'
 
+// The "Inspect Vue component" dock action registered by vite-plugin-vue-tracer.
+// It is an on/off tool: while it is on, the hub hides the DevTools panel, and
+// brings it back once the tool is turned off (after a pick, or on Escape).
+const VUE_TRACER_DOCK_ID = 'vue-tracer'
+
 function getDevframeContext() {
   return getDevframeClientContext() as any
 }
@@ -63,7 +68,7 @@ export async function setupDevToolsClient({
       close() {
         const ctx = getDevframeContext()
         if (ctx)
-          ctx.panel.session.open = false
+          closePanel(ctx)
       },
       open() {
         const ctx = getDevframeContext()
@@ -130,10 +135,57 @@ export async function setupDevToolsClient({
       left: '0',
       top: '0',
     })
+    // Keep the inspect panel in the browser's top layer, above the DevTools
+    // dock and panel whatever their z-index: once a pick ends, the hub brings
+    // the panel back while this one is still showing. It renders nothing
+    // without a pick, so it can stay there. Browsers without the Popover API
+    // fall back to the z-index above.
+    const supportsTopLayer = typeof component.showPopover === 'function'
+    function raiseToTopLayer() {
+      if (!supportsTopLayer)
+        return
+      if (component.matches(':popover-open'))
+        component.hidePopover()
+      component.showPopover()
+    }
+    if (supportsTopLayer) {
+      component.popover = 'manual'
+      // Undo the UA styles of `[popover]`
+      Object.assign(component.style, {
+        inset: 'auto',
+        margin: '0',
+        padding: '0',
+        border: 'none',
+        background: 'transparent',
+        overflow: 'visible',
+      })
+      raiseToTopLayer()
+    }
+    // Keep the DevTools panel hidden while the inspect panel is showing. A
+    // pick ends vue-tracer's dock tool, and the hub brings the DevTools panel
+    // back right away; hide it again until the inspect panel is closed.
+    let reopenPanelOnClose = false
+    function holdPanelWhileInspecting() {
+      // After vue-tracer's own `click` listener, which ends the tool
+      queueMicrotask(() => {
+        const ctx = getDevframeContext()
+        if (!props.matched || !ctx?.panel.session.open)
+          return
+        ctx.panel.session.open = false
+        reopenPanelOnClose = true
+      })
+    }
+
     component.addEventListener('close', () => {
       props.matched = undefined
       inspectorState.isEnabled = false
       inspectorState.isVisible = false
+      if (reopenPanelOnClose) {
+        reopenPanelOnClose = false
+        const ctx = getDevframeContext()
+        if (ctx)
+          ctx.panel.session.open = true
+      }
     })
     component.addEventListener('selectParent', () => {
       const parent = inspectorState.main?.getParent()
@@ -172,6 +224,9 @@ export async function setupDevToolsClient({
 
       props.matched = info
       props.mouse = { x: e.clientX, y: e.clientY }
+      // Above anything that entered the top layer since
+      raiseToTopLayer()
+      holdPanelWhileInspecting()
     })
 
     const isAvailable = ref(inspectorHasData())
@@ -181,21 +236,24 @@ export async function setupDevToolsClient({
       })
     }
 
+    // Drive the inspector through the dock action when it is there, so the
+    // hub moves the panel out of the way; fall back to the overlay itself.
+    function setActive(active: boolean) {
+      const ctx = getDevframeContext()
+      if (ctx?.docks.getStateById(VUE_TRACER_DOCK_ID)) {
+        ctx.docks.setActionActive(VUE_TRACER_DOCK_ID, active)
+        return
+      }
+      inspectorState.isVisible = active
+      inspectorState.isEnabled = active
+    }
+
     return inspector = markRaw({
       isAvailable,
       isEnabled: toRef(inspectorState, 'isVisible'),
-      enable: () => {
-        inspectorState.isVisible = true
-        inspectorState.isEnabled = true
-      },
-      disable: () => {
-        inspectorState.isVisible = false
-        inspectorState.isEnabled = false
-      },
-      toggle: () => {
-        inspectorState.isEnabled = !inspectorState.isEnabled
-        inspectorState.isVisible = inspectorState.isEnabled
-      },
+      enable: () => setActive(true),
+      disable: () => setActive(false),
+      toggle: () => setActive(!inspectorState.isEnabled),
     })
   }
 
@@ -209,6 +267,16 @@ export async function setupDevToolsClient({
     if (e.code === 'KeyD' && e.altKey && e.shiftKey)
       client.devtools.toggle()
   })
+}
+
+/**
+ * Close the Devframe panel the way its own close button does: the panel stays
+ * on screen while an entry is selected, so `session.open` alone only collapses
+ * the dock bar.
+ */
+function closePanel(ctx: any) {
+  ctx.docks.switchEntry(null)
+  ctx.panel.session.open = false
 }
 
 export function useClientColorMode(): Ref<ColorScheme> {

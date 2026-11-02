@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { NuxtDevToolsInspectorProps } from './Props'
-import { onClickOutside, useDraggable } from '@vueuse/core'
+import { onClickOutside, onKeyStroke, useDraggable } from '@vueuse/core'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 
 defineOptions({
@@ -71,6 +71,11 @@ onClickOutside(el, () => {
   })
 })
 
+onKeyStroke('Escape', () => {
+  if (props.matched)
+    close()
+})
+
 function close() {
   emit('close')
 }
@@ -85,7 +90,7 @@ async function openInEditor() {
   const file = `${props.matched.pos[0]}:${props.matched.pos[1]}:${props.matched.pos[2]}`
   // await fetch(`/api/open-in-editor?file=${encodeURI(file)}`)
   emit('openInEditor', file)
-  // close()
+  close()
 }
 
 function generateUniqueSelector(element: Element | undefined): string {
@@ -226,6 +231,8 @@ async function copyAgentInfo() {
     toastTimer = setTimeout(() => {
       showToast.value = false
     }, 6_000)
+    // The toast outlives the panel
+    close()
   }
   catch (error) {
     console.error('Failed to copy agent info:', error)

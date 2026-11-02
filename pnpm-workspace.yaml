@@ -2,6 +2,7 @@ ignoreWorkspaceRootCheck: true
 
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
+  - '@devframes/agentic'
   - '@devframes/hub'
   - '@devframes/hub-ui-onboard'
   - '@devframes/json-render'
@@ -103,6 +104,7 @@ minimumReleaseAgeExclude:
   - '@iconify-json/simple-icons@1.2.101'
   - focus-trap@8.2.4
   - magic-string@1.4.5
+  - vite-plugin-vue-tracer@1.7.0
 
 resolutionMode: highest
 
@@ -127,9 +129,12 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/hub': &devframe ^1.2.6
+  '@devframes/agentic': &devframe ^1.3.1
+  '@devframes/hub': *devframe
+  '@devframes/hub-ui': *devframe
   '@devframes/hub-ui-onboard': *devframe
   '@devframes/json-render': *devframe
+  '@devframes/json-render-ui': *devframe
   '@devframes/plugin-assets': *devframe
   '@devframes/plugin-code-server': *devframe
   '@devframes/plugin-data-inspector': *devframe
@@ -299,7 +304,7 @@ catalogs:
     verkit: ^0.5.0
     vite-plugin-inspect: ^12.1.0
     vite-plugin-vue-devtools: ^9.0.0-beta.1
-    vite-plugin-vue-tracer: ^1.6.0
+    vite-plugin-vue-tracer: ^1.7.0
   types:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
