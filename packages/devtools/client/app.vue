@@ -7,9 +7,10 @@ import { useCopy } from '~/composables/editor'
 import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
+import { useDevToolsOptions } from '~/composables/storage-options'
+import { isDevtoolsShortcut, watchShortcutLayoutMap } from '../src/runtime/shared/shortcut'
 import { wsConnectedOnce } from './composables/rpc'
 import { useSchemaInput } from './composables/state-schema'
-import { useDevToolsOptions } from './composables/storage-options'
 import { setupClientRPC } from './setup/client-rpc'
 
 import 'floating-vue/dist/style.css'
@@ -83,8 +84,10 @@ watchEffect(() => {
   document.documentElement.classList.toggle('light', !isDark)
 })
 
+watchShortcutLayoutMap()
+
 useEventListener('keydown', (e) => {
-  if (e.code === 'KeyD' && e.altKey) {
+  if (isDevtoolsShortcut(e)) {
     client.value?.devtools.close()
     e.preventDefault()
   }
