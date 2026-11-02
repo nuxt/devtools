@@ -19,6 +19,7 @@ import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './const
 import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { skipInSSR } from './server-rpc/skip-in-ssr'
+import { createDevListenerPlugin } from './utils/dev-listener'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
@@ -196,6 +197,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     const DevTools = await import('@vitejs/devtools').then(r => r.DevTools(viteDevToolsDefaults))
     addVitePlugin(DevTools)
   }
+
+  // Let Vite DevTools bind its RPC WebSocket to Nuxt's HTTPS listener rather
+  // than a plain-HTTP side-car port, which HTTPS pages can't reach (#1152).
+  addVitePlugin(createDevListenerPlugin(nuxt), { server: false })
 
   // Deferred: will be set when Vite DevTools plugin setup runs
   let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined
