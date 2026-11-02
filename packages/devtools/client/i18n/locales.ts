@@ -24,8 +24,8 @@ export const DEFAULT_LOCALE: DevToolsLocale = 'en'
 /**
  * The `localStorage` key the Devframe hub UI keeps the visitor's language
  * pick under (Settings → Appearance), `'auto'` or a locale tag. The DevTools
- * client is served from the same origin as the hub, so reading and writing
- * this key keeps one language setting for the hub and DevTools.
+ * client is served from the same origin as the hub and only reads this key,
+ * so the hub stays the single place to change the language.
  */
 export const DEVFRAME_LOCALE_STORAGE_KEY = 'devframes-locale'
 

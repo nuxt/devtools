@@ -3,10 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
-import { useLocalePreference } from '~/composables/locale'
 import { rpc } from '~/composables/rpc'
 import { telemetryEnabled } from '~/composables/telemetry'
-import { DEVTOOLS_LOCALES, LOCALE_AUTO } from '~/i18n/locales'
 import { useDevToolsOptions } from '../composables/storage-options'
 
 definePageMeta({
@@ -24,7 +22,6 @@ const {
 
 const client = useClient()
 const { t } = useI18n()
-const localePreference = useLocalePreference()
 
 const editorOptions = computed(() => [
   [
@@ -98,21 +95,6 @@ async function clearOptions() {
               {{ i[0] }}
             </option>
           </NSelect>
-
-          <div mx--2 my1 h-1px border="b base" op75 />
-
-          <p>{{ $t('settings.language') }}</p>
-          <NSelect v-model="localePreference" n="primary">
-            <option :value="LOCALE_AUTO">
-              {{ $t('settings.languageAuto') }}
-            </option>
-            <option v-for="(label, code) of DEVTOOLS_LOCALES" :key="code" :value="code">
-              {{ label }}
-            </option>
-          </NSelect>
-          <p text-sm op50>
-            {{ $t('settings.languageHint') }}
-          </p>
         </NCard>
 
         <h3 mt2 text-lg>

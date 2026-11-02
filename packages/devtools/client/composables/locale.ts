@@ -13,21 +13,18 @@ export function matchDevToolsLocale(tag: string | undefined | null): DevToolsLoc
   return matchLocale(tag ?? undefined, available) as DevToolsLocale | undefined
 }
 
-let preference: ReturnType<typeof useLocalStorage<string>> | undefined
-
 /**
- * The visitor's language pick, shared with the Devframe hub UI: `'auto'` or a
- * locale tag. Backed by the hub's own `localStorage` key, so a change in the
- * hub's Settings → Appearance reaches DevTools live (via the `storage` event),
- * and a change made here reaches the hub.
+ * The visitor's language pick, owned by the Devframe hub UI (Settings →
+ * Appearance): `'auto'` or a locale tag. DevTools only reads the hub's own
+ * `localStorage` key, so a change in the hub reaches DevTools live via the
+ * `storage` event.
  */
-export function useLocalePreference() {
-  preference ??= useLocalStorage<string>(DEVFRAME_LOCALE_STORAGE_KEY, LOCALE_AUTO, {
-    // Don't write the default: an absent key already means `auto` to the hub.
+function useLocalePreference() {
+  return useLocalStorage<string>(DEVFRAME_LOCALE_STORAGE_KEY, LOCALE_AUTO, {
+    // Never write: an absent key already means `auto` to the hub.
     writeDefaults: false,
     listenToStorageChanges: true,
   })
-  return preference
 }
 
 /** The raw stored pick, read directly so it reflects the moment of the call. */
