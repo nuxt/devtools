@@ -19,16 +19,16 @@ function reload() {
       </div>
       <div flex="~ gap-2" items-center op50>
         <NIcon icon="i-carbon-wifi-off" />
-        Disconnected from Server
+        {{ $t('connection.disconnected') }}
       </div>
       <div border="t base" my2 h-1px w-10 />
       <div flex="~ gap-2" animate-pulse items-center text-xl text-yellow>
         <NIcon icon="i-carbon-circle-dash" animate-spin />
-        Retrying...
+        {{ $t('connection.retrying') }}
       </div>
       <div flex-auto />
       <NButton n="sm yellow" px2 py0 op40 @click="reload()">
-        Reload DevTools Page
+        {{ $t('connection.reload') }}
       </NButton>
     </div>
   </Teleport>

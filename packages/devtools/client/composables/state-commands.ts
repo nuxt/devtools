@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 import { randomStr } from '@antfu/utils'
 import { computed, onUnmounted, reactive, toValue } from 'vue'
 import { useRouter } from '#app/composables/router'
+import { i18n } from '../i18n'
 import { useEnabledTabs } from './state-tabs'
 
 export interface CommandItem {
@@ -18,10 +19,10 @@ export function useCommands() {
   const tabs = useEnabledTabs()
   const router = useRouter()
 
-  const fixedCommands: CommandItem[] = [
+  const fixedCommands = computed((): CommandItem[] => [
     {
       id: 'fixed:settings',
-      title: 'Settings',
+      title: i18n.global.t('common.settings'),
       icon: 'carbon-settings-adjust',
       action: () => {
         router.push('/settings')
@@ -29,13 +30,13 @@ export function useCommands() {
     },
     {
       id: 'fixed:docs',
-      title: 'Nuxt Documentations',
+      title: i18n.global.t('commands.nuxtDocs'),
       icon: 'logos-nuxt-icon',
       action: () => {
         return getNuxtDocsCommands()
       },
     },
-  ]
+  ])
 
   const tabCommands = computed(() => tabs.value
     .map((i): CommandItem => {
@@ -58,7 +59,7 @@ export function useCommands() {
 
   return computed(() => {
     return [
-      ...fixedCommands,
+      ...fixedCommands.value,
       ...tabCommands.value,
       ...[
         ...registeredCommands.values(),

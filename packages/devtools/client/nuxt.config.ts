@@ -113,6 +113,13 @@ export default defineNuxtConfig({
 
   vite: {
     warmupEntry: false,
+    // vue-i18n feature flags: Composition API only, no legacy API or
+    // intlify devtools in the bundle.
+    define: {
+      __VUE_I18N_FULL_INSTALL__: true,
+      __VUE_I18N_LEGACY_API__: false,
+      __INTLIFY_PROD_DEVTOOLS__: false,
+    },
     vue: {
       // floating-vue still implements its poppers with Options API mixins,
       // computed properties, and methods. Keep that runtime enabled even when
@@ -156,6 +163,7 @@ export default defineNuxtConfig({
         'devframe/utils/hash',
         'perfect-debounce',
         'scule',
+        'vue-i18n',
         'vue-virtual-scroller',
         'vis-data',
         'vis-network',

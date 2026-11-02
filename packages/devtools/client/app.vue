@@ -7,6 +7,7 @@ import { useCopy } from '~/composables/editor'
 import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
+import { i18n } from '~/i18n'
 import { wsConnectedOnce } from './composables/rpc'
 import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
@@ -117,7 +118,7 @@ registerCommands(() => [
     ? [
         {
           id: 'action:eye-dropper',
-          title: 'Color Picker',
+          title: i18n.global.t('commands.colorPicker'),
           icon: 'i-carbon-eyedropper',
           action: async () => {
             const { sRGBHex } = await eyeDropper.open() || {}
@@ -130,13 +131,13 @@ registerCommands(() => [
   ...[
     {
       id: 'action:refresh-data',
-      title: 'Refresh Data',
+      title: i18n.global.t('commands.refreshData'),
       icon: 'i-carbon-data-backup',
       action: refreshData,
     },
     {
       id: 'action:reload-page',
-      title: 'Reload Page',
+      title: i18n.global.t('commands.reloadPage'),
       icon: 'i-carbon-reset',
       action: reloadPage,
     },
@@ -148,7 +149,7 @@ registerCommands(() => [
   <div fixed inset-0 h-screen w-screen font-sans>
     <NuxtLoadingIndicator />
     <NLoading v-if="waiting">
-      Connecting....
+      {{ $t('common.connecting') }}
     </NLoading>
     <div
       v-show="!waiting"
