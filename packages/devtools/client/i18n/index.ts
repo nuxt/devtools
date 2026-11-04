@@ -1,30 +1,25 @@
 import type { DevToolsLocale } from './locales'
 import { createI18n } from 'vue-i18n'
-import de from '../locales/de.json'
 import en from '../locales/en.json'
-import es from '../locales/es.json'
-import fr from '../locales/fr.json'
-import ja from '../locales/ja.json'
-import ko from '../locales/ko.json'
-import ptBR from '../locales/pt-BR.json'
-import ru from '../locales/ru.json'
-import zhCN from '../locales/zh-CN.json'
-import zhTW from '../locales/zh-TW.json'
 import { DEFAULT_LOCALE } from './locales'
 
 export type MessageSchema = typeof en
 
-const messages: Record<DevToolsLocale, MessageSchema> = {
-  'en': en,
-  'zh-CN': zhCN,
-  'zh-TW': zhTW,
-  'ja': ja,
-  'ko': ko,
-  'es': es,
-  'fr': fr,
-  'de': de,
-  'pt-BR': ptBR,
-  'ru': ru,
+/**
+ * Lazy loaders for every non-default locale. English is bundled eagerly as
+ * the fallback (and the message schema); the others are split into their own
+ * chunks and only fetched when the visitor actually switches to them.
+ */
+const loaders: Record<Exclude<DevToolsLocale, 'en'>, () => Promise<{ default: MessageSchema }>> = {
+  'zh-CN': () => import('../locales/zh-CN.json'),
+  'zh-TW': () => import('../locales/zh-TW.json'),
+  'ja': () => import('../locales/ja.json'),
+  'ko': () => import('../locales/ko.json'),
+  'es': () => import('../locales/es.json'),
+  'fr': () => import('../locales/fr.json'),
+  'de': () => import('../locales/de.json'),
+  'pt-BR': () => import('../locales/pt-BR.json'),
+  'ru': () => import('../locales/ru.json'),
 }
 
 /**
@@ -56,10 +51,53 @@ export const i18n = createI18n<[MessageSchema], DevToolsLocale, false>({
   globalInjection: true,
   locale: DEFAULT_LOCALE,
   fallbackLocale: DEFAULT_LOCALE,
-  messages,
+  messages: { [DEFAULT_LOCALE]: en } as Record<DevToolsLocale, MessageSchema>,
   pluralRules: {
     ru: russianPlural,
   },
   missingWarn: false,
   fallbackWarn: false,
 })
+
+const loaded = new Set<DevToolsLocale>([DEFAULT_LOCALE])
+const pending = new Map<DevToolsLocale, Promise<void>>()
+
+/** Fetch and register the messages of `locale`, once. */
+function loadLocaleMessages(locale: DevToolsLocale): Promise<void> {
+  if (loaded.has(locale))
+    return Promise.resolve()
+  let promise = pending.get(locale)
+  if (!promise) {
+    promise = loaders[locale as keyof typeof loaders]()
+      .then((mod) => {
+        i18n.global.setLocaleMessage(locale, mod.default)
+        loaded.add(locale)
+      })
+      .finally(() => pending.delete(locale))
+    pending.set(locale, promise)
+  }
+  return promise
+}
+
+let switchId = 0
+
+/**
+ * Switch the UI to `locale`, loading its messages first so the UI never
+ * renders missing keys. Rapid switches resolve to the last requested locale;
+ * if a chunk fails to load, the current language stays in place.
+ */
+export async function setLocale(locale: DevToolsLocale): Promise<void> {
+  const id = ++switchId
+  try {
+    await loadLocaleMessages(locale)
+  }
+  catch (error) {
+    console.error(`[Nuxt DevTools] Failed to load locale "${locale}"`, error)
+    return
+  }
+  if (id !== switchId)
+    return
+  i18n.global.locale.value = locale
+  if (typeof document !== 'undefined')
+    document.documentElement.lang = locale
+}
