@@ -2,6 +2,7 @@ import type { ModuleBuiltinTab, ModuleCustomTab, RouteInfo, TabCategory } from '
 import { objectPick } from '@antfu/utils'
 import { computed, toValue } from 'vue'
 import { useRouter } from '#app/composables/router'
+import { i18n } from '../i18n'
 import { useClientRouter } from './client'
 import { useCustomTabs, useServerPages } from './state'
 import { useDevToolsOptions } from './storage-options'
@@ -17,11 +18,16 @@ export function useAllTabs() {
       .filter(route => !route.meta.experimental || (route.meta.experimental && settings.showExperimentalFeatures.value))
       .sort((a, b) => (a.meta.order as number || 100) - (b.meta.order as number || 100))
       .map((i): ModuleBuiltinTab => {
+        const name = i.name as string
         return {
-          name: i.name as string,
+          name,
           path: i.path,
           defaultOrder: i.meta.order as number | undefined,
           ...i.meta,
+          // `meta.title` is the English fallback for routes without a message.
+          title: i18n.global.te(`tabs.${name}`)
+            ? i18n.global.t(`tabs.${name}`)
+            : i.meta.title as string,
         }
       }),
     // <ModuleBuiltinTab>{

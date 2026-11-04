@@ -68,6 +68,9 @@ minimumReleaseAgeExclude:
   - '@unocss/vite@66.12.0'
   - '@unocss/webpack@66.12.0'
   - dompurify@3.4.17
+  - '@x18n/*'
+  - vue-i18n
+  - '@intlify/*'
   - unocss@66.12.0
   - chokidar@6.0.0
   - skills@1.7.4
@@ -219,6 +222,7 @@ catalogs:
     '@nuxt/eslint': ^1.17.0
     '@nuxt/test-utils': ^4.3.4
     '@playwright/test': ^1.64.1
+    '@x18n/cli': ^0.1.6
     bumpp: ^12.3.0
     eslint: ^10.14.0
     eslint-flat-config-utils: ^3.2.0
@@ -268,6 +272,7 @@ catalogs:
     vis-network: ^10.1.4
     vite-hot-client: ^2.2.0
     vue: *vue
+    vue-i18n: ^11.4.17
     vue-router: ^5.4.0
     vue-virtual-scroller: ^3.0.5
   icons:
@@ -282,6 +287,7 @@ catalogs:
     package-manager-detector: ^1.9.0
   prod:
     '@devframes/hub': *devframe
+    '@devframes/hub-ui': *devframe
     '@devframes/hub-ui-onboard': *devframe
     '@devframes/plugin-assets': *devframe
     '@devframes/plugin-code-server': *devframe

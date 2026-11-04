@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { definePageMeta } from '#imports'
 import { useClient } from '~/composables/client'
 import { rpc } from '~/composables/rpc'
@@ -19,9 +21,13 @@ const {
 } = useDevToolsOptions('behavior')
 
 const client = useClient()
+const { t } = useI18n()
 
-const editorOptions = [
-  ['Auto', undefined],
+const editorOptions = computed(() => [
+  [
+    t('settings.editorAuto'),
+    undefined,
+  ],
   ['VS Code', 'vscode'],
   ['VS Code Insider', 'vscode-insider'],
   ['Cursor', 'cursor'],
@@ -31,19 +37,34 @@ const editorOptions = [
   ['Sublime Text', 'subl'],
   ['Atom', 'atom'],
   ['Windsurf', 'windsurf'],
-]
+])
 
-const scaleOptions = [
-  ['Tiny', 12 / 15],
-  ['Small', 14 / 15],
-  ['Normal', 1],
-  ['Large', 16 / 15],
-  ['Huge', 18 / 15],
-]
+const scaleOptions = computed(() => [
+  [
+    t('settings.scale.tiny'),
+    12 / 15,
+  ],
+  [
+    t('settings.scale.small'),
+    14 / 15,
+  ],
+  [
+    t('settings.scale.normal'),
+    1,
+  ],
+  [
+    t('settings.scale.large'),
+    16 / 15,
+  ],
+  [
+    t('settings.scale.huge'),
+    18 / 15,
+  ],
+])
 
 async function clearOptions() {
   // eslint-disable-next-line no-alert
-  if (confirm('Are you sure you to reset all local settings & state? The app will reload.')) {
+  if (confirm(t('settings.resetConfirm'))) {
     Object.keys(localStorage).forEach((key) => {
       if (key.startsWith('nuxt-devtools-'))
         localStorage.removeItem(key)
@@ -60,15 +81,15 @@ async function clearOptions() {
     <NIconTitle
       class="mb-5 text-xl op75"
       icon="i-carbon-settings-adjust"
-      text="DevTools Settings"
+      :text="$t('settings.title')"
     />
     <div grid="~ lg:cols-2 gap-x-10 gap-y-3" max-w-300>
       <div flex="~ col gap-2">
         <h3 text-lg>
-          Appearance
+          {{ $t('settings.appearance') }}
         </h3>
         <NCard p4 flex="~ col gap-2">
-          <p>UI Scale</p>
+          <p>{{ $t('settings.uiScale') }}</p>
           <NSelect v-model="scale" n="primary">
             <option v-for="i of scaleOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
@@ -77,16 +98,16 @@ async function clearOptions() {
         </NCard>
 
         <h3 mt2 text-lg>
-          Features
+          {{ $t('settings.features') }}
         </h3>
         <NCard p4 flex="~ col gap-2">
           <NCheckbox v-model="showHelpButtons" n-primary>
-            <span>Show help buttons</span>
+            <span>{{ $t('settings.showHelpButtons') }}</span>
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />
 
-          <p>Open In Editor</p>
+          <p>{{ $t('settings.openInEditor') }}</p>
           <NSelect v-model="openInEditor" n-primary>
             <option v-for="i of editorOptions" :key="i[0]" :value="i[1]">
               {{ i[0] }}
@@ -95,12 +116,12 @@ async function clearOptions() {
         </NCard>
 
         <h3 mt2 text-lg>
-          Feedback
+          {{ $t('settings.feedback') }}
         </h3>
         <NCard p4 flex="~ col gap-2">
           <NCheckbox v-model="telemetryEnabled" n-primary>
-            <span>Send anonymous statistics, help us improving DevTools</span>
-            <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op50 v-text="'Learn more'" />
+            <span>{{ $t('settings.telemetry') }}</span>
+            <NLink href="https://github.com/nuxt/devtools#anonymous-usage-analytics" target="_blank" ml1 op50 v-text="$t('settings.learnMore')" />
           </NCheckbox>
 
           <div mx--2 my1 h-1px border="b base" op75 />
@@ -108,22 +129,22 @@ async function clearOptions() {
           <div flex="~ gap-2">
             <NButton n="blue" to="https://github.com/nuxt/devtools/discussions/29" target="_blank">
               <div i-carbon-data-enrichment />
-              Ideas & Suggestions
+              {{ $t('settings.ideas') }}
             </NButton>
             <NButton n="orange" to="https://github.com/nuxt/devtools/issues" target="_blank">
               <div i-carbon-debug />
-              Bug Reports
+              {{ $t('settings.bugReports') }}
             </NButton>
           </div>
         </NCard>
 
         <h3 mt2 text-lg>
-          Debug
+          {{ $t('settings.debug') }}
         </h3>
         <div flex="~ gap-2">
           <NButton n="orange" @click="clearOptions">
             <div i-carbon-breaking-change />
-            Reset Local Settings & State
+            {{ $t('settings.reset') }}
           </NButton>
         </div>
       </div>
