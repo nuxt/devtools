@@ -73,6 +73,7 @@ async function refreshData(keys?: string[]) {
                 <span
                   v-if="item.origin"
                   class="breakdown-origin"
+                  :title="item.origin === 'client' ? 'Produced on the client (no SSR)' : 'May include server-rendered and client-fetched values'"
                   :class="{
                     'origin-server': item.origin === 'server',
                     'origin-client': item.origin === 'client',

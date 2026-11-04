@@ -4,7 +4,7 @@ import JsonEditorVue from 'json-editor-vue'
 import { structuredClone } from 'structured-clone-es'
 import { computed, onMounted, shallowRef } from 'vue'
 import { getColorMode } from '~/composables/client'
-import { formatBytes } from '~/composables/payload-analysis'
+import { formatBytes, measureSize } from '~/composables/payload-analysis'
 
 const props = defineProps<{
   name?: string
@@ -27,19 +27,9 @@ const error = shallowRef()
 const isVisible = computed(() => !props.name || !!isOpen.value)
 
 // Calculate size of the state for display
-const stateSize = computed(() => {
-  if (!props.state)
-    return 0
-  try {
-    const str = JSON.stringify(props.state)
-    return str
-      ? new Blob([str]).size
-      : 0
-  }
-  catch {
-    return 0
-  }
-})
+const stateSize = computed(() => props.state === undefined
+  ? 0
+  : measureSize(props.state))
 
 const isLargeItem = computed(() => stateSize.value > 10 * 1024) // > 10KB
 

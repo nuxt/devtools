@@ -18,32 +18,63 @@ export interface PayloadAnalysis {
 const LARGE_PAYLOAD_THRESHOLD = 100 * 1024 // 100 KB
 const CRITICAL_PAYLOAD_THRESHOLD = 500 * 1024 // 500 KB
 
-function calculateSize(value: any): number {
-  if (value === null || value === undefined)
-    return 0
-  try {
-    const str = JSON.stringify(value)
-    return str
-      ? new Blob([str]).size
-      : 0
-  }
-  catch {
-    return estimateSize(value)
-  }
+const encoder = new TextEncoder()
+
+function byteLength(str: string): number {
+  return encoder.encode(str).length
 }
 
-function estimateSize(value: any): number {
-  if (typeof value === 'string')
-    return value.length * 2
-  if (typeof value === 'number')
-    return 8
-  if (typeof value === 'boolean')
+/**
+ * Estimate the serialized size (in bytes) of a payload value.
+ *
+ * Unlike `JSON.stringify`, this accounts for the rich types Nuxt's payload
+ * serializer (devalue) supports (`Map`, `Set`, `Date`, `RegExp`, `BigInt`, ...)
+ * and never throws on circular references (repeated references are counted once,
+ * as devalue deduplicates them).
+ */
+export function measureSize(value: unknown, seen = new WeakSet<object>()): number {
+  switch (typeof value) {
+    case 'undefined':
+      return 9 // `undefined`
+    case 'string':
+      return byteLength(JSON.stringify(value))
+    case 'number':
+    case 'boolean':
+      return String(value).length
+    case 'bigint':
+      return value.toString().length + 1
+    case 'symbol':
+    case 'function':
+      return 0
+  }
+
+  if (value === null)
     return 4
-  if (Array.isArray(value))
-    return value.reduce((sum: number, item: any) => sum + estimateSize(item), 0)
-  if (typeof value === 'object')
-    return Object.values(value).reduce((sum: number, val: any) => sum + estimateSize(val), 0)
-  return 0
+
+  const obj = value as object
+  if (seen.has(obj))
+    return 1 // reference to an already serialized value
+  seen.add(obj)
+
+  if (obj instanceof Date)
+    return 26
+  if (obj instanceof RegExp)
+    return byteLength(JSON.stringify(obj.source)) + obj.flags.length + 2
+
+  let size = 2
+  if (obj instanceof Map) {
+    for (const [k, v] of obj)
+      size += measureSize(k, seen) + measureSize(v, seen) + 2
+    return size
+  }
+  if (obj instanceof Set || Array.isArray(obj)) {
+    for (const item of obj)
+      size += measureSize(item, seen) + 1
+    return size
+  }
+  for (const [k, v] of Object.entries(obj))
+    size += byteLength(JSON.stringify(k)) + measureSize(v, seen) + 2
+  return size
 }
 
 export function formatBytes(bytes: number): string {
@@ -65,40 +96,49 @@ export function usePayloadAnalysis() {
       return null
 
     const breakdown: PayloadBreakdown[] = []
-    let totalSize = 0
 
-    if (payload.state && typeof payload.state === 'object') {
-      const stateSize = calculateSize(payload.state)
-      breakdown.push({
-        key: 'State (useState)',
-        size: stateSize,
-        percentage: 0,
-        origin: 'mixed',
-      })
-      totalSize += stateSize
+    // Without SSR, everything in the payload was produced on the client.
+    // With SSR, entries may come from the server render or from later
+    // client-side fetches/updates (e.g. `useAsyncData({ server: false })`).
+    const origin: PayloadBreakdown['origin'] = payload.serverRendered === false
+      ? 'client'
+      : 'mixed'
+
+    const categories: [field: string, label: string][] = [
+      ['state', 'State (useState)'],
+      ['data', 'Data (useAsyncData)'],
+      ['functions', 'Functions'],
+    ]
+
+    for (const [field, label] of categories) {
+      const value = (payload as Record<string, unknown>)[field]
+      if (value && typeof value === 'object') {
+        breakdown.push({
+          key: label,
+          size: measureSize(value),
+          percentage: 0,
+          origin,
+        })
+      }
     }
 
-    if (payload.data && typeof payload.data === 'object') {
-      const dataSize = calculateSize(payload.data)
+    // Count all remaining payload fields so the total reflects the whole payload
+    const known = new Set(categories.map(([field]) => field))
+    const others = Object.fromEntries(
+      Object.entries(payload).filter(([key]) => !known.has(key)),
+    )
+    const othersSize = Object.keys(others).length
+      ? measureSize(others)
+      : 0
+    if (othersSize > 0) {
       breakdown.push({
-        key: 'Data (useAsyncData)',
-        size: dataSize,
+        key: 'Other',
+        size: othersSize,
         percentage: 0,
-        origin: 'server',
       })
-      totalSize += dataSize
     }
 
-    if (payload.functions && typeof payload.functions === 'object') {
-      const functionsSize = calculateSize(payload.functions)
-      breakdown.push({
-        key: 'Functions',
-        size: functionsSize,
-        percentage: 0,
-        origin: 'server',
-      })
-      totalSize += functionsSize
-    }
+    const totalSize = breakdown.reduce((sum, item) => sum + item.size, 0)
 
     breakdown.forEach((item) => {
       item.percentage = totalSize > 0
