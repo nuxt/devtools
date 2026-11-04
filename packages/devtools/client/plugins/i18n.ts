@@ -1,15 +1,13 @@
 import { watch } from 'vue'
 import { defineNuxtPlugin } from '#imports'
 import { useDevToolsLocale } from '../composables/locale'
-import { i18n } from '../i18n'
+import { i18n, setLocale } from '../i18n'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.vueApp.use(i18n)
 
   const locale = useDevToolsLocale()
-  watch(locale, (value) => {
-    i18n.global.locale.value = value
-    if (typeof document !== 'undefined')
-      document.documentElement.lang = value
-  }, { immediate: true })
+  // Load the initial locale before the first render to avoid an English flash.
+  await setLocale(locale.value)
+  watch(locale, value => setLocale(value))
 })
