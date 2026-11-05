@@ -332,9 +332,26 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
       config.externals ||= {}
       config.externals.inline ||= []
       config.externals.inline.push(inlinePath)
+
+      // Exclude devframes packages from inlining to prevent Bun build failures.
+      // These packages import `toNodeHandler` from h3, which is not available
+      // in the CJS build. Keeping them external allows proper module resolution.
+      config.externals.inline ||= []
+      config.externals.inline.push(
+        '@devframes/plugin-data-inspector',
+        '@devframes/plugin-assets',
+        '@devframes/plugin-og',
+        '@devframes/plugin-code-server',
+        '@devframes/plugin-inspect',
+        '@devframes/plugin-messages',
+        '@devframes/plugin-terminals',
+        'devframe',
+      )
     }
     else if (Array.isArray(config.noExternals)) {
       config.noExternals.push(inlinePath)
+      // For Nitro v3, ensure devframes packages are NOT in noExternals
+      // (they should remain external)
     }
     else if (config.noExternals === undefined) {
       config.noExternals = [inlinePath]
