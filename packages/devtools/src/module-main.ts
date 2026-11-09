@@ -131,16 +131,24 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     // Resolve from this module's own location so the entries work whether
     // `@nuxt/devtools` is a direct dependency or nested under `nuxt`.
     nuxt.options.vite.optimizeDeps.include.push(
-      ...await Promise.all(OPTIMIZE_DEPS.map(id => resolvePath(id, {
-        url: import.meta.url,
-        conditions: [
-          'module',
-          'browser',
-          'development',
-          'import',
-          'default',
-        ],
-      }).catch(() => id))),
+      ...await Promise.all(OPTIMIZE_DEPS.map(async (id) => {
+        try {
+          return await resolvePath(id, {
+            url: import.meta.url,
+            conditions: [
+              'module',
+              'browser',
+              'development',
+              'import',
+              'default',
+            ],
+          })
+        }
+        catch (error) {
+          logger.warn(`[nuxt-devtools] Failed to resolve optimizeDeps entry \`${id}\``, error)
+          return id
+        }
+      })),
     )
   }
 
