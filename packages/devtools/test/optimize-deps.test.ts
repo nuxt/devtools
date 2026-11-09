@@ -1,3 +1,4 @@
+import { isAbsolute } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fakeNuxt } from './fake-nuxt'
 
@@ -41,7 +42,7 @@ describe('optimizeDeps.include', () => {
 
     expect(include).toHaveLength(4)
     for (const entry of include!) {
-      expect(entry).toMatch(/^\//)
+      expect(isAbsolute(entry)).toBe(true)
     }
     expect(include![0]).toMatch(/@vitejs\/devtools-kit\/dist\/client\.(?:m|c)?js$/)
     expect(include![1]).toMatch(/error-stack-parser-es\/dist\/index\.mjs$/)
