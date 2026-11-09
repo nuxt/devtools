@@ -1,4 +1,5 @@
 import { isAbsolute } from 'node:path'
+import { resolvePath } from 'mlly'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fakeNuxt } from './fake-nuxt'
 
@@ -15,6 +16,14 @@ vi.mock('@nuxt/kit', async (importOriginal) => {
     addTemplate: vi.fn(),
     addVitePlugin: vi.fn(),
     extendViteConfig: vi.fn(),
+  }
+})
+
+vi.mock('mlly', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('mlly')>()
+  return {
+    ...actual,
+    resolvePath: vi.fn(actual.resolvePath),
   }
 })
 
@@ -48,5 +57,24 @@ describe('optimizeDeps.include', () => {
     expect(include![1]).toMatch(/error-stack-parser-es\/dist\/index\.mjs$/)
     expect(include![2]).toMatch(/vite-plugin-vue-devtools\/dist\/client\.mjs$/)
     expect(include![3]).toMatch(/vite-plugin-vue-tracer\/dist\/client\/overlay\.mjs$/)
+  })
+
+  it('resolves entries from the module location', async () => {
+    const resolvePathMock = vi.mocked(resolvePath)
+    resolvePathMock.mockClear()
+
+    await enableDevtools()
+
+    expect(resolvePathMock).toHaveBeenCalledTimes(4)
+    for (const [, options] of resolvePathMock.mock.calls) {
+      expect(options?.url).toEqual(expect.stringMatching(/packages\/devtools\/src\/module-main\.ts$/))
+      expect(options?.conditions).toEqual([
+        'module',
+        'browser',
+        'development',
+        'import',
+        'default',
+      ])
+    }
   })
 })
