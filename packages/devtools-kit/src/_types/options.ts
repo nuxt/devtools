@@ -11,7 +11,7 @@ export interface ModuleOptions {
    *
    * @default true
    */
-  enabled?: boolean
+  enabled: boolean
 
   /**
    * Custom tabs
