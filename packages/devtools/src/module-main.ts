@@ -10,6 +10,7 @@ import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
+import { resolvePath } from 'mlly'
 import { join, resolve } from 'pathe'
 import { isGreaterThanOrEqual } from 'verkit'
 import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
@@ -23,6 +24,17 @@ import { createDevListenerPlugin } from './utils/dev-listener'
 import { readLocalOptions } from './utils/local-options'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
+
+// Vite DevTools 0.5's embedded client is served by the hub as an external
+// `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
+// is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
+// pre-bundle here.
+const OPTIMIZE_DEPS = [
+  '@vitejs/devtools-kit/client',
+  'error-stack-parser-es',
+  'vite-plugin-vue-devtools/client',
+  'vite-plugin-vue-tracer/client/overlay',
+]
 
 /**
  * The published package holding the built client UI, version-locked to this
@@ -116,15 +128,19 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (nuxt.options.dev) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
+    // Resolve from this module's own location so the entries work whether
+    // `@nuxt/devtools` is a direct dependency or nested under `nuxt`.
     nuxt.options.vite.optimizeDeps.include.push(
-      // Vite DevTools 0.5's embedded client is served by the hub as an external
-      // `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
-      // is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
-      // pre-bundle here.
-      'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
-      'nuxt > @nuxt/devtools > error-stack-parser-es',
-      'nuxt > @nuxt/devtools > vite-plugin-vue-devtools/client',
-      'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
+      ...await Promise.all(OPTIMIZE_DEPS.map(id => resolvePath(id, {
+        url: import.meta.url,
+        conditions: [
+          'module',
+          'browser',
+          'development',
+          'import',
+          'default',
+        ],
+      }).catch(() => id))),
     )
   }
 
