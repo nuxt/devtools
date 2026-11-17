@@ -201,10 +201,10 @@ export function setupGeneralRPC({
     },
     async openInEditor(token: string, input: string): Promise<boolean> {
       await ensureDevAuthToken(token)
-      if (input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input))
-        input = resolve(process.cwd(), input)
+      const isRelative = input.startsWith('./') || !ABSOLUTE_PATH_RE.test(input)
 
-      // separate line and column syntax
+      // separate line and column syntax before resolving, so `:line:col`
+      // is not part of the filename
       const match = input.match(FILE_LINE_COL_RE)
       let suffix = ''
       if (match) {
@@ -212,16 +212,24 @@ export function setupGeneralRPC({
         suffix = match[2]!
       }
 
-      // search for existing path
-      const path = [
-        input,
-        `${input}.js`,
-        `${input}.mjs`,
-        `${input}.ts`,
-      ].find(i => existsSync(i))
+      // Inspector paths are workspace-relative. cwd is the package directory
+      // in a workspace, so try cwd, rootDir, then workspaceDir.
+      const candidates = isRelative
+        ? [
+            ...new Set([
+              process.cwd(),
+              nuxt.options.rootDir,
+              nuxt.options.workspaceDir,
+            ].filter(Boolean)),
+          ].map(dir => resolve(dir, input))
+        : [input]
+
+      const path = candidates
+        .flatMap(i => [i, `${i}.js`, `${i}.mjs`, `${i}.ts`])
+        .find(i => existsSync(i))
 
       if (!path) {
-        console.error('File not found:', input)
+        console.error('File not found:', candidates[0])
         return false
       }
 
