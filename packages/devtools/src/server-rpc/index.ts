@@ -9,6 +9,7 @@ import { RPC_NAMESPACE } from '../rpc-namespace'
 import { setupAnalyzeBuildRPC } from './analyze-build'
 import { setupCustomTabRPC } from './custom-tabs'
 import { setupGeneralRPC } from './general'
+import { setupIconsRPC } from './icons'
 import { createNotifier, setupMessagesRPC } from './messages'
 import { setupNpmRPC } from './npm'
 import { setupOptionsRPC } from './options'
@@ -161,6 +162,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupOptionsRPC(ctx),
     ...setupTimelineRPC(ctx),
     ...setupTelemetryRPC(ctx),
+    ...setupIconsRPC(ctx),
     // Deprecated compat shim (NDT_DEP_0009). The capture + live source now live
     // in the Data Inspector integration; `getServerConfig` is served by the
     // canonical `setupGeneralRPC` above.

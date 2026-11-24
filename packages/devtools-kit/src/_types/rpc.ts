@@ -31,6 +31,8 @@ export interface ServerFunctions {
   getServerRoutes: () => ServerRouteInfo[]
   getServerTasks: () => ScannedNitroTasks | null
   getServerApp: () => NuxtApp | undefined
+  /** Resolve an Iconify icon to SVG markup from locally installed collections. */
+  getIconSvg: (collection: string, name: string) => Promise<string | undefined>
 
   // Options
   getOptions: <T extends keyof NuxtDevToolsOptions>(tab: T) => Promise<NuxtDevToolsOptions[T]>
