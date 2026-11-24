@@ -23,6 +23,7 @@ import { setupRPC } from './server-rpc'
 import { skipInSSR } from './server-rpc/skip-in-ssr'
 import { createDevListenerPlugin } from './utils/dev-listener'
 import { readLocalOptions } from './utils/local-options'
+import { resolveSetupMode } from './utils/setup-mode'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
 
@@ -66,20 +67,20 @@ function resolveClientAssetsSource(): StaticAssetsSource {
 }
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
-  // Disable in test mode
-  if (process.env.TEST || process.env.NODE_ENV === 'test' || nuxt.options.test)
-    return
+  const mode = resolveSetupMode(nuxt)
 
-  if (nuxt.options.builder !== '@nuxt/vite-builder') {
+  if (mode === 'unsupported-builder') {
     logger.warn('Nuxt DevTools only supports Vite mode, module is disabled.')
     return
   }
 
-  if (!nuxt.options.dev) {
-    if (nuxt.options.build.analyze && (nuxt.options.build.analyze === true || nuxt.options.build.analyze.enabled))
-      await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
+  if (mode === 'analyze-build') {
+    await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
   }
+
+  if (mode !== 'dev')
+    return
 
   await nuxt.callHook('devtools:before')
 
