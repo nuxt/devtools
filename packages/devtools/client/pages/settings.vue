@@ -37,6 +37,7 @@ const editorOptions = computed(() => [
   ['Sublime Text', 'subl'],
   ['Atom', 'atom'],
   ['Windsurf', 'windsurf'],
+  ['Google Antigravity', 'antigravity'],
 ])
 
 const scaleOptions = computed(() => [
