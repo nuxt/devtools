@@ -23,15 +23,6 @@ minimumReleaseAgeExclude:
   - bumpp@12.3.0
   - pkg-types@2.4.0
   - tinyexec@1.3.1
-  - '@shikijs/core@4.5.0'
-  - '@shikijs/engine-javascript@4.5.0'
-  - '@shikijs/engine-oniguruma@4.5.0'
-  - '@shikijs/langs@4.5.0'
-  - '@shikijs/primitive@4.5.0'
-  - '@shikijs/themes@4.5.0'
-  - '@shikijs/types@4.5.0'
-  - shiki-codegen@4.5.0
-  - shiki@4.5.0
   - '@nuxt/kit-nightly@5.0.0-2611010234-c709ec8'
   - '@nuxt/nitro-server-nightly@5.0.0-2611010234-c709ec8'
   - '@nuxt/schema-nightly@5.0.0-2611010234-c709ec8'
@@ -39,74 +30,13 @@ minimumReleaseAgeExclude:
   - '@nuxt/vite-server-nightly@5.0.0-2611010234-c709ec8'
   - nuxt-nightly@5.0.0-2611010234-c709ec8
   - package-manager-detector@1.9.0
-  - '@unocss/autocomplete@66.12.0'
-  - '@unocss/cli@66.12.0'
-  - '@unocss/config@66.12.0'
-  - '@unocss/core@66.12.0'
-  - '@unocss/eslint-config@66.12.0'
-  - '@unocss/eslint-plugin@66.12.0'
-  - '@unocss/extractor-arbitrary-variants@66.12.0'
-  - '@unocss/inspector@66.12.0'
-  - '@unocss/nuxt@66.12.0'
-  - '@unocss/preset-attributify@66.12.0'
-  - '@unocss/preset-icons@66.12.0'
-  - '@unocss/preset-mini@66.12.0'
-  - '@unocss/preset-tagify@66.12.0'
-  - '@unocss/preset-typography@66.12.0'
-  - '@unocss/preset-uno@66.12.0'
-  - '@unocss/preset-web-fonts@66.12.0'
-  - '@unocss/preset-wind3@66.12.0'
-  - '@unocss/preset-wind4@66.12.0'
-  - '@unocss/preset-wind@66.12.0'
-  - '@unocss/reset@66.12.0'
-  - '@unocss/rollup@66.12.0'
-  - '@unocss/rule-utils@66.12.0'
-  - '@unocss/transformer-attributify-jsx@66.12.0'
-  - '@unocss/transformer-compile-class@66.12.0'
-  - '@unocss/transformer-directives@66.12.0'
-  - '@unocss/transformer-variant-group@66.12.0'
-  - '@unocss/vite@66.12.0'
-  - '@unocss/webpack@66.12.0'
-  - dompurify@3.4.17
   - '@x18n/*'
   - vue-i18n
   - '@intlify/*'
-  - unocss@66.12.0
   - chokidar@6.0.0
-  - skills@1.7.4
-  - '@iconify-json/logos@1.2.18'
-  - '@iconify-json/simple-icons@1.2.101'
-  - focus-trap@8.2.4
   - magic-string@1.4.5
   - vite-plugin-vue-tracer@1.7.0
-  - '@rollup/rollup-android-arm-eabi@4.67.4'
-  - '@rollup/rollup-android-arm64@4.67.4'
-  - '@rollup/rollup-android-x64@4.67.4'
-  - '@rollup/rollup-darwin-arm64@4.67.4'
-  - '@rollup/rollup-darwin-x64@4.67.4'
-  - '@rollup/rollup-freebsd-arm64@4.67.4'
-  - '@rollup/rollup-freebsd-x64@4.67.4'
-  - '@rollup/rollup-linux-arm-gnueabihf@4.67.4'
-  - '@rollup/rollup-linux-arm-musleabihf@4.67.4'
-  - '@rollup/rollup-linux-arm64-gnu@4.67.4'
-  - '@rollup/rollup-linux-arm64-musl@4.67.4'
-  - '@rollup/rollup-linux-loong64-gnu@4.67.4'
-  - '@rollup/rollup-linux-loong64-musl@4.67.4'
-  - '@rollup/rollup-linux-ppc64-gnu@4.67.4'
-  - '@rollup/rollup-linux-ppc64-musl@4.67.4'
-  - '@rollup/rollup-linux-riscv64-gnu@4.67.4'
-  - '@rollup/rollup-linux-riscv64-musl@4.67.4'
-  - '@rollup/rollup-linux-s390x-gnu@4.67.4'
-  - '@rollup/rollup-linux-x64-gnu@4.67.4'
-  - '@rollup/rollup-linux-x64-musl@4.67.4'
-  - '@rollup/rollup-openbsd-x64@4.67.4'
-  - '@rollup/rollup-openharmony-arm64@4.67.4'
-  - '@rollup/rollup-win32-arm64-msvc@4.67.4'
-  - '@rollup/rollup-win32-ia32-msvc@4.67.4'
-  - '@rollup/rollup-win32-x64-gnu@4.67.4'
-  - '@rollup/rollup-win32-x64-msvc@4.67.4'
   - local-pkg@2.0.0
-  - rollup@4.67.4
 
 resolutionMode: highest
 
@@ -131,7 +61,7 @@ packages:
   - '!playgrounds/**/.output/**'
 
 overrides:
-  '@devframes/agentic': &devframe ^1.3.5
+  '@devframes/agentic': &devframe ^1.4.0
   '@devframes/hub': *devframe
   '@devframes/hub-ui': *devframe
   '@devframes/hub-ui-onboard': *devframe
@@ -148,9 +78,9 @@ overrides:
   '@nuxt/devtools-onboard': workspace:*
   '@nuxt/kit': &nuxt-kit npm:@nuxt/kit-nightly@5.0.0-2611010234-c709ec8
   '@nuxt/schema': &nuxt-schema npm:@nuxt/schema-nightly@5.0.0-2611010234-c709ec8
-  '@vitejs/devtools': &vite-devtools ^0.8.0
+  '@vitejs/devtools': &vite-devtools ^0.8.3
   '@vitejs/devtools-kit': *vite-devtools
-  '@vue/compiler-core': &vue ^3.5.44
+  '@vue/compiler-core': &vue ^3.5.45
   '@vue/compiler-dom': *vue
   '@vue/shared': *vue
   '@vueuse/core': &vueuse ^15.0.0
@@ -159,15 +89,15 @@ overrides:
   esbuild: ^0.28.2
   markdown-exit: ^1.3.0
   nuxt: &nuxt npm:nuxt-nightly@5.0.0-2611010234-c709ec8
-  rollup: ^4.67.4
-  semver: ^7.8.5
-  shiki: &shiki ^4.5.0
+  rollup: ^4.68.5
+  semver: ^7.8.6
+  shiki: &shiki ^4.6.0
   typescript: ^6.0.3
-  unimport: ^7.0.2
-  unocss: &unocss ^66.12.0
-  vite: &vite ^8.3.5
+  unimport: ^7.0.3
+  unocss: &unocss ^66.13.0
+  vite: &vite ^8.3.8
   vue: *vue
-  vue-sfc-transformer: ^0.3.1
+  vue-sfc-transformer: ^0.3.3
   # Held at 3.3.13: 3.3.14 breaks dot-value narrowing when a template
   # attribute value contains `//` (e.g. a URL), producing false TS2551/TS2339
   # errors. https://github.com/vuejs/language-tools/issues/6322
@@ -184,7 +114,7 @@ allowBuilds:
 
 catalogs:
   buildtools:
-    '@nuxt/module-builder': ^1.0.3
+    '@nuxt/module-builder': ^1.0.4
     '@parcel/watcher': ^2.6.0
     '@unocss/core': *unocss
     '@unocss/eslint-config': *unocss
@@ -205,11 +135,11 @@ catalogs:
     # typecheck resolve a single, consistent version of each rather than
     # whatever `autoInstallPeers` would otherwise pick independently.
     nitro: ^3.0.261029-rc
-    nitropack: ^2.13.5
+    nitropack: ^2.13.6
     nuxt: *nuxt
     shiki-codegen: *shiki
-    skills: ^1.7.4
-    turbo: ^2.11.10
+    skills: ^1.9.0
+    turbo: ^2.11.12
     unbuild: ^3.6.1
     unocss: *unocss
     unplugin-vue: ^8.0.1
@@ -220,24 +150,24 @@ catalogs:
     '@antfu/ni': ^30.6.0
     '@antfu/skills': ^0.1.3
     '@nuxt/eslint': ^1.17.0
-    '@nuxt/test-utils': ^4.3.4
-    '@playwright/test': ^1.64.1
-    '@x18n/cli': ^0.1.6
+    '@nuxt/test-utils': ^4.4.0
+    '@playwright/test': ^1.65.1
+    '@x18n/cli': ^0.1.14
     bumpp: ^12.3.0
-    eslint: ^10.14.0
+    eslint: ^10.15.0
     eslint-flat-config-utils: ^3.2.0
     eslint-plugin-antfu: ^3.3.1
     eslint-plugin-format: ^2.0.1
     eslint-plugin-unimport: ^2.0.0
     eslint-typegen: ^2.3.2
-    knip: ^6.44.1
+    knip: ^6.45.1
     nano-staged: ^1.0.2
     nuxt-eslint-auto-explicit-import: ^0.2.0
     simple-git-hooks: ^2.14.0
     taze: ^21.3.0
     tsx: ^4.23.15
     typescript: ^6.0.3
-    vitest: ^5.0.5
+    vitest: ^5.1.0
     vue-tsc: 3.3.13
   frontend:
     '@antfu/utils': ^9.3.0
@@ -245,12 +175,12 @@ catalogs:
     '@vueuse/core': *vueuse
     '@vueuse/integrations': *vueuse
     birpc: ^4.2.0
-    cronstrue: ^3.38.0
+    cronstrue: ^3.41.0
     diff: ^9.0.0
-    dompurify: ^3.4.17
+    dompurify: ^3.4.18
     error-stack-parser-es: ^2.0.1
     floating-vue: ^5.4.0
-    focus-trap: ^8.2.4
+    focus-trap: ^8.2.5
     fuse.js: ^7.5.0
     hookable: ^6.1.2
     json-editor-vue: ^0.19.2
@@ -267,22 +197,22 @@ catalogs:
     theme-vitesse: ^1.0.0
     ua-parser-modern: ^0.1.1
     v-lazy-show: ^0.3.0
-    vanilla-jsoneditor: ^3.13.0
+    vanilla-jsoneditor: ^3.13.1
     vis-data: ^8.0.6
-    vis-network: ^10.1.4
+    vis-network: ^10.1.5
     vite-hot-client: ^2.2.0
     vue: *vue
-    vue-i18n: ^11.4.17
-    vue-router: ^5.4.0
+    vue-i18n: ^11.4.22
+    vue-router: ^5.5.1
     vue-virtual-scroller: ^3.0.5
   icons:
     '@iconify-json/bxl': ^1.2.4
-    '@iconify-json/carbon': ^1.2.29
-    '@iconify-json/logos': ^1.2.18
+    '@iconify-json/carbon': ^1.2.30
+    '@iconify-json/logos': ^1.2.20
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.10
-    '@iconify-json/simple-icons': ^1.2.101
-    '@iconify-json/tabler': ^1.2.43
+    '@iconify-json/simple-icons': ^1.2.103
+    '@iconify-json/tabler': ^1.2.46
   inlined:
     package-manager-detector: ^1.9.0
   prod:
@@ -304,7 +234,7 @@ catalogs:
     magic-string: ^1.4.5
     magicast: ^0.5.5
     mlly: ^1.8.2
-    nostics: ^1.3.0
+    nostics: ^1.4.0
     pkg-types: ^2.4.0
     sirv: ^3.0.2
     tinyexec: ^1.3.1
@@ -312,12 +242,12 @@ catalogs:
     unplugin: ^3.7.0
     verkit: ^0.5.0
     vite-plugin-inspect: ^12.1.0
-    vite-plugin-vue-devtools: ^9.0.0-beta.1
+    vite-plugin-vue-devtools: ^9.0.0-rc.3
     vite-plugin-vue-tracer: ^1.7.0
   types:
     '@nuxt/schema': *nuxt-schema
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^26.6.6
     '@vitejs/devtools-kit': *vite-devtools
-    unimport: ^7.0.2
+    unimport: ^7.0.3
     unstorage: ^1.17.6
