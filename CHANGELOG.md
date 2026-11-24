@@ -1,3 +1,18 @@
+## [1.7.1](https://github.com/nuxt/devtools/compare/v1.7.0...v1.7.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* using `textContent` instead of `innerHtml` for auth pagechore: update lock ([#993](https://github.com/nuxt/devtools/issues/993)) ([b9aa802](https://github.com/nuxt/devtools/commit/b9aa802655ad400cb63513107ffe25417c322038))
+* **vscode:** set a default value for the vscode host parameter ([#766](https://github.com/nuxt/devtools/issues/766)) ([2e6b4e4](https://github.com/nuxt/devtools/commit/2e6b4e4f7da8f8dc926cc0a9f13cbf6dd1562bac))
+
+
+### Features
+
+* enhance module resolution paths for getPackageInfo ([#767](https://github.com/nuxt/devtools/issues/767)) ([04269d0](https://github.com/nuxt/devtools/commit/04269d03b5ce89388528b42f3de8a40a3ddc8bf5))
+
+
+
 # [1.7.0](https://github.com/nuxt/devtools/compare/v1.6.4...v1.7.0) (2024-12-26)
 
 
