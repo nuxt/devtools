@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { createOnboarding } from '@devframes/hub-ui-onboard'
 import { defineNuxtModule, installModule, logger, tryResolveModule } from '@nuxt/kit'
 import { readPackageJSON } from 'pkg-types'
+import { NUXT_LOGO } from './branding'
 import { confirmInTerminal } from './terminal-confirm'
 
 const DEVTOOLS = '@nuxt/devtools'
@@ -74,7 +75,7 @@ export default defineNuxtModule({
       branding: {
         productName: 'Nuxt DevTools',
         primaryColor: '#099e61',
-        logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+        logo: NUXT_LOGO,
       },
       messages: {
         restart: 'Installed. Restarting the dev server…',
