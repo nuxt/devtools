@@ -16,6 +16,7 @@ import { isGreaterThanOrEqual } from 'verkit'
 import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
 import { createTerminalAuthBanner } from './auth-banner'
+import { NUXT_DEVTOOLS_WORDMARK, NUXT_LOGO } from './branding'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
@@ -188,11 +189,9 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     productName: 'Nuxt DevTools',
     tagline: 'DevTools for Nuxt',
     primaryColor: '#099e61',
-    logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-    wordmark: {
-      light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
-      dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
-    },
+    logo: NUXT_LOGO,
+    wordmark: NUXT_DEVTOOLS_WORDMARK,
+    favicon: NUXT_LOGO,
     windowTitle: 'Nuxt DevTools',
   }
 
