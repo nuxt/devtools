@@ -9,7 +9,7 @@ import { useAllRoutes } from '~/composables/state-tabs'
 import { getIsMacOS } from '~/composables/utils'
 import { version } from '../../../package.json'
 import { showConnectionWarning } from '../../composables/client'
-import { formatDuration, pluralizeByCount } from '../../composables/utils'
+import { formatDuration } from '../../composables/utils'
 
 definePageMeta({
   icon: 'carbon-information',
@@ -32,7 +32,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
 <template>
   <NPanelGrids h-screen w-full flex>
     <div v-if="!config">
-      Loading...
+      {{ $t('common.loading') }}
     </div>
     <div v-else flex="~ col gap2" ma h-full max-w-300 w-full p5 px5 md:px20>
       <div flex-auto />
@@ -69,50 +69,50 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             to="/modules/pages"
           >
             <div carbon-tree-view-alt text-3xl />
-            <div>{{ pluralizeByCount(routes.length, 'page') }}</div>
+            <div>{{ $t('overview.pages', routes.length) }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 theme-card-lime p4 flex="~ col auto" to="/modules/components">
             <div i-carbon-assembly-cluster text-3xl />
-            <div>{{ pluralizeByCount(components.length, 'component') }}</div>
+            <div>{{ $t('overview.components', components.length) }}</div>
           </NuxtLink>
           <NuxtLink v-if="config && autoImports" min-w-40 theme-card-yellow p4 flex="~ col auto" to="/modules/imports">
             <div carbon-function text-3xl />
-            <div>{{ pluralizeByCount(autoImports.imports.length, 'import') }}</div>
+            <div>{{ $t('overview.imports', autoImports.imports.length) }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 theme-card-purple p4 flex="~ col auto" to="/modules/modules">
             <div carbon-3d-mpr-toggle text-3xl />
-            <div>{{ pluralizeByCount(installedModules.length, 'module') }}</div>
+            <div>{{ $t('overview.modules', installedModules.length) }}</div>
           </NuxtLink>
           <NuxtLink v-if="config" min-w-40 theme-card-teal p4 flex="~ col auto" to="/modules/plugins">
             <div carbon-plug text-3xl />
-            <div>{{ pluralizeByCount(config.plugins.length, 'plugin') }}</div>
+            <div>{{ $t('overview.plugins', config.plugins.length) }}</div>
           </NuxtLink>
           <div v-if="metricsLoading" pointer-events-none min-w-40 theme-card-lime p4 flex="~ auto gap-6">
             <div i-carbon-time-plot flex-none text-3xl />
             <div grid="~ cols-[auto_auto] gap-x-5 items-center">
               <template v-if="metricsLoading.ssrStart">
                 <div text-sm>
-                  SSR to full load
+                  {{ $t('overview.ssrToFullLoad') }}
                 </div>
                 <div text-right>
                   {{ formatDuration(metricsLoading.appLoad! - metricsLoading.ssrStart!) }}
                 </div>
               </template>
               <div text-sm>
-                Page load
+                {{ $t('overview.pageLoad') }}
               </div>
               <div text-right>
                 {{ formatDuration(metricsLoading.appLoad! - metricsLoading.appInit!) }}
               </div>
               <div text-sm>
-                Navigation
+                {{ $t('overview.navigation') }}
               </div>
               <div text-right>
                 {{ formatDuration(metricsLoading.pageEnd! - metricsLoading.pageStart!) }}
               </div>
               <template v-if="metricsLoading.hmrStart">
                 <div text-sm>
-                  HMR
+                  {{ $t('overview.hmr') }}
                 </div>
                 <div text-right>
                   {{ formatDuration(metricsLoading.hmrEnd! - metricsLoading.hmrStart!) }}
@@ -124,7 +124,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
       </div>
       <div flex="~ col gap2">
         <NTip v-if="showConnectionWarning" n="yellow5" icon="carbon-unlink" justify-center>
-          Not connected to the client app, showing server-side data only. Use the embedded mode for full features.
+          {{ $t('overview.notConnected') }}
         </NTip>
       </div>
       <div flex="~ gap-6 wrap" mt-5 items-center justify-center>
@@ -133,32 +133,32 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
           transition
         >
           <div i-carbon-star />
-          Star on GitHub
+          {{ $t('overview.starOnGitHub') }}
         </a>
         <a
           href="https://github.com/nuxt/devtools/discussions/29" target="_blank" flex="~ gap1" items-center op50
           hover="op100 text-yellow" transition
         >
           <div i-carbon-data-enrichment />
-          Ideas & Suggestions
+          {{ $t('overview.ideas') }}
         </a>
         <a
           href="https://github.com/nuxt/devtools/discussions/31" target="_blank" flex="~ gap1" items-center op50
           hover="op100 text-lime" transition
         >
           <div i-carbon-plan />
-          Project Roadmap
+          {{ $t('overview.roadmap') }}
         </a>
         <a
           href="https://github.com/nuxt/devtools/issues" target="_blank" flex="~ gap1" items-center op50
           hover="op100 text-rose" transition
         >
           <div i-carbon-debug />
-          Bug Reports
+          {{ $t('overview.bugReports') }}
         </a>
         <NuxtLink to="/settings" flex="~ gap1" inline-block items-center op50 hover:op80>
           <div i-carbon-settings-adjust />
-          Settings
+          {{ $t('common.settings') }}
         </NuxtLink>
       </div>
       <div flex-auto />
@@ -183,7 +183,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             </NButton>
           </template>
           <div flex-auto />
-          Open Command Palette
+          {{ $t('overview.openCommandPalette') }}
         </div>
         <div flex="~ gap-1" items-center>
           <template v-if="isMacOS">
@@ -213,7 +213,7 @@ const metricsLoading = computed(() => client.value?.metrics.loading())
             </NButton>
           </template>
           <div flex-auto />
-          <div>Toggle DevTools</div>
+          <div>{{ $t('overview.toggleDevTools') }}</div>
         </div>
       </div>
     </div>

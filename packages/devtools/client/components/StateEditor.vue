@@ -4,6 +4,7 @@ import JsonEditorVue from 'json-editor-vue'
 import { structuredClone } from 'structured-clone-es'
 import { computed, onMounted, shallowRef } from 'vue'
 import { getColorMode } from '~/composables/client'
+import { formatBytes, measureSize } from '~/composables/payload-analysis'
 
 const props = defineProps<{
   name?: string
@@ -24,6 +25,13 @@ const error = shallowRef()
 
 // A named editor is collapsible; only the visible ones need a fresh snapshot.
 const isVisible = computed(() => !props.name || !!isOpen.value)
+
+// Calculate size of the state for display
+const stateSize = computed(() => props.state === undefined
+  ? 0
+  : measureSize(props.state))
+
+const isLargeItem = computed(() => stateSize.value > 10 * 1024) // > 10KB
 
 function isPrimitive(value: any): boolean {
   return [
@@ -95,6 +103,14 @@ function refresh() {
           :class="isOpen ? 'bg-[#8881] rounded-t' : 'rounded hover:bg-active'"
         >{{ name }}</code>
       </button>
+      <span
+        v-if="name && stateSize > 0"
+        class="state-size-badge"
+        :class="{ 'state-size-large': isLargeItem }"
+        :title="`Size: ${formatBytes(stateSize)}`"
+      >
+        {{ formatBytes(stateSize) }}
+      </span>
       <slot name="actions" v-bind="{ isOpen, name, state }" />
       <template v-if="isOpen">
         <NButton v-tooltip.bottom="'Refresh View'" title="Refresh View" icon="carbon-renew" :border="false" @click="refresh" />
@@ -127,3 +143,19 @@ function refresh() {
     </template>
   </div>
 </template>
+
+<style scoped>
+.state-size-badge {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  color: rgb(59, 130, 246);
+  font-family: monospace;
+  font-weight: 500;
+}
+.state-size-large {
+  background-color: rgba(251, 191, 36, 0.1);
+  color: rgb(251, 191, 36);
+}
+</style>

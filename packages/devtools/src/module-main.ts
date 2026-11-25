@@ -10,18 +10,33 @@ import { deprecate, NUXT_DEVTOOLS_GROUP_ID } from '@nuxt/devtools-kit'
 import { addImports, addPlugin, addTemplate, addVitePlugin, extendViteConfig, logger } from '@nuxt/kit'
 import { colors } from 'consola/utils'
 import { serveStaticNodeMiddleware } from 'devframe/utils/serve-static'
+import { resolvePath } from 'mlly'
 import { join, resolve } from 'pathe'
 import { isGreaterThanOrEqual } from 'verkit'
 import { searchForWorkspaceRoot, version as viteVersion } from 'vite'
 import { peerDependencies, version } from '../package.json'
 import { createTerminalAuthBanner } from './auth-banner'
+import { NUXT_DEVTOOLS_WORDMARK, NUXT_LOGO } from './branding'
 import { createDefaultTabOptions, setServerTasksEnabledByDefault } from './constant'
 import { packageDir, runtimeDir } from './dirs'
 import { setupRPC } from './server-rpc'
 import { skipInSSR } from './server-rpc/skip-in-ssr'
+import { createDevListenerPlugin } from './utils/dev-listener'
 import { readLocalOptions } from './utils/local-options'
+import { resolveSetupMode } from './utils/setup-mode'
 
 const MULTIPLE_SLASHES_RE = /\/+/g
+
+// Vite DevTools 0.5's embedded client is served by the hub as an external
+// `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
+// is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
+// pre-bundle here.
+const OPTIMIZE_DEPS = [
+  '@vitejs/devtools-kit/client',
+  'error-stack-parser-es',
+  'vite-plugin-vue-devtools/client',
+  'vite-plugin-vue-tracer/client/overlay',
+]
 
 /**
  * The published package holding the built client UI, version-locked to this
@@ -52,20 +67,20 @@ function resolveClientAssetsSource(): StaticAssetsSource {
 }
 
 export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
-  // Disable in test mode
-  if (process.env.TEST || process.env.NODE_ENV === 'test' || nuxt.options.test)
-    return
+  const mode = resolveSetupMode(nuxt)
 
-  if (nuxt.options.builder !== '@nuxt/vite-builder') {
+  if (mode === 'unsupported-builder') {
     logger.warn('Nuxt DevTools only supports Vite mode, module is disabled.')
     return
   }
 
-  if (!nuxt.options.dev) {
-    if (nuxt.options.build.analyze && (nuxt.options.build.analyze === true || nuxt.options.build.analyze.enabled))
-      await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
+  if (mode === 'analyze-build') {
+    await import('./integrations/analyze-build').then(({ setup }) => setup(nuxt, options))
     return
   }
+
+  if (mode !== 'dev')
+    return
 
   await nuxt.callHook('devtools:before')
 
@@ -115,15 +130,27 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   if (nuxt.options.dev) {
     nuxt.options.vite.optimizeDeps ||= {}
     nuxt.options.vite.optimizeDeps.include ||= []
+    // Resolve from this module's own location so the entries work whether
+    // `@nuxt/devtools` is a direct dependency or nested under `nuxt`.
     nuxt.options.vite.optimizeDeps.include.push(
-      // Vite DevTools 0.5's embedded client is served by the hub as an external
-      // `embedded.js` script (see `runtime/plugins/vite-devtools.client`), so it
-      // is no longer a bundler-resolved `@vitejs/devtools/client/inject` import to
-      // pre-bundle here.
-      'nuxt > @nuxt/devtools > @vitejs/devtools-kit/client',
-      'nuxt > @nuxt/devtools > error-stack-parser-es',
-      'nuxt > @nuxt/devtools > vite-plugin-vue-devtools/client',
-      'nuxt > @nuxt/devtools > vite-plugin-vue-tracer/client/overlay',
+      ...await Promise.all(OPTIMIZE_DEPS.map(async (id) => {
+        try {
+          return await resolvePath(id, {
+            url: import.meta.url,
+            conditions: [
+              'module',
+              'browser',
+              'development',
+              'import',
+              'default',
+            ],
+          })
+        }
+        catch (error) {
+          logger.warn(`[nuxt-devtools] Failed to resolve optimizeDeps entry \`${id}\``, error)
+          return id
+        }
+      })),
     )
   }
 
@@ -148,25 +175,29 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // Nuxt serves the app through its own public listener while Vite runs on an
   // internal port behind it. Keep the public origin from Nuxt's listener so
   // Devframe's auth URL does not expose Vite's internal port.
+  // Also allow every origin Nuxt listens on (e.g. LAN IPs with `--host`), so
+  // Vite DevTools does not reject them as non-loopback.
   let publicDevServerOrigin: string | undefined
-  nuxt.hook('listen', (_server, listener) => {
+  const allowedOrigins: string[] = []
+  nuxt.hook('listen', async (_server, listener) => {
     if (listener?.url)
       publicDevServerOrigin = new URL(listener.url).origin
+    const urls: { url: string }[] = await listener?.getURLs?.() ?? []
+    allowedOrigins.push(...urls.map(({ url }) => new URL(url).origin))
   })
 
   const branding: DevToolsConfig['branding'] = {
     productName: 'Nuxt DevTools',
     tagline: 'DevTools for Nuxt',
     primaryColor: '#099e61',
-    logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-    wordmark: {
-      light: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-light.svg',
-      dark: 'https://cdn.jsdelivr.net/gh/nuxt/devtools@main/assets/nuxt-devtools-dark.svg',
-    },
+    logo: NUXT_LOGO,
+    wordmark: NUXT_DEVTOOLS_WORDMARK,
+    favicon: NUXT_LOGO,
     windowTitle: 'Nuxt DevTools',
   }
 
   viteDevToolsDefaults.branding = branding
+  viteDevToolsDefaults.allowedOrigins = allowedOrigins
 
   // Vite 8.3+ registers the Vite DevTools integration itself from the
   // top-level `devtools` config option (vitejs/vite#23333), which keeps the
@@ -177,6 +208,11 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
   // to it directly.
   if (isGreaterThanOrEqual(viteVersion, '8.3.0')) {
     extendViteDevToolsConfig((devtools) => {
+      // Merged rather than defaulted, so user origins don't drop the listener's.
+      devtools.allowedOrigins = [
+        ...devtools.allowedOrigins ?? [],
+        ...allowedOrigins,
+      ]
       for (const [key, value] of Object.entries(viteDevToolsDefaults))
         (devtools as Record<string, unknown>)[key] ??= value
     })
@@ -185,6 +221,10 @@ export async function enableModule(options: ModuleOptions, nuxt: Nuxt) {
     const DevTools = await import('@vitejs/devtools').then(r => r.DevTools(viteDevToolsDefaults))
     addVitePlugin(DevTools)
   }
+
+  // Let Vite DevTools bind its RPC WebSocket to Nuxt's HTTPS listener rather
+  // than a plain-HTTP side-car port, which HTTPS pages can't reach (#1152).
+  addVitePlugin(createDevListenerPlugin(nuxt), { server: false })
 
   // Deferred: will be set when Vite DevTools plugin setup runs
   let connectDevToolsKit: ((ctx: any) => void | Promise<void>) | undefined

@@ -4,7 +4,7 @@ import { provider } from 'std-env'
 const isSandboxed = provider === 'stackblitz' || provider === 'codesandbox'
 
 export const defaultOptions: ModuleOptions = {
-  enabled: undefined, // determine multiple conditions
+  enabled: true,
   componentInspector: true,
   vueDevTools: true,
   viteInspect: true,

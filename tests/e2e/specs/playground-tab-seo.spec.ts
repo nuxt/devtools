@@ -27,7 +27,11 @@ test('leaves the populated Pages dock through the expanded sidebar without empty
   await page.goto('/')
   await openDevTools()
 
-  const pages = page.getByRole('button', { name: 'Pages', exact: true })
+  // Once a dock is selected, the floating dock (`#devframes-dock`) renders the
+  // same entries next to the expanded sidebar; only target the sidebar ones.
+  const sidebarButton = (name: string) => page.getByRole('button', { name, exact: true })
+    .and(page.locator(':not(#devframes-dock *)'))
+  const pages = sidebarButton('Pages')
   const showMore = page.getByRole('button', { name: 'Show more', exact: true })
   for (const sidebarTitle of [
     'Hooks',
@@ -39,7 +43,7 @@ test('leaves the populated Pages dock through the expanded sidebar without empty
     await expect(devtoolsFrame().locator('body'))
       .toContainText(/dynamic-\[name\]|\/full|\/empty/, { timeout: 15_000 })
 
-    const sidebarDock = page.getByRole('button', { name: sidebarTitle, exact: true })
+    const sidebarDock = sidebarButton(sidebarTitle)
     if (!await sidebarDock.isVisible())
       await showMore.click()
     await sidebarDock.click()

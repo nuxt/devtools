@@ -1,6 +1,7 @@
 import type { ModuleOptions } from './types'
 import { defineNuxtModule } from '@nuxt/kit'
 import { defaultOptions } from './constant'
+import { resolveSetupMode } from './utils/setup-mode'
 
 export type { ModuleOptions }
 
@@ -20,6 +21,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Explicitly disabled
     if (options.enabled === false)
+      return
+
+    if (!resolveSetupMode(nuxt))
       return
 
     return import('./module-main').then(({ enableModule }) => enableModule(options as ModuleOptions, nuxt))

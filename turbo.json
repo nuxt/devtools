@@ -66,8 +66,12 @@
       // `@nuxt/devtools-assets#build`), not by the module. Depending only on
       // the kit avoids regenerating the (uncacheable) client every time the
       // module is packed — the module no longer ships the client.
+      // `build` runs `nuxi prepare client`, and Nuxt loads
+      // `@nuxt/devtools-onboard`, which the root `overrides` point at the
+      // workspace package; its `dist` has to exist by then.
       "dependsOn": [
-        "@nuxt/devtools-kit#build"
+        "@nuxt/devtools-kit#build",
+        "@nuxt/devtools-onboard#build"
       ],
       "outputLogs": "new-only",
       "outputs": [

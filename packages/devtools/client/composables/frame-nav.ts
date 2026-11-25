@@ -2,6 +2,7 @@ import type { ModuleBuiltinTab, ModuleCustomTab } from '~/../src/types'
 import { computed, watch } from 'vue'
 import { useRouter } from '#app/composables/router'
 import { useEnabledTabs } from '~/composables/state-tabs'
+import { i18n } from '~/i18n'
 
 // `devframe:frame-nav` — the embedded-app half of the shared-iframe soft-nav
 // protocol (devframe#128 / vitejs/devtools#464). The Vite DevTools dock owns
@@ -31,9 +32,8 @@ interface FrameNavTab {
 }
 
 /** The DevTools settings page, surfaced as its own dock member. */
-const SETTINGS_TAB: FrameNavTab = {
+const SETTINGS_TAB: Omit<FrameNavTab, 'title'> = {
   id: 'settings',
-  title: 'Settings',
   icon: 'carbon:settings',
   category: '~builtin',
   // sort last within its sub-category (higher `order` renders earlier)
@@ -88,7 +88,10 @@ export function setupFrameNav(): void {
         path: tabPath(tab),
       },
     })),
-    SETTINGS_TAB,
+    {
+      ...SETTINGS_TAB,
+      title: i18n.global.t('common.settings'),
+    },
   ])
 
   function currentTabId(): string | undefined {
@@ -138,8 +141,9 @@ export function setupFrameNav(): void {
   // Announce proactively in case the host attached before this shim loaded.
   announce('ready')
 
-  // Re-announce when the conditional tab set changes (show()/settings/etc).
-  watch(() => manifest.value.map(entry => entry.id).join(','), () => announce('manifest'))
+  // Re-announce when the conditional tab set changes (show()/settings/etc),
+  // or when the titles change (the DevTools language was switched).
+  watch(() => manifest.value.map(entry => `${entry.id}:${entry.title}`).join(','), () => announce('manifest'))
 
   // Report in-app navigation so the dock highlight follows.
   watch(() => router.currentRoute.value.path, () => {

@@ -1,9 +1,9 @@
 {
   "name": "@nuxt-devtools/monorepo",
   "type": "module",
-  "version": "4.0.0",
+  "version": "4.2.1",
   "private": true,
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.21.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nuxt/devtools.git"
@@ -13,6 +13,7 @@
     "watch": "turbo watch build",
     "dev": "pnpm run build && pnpm -C packages/devtools dev",
     "lint": "eslint --cache .",
+    "i18n:check": "x18n check",
     "knip": "knip",
     "release": "pnpm test && bumpp -r --all",
     "test": "pnpm lint && pnpm test:unit",
@@ -27,7 +28,7 @@
     "docs:screenshots": "playwright test --config tests/docs-screenshots/playwright.config.ts",
     "typecheck": "vue-tsc --noEmit",
     "postinstall": "simple-git-hooks && skills experimental_sync -y -r",
-    "dev:prepare": "pnpm -r --filter=\"./packages/*\" run dev:prepare"
+    "dev:prepare": "pnpm -C packages/devtools-onboard run dev:prepare && pnpm -r --filter=\"./packages/*\" --filter=\"!@nuxt/devtools-onboard\" run dev:prepare"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:cli",
@@ -43,6 +44,7 @@
     "@types/node": "catalog:types",
     "@unocss/eslint-config": "catalog:buildtools",
     "@vitejs/devtools-kit": "catalog:types",
+    "@x18n/cli": "catalog:cli",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
     "eslint-flat-config-utils": "catalog:cli",
