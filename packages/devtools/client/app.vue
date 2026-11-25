@@ -8,7 +8,7 @@ import { setupFrameNav } from '~/composables/frame-nav'
 import { WS_DEBOUNCE_TIME } from '~/composables/rpc'
 import { registerCommands } from '~/composables/state-commands'
 import { i18n } from '~/i18n'
-import { isDevtoolsShortcut, watchShortcutLayoutMap } from '../src/runtime/shared/shortcut'
+import { isDevtoolsShortcut } from '../src/runtime/shared/shortcut'
 import { wsConnectedOnce } from './composables/rpc'
 import { useSchemaInput } from './composables/state-schema'
 import { useDevToolsOptions } from './composables/storage-options'
@@ -85,10 +85,8 @@ watchEffect(() => {
   document.documentElement.classList.toggle('light', !isDark)
 })
 
-watchShortcutLayoutMap()
-
 useEventListener('keydown', (e) => {
-  if (isDevtoolsShortcut(e)) {
+  if (isDevtoolsShortcut(e, false)) {
     client.value?.devtools.close()
     e.preventDefault()
   }

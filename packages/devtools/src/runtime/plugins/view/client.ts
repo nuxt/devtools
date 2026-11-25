@@ -16,7 +16,7 @@ import { computed, effect, isRef, markRaw, nextTick, reactive, ref, shallowReact
 import { useAppConfig } from '#imports'
 
 import { initTimelineMetrics } from '../../function-metrics-helpers'
-import { isDevtoolsShortcut, watchShortcutLayoutMap } from '../../shared/shortcut'
+import { isDevtoolsShortcut } from '../../shared/shortcut'
 
 // Host controls must update the visible Devframe viewer context, rather than
 // Vite's separate dock-registration context. Target the shared-frame anchor
@@ -63,18 +63,8 @@ export async function setupDevToolsClient({
     devtools: {
       toggle() {
         const ctx = getDevframeContext()
-        if (!ctx)
-          return
-        if (!ctx.panel.session.open) {
-          ctx.panel.session.open = true
-          void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
-        }
-        else if (ctx.docks.selected?.id === NUXT_DOCK_ANCHOR_ID) {
-          closePanel(ctx)
-        }
-        else {
-          void ctx.docks.switchEntry(NUXT_DOCK_ANCHOR_ID)
-        }
+        if (ctx)
+          ctx.docks.toggleEntry(NUXT_DOCK_ANCHOR_ID)
       },
       close() {
         const ctx = getDevframeContext()
@@ -274,9 +264,8 @@ export async function setupDevToolsClient({
   clientRef.value = client
 
   // Shortcut to toggle devtools (opens Vite DevTools panel with Nuxt DevTools entry)
-  watchShortcutLayoutMap()
   window.addEventListener('keydown', (e) => {
-    if (isDevtoolsShortcut(e, { shift: true }))
+    if (isDevtoolsShortcut(e))
       client.devtools.toggle()
   })
 }
