@@ -19,6 +19,7 @@ import { setupStorageRPC } from './storage'
 import { setupTelemetryRPC } from './telemetry'
 import { setupTerminalsBridge } from './terminals'
 import { setupTimelineRPC } from './timeline'
+import { setupVirtualFilesRPC } from './virtual-files'
 
 export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
   const serverFunctions = {} as ServerFunctions
@@ -157,6 +158,7 @@ export function setupRPC(nuxt: Nuxt, options: ModuleOptions) {
     ...setupTerminalsBridge(ctx),
     ...setupServerRoutesRPC(ctx),
     ...setupServerTasksRPC(ctx),
+    ...setupVirtualFilesRPC(ctx),
     ...setupAnalyzeBuildRPC(ctx),
     ...setupOptionsRPC(ctx),
     ...setupTimelineRPC(ctx),

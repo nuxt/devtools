@@ -205,3 +205,16 @@ export interface ComponentWithRelationships {
   dependencies?: string[]
   dependents?: string[]
 }
+
+export interface VfsData {
+  rootDir: string
+  entries: {
+    id: string
+    path: string
+  }[]
+}
+
+export interface VfsFile {
+  id: string
+  content: string
+}

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { VfsFile } from '~/composables/state'
+import type { VfsFile } from '~/../src/types'
 import Fuse from 'fuse.js'
 import { computed, ref, watchEffect } from 'vue'
 import { definePageMeta } from '#imports'
+import { rpc } from '~/composables/rpc'
 import { useVirtualFiles } from '~/composables/state'
 import { useCurrentVirtualFile } from '~/composables/state-routes'
 
@@ -21,22 +22,23 @@ const fileId = useCurrentVirtualFile()
 const current = ref<VfsFile>()
 
 watchEffect(() => {
-  if (!fileId.value)
+  const id = fileId.value
+  if (!id) {
+    current.value = undefined
     return
-  const url = `/_vfs/${encodeURIComponent(fileId.value)}`
-  fetch(url, {
-    headers: {
-      accept: 'application/json',
-    },
+  }
+  // Re-fetch active file content when the virtual file list refreshes
+  void data.value
+  rpc.getVirtualFile(id).then((file) => {
+    if (fileId.value === id)
+      current.value = file
   })
-    .then(i => i.json())
-    .then(i => current.value = i.current)
 })
 
 function toShortPath(path: string) {
   if (!data.value?.rootDir)
-    return
-  return path.startsWith(data.value?.rootDir)
+    return path
+  return path.startsWith(data.value.rootDir)
     ? path.slice(data.value.rootDir.length)
     : path
 }
@@ -86,7 +88,7 @@ const filteredFiles = computed(() => {
     </template>
 
     <template #right>
-      <div v-if="current?.content" h-full of-hidden flex="~ col">
+      <div v-if="current" h-full of-hidden flex="~ col">
         <div border="b base" flex-none px4 py2 text-sm op75>
           <code>{{ current.id }}</code>
         </div>
