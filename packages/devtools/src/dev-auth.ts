@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { join } from 'node:path'
 import { randomStr } from '@antfu/utils'
-import { getHomeDir } from './utils/local-options'
+import { getOptionsDir } from './utils/local-options'
 
 let token: string | undefined
 
@@ -10,8 +10,7 @@ export async function getDevAuthToken() {
   if (token)
     return token
 
-  const home = getHomeDir()
-  const dir = join(home, '.nuxt/devtools')
+  const dir = getOptionsDir()
   const filepath = join(dir, 'dev-auth-token.txt')
 
   if (existsSync(filepath))
