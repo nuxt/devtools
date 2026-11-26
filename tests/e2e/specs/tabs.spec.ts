@@ -14,6 +14,7 @@ const TABS = [
   { path: '/modules/runtime-configs', title: 'Runtime Configs', content: /public|app/i },
   { path: '/modules/hooks', title: 'Hooks', content: /hook|server|client/i },
   { path: '/modules/plugins', title: 'Plugins', content: /plugin/i },
+  { path: '/modules/virtual-files', title: 'Virtual Files', content: /#build\/nuxt\.config\.mjs/ },
 ] as const
 
 test.describe('main tabs', () => {
@@ -37,4 +38,27 @@ test('lists Nuxt built-in components even with no user components', async ({ pag
     .toContainText(/Total components: \d+/i, { timeout: 15_000 })
   await expect(devtoolsFrame().locator('body'))
     .toContainText('NuxtLink', { timeout: 15_000 })
+})
+
+test('loads virtual file list and content over RPC without HTTP /_vfs requests', async ({ page, openDevTools, navigateTab, devtoolsFrame }) => {
+  const vfsHttpRequests: string[] = []
+  page.on('request', (req) => {
+    if (new URL(req.url()).pathname.startsWith('/_vfs'))
+      vfsHttpRequests.push(req.url())
+  })
+
+  await page.goto('/')
+  await openDevTools()
+  await navigateTab('/modules/virtual-files')
+
+  const frame = devtoolsFrame()
+  const configButton = frame.getByRole('button', { name: '#build/nuxt.config.mjs' })
+  await expect(configButton).toBeVisible({ timeout: 15_000 })
+  await configButton.click()
+
+  await expect(frame.locator('code').filter({ hasText: '#build/nuxt.config.mjs' }))
+    .toBeVisible({ timeout: 15_000 })
+  await expect(frame.locator('.n-code-block'))
+    .toContainText('appBaseURL', { timeout: 15_000 })
+  expect(vfsHttpRequests).toEqual([])
 })

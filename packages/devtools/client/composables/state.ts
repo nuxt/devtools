@@ -1,7 +1,6 @@
 import type { Ref } from 'vue'
 import type { HookInfo, RouteInfo } from '../../src/types'
 import { objectPick } from '@antfu/utils'
-import { $fetch } from 'ofetch'
 import { computed } from 'vue'
 import { useClientRouter } from './client'
 import { rpc } from './rpc'
@@ -59,26 +58,8 @@ export function useAnalyzeBuildInfo() {
   return useAsyncState('getAnalyzeBuildInfo', () => rpc.getAnalyzeBuildInfo())
 }
 
-export interface VfsData {
-  rootDir: string
-  entries: {
-    id: string
-    path: string
-  }[]
-}
-
-export interface VfsFile {
-  id: string
-  content: string
-}
-
 export function useVirtualFiles() {
-  // Nitro v3 only serves `/_vfs/**`; the Accept header selects JSON on both Nitro v2 and v3
-  return useAsyncState('vfs-list', () => $fetch<VfsData>('/_vfs/', {
-    baseURL: '/',
-    headers: { accept: 'application/json' },
-    responseType: 'json',
-  }))
+  return useAsyncState('getVirtualFiles', () => rpc.getVirtualFiles())
 }
 
 export function useMergedRouteList() {

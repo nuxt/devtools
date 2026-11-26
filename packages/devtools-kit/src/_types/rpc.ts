@@ -3,7 +3,7 @@ import type { StorageValue } from 'unstorage'
 import type { ResolvedConfig } from 'vite'
 import type { AnalyzeBuildsInfo } from './analyze-build'
 import type { ModuleCustomTab } from './custom-tabs'
-import type { AutoImportsWithMetadata, ComponentRelationship, HookInfo, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo } from './integrations'
+import type { AutoImportsWithMetadata, ComponentRelationship, HookInfo, NpmCommandOptions, NpmCommandType, PackageUpdateInfo, ScannedNitroTasks, ServerRouteInfo, VfsData, VfsFile } from './integrations'
 import type { AnyNitro, AnyStorageMounts } from './nitro-compat'
 import type { NuxtDevtoolsNotifyInput } from './notify'
 import type { ModuleOptions, NuxtDevToolsOptions } from './options'
@@ -31,6 +31,8 @@ export interface ServerFunctions {
   getServerRoutes: () => ServerRouteInfo[]
   getServerTasks: () => ScannedNitroTasks | null
   getServerApp: () => NuxtApp | undefined
+  getVirtualFiles: () => VfsData
+  getVirtualFile: (id: string) => Promise<VfsFile | undefined>
 
   // Options
   getOptions: <T extends keyof NuxtDevToolsOptions>(tab: T) => Promise<NuxtDevToolsOptions[T]>
