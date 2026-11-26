@@ -21,7 +21,7 @@ const data = useVirtualFiles()
 const fileId = useCurrentVirtualFile()
 const current = ref<VfsFile>()
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   const id = fileId.value
   if (!id) {
     current.value = undefined
@@ -29,8 +29,12 @@ watchEffect(() => {
   }
   // Re-fetch active file content when the virtual file list refreshes
   void data.value
+  let stale = false
+  onCleanup(() => {
+    stale = true
+  })
   rpc.getVirtualFile(id).then((file) => {
-    if (fileId.value === id)
+    if (!stale && fileId.value === id)
       current.value = file
   })
 })
