@@ -13,8 +13,11 @@ import { toJsLiteral } from '../utils/serialize-js-literal'
 import { getOptions } from './options'
 
 const ABSOLUTE_PATH_RE = /^[a-z]:|^\//i
-// eslint-disable-next-line regexp/no-super-linear-backtracking
-const FILE_LINE_COL_RE = /^(.*?)(:[:\d]*)$/
+// Splits a trailing `:line:col` suffix off a path. The suffix is anchored on the
+// right and the prefix has to end in a character that cannot be part of it
+// (anything but `:`, a digit or a line terminator), so a long run of colons or
+// digits is scanned once instead of once per colon.
+const FILE_LINE_COL_RE = /^((?:.*?[^:\d\n\r\u2028\u2029])?)(\d*)(:[:\d]*)$/
 const NUXT_WELCOME_RE = /<NuxtWelcome\s*\/>/
 
 export function setupGeneralRPC({
@@ -188,8 +191,8 @@ export function setupGeneralRPC({
       const match = input.match(FILE_LINE_COL_RE)
       let suffix = ''
       if (match) {
-        input = match[1]!
-        suffix = match[2]!
+        input = match[1]! + match[2]!
+        suffix = match[3]!
       }
 
       const candidates = isRelative
