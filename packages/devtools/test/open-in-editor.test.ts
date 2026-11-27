@@ -87,6 +87,52 @@ describe('openInEditor', () => {
     expect(opened).toEqual([`${join(root, 'apps/web/app/components/Foo.vue')}:3:5`])
   })
 
+  it.each([':3', ':3:5', '::12:3'])('keeps the %s suffix after the file name', async (suffix) => {
+    const { ctx, opened } = fakeContext(root)
+    const { openInEditor } = setupGeneralRPC(ctx)
+
+    await expect(openInEditor(`app/components/Foo.vue${suffix}`)).resolves.toBe(true)
+    expect(opened).toEqual([`${join(root, 'apps/web/app/components/Foo.vue')}${suffix}`])
+  })
+
+  it('does not read a suffix that follows a line terminator', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { ctx, opened } = fakeContext(root)
+    const { openInEditor } = setupGeneralRPC(ctx)
+
+    await expect(openInEditor('app/components/Foo.vue\n:3')).resolves.toBe(false)
+    expect(opened).toEqual([])
+  })
+
+  // A long run of colons used to cost one scan to the end of the input per
+  // colon. The assertion is on growth (4x the input must not cost anywhere near
+  // 16x the time) rather than on an absolute budget, so it does not depend on
+  // how fast the machine is.
+  it('splits the suffix of a long run of colons in linear time', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { ctx } = fakeContext(root)
+    const { openInEditor } = setupGeneralRPC(ctx)
+    const sizes = [100_000, 400_000]
+    const runs = 7
+
+    const measure = async (size: number) => {
+      const input = `${':'.repeat(size)}x`
+      await openInEditor(input) // warm up
+      const times: number[] = []
+      for (let i = 0; i < runs; i++) {
+        const start = performance.now()
+        await expect(openInEditor(input)).resolves.toBe(false)
+        times.push(performance.now() - start)
+      }
+      return times.sort((a, b) => a - b)[Math.floor(runs / 2)]!
+    }
+
+    const small = await measure(sizes[0]!)
+    const large = await measure(sizes[1]!)
+    // linear is about 4x, quadratic about 16x
+    expect(large / small).toBeLessThan(8)
+  })
+
   it('opens an absolute path without touching the base directories', async () => {
     const { ctx, opened } = fakeContext(root)
     const { openInEditor } = setupGeneralRPC(ctx)
